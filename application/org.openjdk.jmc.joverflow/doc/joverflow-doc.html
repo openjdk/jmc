@@ -1,0 +1,1067 @@
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html>
+<head>
+  <title>JOverflow Documentation</title>
+</head>
+<body>
+
+JOverflow is a tool that analyzes Java heap dumps for a number of known memory
+usage inefficiencies. This documentation is for the command-line version of JOverflow.
+There is currently work in progress on integrating JOverflow with Mission Control.
+The resulting interactive tool's output will likely be somewhat different, but its
+basic concepts should remain the same.
+
+<h1>How to use the tool</h1>
+
+<h2>Downloading and running the tool</h2>
+
+JOverflow takes a JVM heap dump in HPROF format. Files in this format usually
+have <tt>.hprof</tt> extension and are typically generated with the following
+command (for HotSpot VM; JRockit may use a different command):
+
+<br><br>
+<tt>jmap -dump:live,format=b,file=my_heap_dump.hprof &lt;JVM process pid&gt;</tt>
+<br><br>
+
+JOverflow reads the heap dump, processes the data, and produces a report
+summarizing its findings. To run JOverflow:<br>
+
+<ul>
+  <li>Build the Mission Control source code.
+  <li>Locate the built jar files for org.openjdk.jmc.common and org.openjdk.jmc.joverflow, and run the tool as
+      <br><br>
+      <tt>java -cp org.openjdk.jmc.joverflow-{version}.jar:org.openjdk.jmc.common-{version}.jar org.openjdk.jmc.joverflow.Main foo.hprof &gt; foo-joverflow.txt</tt>
+      <br><br>
+  <li>For big heap dumps (over 1500M or so), you may want to adjust the JVM settings
+      in the script. Typically you will need to add
+      <tt>-d64 -Xmx&lt;1.2..1.5 x dump size&gt;</tt>.
+</ul>
+
+JOverflow supports the following command line options:
+
+<ul>
+  <li><tt>-depth_first</tt> Scan the heap in depth-first order (default). This
+      is usually faster, but can result in longer and less useful reference
+      chains leading to problematic objects. See the section on
+      <a href="#top_mem_consumers">top memory consumers</a>
+      for more details.
+  <li><tt>-breadth_first</tt> Scan the heap in breadh-first order. This is
+      usually slower, but generally results in shorter and more useful reference
+      chains for problematic objects, see above.
+  <li><tt>-full_obj_histo</tt> Print full object histogram (normally only top
+      memory consumers are printed). See
+      <a href="#class_and_obj_info">Class and Object Information</a> for more
+      details.
+  <li><tt>-ref_chain_depth=&lt;n&gt;</tt> Print up to <tt>n</tt> elements in
+    reverse reference chains leading to problematic objects (default is 8).
+    See the section on <a href="#reference_chains">reference chains for
+    problematic objects</a> for more details.
+  <li><tt>-ref_chain_stoppers=&lt;prefix1,prefix2,...&gt;</tt> Stop printing
+    a reference chain when class starting with any of the given prefixes is
+    reached (default is <tt>oracle.apps.</tt>). See the section on
+    <a href="#top_mem_consumers">top memory consumers</a>
+    for more details.
+  <li><tt>-pointer_size=&lt;size in bytes&gt;</tt> Explicitly specify JVM
+    pointer size to be used in calculations. It generally makes sense to use
+    this flag only for 64-bit heap dumps; see the next section for details.
+</ul>
+
+<h2>An important note about heap dumps</h2>
+
+The HPROF file format is platform-independent. Unfortunately, one (probably
+unintended) consequence is that it provides very little platform-specific
+information that tools like JOverflow or Eclipse Memory Analyzer (MAT) need in
+order to accurately calculate how much space is consumed by Java objects in
+the real JVM heap. The fundamental numbers that tools need for that are:
+
+<ul>
+  <li>Pointer size - how many bytes an object reference takes
+  <li>Object header size. In the heap, each Java object is preceded by a header
+      that contains a pointer to the object's class, some internal flags, etc.
+  <li>Object alignment. In the heap, objects typically cannot be placed at
+      arbitrary addresses. Starting addresses are at least 8-bytes aligned for
+      both HotSpot and JRockit JVMs.
+</ul>
+
+A HPROF file contains only the so-called identifier size, loosely corresponding
+to the pointer size. It allows the tool to determine whether the JVM ran in
+32-bit mode (in that case, identifier size is 4) or in 64-bit mode (size 8).
+In 32-bit mode, other numbers are, fortunately, fixed and are same for both
+HotSpot and JRockit:
+
+<ul>
+  <li>Pointer size is 4 bytes
+  <li>Object header size is 8 bytes. For arrays, additional 4 bytes are used
+      for array length, effectively resulting in object header size of 12 bytes.
+  <li>Object alignment is 8 bytes.
+</ul>
+
+However, in 64-bit mode the situation is much more complex. It stems from the
+fact that in this mode the JVM may use narrow (compressed)
+references, which means that 32-bit, effectively truncated pointers are used
+within a 64-bit heap. The description in the
+<a href="https://bugs.openjdk.java.net/browse/JDK-7145625">JVM bug 7145625</a>
+accurately summarizes what happens in that case.
+<p>
+
+The above bug requests the HotSpot developers to provide the required numbers
+in the HPROF file, but it is currently unclear when it's going to be addressed.
+Thus presently JOverlow does not have a 100 percent reliable way to find out
+whether wide or narrow (compressed) references are used, and what the object
+alignment is. It is possible to specify pointer size explicitly, using the
+<tt>-pointer_size</tt> flag. Otherwise, for 64-bit heap dumps the tool
+currently uses guessing logic that works as follows:
+
+<ul>
+<li>Initially, pointer size is assumed to be 4 bytes if the file size is less than
+    26GB, and 8 bytes otherwise. That is, narrow references are assumed if the
+    heap size (which more or less correlates with the heap dump size) is smaller
+    than the limit used in HotSpot for switching between narrow and wide
+    references.
+<li>Object alignment is always assumed to be 8 bytes (same situation as above)
+<li>Object header size is initially assumed to be 12 bytes (plus additional
+    4 bytes for arrays). However, if during
+    subsequent heap dump scanning JOverflow comes across any class that belongs
+    to <tt>jrockit.vm.*</tt> package, it assumes that the heap dump has
+    been generated by JRockit, and changes the header size to 8 bytes (plus
+    4 bytes for arrays). According to JRockit engineers, that VM uses 8-byte
+    headers on all platforms, so this part of our calculations is accurate,
+    assuming JRockit was indeed used.
+<li>After all objects have been read from the heap dump, the tool attempts
+    to determine the precise value of pointer size by looking at pairs of
+    consecutive objects. We use the fact that object IDs, that is, numbers
+    by which objects in the heap dump reference each other, are actually
+    memory addresses of objects at the time when the heap dump was taken.
+    So, the difference between IDs of two consecutive objects would be
+    equal to the actual size, in memory, of the first object. The tool
+    calculates the expected object size using the current pointer size,
+    and then compares it with the actual object size above. If the numbers are
+    the same, it's assumed that the current pointer size is correct. If the
+    numbers are different, the alternative pointer size is used to calculate
+    the alternative expected object size. If the alternative object size matches
+    the actual size, it's assumed that the alternative pointer size is
+    correct. If neither numbers match, the same operation is tried for another
+    pair of objects, until a certain maximum number of objects is reached. Only
+    objects that have fields of pointer and <tt>int</tt> types are used in this
+    calculation, to avoid uncertainities with size of fields that may take less
+    than 4 bytes, e.g. <tt>boolean</tt> or <tt>char</tt>.
+</ul>
+
+Given this guessing logic, it may well happen that for the same 64-bit heap dump
+JOverflow and other tools, e.g. MAT, would report different object sizes and,
+consequently, different total heap size. Furthermore, it may well happen that both
+tools would be wrong. However, in the past the author has observed that changing
+these numbers could affect absolute figures considerably, but, interestingly, would
+not affect relative overhead estimates that much. That is, estimated memory usage
+and/or absolute overhead due to, say, empty <tt>HashMap</tt>s may jump from 200MB
+to 300MB, but the relative overhead only changes from 8 per cent to 9 per cent.
+<p>
+
+<h1>JOverflow heap report</h1>
+
+A JOverflow report is divided into sections, each devoted to one or
+more memory problems of the same kind. For each problem, we determine the number
+of objects suffering from it, and calculate the overhead: the theoretical amount
+of memory that would be saved if the problem was eliminated. The amount of
+overhead can be considered a problem rank: the higher it is, the more sense it
+makes to fix the given problem.
+<p>
+
+<h2>Section 0: Important Issues Overview</h2>
+
+This section contains a summary of the most acute problems detected by JOverflow.
+They are reported in detail in other sections referenced from this one. A problem
+of a particular kind gets into Section 0 if its overhead is higher than the fixed
+relative threshold (for example, 2 per cent for empty or sparse collections).
+Threshold values have been chosen based on statistics for a number of real-life
+heap dumps. 
+<p>
+
+<h2>Section 1: Overall Stats</h2>
+
+This section presents a diverse set of data. First, the fundamental values needed
+to calculate object sizes and overhead are reported: pointer size, object header
+size and object alignment. Next, overall heap stats are reported: the number of Java
+objects in the heap and its breakdown into instances, object arrays and primitive
+arrays. Finally, we report some &quot;assorted raw stats&quot; :
+various metrics that may occasionally signal certain memory usage anomalies,
+that have not made their way into more sophisticated analysis yet. For example,
+a high (more than 15-20 per cent) overhead due to object headers would be bad,
+and most likely would be due to a very large number of small objects in the heap.
+<p>
+
+Note that when the stats in this section are calculated, the tool does not make a
+distinction between objects that are parts of more complex data structures that
+JOverflow recognizes (known Java collections and <tt>java.lang.String</tt>
+instances) and all other objects, which we call <i>standalone</i> objects. In
+other words, when calculating raw stats, all Java objects are treated in the
+same way.
+<p>
+
+Some notable pieces of assorted raw stats are:
+<ul>
+<li>Size of all <tt>*$Entry</tt> instances: reports the total size of all objects
+whose class name ends with <tt>$Entry</tt>, for example <tt>HashMap$Entry</tt>.
+Such objects are almost always collection implementation details, and their total
+size gives some idea of overhead due to collection internals.
+<li>Number and overhead of short arrays. These metrics are reported, since each
+array in a Java heap incurs the overhead of array header and alignment, see
+above. The relative value of this overhead for a short array is larger than
+for a longer one. A large number of short arrays can become very wasteful.
+<li>Overhead of all null array entries: here we just add up the size in bytes
+of all null pointers in object arrays.
+<li>Number and overhead of short Strings. The problem with short Strings is
+similar to that with short arrays. The overhead is calculated as a number of
+<tt>java.lang.String</tt> objects with the value of <tt>String.length()</tt> in the
+given range, multiplied by shallow size of <tt>String</tt>.
+<li>Number and overhead of boxed numbers. Objects such as <tt>java.lang.Integer</tt>,
+<tt>java.lang.Character</tt> etc. take much more memory than values
+(<tt>int</tt>, <tt>char</tt>) that they wrap internally. Thus excessive usage
+of such objects can be very wasteful. The overhead of boxed number objects is
+calculated, for each type, as
+<tt>(sizeof(Number) - sizeof(number) + pointer_size) * num_of_Number_instances</tt>,
+where e.g. for <tt>Number</tt> equal to <tt>java.lang.Integer</tt>, <tt>number</tt>
+is <tt>int</tt>. We add <tt>pointer_size</tt> in the above formula, since it
+is expected that for each boxed number instance there is at least one pointer
+somewhere, and that takes valuable space as well.
+</ul>
+
+There are two special subsections in this section as well. The first one gives
+some overall statistics related to class loaders. The two pieces that may be
+somewhat non-obvious are:
+<ul>
+<li>Classloader instances with loaded classes: this is gathered by walking all
+the <tt>Class</tt> objects in the heap dump and gathering references to their
+loaders. As a result, we know the number of loaders that do have loaded classes,
+and the how many separate types they belong to.
+<li> Classloader instances with only one loaded class: we check how many of the
+above-mentioned loader objects are only referenced by one <tt>Class</tt> object,
+and how many types these "single-loaded-class" loaders belong to.
+</ul>
+
+The second subsection gives statistics on Strings that are either compressed
+or compressible. Here by "compressible String" we mean one that contains only
+ASCII characters (0..255), and therefore its backing <tt>char[]</tt> array can
+potentially be replaced with a <tt>byte[]</tt> array (or is actually replaced
+with one, as done in some JDK versions - that's what lines that mention
+<tt>byte[]</tt> tell about).
+<p>
+
+One important aspect of gathering data for this section is related to the fact
+that in JDK versions prior to JDK 7u6 two or more String objects can use
+<i>different</i> parts of the <i>same</i> backing <tt>char[]</tt> array (or a
+single String can use only a subset of its backing array). This
+means that there is generally no simple answer to questions like "how many
+characters are used by this group of String objects". The same character in
+some backing <tt>char[]</tt> array may be used by several String objects, or
+not used at all. This is important, because in a given <tt>char[]</tt>
+array some characters may be ASCII (compressible) and some not. So here we
+only look at characters that are <i>actually</i> (logically) contained in
+each String. Furthermore, when calculating "used bytes in backing arrays",
+we also use only the above-mentioned characters, and we don't count characters
+in a backing array if we have already seen that array before. This can lead
+to the "number of used bytes in backing arrays" in this section being
+considerably smaller than the total number of bytes in String backing arrays
+as presented in the <a href="#class_and_obj_info">Class and Object Information</a>
+section.
+<p>
+
+<a name="class_and_obj_info"></a>
+<h2>Section 2: Class and Object Information</h2>
+
+In this section, the tool reports the total number of Java classes and Java
+objects. Java objects are class instances and arrays. JOverflow also reports how
+many classes in the dump have no instances at all, or just one instance. Some
+number of classes with no instances is present in any heap dump, since
+some classes only contain static fields and methods, instances of many anonymous
+classes tend to be short-lived, etc. However, a large number of classes with no
+instances may signal a problem, such as machine-generated classes that are
+always generated by some library but never used by the application.
+<p>
+
+Finally, an object histogram is printed for classes with instances consuming at
+least 0.1 per cent of the total heap size. Typically such objects collectively
+consume almost all of the heap, but represent a small fraction of the total
+number of classes. To get a full list of classes, run the tool with
+<tt>-full_obj_histo</tt> flag.
+<p>
+
+In the object histogram, we report the following numbers for each class: number
+of instances, shallow size of instances, and implementation-inclusive size of
+instances. The latter number is the same as shallow size for most classes,
+except for:
+<ol>
+<li> Known Java collections: container classes in <tt>java.util.*</tt> and
+     <tt>java.util.concurrent.*</tt> packages, and their subclasses, including
+     user-defined ones. For a collection, implementation-inclusive
+     size is the size of the collection object itself, plus the size of all
+     objects that are, logically, a part of this collection's implementation.
+     For example, for a <tt>HashMap</tt> that would be the <tt>HashMap$Entry[]</tt> array
+     referenced by <tt>HashMap.table</tt> field, plus the total size of all
+     <tt>HashMap$Entry</tt> objects referenced from it. However, the contents
+     of this map, that is, keys and values, <i>are not included</i>. Since many
+     collections, such as <tt>ArrayList</tt>, contain an <tt>Object[]</tt>
+     array in their implementation, the implementation-inclusive size for
+     <tt>Object[]</tt> arrays in the JOverflow object histogram is <i>smaller</i>
+     than their shallow size. That's because implementation-inclusive size for
+     <tt>Object[]</tt> only includes standalone arrays.
+<li> <tt>String</tt> instances. An implementation-inclusive size for a
+     <tt>String</tt> is the size of the instance plus the size of its backing
+     <tt>char[]</tt> array. For this reason, implementation-inclusive size
+     of <tt>char[]</tt> arrays is also smaller than their shallow size: it
+     includes only standalone arrays.
+</ol>
+
+The "paradox" with shallow vs implementaiton-inclusive size for <tt>char[]</tt>,
+<tt>Object[]</tt>, <tt>HashMap$Entry</tt> etc. is easy enough to understand.
+However, it turns out that occasionally implementation-inclusive size may be
+<i>smaller</i> than shallow size for <tt>HashMap</tt> and <tt>LinkedHashMap</tt>!
+That happens when a heap dump contains many instances of <tt>HashSet</tt> or
+<tt>LinkedHashSet</tt> and few instances of <tt>HashMap</tt> or
+<tt>LinkedHashMap</tt>. An instance of <tt>HashSet</tt> always points to an
+instance of <tt>HashMap</tt>, same with <tt>LinkedHashSet</tt> and
+<tt>LinkedHashMap</tt>. Shallow size for <tt>HashMap</tt> is calculated for
+<i>all</i> <tt>HashMap</tt>s, both standalone and those that are owned by
+<tt>HashSet</tt>s. So, when there are many <tt>HashSet</tt>s in the heap dump,
+this number may end up pretty big. However, implementation-inclusive size for
+<tt>HashMap</tt> is calculated only for standalone <tt>HashMap</tt>s. Thus if
+there are far fewer <tt>HashMap</tt>s than <tt>HashSet</tt>s, this number, based
+on a small number of standalone <tt>HashMap</tt>s, may end up relatively small.
+
+<a name="top_mem_consumers"></a>
+<h2>Sections 3,4: Number, size and nearest fields/reference chains for top
+memory consumers</h2>
+
+Top memory consumers are classes whose instances consume the highest amount of
+memory. In this section, JOverflow provides information on data structures that
+hold these objects in memory.
+<p>
+
+From the class histogram, the tool determines classes whose instances consume the
+highest amount of memory. Next, it performs a depth-first or breadth-first scan of
+the heap dump, starting from GC roots. Whenever an instance of one of the above classes
+is detected, a whole reference chain to it is recorded. It is important that within
+a reference chain, we don't distinguish individual array elements or collection
+elements. So, for example, if object A are reachable via the chain looking like
+<tt>GC_root_1 -&gt; Foo.bar[0]</tt>, and object B is reachable via chain
+<tt>GC_root_1 -&gt; Foo.bar[1]</tt>, JOverflow will record the same reference
+chain for them, that will look like <tt>GC_root_1 -&gt; Foo.bar -&gt; Object[]</tt>.
+Furthermore, when multiple objects get reached via the same reference chain,
+the information for these objects is aggregated. In the end, we know how many
+objects of given types (for example, 100 instances of <tt>HashMap</tt> and 200
+instances of <tt>LinkedHashMap</tt>) are reachable via the given reference chain,
+and how much memory they use. A group of objects reachable via the same reference
+chain is called an object cluster.
+<p>
+
+Note that breadth-first scan (you can choose it via the command-line option) is
+usually slower than depth-first, but generally results in shorter and more
+useful reference chains. That's because, by design, a reference chain (at
+least from the given GC root) via which we get to the given object in this way
+is the shortest possible one. The shortest reference chain is what people
+usually use as a "primary" one and perceive as the most "logical" one. If the
+same object is reachable via two reference chains, the longer one tends to
+include various secondary data structures, <tt>WeakHashMap</tt>s and
+so on. If there is a group of objects reachable via both short (good) and long
+reference chain, depth-first scan may report half of them under the first
+chain, and another half under the second. As a result, it may be less clear
+where the biggest groups of problematic objects are.
+<p>
+
+Section 3 presents the above information aggregated one level further: for each
+object cluster we take only the data field that references the cluster directly,
+and then merge all clusters with the same nearest referencing data field. This
+representation is more compact, results in fewer clusters, and is generally more
+useful. That's because when the user tries to figure out how to fix a
+particular problem, in many cases they need to look no further than the code
+that creates and directly manages a particular object, which is in
+the same class as the data field referencing that object.
+<p>
+
+Section 4 presents reference chains described in the first paragraph, printed
+in reverse order - from the object cluster to the GC root. Intermediate
+arrays, collections and custom linked lists are printed in the condensed form. That is,
+we avoid printing internals of e.g. a <tt>HashMap</tt>, and thus a part of the
+chain that in reality looks like <tt>HashMap.Entry.key &lt;- HashMap.table[]
+&lt;- Foo.myMap</tt> would be represented as <tt>{HashMap} &lt;- Foo.myMap</tt>.
+Reference chains may still be very long, so to save space they are truncated.
+By default, that happens either after the 8th element or after the first
+element that belongs to an <tt>oracle.apps.*</tt> class. There are two
+command line flags, <tt>-ref_chain_depth=&lt;n&gt;</tt> and
+<tt>-ref_chain_stoppers=&lt;prefix1,prefix2,...&gt;</tt> that can be used
+to override these values.
+<p>
+
+
+<h2>Section 5: Problematic Collections</h2>
+
+In this section, known collections that suffer from problems recognized by
+JOverflow are reported. For each problem, types of relevant collections, number
+of collection instances and total overhead is reported.
+<p>
+
+Known collections are defined as container
+classes in <tt>java.util.*</tt> and <tt>java.util.concurrent.*</tt> packages
+and their subclasses. JOverflow currently recognizes the following problems
+with them (some ways of addressing these problems are suggested in
+the separate section of this document):
+
+<ol>
+<li><b>Empty unused</b>: a collection is empty if it contains no elements. The
+overhead of an empty collection is defined as the amount of memory that would
+be saved if the collection was not allocated at all - that is, the
+implementation-inclusive size in bytes of the collection (see previous section).
+Empty collections where capacity may exceed size - typically
+array-backed collections, such as <tt>HashMap</tt> and <tt>ArrayList</tt> -
+may incur surprisingly high overhead, especially if the initial capacity is
+higher than the default value. For a <tt>ConcurrentHashMap</tt>
+in JDK releases prior to 7, the size of an empty instance initialized with
+default values is whopping 1200 bytes. Fortunately, in more recent JDK versions
+its code has been modified to create internal <tt>ConcurrentHashMap.Segment</tt>
+objects lazily, which greatly reduced this overhead.
+<br>
+<i>Empty unused</i> are empty collections that furthermore have never been used,
+i.e. never contained any elements. This is determined using long or int
+<tt>modCount</tt> field that is defined in most collections and is incremented
+every time a collection is updated.
+
+<li><b>Empty used</b> are empty collections that previously contained some
+elements. That is assumed to be the case if <tt>modCount</tt> field (see the
+previous item) is not zero.
+
+<li><b>Empty</b> are empty collections for which we cannot determine whether
+they previously contained any elements, because they don't have the
+<tt>modCount</tt> field.
+
+<li><b>Small Sparse</b>: a collection is sparse if the number of elements in it
+is fewer than a half of its capacity. Consequently, only collections where
+capacity may exceed size - typically array-backed collections - can be sparse.
+The overhead is defined as the total size in bytes of empty slots (null pointers)
+in the collection - that is, how much memory would be saved if the collection did
+not contain any empty slots. A collection is furthermore <i>small sparse</i>
+if its capacity does not exceed the default capacity (e.g. 16 for <tt>HashMap</tt>).
+See the <a href="#fixing_problems">discussion of fixing problems</a> in collections
+on why the distinction between small and large (see below) sparse collections
+is important.
+
+<li><b>Large Sparse</b>: these are collections that are sparse (see above) and
+have a capacity larger than default. See the
+<a href="#fixing_problems">discussion of fixing problems</a> in collections
+for further details.
+
+<li><b>Boxed</b>: these are collections that contain boxed numbers, i.e.
+instances of classes such as <tt>java.lang.Integer</tt>, <tt>java.lang.Double</tt>
+etc. Such collections are considered problematic since instances of boxed numbers
+take a lot more memory than <tt>int</tt>, <tt>double</tt> etc. numbers that they
+wrap. The overhead of a boxed collection is defined as the amount of memory that
+would be saved if we replaced the collection with one (for lists) or two (for
+maps) arrays of the corresponding primitive numbers. Technically, its value is
+calculated as
+<tt>collection_impl_size + (sizeof(Number) + pointer_size - sizeof(number)) * num_elements</tt>.
+Here <tt>Number</tt> stands for <tt>java.lang.Integer</tt>, <tt>java.lang.Double</tt>
+etc., and <tt>number</tt> stands for <tt>int</tt>, <tt>double</tt>, etc.
+Note that currently a collection is considered boxed if a random
+sample of a key or value or both returns a boxed number object.
+
+<li><b>Vertical bar</b>: this is applicable only to collections that are similar
+to two-dimensional arrays, that is, lists of lists or lists of arrays. A
+&quot;vertical bar&quot; is a collection where outer dimension M is (much) larger
+than the inner dimension N. Such a collection is wasteful, since each short inner
+array or list incurs a per-object overhead (list or array implementation size)
+and requires a pointer from the outer list. The overhead of a bar collection is
+defined as the amount of memory that would be saved if outer and inner dimensions
+are &quot;flipped&quot;, i.e. we replace an M by N list with N by M one.
+Technically, it is calculated as <tt>(M - N) * (pointer_size + array_or_list_overhead)</tt>
+
+<li><b>Small</b>: these are collections that contain a very small number of elements
+(currently defined as 4 or fewer). Such collections are considered problematic,
+since for them the "fixed costs" (size of implementation details that don't
+depend on the number of elements in collection) are comparable to, or higher
+(sometimes much higher) than the total size of "workload" in that collection.
+For example, the minimum amount of memory used by a <tt>HashSet</tt>, which
+internally consists of several Java objects with multiple data fields each, is around
+100 bytes on a 32-bit JVM. If a <tt>HashSet</tt> contains just 3 elements, its
+workload size is 12 bytes - an order of magnitude smaller than its implementation
+size. The overhead of a small collection is defined as the amount of memory that
+would be saved if the collection is replaced with one (for lists) or two (for
+maps) arrays of objects containing this collection's elements. Technically,
+it is calculated as
+<tt>collection_impl_size - (pointer_size * num_elements + array_overhead)</tt>
+(for lists) or
+<tt>collection_impl_size - 2 * (pointer_size * num_elements + array_overhead)</tt>
+(for maps).
+
+</ol>
+
+
+<h2>Section 6: Problematic Standalone Object Arrays</h2>
+
+This section is similar to the previous one, but covers standalone object
+arrays - that is, arrays of Java objects that are not a part of the implementation
+of any collection known to JOverflow. The following problems are recognized:
+
+<ol>
+<li><b>Length 0</b>: arrays that have length zero, i.e. cannot contain any
+elements. Such arrays might be useful in very few situations; usually they are
+a useless by-product of methods that blindly allocate arrays with specified
+length. The overhead of such an array is defined as its size in bytes, which
+is array header plus possible object alignment.
+
+<li><b>Length 1</b>: arrays that have length 1. An array of length 1 is
+equivalent to a direct reference to the object that it contains - in other words,
+the whole array is unnecessary. Thus its overhead is defined as its size in bytes.
+
+<li><b>Empty</b>: an object array is empty if it contains only null elements.
+The overhead is defined as the array size in bytes.
+
+<li><b>Sparse</b>: an object array is sparse if the number of non-zero elements
+in it is fewer than a half of its length. The overhead is defined as the total
+size in bytes of empty slots (null pointers) in this array - that is, how much
+memory would be saved if there were no empty slots.
+
+<li><b>Boxed</b>: these are arrays that contain boxed numbers, e.g.
+<tt>java.lang.Integer</tt>. See the description for boxed collections above.
+The overhead of a boxed array is calculated as
+<tt>(sizeof(Number) - sizeof(number)) * num_unique_referenced_Number_objects +
+pointer_size * num_references_to_Number</tt>. That is, we take care of a
+situation when multiple elements of a boxed array reference the same
+boxed number object. That would occur if, for example, the majority of
+array's elements are instances of <tt>java.lang.Integer</tt> with small
+values, for which <tt>Integer.valueOf()</tt> method returns unique cached
+objects. Note than an array is considered boxed even if it contains just
+one boxed number object, but the overhead strictly depends on the number
+of such objects.
+
+<li><b>Vertical bar</b>: this is applicable only to two-dimensional arrays,
+and is very similar to vertical bar collections described in the previous
+section (in fact, long arrays of short lists would also fall into this category).
+The overhead is defined in the same way, as the amount of memory that would
+be saved if array dimensions were &quot;flipped&quot;. 
+</ol>
+
+
+<h2>Section 7: Problematic Standalone Primitive Arrays</h2>
+
+This section is similar to the previous two, but covers standalone primitive
+arrays, that is, arrays of primitive types, such as <tt>int</tt> or
+<tt>char</tt>, that are not a part of any collection known to JOverflow,
+and not backing <tt>char[]</tt> arrays of <tt>java.lang.String</tt>
+instances.
+
+<ol>
+<li><b>Length 0</b>: this is defined and handled absolutely the same as
+zero-size object arrays. 
+
+<li><b>Length 1</b>: arrays that have length 1. A primitive array of length 1
+is equivalent to single field with the value that this array contains. Thus the
+overhead of such an array is defined as its size in bytes plus pointer size
+minus the size of the contained value (e.g. 2 bytes for a char).
+
+<li><b>Empty</b>: these are arrays that contain only zeros. The overhead is
+defined as the array size in bytes.
+
+<li><b>Long zero-tail (LZT)</b>: these are arrays that end with a continuous
+block of zeros, that is longer than a half of the array's length. Arrays
+looking like this often happen to be buffers in classes such as I/O streams,
+text parsers, etc., that have been allocated with excessive capacity.
+The overhead for such an array is defined as the size in bytes of the block
+of zeros in the end of the array.
+
+<li><b>Unused high bytes</b>: these are arrays of type <tt>char[], short[],
+int[], long[]</tt>, where each element uses no more than a
+half of its bits. For example, an <tt>int[]</tt> array where each element
+is in the <tt>Short.MIN_VALUE .. Short.MAX_VALUE</tt> or
+<tt>Byte.MIN_VALUE .. Byte.MAX_VALUE</tt> range. If by design an element that
+is out of this range can never be added to this array, such an array can be
+replaced with <tt>short[]</tt> or <tt>byte[]</tt>, saving 1/2 or 3/4 of
+memory used by it.</li>
+</ol>
+
+
+<a name="reference_chains"></a>
+<h2>Sections 8 and 9: Number, overhead and nearest fields/reference chains for
+problematic collections and arrays</h2>
+
+These sections give information on data structures that hold problematic
+collection and arrays in memory. It is gathered and presented in the same way
+as the information on top memory consumers in sections 3 and 4. The only
+differences are that the tool reports <i>memory overhead</i> rather than
+<i>memory usage</i> for problematic objects. Furthermore, as we know from the
+previous section, many different kinds of problems can occur with collections
+and arrays, and sometimes the same object can have several problems. Thus the
+tool reports both problem kinds and associated overheads for each object
+cluster.
+<p>
+
+It may happen that in addition to problematic objects in some cluster, there is
+also some number of "good" collections or arrays reachable via the same
+reference chain. If so, the number of good objects is printed  after all the
+information on the bad ones in the given cluster, both in section 6 and 7.
+Knowing the number of good objects is important when choosing the way to fix
+a problem with bad ones, as discussed in the next section.
+
+
+<a name="fixing_problems"></a>
+<h2>Fixing known problems with collections and arrays</h2>
+
+In many cases, the best fix to a performance problem stems from deep understanding
+of the code, and architectural changes that completely eliminate problematic
+objects and/or result in more appropriate data structures. The tips presented
+below assume that either the application is already considered well-optimized,
+or only limited, local changes can be made to it for whatever reason.
+<p>
+
+<b>Empty collections and arrays</b>. A radical way to avoid the
+overhead of empty collections is to avoid allocating them until the first use
+(lazy initialization). If a collection is referenced by a data field that's
+accessed by many methods, switching to lazy initialization would require changing
+the code of all these methods, so that they check if the field is null and
+initialize it if so. That would make the code less readable and more brittle;
+the alternative is to replace all these direct uses with calls to a single
+accessor method that deals with lazy initialization. Still such changes may be
+time-consuming, and in some cases may create races in object initialization if
+these methods can be called by multiple threads.
+<p>
+
+For this reason, in some situations it makes sense to leave eager collection
+initialization in place, but change its initial capacity to a smaller number,
+e.g. use <tt>new HashMap(8)</tt> instead of <tt>new HashMap()</tt> (the latter
+is equivalent to <tt>new HashMap(16)</tt>). This will reduce the overhead for
+those <tt>HashMap</tt>s that stay empty, but may result in some performance
+overhead due to more frequent collection resizing if many <tt>HashMap</tt>s
+allocated at the same site end up growing bigger than their initial capacity.
+Here, as well as in other cases described below, the information on the number
+of good collections referenced by the same field, that JOverflow provides, may
+very helpful. If most collections are bad, the overhead due to the few good
+ones, that will be negatively affected by the fix, is likely to be negligible.
+However, if a considerable number of collections allocated at the given point
+in the code are good, the fix will have to be more sophisticated.
+<p>
+
+<b>Length 0 arrays</b> are useless in most cases, and should be avoided
+whenever possible. However, one common case where this cannot be done easily is
+when some array (a data field, or a value returned by some method) is handled
+in many places in the code, and changing them all to check for <tt>null</tt> is
+difficult. In that case, a reasonable alternative is to create an empty array
+of the appropriate type once, save it in a special static field, and then
+assign or return this singleton instance every time a zero size is passed in.
+<p>
+
+<b>Length 1 arrays</b> are wasteful, because such an array can, in principle, be
+replaced with either a direct reference to the single element that it contains,
+or a primitive value that it contains. However, that cannot always be done, e.g.
+<tt>Bar[] Foo.bar</tt> may point to arrays of length 1 in 98 per cent of cases,
+but to long arrays in the remaining cases. In that case, it may make sense to
+use change the type of <tt>Foo.bar</tt> from <tt>Bar[]</tt> to <tt>Object</tt>
+and then make it point either to a single instance of <tt>Bar</tt> or an array.
+The code that deals with <tt>bar</tt> will likely look more complex than before
+because of <tt>instanceof</tt> checks, but it may be justified by the resulting
+memory savings.
+<p>
+
+<b>Sparse collections and arrays</b>: their overhead can be reduced by
+changing the initial capacity (but see the warning above regarding possible
+frequent resizing as a result). The task is easier if we know there are no
+or very few "good" collections in the same cluster. Small sparse collections
+are usually easier to fix. Such a collection is typically a result of creating
+a standard collection with the default constructor, and then adding just a few
+elements to it. To reduce the overhead, it is sufficient to hardcode a more
+appropriate (smaller than default) initial capacity parameter to the
+constructor. Keep in mind that one of the most popular collections,
+<tt>java.util.HashMap</tt>, with default capacity 16, can by design only have
+a power of two capacity. Thus, for example, invoking <tt>new HashMap(10)</tt>
+will still produce a <tt>HashMap</tt> instance with capacity 16.
+<p>
+
+Collections that are large yet sparse may be a result of specifying too large
+an initial capacity, removing many elements from the collection (most
+array-based collections don't &quot;shrink&quot; in that situation), or, in some
+cases, be a side-effect of automatic collection growth. For example, the
+capacity of a <tt>HashMap</tt> is increased twice when the number of
+elements in it grows larger than 3/4 (default <i>load factor</i>) of the
+current capacity. Thus in the updated <tt>HashMap</tt>, only 3/8 of slots are
+occupied, making it sparse.
+<p>
+
+Fixing large sparse collections is not always easy, since one needs to determine
+the root cause of the problem. For sparse <tt>HashMap</tt>s with appropriate
+initial capacity and no element removal, it is possible to reduce sparseness
+by specifying, in the constructor, a load factor that is higher than the
+default (0.75). However, this measure may affect CPU performance (any hash table
+that is nearly full experiences a larger number of hash collisions), and thus
+should be used with great care.
+<p>
+
+<b>Boxed collections</b> can both create a considerable memory overhead and
+increase GC pressure due to the large number of small objects that they contain.
+Fortunately, in most cases what the user needs to store in such a collection
+are actual numbers, rather than instances of <tt>java.lang.Integer</tt> etc.
+Thus it is best to replace problematic boxed collections with specialized
+ones, that store primitive numbers. Apache Commons library provides such
+collections, but may or may not be allowed to use; GNU Trove is another
+option, but much less likely to be allowed due to licensing issues. In many
+cases, e.g. when deleting elements from the collection is not required, it
+is easy to write a custom implementation.
+<p>
+
+<b>Vertical bar collections and arrays</b>. As already mentioned, the easiest
+way to reduce overhead of such objects is to &quot;flip&quot; their dimensions.
+Furthermore, one can generally convert a two-dimensional array into a
+single-dimensional one (albeit at the cost of making code somewhat more complex
+and less readable) if, for example, there are many such arrays in the
+heap and the overhead of sub-arrays is considerable.
+<p>
+
+<b>Small collections</b>. To save maximum amount of memory, a small collection
+should be replaced with an array of objects. Of course, in reality it is not
+always easy to do that. Perhaps the simplest case is when all collections
+referenced by field <tt>Foo.c</tt> are of the same size, initialized in a
+constructor and are not updated afterwards. If replacing with an array is
+difficult, but at least it's known that any collection to which <tt>Foo.c</tt>
+can ever point is small, it may make sense to think about an alternative,
+more economical collection class. For example, one may replace a small
+<tt>HashSet</tt> with an <tt>ArrayList</tt> and use <tt>indexOf()</tt>
+method of the latter instead of <tt>HashSet.contains()</tt> without noticeable
+loss of performance. Similarly, for a small number of elements a
+<tt>HashMap</tt> with manual synchronization is likely to perform no worse,
+or even better than a <tt>ConcurrentHashMap</tt>.
+<p>
+
+<b>Long zero-tail primitive arrays</b> are largely equivalent to sparse object
+arrays, and the same advice about choosing right initial capacity applies to
+them.
+<p>
+
+<b>Primitive arrays with unused high bytes</b> should, ideally, be replaced
+with arrays of more appropriate type, e.g. <tt>int[]</tt> with <tt>short[]</tt>.
+
+<h2>Section 10: Duplicate String Stats</h2>
+
+Duplicate strings are multiple instances of <tt>java.lang.String</tt> with the
+same value. For example, when <tt>Foo.foo.equals("xyz") , Foo.bar.equals("xyz") ,
+Foo.foo != Foo.bar</tt> there is duplicated string <tt>"xyz"</tt> and two
+<tt>String</tt> instances with this logical value referenced by data fields
+ <tt>Foo.foo</tt> and <tt>Foo.bar</tt>.
+<p>
+
+Every instance of <tt>java.lang.String</tt> points to a backing <tt>char[]</tt>
+array with the actual string contents. Therefore string duplication can take two
+forms: two or more <tt>String</tt> instances with the same logical value can be
+backed by different <tt>char[]</tt> arrays with identical contents, or by the
+same <tt>char[]</tt> array. In the first case, all but one <tt>String</tt>
+objects and their backing arrays are considered to be overhead by our tool. In
+the second case, only the redundant <tt>String</tt> objects are overhead.
+<p>
+
+Most Java applications generate some number of duplicate strings. Sometimes
+only 20-30 per cent of all <tt>String</tt> instances are unique, and the
+overhead of duplicate strings can be as high as 20-25 per cent of the total
+heap size. However, usually there are quite a lot of different string values
+for duplicate strings, and very rarely copies of a single string take more
+than one per cent of the heap. In section 8, JOverflow gives a list of individual
+strings causing overhead of 0.1 per cent of the heap or more. Usually this list
+is pretty short. For the vast majority of duplicate strings, the contribution
+of each individual string is much smaller. Thus it makes sense to consider such
+strings only when they are aggregated with others based on a common reference
+chain and/or the nearest referencing data field.
+<p>
+
+The exact meaning of the metrics reported in this section is explained below.
+For illustration, we assume that a heap dump contains just six separate
+<tt>String</tt> objects:
+<p>
+
+<tt>s1 = &quot;foo&quot;; s2 = &quot;bar&quot;; s3 = &quot;foo&quot;;
+s4 = &quot;bar&quot;; s5 = &quot;abc&quot;; s6 = &quot;xyz&quot;;</tt>
+<p>
+
+Furthermore, <tt>s1</tt> and <tt>s3</tt> are backed by the same <tt>char[]</tt>
+array, whereas <tt>s2</tt> and <tt>s4</tt> are backed by two different arrays
+with identical contents.
+<p>
+
+<ul>
+<li><b>Total strings</b>: the total number of <tt>java.lang.String</tt>
+instances, 6 in our example
+<li><b>Unique strings:</b> the number of separate logical values among all strings.
+In our example, it will be 4:  <tt>&quot;foo&quot;, &quot;bar&quot;,
+&quot;abc&quot;, &quot;xyz&quot;</tt>
+<li><b>Duplicate values:</b> the number of separate logical values among strings
+that are duplicated. 2 in our example: <tt>&quot;foo&quot;, &quot;bar&quot;</tt>
+<li><b>Overhead:</b> the size, in bytes, of redundant <tt>String</tt>
+objects and backing arrays (in our example that's two <tt>String</tt> objects,
+<tt>s2</tt> and <tt>s4</tt>, and one <tt>char</tt> array, <tt>"bar"</tt>).
+</ul>
+
+Additionally, for each of the top duplicate strings the following numbers are
+reported:
+<ul>
+<li><b>Overhead</b>: calculated as specified above
+<li><b>Number of char arrays</b>: how many backing char arrays exist for this
+string value
+<li><b>Number of objects</b>: how many String instances with this value exist
+<li><b>Maximum array length</b>: the length of the longest backing char array.
+This number may be greater than the corresponding string length due to the fact
+that prior to JDK7u6 a String (or more likely several String instances) can
+be backed by a char array that is longer than the String itself (that is, the
+String uses only a fragment of that array).
+<li><b>Value</b>: string value; can be truncated if too long.
+</ul>
+
+<h2>Sections 11 and 12: Number, overhead and nearest fields/reference chains for duplicate strings</h2>
+
+Information in these sections is collected and aggregated in exactly the same
+way as for problematic collections reported in sections 8 and 9. The notable
+highligts are:
+<ul>
+<li>For each cluster, the values of several top duplicated strings are printed.
+
+<li>A cluster of duplicated strings may include more than one unique string
+value - that is, four <tt>String</tt> objects with values <tt>"a", "a", "b",
+"b"</tt>, reached via the same reference chain, are aggregated into the same
+cluster.
+
+<li>For each cluster, JOverflow presents the total number of duplicated strings,
+the number of duplicated backing arrays, and, finally, the number of
+<i>non-duplicated</i> strings (those with logical value unique in this heap dump)
+reached via the same reference chain. This information is important for deciding
+how to get rid of the particular group of duplicated strings, as discussed in the
+next section.
+
+<li>If some string is listed as a duplicate in the given cluster, its other
+copies may belong to other cluster(s) as well. In other words, the fact that a
+string is duplicated is treated as its global property, not a local one within
+the given cluster.
+
+<li>When calculating overhead for a particular string cluster, JOverflow
+considers only the <tt>String</tt> objects within this cluster and their backing
+<tt>char[]</tt> arrays. Furthermore, the same backing array is never used in
+calculations more than once.
+</ul>
+
+<h2>Getting rid of duplicate strings</h2>
+
+As with problematic collections, better overall application architecture often
+leads to less redundancy, fewer objects, and thus fewer duplicated objects,
+including strings.
+<p>
+
+However, some operations, e.g. parsing a text document, inevitably produce
+duplicated strings. Depending on how these strings are handled subsequently,
+it may be possible to come up with efficient case-specific duplication
+elimination methods. This is, however, beyond the scope of this document.
+Below we suggest one universal technique for local elimination or reducing
+the number of duplicated strings. This technique often works efficiently, but
+sometimes it may cause considerable overhead of its own, both in terms of memory
+and CPU cycles. Thus, as any optimization, it should be fully understood and
+used with care.
+<p>
+
+The technique is based on <i>string interning</i> and works as follows. Using
+JOverflow output, one can determine that some data field <tt>Foo.foo</tt> points
+to a sufficiently large cluster of duplicated strings. Provided that the number
+of duplicated strings in this cluster is considerably (ten times or more) higher
+than the number of non-duplicated strings reported for the same cluster (that's
+why this number is important!) the following can be done:
+
+<ol>
+<li>Find out where <tt>Foo.foo</tt> is written. The simplest situation is
+when it is a private field that is initialized in the constructor and never
+changed afterwards. The worst case is if it's a public field and can be written
+anywhere in the code.
+<li>Add a call to <tt>String.intern()</tt> method at every line where
+a value is stored into <tt>Foo.foo</tt>. For example, if there is a line in
+the constructor like <tt>this.foo = s;</tt> replace it with
+<tt>this.foo = s.intern()</tt>
+</ol>
+
+<tt>String.intern()</tt> method returns a unique representation for each
+<tt>String</tt> object, and thus <tt>Foo.foo</tt> will be guaranteed to point at
+no more than one <tt>String</tt> object for each unique value. However, you should
+take into account the following:
+
+<ol>
+<li>The call to <tt>String.intern()</tt> is not free. In particular, it may
+incur a noticeable CPU overhead in multithreaded applications due to internal
+synchronization. That is, to avoid storing multiple copies of the same string by
+different threads, the pool of strings used by this call is synchronized
+internally. Returning a unique value in all situations is required by the
+contract of <tt>String.intern()</tt>, but becomes a burden if all we need is
+to reduce the number of duplicated strings, not necessarily eliminating each and
+every of them.
+
+<li>Prior to JDK 8, the internal pool is implemented as a fixed-size hash table
+with chains of entries, similar to <tt>HashMap$Entry</tt>, hanging off it. Because
+of the fixed-size table, a large pool results in long entry chains
+which take a lot of time to traverse. This may degrade performance of
+<tt>String.intern()</tt> severely even for a single-thread application. The author
+once observed more than three-times slowdown for an application that was interning
+about 1.5M duplicated strings that corresponded to fewer than 300,000 unique
+values. The last number would be the actual size of the string pool.
+
+<li>The internal pool of strings can grow as needed, and strings
+that are not referenced from anywhere in the application are automatically
+garbage collected from it. However, in HotSpot JVM prior to JDK 8, this pool is
+kept in a separate heap area called Permanent Generation. If it grows large, you
+may run out of PerGen space and will need to set a higher value for it using the
+<tt>-XX:MaxPermSize=&lt;size&gt;</tt> JVM flag.
+
+<li>Adding a string to the <tt>String.intern()</tt> pool incurs some memory
+overhead. As a result, in some situations you may discover that after adding
+a call to <tt>String.intern()</tt> the total memory usage decreased only
+marginally, or even increased. That is more likely to occur if in addition
+to duplicated strings the application happens to intern many non-duplicated
+ones.
+</ol>
+<p>
+
+For these reasons, if the number of different values of duplicate strings
+(what JOverflow reports as &quot;duplicate values&quot; on the top of section
+10) is high, it may make sense to try alternative string intern table
+implementations. Since a custom table is not required to return a unique value
+for each and every string, such a table may use very loose synchronization. It
+may use <tt>WeakReference</tt>s to allow the GC to collect unused strings, or it
+can be implemented as a fixed-size, small enough array and rely on the fact
+that least recently used strings contained in it, including the totally unused
+ones, will eventually be overwritten with newer ones. The author once wrote and
+tried several quick-and-dirty custom intern tables, each of them configured to
+use no more than 1-2 per cent of the heap. For the single-threaded application
+that they were used with, they all resulted in considerable (about 20 per cent)
+heap size reduction and some (5-6 per cent) speed up due to reduced GC pressure.
+In contrast, using <tt>String.intern()</tt> resulted in similar memory savings
+but an incredibly high (more than 3 times) application slowdown. However, that
+was observed with JDK 6; the improved string pool implementation in JDK 8 is
+supposed to address the main reason of this slowdown, as previously discussed.
+<p>
+
+<h2>Section 13: Duplicate Primitive Array Stats</h2>
+
+Duplicated primitive arrays are multiple instances of primitive arrays,
+such as <tt>int[]</tt> or <tt>byte[]</tt> with identical type, length and contents.
+Note that JOverflow only considers standalone arrays. That is, for instance,
+<tt>char[]</tt> arrays that back <tt>String</tt> instances are not checked
+for duplication here.
+
+The metrics reported in this section are very similar to those for duplicated
+strings reported in section 8. Assume that a heap dump contains just six separate
+<tt>primitive arrays</tt>:
+<p>
+
+<tt>int[] ia1 = new int[]{1,2,3}; int[] ia2 = new int[]{4,5,6};
+int[] ia3 = new int[]{1,2,3}; int[] ia4 = new int[]{4,5,6};
+int[] ia5 = new int[]{1,2,3};
+int[] ia6 = new int[]{7,8,9}; byte[] ba7 = new byte[]{1,2,3};</tt>
+<p>
+
+<ul>
+<li><b>Total primitive arrays</b>: the total number of primitive array objects of
+all types, 7 in our example
+<li><b>Unique arrays:</b> the number of separate logical values (contents) among
+all these arrays. In our example, it will be 4:
+<tt>int[]{1,2,3}; int[]{4,5,6}; int[]{7,8,9}; byte[]{1,2,3};
+</tt>
+<li><b>Duplicated values:</b> the number of separate logical values (contents)
+among arrays that are duplicated. 2 in our example: <tt>int[]{1,2,3}; int[]{4,5,6};</tt>
+<li><b>Overhead:</b> the size, in bytes, of redundant primitive arrays.
+In our example that's 3 arrays: <tt>int[]{1,2,3}; int[]{1,2,3}; int[]{4,5,6};</tt>
+</ul> 
+
+
+<h2>Sections 14 and 15: Number, overhead and nearest fields/reference chains for duplicate
+primitive arrays</h2>
+
+Information in these sections is collected, aggregated and presented in the
+same way as for duplicated strings reported in sections 9 and 10.
+<p>
+
+<h2>Section 16: WeakHashMaps with references from values to keys</h2>
+
+Here JOverflow reports instances of <tt>java.util.WeakHashMap</tt> which contain
+key-value pairs <tt>(K, V)</tt> such that a field in <tt>V</tt> points
+back at <tt>K</tt> (or some other key in the same map). If there is such a
+reference, <tt>K</tt> and <tt>V</tt> will not be removed from the map even when
+there are no other references to <tt>K</tt>. This, in effect, breaks the
+weakness property of the map and creates a memory leak. Note that a <i>weak</i>
+reference from <tt>V</tt> back to <tt>K</tt> is fine - a <tt>WeakHashMap</tt>
+will work as intended in this case.
+<p>
+
+The overhead of a problematic <tt>WeakHashMap</tt> is calculated as a shallow
+size of all key and value objects that are linked in the above way. This is a
+conservative estimate: each of these objects may point to others, that
+collectively might consume a lot more memory.
+<p>
+
+<h2>Section 17: Data Fields that are always or almost always null/zero</h2>
+
+In this section, JOverflow reports classes for which instances have
+some or all data fields equal to null or zero. More precisely, in the first
+subsection the tool reports every class where certain field(s) are <tt>null</tt> in
+<i>each</i> instance of that class, whereas in the second subsection it reports
+each class where certain field(s) are <tt>null</tt> in <i>at least 90 per cent</i>
+of its instances.
+<p>
+
+For example, if we have
+<tt>class A { String s; int i; ... }</tt>, and in all instances of <tt>A</tt>
+field <tt>s == null</tt>, class <tt>A</tt> and field <tt>s</tt> will be reported
+in the first subsection. If we have 
+<tt>class B { String s; int i; ...}</tt>, there are 100 instances of
+<tt>B</tt>, and in 90 of them <tt>i == 0</tt>, then <tt>B</tt> and <tt>i</tt>
+will be reported in the second subsection. If a class has no fields at all,
+like in <tt>java.lang.Object</tt>, it will be treated as if it has all its
+fields equal to <tt>null</tt>, and will be reported in the first subsection,
+provided its total overhead is above the 0.1 per cent threshold.
+<p>
+
+The overhead of problematic classes is calculated as follows:
+<ul>
+<li>For a class with <i>some</i> fields <tt>null</tt> in all/most instances, the
+overhead is the combined size of these fields in bytes multiplied by the
+number of problematic instances.
+<li>For a class with <i>all</i> fields <tt>null</tt> in all/most instances, the
+overhead is the whole instance size (including object header and alignment)
+multiplied by the number of problematic instances.
+</ul>
+
+Fields that are always or almost always null can create considerable overhead.
+The problem may occur for two main reasons. The field may be not used at all,
+essentially forgotten, in which case it should be simply removed. More often,
+though, it happens that a field is defined in a superclass but used only in some
+of its subclasses, and not used at all in others. In that case, one needs to
+analyze usage of that field and the class hierarchy carefully. To address the
+problem, it may be possible to simply move the field
+to the relevant subclass, which will likely be a more natural place for it.
+In other cases, one may need to make a deeper restructuring of the class
+hierarchy, e.g. insert a new class in between the superclass and some of
+its subclasses, and move the problematic field down into that new
+intermediate class.
+
+<h2>Section 18: Primitive data fields with unused high bytes</h2>
+
+In this section, JOverflow reports classes that have fields of type
+<tt>char, short, int</tt> or <tt>long</tt>, and furthermore some of these
+fields use no more than a half of their bits. For example, an <tt>int</tt>
+field whose value in each object is in the <tt>Short.MIN_VALUE ..
+Short.MAX_VALUE</tt> or <tt>Byte.MIN_VALUE .. Byte.MAX_VALUE</tt> range.
+If by design the given field can never have a value outside this range,
+such a field can be replaced with <tt>short</tt> or <tt>byte</tt>, saving
+1/2 or 3/4 of memory used by it.
+<p>
+
+Similar to null/zero data fields, JOverflow reports two groups of problematic
+classes. In the first group, the given field(s) don't use their high bytes
+in every instance of the given class. In the second group of classes, the
+given field(s) don't use their high bytes in 90 per cent or more of instances
+of the given class.
+<p>
+
+The overhead of problematic fields is calculated as the amount of memory that
+would be saved if the field's type is changed to the smallest one that can
+still accomodate all the values of that field.
+<p>
+</body>
+</html>

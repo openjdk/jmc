@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Flight Recorder Configuration UI Test
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.test;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.test

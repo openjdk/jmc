@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JDK Mission Control
+Bundle-SymbolicName: org.openjdk.jmc.rcp.application; singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.rcp.application.ApplicationPlugin
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.expressions,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.alert,
+ org.openjdk.jmc.commands,
+ org.eclipse.equinox.p2.core,
+ org.eclipse.equinox.p2.ui,
+ org.eclipse.equinox.p2.repository,
+ org.eclipse.equinox.p2.metadata,
+ org.eclipse.equinox.p2.operations,
+ org.eclipse.equinox.p2.ui.sdk.scheduler,
+ org.eclipse.equinox.p2.updatechecker,
+ org.eclipse.swt,
+ org.eclipse.ui.themes;resolution:=optional
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.rcp.application.actions
+Service-Component: OSGI-INF/policy_component.xml
+Automatic-Module-Name: org.openjdk.jmc.rcp.application

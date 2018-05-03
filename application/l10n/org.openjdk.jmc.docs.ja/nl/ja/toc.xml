@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="JDK Mission Controlクライアント・オンライン・ヘルプ"
+     topic="html/toc.htm">
+   <topic label="タイトル�?�よ�?�著作権情報" href="html/title.htm"/>
+   <topic label="JDK Mission Control�?��?��?��?�"
+          href="html/GUID-05BEE8DA-92DD-4D64-8F96-AE3BCA7F1190.htm"/>
+   <topic label="JDK Mission Controlクライアント�?�使用"
+          href="html/GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm">
+      <topic label="JDK Mission Controlクライアント�?�開始"
+             href="html/GUID-E898FF59-2205-49AA-918A-1C9F792BFC54.htm"/>
+      <topic label="JDK Mission ControlクライアントGUI"
+             href="html/GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E.htm">
+         <topic label="タブ�?�よ�?�タブ・グループ" href="html/GUID-472929AC-C8EA-4857-A14C-603AF91D6957.htm"/>
+         <topic label="パ�?ル" href="html/GUID-591A4D5C-C28B-48CE-9B32-CF798D011E75.htm"/>
+      </topic>
+   </topic>
+   <topic label="JDK Mission Control�?�アクセシビリティ"
+          href="html/GUID-8CC21FED-821F-49B4-BADF-4B5F2AB041A2.htm">
+      <topic label="スクリーン・リーダー" href="html/GUID-3B426495-2A88-49D5-B72A-9013773039B7.htm"/>
+      <topic label="JDK Mission Control�?�アクセシビリティ・モード"
+             href="html/GUID-2231E0A6-ECCE-48A6-89DF-7526CC50F280.htm"/>
+      <topic label="ボタン�?�テキスト・ラベル�?�表示"
+             href="html/GUID-A1BCA5DC-0102-4FD4-9D8C-717473025C52.htm"/>
+      <topic label="オンライン・ヘルプ・テキスト�?�サイズ変更"
+             href="html/GUID-FBC35238-6B6D-4CAC-A407-7AEF95FE7058.htm"/>
+      <topic label="アクセシビリティ�?�既知�?��?題�?�回�?�策"
+             href="html/GUID-65882C8B-7834-41E4-AA7F-9A82BCE36388.htm"/>
+   </topic>
+   <topic label="JVMブラウザ�?��?��?��?�" href="html/GUID-2D86C16D-9DFC-4B3E-B7AD-3185418241D1.htm">
+      <topic label="JVMブラウザ�?�使用�?�カスタマイズ"
+             href="html/GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm"/>
+      <topic label="JDK Mission Control�?�通信"
+             href="html/GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A.htm"/>
+      <topic label="ローカル�?�検出�?�れ�?�JVM" href="html/GUID-2E1242E0-8437-467B-9AEC-36AE680733F7.htm"/>
+      <topic label="Java Discovery Protocol経由�?�検出�?�れ�?�JVM"
+             href="html/GUID-D934384D-A13D-46F7-9588-32AE6C901554.htm"/>
+      <topic label="カスタムJVM接続�?�追加" href="html/GUID-2125BB8B-CC13-4125-8562-F0BFD428F1DC.htm"/>
+   </topic>
+   <topic label="JMXコンソール�?��?��?��?�" href="html/GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153.htm">
+      <topic label="JMXコンソール�?�使用" href="html/GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm">
+         <topic label="JMXコンソール設定�?�カスタマイズ"
+                href="html/GUID-41D47617-4E32-4793-9253-6C2125F21CFF.htm">
+            <topic label="通信設定" href="html/GUID-B8C17ABE-C0E5-4044-9401-1A01C5EE07E3.htm"/>
+            <topic label="診断コマンド�?�プリファレンス"
+                   href="html/GUID-B2C0DE8E-376A-4C88-8B11-25B303BED0DF.htm"/>
+            <topic label="JMXデータ永続性�?�設定" href="html/GUID-9EE879C7-3584-4508-8456-B4324097B207.htm"/>
+            <topic label="MBeanブラウザ�?�プリファレンス"
+                   href="html/GUID-DE2B88DD-9E08-4C0A-80ED-4684986F3A73.htm"/>
+         </topic>
+         <topic label="グラフ�?�使用" href="html/GUID-59CA7784-185A-4EED-B523-F640881040FC.htm"/>
+         <topic label="「概�?�?タブ�?�使用" href="html/GUID-440C24FA-59FD-471D-A1DC-7581C522E54E.htm">
+            <topic label="JMXデータ永続性�?�設定"
+                   href="html/GUID-9EE879C7-3584-4508-8456-B4324097B207-01.htm"/>
+            <topic label="ダッシュボード" href="html/GUID-29C36ED5-88E1-4974-B4B1-EFC683A1575D.htm">
+               <topic label="ダイヤル�?�追加�?��?��?�編集" href="html/GUID-2F693047-FF99-43A2-828C-ED22F1EF5A10.htm"/>
+            </topic>
+            <topic label="グラフ" href="html/GUID-CCA54ADF-B778-4CF3-97D0-A34D2442A4C4.htm"/>
+         </topic>
+         <topic label="「MBeanブラウザ�?タブ�?�使用"
+                href="html/GUID-D8E21217-2340-4FCD-BF13-BAC45569ED0A.htm">
+            <topic label="�?作�?�実行" href="html/GUID-978B0DFF-5E04-4781-BC0F-A92B8928B0E8.htm"/>
+            <topic label="通知�?�表示" href="html/GUID-4CB43843-B287-487B-B6D6-D5A58CACDD57.htm"/>
+         </topic>
+         <topic label="「トリガー�?タブ�?�使用" href="html/GUID-DAB13FDA-9430-4457-BFF3-04F9DC0E3977.htm">
+            <topic label="トリガー・ルール�?�使用" href="html/GUID-18677545-5152-4688-8C51-4A1151361BB9.htm"/>
+            <topic label="アプリケーション・アラート�?�表示"
+                   href="html/GUID-D475ABB1-DE41-4A24-8BB8-A058FDDC6645.htm"/>
+         </topic>
+         <topic label="「システム�?タブ�?�使用" href="html/GUID-2AF1BAE8-14F3-4904-85E8-5F333A765B3C.htm"/>
+         <topic label="「メモリー�?タブ�?�使用" href="html/GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0.htm"/>
+         <topic label="「スレッド�?タブ�?�使用" href="html/GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF.htm"/>
+         <topic label="「診断コマンド�?タブ�?�使用" href="html/GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm">
+            <topic label="診断コマンド�?�種類" href="html/GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772.htm"/>
+         </topic>
+         <topic label="JMX永続性データ�?�使用" href="html/GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A.htm">
+            <topic label="JMXデータ永続性ファイル�?�使用"
+                   href="html/GUID-ECB99579-0933-45B8-ABC4-9A0EAC2B5E57.htm"/>
+         </topic>
+      </topic>
+   </topic>
+   <topic label="フライト・レコーダ・プラグイン�?�使用 "
+          href="html/GUID-953292B2-45D3-4842-9656-DAE88D239BA6.htm">
+      <topic label="フライト記録�?�開始" href="html/GUID-4B13023D-6AFA-4563-8532-74871DE29B62.htm"/>
+      <topic label="実行中�?�フライト記録�?�ダンプ"
+             href="html/GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm"/>
+      <topic label="デフォルト�?�記録�?�ダンプ" href="html/GUID-BA742114-2E89-462D-8DCB-4442B3538CFA.htm"/>
+      <topic label="フライト記録テンプレート�?�管�?�"
+             href="html/GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm"/>
+      <topic label="フライト・レコーダ設定�?�構�?"
+             href="html/GUID-C661942A-3DCF-40B4-87C3-F5000DE4830E.htm"/>
+      <topic label="記録�?�表示" href="html/GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759.htm">
+         <topic label="「自動分�?�?��?果�?ページ�?�表示"
+                href="html/GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm"/>
+         <topic label="アウトライン�?�使用" href="html/GUID-58C8400F-82C1-4A25-92F2-1A96058C871F.htm">
+            <topic label="「Javaアプリケーション�?ページ�?�使用"
+                   href="html/GUID-8EA35A18-669C-4EC3-BCEF-7EA7F92BA3EE.htm">
+               <topic label="「メモリー�?ページ�?�使用" href="html/GUID-66413CF1-A0E1-43BD-B8DB-9720B112D8F3.htm"/>
+               <topic label="「ロック・インスタンス�?ページ�?�使用"
+                      href="html/GUID-F94F7FBB-5B53-40A3-854E-8BE8FC172629.htm"/>
+               <topic label="「ファイルI/O�?ページ�?�使用"
+                      href="html/GUID-ABF6E2F7-9FE9-4054-934C-BE05AEA8EDFE.htm"/>
+               <topic label="「ソケットI/O�?ページ�?�使用"
+                      href="html/GUID-492BB17D-5964-48C3-9212-D4848514437A.htm"/>
+               <topic label="「メソッド・プロファイリング�?ページ�?�使用"
+                      href="html/GUID-343C6885-3367-4DDE-9BE5-1A7421CE00A1.htm"/>
+               <topic label="「例外�?�エラー�?ページ�?�使用"
+                      href="html/GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm"/>
+               <topic label="「スレッド・ダンプ�?ページ�?�使用"
+                      href="html/GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm"/>
+            </topic>
+            <topic label="「JVM内部�?ページ�?�使用" href="html/GUID-A45813E6-C32E-4916-966E-AE24992BB326.htm">
+               <topic label="「ガベージ・コレクション�?ページ�?�使用"
+                      href="html/GUID-C12D23CE-E9DE-4BFA-A310-9AD5B6D835FD.htm"/>
+               <topic label="「GC構�?�?ページ�?�使用" href="html/GUID-FEFBE854-3298-46A6-A149-8B48A62330D2.htm"/>
+               <topic label="「コンパイル�?ページ�?�使用" href="html/GUID-CD7A11BF-27AE-481A-8158-03ECC2DB9697.htm"/>
+               <topic label="「コード・キャッシュ�?ページ�?�使用"
+                      href="html/GUID-DB152DDE-4694-439D-B8A7-CF1EABFAF795.htm"/>
+               <topic label="「クラス�?�ロード�?ページ�?�使用"
+                      href="html/GUID-6A66D658-7FD4-4621-9FE7-662D8B8FFACF.htm"/>
+               <topic label="「VM�?作�?ページ�?�使用" href="html/GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm"/>
+               <topic label="「TLAB割当�?��?ページ�?�使用"
+                      href="html/GUID-4F885E48-A548-4140-B985-74B1685BEDEA.htm"/>
+            </topic>
+            <topic label="「環境�?ページ�?�使用" href="html/GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm">
+               <topic label="「プロセス�?ページ�?�使用" href="html/GUID-BCAF66B8-BC4F-48F3-8453-5AA921067861.htm"/>
+               <topic label="「環境変数�?ページ�?�使用" href="html/GUID-81AD3592-4E3F-4D9E-8877-675CEF333549.htm"/>
+               <topic label="「システム・プロパティ�?ページ�?�使用"
+                      href="html/GUID-958F3421-2848-4C34-9A08-681011D409E6.htm"/>
+               <topic label="「記録�?ページ�?�使用" href="html/GUID-A27CE821-5AD5-438D-9A2F-D0B45B743EF0.htm"/>
+            </topic>
+         </topic>
+         <topic label="スタック・トレース�?��?作" href="html/GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480.htm"/>
+      </topic>
+   </topic>
+   <topic label="試験的プラグイン" href="html/GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm"/>
+   <topic label="よ�??�?�る質�?" href="html/GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A.htm"/>
+</toc>

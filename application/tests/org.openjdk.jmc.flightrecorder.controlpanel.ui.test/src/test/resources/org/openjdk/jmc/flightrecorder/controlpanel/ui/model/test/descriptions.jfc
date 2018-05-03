@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="2.0" name="For test" description="" provider="Oracle">
+	<event name="com.oracle.jdk.ThreadAllocationStatistics" label="Thread Allocation Statistics Special Label" description="Thread Allocation Statistics Special Description">
+		      <setting name="enabled">true</setting>
+		      <setting name="period">everyChunk</setting>
+	</event>
+	<event name="com.oracle.jdk.ActiveRecording" >
+      <setting name="enabled">true</setting>
+    </event>
+</configuration>

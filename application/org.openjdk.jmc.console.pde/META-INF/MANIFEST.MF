@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Management Console PDE Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.console.pde;singleton:=true
+Bundle-Version: 2.0.0.qualifier
+Bundle-Localization: plugin
+Bundle-Activator: org.openjdk.jmc.console.pde.Activator
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.pde.ui,
+ org.openjdk.jmc.pde,
+ org.eclipse.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.openjdk.jmc.console.pde

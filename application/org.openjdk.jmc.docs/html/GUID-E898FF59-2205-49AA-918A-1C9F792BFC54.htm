@@ -1,0 +1,105 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Starting the JDK Mission Control Client" />
+<meta name="abstract" content="The JMC client executable file is located in the&#160;bin&#160;directory of the Java SE Development Kit (JDK) installation path (JAVA_HOME)." />
+<meta name="description" content="The JMC client executable file is located in the&#160;bin&#160;directory of the Java SE Development Kit (JDK) installation path (JAVA_HOME)." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Starting the JDK Mission Control Client</title>
+
+<meta name="doctitle" content="Starting the JDK Mission Control Client&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54" name="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-E898FF59-2205-49AA-918A-1C9F792BFC54" class="sect1">Starting the JDK Mission Control Client</h1>
+<div><p>The JMC client executable file is located in the&#160;<code>bin</code>&#160;directory of the Java SE Development Kit (JDK) installation path (<code>JAVA_HOME</code>).</p>
+<div class="p">If the&#160;<code>JAVA_HOME/bin</code>&#160;directory is in the&#160;<code>PATH</code>&#160;environment variable, you can start the JMC client by entering&#160;<code>jmc</code>&#160;at the command-line prompt (shell). Otherwise, you have to specify the full path to the JMC executable:<ul style="list-style-type: disc;"><li><tt>JAVA_HOME\bin\jmc.exe</tt> (Windows)</li>
+<li><tt>JAVA_HOME/bin/jmc</tt>  (Linux, OS X)</li>
+</ul>
+</div>
+<div class="infoboxnote" id="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54__GUID-F9E7A833-D515-44CE-B58C-5640AC965EA6"><p class="notep1">Note:</p>On Windows, a shortcut to the JMC client executable is added to the&#160;<span class="bold">Java Development Kit</span>&#160;folder under&#160;<span class="bold">All Programs</span>&#160;in the&#160;<span class="bold">Start</span>&#160;menu.</div>
+<div class="infoboxnote" id="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54__GUID-FDFAE1BF-C979-42BB-AFF0-A1126CFA8EA2"><p class="notep1">Note:</p>On OS X, if you cannot find the JMC executable or locate JMC in Spotlight, you can start JMC from the command line using <tt>/Library/Java/JavaVirtualMachines/jdk<span class="italic">&lt;version&gt;</span>.jdk/Contents/Home/bin/jmc</tt>. Alternatively, use Finder to browse to <tt>/Library/Java/JavaVirtualMachines/jdk<span class="italic">&lt;version&gt;</span>.jdk/Contents/Home/lib/missioncontrol</tt> and double-click the JDK Mission Control app.</div>
+<div class="infoboxnote" id="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54__GUID-3D3C37AC-1B49-4A2C-8390-99A9CEEA465D"><p class="notep1">Note:</p>On OS X, when you launch the JMC executable, the Terminal window opens. When you close the JMC client, the Terminal is left behind with the text&#160;<code>[Process completed]</code>. To avoid this, open the Terminal&#160;<span class="bold">Preferences</span>, then open the&#160;<span class="bold">Settings</span>&#160;tab, select the scheme you use, then select the&#160;<span class="bold">Shell</span>&#160;tab, and change the&#160;<span class="bold">When the shell exits</span> option to&#160;<span class="bold">Close if the shell exited cleanly</span>.</div>
+<div class="section"><p class="subhead1">Passing JVM Options To the JMC Launcher</p><p>JMC is a Java application, and the JMC client executable is a launcher for this application. JMC startup is controlled by options specified in the&#160;<tt>jmc.ini</tt>&#160;file, which is located in the&#160;<tt>JAVA_HOME/lib/missioncontrol</tt>&#160;directory. Arguments to the&#160;<code>-vmargs</code>&#160;option in the&#160;<code>jmc.ini</code>&#160;file are options that are passed to the JVM running the JMC application. You can specify these options to control the way this JVM runs. If you do not want to modify the&#160;<code>jmc.ini</code>&#160;file, you can specify JVM options on the command line as arguments to the&#160;<code>-vmargs</code>&#160;option of the&#160;<code>jmc</code>&#160;command. </p>
+<p>To start the JMC client with your own set of JVM options (overriding those specified in the&#160;<code>jmc.ini</code>&#160;file), run the following command (separate multiple arguments with spaces):</p>
+<div class="p"><pre class="oac_no_warn" dir="ltr">jmc -vmarg&#160;<span class="italic">arguments</span></pre>
+</div>
+<div class="infoboxnote" id="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54__GUID-8FEBCD57-9A41-47BE-B808-82CE2218435B"><p class="notep1">Note:</p>If other options are specified for the&#160;<tt>jmc</tt>&#160;command, the&#160;<tt>-vmargs</tt>&#160;option must be specified last.</div>
+<p>To start the JMC client with additional JVM options (appending them to those specified in the&#160;<code>jmc.ini</code>&#160;file), run the following command (separate multiple arguments with spaces):</p>
+<div class="p"><pre class="oac_no_warn" dir="ltr">jmc --launcher.appendVmargs -vmarg&#160;<span class="italic">arguments</span></pre>
+</div>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Using a Workspace Directory</p><p>If you want to copy your settings for the JMC client to another computer or another user, or use different predefined settings for different applications, add the&#160;<code>-data</code>&#160;command-line option and define a&#160;<span class="italic">workspace directory</span>&#160;when you start the JMC client:</p>
+<div class="p"><pre class="oac_no_warn" dir="ltr">jmc -data&#160;<span class="italic">workspace-directory</span></pre>
+</div>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

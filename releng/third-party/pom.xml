@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openjdk.jmc</groupId>
+	<artifactId>external-dependencies</artifactId>
+	<packaging>pom</packaging>
+	<version>7.0.0-SNAPSHOT</version>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.reficio</groupId>
+				<artifactId>p2-maven-plugin</artifactId>
+				<version>1.2.0-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<configuration>
+							<additionalArgs>-nouses</additionalArgs>
+							<pedantic>true</pedantic>
+							<artifacts>
+								<!-- specify third party non-OSGi dependencies here -->
+								<!-- groupId:artifactId:version -->
+								<artifact>
+									<id>org.twitter4j:twitter4j-core:4.0.6</id>
+								</artifact>
+								<artifact>
+									<id>javax.mail:mailapi:1.4</id>
+									<override>true</override>
+									<instructions>
+										<Import-Package>*;resolution:=optional</Import-Package>
+										<Export-Package>*</Export-Package>
+									</instructions>
+								</artifact>
+								<artifact>
+									<id>javax.mail:imap:1.4</id>
+								</artifact>
+								<artifact>
+									<id>javax.mail:pop3:1.4</id>
+								</artifact>
+								<artifact>
+									<id>javax.mail:smtp:1.4</id>
+								</artifact>
+								<artifact>
+									<id>javax.mail:dsn:1.4</id>
+								</artifact>
+								<artifact>
+									<id>org.owasp.encoder:encoder:1.2.1</id>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.5.v20120716</version>
+				<configuration>
+					<scanIntervalSeconds>60</scanIntervalSeconds>
+					<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+					<webApp>
+						<contextPath>/site</contextPath>
+					</webApp>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>[1.8.0-40,9.0.0)</version>
+									<message>Building JMC requires Java 8 version JDK 1.8.0_40 or later</message>
+								</requireJavaVersion>
+							</rules>		
+						</configuration>
+					</execution>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.3.1</version>
+									<message>Building JMC requires at least Maven 3.3.1</message>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>OPS4j</id>
+			<url>http://repository.ops4j.org/maven2/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>reficio</id>
+			<url>http://repo.reficio.org/maven/</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

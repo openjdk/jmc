@@ -1,0 +1,119 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Using the TLAB Allocations Page" />
+<meta name="abstract" content="The TLAB Allocations page contains information about Thread Local Allocation Buffers (TLABs)." />
+<meta name="description" content="The TLAB Allocations page contains information about Thread Local Allocation Buffers (TLABs)." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-4F885E48-A548-4140-B985-74B1685BEDEA" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Using the TLAB Allocations Page</title>
+
+<meta name="doctitle" content="Using the TLAB Allocations Page&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-4F885E48-A548-4140-B985-74B1685BEDEA" name="GUID-4F885E48-A548-4140-B985-74B1685BEDEA"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-4F885E48-A548-4140-B985-74B1685BEDEA" class="sect1">Using the TLAB Allocations Page</h1>
+<div><p>The <span class="bold">TLAB Allocations</span> page contains information about Thread Local Allocation Buffers (TLABs).</p>
+<p>This page displays TLAB allocation data in both tables and graphs.</p>
+<div class="section"><p class="subhead1">Using the TLAB Allocations Page: Selections and Aspects</p><p>Use the drop-down menus at the top of the page to choose a selection and aspect if desired. Data from other pages can be saved to the selection drop-down menu by dragging an area of a chart (or selecting data from a table) and choosing <span class="bold">Store Selection</span> or <span class="bold">Store Selection and Set As Focused Selection</span> from the context menu.</p>
+<div class="p">The following controls provide additional behavior:<ul style="list-style-type: disc;"><li><p><span class="bold">Show concurrent</span>: Show all events concurrent to the selected aspect.</p>
+</li>
+<li><p><span class="bold">Intersecting</span>: Show all events that intersect the original events, or only those contained in the same timespan.</p>
+</li>
+<li><p><span class="bold">All threads</span>: Show events in all threads or only in threads related to the original events.</p>
+</li>
+<li><p><span class="bold">Time Range</span>: Zoom to time range on relevant places on the page, or clear the time range zoom.</p>
+</li>
+</ul>
+</div>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Using the TLAB Allocations Page: Tables and Graphs</p><p>Table columns are labeled as follows:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Thread</span>: The thread name.</p>
+</li>
+<li><p><span class="bold">Count</span>: The number of allocations in this TLAB.</p>
+</li>
+<li><p><span class="bold">Average TLAB Allocation</span>: An estimate of the average size of allocations inside TLABs.</p>
+</li>
+<li><p><span class="bold">Average Allocation Outside TLABs</span>: An estimate of the average size of allocations outside TLABs.</p>
+</li>
+<li><p><span class="bold">Est. TLAB Allocation</span>: The estimated allocation size in TLABs.</p>
+</li>
+<li><p><span class="bold">Total Allocation Outside TLABs</span>: The total size of allocations outside TLABs.</p>
+</li>
+</ul>
+<p>You can select any of the following to be displayed on the graph:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Est. TLAB Allocation</span>: The estimated allocation size in TLABs.</p>
+</li>
+<li><p><span class="bold">Total Allocation Outside TLABs</span>: The total size of allocations outside TLABs.</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

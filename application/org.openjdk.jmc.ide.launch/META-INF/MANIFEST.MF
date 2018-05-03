@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: IDE Launch
+Bundle-SymbolicName: org.openjdk.jmc.ide.launch;singleton:=true
+Bundle-Version: 0.0.4.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.debug.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.launching,
+ org.eclipse.swt,
+ org.eclipse.jdt.debug.ui,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui,
+ org.openjdk.jmc.flightrecorder.configuration,
+ org.openjdk.jmc.rjmx,
+ org.eclipse.jdt.core,
+ org.openjdk.jmc.ide.ui,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
+ org.eclipse.pde.ui,
+ org.eclipse.jdt.junit
+Bundle-Activator: org.openjdk.jmc.ide.launch.LaunchPlugin
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+Import-Package: org.openjdk.jmc.rjmx.services.jfr
+Automatic-Module-Name: org.openjdk.jmc.ide.launch

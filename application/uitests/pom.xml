@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openjdk.jmc</groupId>
+		<artifactId>missioncontrol.application</artifactId>
+		<version>7.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>missioncontrol.application.uitests</artifactId>
+	<packaging>pom</packaging>
+	<modules>
+		<module>org.openjdk.jmc.browser.uitest</module>
+		<module>org.openjdk.jmc.console.jconsole.uitest</module>
+		<module>org.openjdk.jmc.console.persistence.uitest</module>
+		<module>org.openjdk.jmc.console.uitest</module>
+		<module>org.openjdk.jmc.flightrecorder.uitest</module>
+		<module>org.openjdk.jmc.rcp.application.uitest</module>
+		<module>org.openjdk.jmc.test.jemmy</module>
+	</modules>
+	<properties>
+		<ui.test.vmargs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-modules=java.xml.bind,java.xml.ws.annotation --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED</ui.test.vmargs>
+		<ui.test.osvmargs/>
+		<ui.test.osappargs/>
+		<ui.test.run>false</ui.test.run>
+		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
+		<test.excludes.default>**/*$*</test.excludes.default>
+		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
+	</properties>
+	<profiles>
+		<profile>
+			<id>NoTestIncludesDefined</id>
+			<activation>
+				<property>
+					<name>!test.includes</name>
+				</property>
+			</activation>
+			<properties>
+				<test.includes>${test.includes.default}</test.includes>
+			</properties>
+		</profile>
+		<profile>
+			<id>NoTestExcludesDefined</id>
+			<activation>
+				<property>
+					<name>!test.excludes</name>
+				</property>
+			</activation>
+			<properties>
+				<test.excludes>${test.excludes.default}</test.excludes>
+			</properties>
+		</profile>
+		<profile>
+			<id>uitests</id>
+			<properties>
+				<ui.test.run>true</ui.test.run>
+				<ui.test.excludes>${test.excludes}</ui.test.excludes>
+			</properties>
+		</profile>
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<ui.test.osvmargs>--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</ui.test.osvmargs>
+				<ui.test.osappargs>-ws cocoa --launcher.appendVmargs</ui.test.osappargs>
+			</properties>
+		</profile>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>linux</family>
+					<name>Linux</name>
+				</os>
+			</activation>
+			<properties>
+				<ui.test.osvmargs>--add-exports=java.desktop/sun.awt.X11=ALL-UNNAMED</ui.test.osvmargs>
+				<ui.test.osappargs>--launcher.appendVmargs</ui.test.osappargs>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<ui.test.osvmargs/>
+				<ui.test.osappargs>--launcher.appendVmargs</ui.test.osappargs>
+			</properties>
+		</profile>
+	</profiles>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<product>org.openjdk.jmc.rcp.application.product</product>
+					<application>org.openjdk.jmc.rcp.application.app</application>
+					<argLine>${ui.test.vmargs} ${ui.test.osvmargs}</argLine>
+					<appArgLine>-nl en -consoleLog ${ui.test.osappargs}</appArgLine>
+					<useUIHarness>${ui.test.run}</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<testFailureIgnore>false</testFailureIgnore>
+					<failIfNoTests>false</failIfNoTests>
+					<includes>${test.includes}</includes>
+					<!--  To be used along with the maven toolchains plugin
+					<useJDK>SYSTEM</useJDK> -->
+				</configuration>
+			</plugin>
+			<!-- maven toolchains plugin needs a ~/.m2/toolchains.xml specifying the locations of the desired JDK toolchains -->
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<id>JavaSE-9</id>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin> -->
+		</plugins>
+	</build>
+</project>

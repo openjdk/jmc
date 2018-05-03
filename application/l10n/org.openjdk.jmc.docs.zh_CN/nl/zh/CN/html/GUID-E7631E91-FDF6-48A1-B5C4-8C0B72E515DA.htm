@@ -1,0 +1,84 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="&#20351;&#29992; JMX &#25511;&#21046;&#21488;" />
+<meta name="abstract" content="&#35201;&#21551;&#21160; JMX &#25511;&#21046;&#21488;&#65292;&#35831;&#22312; JVM &#27983;&#35272;&#22120;&#20013;&#21491;&#38190;&#21333;&#20987;&#35201;&#36830;&#25509;&#21040;&#30340; JVM&#65292;&#28982;&#21518;&#36873;&#25321;&#21551;&#21160; JMX &#25511;&#21046;&#21488;&#12290;" />
+<meta name="description" content="&#35201;&#21551;&#21160; JMX &#25511;&#21046;&#21488;&#65292;&#35831;&#22312; JVM &#27983;&#35272;&#22120;&#20013;&#21491;&#38190;&#21333;&#20987;&#35201;&#36830;&#25509;&#21040;&#30340; JVM&#65292;&#28982;&#21518;&#36873;&#25321;&#21551;&#21160; JMX &#25511;&#21046;&#21488;&#12290;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>&#20351;&#29992; JMX &#25511;&#21046;&#21488;</title>
+
+<meta name="doctitle" content="&#20351;&#29992; JMX &#25511;&#21046;&#21488;&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-41D47617-4E32-4793-9253-6C2125F21CFF.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-41D47617-4E32-4793-9253-6C2125F21CFF.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA" name="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA" class="sect1">&#20351;&#29992; JMX &#25511;&#21046;&#21488;</h1>
+<div><p>&#35201;&#21551;&#21160; JMX &#25511;&#21046;&#21488;&#65292;&#35831;&#22312; JVM &#27983;&#35272;&#22120;&#20013;&#21491;&#38190;&#21333;&#20987;&#35201;&#36830;&#25509;&#21040;&#30340; JVM&#65292;&#28982;&#21518;&#36873;&#25321;<span class="bold">&#21551;&#21160; JMX &#25511;&#21046;&#21488;</span>&#12290;</p>
+<p> &#40664;&#35748;&#24773;&#20917;&#19979;&#65292;JMX &#25511;&#21046;&#21488;&#22312;<span class="bold">&#27010;&#35272;</span>&#36873;&#39033;&#21345;&#19978;&#25171;&#24320;&#12290;&#24744;&#21487;&#20197;&#22312;&#8220;JMX &#25511;&#21046;&#21488;&#8221;&#36873;&#39033;&#21345;&#24213;&#37096;&#38468;&#36817;&#30340;&#21508;&#36873;&#39033;&#21345;&#20043;&#38388;&#20999;&#25442;&#12290;</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-41D47617-4E32-4793-9253-6C2125F21CFF.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

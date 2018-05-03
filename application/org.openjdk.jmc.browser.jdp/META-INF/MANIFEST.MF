@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JDP Browser Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.browser.jdp;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.ui,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.jdp
+Export-Package: org.openjdk.jmc.browser.jdp
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.browser.jdp.JDPPlugin
+Automatic-Module-Name: org.openjdk.jmc.browser.jdp

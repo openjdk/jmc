@@ -1,0 +1,90 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;" />
+<meta name="abstract" content="JVM &#30340;&#40664;&#35748;&#35760;&#24405;&#31867;&#20284;&#20110;&#39134;&#26426;&#19978;&#30340;&#40657;&#30418;&#12290;&#23427;&#22312;&#21551;&#21160; JVM &#26102;&#21551;&#21160;&#65292;&#24182;&#36830;&#32493;&#36816;&#34892;&#65292;&#35813;&#35760;&#24405;&#21487;&#29992;&#20110;&#20998;&#26512;&#23849;&#28291;&#12289;&#25925;&#38556;&#21644;&#20854;&#20182;&#20107;&#20214;&#12290;" />
+<meta name="description" content="JVM &#30340;&#40664;&#35748;&#35760;&#24405;&#31867;&#20284;&#20110;&#39134;&#26426;&#19978;&#30340;&#40657;&#30418;&#12290;&#23427;&#22312;&#21551;&#21160; JVM &#26102;&#21551;&#21160;&#65292;&#24182;&#36830;&#32493;&#36816;&#34892;&#65292;&#35813;&#35760;&#24405;&#21487;&#29992;&#20110;&#20998;&#26512;&#23849;&#28291;&#12289;&#25925;&#38556;&#21644;&#20854;&#20182;&#20107;&#20214;&#12290;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;</title>
+
+<meta name="doctitle" content="&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" name="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" class="sect1">&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;</h1>
+<div><p>JVM &#30340;&#40664;&#35748;&#35760;&#24405;&#31867;&#20284;&#20110;&#39134;&#26426;&#19978;&#30340;&#40657;&#30418;&#12290;&#23427;&#22312;&#21551;&#21160; JVM &#26102;&#21551;&#21160;&#65292;&#24182;&#36830;&#32493;&#36816;&#34892;&#65292;&#35813;&#35760;&#24405;&#21487;&#29992;&#20110;&#20998;&#26512;&#23849;&#28291;&#12289;&#25925;&#38556;&#21644;&#20854;&#20182;&#20107;&#20214;&#12290;</p>
+<p>&#35201;&#21551;&#29992;&#40664;&#35748;&#35760;&#24405;&#65292;&#35831;&#36890;&#36807;&#23558; <code>-XX:FlightRecorderOptions</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>defaultrecording=true</code> &#26469;&#21551;&#21160; Java &#24212;&#29992;&#31243;&#24207;&#12290;&#35831;&#19981;&#35201;&#24536;&#35760;&#21462;&#28040;&#38145;&#23450;&#21830;&#19994;&#21151;&#33021;&#21644;&#21551;&#29992; JFR&#12290;</p>
+<p>&#20363;&#22914;&#65292;&#35201;&#21551;&#29992; Java &#24212;&#29992;&#31243;&#24207; <code>MyApp</code> &#30340;&#40664;&#35748;&#35760;&#24405;&#65292;&#35831;&#20351;&#29992;&#20197;&#19979;&#21629;&#20196;&#65306;</p>
+<div class="p">
+         <pre class="oac_no_warn" dir="ltr">java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:FlightRecorderOptions=defaultrecording=true MyApp</pre>
+
+      </div>
+<p>&#35201;&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;&#65292;&#35831;&#22312; JVM &#27983;&#35272;&#22120;&#20013;&#30340;&#23545;&#24212;&#36830;&#25509;&#19979;&#21491;&#38190;&#21333;&#20987;<span class="bold">&#39134;&#34892;&#35760;&#24405;&#22120;</span>&#33410;&#28857;&#65292;&#28982;&#21518;&#36873;&#25321;<span class="bold">&#36716;&#20648;&#40664;&#35748;&#35760;&#24405;</span>&#12290;&#27492;&#22806;&#65292;&#36824;&#21487;&#20197;&#21491;&#38190;&#21333;&#20987;&#21517;&#20026; <span class="bold">HotSpot &#40664;&#35748;&#20540;</span>&#30340;&#35760;&#24405;&#65292;&#24182;&#36873;&#25321;<span class="bold">&#36716;&#20648;</span>&#12290;&#27492;&#36807;&#31243;&#20854;&#20313;&#37096;&#20998;&#19982;&#36716;&#20648;&#20219;&#20309;&#27491;&#22312;&#36816;&#34892;&#30340;&#35760;&#24405;&#30456;&#21516;&#12290;&#35831;&#21442;&#38405;&#65306;&#36716;&#20648;&#27491;&#22312;&#36816;&#34892;&#30340;&#39134;&#34892;&#35760;&#24405;&#12290;</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

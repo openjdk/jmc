@@ -1,0 +1,110 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="JDK Mission Control &#23458;&#25143;&#26426; GUI" />
+<meta name="abstract" content="&#39318;&#27425;&#21551;&#21160; JMC &#23458;&#25143;&#26426;&#26102;&#65292;&#40664;&#35748;&#24773;&#20917;&#19979;&#23558;&#25171;&#24320;&#22810;&#20010;&#35270;&#22270;&#65292;&#22914;&#19979;&#25152;&#31034;&#12290;" />
+<meta name="description" content="&#39318;&#27425;&#21551;&#21160; JMC &#23458;&#25143;&#26426;&#26102;&#65292;&#40664;&#35748;&#24773;&#20917;&#19979;&#23558;&#25171;&#24320;&#22810;&#20010;&#35270;&#22270;&#65292;&#22914;&#19979;&#25152;&#31034;&#12290;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>JDK Mission Control &#23458;&#25143;&#26426; GUI</title>
+
+<meta name="doctitle" content="JDK Mission Control &#23458;&#25143;&#26426; GUI&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-472929AC-C8EA-4857-A14C-603AF91D6957.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-472929AC-C8EA-4857-A14C-603AF91D6957.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E" name="GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-8626DCFD-B072-4F71-9F38-F5964C51F70E" class="sect1">JDK Mission Control &#23458;&#25143;&#26426; GUI</h1>
+<div><p>&#39318;&#27425;&#21551;&#21160; JMC &#23458;&#25143;&#26426;&#26102;&#65292;&#40664;&#35748;&#24773;&#20917;&#19979;&#23558;&#25171;&#24320;&#22810;&#20010;&#35270;&#22270;&#65292;&#22914;&#19979;&#25152;&#31034;&#12290;</p>
+<p>&#21487;&#20197;&#25171;&#24320;<span class="bold">&#31383;&#21475;</span>&#33756;&#21333;&#65292;&#20381;&#27425;&#36873;&#25321;<span class="bold">&#26174;&#31034;&#35270;&#22270;</span>&#21644;<span class="bold">&#20854;&#20182;</span>&#20197;&#25171;&#24320;&#21015;&#20986;&#25152;&#26377;&#21487;&#29992;&#35270;&#22270;&#30340;&#31383;&#21475;&#12290;&#160;&#160;&#160;&#160;&#160;&#160;&#36873;&#25321;&#25152;&#38656;&#35270;&#22270;&#65292;&#28982;&#21518;&#21333;&#20987;<span class="bold">&#30830;&#23450;</span>&#20197;&#25171;&#24320;&#23427;&#20204;&#12290;&#160;&#160;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#35270;&#22270;&#65306;</p>
+<ul style="list-style-type: disc;"><li>
+            <p><span class="bold">JVM &#27983;&#35272;&#22120;</span>&#65306;&#26174;&#31034;&#25152;&#26377;&#21487;&#29992;&#30340; JVM &#36830;&#25509;&#65288;&#40664;&#35748;&#24773;&#20917;&#19979;&#21487;&#35265;&#65289;&#12290;</p>
+
+         </li>
+<li>
+            <p><span class="bold">&#22823;&#32434;</span>&#65306;&#20197;&#26641;&#20013;&#39029;&#30340;&#24418;&#24335;&#32452;&#32455;&#21644;&#26174;&#31034;&#39134;&#34892;&#35760;&#24405;&#25968;&#25454;&#20197;&#20415;&#20110;&#23548;&#33322;&#65288;&#40664;&#35748;&#24773;&#20917;&#19979;&#21487;&#35265;&#65289;&#12290;</p>
+
+         </li>
+<li>
+            <p><span class="bold">&#36827;&#24230;&#26597;&#30475;</span>&#65306;&#26174;&#31034;&#27491;&#22312;&#36816;&#34892;&#30340;&#25805;&#20316;&#30340;&#36827;&#24230;&#65292;&#20363;&#22914;&#65292;&#39134;&#34892;&#35760;&#24405;&#12290;</p>
+
+         </li>
+<li>
+            <p><span class="bold">&#23646;&#24615;</span>&#65306;&#21015;&#20986;&#34920;&#20013;&#36873;&#23450;&#39033;&#30340;&#23646;&#24615;&#65292;&#21253;&#25324;&#34920;&#20013;&#26410;&#26174;&#31034;&#30340;&#38544;&#34255;&#23646;&#24615;&#12290;</p>
+
+         </li>
+<li>
+            <p><span class="bold">&#32467;&#26524;</span>&#65306;&#26174;&#31034;&#35268;&#21017;&#21450;&#20854;&#23545;&#24212;&#24471;&#20998;&#30340;&#21015;&#34920;&#12290; </p>
+
+         </li>
+<li>
+            <p><span class="bold">&#22534;&#26632;&#36319;&#36394;</span>&#65306;&#26174;&#31034;&#25152;&#35760;&#24405;&#20107;&#20214;&#30340;&#22534;&#26632;&#36319;&#36394;&#12290;</p>
+
+         </li>
+</ul>
+<p></p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-E898FF59-2205-49AA-918A-1C9F792BFC54.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-472929AC-C8EA-4857-A14C-603AF91D6957.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

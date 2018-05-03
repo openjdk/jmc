@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified"
+	version="1.0">
+
+	<xsd:element name="configuration" type="configurationType" />
+
+	<xsd:complexType name="configurationType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="producer" type="producerType" />
+		</xsd:sequence>
+		<xsd:attribute use="required" name="version" type="xsd:decimal" />
+		<xsd:attribute use="required" name="name" type="xsd:string" />
+		<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+		<xsd:attribute use="optional" name="provider" type="xsd:string" default="" />
+	</xsd:complexType>
+
+	<xsd:complexType name="producerType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" maxOccurs="1" name="control" type="controlType" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="event" type="eventType" />
+		</xsd:sequence>
+		<xsd:attribute use="required" name="uri" type="xsd:anyURI" />
+		<xsd:attribute use="optional" name="label" type="xsd:string" default="" />
+		<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+	</xsd:complexType>
+
+	<xsd:complexType name="eventType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="setting" type="settingType" />
+		</xsd:sequence>
+		<xsd:attribute use="required" name="path" type="xsd:string" />
+		<xsd:attribute use="optional" name="label" type="xsd:string" />
+		<xsd:attribute use="optional" name="description" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:simpleType name="controlIdentifier">
+		<xsd:restriction base="xsd:token" />
+	</xsd:simpleType>
+
+	<xsd:complexType name="settingType" mixed="true">
+		<xsd:attribute use="required" name="name" type="xsd:string" />
+		<xsd:attribute use="optional" name="control" type="controlIdentifier" />
+	</xsd:complexType>
+
+	<!-- The elements below are ignored by the JVM -->
+
+	<xsd:complexType name="controlType">
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:choice>
+				<xsd:element name="text" type="textType" />
+				<xsd:element name="selection" type="selectionType" />
+				<xsd:element name="flag" type="flagType" />
+				<xsd:element name="condition" type="conditionType" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Content type is an optional tag (identifier) that hints how a value should be interpreted. -->
+	<xsd:simpleType name="contentType">
+		<xsd:restriction base="xsd:token" />
+	</xsd:simpleType>
+
+	<!-- Flag represents a boolean input that can be true or false. -->
+	<xsd:complexType name="flagType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute use="required" name="label" type="xsd:string" />
+				<xsd:attribute use="required" name="name" type="controlIdentifier" />
+				<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<!-- Text represents a string based input which may have a contentType that hints how the text should be interpreted. 
+	For content that can be ordered (i.e numbers) it's possible to set a minimum and maximum value. How values are 
+	ordered are determined by the contentType. For instance, if the contenType would be "timeSpan" "1 s" would 
+	larger then "1 ns". -->
+	<xsd:complexType name="textType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute use="required" name="label" type="xsd:string" />
+				<xsd:attribute use="required" name="name" type="controlIdentifier" />
+				<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+				<xsd:attribute use="optional" name="contentType" type="contentType" default="text" />
+				<xsd:attribute use="optional" name="minimum" type="xsd:string" />
+				<xsd:attribute use="optional" name="maximum" type="xsd:string" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<!-- Selection represents an input from a set of values. Values are stored in the option elements and 
+	they each have unique identifier (selectionIdentfier). The default attribute should point to one of 
+	these values -->
+	<xsd:simpleType name="selectionIdentifier">
+		<xsd:restriction base="xsd:token" />
+	</xsd:simpleType>
+
+	<xsd:complexType name="selectionType">
+		<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+			<xsd:element name="option" type="optionType" />
+		</xsd:sequence>
+		<xsd:attribute use="required" name="label" type="xsd:string" />
+		<xsd:attribute use="required" name="name" type="controlIdentifier" />
+		<xsd:attribute use="required" name="default" type="selectionIdentifier" />
+		<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+	</xsd:complexType>
+
+	<xsd:complexType name="optionType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute use="required" name="name" type="selectionIdentifier" />
+				<xsd:attribute use="required" name="label" type="xsd:string" />
+				<xsd:attribute use="optional" name="description" type="xsd:string" default="" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<!--Condition represents an input that depends on other inputs. The child elements defines a 
+	boolean expression with test as leaf nodes. If the expression evaluates to true the input returns 
+	"true" and if it's false "false". It's possible to override this behavior by setting the attributes 
+	true and false to the values that should be returned. -->
+	<xsd:complexType name="conditionType">
+		<xsd:choice>
+			<xsd:element name="test" type="testType" />
+			<xsd:element name="and" type="andType" />
+			<xsd:element name="not" type="notType" />
+			<xsd:element name="or" type="orType" />
+		</xsd:choice>
+		<xsd:attribute use="required" name="name" type="xsd:string" />
+		<xsd:attribute default="true" name="true" type="xsd:string" />
+		<xsd:attribute default="false" name="false" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="orType">
+		<xsd:sequence minOccurs="2" maxOccurs="unbounded">
+			<xsd:choice>
+				<xsd:element name="test" type="testType" />
+				<xsd:element name="and" type="andType" />
+				<xsd:element name="not" type="notType" />
+				<xsd:element name="or" type="orType" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="andType">
+		<xsd:sequence minOccurs="2" maxOccurs="unbounded">
+			<xsd:choice>
+				<xsd:element name="test" type="testType" />
+				<xsd:element name="and" type="andType" />
+				<xsd:element name="not" type="notType" />
+				<xsd:element name="or" type="orType" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="notType">
+		<xsd:choice>
+			<xsd:element name="test" type="testType" />
+			<xsd:element name="and" type="andType" />
+			<xsd:element name="or" type="orType" />
+			<xsd:element name="not" type="notType" />
+		</xsd:choice>
+	</xsd:complexType>
+
+	<xsd:simpleType name="operatorType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="equal" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="testType">
+		<xsd:attribute use="required" name="name" type="controlIdentifier" />
+		<xsd:attribute use="required" name="operator" type="operatorType" />
+		<xsd:attribute use="required" name="value" type="xsd:string" />
+		<xsd:attribute use="optional" name="contentType" type="contentType" default="text" />
+	</xsd:complexType>
+</xsd:schema>

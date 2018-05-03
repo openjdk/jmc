@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JFR RJMX Service
+Bundle-SymbolicName: org.openjdk.jmc.rjmx.services.jfr;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.openjdk.jmc.flightrecorder.configuration,
+ org.openjdk.jmc.common,
+ org.openjdk.jmc.rjmx
+Import-Package: org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.rjmx.services,
+ org.openjdk.jmc.rjmx.services.internal,
+ org.openjdk.jmc.rjmx.subscription,
+ org.eclipse.osgi.util
+Export-Package: org.openjdk.jmc.rjmx.services.jfr,
+ org.openjdk.jmc.rjmx.services.jfr.internal;x-friends:="org.openjdk.jmc.rjmx.services.jfr.test"
+Automatic-Module-Name: org.openjdk.jmc.rjmx.services.jfr

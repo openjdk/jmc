@@ -1,0 +1,170 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Working with Stack Traces" />
+<meta name="abstract" content="The Stack Trace window contains the aggregated stack traces for the recorded events." />
+<meta name="description" content="The Stack Trace window contains the aggregated stack traces for the recorded events." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Working with Stack Traces</title>
+
+<meta name="doctitle" content="Working with Stack Traces&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-A27CE821-5AD5-438D-9A2F-D0B45B743EF0.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-A27CE821-5AD5-438D-9A2F-D0B45B743EF0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480" name="GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480" class="sect1">Working with Stack Traces</h1>
+<div><p>The <span class="bold">Stack Trace</span> window contains the aggregated stack traces for the recorded events.</p>
+<p>You can use this window to analyze the calls on the stack trace that cause a large number of events.</p>
+<p></p>
+<div class="section"><p class="subhead1">Working with Stack Traces: Choosing Options</p><div class="p"> The following buttons appear in a row at the top of the Stack Trace window:<ul style="list-style-type: disc;"><li><p><span class="bold">Choose Frame Group</span>: </p>
+</li>
+<li><p><span class="bold">Previous Frame Group</span>: </p>
+</li>
+<li><p><span class="bold">Next Frame Group</span>: </p>
+</li>
+<li><p><span class="bold">Group Traces from Last Method Frame</span>: </p>
+</li>
+<li><p><span class="bold">Group Traces from Thread Root</span>: </p>
+</li>
+<li><p><span class="bold">View Menu</span>: Displays various grouping, formatting, and layout options.</p>
+</li>
+<li><p><span class="bold">Minimize</span>: Minimizes this window.</p>
+</li>
+<li><p><span class="bold">Maximize</span>: Maximizes this window.</p>
+</li>
+</ul>
+</div>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Working with Stack Traces: Viewing Results</p><p>By default, the stack trace displays its results in an interactive tree view. You can explore parts of the stack trace by expanding or collapsing on rows that begin with a triangle icon. </p>
+<div class="p">The <span class="bold">View Menu</span> icon at the top of the page provides the following options:<ul style="list-style-type: disc;"><li><p><span class="bold">Group Stacktraces From</span></p>
+<ul style="list-style-type: disc;"><li><p>Last Frame: </p>
+</li>
+<li><p>Thread Root: </p>
+</li>
+</ul>
+</li>
+<li><div class="p"><span class="bold">Distinguish Frames By</span><ul style="list-style-type: disc;"><li><p>Optimization Type: </p>
+</li>
+</ul>
+<ul style="list-style-type: disc;"><li>Bytecode Index: </li>
+<li><p>Line Number: </p>
+</li>
+<li><p>Method: </p>
+</li>
+<li><p>Class: </p>
+</li>
+<li><p>Package: </p>
+</li>
+</ul>
+</div>
+</li>
+<li><div class="p"><span class="bold">Layout Options</span><ul style="list-style-type: disc;"><li><p>Show as Tree: </p>
+</li>
+<li><p>Reduce Tree Depth: </p>
+</li>
+</ul>
+</div>
+</li>
+<li><div class="p"><span class="bold">Method Formatting Options</span><ul style="list-style-type: disc;"><li><div class="p">Return Value<ul style="list-style-type: disc;"><li><p>Hidden</p>
+</li>
+<li><p>Class Name</p>
+</li>
+<li><p>Class and Package Name</p>
+</li>
+</ul>
+</div>
+</li>
+<li><div class="p">Class<ul style="list-style-type: disc;"><li><p>Hidden</p>
+</li>
+<li><p>Class Name</p>
+</li>
+<li><p>Class and Package Name</p>
+</li>
+</ul>
+</div>
+</li>
+<li><div class="p">Parameters<ul style="list-style-type: disc;"><li><p>Hidden</p>
+</li>
+<li><p>Class Name</p>
+</li>
+<li><p>Class and Package Name</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<p>For in-depth examples of working with stack traces, see the JMC 7.0 User Guide. </p>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-A27CE821-5AD5-438D-9A2F-D0B45B743EF0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

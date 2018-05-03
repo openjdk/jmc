@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.openjdk.jmc.rjmx.triggerActions">
+      <triggerAction
+            class="org.openjdk.jmc.alert.TriggerApplicationAlert"
+            description="%APPLICATION_ALERT_DESCRIPTION"
+            icon="icons/alert_obj.png"
+            id="org.openjdk.jmc.rjmx.services.triggers.actions.TriggerApplicationAlert"
+            name="%APPLICATION_ALERT_NAME"/>
+            
+      <!--<triggerAction
+            class="org.openjdk.jmc.alert.TriggerActionThreadStackDump"
+            description="%THREAD_STACK_DUMP_DESCRIPTION"
+            icon="icons/stckframe_running_obj.png"
+            id="org.openjdk.jmc.console.ui.notification.actions.TriggerActionThreadStackDump"
+            name="%THREAD_STACK_DUMP_NAME">
+         <boolean
+               description="%THREAD_STACK_DUMP_SHOW_ALERT_DESCRIPTION"
+               id="show_application_alert"
+               name="%THREAD_STACK_DUMP_SHOW_ALERT_LABEL"
+               value="false"/>
+         <boolean
+               description="%LOG_TO_FILE_DESCRIPTION"
+               id="log_to_file"
+               name="%LOG_TO_FILE_LABEL"
+               value="false"/>
+         <boolean
+               description="%THREAD_STACK_DUMP_APPEND_DESCRIPTION"
+               id="append"
+               name="%THREAD_STACK_DUMP_APPEND_NAME"
+               value="false"/>
+         <file
+               description="%LOG_FILE_NAME_DESCRIPTION"
+               id="log_filename"
+               name="%LOG_FILE_NAME_LABEL"
+               value="log.txt"/>
+      </triggerAction>-->
+   </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.triggerActionExceptionHandlers">
+      <exceptionHandler
+            class="org.openjdk.jmc.alert.ExceptionHandler">
+      </exceptionHandler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.openjdk.jmc.alert.ShowAlertsHandler"
+            id="org.openjdk.jmc.alert.showalerts"
+            name="%COMMAND_SHOW_ALERTS">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:window?after=additions">
+         <command
+               commandId="org.openjdk.jmc.alert.showalerts"
+               icon="icons/alert_obj.png"
+               label="%COMMAND_SHOW_ALERTS"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+</plugin>

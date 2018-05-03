@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: MBeanbrowser Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.console.ui.mbeanbrowser;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.console.ui,
+ org.openjdk.jmc.ui.common,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.rjmx.ui
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.console.ui.mbeanbrowser.MBeanBrowserPlugin
+Export-Package: org.openjdk.jmc.console.ui.mbeanbrowser.notifications;x-friends:="org.openjdk.jmc.test.jemmy",
+ org.openjdk.jmc.console.ui.mbeanbrowser.tab;x-friends:="org.openjdk.jmc.test.jemmy",
+ org.openjdk.jmc.console.ui.mbeanbrowser.tree;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser.uitest,org.openjdk.jmc.test.jemmy"
+Automatic-Module-Name: org.openjdk.jmc.console.ui.mbeanbrowser

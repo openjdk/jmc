@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<pages>
+	<page factory="org.openjdk.jmc.flightrecorder.ui.resultoverview"
+		id="org.openjdk.jmc.flightrecorder.ui.resultoverview">
+		<state>
+			<table sortColumn="score">
+				<column id="score" sortAscending="false" width="70" />
+				<column id="name" width="200" />
+				<column id="shortDesc" width="400" />
+				<column id="longDesc" width="165" />
+				<column id="id" />
+				<column id="page" />
+			</table>
+			<report>
+				<showOk value="false" />
+			</report>
+		</state>
+	</page>
+	<page factory="org.openjdk.jmc.flightrecorder.ui.javaapplication"
+		id="org.openjdk.jmc.flightrecorder.ui.javaapplication">
+		<state>
+			<sash weights="2,3" />
+			<table sortColumn="profilingCount">
+				<column id="itemhistogram.key" width="500" />
+				<column id="profilingCount" sortAscending="false" width="120" />
+				<column id="ioTime" sortAscending="false" width="120" />
+				<column id="ioCount" sortAscending="false" width="120"
+					hidden="true" />
+				<column id="blockedTime" sortAscending="false" width="120" />
+				<column id="blockedCount" sortAscending="false" width="120"
+					hidden="true" />
+				<column id="classloadingTime" sortAscending="false" width="120" />
+				<column id="classloadingCount" sortAscending="false" width="120"
+					hidden="true" />
+				<column id="allocation" sortAscending="false" width="120" />
+				<column id="exceptions" sortAscending="false" width="120" />
+                <column id="(thread).groupName" width="100" hidden="true" />
+                <column id="(thread).javaThreadId" width="70" hidden="true" />
+                <column id="threadStart" width="120" hidden="true" />
+                <column id="threadEnd" width="120" hidden="true" />
+                <column id="threadDuration" width="100" hidden="true" />
+			</table>
+			<chart selected="profilingCount">
+				<checkedAction id="applicationPause" />
+				<checkedAction id="machineTotal" />
+				<checkedAction id="jvmTotal" />
+				<checkedAction id="heapUsed" />
+				<checkedAction id="profilingCount" />
+				<checkedAction id="allocation" />
+				<checkedAction id="exceptions" />
+				<checkedAction id="threadActivityLanes"/>
+			</chart>
+           <threadLane name="EJB">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Database_Access"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Home_Remove"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Timer_Manager"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Home_Create"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Pool_Manager_Remove"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Business_Method_Post_Invoke_Cleanup"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Pool_Manager_Create"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Replicated_Session_Manager"/>
+                </filter>
+            </threadLane>
+            <threadLane name="EJB Business Method Invoke" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/EJB/EJB_Business_Method_Invoke"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JDBC" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/JDBC/JDBC_Statement_Execute"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Data_Source_Get_Connection"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Driver_Connect"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Statement_Creation"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JDBC Connection">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Reserve"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Create_Statement"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Commit"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Prepare"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Release"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/JDBC/JDBC_Connection_Rollback"/>
+                </filter>
+            </threadLane>
+           <threadLane name="JDBC Connection Close">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Close"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Request Run" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Request_Run"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Request_Run_Begin"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Web Application Load">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Web_Application_Load"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Execute">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Execute"/>
+                </filter>
+            </threadLane>
+           <threadLane name="Servlet Context Execute">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Context_Execute"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Invocation">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Invocation"/>
+                </filter>
+            </threadLane>
+             <threadLane name="Servlet Filter">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Check_Access"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Filter"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Request">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Request_Dispatch"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Response Write Headers/Stale Resource">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Response_Write_Headers"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Stale_Resource"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Response Send">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Response_Send"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JAX-RPC">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Client_Response"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Client_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Response"/>
+                </filter>
+            </threadLane>
+            <threadLane name="WebServices" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Dispatch"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXWS/Webservices_JAXWS_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXWS/Webservices_JAXWS_Endpoint"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-context/dms/ExecutionContext/span"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-anonymous-phase/dms/AnonymousPhase/span"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS execution context start">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-context/dms/ExecutionContext/start"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS HTTP">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-http/dms/HttpRequest/span"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-http/dms/HttpRequest/start"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JavaFX Pulse" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/technetwork/java/javafx/index.html/javafx/pulse"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JavaFX Input" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/technetwork/java/javafx/index.html/javafx/input"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Java Latencies" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorEnter"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.SocketRead"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.Compilation"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ExecutionSampling"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.SocketWrite"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ClassLoad"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ThreadPark"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.FileWrite"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ThreadSleep"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorWait"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.FileRead"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JVM Compiler">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="com.oracle.jdk.SweepCodeCache"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.CompilerPhase"/>
+                </filter>
+            </threadLane>
+          <threadLane name="Other Types" enabled="false" editable="false" isRestLane="true"/>
+  		</state>
+  		<page factory="org.openjdk.jmc.flightrecorder.ui.threads" id="org.openjdk.jmc.flightrecorder.ui.threads">
+  			<state>
+  			<sash weights="1,5" />
+  			<threadLane name="EJB">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Database_Access"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Home_Remove"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Timer_Manager"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Home_Create"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Pool_Manager_Remove"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Business_Method_Post_Invoke_Cleanup"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/EJB/EJB_Pool_Manager_Create"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/high/wls/EJB/EJB_Replicated_Session_Manager"/>
+                </filter>
+            </threadLane>
+            <threadLane name="EJB Business Method Invoke" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/EJB/EJB_Business_Method_Invoke"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JDBC" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/JDBC/JDBC_Statement_Execute"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Data_Source_Get_Connection"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Driver_Connect"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Statement_Creation"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JDBC Connection">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Reserve"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Create_Statement"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Commit"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Prepare"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Release"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/JDBC/JDBC_Connection_Rollback"/>
+                </filter>
+            </threadLane>
+           <threadLane name="JDBC Connection Close">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/JDBC/JDBC_Connection_Close"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Request Run" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Request_Run"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Request_Run_Begin"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Web Application Load">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Web_Application_Load"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Execute">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Execute"/>
+                </filter>
+            </threadLane>
+           <threadLane name="Servlet Context Execute">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Context_Execute"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Invocation">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Servlet/Servlet_Invocation"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Filter">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Check_Access"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Filter"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Request">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Request_Dispatch"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Response Write Headers/Stale Resource">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Response_Write_Headers"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Stale_Resource"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Servlet Response Send">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/medium/wls/Servlet/Servlet_Response_Send"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JAX-RPC">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Client_Response"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Client_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Response"/>
+                </filter>
+            </threadLane>
+            <threadLane name="WebServices" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXRPC/Webservices_JAXRPC_Dispatch"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXWS/Webservices_JAXWS_Request"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/wls/flightrecorder/low/wls/Webservices/JAXWS/Webservices_JAXWS_Endpoint"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-context/dms/ExecutionContext/span"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-anonymous-phase/dms/AnonymousPhase/span"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS execution context start">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-context/dms/ExecutionContext/start"/>
+                </filter>
+            </threadLane>
+            <threadLane name="DMS HTTP">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-http/dms/HttpRequest/span"/>
+                    <filter kind="TYPE" type="http://www.oracle.com/dms-http/dms/HttpRequest/start"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JavaFX Pulse" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/technetwork/java/javafx/index.html/javafx/pulse"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JavaFX Input" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="http://www.oracle.com/technetwork/java/javafx/index.html/javafx/input"/>
+                </filter>
+            </threadLane>
+            <threadLane name="Java Latencies" enabled="true">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorEnter"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.SocketRead"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.Compilation"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ExecutionSampling"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.SocketWrite"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ClassLoad"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ThreadPark"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.FileWrite"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.ThreadSleep"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorWait"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.FileRead"/>
+                </filter>
+            </threadLane>
+            <threadLane name="JVM Compiler">
+                <filter kind="OR">
+                    <filter kind="TYPE" type="com.oracle.jdk.SweepCodeCache"/>
+                    <filter kind="TYPE" type="com.oracle.jdk.CompilerPhase"/>
+                </filter>
+            </threadLane>
+          <threadLane name="Other Types" enabled="false" editable="false" isRestLane="true"/>
+  			</state>
+  		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.heap" id="org.openjdk.jmc.flightrecorder.ui.heap">
+			<state>
+				<chart>
+					<checkedAction id="heapUsed" />
+					<checkedAction id="gcPause" />
+					<checkedAction id="allocation" />
+				</chart>
+			</state>
+			<page factory="org.openjdk.jmc.flightrecorder.ui.memoryleak" id="org.openjdk.jmc.flightrecorder.ui.memoryleak">
+				<state>
+					<selectedLeakItemsFilter showFilter="false" showSearch="false" />
+					<leakItemsByClassFilter showFilter="false" showSearch="false" />
+					<mainSash weights="100,500"/>
+					<leakItemsSash weights="500,500"/>
+					<itemSash weights="500,500" horizontal="false"/>
+					<chartSash weights="500,500"/>
+					<histogram sortColumn="itemhistogram.count">
+						<column id="itemhistogram.key" hidden="false" width="200" />
+						<column id="itemhistogram.count" hidden="false" width="100" sortAscending="false" />
+						<column id="timestamp" hidden="true" width="100" />
+						<column id="thread" hidden="true" width="50" />
+						<column id="address" hidden="true" width="50" />
+						<column id="description" hidden="false" width="300" />
+						<column id="arraySize" hidden="false" width="50" />
+					</histogram>
+					<itemlist sortColumn="startTime">
+						<column id="class" hidden="false" width="100" />
+						<column id="startTime" hidden="false" width="120" />
+						<column id="sampledThread" hidden="false" width="100" />
+						<column id="arraySize" hidden="false" width="50" />
+						<column id="address" hidden="false" width="100" />
+						<column id="objectDescription" hidden="false" width="500" />
+					</itemlist>
+					<referenceTree sortColumn="count">
+						<column id="object" hidden="false" width="500" />
+						<column id="count" hidden="false" width="50" sortAscending="false"/>
+						<column id="description" hidden="false" width="300" />
+					</referenceTree>
+					<referenceTable classWidth="300" descWidth="500" arraySizeWidth="50" arrayIndexWidth="50"></referenceTable>
+				</state>
+			</page>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.lockinstances"
+			id="org.openjdk.jmc.flightrecorder.ui.lockinstances">
+			<state>
+				<byClassTable sortColumn="duration">
+					<column id="itemhistogram.key" hidden="false" width="512" />
+					<column id="duration" hidden="false" width="125"
+						sortAscending="false" />
+					<column id="maxDuration" hidden="true" width="125"/>
+					<column id="avgDuration" hidden="true" width="125"/>
+					<column id="stdDevDuration" hidden="true" width="125"/>
+					<column id="klass" width="114" />
+					<column id="eventThread" width="106" />
+					<column id="itemhistogram.count" width="150" />
+				</byClassTable>
+				<byAddressTable sortColumn="duration">
+					<column id="itemhistogram.key" hidden="false" width="512" />
+					<column id="duration" hidden="false" width="125"
+						sortAscending="false" />
+					<column id="maxDuration" hidden="true" width="125"/>
+					<column id="avgDuration" hidden="true" width="125"/>
+					<column id="stdDevDuration" hidden="true" width="125"/>
+					<column id="klass" width="114" />
+					<column id="eventThread" width="106" />
+					<column id="itemhistogram.count" width="150" />
+				</byAddressTable>
+				<byThreadTable sortColumn="duration">
+					<column id="itemhistogram.key" hidden="false" width="512" />
+					<column id="duration" hidden="false" width="125"
+						sortAscending="false" />
+					<column id="maxDuration" hidden="true" width="125"/>
+					<column id="avgDuration" hidden="true" width="125"/>
+					<column id="stdDevDuration" hidden="true" width="125"/>
+					<column id="klass" width="114" />
+					<column id="eventThread" width="106" />
+					<column id="itemhistogram.count" width="150" />
+				</byThreadTable>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.fileio" id="org.openjdk.jmc.flightrecorder.ui.fileio">
+			<state>
+				<table sortColumn="totalTime">
+					<column id="itemhistogram.key" width="200" />
+					<column id="totalTime" sortAscending="false" width="150" />
+					<column id="maxTime" sortAscending="false" hidden="true" width="150" />
+					<column id="avgTime" sortAscending="false" hidden="true" width="150" />
+					<column id="stddevTime" sortAscending="false" hidden="true" width="150" />
+					<column id="itemhistogram.count" width="160" />
+					<column id="readCount" width="100" />
+					<column id="writeCount" width="100" />
+					<column id="readSize" width="100" />
+					<column id="writeSize" width="100" />
+				</table>
+				<eventList sortColumn="startTime">
+					<column id="startTime" sortAscending="true" width="180" />
+					<column id="path" width="500" />
+					<column id="duration" sortAscending="false" width="120" />
+					<column hidden="true" id="(endTime)" width="120" />
+					<column id="bytesRead" sortAscending="false" width="120" />
+					<column id="bytesWritten" sortAscending="false" width="120" />
+					<column id="eventThread" width="120" />
+					<column id="endOfFile" width="80" />
+				</eventList>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.socketio" id="org.openjdk.jmc.flightrecorder.ui.socketio">
+			<state>
+				<socketTable sortColumn="totalTime">
+					<column id="itemhistogram.key" width="200" />
+					<column id="totalTime" sortAscending="false" width="150" />
+					<column id="maxTime" sortAscending="false" hidden="true" width="150" />
+					<column id="avgTime" sortAscending="false" hidden="true" width="150" />
+					<column id="stddevTime" sortAscending="false" hidden="true" width="150" />
+					<column id="itemhistogram.count" width="160" />
+					<column id="readCount" width="100" />
+					<column id="writeCount" width="100" />
+					<column id="readSize" width="100" />
+					<column id="writeSize" width="100" />
+				</socketTable>
+				<secondarySocketTable sortColumn="totalTime">
+					<column id="itemhistogram.key" width="200" />
+					<column id="totalTime" sortAscending="false" width="150" />
+					<column id="maxTime" sortAscending="false" hidden="true" width="150" />
+					<column id="avgTime" sortAscending="false" hidden="true" width="150" />
+					<column id="stddevTime" sortAscending="false" hidden="true" width="150" />
+					<column id="itemhistogram.count" width="160" />
+					<column id="readCount" width="100" />
+					<column id="writeCount" width="100" />
+					<column id="readSize" width="100" />
+					<column id="writeSize" width="100" />
+				</secondarySocketTable>
+				<eventList sortColumn="startTime">
+					<column id="startTime" sortAscending="true" width="180" />
+					<column id="address" width="300" />
+					<column hidden="true" id="host" width="450" />
+					<column id="port" width="100" />
+					<column id="duration" sortAscending="false" width="150" />
+					<column hidden="true" id="(endTime)" width="120" />
+					<column id="bytesRead" sortAscending="false" width="100" />
+					<column id="bytesWritten" sortAscending="false" width="100" />
+					<column id="eventThread" width="120" />
+					<column id="endOfStream" width="80" />
+					<column id="timeout" width="50" />
+				</eventList>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.methodprofiling" id="org.openjdk.jmc.flightrecorder.ui.methodprofiling">
+	       <state>
+            <sash weights="500,500"/>
+            <packageTable sortColumn="itemhistogram.count">
+                <column hidden="false" id="itemhistogram.key" width="500"/>
+                <column hidden="false" id="itemhistogram.count" sortAscending="false" width="120"/>
+            </packageTable>
+            <classTable sortColumn="itemhistogram.count">
+                <column hidden="false" id="itemhistogram.key" width="500"/>
+                <column hidden="false" id="itemhistogram.count" sortAscending="false" width="120"/>
+            </classTable>
+	        </state>
+		</page>
+		
+		<page factory="org.openjdk.jmc.flightrecorder.ui.exceptions" id="org.openjdk.jmc.flightrecorder.ui.exceptions">
+			<state histogramType="HOST">
+				<exceptionsTable sortColumn="itemhistogram.count">
+					<column id="itemhistogram.key" hidden="false" width="500" />
+					<column id="itemhistogram.count" hidden="false" width="200" sortAscending="false" />
+				</exceptionsTable>
+				<secondaryExceptionsTable sortColumn="itemhistogram.count">
+					<column id="itemhistogram.key" hidden="false" width="500" />
+					<column id="itemhistogram.count" hidden="false" width="200" sortAscending="false" />
+				</secondaryExceptionsTable>
+				<eventList sortColumn="startTime">
+					<column id="startTime" sortAscending="true" width="180" />
+					<column id="thrownClass" width="300" />
+					<column id="message" width="500" />
+					<column id="eventThread" width="200" />
+					<column id="(endTime)" hidden="true" sortAscending="true" width="180" />
+					<column id="(eventType)" hidden="true" width="150" />
+				</eventList>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.threaddumps" id="org.openjdk.jmc.flightrecorder.ui.threaddumps">
+		    <state>
+		        <sash weights="2,3" horizontal="true"/>
+		    </state>
+		</page>
+	</page>
+	<page factory="org.openjdk.jmc.flightrecorder.ui.jvminformation"
+		id="org.openjdk.jmc.flightrecorder.ui.jvminternals">
+		<state>
+			<jvmFlags sortColumn="name:text">
+				<column id="name:text" width="200" />
+				<column id="value" width="110" />
+				<column id="origin:text" width="110" />
+			</jvmFlags>
+			<jvmFlagsFilter showFilter="false" showSearch="true" />
+		</state>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.garbagecollections"
+			id="org.openjdk.jmc.flightrecorder.ui.garbagecollections">
+			<state>
+				<gcs sortColumn="gcId">
+					<column id="gcId" width="90" />
+					<column id="cause" width="150" />
+					<column id="name" width="150" />
+					<column id="longestPause" sortAscending="false" width="120" />
+					<column id="sumOfPauses" sortAscending="false" width="120" />
+					<column id="ReferenceStatisticsType-FINAL" sortAscending="false"
+						width="130" />
+					<column id="ReferenceStatisticsType-WEAK" sortAscending="false"
+						width="130" />
+					<column id="ReferenceStatisticsType-SOFT" sortAscending="false"
+						width="130" />
+					<column id="ReferenceStatisticsType-PHANTOM" sortAscending="false"
+						width="130" />
+				</gcs>
+				<chart>
+					<checkedAction id="heapUsed" />
+					<checkedAction id="metaspace:used" />
+					<checkedAction id="longestPause" />
+					<checkedAction id="sumOfPauses" />
+				</chart>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.gcconfiguration"
+			id="org.openjdk.jmc.flightrecorder.ui.gcconfiguration">
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.compilations" id="org.openjdk.jmc.flightrecorder.ui.compilations">
+			<state>
+				<compilationsTable sortColumn="duration">
+					<column hidden="false" id="compileID" width="100" />
+					<column hidden="false" id="method" width="500" />
+					<column hidden="false" id="duration" width="100" sortAscending="false" />
+					<column hidden="false" id="codeSize" />
+					<column hidden="false" id="inlinedBytes" />
+				</compilationsTable>
+				<fCompilationsTable>
+					<column hidden="false" id="compileId" width="100" />
+					<column hidden="false" id="failureMessage" width="300" />
+					<column hidden="false" id="(endTime)" width="200" />
+					<column hidden="false" id="eventThread" width="175" />
+				</fCompilationsTable>
+			</state>
+			<page factory="org.openjdk.jmc.flightrecorder.ui.codecache" id="org.openjdk.jmc.flightrecorder.ui.codecache">
+				<state>
+					<sash weights="300,200" />
+					<codeSweepTable sortColumn="startTime">
+						<column hidden="false" id="startTime" sortAscending="true"
+							width="125" />
+						<column hidden="false" id="sweepIndex" width="80" />
+						<column hidden="false" id="sweepFractionIndex" width="80" />
+						<column hidden="false" id="duration" width="100" />
+						<column hidden="false" id="flushedCount" width="100" />
+						<column hidden="false" id="markedCount" width="100" />
+						<column hidden="false" id="sweptCount" width="100" />
+						<column hidden="false" id="zombifiedCount" width="100" />
+						<column hidden="false" id="eventThread" width="175" />
+					</codeSweepTable>
+					<chart>
+						<series id="entryCount" />
+						<series id="methodCount" />
+						<series id="adaptorCount" />
+						<series id="totalMethodsSwept" />
+						<series id="totalMethodsFlushed" />
+						<series id="totalMethodsReclaimed" />
+						<series id="totalMethodsZombified" />
+						<series id="codeCacheSweeps" />
+					</chart>
+				</state>
+			</page>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.classloading" id="org.openjdk.jmc.flightrecorder.ui.classloading">
+           <state>
+                <sash weights="250,200,200"/>
+                <histogram sortColumn="loadedCount">
+                    <column id="itemhistogram.key" width="250"/>
+                    <column id="loadedCount" sortAscending="false" width="120"/>
+                    <column id="unloadedCount" sortAscending="false" width="120"/>
+                </histogram>
+                <classLoadingTable sortColumn="duration">
+                    <column hidden="false" id="loadedClass" width="400"/>
+                    <column hidden="false" id="duration" sortAscending="false" width="150"/>
+                    <column hidden="false" id="definingClassLoader" width="250"/>
+                    <column hidden="false" id="initiatingClassLoader" width="250"/>
+                    <column hidden="false" id="eventThread" width="150"/>
+                    <column hidden="true" id="startTime" width="120"/>
+                    <column hidden="false" id="(endTime)" width="120"/>
+                </classLoadingTable>
+                <classUnloadingTable sortColumn="(endTime)">
+                    <column hidden="false" id="unloadedClass" width="400"/>
+                    <column hidden="false" id="definingClassLoader" width="250"/>
+                    <column hidden="true" id="eventThread" width="150"/>
+                    <column hidden="false" id="(endTime)" width="150"/>
+                </classUnloadingTable>
+                <chart>
+                    <checkedAction id="loadedClassCount"/>
+                    <checkedAction id="unloadedClassCount"/>
+                    <checkedAction id="classLoad"/>
+                    <checkedAction id="classUnload"/>
+                </chart>
+            </state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.vmoperations" id="org.openjdk.jmc.flightrecorder.ui.vmoperations">
+			<state>
+				<vmOperationsTable sortColumn="maxDuration">
+					<column id="itemhistogram.key" width="230" />
+					<column id="maxDuration" hidden="false" width="130" sortAscending="false"/>
+					<column id="totalDuration" hidden="false" width="100"/>
+					<column id="stddev" hidden="false" width="175" />
+					<column id="itemhistogram.count" hidden="false" width="100"/>
+				</vmOperationsTable>
+				<eventList sortColumn="startTime">
+					<column id="startTime" sortAscending="true" width="180" />
+					<column id="operation" hidden="false" width="250" />
+					<column id="blocking" hidden="false" width="100" />
+					<column id="safepoint" hidden="false" width="100" />
+					<column id="duration" hidden="false" sortAscending="false" width="120" />
+					<column id="(endTime)" hidden="true" width="120" />
+					<column id="eventThread" hidden="true" width="136" />
+					<column id="caller" hidden="false" width="200" />
+				</eventList>
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.tlab" id="org.openjdk.jmc.flightrecorder.ui.tlaballocations">
+			<state>
+				<sash weights="2,1" />
+				<table sortColumn="totalOutsideSize">
+					<column id="itemhistogram.key" width="500" />
+					<column id="itemhistogram.count" sortAscending="false" width="120" />
+					<column id="insideCount" sortAscending="false" width="120"
+						hidden="true" />
+					<column id="outsideCount" sortAscending="false" width="120"
+						hidden="true" />
+					<column id="averageInsideSize" sortAscending="false" width="120" />
+					<column id="averageOutsideSize" sortAscending="false" width="120" />
+					<column id="totalInsideSize" sortAscending="false" width="120" />
+					<column id="totalOutsideSize" sortAscending="false" width="120" />
+				</table>
+				<chart>
+					<checkedAction id="insideSize" />
+					<checkedAction id="outsideSize" />
+				</chart>
+			</state>
+		</page>
+	</page>
+	<page factory="org.openjdk.jmc.flightrecorder.ui.system" id="org.openjdk.jmc.flightrecorder.ui.environment">
+		<page factory="org.openjdk.jmc.flightrecorder.ui.processes" id="org.openjdk.jmc.flightrecorder.ui.processes">
+			<state>
+				<processesTable sortColumn="commandLine:text">
+					<column id="pid:text" hidden="false" width="150" />
+					<column id="commandLine:text" hidden="false" width="400" />
+					<column id="firstSample" hidden="false" width="150" />
+					<column id="lastSample" hidden="false" width="150" />
+				</processesTable>
+				<processesFilter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.environmentvariables"
+			id="org.openjdk.jmc.flightrecorder.ui.environmentvariables">
+			<state>
+				<table>
+					<column id="key:text" width="200">
+					</column>
+					<column id="value:text" width="600">
+					</column>
+					<filterColumn id="key:text">
+					</filterColumn>
+				</table>
+				<filter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.systemproperties"
+			id="org.openjdk.jmc.flightrecorder.ui.systemproperties">
+			<state>
+				<table>
+					<column id="key:text" width="230" />
+					<column id="value:text" width="550" />
+				</table>
+				<filter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.recording" id="org.openjdk.jmc.flightrecorder.ui.recording">
+			<state>
+				<sash weights="27,20,70" />
+				<eventSettingsSash weights="1,1" />
+				<concurrentRecordings>
+					<column id="name:text" width="270" />
+					<column id="id:number" width="90" />
+					<column id="recordingStart:timestamp" width="150" />
+					<column id="recordingDuration:timespan" width="150" />
+					<column id="maxSize:memory" width="100" hidden="true"/>
+					<column id="maxAge:timespan" width="100" hidden="true"/>
+					<column id="destination:text" width="200" hidden="true"/>
+				</concurrentRecordings>
+				<eventSettings sortColumn="name:text">
+					<column id="settingFor:labeledIdentifier" width="280" />
+					<column id="name:text" width="200" />
+					<column id="value:text" width="140" />
+					<column id="(endTime):timestamp" hidden="true" width="140" />
+				</eventSettings>
+				<eventSettingsFilter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+	</page>
+	<page factory="org.openjdk.jmc.flightrecorder.ui.eventbrowser" id="org.openjdk.jmc.flightrecorder.ui.eventbrowser">
+		<state>
+           <treeSash horizontal="true" weights="3,7"/>
+ 		</state>
+	</page>
+</pages>

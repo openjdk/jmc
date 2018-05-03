@@ -1,0 +1,53 @@
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+/* Shared style applied to all pages */
+/* trick to get desired scroll bar behavior on all browsers */ 
+html {
+	overflow:auto;
+	border:0px;
+	height:100%;
+}
+	
+body {	
+	color:#000000;
+	padding: 0;
+	margin: 0;
+} 
+
+span.title {
+	padding: 0;
+	margin: 0;
+}
+
+img {
+	border: 0;
+	vertical-align: middle;
+	padding: 0;
+	margin: 0;
+}
+
+hr {
+	color: #FF0000;
+	background-color: #FF0000;
+	height: 3px;
+	border: none;
+	width:100%;
+	padding: 0;
+	margin: 0;
+}
+
+a {
+	text-decoration:none;
+	color:#000000;
+}
+
+a.normal {
+	font: 50% Arial, Verdana, Helvetica, sans-serif;	
+}
+
+a.large {
+	font: 100% Arial, Verdana, Helvetica, sans-serif;	
+}
+	

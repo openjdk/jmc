@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDP Client
+Bundle-SymbolicName: org.openjdk.jmc.jdp;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.openjdk.jmc.jdp.client,
+ org.openjdk.jmc.jdp.common,
+ org.openjdk.jmc.jdp.jmx
+Automatic-Module-Name: org.openjdk.jmc.jdp

@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: Support for Eclipse JDT
+Bundle-SymbolicName: org.openjdk.jmc.ide.jdt;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.ui.common,
+ org.openjdk.jmc.ui,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.ui.forms
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.ide.jdt
+Automatic-Module-Name: org.openjdk.jmc.ide.jdt

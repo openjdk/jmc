@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Used for both PropertyContentBuilderTest and JfcAndServerSettingsCombinationTest
+-->
+
+<configuration version="2.0" label="Custom without labels" description="Low overhead configuration safe for continuous use in production environments, typically less than 1 % overhead." provider="Oracle">
+
+  <category label="SMX">
+
+    <event name="org.openjdk.jmc.smx.Transaction2" label="SMX Transaction" description="An Second Smurfberry Exchange transaction.">
+      <setting name="stackTrace" description="Enable stack trace" contentType="jdk.jfr.Flag">true</setting>
+      <setting name="enabled"  contentType="jdk.jfr.Flag">true</setting>
+      <setting name="timeSpanFilterWithDifferentKeyButSameLabel2"  contentType="jdk.jfr.Timespan">10 ms</setting>
+      <setting name="textFilterWithSameKeyButDifferentLabel">apa</setting>
+      <setting name="filterWithDifferentContentTypeButSameKeyAndLabel" description="MyCustomFlag">apa</setting>
+      <setting name="threshold" contentType="jdk.jfr.Timespan">0 ns</setting>
+    </event>
+
+    <event name="org.openjdk.jmc.smx.Transaction" label="SMX Transaction" description="An Smurfberry Exchange transaction.">
+      <setting name="threshold" contentType="jdk.jfr.Timespan">0 ns</setting>
+      <setting name="textFilterWithSameKeyButDifferentLabel">apa</setting>
+      <setting name="timeSpanFilterWithDifferentKeyButSameLabel" contentType="jdk.jfr.Timespan">10 ms</setting>
+      <setting name="filterWithDifferentContentTypeButSameKeyAndLabel" description="MyCustomFlag" contentType="jdk.jfr.Flag">true</setting>
+      <setting name="stackTrace" description="Enable stack trace" contentType="jdk.jfr.Flag">true</setting>
+      <setting name="enabled" contentType="jdk.jfr.Flag">true</setting>
+    </event>
+
+  </category>
+    <event name="com.oracle.jdk.ThreadAllocationStatistics">
+      <setting name="enabled">true</setting>
+      <setting name="period">everyChunk</setting>
+    </event>
+
+</configuration>

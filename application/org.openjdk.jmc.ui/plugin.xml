@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="filetypeopener" name="File Type Opener" schema="schema/filetypeopener.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.openjdk.jmc.ui.preferences.MissionControlPage"
+            id="org.openjdk.jmc.ui.preferences.MissionControlPage"
+            name="%PREFERENCE_NAME_MISSION_CONTROL"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.openjdk.jmc.ui.preferences.Initializer">
+      </initializer>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.openjdk.jmc.ui.MCPathFactory"
+            id="mc.path.editorinput"/>
+   </extension>
+
+      <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.openjdk.jmc.ui.idesupport.StandardPerspective"
+            icon="icons/mission_control.gif"
+            id="org.openjdk.jmc.ui.idesupport.StandardPerspective"
+            name="%MISSION_CONTROL_PERSPECTIVE">
+         <description>
+            %MISSION_CONTROL_PERSPECTIVE_DESCRIPTION
+         </description>
+      </perspective>
+   </extension>
+      <extension
+            point="org.eclipse.ui.perspectiveExtensions">
+         <perspectiveExtension
+               targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+            <viewShortcut
+                  id="org.eclipse.ui.views.PropertySheet">
+            </viewShortcut>
+            <viewShortcut
+                  id="org.eclipse.ui.views.ProgressView">
+            </viewShortcut>
+         </perspectiveExtension>
+      </extension>
+      <extension
+            point="org.eclipse.ui.exportWizards">
+         <category
+               id="org.openjdk.jmc.ui.wizards.export"
+               name="%MISSION_CONTROL_WIZARD_CATEGORY">
+         </category>
+      </extension>
+      <extension
+            point="org.eclipse.ui.importWizards">
+         <category
+               id="org.openjdk.jmc.ui.wizards.import"
+               name="%MISSION_CONTROL_WIZARD_CATEGORY">
+         </category>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.adapters">
+         <factory
+               adaptableType="org.openjdk.jmc.ui.wizards.IWizardFactory"
+               class="org.openjdk.jmc.ui.wizards.WizardAdapterFactory">
+            <adapter
+                  type="org.eclipse.jface.wizard.IWizard">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.openjdk.jmc.ui.misc.IGraphical"
+               class="org.openjdk.jmc.ui.misc.ImageDescriptorAdapterFactory">
+            <adapter type="org.eclipse.jface.resource.ImageDescriptor">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.openjdk.jmc.ui.common.resource.IImageResource"
+               class="org.openjdk.jmc.ui.misc.ImageDescriptorAdapterFactory">
+            <adapter
+                  type="org.eclipse.jface.resource.ImageDescriptor">
+            </adapter>
+         </factory>
+      </extension>
+      
+     
+       <extension
+       point="org.openjdk.jmc.commands.command">
+    <command
+          category="Testing"
+          class="org.openjdk.jmc.ui.formpage.commands.internal.PrintUI"
+          description="Prettyprint user interfacce"
+          identifier="printui"
+          name="Prints the user interface"
+          userInterface="true">
+    </command>
+    <command
+          category="Scripting"
+          class="org.openjdk.jmc.ui.formpage.commands.internal.Click"
+          commandHelper="org.openjdk.jmc.ui.formpage.commands.internal.ClickHelper"
+          description="Clicks on a widget, e.g. a button or tab."
+          identifier="click"
+          name="Click"
+          userInterface="true">
+       <string
+             description=" the identifier for the widget"
+             exampleValue="my.button"
+             identifier="identifier"
+             name="Identifier"
+             optional="false">
+       </string>
+    </command>
+    <command
+          category="Scripting"
+          class="org.openjdk.jmc.ui.formpage.commands.internal.Select"
+          commandHelper="org.openjdk.jmc.ui.formpage.commands.internal.SelectHelper"
+          description="Selects an item, e.g in a ComboBox"
+          identifier="select"
+          name="Select"
+          userInterface="true">
+       <string
+             description="The identifier for the widget to select from"
+             exampleValue="my.combo"
+             identifier="identifier"
+             name="Identifier"
+             optional="true">
+       </string>
+       <string
+             description="The value to select in the widget"
+             exampleValue="&quot;My Item&quot;"
+             identifier="value"
+             name="Value"
+             optional="false">
+       </string>
+    </command>
+    <command
+          category="org.openjdk.jmc.flightrecorder.ui.command5"
+          class="org.openjdk.jmc.ui.formpage.commands.internal.Type"
+          commandHelper="org.openjdk.jmc.ui.formpage.commands.internal.TypeHelper"
+          description="Types a user defined message into a text widget,"
+          identifier="type"
+          name="Type"
+          userInterface="true">
+       <string
+             description="The identifier for the widget to type text into."
+             exampleValue="my.text"
+             identifier="identifier"
+             name="Identifier"
+             optional="true">
+       </string>
+       <string
+             description="The text to type."
+             exampleValue="&quot;My first text&quot;orld&quot;"
+             identifier="text"
+             name="Text"
+             optional="false">
+       </string>
+    </command>
+    <command
+          category="Scripting"
+          class="org.openjdk.jmc.ui.formpage.commands.internal.TabItemCommand"
+          description="Selects a tab in an editor."
+          identifier="selecttab"
+          name="Select Tab"
+          userInterface="true">
+       <string
+             description="the identifier for the tab group"
+             exampleValue="com.example.myTab"
+             identifier="identifier"
+             name="Identifier"
+             optional="false">
+       </string>
+    </command>
+ </extension>
+       <extension
+             point="org.eclipse.ui.views">
+          <category
+                id="org.openjdk.jmc.ui.main"
+                name="%MISSION_CONTROL_VIEW_CATEGORY">
+          </category>
+       </extension>
+ </plugin>

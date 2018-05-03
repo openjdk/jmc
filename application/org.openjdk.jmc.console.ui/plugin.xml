@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension-point id="consolepage" name="Console Page" schema="schema/consolepage.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor"
+            default="true"
+            icon="icons/console.gif"
+            id="org.openjdk.jmc.console.ui.editor"
+            name="%EDITOR_NAME_MANAGEMENT_CONSOLE">
+      </editor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.openjdk.jmc.ui.preferences.MissionControlPage"
+            class="org.openjdk.jmc.console.ui.preferences.GeneralPage"
+            id="org.openjdk.jmc.console.ui.preferences.GeneralPage"
+            name="%PREFERENCE_PAGE_MANAGEMENT_CONSOLE"/>
+      <page
+            category="org.openjdk.jmc.console.ui.preferences.GeneralPage"
+            class="org.openjdk.jmc.console.ui.preferences.PersistencePage"
+            id="org.openjdk.jmc.console.ui.preferences.PersistencePage"
+            name="%PREFERENCE_PAGE_PERSISTENCE"/>
+      <page
+            category="org.openjdk.jmc.console.ui.preferences.GeneralPage"
+            class="org.openjdk.jmc.console.ui.preferences.CommunicationPage"
+            id="org.openjdk.jmc.console.ui.preferences.CommunicationPage"
+            name="%PREFERENCE_PAGE_COMMUNICATION"/>
+      <page
+            category="org.openjdk.jmc.console.ui.preferences.GeneralPage"
+            class="org.openjdk.jmc.console.ui.preferences.MBeanBrowserPage"
+            id="org.openjdk.jmc.console.ui.preferences.MBeanBrowserPage"
+            name="%PREFERENCE_PAGE_MBEANBROWSER"/>
+   </extension>
+   <extension point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml"
+            plugin="org.openjdk.jmc.console.ui"/>
+   </extension>
+   
+
+
+   <extension
+         point="org.openjdk.jmc.commands.command">
+      <command
+            category="Scripting"
+            class="org.openjdk.jmc.console.ui.misc.StartConsole"
+            description="Starts the JMX Console."
+            identifier="startconsole"
+            name="Start Console"
+            userInterface="true">
+         <string
+               description="the host to connect to."
+               exampleValue="localhost"
+               identifier="host"
+               name="Host"
+               optional="true">
+         </string>
+         <number
+               description="the port to connect to."
+               exampleValue="7091"
+               identifier="port"
+               name="Port"
+               optional="true">
+         </number>
+         <string
+               description="the username to use for authentication."
+               exampleValue="myuser"
+               identifier="username"
+               name="Username"
+               optional="true">
+         </string>
+         <string
+               description="the password to use for authentication."
+               exampleValue="mypassword"
+               identifier="password"
+               name="Password"
+               optional="true">
+         </string>
+      </command>
+   </extension>
+   
+    <extension
+       point="org.openjdk.jmc.rjmx.actionProvider">
+         <action
+                factory="org.openjdk.jmc.console.ui.editor.internal.ConsoleEditorOpener"
+                icon="icons/console.gif"
+                label="%ACTION_START_CONSOLE_LABEL">
+         </action>
+       <provider
+             icon="icons/mbean-16.png"
+             id="org.openjdk.jmc.console"
+             description="%MBEAN_SERVER_DESCRIPTION"
+             label="%MBEAN_SERVER_LABEL"
+             priority="100"
+             doubleClickActionIndex="0">
+          <action
+                factory="org.openjdk.jmc.console.ui.editor.internal.ConsoleEditorOpener"
+                icon="icons/console.gif"
+                label="%ACTION_START_CONSOLE_LABEL">
+          </action>
+       </provider>
+ </extension>
+   <extension
+         point="org.openjdk.jmc.console.ui.consolepage">
+      <consolePage
+            helpContextID="org.openjdk.jmc.console.ui.OverviewTab"
+            hostEditorId="org.openjdk.jmc.console.ui.editor"
+            placement="/#1.0"
+            icon="icons/overview_obj.gif"
+            id="org.openjdk.jmc.console.ui.tabs.overview.OverviewTab"
+            name="%TAB_OVERVIEW_NAME">
+            <class class="org.openjdk.jmc.console.ui.tabs.overview.OverviewTab">
+            	<dial>
+					<attribute gradientBeginColor="#149bff" gradientValueType="memory" gradientBeginValue="1 GiB" gradientEndColor="#b400b4" gradientEndValue="3 GiB">attribute://java.lang:type=Memory/HeapMemoryUsage/used</attribute>
+					<attribute gradientBeginColor="#ff00" gradientValueType="percentage" gradientBeginValue="0 %" gradientEndColor="#ff0000" gradientEndValue="100 %">attribute://java.lang:type=OperatingSystem/ProcessCpuLoad</attribute>
+					<attribute gradientBeginColor="#ff00" gradientValueType="percentage" gradientBeginValue="75 %" gradientEndColor="#ff0000" gradientEndValue="100 %">attribute://com.sun.management:type=GarbageCollectionAggregator/HeapLiveSet</attribute>
+				</dial>
+				<chart chartTitle="%PROCESSOR_CHART_NAME" kindOfQuantity="percentage" rangeFromType="percentage" rangeFromValue="0 %" rangeToType="percentage" rangeToValue="100 %" yRangeSetting="CUSTOM">
+					<attribute>attribute://java.lang:type=OperatingSystem/SystemCpuLoad</attribute>
+					<attribute>attribute://java.lang:type=OperatingSystem/ProcessCpuLoad</attribute>
+				</chart>
+				<chart chartTitle="%MEMORY_CHART_NAME">
+					<attribute>attribute://java.lang:type=Memory/HeapMemoryUsage/used</attribute>
+					<attribute enabled="false">attribute://java.lang:type=Memory/HeapMemoryUsage/committed</attribute>
+					<attribute enabled="false">attribute://java.lang:type=Memory/HeapMemoryUsage/max</attribute>
+					<attribute enabled="false">attribute://java.lang:type=OperatingSystem/UsedPhysicalMemorySize</attribute>
+					<attribute enabled="false">attribute://java.lang:type=OperatingSystem/TotalPhysicalMemorySize</attribute>
+				</chart>
+            </class>
+      </consolePage>
+      <consolePage
+            helpContextID="org.openjdk.jmc.console.ui.SystemTab"
+            hostEditorId="org.openjdk.jmc.console.ui.editor"
+            placement="/#4.0"
+            icon="icons/debugt_obj.gif"
+            id="org.openjdk.jmc.console.ui.tabs.system.SystemTab"
+            name="%TAB_SYSTEM_NAME">
+            <class class="org.openjdk.jmc.console.ui.tabs.system.SystemTab">
+				<ServerInformation>
+					<column id="category" width="200"/>
+					<column id="value" width="400"/>
+				</ServerInformation>
+				<JVMStatistics>
+					<column id="name" width="160"/>
+					<column id="value" width="100"/>
+					<column hidden="true" id="type" width="100"/>
+					<column hidden="true" id="update" width="80"/>
+					<column id="description" width="200"/>
+					<column id="objectName" width="140"/>
+					<attribute>attribute://java.lang:type=ClassLoading/LoadedClassCount</attribute>
+					<attribute>attribute://java.lang:type=Runtime/Uptime</attribute>
+				</JVMStatistics>
+				<SystemProperties>
+					<column id="key" width="200"/>
+					<column id="value" width="400"/>
+				</SystemProperties>
+			</class>
+      </consolePage>
+      <consolePage
+            helpContextID="org.openjdk.jmc.console.ui.MemoryTab"
+            hostEditorId="org.openjdk.jmc.console.ui.editor"
+            placement="/#5.0"
+            icon="icons/memory-16.png"
+            id="org.openjdk.jmc.console.ui.tabs.memory.MemoryTab"
+            name="%TAB_MEMORY_NAME">
+            <class class="org.openjdk.jmc.console.ui.tabs.memory.MemoryTab">
+	            <heapHistogram sortColumn="size">
+					<column id="className" width="400"/>
+					<column id="count" width="150"/>
+					<column id="size" width="150" sortAscending="false" />
+					<column id="delta" width="150"/>
+				</heapHistogram>
+				<gcTable>
+					<gc>
+						<column id="name" width="250"/>
+						<column id="value" width="150"/>
+						<column id="description" width="450"/>
+						<column hidden="true" id="type"/>
+						<column hidden="true" id="update"/>
+					</gc>
+				</gcTable>
+				<memoryPool>
+					<column id="name" width="250"/>
+					<column id="type" width="100"/>
+					<column id="currentUsed" width="100"/>
+					<column id="currentMax" width="100"/>
+					<column id="currentUsage" width="100"/>
+					<column id="peakUsed" width="100"/>
+					<column id="peakMax" width="100"/>
+				</memoryPool>
+            </class>
+            </consolePage>
+      <consolePage
+            helpContextID="org.openjdk.jmc.console.ui.ThreadTab"
+            hostEditorId="org.openjdk.jmc.console.ui.editor"
+            placement="/#6.0"
+            icon="icons/thread_obj.gif"
+            id="org.openjdk.jmc.console.ui.tabs.threads.ThreadTab"
+            name="%TAB_THREADS_NAME">
+            <class class="org.openjdk.jmc.console.ui.tabs.threads.ThreadTab">
+	            <threadsChart chartTitle="%LIVE_THREAD_GRAPH_NAME">
+					<attribute>attribute://java.lang:type=Threading/PeakThreadCount</attribute>
+					<attribute>attribute://java.lang:type=Threading/ThreadCount</attribute>
+					<attribute>attribute://java.lang:type=Threading/DaemonThreadCount</attribute>
+				</threadsChart>
+				<threadsTable>
+					<column id="threadName" width="300"/>
+					<column id="threadState" width="120"/>
+					<column id="blockedCount" width="120"/>
+					<column id="cpuUsage" width="120"/>
+					<column id="isDeadlocked" width="120"/>
+					<column id="allocatedMemory" width="120"/>
+					<column hidden="true" id="blockedTime" width="100"/>
+					<column hidden="true" id="lockName" width="100"/>
+					<column hidden="true" id="lockOwnerId" width="100"/>
+					<column hidden="true" id="lockOwnerName" width="100"/>
+					<column hidden="true" id="threadId" width="100"/>
+					<column hidden="true" id="waitCount" width="100"/>
+					<column hidden="true" id="waitTime" width="100"/>
+					<column hidden="true" id="isInNative" width="100"/>
+					<column hidden="true" id="isSuspended" width="100"/>
+				</threadsTable>
+            </class>
+      </consolePage>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.openjdk.jmc.console.ui.preferences.Initializer">
+      </initializer>
+   </extension>
+   <extension point="org.eclipse.ui.handlers">
+    <handler
+    	class="org.openjdk.jmc.console.ui.misc.DisabledHandler"
+    	commandId="org.eclipse.ui.window.newEditor">
+       <activeWhen> 
+	     <with variable="activePartId">
+	      <equals 
+	          value="org.openjdk.jmc.console.ui.editor" />
+	     </with>
+       </activeWhen>
+     </handler>
+   </extension>
+</plugin>

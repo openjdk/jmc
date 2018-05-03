@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Name: Common Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.common;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Export-Package: org.openjdk.jmc.common,
+ org.openjdk.jmc.common.collection,
+ org.openjdk.jmc.common.io,
+ org.openjdk.jmc.common.item,
+ org.openjdk.jmc.common.unit,
+ org.openjdk.jmc.common.util,
+ org.openjdk.jmc.common.version
+Automatic-Module-Name: org.openjdk.jmc.common

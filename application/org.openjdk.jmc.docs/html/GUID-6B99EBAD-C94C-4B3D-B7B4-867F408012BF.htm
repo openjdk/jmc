@@ -1,0 +1,133 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Using the Threads Tab" />
+<meta name="abstract" content="The Threads tab allows you to monitor thread activity. This tab contains a graph that plots live thread usage by the application over time, a table with all live threads used by the application, and stack traces for selected threads." />
+<meta name="description" content="The Threads tab allows you to monitor thread activity. This tab contains a graph that plots live thread usage by the application over time, a table with all live threads used by the application, and stack traces for selected threads." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Using the Threads Tab</title>
+
+<meta name="doctitle" content="Using the Threads Tab&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF" name="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF" class="sect1">Using the Threads Tab</h1>
+<div><p>The <span class="bold">Threads</span> tab allows you to monitor thread activity. This tab contains a graph that plots live thread usage by the application over time, a table with all live threads used by the application, and stack traces for selected threads.</p>
+<p><span class="bold">Live Thread Graph</span></p>
+<p>The <span class="bold">Live Thread Graph</span> show the number of threads started by the Java application over time. By default, the following attributes are displayed in the graph:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Daemon Live Thread Count</span>: The number of daemon live threads.</p>
+</li>
+<li><p><span class="bold">Peak Live Thread Count</span>: The number of peak live threads.</p>
+</li>
+<li><p><span class="bold">Total Live Thread Count</span>: The total number of live threads.</p>
+</li>
+</ul>
+<p>For information about adding and removing attributes for a graph, see Working with Attributes. For information about using graphs, see <a href="GUID-59CA7784-185A-4EED-B523-F640881040FC.htm" title="The JMX Console uses graphs to show how attributes change their values in time.">Working with Graphs</a>.</p>
+<p><span class="bold">Live Threads</span></p>
+<p>The<span class="bold"> Live Threads</span> panel contains a table with information about live threads started by the Java application. By default, the table contains the following columns:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Thread Name</span>: The name of the thread.</p>
+</li>
+<li><p><span class="bold">Thread State</span>: The state of the thread. A thread can be in one of the following states: <code>NEW</code>, <code>RUNNABLE</code>, <code>BLOCKED</code>, <code>WAITING</code>, <code>TIMED_WAITING</code>, or <code>TERMINATED</code>.</p>
+</li>
+<li><p><span class="bold">Blocked Count</span>: The number of times that the thread was in the <code>BLOCKED</code> state.</p>
+</li>
+<li><p><span class="bold">Total CPU Usage</span>: The percentage of the total CPU resources used by the thread. This value is not fetched by default. To enable it, select <span class="bold">CPU Profiling</span> above the table.</p>
+</li>
+<li><p><span class="bold">Deadlocked</span>: Whether the thread is deadlocked. This value is not fetched by default. To enable it, select <span class="bold">Deadlock Detection</span> above the table.</p>
+</li>
+<li><p><span class="bold">Allocated Bytes</span>: The number of bytes allocated to the thread. This value is not fetched by default. To enable it, select <span class="bold">Allocation</span> above the table.</p>
+</li>
+</ul>
+<p>Monitoring the last three values in real time consumes a lot of system resources. This is why they are disabled by default. Use the corresponding check boxes above the table, to enable monitoring of these values.</p>
+<p>To filter the thread in the table, select the filter column (usually, the thread name) and specify the filter string in the text field above the table.</p>
+<p>To configure the appearance of the table, right-click a <span class="bold">Thread Name</span> in the <span class="bold">Live Threads</span> panel, choose <span class="bold">Visible Columns</span>, and select the columns that you want to show or hide. In addition to the default columns, you can add the following:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Blocked Time</span>: The accumulated time (in milliseconds) that the thread was in the <code>BLOCKED</code> state.</p>
+</li>
+<li><p><span class="bold">Lock Name</span>: The locked object that this thread is trying to access, or the object that called wait() when this thread was the current thread.</p>
+</li>
+<li><p><span class="bold">Lock Owner ID</span>: The identifier of the thread that locked the object this thread is trying to access.</p>
+</li>
+<li><p><span class="bold">Lock Owner Name</span>: The name of the thread that locked the object this thread is trying to access.</p>
+</li>
+<li><p><span class="bold">Native</span>: Whether the thread is currently executing native code using the Java Native Interface (JNI).</p>
+</li>
+<li><p><span class="bold">Suspended</span>: Whether the thread is suspended.</p>
+</li>
+<li><p><span class="bold">Thread ID</span>: The identifier of the thread.</p>
+</li>
+<li><p><span class="bold">Waited Count</span>: The number of times that the thread was in the <code>WAITING</code> or <code>TIMED_WAITING</code> state.</p>
+</li>
+<li><p><span class="bold">Waited Time</span>: The accumulated time (in milliseconds) that the thread was in the <code>WAITING</code> or <code>TIMED_WAITING</code> state.</p>
+</li>
+</ul>
+<p><span class="bold">Stack Traces for Selected Threads</span></p>
+<p>When you select a thread in the <span class="bold">Live Threads</span> table, its full stack trace is displayed in the <span class="bold">Stack traces for selected threads</span> panel below. The stack trace contains the call path for all methods up to the one that is currently executed. It is useful, for example, when you need to identify the method that led to a deadlock or unexpected halt in code execution.</p>
+<p>You can select several threads in the <span class="bold">Live Threads</span> table using the Control key to display multiple stack traces.</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

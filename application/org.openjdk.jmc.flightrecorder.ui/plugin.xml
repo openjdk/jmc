@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="datapage" name="Flight Recorder Data Page" schema="schema/datapage.exsd"/>
+
+ <extension point="org.eclipse.ui.views">
+     <view
+          allowMultiple="false"
+          category="org.openjdk.jmc.ui.main"
+          class="org.openjdk.jmc.flightrecorder.ui.views.stacktrace.StacktraceView"
+          icon="icons/stckframe_obj.gif"
+          id="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
+          name="%STACK_TRACE"
+          restorable="true">
+    </view>
+    <view
+        allowMultiple="false"
+        category="org.openjdk.jmc.ui.main"
+        class="org.openjdk.jmc.flightrecorder.ui.ResultPageBookView"
+        icon="icons/jfr.png"
+        id="org.openjdk.jmc.flightrecorder.ui.ResultView"
+        name="%RESULTS"
+        restorable="true">
+    </view>
+ </extension>
+
+ <extension
+       point="org.eclipse.ui.editors">
+      <editor
+            class="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
+            extensions="jfr"
+            icon="icons/jfr.png"
+            id="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
+            name="Flight Recording">
+      </editor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+         <view
+               closeable="false"
+               id="org.eclipse.ui.views.ContentOutline"
+               minimized="false"
+               moveable="true"
+               relationship="stack"
+               relative="org.openjdk.jmc.browser.views.JVMBrowserView"
+               showTitle="false"
+               standalone="false"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.eclipse.ui.views.ContentOutline">
+         </viewShortcut>
+         <view
+               closeable="true"
+               id="org.eclipse.ui.views.PropertySheet"
+               minimized="false"
+               moveable="true"
+               ratio="0.65"
+               relationship="bottom"
+               relative="org.eclipse.ui.views.ContentOutline"
+               showTitle="true"
+               standalone="false"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.eclipse.ui.views.PropertySheet">
+         </viewShortcut>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+         <view
+               closeable="false"
+               id="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
+               minimized="false"
+               moveable="true"
+               ratio="0.75"
+               relationship="bottom"
+               relative="org.eclipse.ui.editorss"
+               showTitle="false"
+               standalone="false"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.openjdk.jmc.flightrecorder.ui.StacktraceView">
+         </viewShortcut>
+      </perspectiveExtension>
+      
+      <perspectiveExtension
+            targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+         <view
+               closeable="false"
+               id="org.openjdk.jmc.flightrecorder.ui.ResultView"
+               minimized="true"
+               moveable="true"
+               ratio="1"
+               relationship="stack"
+               relative="org.eclipse.ui.views.PropertySheet"
+               showTitle="false"
+               standalone="false"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.openjdk.jmc.flightrecorder.ui.ResultView">
+         </viewShortcut>
+      </perspectiveExtension>
+   </extension>
+   
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          category="org.openjdk.jmc.ui.preferences.MissionControlPage"
+          class="org.openjdk.jmc.flightrecorder.ui.preferences.GeneralPage"
+          id="org.openjdk.jmc.flightrecorder.ui.preferences.GeneralPage"
+          name="%FLIGHT_RECORDER">
+    </page>
+    <page
+          category="org.openjdk.jmc.flightrecorder.ui.preferences.GeneralPage"
+          class="org.openjdk.jmc.flightrecorder.ui.preferences.RulesPage"
+          id="org.openjdk.jmc.flightrecorder.ui.preferences.RulesPage"
+          name="%FLR_RULES">
+    </page>
+ </extension>
+
+ <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="org.openjdk.jmc.ui.wizards.export"
+            class="org.openjdk.jmc.flightrecorder.ui.PagesExportWizard"
+            icon="icons/log.gif"
+            id="org.openjdk.jmc.flightrecorder.ui.pages"
+            name="%FLR_PAGES">
+		<description>
+           %EXPORT_FLR_PAGES_DESCRIPTION
+        </description>
+      </wizard>
+  </extension>
+  <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.openjdk.jmc.ui.wizards.import"
+            class="org.openjdk.jmc.flightrecorder.ui.PagesImportWizard"
+            icon="icons/log.gif"
+            id="org.openjdk.jmc.flightrecorder.ui.pages"
+            name="%FLR_PAGES">
+    	<description>
+           %IMPORT_FLR_PAGES_DESCRIPTION
+        </description>
+      </wizard>
+  </extension>
+   
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.openjdk.jmc.flightrecorder.ui.preferences.Initializer">
+    </initializer>
+ </extension>
+ 
+  <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.openjdk.jmc.flightrecorder.ui.FlightRecordingEditor.tabs">
+         <menu
+               icon="icons/chart_pie_16x16.png"
+               id="mc.flr.memory"
+               label="Memory">
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.help.contexts">
+      <contexts file="org.openjdk.jmc.flightrecorder.ui_contexts.xml" />
+   </extension>
+   <extension
+         point="org.openjdk.jmc.flightrecorder.ui.datapage">
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.overview.ResultOverview$ResultOverviewPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.resultoverview">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.JavaApplicationPage$JavaApplicationPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.javaapplication">
+      </factory>
+      <factory
+      		class="org.openjdk.jmc.flightrecorder.ui.pages.ThreadsPage$ThreadsPageFactory"
+      		id="org.openjdk.jmc.flightrecorder.ui.threads">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.HeapPage$HeapPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.heap">
+      </factory>
+            <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.MemoryLeakPage$MemoryLeakPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.memoryleak">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.LockInstancesPage$LockInstancesPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.lockinstances">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.FileIOPage$FileIOPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.fileio">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.SocketIOPage$SocketIOPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.socketio">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.MethodProfilingPage$MethodProfilingPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.methodprofiling">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.ExceptionsPage$ExceptionsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.exceptions">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.ThreadDumpsPage$ThreadDumpsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.threaddumps">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.JVMInformationPage$JVMInformationPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.jvminformation">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.GarbageCollectionsPage$GarbageCollectionPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.garbagecollections">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.GCConfigurationPage$GCConfigurationPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.gcconfiguration">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.CompilationsPage$CompilationsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.compilations">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.CodeCachePage$CodeCachePageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.codecache">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.ClassLoadingPage$ClassLoadingPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.classloading">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.TlabPage$TlabPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.tlab">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.SystemPage$SystemPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.system">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.ProcessesPage$ProcessesPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.processes">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.SystemPropertiesPage$SystemPropertiesPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.systemproperties">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.EnvironmentVariablesPage$EnvironmentVariablesPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.environmentvariables">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.RecordingPage$RecordingPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.recording">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.EventBrowserPage$Factory"
+            id="org.openjdk.jmc.flightrecorder.ui.eventbrowser">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage$Factory"
+            id="org.openjdk.jmc.flightrecorder.ui.itemhandler">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.VMOperationPage$VMOperationsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.vmoperations">
+      </factory>  
+    </extension>
+   <extension point="org.openjdk.jmc.flightrecorder.ui.datapage">
+         <pages weight="100" file="defaultPages.xml" /> 
+   </extension>
+</plugin>

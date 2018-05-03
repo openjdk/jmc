@@ -1,0 +1,454 @@
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html lang="en">
+<head>
+<base target="_blank">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Automated Analysis Result Overview</title>
+<style>
+* {
+	margin: 0;
+}
+
+html, body {
+	height: 100%;
+	font-size: 1em;
+}
+
+body {
+	background-color: white
+}
+
+section {
+	font-family: Helvetica;
+	font-size: 0.75em;
+	float: left;
+	width: 95%;
+	margin-right: 1em;
+}
+
+@media (min-width : 800px) {
+	section {
+		width: 48%;
+	}
+}
+
+@media (min-width : 1200px) {
+	section {
+		width: 31%;
+	}
+}
+
+.column {
+	margin-left: 0.8em;
+}
+
+.column_title {
+	cursor: pointer;
+	font-size: 2em;
+	width: 100%;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+}
+
+.column_title:hover {
+	background: #dadada;
+}
+
+.page_heading:hover {
+	background: #dadada;
+}
+
+.column_title_icon {
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	width: 0.7em;
+	float: center;
+}
+
+.page_heading {
+	cursor: pointer;
+	font-size: 1.25em;
+	margin-top: 0.3em;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	float: center-left;
+}
+
+.page_heading_icon {
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	width: 0.7em;
+	float: center-left;
+}
+
+.rule {
+	padding-top: 0.2em;
+}
+
+.rule_heading {
+	display: flex;
+	align-items: center;
+	cursor: default;
+	padding: 0.3em;
+	width: 100%;
+	overflow: hidden;
+	color: #403E3E;
+	font-weight: 600;
+	background-color: #EDE8E8;
+}
+
+.rule_name {
+	flex-grow: 1;
+	float: left;
+	padding-left: 0.2em;
+}
+
+.rule_score {
+	border: 0.1em solid darkgrey;
+	float: left;
+	color: #F0F0F0;
+	text-align: center;
+	width: 5em;
+	min-width: 5em;
+	text-shadow: -0.1em 0 grey, 0 0.1em grey, 0.1em 0 grey, 0 -0.1em grey;
+}
+
+.progress_score {
+	float: left;
+	min-width: 5em;
+	width: 5em;
+}
+
+.rule_score.warning {
+	background-color: #F0788C;
+}
+
+.rule_score.info {
+	background-color: #FFC609;
+}
+
+.rule_score.ok {
+	background-color: #45BF55;
+}
+
+.rule_score.na {
+	background-color: gray;
+}
+
+.rule_score.error {
+    background-color: #FF0000;
+}
+
+.rule_bar {
+	float: left;
+}
+
+.rule_bar.warning {
+	background-color: #D40D12;
+}
+
+.rule_bar.info {
+	background-color: #FF9004;
+}
+
+.rule_bar.ok {
+	background-color: #167F39;
+}
+
+.rule_bar.na {
+	background-color: gray;
+}
+
+.rule_bar.error {
+    background-color: #FF0F0F;
+}
+
+.rule_score_value {
+	position: absolute;
+	width: 5em;
+	min-width: 5em;
+	text-align: center;
+	float: left;
+}
+
+.rule_text {
+	color: #3a3a3a;
+	clear: left;
+    word-wrap: break-word;
+}
+.shortDescription {
+   margin-bottom: 10px;
+   display: none;
+}
+
+.rule_hide_button {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	float: right;
+	color: #7F7D7D;
+	onclick: toggleVisibility()
+}
+
+.hidden {
+	display: none;
+}
+
+.ok, .na {
+	display: none;
+}
+
+.ignore {
+	display: none;
+}
+
+.visible {
+	display: block;
+}
+
+.testing {
+	background-color: red;
+}
+
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -1.25em;
+}
+
+.footer, .push {
+	clear: both;
+	height: 1.25em;
+}
+
+.okbox {
+	text-align: right;
+	clear: both;
+	height: 1.25em;
+}
+
+.allOk {
+	font-family: sans-serif;
+	font-size: 2em;
+}
+
+.showOkText {
+	font-family: sans-serif;
+	font-size: 85%;
+}
+</style>
+<script type="text/javascript">
+	// If you add an element of class hide_button on your page, it can hide/show
+	// other elements. If you want to control a div of id "heap_live_set_trend_text"
+	// you should add "hide_" to the id of your controller.
+
+	// E.g. the button of id "hide_heap_live_set_trend_text" controls the element of id "heap_live_set_trend_text"
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+		overview.initializeRuleOverview();
+	});
+	
+	var showOk = false;
+	
+	var overview = {
+		initializeRuleOverview : function() {
+			document.body.onclick = function(e) {
+				e = window.event ? event.srcElement : e.target;
+				if (e.className && e.className.indexOf("rule_") != -1
+						&& e.className.indexOf("text") == -1) {
+					id_to_toggle = e.id.slice(0, e.id.indexOf("_")) + "_text";
+					overview.toggleVisibility(id_to_toggle, document
+							.getElementById(id_to_toggle + "_hide"));
+				}
+			}
+		},
+
+		link : function(name) {
+			try {
+				linker(name);
+			} catch (e) {
+			}
+		},
+		
+		allOk : function(isOk) {
+			document.getElementById("allgreen").style.display = isOk ? "block" : "none";
+			document.getElementById("notAllOk").style.display = isOk ? "none" : "block";
+		},
+		
+		allIgnored : function(isIgnored) {
+			document.getElementById("allignored").style.display = isIgnored ? "block" : "none";
+		},
+
+		showOk : function(ok) {
+			var newDisplay = ok ? "block" : "none";
+			var css = document.all ? 'rules' : 'cssRules';
+			var rule = document.styleSheets[0][css];
+			for (var i = 0; i < rule.length; i++) {
+				if (rule[i].selectorText == ".ok, .na") {
+					rule[i].style.display = newDisplay;
+				}
+			}
+			overview.updateElementsDisplay("ok", newDisplay);
+			overview.updateElementsDisplay("na", newDisplay);
+			overview.updatePageHeadersVisibility();
+			showOk = ok;
+		},
+		
+		updatePageHeadersVisibility : function() {
+			var headers = document.getElementsByClassName("page_heading");
+			for (var i = 0; i < headers.length; i++) {
+				overview.updateVisibility([headers[i]]);
+			}
+			headers = document.getElementsByClassName("column_title");
+			for (var i = 0; i < headers.length; i++) {
+				overview.updateVisibility([headers[i]]);
+			}
+		},
+		
+		updateElementsDisplay : function(clazz, newDisplay) {
+			var elements = document.getElementsByClassName(clazz);
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.display = newDisplay;
+				overview.updateVisibility([elements[i]]);
+			}
+		},
+
+		makeScalable : function() {
+			var css = document.all ? 'rules' : 'cssRules';
+			var rule = document.styleSheets[0][css];
+			for (var i = 0; i < rule.length; i++) {
+				if (rule[i].media !== undefined) {
+					rule[i].cssRules[0].style.width = "96.5%";
+				}
+				if (rule[i].selectorText == "section") {
+					rule[i].style.width = "96.5%";
+				}
+			}
+		},
+
+		toggleVisibility : function(id, button) {
+			current = document.getElementById(id).className;
+			var name = document.getElementById(id).getAttribute("name");
+			if (current.indexOf("hidden") == -1) {
+				re = new RegExp("visible", "g");
+				new_class = "hidden";
+				button.innerHTML = "+";
+				try {
+					expander(name.slice(0, name.indexOf("_")), false);
+				} catch (e) {
+				}
+			} else {
+				re = new RegExp("hidden", "g");
+				new_class = "visible";
+				button.innerHTML = "-";
+				try {
+					expander(name.slice(0, name.indexOf("_")), true);
+				} catch (e) {
+				}
+			}
+			document.getElementById(id).className = current.replace(re,
+					new_class);
+			after = document.getElementById(id).className;
+		},
+		
+		updateVisibility : function(elements) {
+			for (var i = 0; i < elements.length; i++) {
+				var element = elements[i];
+				overview.updateVisibilityRecursive(element);
+			}
+		},
+		
+		updateVisibilityRecursive : function(element) {
+			if (element.localName !== "section") {
+				var siblings = element.parentNode.children;
+				var allInvisible = true;
+				for (var j = 0; j < siblings.length; j++) {
+					var sibling = siblings[j];
+					if (sibling.style.display === "block") {
+						sibling.parentNode.style.display = "block";
+						allInvisible = false;
+					}
+				}
+				if (allInvisible) {
+					element.parentNode.style.display = "none";
+				}
+				overview.updateVisibilityRecursive(element.parentNode);
+			}
+		},
+		
+		updateResult : function(id, score, desc) {
+			var severity = 'warning';
+			if (score >= 75) {
+				severity = 'warning'
+			} else if (score >= 25) {
+				severity = 'info';
+			} else if (score >= 0) {
+				severity = 'ok';
+			} else if (score == -1) {
+				severity = 'na';
+				score = 'N/A';
+			} else if (score == -3) {
+				severity = 'ignore';
+				score = 'I';
+			} else if (score == -2) {
+				severity = 'error';
+				score = '';
+			} else if (score == -200) {
+				severity = 'spin';
+			}
+			var shouldSpin = severity === 'spin';
+			var displaySpin = shouldSpin ? 'inline block;' : 'none;';
+			var displayScore = !shouldSpin ? 'inline block;' : 'none;';
+			var progressElements = document.getElementsByName(id + '_progress');
+			for (var i = 0; i < progressElements.length; i++) {
+				progressElements[i].setAttribute('style', 'display: ' + displaySpin);
+			}
+			var scoreElements = document.getElementsByName(id + '_score');
+			for (var i = 0; i < scoreElements.length; i++) {
+				scoreElements[i].setAttribute('style', 'display: ' + displayScore);
+				scoreElements[i].className = 'rule_score ' + severity;
+			}
+			var elements = document.getElementsByName(id);
+			for (var i = 0; i < elements.length; i++)  {
+				elements[i].className = 'rule ' + severity;
+				if (showOk) {
+					if (severity !== 'ignore') {
+						elements[i].style.display = 'block';
+					} else {
+						elements[i].style.display = 'none';
+					}
+				} else {
+					if (severity === 'ok' || severity === 'ignore' || severity === 'na') {
+						elements[i].style.display = 'none';
+					} else {
+						elements[i].style.display = 'block';
+					}
+				}
+			}
+			var scoreBarElements = document.getElementsByName(id + '_score_bar');
+			for (var i = 0; i < scoreBarElements.length; i++) {
+				var scoreBar = scoreBarElements[i];
+				scoreBar.className = 'rule_bar ' + severity;
+				scoreBar.setAttribute('style', 'width: ' + score + '%;');
+			}
+			var scoreValueElements = document.getElementsByName(id + '_score_value');
+			for (var i = 0; i < scoreValueElements.length; i++) {
+				scoreValueElements[i].innerHTML = score;
+			}
+			var textElements = document.getElementsByName(id + '_text');
+			for (var i = 0; i < textElements.length; i++) {
+				textElements[i].innerHTML = desc;
+			}
+			overview.updateVisibility(elements);
+		}
+	};
+</script>
+</head>
+<body>

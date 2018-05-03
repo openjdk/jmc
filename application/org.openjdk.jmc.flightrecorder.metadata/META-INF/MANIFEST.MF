@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JFR Metadata Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.metadata;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.flightrecorder.metadata
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.metadata

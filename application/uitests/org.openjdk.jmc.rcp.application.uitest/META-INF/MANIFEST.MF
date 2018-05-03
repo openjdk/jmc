@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Uitest
+Bundle-SymbolicName: org.openjdk.jmc.rcp.application.uitest;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit,
+ org.openjdk.jmc.test.jemmy
+Automatic-Module-Name: org.openjdk.jmc.rcp.application.uitest

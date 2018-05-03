@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?pde version="3.8"?><target name="jmc-target-photon" sequenceNumber="47">
+    <locations>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="javax.mail.api" version="1.4.0"/>
+            <unit id="javax.mail.dsn" version="1.4.0"/>
+            <unit id="javax.mail.imap" version="1.4.0"/>
+            <unit id="javax.mail.pop3" version="1.4.0"/>
+            <unit id="javax.mail.smtp" version="1.4.0"/>
+            <unit id="org.owasp.encoder" version="1.2.1"/>
+            <unit id="org.twitter4j.core" version="4.0.6"/>
+            <repository location="http://localhost:8080/site"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+        	<unit id="a.jre.javase" version="9.0.0"/>
+        	<unit id="config.a.jre.javase" version="9.0.0"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.0.v20180207-1446"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.13.100.v20180308-0630"/>
+            <unit id="org.eclipse.platform.sdk" version="4.8.0.I20180308-0630"/>
+            <repository location="http://download.eclipse.org/eclipse/updates/4.8milestones/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+	        <!-- TODO: Replace with Babel for Photon once it's available, don't forget thirdparty approvals. -->
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.7.0.v20171231020002"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.7.0.v20171231020002"/>
+            <repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.1/oxygen"/>
+        </location>
+    </locations>
+    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+</target>

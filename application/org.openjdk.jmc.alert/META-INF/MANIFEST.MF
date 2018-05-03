@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: Alert Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.alert; singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.alert.AlertPlugin
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.ui,
+ org.openjdk.jmc.rjmx.ui
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.alert
+Automatic-Module-Name: org.openjdk.jmc.alert

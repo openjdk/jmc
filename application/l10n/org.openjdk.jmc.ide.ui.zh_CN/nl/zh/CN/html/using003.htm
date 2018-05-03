@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh_CN" lang="zh_CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>更改 JVM</title>
+<meta name="robots" content="noarchive" />
+<meta name="doctitle" content="Changing Your JVM" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="using002.htm" title="Previous" type="text/html" />
+<link rel="next" href="using004.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">跳过标题</a></div>
+<table cellpadding="0" cellspacing="0" class="simple oac_no_warn" summary="" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr valign="bottom">
+<td align="left"></td>
+<td align="center"><a href="using002.htm"><img alt="上一页" src="./dcommon/gifs/leftnav.gif" /><br /><span class="icon">上一页</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img alt="下一页" src="./dcommon/gifs/rightnav.gif" /><br /><span class="icon">下一页</span></a></td>
+</tr>
+</table>
+<div class="sect2"><a id="sthref11" name="sthref11"></a>
+<h1>更改 JVM</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>虽然 JDK Mission Control Client 可与许多不同的 JVM 一起工作，但是在 Eclipse 平台上运行 JDK Mission Control Client 时，强烈建议您使用 Oracle JDK/JVM 作为您的 JVM。确保使用 Oracle HotSpot JDK 7 Update 14 或更高版本。建议不要在 JRE 上运行，这将禁用本地 JVM 的自动检测。</p>
+<p><span class="bold">要更改运行 Eclipse 的 JVM，请执行以下操作：</span></p>
+<ol>
+<li>
+<p>转到您的文件系统浏览器 (例如，Windows 资源管理器)。</p>
+</li>
+<li>
+<p>定位您的 Eclipse 安装文件夹 (例如，<code>C:\Program Files\Eclipse</code>)，然后使用“记事本”之外的文件编辑器打开文件 <code>eclipse.ini</code>。该文件看起来类似于以下示例：</p>
+<br /> <code>-showsplash</code><br /> <code>org.eclipse.platform</code><br /> <code>--launcher.XXMaxPermSize</code><br /> <code>256M</code><br /> <code>-vmargs</code><br /> <code>-Dosgi.requiredJavaVersion=1.5</code><br /> <code>-Xms40m</code><br /> <code>-Xmx512m</code><br /></li>
+<li>
+<p>对 <code>eclipse.ini</code> 文件进行以下更改：</p>
+<ul>
+<li>
+<p>删除与 JVM 之外的其他 JVM 相关的所有标记 (例如 <code>--launcher.XXMaxPermSize 256M</code>)。</p>
+</li>
+<li>
+<p>在第三行上 (<code>org.eclipse.platform</code> 之后)，添加以下内容：</p>
+<p><code>-vm &lt;Full path JAVA_HOME/jre/bin/ folder></code></p>
+<p>在 Windows 上，完整路径可能如下所示：</p>
+<p><code>C:\Program Files\Java\jdk1.7.0\jre\bin\</code></p>
+<p>或者，在 Linux 和 Solaris 上，该路径可能如下所示：</p>
+<p><code>$HOME/jdk1.7.0/jre/bin/</code></p>
+</li>
+<li>
+<p>根据您的特定 JVM 实施和其上运行的应用程序，可以设置任何有效的 JVM 命令行选项。</p>
+<p>有关可用命令行选项的详细信息，请参阅 <span class="italic">Java 命令行参考</span>，网址为：<br /><code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html</a></code> (Solaris、Linux)<br /> <code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html</a></code> (Windows)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>完成对 <code>eclipse.ini</code> 文件的必要更改后，保存并关闭该文件。以下示例显示为了使 JVM 在 Windows 实施中成为活动 JVM 而更新的 <code>eclipse.ini</code> 文件。</p>
+<br /> <code>-showsplash</code><br /> <code>org.eclipse.platform</code><br /> <code>-vm</code><br /> <code>C:\Program Files\Java\jdk1.7.0\bin\javaw.exe</code><br /> <code>-vmargs</code><br /> <code>-Dosgi.requiredJavaVersion=1.5</code><br /> <code>-Xms256m</code><br /> <code>-Xmx512m</code></li>
+</ol>
+</div>
+<!-- class="sect2" -->
+<!-- Start Footer -->
+<div class="footer">
+<table cellpadding="0" cellspacing="0" class="simple oac_no_warn" summary="" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr>
+<td align="left"><span class="copyrightlogo">版权所有 © 2018, Oracle 和/或其附属公司。保留所有权利。</span><br /> <a href="http://oss.oracle.com/licenses/upl"><span class="copyrightlogo">法律声明</span></a></td>
+<td align="center"><a href="using002.htm"><img alt="上一页" src="./dcommon/gifs/leftnav.gif" /><br /><span class="icon">上一页</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img alt="下一页" src="./dcommon/gifs/rightnav.gif" /><br /><span class="icon">下一页</span></a></td>
+</tr>
+</table>
+</div>
+<!-- class="footer" -->
+</body>
+</html>

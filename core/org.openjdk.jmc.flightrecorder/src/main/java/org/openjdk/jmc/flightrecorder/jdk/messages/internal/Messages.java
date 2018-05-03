@@ -1,0 +1,446 @@
+/*
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * 
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * The contents of this file are subject to the terms of either the Universal Permissive License
+ * v 1.0 as shown at http://oss.oracle.com/licenses/upl
+ *
+ * or the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
+ * conditions and the following disclaimer in the documentation and/or other materials provided with
+ * the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.openjdk.jmc.flightrecorder.jdk.messages.internal;
+
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+public class Messages {
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.jdk.messages.internal.messages"; //$NON-NLS-1$
+
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+	public static final String AGGR_ADDRESSES_COUNT = "AGGR_ADDRESSES_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_ADDRESSES_COUNT_DESC = "AGGR_ADDRESSES_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ALLOCATION_TOTAL = "AGGR_ALLOCATION_TOTAL"; //$NON-NLS-1$
+	public static final String AGGR_ALLOCATION_TOTAL_DESC = "AGGR_ALLOCATION_TOTAL_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_INSIDE_TLAB_AVG = "AGGR_ALLOC_INSIDE_TLAB_AVG"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_INSIDE_TLAB_AVG_DESC = "AGGR_ALLOC_INSIDE_TLAB_AVG_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_INSIDE_TLAB_SUM = "AGGR_ALLOC_INSIDE_TLAB_SUM"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_INSIDE_TLAB_SUM_DESC = "AGGR_ALLOC_INSIDE_TLAB_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_OUTSIDE_TLAB_AVG = "AGGR_ALLOC_OUTSIDE_TLAB_AVG"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_OUTSIDE_TLAB_AVG_DESC = "AGGR_ALLOC_OUTSIDE_TLAB_AVG_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_OUTSIDE_TLAB_SUM = "AGGR_ALLOC_OUTSIDE_TLAB_SUM"; //$NON-NLS-1$
+	public static final String AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC = "AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_AVG_BLOCKED_TIME = "AGGR_AVG_BLOCKED_TIME"; //$NON-NLS-1$
+	public static final String AGGR_AVG_BLOCKED_TIME_DESC = "AGGR_AVG_BLOCKED_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_AVG_HEAP_USED_AFTER_GC = "AGGR_AVG_HEAP_USED_AFTER_GC"; //$NON-NLS-1$
+	public static final String AGGR_AVG_HEAP_USED_BEFORE_GC = "AGGR_AVG_HEAP_USED_BEFORE_GC"; //$NON-NLS-1$
+	public static final String AGGR_AVG_IO_TIME = "AGGR_AVG_IO_TIME"; //$NON-NLS-1$
+	public static final String AGGR_AVG_IO_TIME_DESC = "AGGR_AVG_IO_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_CLASS_LOADING_COUNT = "AGGR_CLASS_LOADING_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_CLASS_LOADING_COUNT_DESC = "AGGR_CLASS_LOADING_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_CLASS_LOADING_TIME_SUM = "AGGR_CLASS_LOADING_TIME_SUM"; //$NON-NLS-1$
+	public static final String AGGR_CLASS_LOADING_TIME_SUM_DESC = "AGGR_CLASS_LOADING_TIME_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_CODE_CACHE_FULL_COUNT = "AGGR_CODE_CACHE_FULL_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_CODE_CACHE_FULL_COUNT_DESC = "AGGR_CODE_CACHE_FULL_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_COMPILATIONS_COUNT = "AGGR_COMPILATIONS_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_COMPILATIONS_COUNT_DESC = "AGGR_COMPILATIONS_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ERROR_COUNT = "AGGR_ERROR_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_ERROR_COUNT_DESC = "AGGR_ERROR_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_EXCEPTIONS_COUNT = "AGGR_EXCEPTIONS_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_EXCEPTIONS_COUNT_DESC = "AGGR_EXCEPTIONS_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_EXECUTION_SAMPLE_COUNT = "AGGR_EXECUTION_SAMPLE_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_EXECUTION_SAMPLE_COUNT_DESC = "AGGR_EXECUTION_SAMPLE_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_READ_COUNT = "AGGR_FILE_READ_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_FILE_READ_COUNT_DESC = "AGGR_FILE_READ_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_READ_SIZE = "AGGR_FILE_READ_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_FILE_READ_SIZE_DESC = "AGGR_FILE_READ_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_WRITE_COUNT = "AGGR_FILE_WRITE_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_FILE_WRITE_COUNT_DESC = "AGGR_FILE_WRITE_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_WRITE_SIZE = "AGGR_FILE_WRITE_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_FILE_WRITE_SIZE_DESC = "AGGR_FILE_WRITE_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FIRST_ATTRIBUTE = "AGGR_FIRST_ATTRIBUTE"; //$NON-NLS-1$
+	public static final String AGGR_FIRST_ATTRIBUTE_DESC = "AGGR_FIRST_ATTRIBUTE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FLR_DATA_LOST_SIZE = "AGGR_FLR_DATA_LOST_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_FLR_DATA_LOST_SIZE_DESC = "AGGR_FLR_DATA_LOST_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_IGNORE_UNRECOGNIZED_VM_OPTIONS = "AGGR_IGNORE_UNRECOGNIZED_VM_OPTIONS"; //$NON-NLS-1$
+	public static final String AGGR_INSIDE_TLAB_COUNT = "AGGR_INSIDE_TLAB_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_INSIDE_TLAB_COUNT_DESC = "AGGR_INSIDE_TLAB_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_ITEM_COUNT = "AGGR_ITEM_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_ITEM_COUNT_DESC = "AGGR_ITEM_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_JFR_DATA_LOST_COUNT = "AGGR_JFR_DATA_LOST_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_JFR_DATA_LOST_COUNT_DESC = "AGGR_JFR_DATA_LOST_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_LARGEST_MAX_HEAP_SIZE_FROM_FLAG = "AGGR_LARGEST_MAX_HEAP_SIZE_FROM_FLAG"; //$NON-NLS-1$
+	public static final String AGGR_LAST_ATTRIBUTE = "AGGR_LAST_ATTRIBUTE"; //$NON-NLS-1$
+	public static final String AGGR_LAST_ATTRIBUTE_DESC = "AGGR_LAST_ATTRIBUTE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_LONGEST_GC_PAUSE = "AGGR_LONGEST_GC_PAUSE"; //$NON-NLS-1$
+	public static final String AGGR_LONGEST_GC_PAUSE_DESC = "AGGR_LONGEST_GC_PAUSE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_MAX_BLOCKED_TIME = "AGGR_MAX_BLOCKED_TIME"; //$NON-NLS-1$
+	public static final String AGGR_MAX_BLOCKED_TIME_DESC = "AGGR_MAX_BLOCKED_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_MAX_IO_TIME = "AGGR_MAX_IO_TIME"; //$NON-NLS-1$
+	public static final String AGGR_MAX_IO_TIME_DESC = "AGGR_MAX_IO_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_MAX_USED_MEMORY = "AGGR_MAX_USED_MEMORY"; //$NON-NLS-1$
+	public static final String AGGR_METASPACE_OOM_COUNT = "AGGR_METASPACE_OOM_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_METASPACE_OOM_COUNT_DESC = "AGGR_METASPACE_OOM_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_MIN_TOTAL_MEMORY = "AGGR_MIN_TOTAL_MEMORY"; //$NON-NLS-1$
+	public static final String AGGR_NUMBER_OF_DISTINCT_HOSTS = "AGGR_NUMBER_OF_DISTINCT_HOSTS"; //$NON-NLS-1$
+	public static final String AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC = "AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC"; //$NON-NLS-1$
+	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS = "AGGR_NUMBER_OF_DISTINCT_PORTS"; //$NON-NLS-1$
+	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS_DESC = "AGGR_NUMBER_OF_DISTINCT_PORTS_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES = "AGGR_OBJECT_COUNT_MAX_INSTANCES"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC = "AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_MAX_SIZE = "AGGR_OBJECT_COUNT_MAX_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_MAX_SIZE_DESC = "AGGR_OBJECT_COUNT_MAX_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OUTSIDE_TLAB_COUNT = "AGGR_OUTSIDE_TLAB_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_OUTSIDE_TLAB_COUNT_DESC = "AGGR_OUTSIDE_TLAB_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_READ_COUNT = "AGGR_SOCKET_READ_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_READ_COUNT_DESC = "AGGR_SOCKET_READ_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_READ_SIZE = "AGGR_SOCKET_READ_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_READ_SIZE_DESC = "AGGR_SOCKET_READ_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_WRITE_COUNT = "AGGR_SOCKET_WRITE_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_WRITE_COUNT_DESC = "AGGR_SOCKET_WRITE_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_WRITE_SIZE = "AGGR_SOCKET_WRITE_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_SOCKET_WRITE_SIZE_DESC = "AGGR_SOCKET_WRITE_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_STDDEV_BLOCKED_TIME = "AGGR_STDDEV_BLOCKED_TIME"; //$NON-NLS-1$
+	public static final String AGGR_STDDEV_BLOCKED_TIME_DESC = "AGGR_STDDEV_BLOCKED_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_STDDEV_IO_TIME = "AGGR_STDDEV_IO_TIME"; //$NON-NLS-1$
+	public static final String AGGR_STDDEV_IO_TIME_DESC = "AGGR_STDDEV_IO_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_FLUSHED_SUM = "AGGR_SWEEP_FLUSHED_SUM"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_FLUSHED_SUM_DESC = "AGGR_SWEEP_FLUSHED_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_METHOD_SUM = "AGGR_SWEEP_METHOD_SUM"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_METHOD_SUM_DESC = "AGGR_SWEEP_METHOD_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_RECLAIMED_SUM = "AGGR_SWEEP_RECLAIMED_SUM"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_RECLAIMED_SUM_DESC = "AGGR_SWEEP_RECLAIMED_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_ZOMBIFIED_SUM = "AGGR_SWEEP_ZOMBIFIED_SUM"; //$NON-NLS-1$
+	public static final String AGGR_SWEEP_ZOMBIFIED_SUM_DESC = "AGGR_SWEEP_ZOMBIFIED_SUM_DESC"; //$NON-NLS-1$
+	public static final String AGGR_THROWABLES_COUNT = "AGGR_THROWABLES_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_THROWABLES_COUNT_DESC = "AGGR_THROWABLES_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_BLOCKED_COUNT = "AGGR_TOTAL_BLOCKED_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_BLOCKED_COUNT_DESC = "AGGR_TOTAL_BLOCKED_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_BLOCKED_TIME = "AGGR_TOTAL_BLOCKED_TIME"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_BLOCKED_TIME_DESC = "AGGR_TOTAL_BLOCKED_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_GC_PAUSE = "AGGR_TOTAL_GC_PAUSE"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_GC_PAUSE_DESC = "AGGR_TOTAL_GC_PAUSE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_IO_COUNT = "AGGR_TOTAL_IO_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_IO_COUNT_DESC = "AGGR_TOTAL_IO_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_IO_TIME = "AGGR_TOTAL_IO_TIME"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_IO_TIME_DESC = "AGGR_TOTAL_IO_TIME_DESC"; //$NON-NLS-1$
+	public static final String AGGR_UNLOCK_EXPERIMENTAL_VM_OPTIONS = "AGGR_UNLOCK_EXPERIMENTAL_VM_OPTIONS"; //$NON-NLS-1$
+	public static final String AGGR_USING_COMPRESSED_OOPS = "AGGR_USING_COMPRESSED_OOPS"; //$NON-NLS-1$
+	public static final String AGGR_VM_OPERATION_COUNT = "AGGR_VM_OPERATION_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_VM_OPERATION_COUNT_DESC = "AGGR_VM_OPERATION_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_VM_OPERATION_DURATION = "AGGR_VM_OPERATION_DURATION"; //$NON-NLS-1$
+	public static final String AGGR_VM_OPERATION_DURATION_DESC = "AGGR_VM_OPERATION_DURATION_DESC"; //$NON-NLS-1$
+	public static final String ATTR_ADAPTORS = "ATTR_ADAPTORS"; //$NON-NLS-1$
+	public static final String ATTR_ALLOCATION_CLASS = "ATTR_ALLOCATION_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_ALLOCATION_CLASS_DESC = "ATTR_ALLOCATION_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_ALLOCATION_SIZE = "ATTR_ALLOCATION_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_BLOCKING = "ATTR_BLOCKING"; //$NON-NLS-1$
+	public static final String ATTR_BLOCKING_DESC = "ATTR_BLOCKING_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CALLER = "ATTR_CALLER"; //$NON-NLS-1$
+	public static final String ATTR_CALLER_DESC = "ATTR_CALLER_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CLASSLOADER_LOADED_COUNT = "ATTR_CLASSLOADER_LOADED_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CLASSLOADER_LOADED_COUNT_DESC = "ATTR_CLASSLOADER_LOADED_COUNT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CLASSLOADER_UNLOADED_COUNT = "ATTR_CLASSLOADER_UNLOADED_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CLASSLOADER_UNLOADED_COUNT_DESC = "ATTR_CLASSLOADER_UNLOADED_COUNT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CLASS_DEFINING_CLASSLOADER = "ATTR_CLASS_DEFINING_CLASSLOADER"; //$NON-NLS-1$
+	public static final String ATTR_CLASS_INITIATING_CLASSLOADER = "ATTR_CLASS_INITIATING_CLASSLOADER"; //$NON-NLS-1$
+	public static final String ATTR_CLASS_LOADED = "ATTR_CLASS_LOADED"; //$NON-NLS-1$
+	public static final String ATTR_CLASS_UNLOADED = "ATTR_CLASS_UNLOADED"; //$NON-NLS-1$
+	public static final String ATTR_CODE_HEAP = "ATTR_CODE_HEAP"; //$NON-NLS-1$
+	public static final String ATTR_COMMAND_LINE = "ATTR_COMMAND_LINE"; //$NON-NLS-1$
+	public static final String ATTR_COMMITTED_TOP = "ATTR_COMMITTED_TOP"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_CODE_SIZE = "ATTR_COMPILER_CODE_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_COMPILATION_ID = "ATTR_COMPILER_COMPILATION_ID"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_COMPILATION_LEVEL = "ATTR_COMPILER_COMPILATION_LEVEL"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_COMPILATION_SUCCEEDED = "ATTR_COMPILER_COMPILATION_SUCCEEDED"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_FAILED_MESSAGE = "ATTR_COMPILER_FAILED_MESSAGE"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_INLINED_SIZE = "ATTR_COMPILER_INLINED_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_IS_OSR = "ATTR_COMPILER_IS_OSR"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_METHOD = "ATTR_COMPILER_METHOD"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_METHOD_HUMAN = "ATTR_COMPILER_METHOD_HUMAN"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_METHOD_HUMAN_DESC = "ATTR_COMPILER_METHOD_HUMAN_DESC"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_OSR_COUNT = "ATTR_COMPILER_OSR_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_COMPILER_STANDARD_COUNT = "ATTR_COMPILER_STANDARD_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CONCURRENT_GC_THREADS = "ATTR_CONCURRENT_GC_THREADS"; //$NON-NLS-1$
+	public static final String ATTR_CONCURRENT_GC_THREADS_DESC = "ATTR_CONCURRENT_GC_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_COUNT = "ATTR_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CPU_DESCRIPTION = "ATTR_CPU_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_CPU_DESCRIPTION_DESC = "ATTR_CPU_DESCRIPTION_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CPU_TYPE = "ATTR_CPU_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_DISABLE_BIASING = "ATTR_DISABLE_BIASING"; //$NON-NLS-1$
+	public static final String ATTR_DUMP_REASON = "ATTR_DUMP_REASON"; //$NON-NLS-1$
+	public static final String ATTR_DUMP_REASON_DESC = "ATTR_DUMP_REASON_DESC"; //$NON-NLS-1$
+	public static final String ATTR_DUMP_REASON_RECORDING_ID = "ATTR_DUMP_REASON_RECORDING_ID"; //$NON-NLS-1$
+	public static final String ATTR_DUMP_REASON_RECORDING_ID_DESC = "ATTR_DUMP_REASON_RECORDING_ID_DESC"; //$NON-NLS-1$
+	public static final String ATTR_ENTRIES = "ATTR_ENTRIES"; //$NON-NLS-1$
+	public static final String ATTR_ENVIRONMENT_KEY = "ATTR_ENVIRONMENT_KEY"; //$NON-NLS-1$
+	public static final String ATTR_ENVIRONMENT_VALUE = "ATTR_ENVIRONMENT_VALUE"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_GROUP = "ATTR_EVENT_THREAD_GROUP"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_GROUP_DESC = "ATTR_EVENT_THREAD_GROUP_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_ID = "ATTR_EVENT_THREAD_ID"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_ID_DESC = "ATTR_EVENT_THREAD_ID_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_NAME = "ATTR_EVENT_THREAD_NAME"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_THREAD_NAME_DESC = "ATTR_EVENT_THREAD_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_MESSAGE = "ATTR_EXCEPTION_MESSAGE"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_THROWABLES_COUNT = "ATTR_EXCEPTION_THROWABLES_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_THROWABLES_COUNT_DESC = "ATTR_EXCEPTION_THROWABLES_COUNT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_THROWNCLASS = "ATTR_EXCEPTION_THROWNCLASS"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_THROWNCLASS_NAME = "ATTR_EXCEPTION_THROWNCLASS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_EXCEPTION_THROWNCLASS_NAME_DESC = "ATTR_EXCEPTION_THROWNCLASS_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EXPANSION_SIZE = "ATTR_EXPANSION_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_EXPLICIT_GC_CONCURRENT = "ATTR_EXPLICIT_GC_CONCURRENT"; //$NON-NLS-1$
+	public static final String ATTR_EXPLICIT_GC_CONCURRENT_DESC = "ATTR_EXPLICIT_GC_CONCURRENT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EXPLICIT_GC_DISABLED = "ATTR_EXPLICIT_GC_DISABLED"; //$NON-NLS-1$
+	public static final String ATTR_EXPLICIT_GC_DISABLED_DESC = "ATTR_EXPLICIT_GC_DISABLED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EXPORTED_PACKAGE = "ATTR_EXPORTED_PACKAGE"; //$NON-NLS-1$
+	public static final String ATTR_EXPORTING_MODULE = "ATTR_EXPORTING_MODULE"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_NAME = "ATTR_FLAG_NAME"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_ORIGIN = "ATTR_FLAG_ORIGIN"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_VALUE_BOOLEAN = "ATTR_FLAG_VALUE_BOOLEAN"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_VALUE_NUMBER = "ATTR_FLAG_VALUE_NUMBER"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_VALUE_TEXT = "ATTR_FLAG_VALUE_TEXT"; //$NON-NLS-1$
+	public static final String ATTR_FULL_COUNT = "ATTR_FULL_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_GC_CAUSE = "ATTR_GC_CAUSE"; //$NON-NLS-1$
+	public static final String ATTR_GC_CAUSE_DESC = "ATTR_GC_CAUSE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_HEAPSPACE_COMMITTED = "ATTR_GC_HEAPSPACE_COMMITTED"; //$NON-NLS-1$
+	public static final String ATTR_GC_HEAPSPACE_COMMITTED_DESC = "ATTR_GC_HEAPSPACE_COMMITTED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_HEAPSPACE_RESERVED = "ATTR_GC_HEAPSPACE_RESERVED"; //$NON-NLS-1$
+	public static final String ATTR_GC_HEAPSPACE_RESERVED_DESC = "ATTR_GC_HEAPSPACE_RESERVED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_ID = "ATTR_GC_ID"; //$NON-NLS-1$
+	public static final String ATTR_GC_ID_DESC = "ATTR_GC_ID_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_LONGEST_PAUSE = "ATTR_GC_LONGEST_PAUSE"; //$NON-NLS-1$
+	public static final String ATTR_GC_LONGEST_PAUSE_DESC = "ATTR_GC_LONGEST_PAUSE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CAPACITY = "ATTR_GC_METASPACE_CAPACITY"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CAPACITY_DESC = "ATTR_GC_METASPACE_CAPACITY_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_COMMITTED = "ATTR_GC_METASPACE_CLASS_COMMITTED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_COMMITTED_DESC = "ATTR_GC_METASPACE_CLASS_COMMITTED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_RESERVED = "ATTR_GC_METASPACE_CLASS_RESERVED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_RESERVED_DESC = "ATTR_GC_METASPACE_CLASS_RESERVED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_USED = "ATTR_GC_METASPACE_CLASS_USED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_CLASS_USED_DESC = "ATTR_GC_METASPACE_CLASS_USED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_COMMITTED = "ATTR_GC_METASPACE_COMMITTED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_COMMITTED_DESC = "ATTR_GC_METASPACE_COMMITTED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_COMMITTED = "ATTR_GC_METASPACE_DATA_COMMITTED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_COMMITTED_DESC = "ATTR_GC_METASPACE_DATA_COMMITTED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_RESERVED = "ATTR_GC_METASPACE_DATA_RESERVED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_RESERVED_DESC = "ATTR_GC_METASPACE_DATA_RESERVED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_USED = "ATTR_GC_METASPACE_DATA_USED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_DATA_USED_DESC = "ATTR_GC_METASPACE_DATA_USED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_RESERVED = "ATTR_GC_METASPACE_RESERVED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_RESERVED_DESC = "ATTR_GC_METASPACE_RESERVED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_USED = "ATTR_GC_METASPACE_USED"; //$NON-NLS-1$
+	public static final String ATTR_GC_METASPACE_USED_DESC = "ATTR_GC_METASPACE_USED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_NAME = "ATTR_GC_NAME"; //$NON-NLS-1$
+	public static final String ATTR_GC_NAME_DESC = "ATTR_GC_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_PHASE_NAME = "ATTR_GC_PHASE_NAME"; //$NON-NLS-1$
+	public static final String ATTR_GC_ROOT = "ATTR_GC_ROOT"; //$NON-NLS-1$
+	public static final String ATTR_GC_ROOT_DESC = "ATTR_GC_ROOT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_SUM_OF_PAUSES = "ATTR_GC_SUM_OF_PAUSES"; //$NON-NLS-1$
+	public static final String ATTR_GC_SUM_OF_PAUSES_DESC = "ATTR_GC_SUM_OF_PAUSES_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_THRESHOLD = "ATTR_GC_THRESHOLD"; //$NON-NLS-1$
+	public static final String ATTR_GC_THRESHOLD_DESC = "ATTR_GC_THRESHOLD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_RATIO = "ATTR_GC_TIME_RATIO"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_RATIO_DESC = "ATTR_GC_TIME_RATIO_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_WHEN = "ATTR_GC_WHEN"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_ADDRESS_SIZE = "ATTR_HEAP_ADDRESS_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_ADDRESS_SIZE_DESC = "ATTR_HEAP_ADDRESS_SIZE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_COMPRESSED_OOPS_MODE = "ATTR_HEAP_COMPRESSED_OOPS_MODE"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_COMPRESSED_OOPS_MODE_DESC = "ATTR_HEAP_COMPRESSED_OOPS_MODE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_INITIAL_SIZE = "ATTR_HEAP_INITIAL_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_MAX_SIZE = "ATTR_HEAP_MAX_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_MIN_SIZE = "ATTR_HEAP_MIN_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_OBJECT_ALIGNMENT = "ATTR_HEAP_OBJECT_ALIGNMENT"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_OBJECT_ALIGNMENT_DESC = "ATTR_HEAP_OBJECT_ALIGNMENT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_TOTAL = "ATTR_HEAP_TOTAL"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_USED = "ATTR_HEAP_USED"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_USED_DESC = "ATTR_HEAP_USED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_USE_COMPRESSED_OOPS = "ATTR_HEAP_USE_COMPRESSED_OOPS"; //$NON-NLS-1$
+	public static final String ATTR_HEAP_USE_COMPRESSED_OOPS_DESC = "ATTR_HEAP_USE_COMPRESSED_OOPS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_HW_THREADS = "ATTR_HW_THREADS"; //$NON-NLS-1$
+	public static final String ATTR_HW_THREADS_DESC = "ATTR_HW_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_INITIAL_SIZE = "ATTR_INITIAL_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_IO_ADDRESS = "ATTR_IO_ADDRESS"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_BYTES_READ = "ATTR_IO_FILE_BYTES_READ"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_BYTES_READ_DESC = "ATTR_IO_FILE_BYTES_READ_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_BYTES_WRITTEN = "ATTR_IO_FILE_BYTES_WRITTEN"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_BYTES_WRITTEN_DESC = "ATTR_IO_FILE_BYTES_WRITTEN_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_READ_EOF = "ATTR_IO_FILE_READ_EOF"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_READ_EOF_DESC = "ATTR_IO_FILE_READ_EOF_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_HOST = "ATTR_IO_HOST"; //$NON-NLS-1$
+	public static final String ATTR_IO_HOST_DESC = "ATTR_IO_HOST_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_PATH = "ATTR_IO_PATH"; //$NON-NLS-1$
+	public static final String ATTR_IO_PATH_DESC = "ATTR_IO_PATH_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_PORT = "ATTR_IO_PORT"; //$NON-NLS-1$
+	public static final String ATTR_IO_PORT_ON_ADDRESS = "ATTR_IO_PORT_ON_ADDRESS"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_BYTES_READ = "ATTR_IO_SOCKET_BYTES_READ"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_BYTES_READ_DESC = "ATTR_IO_SOCKET_BYTES_READ_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_BYTES_WRITTEN = "ATTR_IO_SOCKET_BYTES_WRITTEN"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_BYTES_WRITTEN_DESC = "ATTR_IO_SOCKET_BYTES_WRITTEN_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_READ_EOS = "ATTR_IO_SOCKET_READ_EOS"; //$NON-NLS-1$
+	public static final String ATTR_IO_SOCKET_READ_EOS_DESC = "ATTR_IO_SOCKET_READ_EOS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_TIMEOUT = "ATTR_IO_TIMEOUT"; //$NON-NLS-1$
+	public static final String ATTR_JAVA_ARGUMENTS = "ATTR_JAVA_ARGUMENTS"; //$NON-NLS-1$
+	public static final String ATTR_JVM_ARGUMENTS = "ATTR_JVM_ARGUMENTS"; //$NON-NLS-1$
+	public static final String ATTR_JVM_NAME = "ATTR_JVM_NAME"; //$NON-NLS-1$
+	public static final String ATTR_JVM_START_TIME = "ATTR_JVM_START_TIME"; //$NON-NLS-1$
+	public static final String ATTR_JVM_SYSTEM = "ATTR_JVM_SYSTEM"; //$NON-NLS-1$
+	public static final String ATTR_JVM_SYSTEM_DESC = "ATTR_JVM_SYSTEM_DESC"; //$NON-NLS-1$
+	public static final String ATTR_JVM_TOTAL = "ATTR_JVM_TOTAL"; //$NON-NLS-1$
+	public static final String ATTR_JVM_TOTAL_DESC = "ATTR_JVM_TOTAL_DESC"; //$NON-NLS-1$
+	public static final String ATTR_JVM_USER = "ATTR_JVM_USER"; //$NON-NLS-1$
+	public static final String ATTR_JVM_USER_DESC = "ATTR_JVM_USER_DESC"; //$NON-NLS-1$
+	public static final String ATTR_JVM_VERSION = "ATTR_JVM_VERSION"; //$NON-NLS-1$
+	public static final String ATTR_MACHINE_TOTAL = "ATTR_MACHINE_TOTAL"; //$NON-NLS-1$
+	public static final String ATTR_MACHINE_TOTAL_DESC = "ATTR_MACHINE_TOTAL_DESC"; //$NON-NLS-1$
+	public static final String ATTR_METHODS = "ATTR_METHODS"; //$NON-NLS-1$
+	public static final String ATTR_MONITOR_ADDRESS = "ATTR_MONITOR_ADDRESS"; //$NON-NLS-1$
+	public static final String ATTR_MONITOR_CLASS = "ATTR_MONITOR_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_MONITOR_PREVIOUS_OWNER = "ATTR_MONITOR_PREVIOUS_OWNER"; //$NON-NLS-1$
+	public static final String ATTR_NEW_RATIO = "ATTR_NEW_RATIO"; //$NON-NLS-1$
+	public static final String ATTR_NEW_RATIO_DESC = "ATTR_NEW_RATIO_DESC"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_ADAPTORS = "ATTR_NON_NMETHODS_ADAPTORS"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_ADAPTORS_DESCRIPTION = "ATTR_NON_NMETHODS_ADAPTORS_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_ENTRIES = "ATTR_NON_NMETHODS_ENTRIES"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_ENTRIES_DESCRIPTION = "ATTR_NON_NMETHODS_ENTRIES_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_UNALLOCATED = "ATTR_NON_NMETHODS_UNALLOCATED"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHODS_UNALLOCATED_DESCRIPTION = "ATTR_NON_NMETHODS_UNALLOCATED_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_NMETHOD_SIZE = "ATTR_NON_NMETHOD_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_ENTRIES = "ATTR_NON_PROFILED_NMETHODS_ENTRIES"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_ENTRIES_DESCRIPTION = "ATTR_NON_PROFILED_NMETHODS_ENTRIES_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_METHODS = "ATTR_NON_PROFILED_NMETHODS_METHODS"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_METHODS_DESCRIPTION = "ATTR_NON_PROFILED_NMETHODS_METHODS_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_UNALLOCATED = "ATTR_NON_PROFILED_NMETHODS_UNALLOCATED"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_NMETHODS_UNALLOCATED_DESCRIPTION = "ATTR_NON_PROFILED_NMETHODS_UNALLOCATED_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_NON_PROFILED_SIZE = "ATTR_NON_PROFILED_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_NUMBER_OF_CORES = "ATTR_NUMBER_OF_CORES"; //$NON-NLS-1$
+	public static final String ATTR_NUMBER_OF_CORES_DESC = "ATTR_NUMBER_OF_CORES_DESC"; //$NON-NLS-1$
+	public static final String ATTR_NUMBER_OF_SOCKETS = "ATTR_NUMBER_OF_SOCKETS"; //$NON-NLS-1$
+	public static final String ATTR_NUMBER_OF_SOCKETS_DESC = "ATTR_NUMBER_OF_SOCKETS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OBJECT_CLASS = "ATTR_OBJECT_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_OLD_COLLECTOR = "ATTR_OLD_COLLECTOR"; //$NON-NLS-1$
+	public static final String ATTR_OLD_COLLECTOR_DESC = "ATTR_OLD_COLLECTOR_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_ADDRESS = "ATTR_OLD_OBJECT_ADDRESS"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_ADDRESS_DESC = "ATTR_OLD_OBJECT_ADDRESS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_ARRAY_SIZE = "ATTR_OLD_OBJECT_ARRAY_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_ARRAY_SIZE_DESC = "ATTR_OLD_OBJECT_ARRAY_SIZE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_CLASS = "ATTR_OLD_OBJECT_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_CLASS_DESC = "ATTR_OLD_OBJECT_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_DESCRIPTION = "ATTR_OLD_OBJECT_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_OLD_OBJECT_DESCRIPTION_DESC = "ATTR_OLD_OBJECT_DESCRIPTION_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OPERATION = "ATTR_OPERATION"; //$NON-NLS-1$
+	public static final String ATTR_OPERATION_DESC = "ATTR_OPERATION_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OS_MEMORY_TOTAL = "ATTR_OS_MEMORY_TOTAL"; //$NON-NLS-1$
+	public static final String ATTR_OS_MEMORY_TOTAL_DESC = "ATTR_OS_MEMORY_TOTAL_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OS_MEMORY_USED = "ATTR_OS_MEMORY_USED"; //$NON-NLS-1$
+	public static final String ATTR_OS_MEMORY_USED_DESC = "ATTR_OS_MEMORY_USED_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OS_SWITCH_RATE = "ATTR_OS_SWITCH_RATE"; //$NON-NLS-1$
+	public static final String ATTR_OS_VERSION = "ATTR_OS_VERSION"; //$NON-NLS-1$
+	public static final String ATTR_OTHER_CPU = "ATTR_OTHER_CPU"; //$NON-NLS-1$
+	public static final String ATTR_OTHER_CPU_DESC = "ATTR_OTHER_CPU_DESC"; //$NON-NLS-1$
+	public static final String ATTR_PARALLEL_GC_THREADS = "ATTR_PARALLEL_GC_THREADS"; //$NON-NLS-1$
+	public static final String ATTR_PARALLEL_GC_THREADS_DESC = "ATTR_PARALLEL_GC_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_PID = "ATTR_PID"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_ENTRIES = "ATTR_PROFILED_NMETHODS_ENTRIES"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_ENTRIES_DESCRIPTION = "ATTR_PROFILED_NMETHODS_ENTRIES_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_METHODS = "ATTR_PROFILED_NMETHODS_METHODS"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_METHODS_DESCRIPTION = "ATTR_PROFILED_NMETHODS_METHODS_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_UNALLOCATED = "ATTR_PROFILED_NMETHODS_UNALLOCATED"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_NMETHODS_UNALLOCATED_DESCRIPTION = "ATTR_PROFILED_NMETHODS_UNALLOCATED_DESCRIPTION"; //$NON-NLS-1$
+	public static final String ATTR_PROFILED_SIZE = "ATTR_PROFILED_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_DESTINATION = "ATTR_RECORDING_DESTINATION"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_DURATION = "ATTR_RECORDING_DURATION"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_ID = "ATTR_RECORDING_ID"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_MAX_AGE = "ATTR_RECORDING_MAX_AGE"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_MAX_SIZE = "ATTR_RECORDING_MAX_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_NAME = "ATTR_RECORDING_NAME"; //$NON-NLS-1$
+	public static final String ATTR_RECORDING_START = "ATTR_RECORDING_START"; //$NON-NLS-1$
+	public static final String ATTR_REC_SETTING_FOR = "ATTR_REC_SETTING_FOR"; //$NON-NLS-1$
+	public static final String ATTR_REC_SETTING_NAME = "ATTR_REC_SETTING_NAME"; //$NON-NLS-1$
+	public static final String ATTR_REC_SETTING_VALUE = "ATTR_REC_SETTING_VALUE"; //$NON-NLS-1$
+	public static final String ATTR_REFERENCE_COUNT = "ATTR_REFERENCE_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_REFERENCE_STATISTICS_COUNT = "ATTR_REFERENCE_STATISTICS_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_REFERENCE_STATISTICS_TYPE = "ATTR_REFERENCE_STATISTICS_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_REFERRER = "ATTR_REFERRER"; //$NON-NLS-1$
+	public static final String ATTR_REFERRER_DESC = "ATTR_REFERRER_DESC"; //$NON-NLS-1$
+	public static final String ATTR_RESERVED_SIZE = "ATTR_RESERVED_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_RESERVED_TOP = "ATTR_RESERVED_TOP"; //$NON-NLS-1$
+	public static final String ATTR_REVOKATION_LOCK_CLASS = "ATTR_REVOKATION_LOCK_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_REVOKATION_LOCK_CLASS_DESC = "ATTR_REVOKATION_LOCK_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_REVOKED_CLASS = "ATTR_REVOKED_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_REVOKED_CLASS_DESC = "ATTR_REVOKED_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_SAFEPOINT = "ATTR_SAFEPOINT"; //$NON-NLS-1$
+	public static final String ATTR_SAFEPOINT_DESC = "ATTR_SAFEPOINT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME = "ATTR_STACK_TRACE_BOTTOM_FRAME"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME_DESC = "ATTR_STACK_TRACE_BOTTOM_FRAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_BOTTOM_METHOD = "ATTR_STACK_TRACE_BOTTOM_METHOD"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_BOTTOM_METHOD_DESC = "ATTR_STACK_TRACE_BOTTOM_METHOD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_CLASS = "ATTR_STACK_TRACE_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_CLASS_DESC = "ATTR_STACK_TRACE_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_DEPTH = "ATTR_STACK_TRACE_DEPTH"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_DEPTH_DESC = "ATTR_STACK_TRACE_DEPTH_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_FRAME = "ATTR_STACK_TRACE_FRAME"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_FRAME_DESC = "ATTR_STACK_TRACE_FRAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_METHOD = "ATTR_STACK_TRACE_METHOD"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_METHOD_DESC = "ATTR_STACK_TRACE_METHOD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_PACKAGE = "ATTR_STACK_TRACE_PACKAGE"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_PACKAGE_DESC = "ATTR_STACK_TRACE_PACKAGE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_STRING = "ATTR_STACK_TRACE_STRING"; //$NON-NLS-1$
+	public static final String ATTR_STACK_TRACE_STRING_DESC = "ATTR_STACK_TRACE_STRING_DESC"; //$NON-NLS-1$
+	public static final String ATTR_START_ADDRESS = "ATTR_START_ADDRESS"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_FRACTION_INDEX = "ATTR_SWEEP_FRACTION_INDEX"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_INDEX = "ATTR_SWEEP_INDEX"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_METHOD_FLUSHED = "ATTR_SWEEP_METHOD_FLUSHED"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_METHOD_RECLAIMED = "ATTR_SWEEP_METHOD_RECLAIMED"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_METHOD_SWEPT = "ATTR_SWEEP_METHOD_SWEPT"; //$NON-NLS-1$
+	public static final String ATTR_SWEEP_METHOD_ZOMBIFIED = "ATTR_SWEEP_METHOD_ZOMBIFIED"; //$NON-NLS-1$
+	public static final String ATTR_TENURING_THRESHOLD_INITIAL = "ATTR_TENURING_THRESHOLD_INITIAL"; //$NON-NLS-1$
+	public static final String ATTR_TENURING_THRESHOLD_INITIAL_DESC = "ATTR_TENURING_THRESHOLD_INITIAL_DESC"; //$NON-NLS-1$
+	public static final String ATTR_TENURING_THRESHOLD_MAXIMUM = "ATTR_TENURING_THRESHOLD_MAXIMUM"; //$NON-NLS-1$
+	public static final String ATTR_TENURING_THRESHOLD_MAXIMUM_DESC = "ATTR_TENURING_THRESHOLD_MAXIMUM_DESC"; //$NON-NLS-1$
+	public static final String ATTR_THREAD_DUMP_RESULT = "ATTR_THREAD_DUMP_RESULT"; //$NON-NLS-1$
+	public static final String ATTR_TLAB_MIN_SIZE = "ATTR_TLAB_MIN_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_TLAB_REFILL_WASTE_LIMIT = "ATTR_TLAB_REFILL_WASTE_LIMIT"; //$NON-NLS-1$
+	public static final String ATTR_TLAB_SIZE = "ATTR_TLAB_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_UNALLOCATED = "ATTR_UNALLOCATED"; //$NON-NLS-1$
+	public static final String ATTR_USES_TLABS = "ATTR_USES_TLABS"; //$NON-NLS-1$
+	public static final String ATTR_USES_TLABS_DESC = "ATTR_USES_TLABS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_USE_DYNAMIC_GC_THREADS = "ATTR_USE_DYNAMIC_GC_THREADS"; //$NON-NLS-1$
+	public static final String ATTR_USE_DYNAMIC_GC_THREADS_DESC = "ATTR_USE_DYNAMIC_GC_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_YOUNG_COLLECTOR = "ATTR_YOUNG_COLLECTOR"; //$NON-NLS-1$
+	public static final String ATTR_YOUNG_COLLECTOR_DESC = "ATTR_YOUNG_COLLECTOR_DESC"; //$NON-NLS-1$
+	public static final String ATTR_YOUNG_GENERATION_MAX_SIZE = "ATTR_YOUNG_GENERATION_MAX_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
+
+	private Messages() {
+	}
+
+	public static String getString(String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			return '!' + key + '!';
+		}
+	}
+}

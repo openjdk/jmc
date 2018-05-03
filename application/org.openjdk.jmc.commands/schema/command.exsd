@@ -1,0 +1,322 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<schema targetNamespace="org.openjdk.jmc.commands" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.openjdk.jmc.commands" id="command" name="Mission Control Command"/>
+      </appinfo>
+      <documentation>
+         Extension point that can be executed from the Mission Control shell or from the command line using &apos;-&apos; as a prefix.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="command" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="command">
+      <complexType>
+         <choice minOccurs="0" maxOccurs="unbounded">
+            <element ref="boolean"/>
+            <element ref="number"/>
+            <element ref="string"/>
+         </choice>
+         <attribute name="identifier" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name or keyword for the command.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  A human readabe name of the command.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description of the command.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class that should be invoked when the command is executed. The class must implement org.openjdk.jmc.commands.IExecute.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.openjdk.jmc.commands.IExecute"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="category" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The category the command belongs to, e.g. &quot;General&quot;, &quot;Scripting&quot;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="userInterface" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Set to true if the command requires a display or access to the workbench window to execute.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="commandHelper" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.openjdk.jmc.commands.ICommandHelper"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="string">
+      <complexType>
+         <attribute name="identifier" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name that should be used to identify the parameter.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  A human readabe name of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="exampleValue" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An example value for the parameter. Used by the help system.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="optional" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Set to true if the parameter should be optional.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="boolean">
+      <complexType>
+         <attribute name="identifier" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name that should be used to identigy the parameter
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  A human readabe name of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="exampleValue" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An example value for the parameter. Used by the help system.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="optional" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Set to true if the parameter should be optional.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="number">
+      <complexType>
+         <attribute name="identifier" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name that should be used to identigy the parameter
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  A human readabe name of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="exampleValue" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An example value for the parameter. Used by the help system.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="optional" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Set to true if the parameter should be optional.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         4.1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;command
+  class=&quot;com.test.HelloWorld&quot;
+  description=&quot;Prints hello world.&quot;
+  identifier=&quot;helloworld&quot;
+  name=&quot;Hello World&quot;
+  category=&quot;General&quot;/&gt;
+
+package com.test;
+
+import java.io.PrintStream;
+import org.openjdk.jmc.commands.IExecute;
+import org.openjdk.jmc.commands.Statement;
+
+public class HelloWorld implements IExecute
+{
+ public boolean execute(Statement statment, PrintStream writer)
+ {
+  System.out.println(&quot;Hello World&quot;);
+ }
+}
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+      </documentation>
+   </annotation>
+
+</schema>

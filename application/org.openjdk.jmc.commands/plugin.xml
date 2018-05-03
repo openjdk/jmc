@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+  <extension-point id="command" name="Mission Control Command" schema="schema/command.exsd"/> <extension
+  point="org.openjdk.jmc.commands.command">
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Wait"
+      description="Waits for a user defined number of seconds."
+      identifier="wait"
+      name="Wait"
+      userInterface="false">
+    <number
+    description="the number of seconds to wait."
+    exampleValue="10"
+    identifier="period"
+    name="Period"
+    optional="false">
+    </number>
+
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Print"
+      description="Prints a message."
+      identifier="print"
+      name="Print"
+      userInterface="false">
+    <string
+    description="the message to print, use quotation for sentences."
+    exampleValue="&quot;Hello World!&quot;"
+    identifier="message"
+    name="Message"
+    optional="false">
+    </string>
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Exit"
+      description="Exits the application."
+      identifier="exit"
+      name="Exit"
+      userInterface="false">
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Help"
+      description="Shows help."
+      identifier="help"
+      name="Help"
+      userInterface="false">
+    <string
+    description="the command to get for."
+    exampleValue="wait"
+    identifier="command"
+    name="Command"
+    optional="true">
+    </string>
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.ShowVersion"
+      description="Prints version information"
+      identifier="showversion"
+      name="ShowVersion"
+      userInterface="false">
+  </command>
+   <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Version"
+      description="Prints version information and exits"
+      identifier="version"
+      name="Version"
+      userInterface="false">
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.SetSystemProperty"
+      description="Sets a system property."
+      identifier="setproperty"
+      name="Set System Property"
+      userInterface="false">
+    <string
+    description="the key for property"
+    exampleValue="com.company.login.username"
+    identifier="key"
+    name="Key"
+    optional="false">
+      optional="false"
+      
+    </string>
+    <string
+    description="the value to set for the key"
+    exampleValue="&quot;John Smith&quot;"
+    identifier="value"
+    name="Value"
+    optional="false"
+    >
+    </string>
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.PrintSystemProperties"
+      description="Prints all system properties."
+      identifier="printproperties"
+      name="Print Properties"
+      userInterface="false">
+  </command>
+  <command
+      category="General"
+      class="org.openjdk.jmc.commands.internal.executables.Call"
+      description="Executes the commands in a file."
+      identifier="call"
+      name="Call"
+      userInterface="false">
+    <string
+    description="the name of the script file to execute."
+    exampleValue="&quot;c:\myscript.cmd&quot;"
+    identifier="filename"
+    name="File name"
+    optional="false">
+    </string>
+  </command>
+  
+</extension>
+
+</plugin>

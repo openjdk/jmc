@@ -1,0 +1,88 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Dumping the Default Recording" />
+<meta name="abstract" content="The default recording for a JVM is similar to the black box on an airplane. It is started when the JVM is launched, runs continuously, and it can be used to analyze crashes, failures, and other events." />
+<meta name="description" content="The default recording for a JVM is similar to the black box on an airplane. It is started when the JVM is launched, runs continuously, and it can be used to analyze crashes, failures, and other events." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Dumping the Default Recording</title>
+
+<meta name="doctitle" content="Dumping the Default Recording&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" name="GUID-BA742114-2E89-462D-8DCB-4442B3538CFA"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-BA742114-2E89-462D-8DCB-4442B3538CFA" class="sect1">Dumping the Default Recording</h1>
+<div><p>The default recording for a JVM is similar to the black box on an airplane. It is started when the JVM is launched, runs continuously, and it can be used to analyze crashes, failures, and other events.</p>
+<p>To enable the default recording, start you Java application with the <code>-XX:FlightRecorderOptions</code> option set to <code>defaultrecording=true</code>. Do not forget to unlock commercial features and enable JFR.</p>
+<p>For example, to enable the default recording for a Java application named <code>MyApp</code>, use the following command:</p>
+<div class="p"><pre class="oac_no_warn" dir="ltr">java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:FlightRecorderOptions=defaultrecording=true MyApp</pre>
+</div>
+<p>To dump the default recording, right-click the <span class="bold">Flight Recorder</span> node under the corresponding connection in the JVM Browser and select <span class="bold">Dump Default Recording</span>. You can also right-click the recording named <span class="bold">HotSpot Default</span> and select <span class="bold">Dump</span>. The rest of the procedure is the same as dumping any running recording. See: Dumping a Running Flight Recording.</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-35CEE658-D1BE-456C-84C1-38543BE776AA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

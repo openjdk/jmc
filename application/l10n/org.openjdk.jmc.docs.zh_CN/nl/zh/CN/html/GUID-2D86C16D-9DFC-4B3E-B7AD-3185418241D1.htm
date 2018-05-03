@@ -1,0 +1,91 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="&#20851;&#20110; JVM &#27983;&#35272;&#22120;" />
+<meta name="abstract" content="JVM &#27983;&#35272;&#22120;&#26159;&#26174;&#31034;&#21487;&#29992; Java &#34394;&#25311;&#26426; (JVM) &#30340;&#35270;&#22270;&#65292;&#24744;&#21487;&#20197;&#20351;&#29992; JDK Mission Control (JMC) &#23545;&#36825;&#20123; JVM &#36827;&#34892;&#30417;&#35270;&#12289;&#31649;&#29702;&#21644;&#25925;&#38556;&#25490;&#38500;&#12290;" />
+<meta name="description" content="JVM &#27983;&#35272;&#22120;&#26159;&#26174;&#31034;&#21487;&#29992; Java &#34394;&#25311;&#26426; (JVM) &#30340;&#35270;&#22270;&#65292;&#24744;&#21487;&#20197;&#20351;&#29992; JDK Mission Control (JMC) &#23545;&#36825;&#20123; JVM &#36827;&#34892;&#30417;&#35270;&#12289;&#31649;&#29702;&#21644;&#25925;&#38556;&#25490;&#38500;&#12290;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-2D86C16D-9DFC-4B3E-B7AD-3185418241D1" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>&#20851;&#20110; JVM &#27983;&#35272;&#22120;</title>
+
+<meta name="doctitle" content="4 &#20851;&#20110; JVM &#27983;&#35272;&#22120;&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-65882C8B-7834-41E4-AA7F-9A82BCE36388.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-65882C8B-7834-41E4-AA7F-9A82BCE36388.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-2D86C16D-9DFC-4B3E-B7AD-3185418241D1" name="GUID-2D86C16D-9DFC-4B3E-B7AD-3185418241D1"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-2D86C16D-9DFC-4B3E-B7AD-3185418241D1" class="sect1"><span class="enumeration_chapter">4 </span>&#20851;&#20110; JVM &#27983;&#35272;&#22120;</h1>
+<div><p>JVM &#27983;&#35272;&#22120;&#26159;&#26174;&#31034;&#21487;&#29992; Java &#34394;&#25311;&#26426; (JVM) &#30340;&#35270;&#22270;&#65292;&#24744;&#21487;&#20197;&#20351;&#29992; JDK Mission Control (JMC) &#23545;&#36825;&#20123; JVM &#36827;&#34892;&#30417;&#35270;&#12289;&#31649;&#29702;&#21644;&#25925;&#38556;&#25490;&#38500;&#12290;</p>
+<p>JVM &#27983;&#35272;&#22120;&#22312;&#24744;&#21551;&#21160; JMC &#23458;&#25143;&#26426;&#26102;&#33258;&#21160;&#21551;&#21160;&#12290;&#35201;&#23558;&#25554;&#20214;&#36830;&#25509;&#21040; JVM&#65292;&#35831;&#21491;&#38190;&#21333;&#20987;&#27983;&#35272;&#22120;&#20013;&#30340; JVM&#65292;&#28982;&#21518;&#20174;&#19978;&#19979;&#25991;&#33756;&#21333;&#20013;&#36873;&#25321;&#35201;&#20351;&#29992;&#30340;&#24037;&#20855;&#12290;</p>
+<p>&#21487;&#20197;&#33258;&#21160;&#25628;&#32034;&#25110;&#25163;&#21160;&#37197;&#32622;&#27983;&#35272;&#22120;&#20013;&#30340; JVM&#12290;&#25163;&#21160;&#37197;&#32622;&#23450;&#21046; JVM &#23545;&#31934;&#32454;&#25511;&#21046;&#160;<code>JMXServiceURL</code>&#160;&#25110;&#35774;&#32622;&#36523;&#20221;&#35777;&#26126;&#24456;&#26377;&#29992;&#12290;</p>
+<div class="p">&#33258;&#21160;&#25628;&#32034;&#21040;&#30340; JVM &#26377;&#20197;&#19979;&#20004;&#31181;&#31867;&#22411;&#65306;<ul style="list-style-type: disc;"><li><p><a href="GUID-2E1242E0-8437-467B-9AEC-36AE680733F7.htm" title="JVM &#27983;&#35272;&#22120;&#21015;&#20986;&#20102;&#27491;&#22312;&#24744;&#35745;&#31639;&#26426;&#19978;&#36816;&#34892;&#30340;&#26412;&#22320;&#25628;&#32034;&#21040;&#30340; JVM&#12290;">&#26412;&#22320;&#25628;&#32034;&#21040;&#30340; JVM</a> &#19982; JDK Mission Control &#22312;&#21516;&#19968;&#35745;&#31639;&#26426;&#19978;&#36816;&#34892;</p>
+</li>
+<li><p>&#32593;&#32476;&#19978;&#30340;<a href="GUID-D934384D-A13D-46F7-9588-32AE6C901554.htm" title="Java Discovery Protocol (JDP) &#21487;&#20351; JVM &#27983;&#35272;&#22120;&#21015;&#20986;&#32593;&#32476;&#19978;&#30340; JVM &#23454;&#20363;&#12290;">&#36890;&#36807; Java Discovery Protocol &#25628;&#32034;&#21040;&#30340; JVM</a> (JDP)</p>
+</li>
+</ul>
+</div>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-65882C8B-7834-41E4-AA7F-9A82BCE36388.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

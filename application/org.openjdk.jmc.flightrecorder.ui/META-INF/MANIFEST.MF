@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: Flightrecorder Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ui;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.flightrecorder;visibility:=reexport,
+ org.openjdk.jmc.ui;visibility:=reexport,
+ org.openjdk.jmc.javafx.osgi,
+ org.openjdk.jmc.flightrecorder.rules,
+ org.openjdk.jmc.flightrecorder.rules.jdk,
+ org.openjdk.jmc.flightrecorder.configuration,
+ org.openjdk.jmc.commands
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI
+Export-Package: org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.flightrecorder.ui.common,
+ org.openjdk.jmc.flightrecorder.ui.messages.internal,
+ org.openjdk.jmc.flightrecorder.ui.preferences,
+ org.openjdk.jmc.flightrecorder.ui.selection
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ui

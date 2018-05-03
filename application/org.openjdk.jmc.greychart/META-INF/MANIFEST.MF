@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: GreyChart Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.greychart;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Export-Package: org.openjdk.jmc.greychart,
+ org.openjdk.jmc.greychart.data,
+ org.openjdk.jmc.greychart.impl,
+ org.openjdk.jmc.greychart.resource,
+ org.openjdk.jmc.greychart.util
+Require-Bundle: org.openjdk.jmc.ui.common
+Automatic-Module-Name: org.openjdk.jmc.greychart

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+<!--
+	<context id="org.openjdk.jmc.console.ui.action_startconsole" title="Starting the Console">
+		<description>This action will start the console.</description>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm" label="Starting the Console"/>
+	</context>
+-->
+	<context id="OverviewTab" title="Overview Tab">
+		<description>The Overview tab displays a set of dials and graphs with real-time usage statistics for any attributes of your choice.</description>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-440C24FA-59FD-471D-A1DC-7581C522E54E.htm" label="Using the Overview Tab"/>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-9EE879C7-3584-4508-8456-B4324097B207-01.htm" label="JMX Data Persistence Settings"/>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-29C36ED5-88E1-4974-B4B1-EFC683A1575D.htm" label="Dashboard"/>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-CCA54ADF-B778-4CF3-97D0-A34D2442A4C4.htm" label="Graphs"/>
+	</context>
+	<context id="SystemTab" title="System Tab">
+		<description>The System tab provides information about the system on which the JVM is running, performance attributes of the JVM, and a list of system properties.</description>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-2AF1BAE8-14F3-4904-85E8-5F333A765B3C.htm" label="Using the System Tab"/>
+	</context>
+	<context id="MemoryTab" title="Memory Tab">
+		<description>The Memory tab allows you to monitor how efficiently your application is using memory resources.</description>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0.htm" label="Using the Memory Tab"/>
+	</context>
+	<context id="ThreadTab" title="Threads Tab">
+		<description>The Threads tab allows you to monitor thread activity.</description>
+		<topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF.htm" label="Using the Threads Tab"/>
+	</context>
+</contexts>

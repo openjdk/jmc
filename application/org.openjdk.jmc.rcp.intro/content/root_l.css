@@ -1,0 +1,89 @@
+@import "shared.css";
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+
+h1 {
+	font: 240% Arial, Verdana, Helvetica, sans-serif;	
+}	
+
+h2 {
+	font: 200% Arial, Verdana, Helvetica, sans-serif;	
+}
+		
+h1, h2 {
+	font-weight: bold;	
+	padding-top: 1em;
+}
+			
+p {
+	padding-right: 20px;
+	padding-bottom: 0.5em;
+	font: 160% Arial, Verdana, Helvetica, sans-serif;	
+}
+
+a {
+	font-weight: bold;
+}
+
+a.normal {
+	font: 50% Arial, Verdana, Helvetica, sans-serif;	
+}
+
+a.large {
+	font: 100% Arial, Verdana, Helvetica, sans-serif;	
+}
+
+table {
+	margin-right: 50px;
+	margin-left: 30px;
+}
+
+table.inner {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+td {
+	vertical-align: top;
+}
+
+td.itemhead {
+	height: 2em;
+}	
+td.itemtext {
+	height: 4em;
+}	
+td.itemlink {
+	height: 1.5em;
+}
+
+td.three {
+	width: 33%;
+}
+
+td.four {
+	width: 25%;
+}
+
+td.five {
+	width: 20%;
+}
+		
+.titletext {
+	position: absolute;
+	right: 15px;
+	top: 8px;
+	font: 240% Arial, Verdana, Helvetica, sans-serif;	
+	font-weight: bold;
+	padding: 0;
+	margin: 0;	
+	color:#FF0000;
+}	
+	
+.fontsize {
+	position: absolute;
+	right: 10px;
+	top: 75px;
+}

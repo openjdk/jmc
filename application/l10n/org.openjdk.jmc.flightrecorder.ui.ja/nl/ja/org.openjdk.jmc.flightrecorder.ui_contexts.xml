@@ -1,0 +1,177 @@
+<?xml version = '1.0' encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+   <!-- Views -->
+
+   <context id="JfrOutlinePage">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-58C8400F-82C1-4A25-92F2-1A96058C871F.htm" label="アウトライン�?�使用"/>
+   </context>
+   
+   <context id="StacktraceView">
+      <description>「スタック・トレース�?ビュー�?��?��?「フライト記録�?エディタ・ビュー�?��?�択�?��?�イベント�?�集計�?�れ�?�スタック・トレース�?��?��?�れ�?��?�。</description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-DDE72C8A-0A15-43F9-A109-EB87804FD480.htm" label="スタック・トレース�?��?作"/>
+   </context>
+   
+   <context id="JfrPropertiesView" title="「イベント�?�プロパティ�?ビュー">
+      <description>�?��?�ビュー�?��?��?「フライト記録�?エディタ・ビュー�?��?�択�?��?�イベント�?�プロパティ�?�表示�?�れ�?��?�。</description>
+   </context>
+   
+   <context id="ResultView">
+      <description>�?��?�ビュー�?��?��?「フライト記録�?エディタ・ビュー�?��?�在アクティブ�?�ページ�?�関連�?�る自動分�?�?��?果�?�表示�?�れ�?��?�。</description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm" label="「自動分�?�?��?果�?ページ�?�表示"/>
+   </context>
+   
+   <!-- Pages -->
+   
+   <context id="resultoverview">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm" label="「自動分�?�?��?果�?ページ�?�表示"/>
+   </context>
+   
+   <context id="javaapplication">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-8EA35A18-669C-4EC3-BCEF-7EA7F92BA3EE.htm" label="「Javaアプリケーション�?ページ�?�使用"/>
+   </context>
+   
+   <context id="heap">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-66413CF1-A0E1-43BD-B8DB-9720B112D8F3.htm" label="「メモリー�?ページ�?�使用"/>
+   </context>
+   
+   <context id="lockinstances">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-F94F7FBB-5B53-40A3-854E-8BE8FC172629.htm" label="「ロック・インスタンス�?ページ�?�使用"/>
+   </context>
+   
+   <context id="fileio">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-ABF6E2F7-9FE9-4054-934C-BE05AEA8EDFE.htm" label="「ファイルI/O�?ページ�?�使用"/>
+   </context>
+   
+   <context id="socketio">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-492BB17D-5964-48C3-9212-D4848514437A.htm" label="「ソケットI/O�?ページ�?�使用"/>
+   </context>
+   
+   <context id="methodprofiling">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-343C6885-3367-4DDE-9BE5-1A7421CE00A1.htm" label="「メソッド・プロファイリング�?ページ�?�使用"/>
+   </context>
+   
+   <context id="exceptions">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm" label="「例外�?�エラー�?ページ�?�使用"/>
+   </context>
+   
+   <context id="threaddumps">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm" label="「スレッド・ダンプ�?ページ�?�使用"/>
+   </context>
+   
+   <context id="jvminternals">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-A45813E6-C32E-4916-966E-AE24992BB326.htm" label="「JVM内部�?ページ�?�使用"/>
+   </context>
+
+   <context id="garbagecollections">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-C12D23CE-E9DE-4BFA-A310-9AD5B6D835FD.htm" label="「ガベージ・コレクション�?ページ�?�使用"/>
+   </context>
+   
+   <context id="gcconfiguration">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-FEFBE854-3298-46A6-A149-8B48A62330D2.htm" label="「GC構�?�?ページ�?�使用"/>
+   </context>
+
+   <context id="compilations">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-CD7A11BF-27AE-481A-8158-03ECC2DB9697.htm" label="「コンパイル�?ページ�?�使用"/>
+   </context>
+   
+   <context id="codecache">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-DB152DDE-4694-439D-B8A7-CF1EABFAF795.htm" label="「コード・キャッシュ�?ページ�?�使用"/>
+   </context>
+   
+   <context id="classloading">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-6A66D658-7FD4-4621-9FE7-662D8B8FFACF.htm" label="「クラス�?�ロード�?ページ�?�使用"/>
+   </context>
+
+   <context id="vmoperations">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm" label="「VM�?作�?ページ�?�使用"/>
+   </context>
+
+   <context id="tlaballocations">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-4F885E48-A548-4140-B985-74B1685BEDEA.htm" label="「TLAB割当�?��?ページ�?�使用"/>
+   </context>
+
+   <context id="environment">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm" label="「環境�?ページ�?�使用"/>
+   </context>
+
+   <context id="processes">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-BCAF66B8-BC4F-48F3-8453-5AA921067861.htm" label="「プロセス�?ページ�?�使用"/>
+   </context>
+	
+   <context id="environmentvariables">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-81AD3592-4E3F-4D9E-8877-675CEF333549.htm" label="「環境変数�?ページ�?�使用"/>
+   </context>
+   
+   <context id="systemproperties">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-958F3421-2848-4C34-9A08-681011D409E6.htm" label="「システム・プロパティ�?ページ�?�使用"/>
+   </context>
+   
+   <context id="recording">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-A27CE821-5AD5-438D-9A2F-D0B45B743EF0.htm" label="「記録�?ページ�?�使用"/>
+   </context>
+   
+   <!--
+   <context id="eventbrowser">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/olh-event-browser.htm" label="Using the Event Browser Page" />
+   </context>
+   -->
+   
+</contexts>

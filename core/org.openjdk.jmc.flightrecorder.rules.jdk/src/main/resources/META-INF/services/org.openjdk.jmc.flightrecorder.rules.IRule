@@ -1,0 +1,87 @@
+#
+#  Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+#
+#  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+#  The contents of this file are subject to the terms of either the Universal Permissive License 
+#  v 1.0 as shown at http://oss.oracle.com/licenses/upl
+#   
+#  or the following license:
+#   
+#  Redistribution and use in source and binary forms, with or without modification, are permitted
+#  provided that the following conditions are met:
+#   
+#  1. Redistributions of source code must retain the above copyright notice, this list of conditions
+#  and the following disclaimer.
+#   
+#  2. Redistributions in binary form must reproduce the above copyright notice, this list of
+#  conditions and the following disclaimer in the documentation and/or other materials provided with
+#  the distribution.
+#   
+#  3. Neither the name of the copyright holder nor the names of its contributors may be used to
+#  endorse or promote products derived from this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+#  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+#  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+#  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+#  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+org.openjdk.jmc.flightrecorder.rules.jdk.compilation.CodeCacheRule
+org.openjdk.jmc.flightrecorder.rules.jdk.cpu.CompareCpuRule
+org.openjdk.jmc.flightrecorder.rules.jdk.cpu.HighJvmCpuRule
+org.openjdk.jmc.flightrecorder.rules.jdk.cpu.ManyRunningProcessesRule
+org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ErrorRule
+org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ExceptionRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.BufferLostRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLoadingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DMSIncidentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DebugNonSafepointsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedGcOptionsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedVmOptionsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DumpReasonRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DuplicateFlagsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.FewSampledThreadsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.FlightRecordingSupportRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ManagementAgentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.OptionsCheckRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInArgumentsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInSystemPropertiesRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.RecordingSettingsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.StackDepthSettingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule
+org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule
+org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule
+org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketReadRule
+org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketWriteRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.BiasedLockingRevocationPauseRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.BiasedLockingRevocationRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.ContextSwitchRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.MethodProfilingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.JavaBlockingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.latency.VMOperationRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.AllocationByClassRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.AllocationByThreadRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.ApplicationHaltsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.AutoBoxingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.CompressedOopsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcLockerRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcFreedRatioRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcPauseRatioRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapContentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapInspectionRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.HighGcRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.IncreasingLiveSetRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.IncreasingMetaspaceLiveSetRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.LongGcPauseRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.LowOnPhysicalMemoryRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.MetaspaceOomRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.StringDeduplicationRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.SystemGcRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.TlabAllocationRatioRule

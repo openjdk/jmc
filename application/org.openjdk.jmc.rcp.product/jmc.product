@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?pde version="3.5"?>
+
+<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="7.0.0" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="../org.openjdk.jmc.rcp.application/icons/mission_control_abt_Oracle.gif"/>
+      <text>
+         %ABOUT_TEXT
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>--launcher.appendVmargs
+      </programArgs>
+      <programArgsLin>-vm ../../bin/
+      </programArgsLin>
+      <programArgsMac>-ws cocoa -vm ../../../../../bin/
+      </programArgsMac>
+      <programArgsWin>-vm ./
+      </programArgsWin>
+      <vmArgs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-modules=java.xml.bind,java.xml.ws.annotation --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED
+      </vmArgs>
+      <vmArgsLin>--add-exports=java.desktop/sun.awt.X11=ALL-UNNAMED
+      </vmArgsLin>
+      <vmArgsMac>--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="../org.openjdk.jmc.rcp.application/icons/mission_control_16.png" i32="../org.openjdk.jmc.rcp.application/icons/mission_control_32.png" i48="../org.openjdk.jmc.rcp.application/icons/mission_control_48.png" i64="../org.openjdk.jmc.rcp.application/icons/mission_control_64.png" i128="../org.openjdk.jmc.rcp.application/icons/mission_control_128.png"/>
+
+   <splash
+      location="org.openjdk.jmc.rcp.application"
+      startupProgressRect="0,320,500,10"
+      startupMessageRect="165,280,310,20"
+      startupForegroundColor="C0C0C0" />
+   <launcher name="jmc">
+      <linux icon="../org.openjdk.jmc.rcp.application/icons/mission_control_48.xpm"/>
+      <macosx icon="../org.openjdk.jmc.rcp.application/icons/mission_control.icns"/>
+      <win useIco="true">
+         <ico path="../org.openjdk.jmc.rcp.application/icons/mission_control.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <intro introId="org.openjdk.jmc.rcp.intro"/>
+
+   <vm>
+   </vm>
+
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.openjdk.jmc.feature.rcp"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.openjdk.jmc.rcp.application" autoStart="false" startLevel="5" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
+      <property name="eclipse.application" value="org.openjdk.jmc.rcp.application.app" />
+      <property name="eclipse.home.location" value="$osgi.install.area$" />
+      <property name="eclipse.p2.profile" value="JMC" />
+      <property name="eclipse.p2.unsignedPolicy" value="prompt" />
+      <property name="eclipse.product" value="org.openjdk.jmc.rcp.application.product" />
+      <property name="osgi.bundles.defaultStartLevel" value="4" />
+      <property name="osgi.instance.area.default" value="@user.home/.jmc/7.0.0" />
+      <property name="osgi.signedcontent.support" value="true" />
+      <property name="osgi.splashPath" value="platform:/base/plugins/org.openjdk.jmc.rcp.application" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Joverflow
+Bundle-SymbolicName: org.openjdk.jmc.joverflow
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.openjdk.jmc.joverflow,
+ org.openjdk.jmc.joverflow.descriptors,
+ org.openjdk.jmc.joverflow.heap.model,
+ org.openjdk.jmc.joverflow.heap.parser,
+ org.openjdk.jmc.joverflow.stats,
+ org.openjdk.jmc.joverflow.support,
+ org.openjdk.jmc.joverflow.util
+Import-Package: org.openjdk.jmc.common.io
+Automatic-Module-Name: org.openjdk.jmc.joverflow

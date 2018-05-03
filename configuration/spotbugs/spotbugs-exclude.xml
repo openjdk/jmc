@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<FindBugsFilter>
+    <!-- Skip I18n -->
+    <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING"/>
+    </Match>
+    <Match>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
+    
+	<!-- Allowing Eclipse plug-in style singleton default instances -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\..*Plugin" />
+		<Method name="&lt;init&gt;" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+	</Match>
+
+	<!-- Allow tri state Boolean methods in these framework methods, i.e. the 
+		methods are used by the framework, and known to work with null values. -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.console.ui.notification.tab.RuleCheckedStateProvider" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.misc.CompositeSupport" />
+		<Method name="getBoolean" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.classes.model.ClassLoaderInstance" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="~org.openjdk.jmc.ui.checkedstate..*" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.triggers.fields.internal.Field" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.views.types.TypeCheckedStateProvider" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.internal.parser.v1.StructTypes$JfrMethod" />
+		<Method name="isNative" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.internal.parser.v1.StructTypes$JfrOldObject" />
+		<Method name="isRoot" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	
+	<!-- Just internal helper method -->
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.internal.ConnectionCapabilitiesToolkit" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+
+	<!-- State changed in volatile. Signal used to stop wait and speed up thread 
+		end. -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.common.PollManager" />
+		<Method name="stopIfNotStopped" />
+		<Bug pattern="NN_NAKED_NOTIFY" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.polling.PollManager" />
+		<OR>
+			<Method name="stopIfNotStopped" />
+			<Method name="poll" />
+		</OR>
+		<Bug pattern="NN_NAKED_NOTIFY" />
+	</Match>
+
+	<!-- Reference comparisons known to be okay, and in performance critical 
+		areas -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.ui.components.chart.model.FilteredFLRIterator" />
+		<Method name="skipForward" />
+		<Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
+	</Match>
+
+	<!-- Plain false positive -->
+	<Match>
+		<Class name="org.openjdk.jmc.components.ui.settings.IconEditor" />
+		<Method name="fillPixel" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+	</Match>
+
+	<!-- === Level 16 nitpicks and higher === -->
+	<!-- Eclipse uses a rather smart way to handle NSL that rubs FindBugs the 
+		wrong way -->
+	<Match>
+		<Class name="~.*\.Messages" />
+		<Bug pattern="MS_SHOULD_BE_FINAL" />
+	</Match>
+
+	<!-- The exit command which, obviously, works as advertised. The command 
+		is available from JMCs internal command console, and only affects the client. 
+		I.e, it is not a remote command. -->
+	<Match>
+		<Class name="org.openjdk.jmc.commands.internal.executables.Exit" />
+		<Method name="execute" />
+		<Bug pattern="DM_EXIT" />
+	</Match>
+
+	<!-- Used for best effort in-memory size determination. If we get a better 
+		way to determine this, say perf counters we will change this. Note that this 
+		is done in the JMC GUI, not in any framework code that may be used by third 
+		party (server) consumers. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.FlightRecordingEditor" />
+		<Bug pattern="DM_GC" />
+	</Match>
+
+	<!-- Also intended exit - user wanted to quit on start up -->
+	<Match>
+		<Class name="org.openjdk.jmc.rcp.application.RCPApplicationIDESupport$1" />
+		<Method name="run" />
+		<Bug pattern="DM_EXIT" />
+	</Match>
+
+	<!-- Optimized equals(), since we know it will only be compared to this 
+		type... -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.internal.parser.binary.factories.EqualityProxy" />
+		<Bug pattern="BC_EQUALS_METHOD_SHOULD_WORK_FOR_ALL_OBJECTS" />
+	</Match>
+
+	<!-- Exception ignored on purpose, trying to determine what ciphers can 
+		be used for PBE -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.common.security.DefaultSecurityManager" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+
+	<!-- Our own framework clone -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.profiler.exception.Template" />
+		<Bug pattern="CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.profiler.method.Template" />
+		<Bug pattern="CN_IDIOM_NO_SUPER_CALL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.support.ClassAndOvhdComboList" />
+		<Bug pattern="CN_IDIOM_NO_SUPER_CALL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.support.ClassAndSizeComboList" />
+		<Bug pattern="CN_IDIOM_NO_SUPER_CALL" />
+	</Match>
+
+	<!-- Class representing a profiled exception -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.console.ui.profiler.exception.ProfiledException" />
+		<Bug pattern="NM_CLASS_NOT_EXCEPTION" />
+	</Match>
+
+	<!-- Ignoring mockup classes -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.rjmx\.mockup\..*" />
+	</Match>
+
+	<!-- Ignoring directory creation problem, as the code path for the actual 
+		logging will hit the problem and display an error -->
+	<Match>
+		<Class name="org.openjdk.jmc.rcp.logging.LoggingToolkit" />
+		<Method name="createFolders" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
+	</Match>
+
+	<!-- Will never do nothing but reference comparisons of these. Only equal 
+		when the same. -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.layout.SimpleLayout$CalculationData" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- Reversing the order of compare is in this case very deliberate, and 
+		in fact the whole point. The framework is for visualizing data in tables, 
+		and for instance used by tables to change the sort order of the content. -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.model.fields.Field" />
+		<Bug pattern="RV_NEGATING_RESULT_OF_COMPARETO" />
+	</Match>
+
+	<!-- There will be no nodes that are duplicates and should be equal when 
+		the instances are not the exact same. Could possibly microoptimize by having 
+		a better hash code, but may be confusing to not also implement equals. -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.ui.components.graph.TreeNodeWrapper" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- We only sort these instances using compareTo(), not to mention they 
+		are mutable - there is no hashCode better than the default. -->
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.triggers.TriggerRule" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.ui.components.graph.renderer.RenderLayoutData" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- We need to execute equals on these instances but since they are mutable 
+		we can not provide a good hashCode implementation. -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.dial.ImageDescription" />
+		<Bug pattern="HE_EQUALS_USE_HASHCODE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.dial.DialViewer$Range" />
+		<Bug pattern="HE_EQUALS_USE_HASHCODE" />
+	</Match>
+
+	<!-- === The following are in experimental plug-ins === -->
+	<!-- Increments of the volatile are always by the same thread (from the 
+		run method), either directly or indirectly. -->
+	<Match>
+		<Class name="org.openjdk.jmc.test.services.applications.ExceptionThrower" />
+		<Bug pattern="VO_VOLATILE_INCREMENT" />
+		<Method name="run" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.test.services.ServiceThread" />
+		<Bug pattern="VO_VOLATILE_INCREMENT" />
+		<Method name="updateStatistics" />
+	</Match>
+
+	<!-- We only sort these instances using compareTo(), not to mention they 
+		are mutable - there is no hashCode better than the default. -->
+	<Match>
+		<Class name="org.openjdk.jmc.pde.PluginReference" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- === JOverflow === -->
+	<!-- These are ok exit calls for the code to run JOverflow in stand-alone 
+		mode -->
+	<Match>
+		<OR>
+			<Class name="org.openjdk.jmc.joverflow.ui.FXMain" />
+			<Class name="org.openjdk.jmc.joverflow.ui.FXMain$1" />
+		</OR>
+		<Bug pattern="DM_EXIT" />
+	</Match>
+
+	<!-- These are injected by the framework through special annotations, and 
+		will be initialized. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.ui.JOverflowFxUi" />
+		<Method name="&lt;init&gt;" />
+		<Bug pattern="UR_UNINIT_READ" />
+	</Match>
+
+	<!-- We only sort these instances using compareTo(), and never use them 
+		where equals() can be used -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.support.ClassAndSizeCombo" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.model.Root" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.model.Root$1" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+	<Match>
+		<Or>
+			<Class name="org.openjdk.jmc.joverflow.batch.ReferencedObjCluster$Collections" />
+			<Class name="org.openjdk.jmc.joverflow.batch.ReferencedObjCluster$DupArrays" />
+			<Class name="org.openjdk.jmc.joverflow.batch.ReferencedObjCluster$DupStrings" />
+			<Class name="org.openjdk.jmc.joverflow.batch.ReferencedObjCluster$HighSizeObjects" />
+			<Class name="org.openjdk.jmc.joverflow.batch.ReferencedObjCluster$WeakHashMaps" />
+		</Or>
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- Increments of the volatile are always by the same thread (from the 
+		run method), either directly or indirectly. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.parser.CachedReadBuffer" />
+		<Bug pattern="VO_VOLATILE_INCREMENT" />
+		<Method name="get" />
+	</Match>
+	<!-- Used as best effort cache size determination -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.ui.model.ModelLoader" />
+		<Bug pattern="DM_GC" />
+	</Match>
+
+	<!-- Experimental/benchmarking code is ok to use explicit System.gc() -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.parser.CachedReadBuffer" />
+		<Bug pattern="DM_GC" />
+		<Method name="determineCacheSizeFromFreeMem" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.agent.MemoryTracker$1" />
+		<Bug pattern="DM_GC" />
+		<Method name="run" />
+	</Match>
+
+	<!-- Optimized equals() - proper type checks are done in the callee method -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.joverflow.support.RefChainElementImpl$AbstractElement" />
+		<Method name="equals" />
+		<Bug pattern="BC_EQUALS_METHOD_SHOULD_WORK_FOR_ALL_OBJECTS" />
+	</Match>
+
+	<!-- A shared object does change (gets initialized), but FindBugs cannot 
+		recognize that. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.PhoneHome$ConnectThread" />
+		<Method name="run" />
+		<Bug pattern="NN_NAKED_NOTIFY" />
+	</Match>
+	
+	<!-- JOverflow: Fire and forget model loaders. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.ui.FxMain" />
+		<Method name="start" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.ui.JOverflowEditor" />
+		<Method name="createScene" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
+	</Match>
+	
+	<!-- JOverflow: Unread public field. May be used in the future. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.support.CompressibleStringStats" />
+		<Field name="nBackingCharArrays" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.support.DupStringStats" />
+		<Field name="nBackingCharArrays" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+	<!-- JOverflow: Uncalled debug method. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.parser.CachedReadBuffer" />
+		<Method name="checkListConsistency" />
+		<Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
+	</Match>
+	<!-- JOverflow: Unused debug counters. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.parser.CachedReadBuffer" />
+		<Or>
+			<Field name="numReads" />
+			<Field name="numPageSwaps" />
+			<Field name="lastReadPos" />
+			<Field name="numChanges" />
+		</Or>
+		<Bug pattern="UUF_UNUSED_FIELD" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.stats.HeapScaner" />
+		<Method name="analyzeViaAllObjectsEnum" />
+		<Bug pattern="DLS_DEAD_LOCAL_STORE" />
+	</Match>
+	<!-- JOverflow explicit null returned instead of empty array. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.descriptors.AbstractCollectionDescriptor" />
+		<Method name="getKnownAndPrimitiveFieldIndices" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+	<Match>
+		<Or>
+			<Class name="org.openjdk.jmc.joverflow.heap.parser.ReadBuffer$CachedReadBufferFactory" />
+			<Class name="org.openjdk.jmc.joverflow.heap.parser.ReadBuffer$MmappedBufferFactory" />
+		</Or>
+		<Method name="getFileImageBytes" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.stats.BreadthFirstHeapScanner" />
+		<Method name="getNewFrontier" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.util.StringInterner" />
+		<Or>
+			<Method name="internStringArrayContents" />
+			<Method name="internStringsInObjectArray" />
+		</Or>
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+
+	<!-- JOverflow examples code: Explicitly never written fields. -->
+	<Match>
+		<Class name="examples.FixableIssues$DeadFieldHolder" />
+		<Field name="dataField" />
+		<Bug pattern="UWF_UNWRITTEN_FIELD" />
+	</Match>
+	<!-- JOverflow examples code: Unread fields. -->
+	<Match>
+		<Or>
+			<Class name="examples.DuplicateArrays" />
+			<Class name="examples.DuplicateStrings" />
+			<Class name="examples.FixableIssues" />
+			<Class name="examples.VariousIssues" />
+			<Class name="examples.VariousIssues2" />
+			<Class name="examples.VariousIssues3" />
+		</Or>
+		<Method name="main" />
+		<Bug pattern="DLS_DEAD_LOCAL_STORE" />
+	</Match>
+	<Match>
+		<Class name="examples.VariousIssues$RefBackToKey" />
+		<Bug pattern="URF_UNREAD_FIELD" />
+	</Match>
+	<Match>
+		<Or>
+			<Class name="examples.VariousIssues2$CustomRef1" />
+			<Class name="examples.VariousIssues2$CustomRef2" />
+			<Class name="examples.VariousIssues2$LLElementP" />
+		</Or>
+		<Field name="ref" />
+		<Bug pattern="URF_UNREAD_FIELD" />
+	</Match>
+	<!-- JOverflow examples code: Explicit string duplication. -->
+	<Match>
+		<Class name="examples.DuplicateStrings" />
+		<Method name="duplicateStringShallow" />
+		<Bug pattern="DM_STRING_CTOR" />
+	</Match>
+	<!-- JOverflow examples code: Explicit string duplication. -->
+	<Match>
+		<Class name="examples.VariousIssues" />
+		<Bug pattern="DM_GC" />
+	</Match>
+	<!-- JOverflow test code: Unread fields. -->
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.stats.VariousIssueTest3" />
+		<Method name="testVariousIssues" />
+		<Bug pattern="DLS_DEAD_LOCAL_STORE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.heap.model.TestJavaObjectTable" />
+		<Method name="testIteratingUnvisitedObjects" />
+		<Bug pattern="UC_USELESS_OBJECT" />
+	</Match>
+
+	<!-- === Filtering out test classes right now === -->
+	<Match>
+		<Class name="~.*\.test\..*" />
+	</Match>
+	<Match>
+		<Class name="~.*\.uitest\..*" />
+	</Match>
+	<Match>
+		<Class name="~.*Test" />
+	</Match>
+	<Match>
+		<Class name="~.*Test\$.*" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.checkedstate.TreeContentProvider" />
+	</Match>
+
+	<!-- === Filtering out classes we do not own === -->
+	<!-- The sun classes are only included as part of an internal JConsole plug-in 
+		used for testing. -->
+	<Match>
+		<Class name="~sun\.tools\..*" />
+	</Match>
+	<Match>
+		<Class name="~com\.sun\..*" />
+	</Match>
+
+	<!-- === Findbugs rank 17 === -->
+	<!-- Filtering out due to nearly always false positives, and no negative 
+		side effects except possibly for readability. -->
+	<Match>
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+		<Rank value="17" />
+	</Match>
+	<!-- Filtering out due to nearly always false positives (does not respect 
+		an implementation of an API may change, and that it is the API not the current 
+		implementation that should be analyzed), and no negative side effects except 
+		possibly for readability. -->
+	<Match>
+		<Bug pattern="BC_VACUOUS_INSTANCEOF" />
+		<Rank value="17" />
+	</Match>
+
+	<!-- Instance sequence number. All instances created from the same thread. -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.browser\.attach\.LocalConnectionDescriptor" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+	</Match>
+
+	<!-- These are okay, since we never write to individual elements in the 
+		array. The array is always substituted for an entirely new array. -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.tabs.memory.MemoryPoolModel" />
+		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.tabs.threads.ThreadsModel" />
+		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.misc.ProgressCircle" />
+		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.fields.FieldToolkit" />
+		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+
+	<!-- The super class is an rt.jar class. Can't override. Then again, we 
+		know we only use our subclasses, so ok. -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.subscription.internal.AttributeExceptionEvent" />
+		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+	</Match>
+
+	<!-- The equals implementation of the superclass is valid for the subclass 
+		too -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.subscription.internal.CompositeFileMRIMetadata" />
+		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+	</Match>
+
+	<!-- The equals and hashCode implementation of the superclass is valid for the subclass 
+		too -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.services.internal.HotSpot24DiagnosticCommandService$DiagnosticCommandParameter" />
+		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+	</Match>
+
+	<!-- It's a helper class with information that may be useful in the future -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.ui.internal.AttributeFieldTableSectionPart$DashboardEntry" />
+		<Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+
+	<!-- It's an optimization. See comment. -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.common.util.FilterMatcher" />
+		<Field name="lastPattern" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+	</Match>
+
+	<!-- One can argue that this class does not need to have all those protected 
+		methods. One could even argue that the class should be final. TODO: check this. -->
+	<Match>
+		<Class name="org.openjdk.jmc.rcp.start.MCMain" />
+		<Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+
+	<!-- In these cases the wait is used as a sleep. One may argue that there 
+		are better ways, but it is indeed correct. -->
+	<Match>
+		<Class name="~.*PollManager.*" />
+		<Bug pattern="UW_UNCOND_WAIT " />
+	</Match>
+
+	<!-- False positives -->
+	<Match>
+		<Class name="org.openjdk.jmc.common.parsing.Token" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.ui.column.AsyncService" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
+	</Match>
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.ui.components.operativeset.model.EventToolkit" />
+		<Bug pattern="BIT_SIGNED_CHECK" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.triggers.internal.NotificationTrigger" />
+		<Bug pattern="BIT_SIGNED_CHECK" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.internal.KnownObjectNames" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.internal.MCMBeanServerConnection" />
+		<Method name="tryRegisteringListener" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.internal.MCMBeanServerConnection" />
+		<Method name="tryRemoveListener" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.subscription.internal.SyntheticAttributeToolkit" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rjmx.subscription.internal.HotSpotLiveSetAttribute" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.coherence.jmx.util.CoherenceModel" />
+		<Method name="closeAndIgnore" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.formpage.FormPageContribution" />
+		<Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+	</Match>
+
+	<!-- Yes, we want to be able to control sort order. The code is correct. -->
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.ui.column.ColumnCompositeComparator" />
+		<Bug pattern="RV_NEGATING_RESULT_OF_COMPARETO" />
+	</Match>
+
+	<!-- Temporarily turning these one off, as it is used all over JMC as a performance 
+		enhancement. (One possible fix is to always return a copy of the array, 
+		wrap in an immutable collection or a copy of whatever object containing the 
+		state.) -->
+	<Match>
+		<Bug pattern="EI_EXPOSE_REP" />
+	</Match>
+	<Match>
+		<Bug pattern="EI_EXPOSE_REP2" />
+	</Match>
+	
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar" />
+		<Bug pattern="MS_PKGPROTECT" />
+	</Match>
+	<!-- JMC is not run with a SecurityManager -->
+	<Match>
+		<Bug pattern="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" />
+	</Match>
+
+	<!-- We we choose to ignore exceptions during shutdown, it is normally since 
+		we do not care, and do not wish to clutter the log. -->
+	<Match>
+		<Method name="dispose" />
+		<Bug pattern="DE_MIGHT_IGNORE" />
+	</Match>
+
+	<!-- The only downside with this is a redundant nullcheck, and we seem to 
+		only do this when API documentation tells us this may be necessary, or in 
+		conjunction with asserts (which seems to yield false positives) -->
+	<Match>
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+	</Match>
+
+	<!-- If we need a comparator to be serializable, we make it serializable -->
+	<Match>
+		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+	</Match>
+
+	<!-- It's a UI. It is quite common to switch on event types etc. and not 
+		have a default case. -->
+	<Match>
+		<Bug pattern="SF_SWITCH_NO_DEFAULT" />
+	</Match>
+
+	<!-- === Finbugs Rank 20 === -->
+	<!-- The standard Eclipse UI pattern is that critical components are built 
+		in the start method of plug-ins, and or createComposite method of UI classes. 
+		Since the method reported is not where the field is assigned, but rather 
+		referenced, we must disable this altogether (too common with false positives). -->
+	<Match>
+		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class name="~.*Handler.*" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<!-- We know the component to be a tab folder -->
+	<Match>
+		<Class name="org.openjdk.jmc.components.ui.design.designelement.TabElement" />
+		<Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Null signals done/quit -->
+	<Match>
+		<Class name="org.openjdk.jmc.rcp.start.MCMain" />
+		<Method name="process" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+		<Rank value="20" />
+	</Match>
+	<!-- Null signals could not get info -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.RecordingWizardModel" />
+		<Method name="getDescriptors" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+		<Rank value="20" />
+	</Match>
+	<!-- Null signals parse error -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.misc.PersistableSashForm" />
+		<Method name="parseIntArray" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+
+	<!-- Not running with security manager -->
+	<Match>
+		<Bug pattern="DP_DO_INSIDE_DO_PRIVILEGED" />
+		<Rank value="20" />
+	</Match>
+	<!-- Don't care about performance in the test classes -->
+	<Match>
+		<Class name="~.*Tester.*" />
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Type implied from isConnectioNNode method -->
+	<Match>
+		<Class name="org.openjdk.jmc.browser.views.BrowserLabelProvider" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.browser.views.JVMBrowserToolkit" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.browser.views.JVMBrowserNodeActionFilter" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- This is an artefact from when we needed to be able to add pojo triggers 
+		for headless operation. NOTE: This will disappear after the rewrite. -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.notification.wizard.RuleWizard" />
+		<Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- We always use styled text in this framework. -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.rcp.application.scripting.ControlContentAdapter" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Yes Java2D will always be available on modern JVMs. If we do not have 
+		access to AWT, we have much bigger problems... -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.flightrecorder.ui.components.graph.EventGraphTree" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.greychart.GreyChartPanel" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.greychart.JChartComponent" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- isIntegrating implies type -->
+	<Match>
+		<Class name="~.*Buffer" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Safe in the framework -->
+	<Match>
+		<Class
+			name="~org\.openjdk\.jmc\.flightrecorder\.ui\.components\.aggregators\..*" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Only added to MBeanTreeSection parts. -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.ui.mbeanbrowser.tree.MBeanTreeFilter" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Class
+			name="org.openjdk.jmc.console.ui.mbeanbrowser.tab.MBeanOperationsSectionPart" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Lost patience, excluding this bug pattern since there are so many false 
+		positives. I keep the other related excludes, since we may want to complete 
+		that work at a later point. -->
+	<Match>
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+		<Rank value="20" />
+	</Match>
+	<Match>
+		<Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Instance tracking -->
+	<Match>
+		<Class name="org.openjdk.jmc.browser.views.JVMBrowserViewDragSource" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Will only provide values from a set of predefined values. -->
+	<Match>
+		<Class
+			name="org.openjdk.jmc.components.ui.design.view.layout.LayoutDataSliderListener" />
+		<Bug pattern="FE_FLOATING_POINT_EQUALITY" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Explicit nulls in the fields framework -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.ui\.fields\..*" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- In UI classes, this is really only causing the minor memory overhead 
+		of a this pointer. We can go after these later, but it will probably only 
+		clutter up the code. -->
+	<Match>
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- These are a lot of comparisons in JMC of double values where the values 
+		are not calculated values but previously read values. This is so common that 
+		I turn off this warning for now. -->
+	<Match>
+		<Bug pattern="FE_FLOATING_POINT_EQUALITY" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Excluding native memory since not yet shipped -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.console\.ui\.nativememory\..*" />
+		<Rank value="20" />
+	</Match>
+
+	<!-- Modifications to this array are considered to be thread local.
+		 Only reference read/write are thread safe -->
+	<Match>
+	   <Class name="org.openjdk.jmc.browser.views.JVMBrowserView" />
+	   <Field name="expanded" />
+	   <Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+	
+	<!-- Null return value documented -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.internal.parser.binary.LoaderContext" />
+		<Method name="takeBuffer" />
+		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+	</Match>
+
+	<!-- Calling method to force initialization -->
+	<Match>
+		<Class name="org.openjdk.jmc.rcp.application.Application" />
+		<Method name="start" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.ui.MCAbstractUIPlugin" />
+		<Method name="attemptToInitAWT" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
+	</Match>
+	<!-- Calling Class.forName to force class initialization -->
+	<Match>
+		<Class name="org.openjdk.jmc.attach.AttachToolkit" />
+		<Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
+	</Match>
+
+	<!-- Caching in volatile variable -->
+	<Match>
+		<Class name="org.openjdk.jmc.common.util.FilterMatcher" />
+		<Method name="regexpMatch" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+	</Match>
+ 
+	<!-- False positive, referenced by a lambda style method reference -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.flightrecorder\.ui\.pages\.itemhandler\.AttributeMenuFactory.*" />
+		<Method name="attributeAggregatorMenu" />
+		<Bug pattern="UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS" />
+	</Match>
+	
+	<!-- Fall through is intentional -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit" />
+		<Method name="formatFrame" />
+		<Bug pattern="SF_SWITCH_FALLTHROUGH" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.JfrOutlinePage$OutlineDropListener" />
+		<Method name="performDrop" />
+		<Bug pattern="SF_SWITCH_FALLTHROUGH" />
+	</Match>
+	
+	<!-- We want to use single word "username" and "timestamp" but don't want to
+	    change the imported JConsole code that contains other camelCase variants. -->
+	<Match>
+		<Method name="getUsername" />
+		<Bug pattern="NM_CONFUSING" />
+	</Match>
+	<Match>
+		<Method name="getLastTimestamp" />
+		<Bug pattern="NM_CONFUSING" />
+	</Match>
+
+	<!-- We will not serialize Swing components -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.jconsole.tabs.JConsolePluginTabbedPane" />
+		<Bug pattern="SE_BAD_FIELD" />
+	</Match>	
+	
+	<!-- False positive -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader" />
+		<Method name="sendProgress" />
+		<Bug pattern="UC_USELESS_VOID_METHOD" />
+	</Match>	
+	
+	<!-- Fields are written using reflection and must match file format. -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.flightrecorder\.internal\.parser\.v1\.StructTypes\$.*" />
+		<Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.flightrecorder\.internal\.parser\.v1\.StructTypes\$.*" />
+		<Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" />
+	</Match>
+
+	<!-- If we can find a better way of estimating free heap space then we should 
+		use that instead. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.RecordingLoader" />
+		<Method name="doCreateRecording" />
+		<Bug pattern="DM_GC" />
+	</Match>
+
+	<!-- These could theoretically be reworked into static inner classes but 
+		it is too much work and the performance impact is minimal. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ext.wls.WlsOverviewPage$WlsOverviewPageUi" />
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_NEEDS_THIS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.pages.DistinctItemsPage$DistinctItemsUi" />
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_NEEDS_THIS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.pages.TlabPage$TlabUI" />
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_NEEDS_THIS" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel$Fork" />
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_NEEDS_THIS" />
+	</Match>
+
+	<!-- False positive. CompletableFuture is completely happy with null and 
+		the value is ignored by consumers. Actually since this is a CompletableFuture<Void>, 
+		null is the only permitted value. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet" />
+		<Method name="show" />
+		<Bug pattern="NP_NONNULL_PARAM_VIOLATION" />
+	</Match>
+	
+	<!-- Skipping our embedded ASM -->
+	<Match>
+        <Class name="~org\.openjdk\.jmc\.internal\.org\.objectweb\.asm\..*"/>
+    </Match>
+
+	<!-- Field initialized indirectly through super constructor. It works but 
+		should still be changed to a safer initialization flow. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.pages.JavaApplicationPage$JavaApplicationUi"/>
+		<Field name="lanes"/>
+		<Bug pattern="UR_UNINIT_READ"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.pages.ThreadsPage$ThreadsPageUi"/>
+		<Field name="lanes"/>
+		<Bug pattern="UR_UNINIT_READ"/>
+	</Match>
+	
+	<!-- Exclude the testserver package. It should really be fixed but is only used 
+		while testing so it is low priority. -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\.testserver\..*"/>
+	</Match>
+
+	<!-- Exclude various test classes. These are of low priority to fix. -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.ui.RecordingFileWriter"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.greychart.testutil.RenderingOutOfOrderTester"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.testutil.RockitRunner"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.testutil.RockitRunner$WorkerThread"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.internal.RJMXConnectionTest"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.synthetic.CountingAttribute"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.RjmxTestCase"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.testutil.JVMKeepAlive"/>
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.rjmx.subscription.internal.EvilMethodsClass"/>
+	</Match>
+		
+</FindBugsFilter>

@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
+org.eclipse.jdt.core.compiler.compliance=1.7
+org.eclipse.jdt.core.compiler.problem.forbiddenReference=ignore
+org.eclipse.jdt.core.compiler.problem.invalidJavadocTags=disabled
+org.eclipse.jdt.core.compiler.problem.missingJavadocTagDescription=no_tag
+org.eclipse.jdt.core.compiler.problem.missingOverrideAnnotation=ignore
+org.eclipse.jdt.core.compiler.problem.nonExternalizedStringLiteral=ignore
+org.eclipse.jdt.core.compiler.problem.unusedWarningToken=ignore
+org.eclipse.jdt.core.compiler.source=1.7

@@ -1,0 +1,88 @@
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+        body
+        {
+          margin: 0px;
+          padding: 0px;
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 12px;
+          background-color: #FFFFFF;
+        }
+        a:link,a:visited
+        {
+		  color: #CC0000;
+		  font-size: 12px;
+		  text-decoration: none;
+	    }
+        a:active,a:hover
+        {
+		  color: #CC0000;
+		  font-size: 12px;
+		  text-decoration: underline;
+	    }
+        .body-text
+        {
+          padding-left: 15px;
+          padding-right: 15px;
+          padding-bottom: 20px;
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 12px;
+          color: #000000;
+          vertical-align: top
+        }
+        .screen-shot-cell
+        {
+          padding-left: 15px;
+          padding-right: 0px;
+          padding-bottom: 20px;
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 12px;
+          color: #000000;
+          text-align: center;
+          vertical-align: top
+        }
+        .instructions-cell
+        {
+          padding-left: 0px;
+          padding-right: 10px;
+          padding-bottom: 20px;
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 12px;
+          color: #000000;
+          vertical-align: top
+        }
+        .section-header
+        {
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 16px;
+          color: #000000
+        }
+        .bannerlogo
+        {
+          padding-left: 6px;
+        }
+        .bannertitle
+        {
+          padding-top: 6px;
+          padding-left: 15px;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 24px;
+          color: #ED1C24;
+          letter-spacing: -1px;
+          line-height: 22px;
+        }
+        .superscript
+        {
+          vertical-align: super;
+          font-size: 12px;
+        }
+        .footer
+        {
+          padding: 20px;
+          font-family: Helvetica, Arial, Verdana, sans-serif;
+          font-size: 10px;
+          color: #000000;
+          text-align: center
+        }

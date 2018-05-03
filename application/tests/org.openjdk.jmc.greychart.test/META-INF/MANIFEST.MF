@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GreyChart Plug-in Test
+Bundle-SymbolicName: org.openjdk.jmc.greychart.test;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.openjdk.jmc.greychart
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit,
+ org.openjdk.jmc.ui.common
+Export-Package: org.openjdk.jmc.greychart,
+ org.openjdk.jmc.greychart.data,
+ org.openjdk.jmc.greychart.impl
+Automatic-Module-Name: org.openjdk.jmc.greychart.test

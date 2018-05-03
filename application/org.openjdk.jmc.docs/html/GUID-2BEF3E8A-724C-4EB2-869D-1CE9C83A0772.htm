@@ -1,0 +1,152 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="reference" />
+<meta name="DC.Title" content="Types of Diagnostic Commands" />
+<meta name="abstract" content="This section describes the diagnostic commands of JDK Mission Control." />
+<meta name="description" content="This section describes the diagnostic commands of JDK Mission Control." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Types of Diagnostic Commands</title>
+
+<meta name="doctitle" content="Types of Diagnostic Commands&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772" name="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772" class="sect1">Types of Diagnostic Commands</h1>
+<div><p>This section describes the diagnostic commands of JDK Mission Control. </p>
+<div class="section"><p class="subhead1">Standard Commands</p><p><span class="italic">Standard commands</span> are denoted by a green icon with the letter <code>i</code> in a circle. They provide general diagnostic information.</p>
+<ul style="list-style-type: disc;"><li><p><code>JFR.check</code></p>
+<p>Prints the status of the running JFR recordings.</p>
+</li>
+<li><p><code>JFR.dump</code></p>
+<p>Dumps the current data in the specified JFR recording to a recording file.</p>
+</li>
+<li><p><code>JFR.stop</code></p>
+<p>Stops the specified JFR recording.</p>
+</li>
+<li><p><code>VM.check_commercial_features</code></p>
+<p>Prints the status of commercial features.</p>
+</li>
+<li><p><code>VM.command_line</code></p>
+<p>Prints the command line arguments that were used to start the JVM.</p>
+</li>
+<li><p><code>VM.flags</code></p>
+<p>Prints the JVM flags and their current values.</p>
+</li>
+<li><p><code>VM.system_properties</code></p>
+<p>Prints the system properties and their current values.</p>
+</li>
+<li><p><code>VM.unlock_commercial_features</code></p>
+<p>Unlocks the commercial features.</p>
+</li>
+<li><p><code>VM.uptime</code></p>
+<p>Prints the JVM uptime since it was launched.</p>
+</li>
+<li><p><code>VM.version</code></p>
+<p>Prints the JVM version information.</p>
+</li>
+<li><p><code>help</code></p>
+<p>Prints a list of available commands, help information for the specified command, or help for all commands.</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Advanced Commands</p><p>Advanced commands are denoted by a yellow icon with an exclamation mark (!) in a triangle. They require more resources, can impact JVM performance, but provide more information.</p>
+<ul style="list-style-type: disc;"><li><p><code>GC.run</code></p>
+<p>Calls the <span class="apiname">java.lang.System.gc()</span> method that runs the garbage collector. Garbage collection performance depends on the size and contents of the Java heap.</p>
+</li>
+<li><p><code>GC.run_finalization</code></p>
+<p>Calls the <span class="apiname">java.lang.System.runFinalization()</span> method that runs the finalization methods of all objects pending finalization.</p>
+</li>
+<li><p><code>JFR.start</code></p>
+<p>Starts a JFR recording.</p>
+</li>
+<li><p><code>Thread.print</code></p>
+<p>Prints stack traces for all threads.</p>
+</li>
+<li><p><code>VM.native_memory</code></p>
+<p>Prints native memory usage.</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Internal Commands</p><p>Internal commands are denoted by a red icon with an exclamation mark (!) in an upside-down triangle. These provide very detailed diagnostic information, but greatly impact the JVM performance. Their impact depends on the size and contents of the Java heap.</p>
+<ul style="list-style-type: disc;"><li><p><code>GC.class_histogram</code></p>
+<p>Prints detailed Java heap usage statistics.</p>
+</li>
+<li><p><code>GC.class_stats</code></p>
+<p>Prints statistics about the Java class metadata. This command requires the <code>-XX:+UnlockDiagnosticVMOptions</code> to be enabled when starting the JVM.</p>
+</li>
+<li><p><code>GC.heap_dump</code></p>
+<p>Generate a dump of the Java heap to an <code>HPROF</code> file.</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-49FF0744-EF9E-41D6-8BF2-5326EAB9921C.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

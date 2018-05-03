@@ -1,0 +1,16 @@
+syntax: glob
+
+# Ignore build related folders
+build/
+target/
+bin/
+
+# Ignore workspaces
+ide_workspace/
+workspace/
+
+# Ignore perforce ignore files
+.p4ignore
+
+# Ignore MacOS X finder files
+.DS_Store

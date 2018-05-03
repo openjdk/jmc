@@ -1,0 +1,77 @@
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+
+/* Modifying default style */
+
+.split-pane{
+    -fx-background-insets: 0;
+}
+
+.split-pane *.split-pane-divider,
+        .split-pane *.vertical-grabber, 
+        .split-pane *.horizontal-grabber {
+    -fx-background-color: -fx-background;
+    -fx-border-color: -fx-background;
+    -fx-padding: 5px;
+}
+
+.table-view, .table-view:focused {
+    -fx-background-color: -fx-control-inner-background;
+   	-fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color:  #cccccc;
+   	-fx-border-radius: 6;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, transparent 50%, rgba(200,200,200,0.5) 100%);
+}
+
+.table-view .column-header {
+    -fx-border-color: transparent -fx-table-header-border-color -fx-table-header-border-color transparent;
+}
+
+.table-view .filler {
+    -fx-border-color: transparent transparent -fx-table-header-border-color transparent;
+}
+
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell { 
+	-fx-background-color: transparent; 
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color:  rgba(0,0,0,0.02);
+}
+
+
+/* Application specific style classes */
+
+#joverflowui{
+   -fx-padding: 10;
+}
+
+.table-view .highlight {
+    -fx-background-color: rgba(0,0,0,0.08);
+}
+
+.table-view .highlight:hover {
+    -fx-background-color:  rgba(0,0,0,0.11);
+}
+
+.table-row-cell:hover .referrer-icon {
+	    -fx-scale-x: 1.3;
+	    -fx-scale-y: 1.3;
+  	    -fx-effect: dropshadow( gaussian , #aaaaff , 3, 0.3 , 2 , 2 );
+}
+
+.referrer-icon {
+    -fx-fill: transparent;
+    -fx-stroke-width: 0.5;
+}

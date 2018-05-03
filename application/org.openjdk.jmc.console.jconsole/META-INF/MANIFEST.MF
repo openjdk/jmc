@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JConsole Meta Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.console.jconsole; singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.console.jconsole.Activator
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.console.ui
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.console.jconsole,
+ com.sun.tools.jconsole
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .,
+ external:$java.home$/../lib/jconsole.jar
+Eclipse-BuddyPolicy: app 
+Automatic-Module-Name: org.openjdk.jmc.console.jconsole

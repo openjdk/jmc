@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JMX Data Persistence Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.console.persistence;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.console.persistence.PersistencePlugin
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.console.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.rjmx.ui
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.console.persistence
+Automatic-Module-Name: org.openjdk.jmc.console.persistence

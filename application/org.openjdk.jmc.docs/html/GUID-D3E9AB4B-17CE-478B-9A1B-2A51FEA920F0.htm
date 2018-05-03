@@ -1,0 +1,122 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Using the Memory Tab" />
+<meta name="abstract" content="The Memory tab allows you to monitor how efficiently your application is using memory resources. This tab focuses on heap usage, garbage collection, and active memory pools. The information provided on this tab helps you determine whether you have configured the JVM to provide optimal application performance." />
+<meta name="description" content="The Memory tab allows you to monitor how efficiently your application is using memory resources. This tab focuses on heap usage, garbage collection, and active memory pools. The information provided on this tab helps you determine whether you have configured the JVM to provide optimal application performance." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Using the Memory Tab</title>
+
+<meta name="doctitle" content="Using the Memory Tab&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-2AF1BAE8-14F3-4904-85E8-5F333A765B3C.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-2AF1BAE8-14F3-4904-85E8-5F333A765B3C.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0" name="GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-D3E9AB4B-17CE-478B-9A1B-2A51FEA920F0" class="sect1">Using the Memory Tab</h1>
+<div><p>The<span class="bold"> Memory</span> tab allows you to monitor how efficiently your application is using memory resources. This tab focuses on heap usage, garbage collection, and active memory pools. The information provided on this tab helps you determine whether you have configured the JVM to provide optimal application performance.</p>
+<p>From the <span class="bold">Memory</span> tab, you can manually initiate a full garbage collection using the <span class="bold">Run a full garbage collection</span> button in the top right corner of the tab.</p>
+<p><span class="bold">Heap Histogram</span></p>
+<p>The top panel of the <span class="bold">Memory</span> tab contains the <span class="bold">Heap Histogram</span>. The Heap Histogram feature can be used to look at the distribution of the memory on the heap per class. Since it can incur some latency and overhead, it is captured on demand only. To capture a snapshot, click the <span class="bold">Refresh Heap Histogram</span> button. You will be presented with a warning letting you know that this can cause some overhead. When the first heap histogram is captured, that will be the baseline, and the delta will be set to zero. Every subsequent histogram captured will show the delta to the second last. If the Reset delta calculation is pressed, the currently captured snapshot will be used as baseline.</p>
+<p><span class="bold">GC Tables</span></p>
+<p>The <span class="bold">GC Tables</span> panel contains the current values for key performance attributes of available garbage collectors. The panel is divided into tabs with the names of the active garbage collectors (for example, <span class="bold">G1 Young Generation</span> and <span class="bold">G1 Old Generation</span>). Each tab contains a table with the following default attributes:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Total Collection Time</span>: The accumulated collection time.</p>
+</li>
+<li><p><span class="bold">Collection Count</span>: The total number of collections that have occurred.</p>
+</li>
+<li><p><span class="bold">GC Start Time</span>: The start time of this GC since the JVM was started.</p>
+</li>
+<li><p><span class="bold">GC End Time</span>: The end time of this GC since the JVM was started.</p>
+</li>
+<li><p><span class="bold">GC Duration</span>: The elapsed time of this GC.</p>
+</li>
+<li><p><span class="bold">GC ID</span>: The identifier of this GC, which is the number of collections that this collector has done.</p>
+</li>
+<li><p><span class="bold">GC Thread Count</span>: The number of GC threads.</p>
+</li>
+</ul>
+<p>By right-clicking an attribute, you can change its update interval, units, and for some attributes it is possible to set the value.</p>
+<p><span class="bold">Active Memory Pools</span></p>
+<p>The Active Memory Pools panel contains a table with information about memory pools available to the JVM. By default, the table contains the following columns:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Pool Name</span>: The name of the memory pool.</p>
+</li>
+<li><p><span class="bold">Type</span>: The type of the memory pool. If the memory pool belong to the Java heap, then the type is HEAP, otherwise, it is NON_HEAP.</p>
+</li>
+<li><p><span class="bold">Used</span>: Currently used size of the memory pool.</p>
+</li>
+<li><p><span class="bold">Max</span>: Maximum size of the memory pool.</p>
+</li>
+<li><p><span class="bold">Usage</span>: Percent of the maximum memory pool size that is currently used.</p>
+</li>
+<li><p><span class="bold">Peak Used</span>: The peak value for the used size of the memory pool during the lifetime of the monitored JVM.</p>
+</li>
+<li><p><span class="bold">Peak Max</span>: The peak value for the maximum size of the memory pool during the lifetime of the monitored JVM.</p>
+</li>
+</ul>
+<p>To filter the memory pools, select the filter column (usually, the pool name) and specify the filter string in the text field above the table.</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-2AF1BAE8-14F3-4904-85E8-5F333A765B3C.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-6B99EBAD-C94C-4B3D-B7B4-867F408012BF.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

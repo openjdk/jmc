@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JMX Console
+Bundle-SymbolicName: org.openjdk.jmc.console.ui;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.console.ui.ConsolePlugin
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.rjmx.ui;visibility:=reexport,
+ org.eclipse.e4.core.contexts;bundle-version="1.3.0",
+ org.eclipse.e4.core.di;bundle-version="1.3.0";visibility:=reexport,
+ javax.annotation;bundle-version="1.0.0";visibility:=reexport,
+ javax.inject;bundle-version="1.0.0";visibility:=reexport,
+ org.openjdk.jmc.commands
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.console.ui.actions;
+  x-friends:="org.openjdk.jmc.console.ext.coherence,
+   org.openjdk.jmc.console.persistence,
+   org.openjdk.jmc.console.ui.mbeanbrowser,
+   org.openjdk.jmc.console.ui.notification",
+ org.openjdk.jmc.console.ui.editor,
+ org.openjdk.jmc.console.ui.editor.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.rcp.intro"
+Bundle-ClassPath: .
+Import-Package: javax.annotation;version="1.0.0",
+ javax.inject;version="1.0.0"
+Automatic-Module-Name: org.openjdk.jmc.console.ui
+

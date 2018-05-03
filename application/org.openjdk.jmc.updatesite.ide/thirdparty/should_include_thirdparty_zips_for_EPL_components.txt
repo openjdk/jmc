@@ -1,0 +1,4 @@
+This directory is meant to contain thirdparty zips for EPL components:
+* Eclipse Platform <bundled version>
+* Eclipse Babel <bundled version>
+They are included in the supported/eclipse updatesite by make/ext/updatesites/updatesites.ant

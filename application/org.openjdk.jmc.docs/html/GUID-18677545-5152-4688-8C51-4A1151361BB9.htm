@@ -1,0 +1,133 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Working with Trigger Rules" />
+<meta name="abstract" content="Rules displayed in grey are not available in the monitored JVM. By default, all rules are deactivated. To activate a rule, select the check box next to it." />
+<meta name="description" content="Rules displayed in grey are not available in the monitored JVM. By default, all rules are deactivated. To activate a rule, select the check box next to it." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-18677545-5152-4688-8C51-4A1151361BB9" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Working with Trigger Rules</title>
+
+<meta name="doctitle" content="Working with Trigger Rules&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-DAB13FDA-9430-4457-BFF3-04F9DC0E3977.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-D475ABB1-DE41-4A24-8BB8-A058FDDC6645.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-DAB13FDA-9430-4457-BFF3-04F9DC0E3977.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-D475ABB1-DE41-4A24-8BB8-A058FDDC6645.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-18677545-5152-4688-8C51-4A1151361BB9" name="GUID-18677545-5152-4688-8C51-4A1151361BB9"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-18677545-5152-4688-8C51-4A1151361BB9" class="sect1">Working with Trigger Rules</h1>
+<div><p>Rules displayed in grey are not available in the monitored JVM. By default, all rules are deactivated. To activate a rule, select the check box next to it.</p>
+<div class="section"><p>To add a new trigger rule:</p>
+</div>
+<!-- class="section" -->
+<ol><li class="stepexpand"><span>Click <span class="bold">Add</span> on the <span class="bold">Trigger Rules</span> panel.</span></li>
+<li class="stepexpand"><span>At the first step of the <span class="bold">Add New Rule</span> Wizard, select the attribute on which the rule should trigger. Click <span class="bold">Next</span>.</span></li>
+<li class="stepexpand"><span>Set the condition on which the rule should trigger. This step contains the following settings:</span><div><ul style="list-style-type: disc;"><li><p><span class="bold">Max trigger value</span> (for numeric attributes) or <span class="bold">Match string</span> (for non-numeric attributes): Specify the maximum value or the matching string for the selected attribute for which the rule should trigger.</p>
+</li>
+<li><p><span class="bold">Sustained time:</span> Specify the duration (in seconds) for which the condition must stay true before the rule is triggered.</p>
+</li>
+<li><p><span class="bold">Limit period:</span> Specify the minimum amount of time (in seconds) that should pass before the rule can be triggered subsequently.</p>
+</li>
+<li><p><span class="bold">Trigger when condition is met:</span> Select whether to trigger the rule when the condition is met. For example, if the trigger value is set to 100, the rule will be triggered when the value changes from less than 100 to 100 or more.</p>
+</li>
+<li><p><span class="bold">Trigger when recovering from condition:</span> Select whether to trigger the rule when the condition is no longer met. For example, if the trigger value is set to 100, the rule will be triggered when the value changes from 100 or more to less than 100.</p>
+</li>
+</ul>
+<p>Click <span class="bold">Next</span>.</p>
+</div></li>
+<li class="stepexpand"><span>Select the action you want to occur when the rule triggers. Depending on the action, you may have to provide additional data. The following actions are available:</span><div><ul style="list-style-type: disc;"><li><p><span class="bold">Application Alert</span>: Displays an alert dialog in JDK Mission Control.</p>
+</li>
+<li><p><span class="bold">Console Output</span>: Sends a notification to the standard output (stdout) of the console (command prompt) from which the JMX Console was started.</p>
+</li>
+<li><p><span class="bold">Dump Flight Recording</span>: Dumps whatever data is available in a flight recording for the last specified time period (in seconds) to a JFR file.</p>
+</li>
+<li><p><span class="bold">HPROF Dump</span>: Initiates a memory dump to the specified HPROF file.</p>
+</li>
+<li><p><span class="bold">Invoke Diagnostic Command</span>: Invokes the specified diagnostic command and logs output to the specified log file by appending or overwriting the results.</p>
+</li>
+<li><p><span class="bold">Log to file</span>: Writes a notification to the specified log file.</p>
+</li>
+<li><p><span class="bold">Send Email</span>: Sends a notification by email. You can configure the SMTP server address and port, the recipients and sender for the email, and provide SSL credentials if secure connection is necessary.</p>
+</li>
+<li><p><span class="bold">Start Continuous Flight Recording</span>: Starts a continuous flight recording.</p>
+</li>
+<li><p><span class="bold">Start Time Limited Flight Recording</span>: Starts a flight recording that will dump the results to a JFR file after the specified time period (in seconds).</p>
+</li>
+</ul>
+<p>Click <span class="bold">Next</span> to continue, or <span class="bold">Finish</span> to add the rule as it is.</p>
+</div></li>
+<li class="stepexpand"><span>(Optional) Select the time constraints if you want the rule to be active only on specific dates, days of the week, or time of day. Click <span class="bold">Next</span>.</span></li>
+<li class="stepexpand"><span>(Optional) Select the group to which the rule should belong to or specify a new group. Specify the name for the rule and a detailed description.</span><div><p>You can go back to any previous step in the wizard to modify any of the settings. Click <span class="bold">Finish</span> to add the rule to the list.</p>
+</div></li>
+</ol>
+<div class="section"><p>To edit a rule, select it in the <span class="bold">Trigger Rules</span> panel. The <span class="bold">Rule Details</span> panel to the right displays three subtabs with the attribute and value on which the rule should trigger, action that is triggered by the rule, and time constraints for when you want the rule to be active.</p>
+<p>To rename a rule, select it in the <span class="bold">Trigger Rules</span> panel and click <span class="bold">Rename</span>. Then provide a new name for the rule and click <span class="bold">OK</span>.</p>
+<p>If you do not want the rule to trigger, you can deactivate it by deselecting the check box near the rule in the <span class="bold">Trigger Rules</span> panel. However, if you are sure you will never use the rule again, you can remove it from the list completely by selecting it and clicking <span class="bold">Delete</span>.</p>
+<p>To export a set of rules to an XML file, click <span class="bold">Export</span> in the <span class="bold">Trigger Rules</span> panel. Then select the rules you want to export, specify the file name, and click <span class="bold">OK</span>. To import a set of rules from an XML file, click <span class="bold">Import</span> in the <span class="bold">Trigger Rules</span> panel, select the file and click <span class="bold">OK</span>.</p>
+<p>To reset back to the default set of rules, click <span class="bold">Reset</span> in the <span class="bold">Trigger Rules</span> panel and confirm. This will overwrite all the rules and replace them with the default set.</p>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-DAB13FDA-9430-4457-BFF3-04F9DC0E3977.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-D475ABB1-DE41-4A24-8BB8-A058FDDC6645.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

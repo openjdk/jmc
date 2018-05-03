@@ -1,0 +1,93 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="About JDK Mission Control" />
+<meta name="abstract" content="JDK Mission Control (JMC) makes it possible to monitor and manage Java applications without introducing the performance overhead normally associated with such tools." />
+<meta name="description" content="JDK Mission Control (JMC) makes it possible to monitor and manage Java applications without introducing the performance overhead normally associated with such tools." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-05BEE8DA-92DD-4D64-8F96-AE3BCA7F1190" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>About JDK Mission Control</title>
+
+<meta name="doctitle" content="1 About JDK Mission Control&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="title.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="title.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-05BEE8DA-92DD-4D64-8F96-AE3BCA7F1190" name="GUID-05BEE8DA-92DD-4D64-8F96-AE3BCA7F1190"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-05BEE8DA-92DD-4D64-8F96-AE3BCA7F1190" class="sect1"><span class="enumeration_chapter">1 </span>About JDK Mission Control</h1>
+<div><p>JDK Mission Control (JMC) makes it possible to monitor and manage Java applications without introducing the performance overhead normally associated with such tools.</p>
+<p>JMC uses data collected for normal adaptive dynamic optimization of the Java Virtual Machine (JVM). Besides minimizing the performance overhead, this approach eliminates the problem of the&#160;<span class="italic">observer effect</span>, which occurs when monitoring tools alter the execution characteristics of the system.</p>
+<div class="p">JDK Mission Control consists of the client application (<span class="italic">JMC client</span>) and a number of plug-ins that run on it:<ul style="list-style-type: disc;"><li><p><span class="italic">JVM Browser</span> shows the running Java applications and their JVMs. Each JVM instance is called a <span class="italic">JVM Connection</span>.</p>
+</li>
+<li><p><span class="italic">JMX Console</span> connects to a running JVM, collects and displays its characteristics in real time, and enables you to change some of the runtime properties through <span class="italic">Managed Beans</span> (MBeans). You can also create rules that trigger on certain events (for example, to send an e-mail if the CPU usage by the application reaches 90 percent).</p>
+</li>
+<li><p><span class="italic">JDK Flight Recorder (JFR)</span> collects and saves detailed performance characteristics for historic analysis and profiling. It can be used as a standalone performance monitoring and profiling tool, but when used as a plug-in for the JMC client, it presents diagnostic information in logically grouped tables and charts. It enables you to select the range of time and level of detail necessary to focus on the problem.</p>
+</li>
+</ul>
+</div>
+<p>JDK Mission Control plug-ins connect to a JVM using the <span class="italic">Java Management Extensions</span> (JMX) agent. For more information about JMX, see the JMX Technology Home Page at <a href="http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html" target="_blank">http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html</a></p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="title.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-B633156D-F63E-4E09-BBB0-009509FED0B0.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

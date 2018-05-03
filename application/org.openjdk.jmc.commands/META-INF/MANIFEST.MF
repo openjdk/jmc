@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commands Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.commands;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.openjdk.jmc.ui.common
+Export-Package: org.openjdk.jmc.commands
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.commands.CommandsPlugin
+Automatic-Module-Name: org.openjdk.jmc.commands

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core Plug-in
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-SymbolicName: org.openjdk.jmc.ui.common;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.ui.common.CorePlugin
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
+ org.openjdk.jmc.common;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.core.expressions
+Export-Package: org.openjdk.jmc.ui.common,
+ org.openjdk.jmc.ui.common.action,
+ org.openjdk.jmc.ui.common.idesupport,
+ org.openjdk.jmc.ui.common.jvm,
+ org.openjdk.jmc.ui.common.labelingrules,
+ org.openjdk.jmc.ui.common.resource,
+ org.openjdk.jmc.ui.common.security,
+ org.openjdk.jmc.ui.common.tree,
+ org.openjdk.jmc.ui.common.util,
+ org.openjdk.jmc.ui.common.xydata
+Automatic-Module-Name: org.openjdk.jmc.ui.common

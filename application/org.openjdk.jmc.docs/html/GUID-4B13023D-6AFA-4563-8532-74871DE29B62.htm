@@ -1,0 +1,112 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Starting a Flight Recording" />
+<meta name="abstract" content="You start a flight recording by connecting the Flight Recorder plugin to a JVM. The Flight Recorder plugin launches the JFR runtime engine on the JVM and creates a recording file." />
+<meta name="description" content="You start a flight recording by connecting the Flight Recorder plugin to a JVM. The Flight Recorder plugin launches the JFR runtime engine on the JVM and creates a recording file." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-4B13023D-6AFA-4563-8532-74871DE29B62" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Starting a Flight Recording</title>
+
+<meta name="doctitle" content="Starting a Flight Recording&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-953292B2-45D3-4842-9656-DAE88D239BA6.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-953292B2-45D3-4842-9656-DAE88D239BA6.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-4B13023D-6AFA-4563-8532-74871DE29B62" name="GUID-4B13023D-6AFA-4563-8532-74871DE29B62"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-4B13023D-6AFA-4563-8532-74871DE29B62" class="sect1">Starting a Flight Recording</h1>
+<div><p>You start a flight recording by connecting the Flight Recorder plugin to a JVM. The Flight Recorder plugin launches the JFR runtime engine on the JVM and creates a recording file.</p>
+<div class="section"><p>To start a flight recording:</p>
+</div>
+<!-- class="section" -->
+<ol><li class="stepexpand"><span>Right-click a JVM in the JVM Browser and select <span class="bold">Start Flight Recording</span>.</span></li>
+<li class="stepexpand"><span>Select the path and file name for the recording by clicking the <span class="bold">Browse</span> button.</span></li>
+<li class="stepexpand"><span>Specify the name for the recording.</span></li>
+<li class="stepexpand"><span>Select the type of recording. The following options are available:</span><div><ul style="list-style-type: disc;"><li><p><span class="bold">Time fixed recording</span>: Creates a recording with a fixed duration specified in the <span class="bold">Recording time</span> field. JFR will collect events for a fixed duration and then dump the recording to the specified file.</p>
+</li>
+<li><p><span class="bold">Continuous recording</span>: Creates a recording that runs continuously. JFR will collect events and write data to the global buffer. When the global buffer fills up, the oldest data is discarded. The data currently in the buffer can be written to the specified file whenever you request a dump, or if the dump is triggered by a rule. For this type of recording, you can set the maximum allowed size of data to keep on disk using the <span class="bold">Maximum size</span> field, and the maximum allowed age of events using the <span class="bold">Maximum age</span> field. These values are approximate, because the dumps are performed on complete chunks of data.</p>
+</li>
+</ul>
+</div></li>
+<li class="stepexpand"><span>Select the flight recording template in the <span class="bold">Event settings</span> drop-down list. Templates define the events that you want to be recorded. To manage templates, click <span class="bold">Template Manager</span>. For information about using templates, see: Managing Flight Recording Templates.</span><div>Click <span class="bold">Finish</span> to start the recording or click <span class="bold">Next</span> to modify the event options defined in the selected template.</div></li>
+<li class="stepexpand"><span>(Optional) Modify the event options for the selected flight recording template.</span><div>Click <span class="bold">Finish</span> to start the recording or click <span class="bold">Next</span> to modify the event details defined in the selected template.</div></li>
+<li class="stepexpand"><span>(Optional) Modify the event details for the selected flight recording template. Event details define whether the event should be included in the recording. For some events, you can also define whether a stack trace should be attached to the event, specify the duration threshold (for <span class="italic">duration events</span>) and a request period (for <span class="italic">requestable events</span>).</span><div>Click <span class="bold">Back</span> if you want to modify any of the settings set in the previous steps. Click <span class="bold">Finish</span> to start the recording.</div></li>
+</ol>
+<div class="section"><p>When you start a fixed time recording, it appears in the Progress View. To open the Progress View, open the <span class="bold">Window</span> menu, select <span class="bold">Show View</span>, then select <span class="bold">Progress View</span>.</p>
+<p>To see all running recordings for a JVM (including continuous recordings), expand the necessary connection in the JVM Browser and then expand the <span class="bold">Flight Recorder</span> node. If you right-click a running recording, you have the following options:</p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Dump</span>: Opens the Dump Recording window to create a dump of the current events in the global buffer to a recording file. For more information, see: Dumping a Running Flight Recording.</p>
+</li>
+<li><p><span class="bold">Edit</span>: Open the Edit Flight Recording Wizard that is similar to the Start Flight Recording Wizard.</p>
+</li>
+<li><p><span class="bold">Stop</span>: Stop recording but keep the collected data in the global buffer. The stopped recording remains in the list of recordings for the JVM.</p>
+</li>
+<li><p><span class="bold">Close</span>: Dump the collected data from the global buffer to a recording file and stop the recording.</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-953292B2-45D3-4842-9656-DAE88D239BA6.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-41C663D6-F745-4062-BD32-6F7F2BC001BA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

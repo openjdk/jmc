@@ -1,0 +1,87 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="&#26597;&#30475;&#35760;&#24405;" />
+<meta name="abstract" content="&#20351;&#29992;&#39134;&#34892;&#35760;&#24405;&#22120;&#25554;&#20214;&#21487;&#20197;&#26597;&#30475; JFR &#35760;&#24405;&#25991;&#20214;&#12290;" />
+<meta name="description" content="&#20351;&#29992;&#39134;&#34892;&#35760;&#24405;&#22120;&#25554;&#20214;&#21487;&#20197;&#26597;&#30475; JFR &#35760;&#24405;&#25991;&#20214;&#12290;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>&#26597;&#30475;&#35760;&#24405;</title>
+
+<meta name="doctitle" content="&#26597;&#30475;&#35760;&#24405;&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-C661942A-3DCF-40B4-87C3-F5000DE4830E.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-C661942A-3DCF-40B4-87C3-F5000DE4830E.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759" name="GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759" class="sect1">&#26597;&#30475;&#35760;&#24405;</h1>
+<div><p>&#20351;&#29992;&#39134;&#34892;&#35760;&#24405;&#22120;&#25554;&#20214;&#21487;&#20197;&#26597;&#30475; JFR &#35760;&#24405;&#25991;&#20214;&#12290;</p>
+<p>JFR &#36816;&#34892;&#26102;&#24341;&#25806;&#23558;&#35760;&#24405;&#30340;&#25968;&#25454;&#36716;&#20648;&#21040;&#25193;&#23637;&#21517;&#20026; jfr &#30340;&#25991;&#20214;&#20013;&#12290;&#36825;&#20123; JFR &#35760;&#24405;&#26159;&#20108;&#36827;&#21046;&#25991;&#20214;&#65292;&#21487;&#22312; JDK Mission Control (JMC) &#23458;&#25143;&#26426;&#20013;&#26597;&#30475;&#12290;</p>
+<div class="infoboxnote" id="GUID-40FF6634-CBCF-4879-A494-52FF7CEFD759__GUID-3E49C8FE-5301-4B09-9F3E-B893E48E5D16"><p class="notep1">&#27880;&#65306;</p>&#26597;&#30475; JFR &#35760;&#24405;&#38656;&#35201; Java SE &#24320;&#21457;&#24037;&#20855;&#21253; (JDK) 7 Update 4 &#25110;&#26356;&#39640;&#29256;&#26412;&#12290;</div>
+<p>&#22312;&#23450;&#26102;&#35760;&#24405;&#23436;&#25104;&#26102;&#25110;&#32773;&#21019;&#24314;&#20102;&#27491;&#22312;&#36816;&#34892;&#30340;&#35760;&#24405;&#30340;&#36716;&#20648;&#26102;&#65292;&#35760;&#24405;&#25991;&#20214;&#23558;&#33258;&#21160;&#22312; JMC &#23458;&#25143;&#26426;&#20013;&#25171;&#24320;&#12290;&#24744;&#21487;&#20197;&#21452;&#20987;&#20197;&#25171;&#24320;&#20219;&#24847;&#35760;&#24405;&#25991;&#20214;&#65292;&#25110;&#32773;&#22312;<span class="bold">&#25991;&#20214;</span>&#33756;&#21333;&#20013;&#36873;&#25321;<span class="bold">&#25171;&#24320;&#25991;&#20214;</span>&#24182;&#22312;&#25991;&#20214;&#31995;&#32479;&#36164;&#28304;&#31649;&#29702;&#22120;&#20013;&#23450;&#20301;&#25152;&#38656;&#30340;&#35760;&#24405;&#25991;&#20214;&#26469;&#25171;&#24320;&#35813;&#25991;&#20214;&#12290;</p>
+<p>&#27492;&#20027;&#39064;&#20171;&#32461;&#20102;&#29992;&#20110;&#22312; JMC &#23458;&#25143;&#26426;&#20013;&#26597;&#30475;&#35760;&#24405;&#30340;&#19968;&#33324;&#36807;&#31243;&#12290;&#26377;&#20851;&#25968;&#25454;&#22914;&#20309;&#22312;&#19981;&#21516;&#36873;&#39033;&#21345;&#20013;&#25490;&#21015;&#30340;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;&#8220;&#39134;&#34892;&#35760;&#24405;&#22120;&#36873;&#39033;&#21345;&#21442;&#32771;&#8221;&#12290;</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-C661942A-3DCF-40B4-87C3-F5000DE4830E.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

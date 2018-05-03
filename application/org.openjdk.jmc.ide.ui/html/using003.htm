@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Changing Your JVM</title>
+<meta name="robots" content="noarchive" />
+<meta name="doctitle" content="Changing Your JVM" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="using002.htm" title="Previous" type="text/html" />
+<link rel="next" href="using004.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Skip Headers</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr valign="bottom">
+<td align="left"></td>
+<td align="center"><a href="using002.htm"><img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span></a></td>
+</tr>
+</table>
+<div class="sect2"><a id="sthref11" name="sthref11"></a>
+<h1>Changing Your JVM</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>While the JDK Mission Control client can work with many different JVMs, it is highly recommended that you use the Oracle JDK/JVM as your JVM when running the JDK Mission Control Client on the Eclipse platform. Make sure to use Oracle HotSpot JDK 7 Update 14 or later. Running on a JRE is not recommended, as this will disable the autodetection of local JVMs.</p>
+<p><span class="bold">To change the JVM on which you run Eclipse:</span></p>
+<ol>
+<li>
+<p>Go to your file system browser (for example, Windows Explorer).</p>
+</li>
+<li>
+<p>Locate your Eclipse installation folder (for example, <code>C:\Program Files\Eclipse</code>) and, with a file editor other than Notepad, open the file <code>eclipse.ini</code>. It will look similar as in the following example:</p>
+<br />
+<code>-showsplash</code><br />
+<code>org.eclipse.platform</code><br />
+<code>--launcher.XXMaxPermSize</code><br />
+<code>256M</code><br />
+<code>-vmargs</code><br />
+<code>-Dosgi.requiredJavaVersion=1.5</code><br />
+<code>-Xms40m</code><br />
+<code>-Xmx512m</code><br /></li>
+<li>
+<p>Make the following changes to the <code>eclipse.ini</code> file:</p>
+<ul>
+<li>
+<p>Remove all flags related to other JVMs than the JVM (for example, <code>--launcher.XXMaxPermSize 256M</code>).</p>
+</li>
+<li>
+<p>On the third line down (after <code>org.eclipse.platform</code>), add the following:</p>
+<p><code>-vm &lt;Full path JAVA_HOME/jre/bin/ folder&gt;</code></p>
+<p>The full path might look like this on Windows:</p>
+<p><code>C:\Program Files\Java\jdk1.7.0\jre\bin\</code></p>
+<p>Or, the path might look like this on Linux and Solaris:</p>
+<p><code>$HOME/jdk1.7.0/jre/bin/</code></p>
+</li>
+<li>
+<p>Depending upon your particular JVM implementation and the applications running on it, you can set any valid JVM command-line option.</p>
+<p>For more information on the available command-line options, see <span class="italic">Java Command-Line Reference</span> at<br />
+<code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html</a></code> (Solaris, Linux)<br />
+<code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html</a></code> (Windows)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>When you have finished making the necessary changes to the <code>eclipse.ini</code> file, save and close the file. The following example shows the <code>eclipse.ini</code> file updated to make the JVM the active JVM in a Windows implementation.</p>
+<br />
+<code>-showsplash</code><br />
+<code>org.eclipse.platform</code><br />
+<code>-vm</code><br />
+<code>C:\Program Files\Java\jdk1.7.0\bin\javaw.exe</code><br />
+<code>-vmargs</code><br />
+<code>-Dosgi.requiredJavaVersion=1.5</code><br />
+<code>-Xms256m</code><br />
+<code>-Xmx512m</code></li>
+</ol>
+</div>
+<!-- class="sect2" -->
+<!-- Start Footer -->
+<div class="footer">
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr>
+<td align="left"><span class="copyrightlogo">Copyright&nbsp;&copy;&nbsp;2018,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span><br />
+<a href="http://oss.oracle.com/licenses/upl"><span class="copyrightlogo">Legal Notices</span></a></td>
+<td align="center"><a href="using002.htm"><img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span></a></td>
+</tr>
+</table>
+</div>
+<!-- class="footer" -->
+</body>
+</html>

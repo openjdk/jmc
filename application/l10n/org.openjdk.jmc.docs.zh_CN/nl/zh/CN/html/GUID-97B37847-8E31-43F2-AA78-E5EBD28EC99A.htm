@@ -1,0 +1,141 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="reference" />
+<meta name="DC.Title" content="JDK Mission Control &#36890;&#20449;" />
+<meta name="abstract" content="HotSpot JVM &#20351;&#29992;&#22522;&#20110;&#36828;&#31243;&#26041;&#27861;&#35843;&#29992; (RMI) &#36830;&#25509;&#22120;&#30340; Java Management Extensions (JMX) &#25216;&#26415;&#21551;&#29992;&#30417;&#35270;&#21644;&#31649;&#29702;&#21151;&#33021;&#12290;&#36825;&#20063;&#31216;&#20026;&#22522;&#20110; RMI &#30340; JMX&#65292;&#25110;&#31616;&#31216; JMXRMI&#12290;&#35201;&#37197;&#32622;&#36830;&#25509;&#65292;&#21551;&#21160; JVM &#26102;&#24517;&#39035;&#35774;&#32622;&#20197;&#19979;&#31995;&#32479;&#23646;&#24615;&#65306;" />
+<meta name="description" content="HotSpot JVM &#20351;&#29992;&#22522;&#20110;&#36828;&#31243;&#26041;&#27861;&#35843;&#29992; (RMI) &#36830;&#25509;&#22120;&#30340; Java Management Extensions (JMX) &#25216;&#26415;&#21551;&#29992;&#30417;&#35270;&#21644;&#31649;&#29702;&#21151;&#33021;&#12290;&#36825;&#20063;&#31216;&#20026;&#22522;&#20110; RMI &#30340; JMX&#65292;&#25110;&#31616;&#31216; JMXRMI&#12290;&#35201;&#37197;&#32622;&#36830;&#25509;&#65292;&#21551;&#21160; JVM &#26102;&#24517;&#39035;&#35774;&#32622;&#20197;&#19979;&#31995;&#32479;&#23646;&#24615;&#65306;" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A" />
+<meta name="DC.Language" content="zh-CN" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>JDK Mission Control &#36890;&#20449;</title>
+
+<meta name="doctitle" content="JDK Mission Control &#36890;&#20449;&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="&#29256;&#26435;&#25152;&#26377;" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="&#30446;&#24405;" type="text/html" />
+<link rel="prev" href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm" title="&#19978;&#19968;&#39029;" type="text/html" />
+<link rel="next" href="GUID-2E1242E0-8437-467B-9AEC-36AE680733F7.htm" title="&#19979;&#19968;&#39029;" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">&#36716;&#33267;&#20027;&#35201;&#20869;&#23481;</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-2E1242E0-8437-467B-9AEC-36AE680733F7.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A" name="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A" class="sect1">JDK Mission Control &#36890;&#20449;</h1>
+<div><p>HotSpot JVM &#20351;&#29992;&#22522;&#20110;&#36828;&#31243;&#26041;&#27861;&#35843;&#29992; (RMI) &#36830;&#25509;&#22120;&#30340; Java Management Extensions (JMX) &#25216;&#26415;&#21551;&#29992;&#30417;&#35270;&#21644;&#31649;&#29702;&#21151;&#33021;&#12290;&#36825;&#20063;&#31216;&#20026;&#22522;&#20110; RMI &#30340; JMX&#65292;&#25110;&#31616;&#31216; JMXRMI&#12290;&#35201;&#37197;&#32622;&#36830;&#25509;&#65292;&#21551;&#21160; JVM &#26102;&#24517;&#39035;&#35774;&#32622;&#20197;&#19979;&#31995;&#32479;&#23646;&#24615;&#65306;</p>
+<div class="section"><p class="subhead1">-Dcom.sun.management.jmxremote</p>
+         
+         <p>&#27492;&#36873;&#39033;&#29992;&#20110;&#20999;&#25442; JMXRMI &#30340;&#20351;&#29992;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#21551;&#29992;&#35813;&#36873;&#39033;&#65292;&#22240;&#27492;&#26080;&#38656;&#35774;&#32622;&#35813;&#36873;&#39033;&#23601;&#21487;&#20197;&#20351;&#29992; JVM &#30340;&#30417;&#35270;&#21151;&#33021;&#12290;&#35201;&#20026; JVM &#31105;&#29992; JMXRMI&#65292;&#35831;&#25351;&#23450;&#160;<code>-Dcom.sun.management.jmxremote=false</code>&#12290;</p>
+
+      </div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">-Dcom.sun.management.jmxremote.authenticate</p>
+         
+         <p>&#35813;&#36873;&#39033;&#29992;&#20110;&#20999;&#25442;&#23545; JMXRMI &#36830;&#25509;&#20351;&#29992;&#21475;&#20196;&#39564;&#35777;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#27492;&#36873;&#39033;&#26159;&#21551;&#29992;&#30340;&#12290;&#35201;&#20026; JVM &#31105;&#29992;&#21475;&#20196;&#39564;&#35777;&#65292;&#35831;&#25351;&#23450;&#160;<code>-Dcom.sun.management.jmxremote.authenticate=false</code></p>
+
+         <div class="infoboxnote" id="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A__GUID-B1DF742A-F33B-48F9-85BE-01BAB4BFA5C9"><p class="notep1">&#27880;&#65306;</p>&#31105;&#29992;&#39564;&#35777;&#26159;&#19981;&#23433;&#20840;&#30340;&#12290;&#20219;&#20309;&#30693;&#36947;&#65288;&#25110;&#29468;&#20013;&#65289;JMX &#31471;&#21475;&#21495;&#21644;&#20027;&#26426;&#21517;&#30340;&#36828;&#31243;&#29992;&#25143;&#37117;&#33021;&#22815;&#30417;&#35270;&#21644;&#25511;&#21046; Java &#24212;&#29992;&#31243;&#24207;&#21644; VM&#12290;&#34429;&#28982;&#24320;&#21457;&#26102;&#36825;&#26159;&#21487;&#25509;&#21463;&#30340;&#65292;&#20294;&#23545;&#20110;&#29983;&#20135;&#31995;&#32479;&#19981;&#24314;&#35758;&#36825;&#26679;&#35774;&#32622;&#12290;</div>
+
+      </div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">-Dcom.sun.management.jmxremote.port</p>
+         
+         <p>&#27492;&#36873;&#39033;&#29992;&#20110;&#35774;&#32622; JMXRMI &#36830;&#25509;&#30340;&#31471;&#21475;&#21495;&#12290;&#24517;&#39035;&#35774;&#32622;&#26410;&#20351;&#29992;&#30340;&#31471;&#21475;&#21495;&#25165;&#33021;&#21551;&#29992; JVM &#30340;&#30417;&#35270;&#21644;&#31649;&#29702;&#21151;&#33021;&#12290;</p>
+
+      </div>
+<!-- class="section" -->
+<div class="section" id="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A__DCOM.SUN.MANAGEMENT.JMXREMOTE.SSL-4DE53AD1"><p class="subhead1">-Dcom.sun.management.jmxremote.ssl</p>
+         
+         <p>&#27492;&#36873;&#39033;&#29992;&#20110;&#20999;&#25442;&#23433;&#20840;&#22871;&#25509;&#23383;&#23618; (SSL) &#39564;&#35777;&#30340;&#20351;&#29992;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#21551;&#29992;&#35813;&#36873;&#39033;&#12290;&#35201;&#20026; JVM &#31105;&#29992; SSL &#39564;&#35777;&#65292;&#35831;&#25351;&#23450; <code>&#8212;Dcom.sun.management.jmxremote.ssl=false</code>&#12290;</p>
+
+         <ul style="list-style-type: disc;"><li>
+               <p>
+                  <code>-Dcom.sun.management.jmxremote.port</code>
+               </p>
+
+            </li>
+<li>
+               <p>
+                  <code>-Dcom.sun.management.jmxremote.authenticate</code>
+               </p>
+
+            </li>
+<li>
+               <p>
+                  <code>-Dcom.sun.management.jmxremote.ssl</code>
+               </p>
+
+            </li>
+</ul>
+
+         <p>&#26377;&#20851;&#36825;&#20123;&#26631;&#35760;&#30340;&#35814;&#32454;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;<a href="olink:JSMGM-GUID-805517EC-2D33-4D61-81D8-4D0FA770D1B8" target="_blank">&#20351;&#29992; JMX &#25216;&#26415;&#36827;&#34892;&#30417;&#35270;&#21644;&#31649;&#29702;</a>&#12290;&#160;</p>
+
+      </div>
+<!-- class="section" -->
+<div class="example" id="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A__GUID-0571AD03-CA31-4B96-8F7C-21F6710B88AE"><p class="titleinexample">&#31034;&#20363; 4-1 &#21551;&#21160;&#24050;&#21551;&#29992; JMXRMI &#19988;&#26080;&#38656;&#39564;&#35777;&#30340; JVM</p>
+         
+         <p>&#20197;&#19979;&#31034;&#20363;&#28436;&#31034;&#20102;&#22914;&#20309;&#21551;&#21160;&#22312;&#31471;&#21475; 7091 &#19978;&#21551;&#29992;&#20102; JMXRMI &#19988;&#26080;&#38656;&#39564;&#35777;&#30340; Java &#24212;&#29992;&#31243;&#24207;&#65288;&#21517;&#20026; <code>MyApp</code>&#65289;&#12290;</p>
+
+         <pre class="oac_no_warn" dir="ltr">java -Dcom.sun.management.jmxremote.port=7091
+-Dcom.sun.management.jmxremote.authenticate=false
+-Dcom.sun.management.jmxremote.ssl=false MyApp</pre>
+
+      </div>
+<!-- class="example" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">&#29256;&#26435;&#25152;&#26377;&#160;&#169;&#160;2018, Oracle&#160;&#21644;/&#25110;&#20854;&#38468;&#23646;&#20844;&#21496;&#12290;&#160;&#20445;&#30041;&#25152;&#26377;&#26435;&#21033;&#12290;</span></a></td>
+
+
+<td align="center">
+<a href="GUID-4D1A3616-1FB9-4478-8AB7-1941F3EDF87B.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="&#19978;&#19968;&#39029;" /><br />
+<span class="icon">&#19978;&#19968;&#39029;</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-2E1242E0-8437-467B-9AEC-36AE680733F7.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="&#19979;&#19968;&#39029;" /><br />
+<span class="icon">&#19979;&#19968;&#39029;</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

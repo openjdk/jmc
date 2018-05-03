@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="将 JDK Mission Control 作为 Eclipse �?�件使用" link_to="PLUGINS_ROOT/org.openjdk.jmc.docs/toc.xml#MissionControlIDETOCLink">
+  <!--<topic href="html/title.htm" label="JDK Mission Control Eclipse �?�件�?�机帮助，�?�行版 5.4">
+    <topic href="html/preface.htm" label="�?言">
+      <topic href="html/preface.htm#sthref3" label="读者"/>
+      <topic href="html/preface.htm#sthref4" label="文档�?�访问性"/>
+      <topic href="html/preface.htm#sthref6" label="相关文档"/>
+      <topic href="html/preface.htm#sthref7" label="约定"/>
+    </topic>
+    <topic href="html/using.htm" label="使用 Eclipse �?�件">-->
+      <topic href="html/using001.htm#sthref9" label="Eclipse �?�件">
+        <topic href="html/using002.htm#sthref10" label="Eclipse IDE 版和 RCP 版 JDK Mission Control 之间的差异"/>
+        <topic href="html/using003.htm#sthref11" label="更改 JVM"/>
+        <topic href="html/using004.htm#sthref12" label="选择�?视图"/>
+        <topic href="html/using005.htm#CHDCEJGJ" label="跳转到应用程�?�?代�?">
+          <topic href="html/using006.htm#sthref13" label="使用“跳转到�?代�?�?"/>
+          <topic href="html/using007.htm#CHDCCBBF" label="支�?“跳转到�?代�?�?的 JDK Mission Control �?�件"/>
+        </topic>
+      </topic>
+    <!--</topic>
+  </topic>-->
+</toc>

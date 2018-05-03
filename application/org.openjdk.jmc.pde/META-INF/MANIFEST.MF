@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDE Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.pde
+Bundle-Version: 1.0.2.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.pde.core;visibility:=reexport,
+ org.eclipse.core.resources;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.pde
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.openjdk.jmc.pde

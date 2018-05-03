@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Uitest
+Bundle-SymbolicName: org.openjdk.jmc.console.uitest;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.rjmx.ui,
+ org.openjdk.jmc.console.ui.mbeanbrowser,
+ org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.openjdk.jmc.common.util,
+ org.openjdk.jmc.console.ui.diagnostic.form,
+ org.openjdk.jmc.console.ui.diagnostic.preferences,
+ org.openjdk.jmc.rjmx.ui.internal,
+ org.openjdk.jmc.rjmx.ui.operations,
+ org.openjdk.jmc.test.jemmy,
+ org.openjdk.jmc.test.jemmy.misc.base.test,
+ org.openjdk.jmc.test.jemmy.misc.base.wrappers,
+ org.openjdk.jmc.test.jemmy.misc.fetchers,
+ org.openjdk.jmc.test.jemmy.misc.helpers,
+ org.openjdk.jmc.test.jemmy.misc.wrappers
+Automatic-Module-Name: org.openjdk.jmc.console.uitest

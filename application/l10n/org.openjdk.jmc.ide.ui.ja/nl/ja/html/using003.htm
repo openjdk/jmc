@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>JVMの変更</title>
+<meta name="robots" content="noarchive" />
+<meta name="doctitle" content="Changing Your JVM" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="using002.htm" title="Previous" type="text/html" />
+<link rel="next" href="using004.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">ヘッダーをスキップ</a></div>
+<table cellpadding="0" cellspacing="0" class="simple oac_no_warn" summary="" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr valign="bottom">
+<td align="left"></td>
+<td align="center"><a href="using002.htm"><img alt="前" src="./dcommon/gifs/leftnav.gif" /><br /> <span class="icon">前</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img alt="次" src="./dcommon/gifs/rightnav.gif" /><br /> <span class="icon">次</span></a></td>
+</tr>
+</table>
+<div class="sect2"><a id="sthref11" name="sthref11"></a>
+<h1>JVMの変更</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>JDK Mission Controlクライアントは多くの異なるJVMとともに動作できますが、JDK Mission ControlクライアントをEclipseプラットフォームで実行する場合は、Oracle JDK/JVMをJVMとして使用することをお薦めします。Oracle HotSpot JDK 7 Update 14以降を使用してください。JRE上で実行すると、ローカルJVMの自動検出が無効になるためお薦めしません。</p>
+<p><span class="bold">Eclipseを実行するJVMを変更する手順:</span></p>
+<ol>
+<li>
+<p>ファイル・システム・ブラウザ(たとえば、Windowsエクスプローラ)を表示します。</p>
+</li>
+<li>
+<p>Eclipseインストール・フォルダ(たとえば、<code>C:\Program Files\Eclipse</code>)を探し、メモ帳以外のファイル・エディタでファイル<code>eclipse.ini</code>を開きます。次の例のようになります:</p>
+<br /> <code>-showsplash</code><br /> <code>org.eclipse.platform</code><br /> <code>--launcher.XXMaxPermSize</code><br /> <code>256M</code><br /> <code>-vmargs</code><br /> <code>-Dosgi.requiredJavaVersion=1.5</code><br /> <code>-Xms40m</code><br /> <code>-Xmx512m</code><br /></li>
+<li>
+<p><code>eclipse.ini</code>ファイルを次のように変更します。</p>
+<ul>
+<li>
+<p>JVM以外の他のJVMに関連するすべてのフラグ(たとえば、<code>--launcher.XXMaxPermSize 256M</code>)を削除します。</p>
+</li>
+<li>
+<p>3行目(<code>org.eclipse.platform</code>の後)に、次のコードを追加します。</p>
+<p><code>-vm &lt;Full path JAVA_HOME/jre/bin/ folder></code></p>
+<p>フルパスは、Windowsでは次のようになります。</p>
+<p><code>C:\Program Files\Java\jdk1.7.0\jre\bin\</code></p>
+<p>または、LinuxとSolarisでは次のようになります。</p>
+<p><code>$HOME/jdk1.7.0/jre/bin/</code></p>
+</li>
+<li>
+<p>特定のJVM実装やそこで実行するアプリケーションによって異なりますが、有効なJVMコマンド行オプションを設定できます。</p>
+<p>使用可能なコマンド行オプションの詳細は、次の場所の<span class="italic">Javaコマンド行リファレンス</span>を参照してください<br /> <code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html</a></code>(Solaris、Linux)<br /> <code><a href="https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html">https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html</a></code>(Windows)</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>eclipse.ini</code>ファイルの必要な変更が終了した後、ファイルを保存して閉じます。次に示すのは、Windows実装内でJVMをアクティブなJVMに設定するように更新した場合の<code>eclipse.ini</code>ファイルの例です。</p>
+<br /> <code>-showsplash</code><br /> <code>org.eclipse.platform</code><br /> <code>-vm</code><br /> <code>C:\Program Files\Java\jdk1.7.0\bin\javaw.exe</code><br /> <code>-vmargs</code><br /> <code>-Dosgi.requiredJavaVersion=1.5</code><br /> <code>-Xms256m</code><br /> <code>-Xmx512m</code></li>
+</ol>
+</div>
+<!-- class="sect2" -->
+<!-- Start Footer -->
+<div class="footer">
+<table cellpadding="0" cellspacing="0" class="simple oac_no_warn" summary="" width="100%">
+<col width="86%" />
+<col width="*" />
+<tr>
+<td align="left"><span class="copyrightlogo">Copyright&nbsp;©&nbsp;2018,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates. &nbsp;All&nbsp;rights&nbsp;reserved.</span><br /> <a href="http://oss.oracle.com/licenses/upl"><span class="copyrightlogo">法律上の注意点</span></a></td>
+<td align="center"><a href="using002.htm"><img alt="前" src="./dcommon/gifs/leftnav.gif" /><br /> <span class="icon">前</span></a>&nbsp;</td>
+<td align="center"><a href="using004.htm"><img alt="次" src="./dcommon/gifs/rightnav.gif" /><br /> <span class="icon">次</span></a></td>
+</tr>
+</table>
+</div>
+<!-- class="footer" -->
+</body>
+</html>

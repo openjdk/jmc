@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         id="app"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.openjdk.jmc.rcp.application.Application">
+         </run>
+      </application>
+   </extension>
+  
+  <extension
+       point="org.openjdk.jmc.ui.common.idesupport">
+    <idesupport
+          class="org.openjdk.jmc.rcp.application.RCPApplicationIDESupport"
+          id="org.openjdk.jmc.ide.ui.idesupport"
+          name="IDE support for stand alone Mission Control RCP application">
+    </idesupport>
+ </extension>
+ 
+ <extension
+		 point="org.eclipse.ui.activities">
+		<activity
+   			id="org.openjdk.jmc.activity.shell"
+   			name="Mission Control Shell"/>
+   			<activityPatternBinding
+            activityId="org.openjdk.jmc.activity.shell"
+            pattern=".*/com\.oracle\.jmc\.rcp\.application\.commands\.CommandView"/>
+	</extension>
+ 
+   <extension
+         point="org.eclipse.core.runtime.products"
+         id="product">
+      <product
+            application="org.openjdk.jmc.rcp.application.app"
+            name="%APPLICATION_NAME">
+         <property
+               name="appName"
+               value="%APPLICATION_NAME"/>
+         <property
+               name="aboutText"
+               value="%ABOUT_TEXT"/>
+         <property
+               name="aboutImage"
+               value="icons/mission_control_abt_Oracle.gif"/>
+         <property
+               name="windowImages"
+               value="icons/mission_control_16.png,icons/mission_control_32.png,icons/mission_control_48.png,icons/mission_control_64.png,icons/mission_control_128.png"/>
+         <property
+                name="startupProgressRect"
+                value="40,400,620,25"/>
+         <property
+               name="startupForegroundColor"
+               value="C0C0C0"/>
+         <property
+               name="startupMessageRect"
+               value="260,385,440,15"/>   
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+         		name="cssTheme"
+         		value="org.eclipse.e4.ui.css.theme.e4_default">
+         </property>
+      </product>
+   </extension>
+  
+  
+   	   <extension
+       point="org.eclipse.ui.views">
+    <view
+          category="org.eclipse.ui"
+          class="org.eclipse.ui.ExtensionFactory:progressView"
+          icon="icons/pview.gif"
+          id="org.eclipse.ui.views.ProgressView"
+          name="%PROGRESS_VIEW_TITLE">
+    </view>
+ </extension>   
+ 
+  
+ 
+ 	<extension point="org.eclipse.ui.commands">
+		<command
+        categoryId="org.openjdk.jmc.rcp.application.file"
+        defaultHandler="org.openjdk.jmc.rcp.application.actions.OpenFileHandler"
+        description="%OPEN_FILE_DESCRIPTION"
+        id="org.openjdk.jmc.rcp.application.file.open"
+        name="%OPEN_FILE_NAME">
+		</command>
+		<category
+            name="%MISSION_CONTROL_FILE_COMMANDS_CATEGORY"
+            description="%MISSION_CONTROL_FILE_COMMANDS_CATEGORY"
+            id="org.openjdk.jmc.rcp.application.file">
+      </category>
+ 	</extension>
+ 	
+ 	<extension
+	 	point="org.eclipse.ui.bindings">
+	 	<key commandId="org.openjdk.jmc.rcp.application.file.open" sequence="M1+O"  schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.openjdk.jmc.rcp.application.commands.shellview" sequence="M1+1" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		
+		<!-- The following two commands have the same shortcut as the Eclipse default -->
+		<key commandId="org.eclipse.ui.window.showKeyAssist" sequence="M1+SHIFT+L" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.window.quickAccess" sequence="M1+3" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+
+		<key commandId="org.openjdk.jmc.browser.command.connection" sequence="SHIFT+M1+Alt+C" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.help.quickStartAction" sequence="SHIFT+M1+Alt+W" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>	
+		<key commandId="org.eclipse.ui.file.import" sequence="SHIFT+M1+Alt+I" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.file.export" sequence="SHIFT+M1+Alt+E" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.help.aboutAction" sequence="M1+Alt+A" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.equinox.p2.ui.sdk.install" sequence="SHIFT+M1+Alt+X" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.window.preferences" sequence="SHIFT+M1+Alt+P" contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key commandId="org.eclipse.ui.views.showView" 	sequence="SHIFT+M1+Alt+J" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+	 		<parameter id="org.eclipse.ui.views.showView.viewId" value="org.openjdk.jmc.browser.views.JVMBrowserView"/>
+		</key>
+		<key commandId="org.eclipse.ui.views.showView" sequence="SHIFT+M1+Alt+O" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+	 		<parameter id="org.eclipse.ui.views.showView.viewId" value="org.eclipse.ui.views.ContentOutline"/>
+		</key>
+		<key commandId="org.eclipse.ui.views.showView" sequence="SHIFT+M1+Alt+S" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+	 		<parameter id="org.eclipse.ui.views.showView.viewId" value="org.openjdk.jmc.flightrecorder.ui.StacktraceView"/>
+		</key>
+ 	</extension>
+    
+    <extension
+          point="org.openjdk.jmc.commands.command">
+       <command
+             category="Scripting"
+             class="org.openjdk.jmc.rcp.application.commands.OpenFile"
+             description="Opens up a file."
+             identifier="open"
+             name="Open File"
+             userInterface="true">
+          <string
+                description="an absolute path to the file to open. "
+                exampleValue="&quot;c:/myfile.jfr&quot;"
+                identifier="filename"
+                name="Filename"
+                optional="false">
+          </string>
+       </command>
+       <command
+             category="Scripting"
+             class="org.openjdk.jmc.rcp.application.commands.CloseEditor"
+             description="Closes the current active editor."
+             identifier="closeeditor"
+             name="Close Editor"
+             userInterface="true">
+       </command>
+           <command
+          category="Scripting"
+          class="org.openjdk.jmc.rcp.application.commands.CloseWelcome"
+          description="Closes the welcome screen."
+          identifier="closewelcome"
+          name="Close Welcome"
+          userInterface="true">
+       </command>
+    </extension>
+    <extension
+          point="org.eclipse.ui.views">
+       <view
+             allowMultiple="false"
+             category="org.openjdk.jmc.ui.main"
+             class="org.openjdk.jmc.rcp.application.scripting.ScriptView"
+             icon="icons/command-output-16.png"
+             id="org.openjdk.jmc.rcp.application.commands.CommandView"
+             name="Commands"
+             restorable="true">
+       </view>
+    </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <command
+             id="org.openjdk.jmc.rcp.application.commands.shellview"
+             name="View Shell">
+       </command>
+    </extension>
+    <!-- Adding our own General prefs group, since this is contributed by org.eclipse.ui.ide --> 
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%GENERAL_PREFERENCE_PAGE_TITLE"
+            class="org.openjdk.jmc.rcp.application.GeneralPrefsPage"
+            id="org.eclipse.ui.preferencePages.Workbench">
+         <keywordReference id="org.eclipse.ui.ide.general"/>
+      </page>
+      <page
+            name="%FILE_ASSOCIATIONS_PREFERENCE_PAGE_TITLE"
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.ui.ExtensionFactory:fileAssociationsPreferencePage"
+            id="org.eclipse.ui.preferencePages.FileEditors">
+         <keywordReference id="org.eclipse.ui.ide.editing"/>
+         <keywordReference id="org.eclipse.ui.ide.editors"/>
+      </page>
+      <page 
+      		name="%APPEARANCE_PREFERENCE_PAGE_TITLE"
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.ui.ExtensionFactory:appearancePreferencePage"
+            id="org.eclipse.ui.preferencePages.Views">
+         <keywordReference id="org.eclipse.ui.ide.appearance"/>
+         <keywordReference id="org.eclipse.ui.ide.colorlabels"/>
+         <keywordReference id="org.eclipse.ui.ide.themes"/>
+         <keywordReference id="org.eclipse.ui.ide.tabs"/>
+         <keywordReference id="org.eclipse.ui.ide.apearancepage"/>
+         <keywordReference id="org.eclipse.ui.ide.animations"/>
+      </page>
+      <page
+            name="%COLORS_AND_FONTS_PREFERENCE_PAGE_TITLE"
+            category="org.eclipse.ui.preferencePages.Views"
+            class="org.eclipse.ui.ExtensionFactory:colorsAndFontsPreferencePage"
+            id="org.eclipse.ui.preferencePages.ColorsAndFonts">
+         <keywordReference id="org.eclipse.ui.ide.appearance"/>
+         <keywordReference id="org.eclipse.ui.ide.themes"/>
+         <keywordReference id="org.eclipse.ui.ide.textFont"/>
+         <keywordReference id="org.eclipse.ui.ide.textEditorFont"/>
+         <keywordReference id="org.eclipse.ui.ide.editorFont"/>
+      </page>
+      <page
+            name="%KEYS_PREFERENCE_PAGE_TITLE"
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
+            id="org.eclipse.ui.preferencePages.Keys">
+         <keywordReference id="org.eclipse.ui.ide.keys"/>
+      </page>
+    </extension>
+</plugin>

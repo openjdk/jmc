@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-Name: JVMBrowser Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.browser;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.browser.JVMBrowserPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.ui,
+ org.eclipse.ui.forms,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.browser.attach,
+ org.openjdk.jmc.attach,
+ org.eclipse.help
+Eclipse-BuddyPolicy: app
+Bundle-Vendor: Oracle Corporation
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.browser.views;x-friends:="org.openjdk.jmc.test.jemmy",
+ org.openjdk.jmc.browser.wizards;x-friends:="org.openjdk.jmc.test.jemmy"
+Automatic-Module-Name: org.openjdk.jmc.browser

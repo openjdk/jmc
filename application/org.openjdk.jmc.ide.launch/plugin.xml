@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+<!-- (Local) Java Application -->
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabs">
+    <tab
+	class="org.openjdk.jmc.ide.launch.JfrLaunchConfigurationTab"
+        group="org.eclipse.jdt.debug.ui.launchConfigurationTabGroup.localJavaApplication"
+        id="org.openjdk.jmc.ide.launch.JFRTab"
+        name="%JFR_LAUNCH_TAB_NAME">
+      <placement after="org.eclipse.jdt.debug.ui.javaArgumentsTab"/>
+    </tab>
+  </extension> 
+ 
+   <extension point="org.eclipse.debug.core.launchDelegates">
+    <launchDelegate
+        delegate="org.openjdk.jmc.ide.launch.JfrJavaLaunchDelegate"
+        delegateDescription="%JFR_LAUNCH_JAVA_DELEGATE_DESCRIPTION"
+        id="org.openjdk.jmc.ide.launch.JFRJavaLaunchDelegate"
+        modes="run"
+        name="%JFR_LAUNCH_JAVA_DELEGATE_NAME"
+        type="org.eclipse.jdt.launching.localJavaApplication">
+    </launchDelegate>
+  </extension>
+  
+ 
+  <extension
+      point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+        class="org.openjdk.jmc.ide.launch.JfrJavaLaunchShortcut"
+        description="%JFR_LAUNCH_JAVA_SHORTCUT_DESCRIPTION"
+        icon="icons/jfr.png"
+        id="org.openjdk.jmc.ide.launch.jfr.java.shortcut"
+        label="%JFR_LAUNCH_JAVA_SHORTCUT_LABEL"
+        modes="run">
+      <contextualLaunch>
+        <enablement>
+          <with variable="selection">
+            <count value="1"/>
+            <iterate>
+              <and>
+                <adapt type="org.eclipse.jdt.core.IJavaElement">
+                  <test property="org.eclipse.jdt.core.isInJavaProject"/>
+                </adapt>
+	        <or>
+	          <test property="org.eclipse.jdt.launching.hasMain"/>
+	          <test property="org.eclipse.jdt.launching.isContainer"/>
+	          <test property="org.eclipse.jdt.launching.isPackageFragment"/>
+	          <test property="org.eclipse.jdt.launching.isPackageFragmentRoot"/>
+	        </or>
+	      </and>
+	    </iterate>
+          </with>
+        </enablement>
+      </contextualLaunch>
+    </shortcut>
+  </extension>
+  
+  <!-- Eclipse Application -->
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabs">
+    <tab
+	class="org.openjdk.jmc.ide.launch.JfrLaunchConfigurationTab"
+        group="org.eclipse.pde.ui.launcher.WorkbenchLauncherTabGroup"
+        id="org.openjdk.jmc.ide.launch.JFRTab"
+        name="%JFR_LAUNCH_TAB_NAME">
+      <placement after="org.eclipse.jdt.debug.ui.javaArgumentsTab"/>
+    </tab>
+  </extension> 
+
+   <extension point="org.eclipse.debug.core.launchDelegates">
+    <launchDelegate
+        delegate="org.openjdk.jmc.ide.launch.JfrEclipseLaunchDelegate"
+        delegateDescription="%JFR_LAUNCH_ECLIPSE_DELEGATE_DESCRIPTION"
+        id="org.openjdk.jmc.ide.launch.JFREclipseLaunchDelegate"
+        modes="run"
+        name="%JFR_LAUNCH_ECLIPSE_DELEGATE_NAME"
+        type="org.eclipse.pde.ui.RuntimeWorkbench">
+    </launchDelegate>
+  </extension> 
+   
+  <extension
+      point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+        class="org.openjdk.jmc.ide.launch.JfrEclipseLaunchShortcut"
+        description="%JFR_LAUNCH_ECLIPSE_SHORTCUT_DESCRIPTION"
+        icon="icons/jfr.png"
+        id="org.openjdk.jmc.ide.launch.jfr.eclipse.shortcut"
+        label="%JFR_LAUNCH_ECLIPSE_SHORTCUT_LABEL"
+        modes="run">
+      <contextualLaunch>
+        <enablement>
+          <with variable="selection">
+            <count value="1"/>
+	    <iterate>
+              <and>
+                <instanceof value="org.eclipse.core.runtime.IAdaptable"/>
+		<test property="org.eclipse.debug.ui.projectNature" value="org.eclipse.pde.PluginNature"/>
+                <or>
+                  <adapt type="org.eclipse.core.resources.IProject"/>
+                  <test property="org.eclipse.debug.ui.matchesPattern" value="plugin.xml"/>
+                  <test property="org.eclipse.debug.ui.matchesPattern" value="MANIFEST.MF"/>
+                  <test property="org.eclipse.debug.ui.matchesPattern" value="*.product"/>
+                </or>
+              </and>
+	    </iterate>
+          </with>
+        </enablement>
+      </contextualLaunch>
+    </shortcut>
+  </extension>
+ 
+<!-- JUnit -->
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabs">
+    <tab
+	class="org.openjdk.jmc.ide.launch.JfrLaunchConfigurationTab"
+        group="org.eclipse.jdt.junit.launchConfigurationTabGroup.junit"
+        id="org.openjdk.jmc.ide.launch.JFRTab"
+        name="%JFR_LAUNCH_TAB_NAME">
+      <placement after="org.eclipse.jdt.debug.ui.javaArgumentsTab"/>
+    </tab>
+  </extension> 
+
+   <extension point="org.eclipse.debug.core.launchDelegates">
+    <launchDelegate
+        delegate="org.openjdk.jmc.ide.launch.JfrJUnitLaunchDelegate"
+        delegateDescription="%JFR_LAUNCH_JUNIT_DELEGATE_DESCRIPTION"
+        id="org.openjdk.jmc.ide.launch.JFRJUnitLaunchDelegate"
+        modes="run"
+        name="%JFR_LAUNCH_JUNIT_DELEGATE_NAME"
+        type="org.eclipse.jdt.junit.launchconfig">
+    </launchDelegate>
+  </extension>
+  
+    <extension
+      point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+        class="org.openjdk.jmc.ide.launch.JfrJUnitLaunchShortcut"
+        description="%JFR_LAUNCH_JUNIT_SHORTCUT_DESCRIPTION"
+        icon="icons/jfr.png"
+        id="org.openjdk.jmc.ide.launch.jfr.junit.shortcut"
+        label="%JFR_LAUNCH_JUNIT_SHORTCUT_LABEL"
+        modes="run">
+      <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+               	  <iterate>
+                     <adapt type="org.eclipse.jdt.core.IJavaElement">
+		                <test property="org.eclipse.jdt.core.isInJavaProject"/>
+		                <test property="org.eclipse.jdt.core.hasTypeOnClasspath" value="org.junit.Test"/>
+		                <test property="org.eclipse.jdt.junit.canLaunchAsJUnit" forcePluginActivation="true"/>
+		             </adapt>
+		          </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+    </shortcut>
+  </extension>
+ 
+ <!-- JUnit Plug-in Test -->
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabs">
+    <tab
+	class="org.openjdk.jmc.ide.launch.JfrLaunchConfigurationTab"
+        group="org.eclipse.pde.ui.launcher.JUnitTabGroup"
+        id="org.openjdk.jmc.ide.launch.JFRTab"
+        name="%JFR_LAUNCH_TAB_NAME">
+      <placement after="org.eclipse.jdt.debug.ui.javaArgumentsTab"/>
+    </tab>
+  </extension> 
+
+   <extension point="org.eclipse.debug.core.launchDelegates">
+    <launchDelegate
+        delegate="org.openjdk.jmc.ide.launch.JfrJUnitPluginLaunchDelegate"
+        delegateDescription="%JFR_LAUNCH_JUNIT_PLUGIN_DELEGATE_DESCRIPTION"
+        id="org.openjdk.jmc.ide.launch.JFRJUnitPluginLaunchDelegate"
+        modes="run"
+        name="%JFR_LAUNCH_JUNIT_PLUGIN_DELEGATE_NAME"
+        type="org.eclipse.pde.ui.JunitLaunchConfig">
+    </launchDelegate>
+  </extension> 
+   
+  <extension
+      point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+        class="org.openjdk.jmc.ide.launch.JfrJUnitPluginLaunchShortcut"
+        description="%JFR_LAUNCH_JUNIT_PLUGIN_SHORTCUT_DESCRIPTION"
+        icon="icons/jfr.png"
+        id="org.openjdk.jmc.ide.launch.jfr.junit.plugin.shortcut"
+        label="%JFR_LAUNCH_JUNIT_PLUGIN_SHORTCUT_LABEL"
+        modes="run">
+      <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+               	  <iterate>
+                      <adapt type="org.eclipse.jdt.core.IJavaElement">
+		                <test property="org.eclipse.jdt.core.isInJavaProjectWithNature" value="org.eclipse.pde.PluginNature"/>
+		                <test property="org.eclipse.jdt.core.hasTypeOnClasspath" value="org.junit.Test"/>
+		                <test property="org.eclipse.jdt.junit.canLaunchAsJUnit" forcePluginActivation="true"/>
+		             </adapt>
+		          </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+    </shortcut>
+  </extension>
+ </plugin>

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JOverFlow Plugin
+Bundle-SymbolicName: org.openjdk.jmc.joverflow.ui;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.openjdk.jmc.ui,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.joverflow,
+ org.openjdk.jmc.javafx.osgi
+Eclipse-BuddyPolicy: app
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.joverflow.ui.JOverflowPlugin
+Export-Package: org.openjdk.jmc.joverflow.ui.fx,
+ org.openjdk.jmc.joverflow.ui.tabletree
+Automatic-Module-Name: org.openjdk.jmc.joverflow.ui

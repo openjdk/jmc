@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Japanese Language Fragment
+Bundle-SymbolicName: org.openjdk.jmc.rcp.intro.ja
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.openjdk.jmc.rcp.intro;bundle-version="7.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.openjdk.jmc.rcp.intro.ja

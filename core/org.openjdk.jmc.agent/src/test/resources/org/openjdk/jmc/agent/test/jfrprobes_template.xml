@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<jfragent>
+	<!-- Global configuration options -->
+	<config>
+		<!-- This is the prefix to use when generating event class names -->
+		<classprefix>__JFREvent</classprefix>
+		<!-- Will allow the recording of arrays and object parameters as Strings. This will cause toString to be called
+		     for array elements and objects other than strings, which in turn can cause trouble if the toString 
+		     method is badly implemented. Use with care. -->
+		<allowtostring>true</allowtostring>
+		<!-- Allows converters to be used. If a converter is badly implemented, you are on your own. -->
+		<allowconverters>true</allowconverters>		
+	</config>
+	<events>
+		<event id="demo.test1">
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorld1</name>						
+				<descriptor>()V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<messageEntry>Entering 1!</messageEntry>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageExit>Exiting 1! Time: {0} ns</messageExit>
+		</event>
+		<event id="demo.test2">
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorld2</name>						
+				<descriptor>(Ljava/lang/String;J)I</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<!-- Note that message format parameters are allowed; here is an example for the long parameter. -->
+			<messageEntry>Entering 2. String param {0}, long param {1, number, 0.###E0}</messageEntry>
+			<messageExit>Exiting 2. Time: {3} ns, return param: {2, number, integer}</messageExit>
+		</event>
+		<event id="demo.test3">
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorld3</name>						
+				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering 3. Param: {0}</messageEntry>
+			<messageExit>Exiting 3. Time: {1} ns</messageExit>
+		</event>
+		<event id="demo.test4">
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorld4</name>						
+				<descriptor>([Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering 4. Param: {0}</messageEntry>
+			<messageExit>Exiting 4. Time: {1} ns</messageExit>
+		</event>
+		<event id="demo.test5">
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorld5</name>						
+				<descriptor>(Ljava/util/Collection;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering 5. Param: {0}</messageEntry>
+			<messageExit>Exiting 5. Time: {1} ns</messageExit>
+		</event>
+
+		<event id="demo.jfr.test1">
+			<name>JFR Hello World Event 1 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent.</description>
+			<path>demo/jfrhelloworldevent1</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR1</name>						
+				<descriptor>()V</descriptor>
+			</method>
+			<!-- location {ENTRY, EXIT, BOTH}, kind DURATION and TIMED implies BOTH -->
+			<location>BOTH</location>
+			<!-- Reuse will for JDK 7 and JDK 8 reuse the same event instance. Must be at a thread safe location for a well defined result. -->
+			<reuse>false</reuse>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.test2">
+			<name>JFR Hello World Event 2 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldevent2</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR2</name>						
+				<descriptor>(Ljava/lang/String;J)I</descriptor>
+				<parameter index="0">
+					<name>String Attribute</name>
+					<description>The first parameter</description>
+					<!-- See com.oracle.jrockit.jfr.ContentType
+					     {None, Bytes, Timestamp, Millis, Nanos, Ticks, Address, OSThread, JavaThread, StackTrace, Class, Percentage} -->
+					<contenttype>None</contenttype>	
+				</parameter>
+				<parameter index="1">
+					<name>Long Attribute</name>
+					<description>The second parameter</description>
+					<contenttype>Bytes</contenttype>	
+				</parameter>
+				<parameter index="-1">
+					<name>Return Value</name>
+					<description>The return value</description>
+					<contenttype>None</contenttype>	
+				</parameter>				
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+				
+		<event id="demo.testI1">
+			<name>Hello World Text Event I1 %TEST_NAME%</name>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorld1</name>						
+				<descriptor>()V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<messageEntry>Entering Instance 1!</messageEntry>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageExit>Exiting Instance 1! Time: {0} ns</messageExit>
+		</event>
+		<event id="demo.testI2">
+			<name>Hello World Text Event I1 %TEST_NAME%</name>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorld2</name>						
+				<descriptor>(Ljava/lang/String;J)I</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<!-- Note that message format parameters are allowed; here is an example for the long parameter. -->
+			<messageEntry>Entering I2. String param {0}, long param {1, number, 0.###E0}</messageEntry>
+			<messageExit>Exiting I2. Time: {3} ns, return param: {2, number, integer}</messageExit>
+		</event>
+		<event id="demo.testI3">
+			<name>Hello World Text Event I3 %TEST_NAME%</name>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorld3</name>						
+				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering I3. Param: {0}</messageEntry>
+			<messageExit>Exiting I3. Time: {1} ns</messageExit>
+		</event>
+		<event id="demo.testI4">
+			<name>Hello World Text Event I4 %TEST_NAME%</name>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorld4</name>						
+				<descriptor>([Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering I4. Param: {0}</messageEntry>
+			<messageExit>Exiting I4. Time: {1} ns</messageExit>
+		</event>
+		<event id="demo.testI5">
+			<name>Hello World Text Event I5 %TEST_NAME%</name>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorld5</name>						
+				<descriptor>(Ljava/util/Collection;)V</descriptor>
+			</method>
+			<loggingtype>text</loggingtype>
+			<!-- Available message parameter indices are:
+			     0 to (parameter count - 1) are the method parameters, 
+			     index (parameter count) is the return value, 
+			     parameter count + 1 is the ns time for executing the method. 
+			     Note that the time for executing the method is only available in the exit message. -->
+			<messageEntry>Entering I5. Param: {0}</messageEntry>
+			<messageExit>Exiting I5. Time: {1} ns</messageExit>
+		</event>
+		
+		<event id="demo.jfr.testI1">
+			<name>JFR Hello World Instance Event 1 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent.</description>
+			<path>demo/jfrhelloworldeventI1</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR1</name>						
+				<descriptor>()V</descriptor>
+			</method>
+			<!-- location {ENTRY, EXIT, BOTH}, kind DURATION and TIMED implies BOTH -->
+			<location>BOTH</location>
+			<!-- Reuse will for JDK 7 and JDK 8 reuse the same event instance. Must be at a thread safe location for a well defined result. -->
+			<reuse>false</reuse>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testI2">
+			<name>JFR Hello World Instance Event 2 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventI2</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR2</name>						
+				<descriptor>(Ljava/lang/String;J)I</descriptor>
+				<parameter index="0">
+					<name>String Attribute</name>
+					<description>The first parameter</description>
+					<contenttype>None</contenttype>	
+				</parameter>
+				<parameter index="1">
+					<name>Long Attribute</name>
+					<description>The second parameter</description>
+					<contenttype>Bytes</contenttype>	
+				</parameter>
+				<parameter index="-1">
+					<name>Return Value</name>
+					<description>The return value</description>
+					<contenttype>None</contenttype>	
+				</parameter>				
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testI3">
+			<name>JFR Hello World Instance Event 3 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventI3</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR3</name>						
+				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="0">
+					<name>Gurka Attribute</name>
+					<description>The one and only Gurk-parameter</description>
+					<contenttype>None</contenttype>	
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testI4">
+			<name>JFR Hello World Instance Event 4 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventI4</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR4</name>						
+				<descriptor>([Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="0">
+					<name>Gurka Array Attribute</name>
+					<description>The one and only Gurk-array-parameter</description>
+					<contenttype>None</contenttype>	
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testI5">
+			<name>JFR Hello World Instance Event 5 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventI5</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR5</name>						
+				<descriptor>(Ljava/util/Collection;)V</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="0">
+					<name>Gurka Collection Attribute</name>
+					<description>The one and only Gurk-collection</description>
+					<contenttype>None</contenttype>	
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testI6">
+			<name>JFR Hello World Instance Event 6 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the return value.</description>
+			<path>demo/jfrhelloworldeventI6</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR6</name>						
+				<descriptor>()D</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="-1">
+					<name>Return Value</name>
+					<description>A value between 0 and 100 (double)</description>
+					<contenttype>Percentage</contenttype>	
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+		<event id="demo.jfr.testC1">
+			<name>JFR Hello World Converter Event 1 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventC1</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR3</name>						
+				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="0">
+					<name>Gurka Attribute</name>
+					<description>The one and only converted Gurk-parameter</description>
+					<contenttype>None</contenttype>	
+					<converter>org.openjdk.jmc.agent.test.GurkConverterString</converter>
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
+	</events>
+</jfragent>

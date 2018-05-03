@@ -1,0 +1,138 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Using the GC Configuration Page" />
+<meta name="abstract" content="The GC Configuration page contains configuration data related to garbage collection." />
+<meta name="description" content="The GC Configuration page contains configuration data related to garbage collection." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-FEFBE854-3298-46A6-A149-8B48A62330D2" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Using the GC Configuration Page</title>
+
+<meta name="doctitle" content="Using the GC Configuration Page&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-C12D23CE-E9DE-4BFA-A310-9AD5B6D835FD.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-CD7A11BF-27AE-481A-8158-03ECC2DB9697.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-C12D23CE-E9DE-4BFA-A310-9AD5B6D835FD.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-CD7A11BF-27AE-481A-8158-03ECC2DB9697.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-FEFBE854-3298-46A6-A149-8B48A62330D2" name="GUID-FEFBE854-3298-46A6-A149-8B48A62330D2"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-FEFBE854-3298-46A6-A149-8B48A62330D2" class="sect1">Using the GC Configuration Page</h1>
+<div><p>The <span class="bold">GC Configuration</span> page contains configuration data related to garbage collection.</p>
+<p>This page contains panels for <span class="bold">GC Configuration</span>, <span class="bold">Heap Configuration</span>, and <span class="bold">Young Generation Configuration</span>.</p>
+<div class="section"><p class="subhead1">Using the GC Configuration Page: GC Configuration Panel</p><ul style="list-style-type: disc;"><li><p><span class="bold">Young Garbage Collector</span>: The garbage collector used for the young generation.</p>
+</li>
+<li><span class="bold">Old Garbage Collector</span>: The garbage collector used for the old generation.</li>
+<li><p><span class="bold">Concurrent GC Threads</span>: The number of concurrent GC threads.</p>
+</li>
+<li><p><span class="bold">Parallel GC Threads</span>: The number of parallel GC threads.</p>
+</li>
+<li><p><span class="bold">Concurrent Explicit GC</span>: Indicates whether <code>System.gc()</code> is concurrent or not.</p>
+</li>
+<li><p><span class="bold">Disabled Explicit GC</span>: Indicates whether <code>System.gc()</code> is will cause a garbage collection or not.</p>
+</li>
+<li><p><span class="bold">Uses Dynamic GC Threads</span>: Indicates whether a dynamic number of GC threads are used or not.</p>
+</li>
+<li><p><span class="bold">GC Time Ratio</span>: The GC time ratio. </p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Using the GC Configuration Page: Heap Configurations Panel</p><ul style="list-style-type: disc;"><li><p><span class="bold">Initial Heap Size</span>: The size of the Java heap at JVM startup.</p>
+</li>
+<li><p><span class="bold">Minimum Heap Size</span>: The minimum amount of memory reserved for the Java heap.</p>
+</li>
+<li><p><span class="bold">Maximum Heap Size</span>: The maximum amount of memory reserved for the Java heap.</p>
+</li>
+<li><p><span class="bold">If Compressed Oops Are Used</span>: Indicates whether compressed Ordinary Object Pointers are enabled.</p>
+</li>
+<li><p><span class="bold">Compressed Oops Mode</span>: Indicates the kind of compressed Ordinary Object Pointers being used.</p>
+</li>
+<li><p><span class="bold">Heap Address Size</span>: The heap address size.</p>
+</li>
+<li><p><span class="bold">Object Alignment</span>: </p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Using the GC Configuration Page: Young Generation Configuration Panel</p><ul style="list-style-type: disc;"><li><p><span class="bold">Minimum Young Generation Size</span>: The minimum size of the young generation.</p>
+</li>
+<li><p><span class="bold">Maximum Young Generation Size</span>: The maximum size of the young generation.</p>
+</li>
+<li><p><span class="bold">New Ratio</span>: </p>
+</li>
+<li><p><span class="bold">Initial Tenuring Threshold</span>: </p>
+</li>
+<li><p><span class="bold">Maximum Tenuring Threshold</span>: </p>
+</li>
+<li><p><span class="bold">TLABs Used</span>: Indicates whether Thread Local Allocation Buffers (TLABs) are in use.</p>
+</li>
+<li><p><span class="bold">Minimum TLAB Size</span>: The minimum TLAB size.</p>
+</li>
+<li><p><span class="bold">TLAB Refill Waste Limit</span>: </p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-C12D23CE-E9DE-4BFA-A310-9AD5B6D835FD.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-CD7A11BF-27AE-481A-8158-03ECC2DB9697.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

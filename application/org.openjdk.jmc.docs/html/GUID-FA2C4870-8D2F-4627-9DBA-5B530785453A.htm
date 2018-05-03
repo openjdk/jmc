@@ -1,0 +1,96 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Using JMX Persistence Data" />
+<meta name="abstract" content="The JMX Persistence Data plugin combines graphs of attributes for which data persistence was enabled in the Overview tab of the JMX Console. JMX Persistence Data is a low-overhead way to monitor attribute trends in a single tab." />
+<meta name="description" content="The JMX Persistence Data plugin combines graphs of attributes for which data persistence was enabled in the Overview tab of the JMX Console. JMX Persistence Data is a low-overhead way to monitor attribute trends in a single tab." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Using JMX Persistence Data</title>
+
+<meta name="doctitle" content="Using JMX Persistence Data&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-ECB99579-0933-45B8-ABC4-9A0EAC2B5E57.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-ECB99579-0933-45B8-ABC4-9A0EAC2B5E57.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A" name="GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-FA2C4870-8D2F-4627-9DBA-5B530785453A" class="sect1">Using JMX Persistence Data</h1>
+<div><p>The JMX Persistence Data plugin combines graphs of attributes for which data persistence was enabled in the <span class="bold">Overview</span> tab of the JMX Console. JMX Persistence Data is a low-overhead way to monitor attribute trends in a single tab.</p>
+<p>To enable JMX Persistence Data logging, expand the <span class="bold">JMX Persistence Data Settings</span> panel at the top of the <span class="bold">Overview</span> tab and click the <span class="bold">Activate JMX Persistence Data persistence</span> button in the top right corner. Only the attributes in the list are logged. Logging starts when you enable it and stops when you disable it or disconnect the JVM. Unlike graphs in the JMX Console, where only the buffered attribute values are displayed, the JMX Persistence Data log is permanently saved to disk, so it is possible to display as much JMX Persistence Data in the graphs as the log files allow. For more information, see <a href="GUID-ECB99579-0933-45B8-ABC4-9A0EAC2B5E57.htm" title="When you enable JMX Data Persistence logging, data is stored in binary files in the persistence directory.">Using JMX Data Persistence Files</a>.</p>
+<p>To open the <span class="bold">JMX Persistence Data</span> tab, in the JVM Browser, expand the node with the JVM for which you want to view JMX persistence data, right click the <span class="bold">MBean Server</span> node and select <span class="bold">Open JMX Persistence Data</span>.</p>
+<p>To add a graph to the <span class="bold">JMX Persistence Data</span> tab, click the <span class="bold">Add Chart</span> button in the top right corner of the tab. To add attributes to a graph, click the <span class="bold">Add attributes</span> button in the top right corner of the graph. To remove an attribute from the graph, right-click it in the graph legend and select <span class="bold">Delete</span>.</p>
+<p>By default, all data is shown for each attribute added to the graph. You can select the attributes that you want to show or hide on the graph using the check boxes in the graph legend.</p>
+<p>There are several ways to manipulate the time range of the displayed data in the graph:</p>
+<ul style="list-style-type: disc;"><li><p>You can zoom into a specific range on the graph by clicking and dragging with the mouse.</p>
+</li>
+<li><p>You can right-click the graph and select <span class="bold">Zoom In</span> or <span class="bold">Zoom Out</span>.</p>
+</li>
+<li><p>You can right-click the graph, select Show and then select how far back in time you would like the graph to display (15 seconds, 1 minute, 10 minutes, 1 hour, 1 day, or 1 week).</p>
+</li>
+</ul>
+<p>By right-clicking the graph you can also adjust the y-axis range and label density, select the rendering mode, edit titles, and export the graph as an image.</p>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-2BEF3E8A-724C-4EB2-869D-1CE9C83A0772.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-ECB99579-0933-45B8-ABC4-9A0EAC2B5E57.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

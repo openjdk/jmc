@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.openjdk.jmc.ui.main"
+            class="org.openjdk.jmc.browser.views.JVMBrowserView"
+            icon="icons/mission_control.png"
+            id="org.openjdk.jmc.browser.views.JVMBrowserView"
+            name="%VIEW_NAME">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               closeable="true"
+               id="org.openjdk.jmc.browser.views.JVMBrowserView"
+               moveable="true"
+               relationship="stack"
+               relative="org.eclipse.ui.navigator.ProjectExplorer"
+               showTitle="true"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension point="org.eclipse.help.contexts">
+      <contexts file="contexts.xml"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.openjdk.jmc.ui.preferences.MissionControlPage"
+            class="org.openjdk.jmc.browser.preferences.BrowserPreferencePage"
+            id="org.openjdk.jmc.browser.preferences.BrowserPreferencePage"
+            name="%PREFERENCE_PAGE_NAME"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.openjdk.jmc.browser.preferences.PreferenceInitializer"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+
+         <view
+               closeable="false"
+               id="org.openjdk.jmc.browser.views.JVMBrowserView"
+               moveable="true"
+               relationship="stack"
+               relative="org.openjdk.jmc.ui.idesupport.tallFolder"
+               standalone="false"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.openjdk.jmc.browser.views.JVMBrowserView">
+         </viewShortcut>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="org.openjdk.jmc.ui.wizards.export"
+            class="org.openjdk.jmc.browser.wizards.ConnectionExportWizard"
+            icon="icons/newconnection.gif"
+            id="org.openjdk.jmc.browser.wizard2"
+            name="%CONNECTIONS">
+         <description>
+           %EXPORT_CONNECTIONS_DESCRIPTION
+        </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.openjdk.jmc.ui.wizards.import"
+            class="org.openjdk.jmc.browser.wizards.ConnectionImportWizard"
+            icon="icons/newconnection.gif"
+            id="org.openjdk.jmc.ui.wizards"
+            name="%CONNECTIONS">
+        <description>
+           %IMPORT_CONNECTIONS_DESCRIPTION
+        </description>
+      </wizard>
+   </extension>
+  	<extension
+       point="org.openjdk.jmc.rjmx.actionProvider">
+       <providerFactory
+        class="org.openjdk.jmc.browser.remoteagent.RemoteJMXAgent"
+        priority="950">
+    </providerFactory>
+   </extension>
+   <extension
+         point="org.openjdk.jmc.ui.common.labelingRules">
+      <rule
+      		name="This JMC RCP"
+			format="%CONNECTION_FORMAT_THE_JVM_RUNNING_MISSION_CONTROL"
+            icon="appicons/MissionControl.png"
+            match="{Name}=org.openjdk.jmc.rcp.this"
+            priority="910">
+      </rule>
+      <rule
+      		name="This JMC in Eclipse"
+			format="%CONNECTION_FORMAT_THE_JVM_RUNNING_MISSION_CONTROL"
+            icon="appicons/Eclipse.png"
+            match="{Name}=org.openjdk.jmc.eclipse.this"
+            priority="910">
+      </rule>
+      <rule
+            name="Other RCP JMC bundled with JDK"
+            match="{Name}=.*lib[/\\]+missioncontrol[/\\]+plugins[/\\]+org.eclipse.equinox.launcher.*"
+            icon="appicons/MissionControl.png"
+            priority="909"
+            format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+      </rule>
+      <rule
+            name="Other RCP JMC bundled with JDK"
+            match="{Name}=.*lib/missioncontrol/JDK Mission Control.app.*"
+            icon="appicons/MissionControl.png"
+            priority="909"
+            format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+      </rule>
+      <rule
+            name="Other RCP JMC bundled with JDK"
+            match="{Name}=.*lib/missioncontrol/Java Mission Control.app.*"
+            icon="appicons/MissionControl.png"
+            priority="909"
+            format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+      </rule> 
+      <rule
+      		name="Other (old style) RCP JMC"
+ 			match="{Name}=com.oracle.jmc.rcp.start.MCMain.*"
+            icon="appicons/MissionControl.png"
+ 			priority="909"
+ 			format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+ 	  </rule>
+ 	  <rule
+            name="Other RCP JMC not bundled with JDK"
+            match="{JavaCmd}=.*org.eclipse.equinox.launcher.*-name Jmc .*"
+            icon="appicons/MissionControl.png"
+            priority="908"
+            format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+      </rule>
+ 	  <rule
+            name="Other RCP JMC not bundled with JDK"
+            match="{JavaCmd}=.*org.eclipse.equinox.launcher.*jmc.exe.*"
+            icon="appicons/MissionControl.png"
+            priority="908"
+            format="%CONNECTION_FORMAT_OTHER_MISSION_CONTROL">
+      </rule>
+      <rule
+      		name="Unknown RCP app launched from Eclipse (or RCP JMC launched from within Eclipse)"
+ 			match="{Name}=org.eclipse.equinox.launcher.Main.*"
+            icon="appicons/Eclipse.png"
+ 			priority="870"
+ 			format="%CONNECTION_FORMAT_UNKNOWN_RCP_APPLICATION">
+ 	  </rule>
+      <rule
+      		name="Eclipse"
+			format="{StrDebug}{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Eclipse ({PID})"
+            icon="appicons/Eclipse.png"
+            match="{Name}=.*org.eclipse.equinox.launcher_.*"
+            priority="870">
+      </rule>
+<!-- App Servers -->
+      <rule
+      		name="WebLogic Server"
+      		match="{JVMArgs}=.*weblogic.Name.*"
+      		icon="appicons/WLS.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} WebLogic Server ({JVMArgs:.*weblogic.Name=([\w-_]+).*}) ({PID})"
+            priority="510">		
+      </rule>
+      <rule
+      		name="WebLogic Server"
+      		match="{Name}=weblogic.Server"
+      		icon="appicons/WLS.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} WebLogic Server ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="WebLogic Cache Server"
+      		match="{Name}=weblogic.nodemanager.server.provider.WeblogicCacheServer"
+      		icon="appicons/WLS.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} WebLogic Cache Server ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="JBoss"
+      		match="{Name}=org.jboss.Main"
+      		icon="appicons/JBoss.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JBoss ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="Tomcat"
+      		match="{Name}=org.apache.catalina.startup.Bootstrap"
+      		icon="appicons/Tomcat.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Tomcat ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="GlassFish 1"
+      		match="{Name}=com.sun.enterprise.glassfish.bootstrap.ASMain"
+      		icon="appicons/GlassFish.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} GlassFish ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="GlassFish 2"
+      		match="{Name}=com.sun.enterprise.server.PELaunch"
+      		icon="appicons/GlassFish.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} GlassFish ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="GlassFish Node"
+      		match="{Name}=com.sun.enterprise.ee.nodeagent.NodeAgentMain"
+      		icon="appicons/GlassFish.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} GlassFish Node ({PID})"
+            priority="500">		
+      </rule>
+<!-- JDK Tools -->
+      <rule
+      		name="JConsole"
+      		match="{Name}=(.*/)?sun.tools.jconsole.JConsole"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JConsole ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="Jps"
+      		match="{Name}=(.*/)?sun.tools.jps.Jps"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jps ({PID})"
+            priority="500">		
+      </rule>
+      <rule
+      		name="Jstat"
+      		match="{Name}=(.*/)?sun.tools.jstat.Jstat"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jstat ({PID})"
+            priority="500">		
+      </rule>      
+      <rule
+      		name="Jstatd"
+      		match="{Name}=(.*/)?sun.tools.jstat.Jstatd"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jstatd ({PID})"
+            priority="500">		
+      </rule>      
+      <rule
+      		name="JStack"
+      		match="{Name}=(.*/)?sun.jvm.hotspot.tools.JStack"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JStack ({PID})"
+            priority="500">
+      </rule>      
+      <rule
+      		name="JMap"
+      		match="{Name}=(.*/)?sun.tools.jmap.JMap"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JMap ({PID})"
+            priority="500">
+      </rule>
+      <rule
+      		name="JHat"
+      		match="{Name}=(.*/)?com.sun.tools.hat.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JHat ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="JInfo"
+      		match="{Name}=(.*/)?sun.tools.jinfo.JInfo"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JInfo ({PID})"
+            priority="500">
+      </rule>      
+	  <rule
+      		name="jsadebugd"
+      		match="{Name}=(.*/)?sun.jvm.hotspot.jdi.SADebugServer"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} jsadebugd ({PID})"
+            priority="500">
+      </rule>      
+	  <rule
+      		name="Jdb"
+      		match="{Name}=(.*/)?com.sun.tools.example.debug.tty.TTY"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jdb ({PID})"
+            priority="500">
+      </rule>      
+<!-- JDK Utilities -->
+	  <rule
+      		name="JCmd"
+      		match="{Name}=(.*/)?sun.tools.jcmd.JCmd"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JCmd ({PID})"
+            priority="500">
+      </rule>      
+	  <rule
+      		name="JrCmd"
+      		match="{Name}=jrockit.tools.jrcmd.JrCmd"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JrCmd ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Jar"
+      		match="{Name}=(.*/)?sun.tools.jar.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jar ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Pack 200"
+      		match="{Name}=(.*/)?com.sun.java.util.jar.pack.Driver"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} pack200 ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="JavaDoc"
+      		match="{Name}=(.*/)?com.sun.tools.javadocs.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JavaDoc ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Javac"
+      		match="{Name}=(.*/)?com.sun.tools.javac.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Javac ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Javah"
+      		match="{Name}=(.*/)?com.sun.tools.javah.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Javah ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Javap"
+      		match="{Name}=(.*/)?sun.tools.javap.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Javap ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="APT"
+      		match="{Name}=(.*/)?com.sun.tools.apt.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} APT ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="AppletViewer 1"
+      		match="{Name}=(.*/)?sun.applet.AppletViewer"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Applet Viewer ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="AppletViewer 2"
+      		match="{Name}=(.*/)?sun.applet.Main"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Applet Viewer ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="AppletViewer 3"
+      		match="{Name}=(.*/)?sun.plugin2.main.client.PluginMain.*"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Applet Viewer ({PID})"
+            priority="500">
+      </rule>
+<!-- Benchmarks -->
+	  <rule
+      		name="SPECjbb"
+      		match="{Name}=spec.jbb.JBBmain"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} SPECjbb ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="SPECjvm 2008"
+      		match="{Name}=SPECjvm2008.jar"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} SPECjvm 2008 ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="SPECjvm"
+      		match="{Name}=spec.harness.Launch"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} SPECjvm ({PID})"
+            priority="500">
+      </rule>
+<!-- Other -->
+      <rule
+            name="VisualVM"
+            match="{JavaCmd}=org/netbeans/Main --branding visualvm.*"
+            icon="appicons/VisualVM.png"
+            format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} VisualVM ({PID})"
+            priority="500">     
+      </rule>      
+      <rule
+            name="NetBeans"
+            match="{JavaCmd}=org/netbeans/Main --branding nb.*"
+            icon="appicons/NetBeans.png"
+            format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} NetBeans ({PID})"
+            priority="500">     
+      </rule>    
+      <rule
+            name="NetBeans"
+            match="{JavaCmd}=.*netbeans.*"
+            icon="appicons/NetBeans.png"
+            format="{StrJDK}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} NetBeans ({PID})"
+            priority="450">     
+      </rule>   	 
+      <rule
+      		name="Apache Ant 1"
+      		match="{Name}=org.apache.tools.ant.Main"
+      		icon="appicons/Ant.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Apache Ant ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Apache Ant 2"
+      		match="{Name}=org.apache.tools.ant.launch.Launcher"
+      		icon="appicons/Ant.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Apache Ant ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Coherence 1"
+      		match="{Name}=com.tangosol.net.*"
+      		icon="appicons/Coherence.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Coherence ({PID})"
+            priority="300">
+      </rule>
+	  <rule
+      		name="Coherence 2"
+      		match="{Name}=coherence.*"
+      		icon="appicons/Coherence.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Coherence ({PID})"
+            priority="300">
+      </rule>
+	  <rule
+      		name="Java Web Start"
+      		match="{Name}=(.*/)?com.sun.javaws.Main.*"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Java Web Start ({PID})"
+            priority="300">
+      </rule>
+      <!-- Quick matching one for the common WLS use case -->
+	  <rule
+      		name="JavaDB"
+      		match="{Name}=org.apache.derby.drda.NetworkServerControl start"
+      		icon="appicons/JavaDB.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Derby Network Server ({PID})"
+            priority="310">
+      </rule>
+      <!-- Catch all for the rest of the use cases -->
+	  <rule
+      		name="JavaDB"
+      		match="{Name}=org.apache.derby.drda.NetworkServerControl.*"
+      		icon="appicons/JavaDB.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Derby Network Server ({PID})"
+            priority="300">
+      </rule>
+	  <rule
+      		name="Java2D Demo"
+      		match="{Name}=java2d.Java2Demo"
+      		icon="appicons/Duke.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Java2D Demo ({PID})"
+            priority="100">
+      </rule>
+<!-- Other runtimes -->
+	  <rule
+      		name="JRuby Runtime"
+      		match="{Name}=org.jruby.Main"
+      		icon="appicons/JRuby.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} JRuby ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Scala Runtime"
+      		match="{Name}=scala.tools.nsc.MainGenericRunner"
+      		icon="appicons/Scala.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Scala ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Clojure"
+      		match="{Name}=clojure\..*"
+      		icon="appicons/Clojure.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Clojure ({PID})"
+            priority="100">
+      </rule>
+	  <rule
+      		name="Groovy"
+      		match="{Name}=org.codehaus.groovy.tools.GroovyStarter"
+      		icon="appicons/Groovy.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Groovy ({PID})"
+            priority="500">
+      </rule>
+	  <rule
+      		name="Jython"
+      		match="{Name}=org.python.util.jython"
+      		icon="appicons/Jython.png"
+      		format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} Jython ({PID})"
+            priority="500">
+      </rule>
+      
+<!-- Default -->
+	  <rule
+      		name="Default"
+            format="{StrJDK}{StrDebug}{UnsupportedStrJVMType}{UnsupportedStrJVMArch} {Name} ({PID})"
+            icon="appicons/Unknown.png"
+            match="{Name}=.*"
+            priority="0">
+      </rule>
+<!-- Unsupported -->
+      <rule
+      	    name="Unsupported"
+            format="%CONNECTION_FORMAT_UNSUPPORTED"
+            icon="appicons/MissionControl.png"
+            match="{JDK}=1.[0,1,2,3,4,5,6](?:[\.,_]\d+)*"
+            priority="1000">
+      </rule>
+   </extension>
+   <extension
+      point = "org.eclipse.ui.newWizards">
+	<category
+	   id = "org.openjdk.jmc.newcategory"
+	   name="%MISSION_CONTROL_NEW_CATEGORY_NAME">
+	</category>
+	<wizard
+       id = "org.openjdk.jmc.browser.wizards.connection"
+       name = "%CONNECTION_WIZARD_TITLE"
+       class="org.openjdk.jmc.browser.wizards.ConnectionWizard"
+       category="org.openjdk.jmc.newcategory"
+       icon="icons/newconnection.gif">
+       <description>%CONNECTION_WIZARD_DESCRIPTION</description>
+    </wizard>
+</extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          defaultHandler="org.openjdk.jmc.browser.wizards.OpenConnectionWizardHandler"
+          id="org.openjdk.jmc.browser.command.connection"
+          categoryId="org.eclipse.ui.category.file"
+          name="%OPEN_CONNECTION">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="menu:file?after=additions">
+       <command
+             commandId="org.openjdk.jmc.browser.command.connection"
+             label="%OPEN_CONNECTION"
+             style="push">
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.eclipse.ui.main.toolbar">
+       <toolbar
+             id="org.openjdk.jmc.browser.toolbar.connection">
+          <command
+                commandId="org.openjdk.jmc.browser.command.connection"
+                icon="icons/mission_control.png"
+                label="%OPEN_CONNECTION"
+                style="push">
+          </command>
+       </toolbar>
+    </menuContribution>
+ </extension>
+</plugin>

@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Flight Recorder Control Panel Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.controlpanel.ui;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.rjmx.ui;visibility:=reexport,
+ org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
+ org.openjdk.jmc.flightrecorder.configuration,
+ org.eclipse.help,
+ org.openjdk.jmc.ui.common
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.actions,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.handlers,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.jobs;x-friends:="org.openjdk.jmc.ide.launch",
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal;x-friends:="org.openjdk.jmc.test.jemmy,org.openjdk.jmc.ide.launch",
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.model,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards
+Import-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml,
+ org.openjdk.jmc.rjmx.services.jfr,
+ org.eclipse.core.expressions
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui

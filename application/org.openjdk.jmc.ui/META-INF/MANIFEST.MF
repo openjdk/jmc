@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: JDK Mission Control Core
+Bundle-SymbolicName: org.openjdk.jmc.ui;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.openjdk.jmc.ui.UIPlugin
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui;visibility:=reexport,
+ org.eclipse.ui.forms;visibility:=reexport,
+ org.eclipse.ui.views;visibility:=reexport,
+ org.eclipse.help;resolution:=optional,
+ org.openjdk.jmc.ui.common;visibility:=reexport,
+ org.openjdk.jmc.commands
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.ui,
+ org.openjdk.jmc.ui.accessibility,
+ org.openjdk.jmc.ui.celleditors,
+ org.openjdk.jmc.ui.charts,
+ org.openjdk.jmc.ui.column,
+ org.openjdk.jmc.ui.dial,
+ org.openjdk.jmc.ui.handlers,
+ org.openjdk.jmc.ui.idesupport,
+ org.openjdk.jmc.ui.layout,
+ org.openjdk.jmc.ui.misc,
+ org.openjdk.jmc.ui.polling,
+ org.openjdk.jmc.ui.preferences,
+ org.openjdk.jmc.ui.rate,
+ org.openjdk.jmc.ui.security;x-friends:="org.openjdk.jmc.browser,org.openjdk.jmc.test.jemmy",
+ org.openjdk.jmc.ui.uibuilder,
+ org.openjdk.jmc.ui.wizards
+Automatic-Module-Name: org.openjdk.jmc.ui
+

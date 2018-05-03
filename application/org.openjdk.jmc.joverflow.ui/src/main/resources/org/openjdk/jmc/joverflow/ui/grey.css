@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, transparent 50%, rgba(200,200,200,0.5) 100%);
+    -fx-border-color: transparent -fx-table-header-border-color -fx-table-header-border-color transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell { 
+	-fx-background-color: transparent; 
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: rgba(0,0,0,0.02);
+}
+

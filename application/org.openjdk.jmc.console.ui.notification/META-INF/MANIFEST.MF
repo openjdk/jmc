@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: Console Notification Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.console.ui.notification; singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.ui.common,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.console.ui,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.forms,
+ org.openjdk.jmc.rjmx;visibility:=reexport,
+ org.openjdk.jmc.rjmx.ui,
+ org.openjdk.jmc.alert,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui,
+ org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
+ org.openjdk.jmc.flightrecorder.configuration
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.console.ui.notification.NotificationPlugin
+Export-Package: org.openjdk.jmc.console.ui.notification,
+ org.openjdk.jmc.console.ui.notification.tab,
+ org.openjdk.jmc.console.ui.notification.uicomponents,
+ org.openjdk.jmc.console.ui.notification.widget,
+ org.openjdk.jmc.console.ui.notification.wizard
+Bundle-ClassPath: .
+Import-Package: org.openjdk.jmc.rjmx.services.jfr
+Automatic-Module-Name: org.openjdk.jmc.console.ui.notification

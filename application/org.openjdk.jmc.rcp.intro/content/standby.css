@@ -1,0 +1,30 @@
+@import "shared.css";
+/**
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+ */
+
+hr {
+	color: #FF0000;
+	background-color: #FF0000;
+	height: 3px;
+	border: none;
+	width:100%;
+	padding: 0;
+	margin: 0;
+}
+
+
+h1, a {
+	padding-left: 15px;
+}
+
+h1 {
+	font: 100% Arial, Verdana, Helvetica, sans-serif;	
+	font-weight: bold;
+}
+
+a {
+	font: 80% Arial, Verdana, Helvetica, sans-serif;	
+	font-weight: bold;
+}

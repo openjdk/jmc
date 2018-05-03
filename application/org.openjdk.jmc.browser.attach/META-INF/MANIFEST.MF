@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Name: Browser Attach Plug-in
+Bundle-SymbolicName: org.openjdk.jmc.browser.attach;singleton:=true
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-Localization: plugin
+Require-Bundle: org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.ui,
+ org.openjdk.jmc.attach
+Bundle-Activator: org.openjdk.jmc.browser.attach.BrowserAttachPlugin
+Eclipse-BuddyPolicy: app
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openjdk.jmc.browser.attach
+Automatic-Module-Name: org.openjdk.jmc.browser.attach
+

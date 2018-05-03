@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openjdk.jmc</groupId>
+		<artifactId>missioncontrol.application</artifactId>
+		<version>7.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.openjdk.jmc.rcp.product</artifactId>
+	<packaging>eclipse-repository</packaging>
+	<properties>
+		<productName>JDK Mission Control</productName>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>false</includeAllDependencies>
+					<!-- Skip mirroring to get rid of warning for Eclipse Babel when building rcp.product -->
+					<disableP2Mirrors>true</disableP2Mirrors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<products>
+						<product>
+							<id>org.openjdk.jmc</id>
+							<rootFolders>
+								<macosx>${productName}.app</macosx>
+							</rootFolders>
+						</product>
+					</products>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-product-distributions</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>name.abuchen</groupId>
+				<artifactId>fix-info-plist-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>fix-info-plist</id>
+						<phase>package</phase>
+						<goals>
+							<goal>fix-info-plist</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<productId>org.openjdk.jmc</productId>
+					<appName>${productName}.app</appName>
+					<properties>
+						<property>
+							<name>CFBundleName</name>
+							<!-- FIXME: Specification for CFBundleName says that it should be limited to 16 chars -->
+							<value>${productName}</value>
+						</property>
+						<property>
+							<name>CFBundleDisplayName</name>
+							<value>${productName}</value>
+						</property>
+						<property>
+							<name>NSHumanReadableCopyright</name>
+							<!-- Make sure this is not line wrapped if indenting the file -->
+							<value>Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.</value>
+						</property>
+						<property>
+							<name>CFBundleDevelopmentRegion</name>
+							<value>en</value>
+						</property>
+						<property>
+							<name>CFBundleLocalizations</name>
+							<value>[en,ja,zh_CN]</value>
+						</property>
+						<!-- TODO: JMC-5920 - Should add CFBundleDocumentTypes and UTExportedTypeDeclarations here for JFR file association, but currently not supported by the maven plugin. -->
+						<!-- Removing properties by setting them to empty -->
+						<property>
+							<name>CFBundleGetInfoString</name>
+							<value/>
+						</property>
+					</properties>
+				</configuration>
+			</plugin>
+		</plugins>
+		<directory>../../target/</directory>
+	</build>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>buchen-maven-repo</id>
+			<url>http://buchen.github.io/maven-repo</url>
+			<layout>default</layout>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

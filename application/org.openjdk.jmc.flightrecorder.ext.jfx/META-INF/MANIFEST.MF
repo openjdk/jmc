@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-Version: 7.0.0.qualifier
+Bundle-Name: Java FX for JFR
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ext.jfx;singleton:=true
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.openjdk.jmc.flightrecorder.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.openjdk.jmc.flightrecorder.rules,
+ org.openjdk.jmc.flightrecorder.rules.util
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.jfx
+
+

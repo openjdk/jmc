@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<schema targetNamespace="org.openjdk.jmc.ui.common" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.openjdk.jmc.ui.common" id="labelingRules" name="Labeling Rules"/>
+      </appInfo>
+      <documentation>
+         Provides rules on how create labels.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="rule"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="rule">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The user friendly name that identifies the rule. For instance used in error messages.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="match" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The matching expression for enabling this visualizer. Matching expressions are evaluated by expanding all variables and then matching the regular expression on the right of the equals sign with the string gathered from the connection descriptor on the left.
+
+Example:
+{PID}{Name} = {ThisPID}.*org.eclipse.equinox.launcher_.*
+
+Would match if the class name appended to the pid would match the regular expression starting with the PID of the process running MissionControl then following by something containing the string .*org.eclipse.equinox.launcher_.*. In other words, it would match if we were connected to ourselves AND running Eclipse.
+
+These are well known variables:
+Name  Comment  Example
+ThisPID  Contains the PID of the JVM currently running Mission Control  4711
+PID  Contains the PID of the JVM represented by the connection descriptor.  4712
+JDK  Contains the JDK level.  1.5
+Name  The name of the class running in the JVM.  org.openjdk.jmc.rcp.start.MCMain
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="format" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The formatting expression deciding how to visualize the name of the ConnectionDescriptor. The same variables as the ones in the matching expression can be used.
+
+Example:
+This Mission Control ({PID})
+
+The expression above would print This Mission Control followed by the PID, for example &quot;This Mission Control (3412)&quot;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="priority" type="string" use="default" value="500">
+            <annotation>
+               <documentation>
+                  The priority decides in what order the rules are applied.  The higher the value, the higher the priority. The default value is 500. The default catch-it-all-rule will have a priority of 0.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  Optional icon resource to use when visualizing the connection descriptor.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         5.2.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;extension
+         point=&quot;org.openjdk.jmc.ui.descriptor.visualizer&quot;&gt;
+      &lt;visualizer
+        name=&quot;JMC in Eclipse&quot;
+   format=&quot;{StrDebug}{StrJVMType} The JVM Running Mission Control&quot;
+            icon=&quot;appicons/Eclipse.png&quot;
+            match=&quot;{PID}{Name}={ThisPID}.*org.eclipse.equinox.launcher_.*&quot;
+            priority=&quot;910&quot;&gt;
+      &lt;/visualizer&gt;
+&lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         Implementation note: should we ever grow beyond the capabilities of this, we can always add an optional class attribute taking an 
+
+interface IConnectionDescriptorVisualizer {
+boolean match(IConnectionDescriptor);
+String format(IConnectionDescriptor);
+Image getIcon();
+}
+
+To which all the important decisions are delegated.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+      </documentation>
+   </annotation>
+
+</schema>

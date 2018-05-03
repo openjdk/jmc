@@ -1,0 +1,112 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Frequently Asked Questions" />
+<meta name="abstract" content="This section lists Frequently Asked Questions about JDK Mission Control." />
+<meta name="description" content="This section lists Frequently Asked Questions about JDK Mission Control." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>Frequently Asked Questions</title>
+
+<meta name="doctitle" content="8 Frequently Asked Questions&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm" title="Previous" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" name="GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" class="sect1"><span class="enumeration_chapter">8 </span>Frequently Asked Questions</h1>
+<div><p>This section lists Frequently Asked Questions about JDK Mission Control.</p>
+<div class="section"><p class="subhead1">I cannot connect to the JVM. What could be the problem?</p><div class="p">Consider the following:<ul style="list-style-type: disc;"><li><p>Are you using the correct protocol?</p>
+<p>Ensure that you are using the same version of the JVM that you want to monitor as is being used by the JVM running the JMC client.</p>
+<p>The format of the service URL is:</p>
+<p><tt>service:jmx:rmi:///jndi/rmi://&lt;hostname&gt;/jmxrmi</tt></p>
+</li>
+<li><p>Are the correct ports opened?</p>
+<p>Note that running JMX over RMI requires two ports and that one of the ports will not be known beforehand.</p>
+</li>
+<li><p>Is the communication caught in a firewall?</p>
+<p>For more information, see "JDK Mission Control Communications" in the&#160;Introduction to JDK Mission Control&#160;on the Oracle Technology Network.</p>
+</li>
+</ul>
+</div>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">When attempting to connect to a JVM, I get a stack trace indicating that the JVM attempts to communicate with a strange IP or host name. What does this mean?</p><p>Sometimes RMI can have a problem determining which address to use. This can happen because of any of the following:</p>
+<ul style="list-style-type: disc;"><li><p>There are access restrictions in the Security manager.</p>
+</li>
+<li><p>The machine is multihomed and RMI is selecting the wrong interface.</p>
+</li>
+<li><p>There is a misconfigured hosts file or a number of different network related configuration problems.</p>
+</li>
+</ul>
+<p>If all else fails, you can try specifying the&#160;<tt>java.rmi.server.hostname</tt>&#160;system property. Note that this can affect applications running on the JVM.</p>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">I am getting exceptions during startup about classes not being found. What is wrong?</p><p>Ensure that you are using&#160;<tt>JAVA_HOME/bin/jmc</tt>&#160;to start the JMC client.</p>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">Why does JDK Mission Control fail to find any local JVMs?</p><p>Consider the following:</p>
+<ul style="list-style-type: disc;"><li><p>Make sure that you are using <code>JAVA_HOME/bin/jmc</code> to start the JMC client.</p>
+</li>
+<li><p>If you are running JMC from Eclipse, make sure that Eclipse is running on a JDK (not JRE).</p>
+</li>
+<li><p>Make sure that there is a directory named <code>hsperfdata_<span class="codeinlineitalic">username</span></code> in the system's <code>tmp</code> directory, that it is writable by the user running JMC, and that the file system supports access control lists (ACLs).</p>
+</li>
+</ul>
+</div>
+<!-- class="section" -->
+<div class="section"><p class="subhead1">How do I connect to JBoss?</p><p>Before starting JMC, you need to add the&#160;<tt>-Xbootclasspath/a</tt>&#160;option to the&#160;<tt>-vmargs</tt>&#160;section of the&#160;<tt>jmc.ini</tt>&#160;file. The value for this option (after a colon) should be set to the extended classpath that is generated by JBoss's&#160;<tt>jconsole.bat</tt>&#160;file (for this, add&#160;<tt>@echo</tt> on&#160;to the file and run it). </p>
+</div>
+<!-- class="section" -->
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-D722CAC6-84F5-4F36-9B83-66B5C4774821.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

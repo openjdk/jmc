@@ -1,0 +1,89 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="About the JMX Console" />
+<meta name="abstract" content="The JMX Console makes it possible to monitor and control running instances of the Java Virtual Machine (JVM) and the application running on it." />
+<meta name="description" content="The JMX Console makes it possible to monitor and control running instances of the Java Virtual Machine (JVM) and the application running on it." />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153" />
+<meta name="DC.Language" content="en-US" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>About the JMX Console</title>
+
+<meta name="doctitle" content="5 About the JMX Console&#xA;" />
+<meta name="robots" content="noarchive" />
+<link rel="copyright" href="http://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
+
+<link rel="contents" href="toc.htm" title="Contents" type="text/html" />
+<link rel="prev" href="GUID-2125BB8B-CC13-4125-8562-F0BFD428F1DC.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm" title="Next" type="text/html" />
+</head>
+<body>
+<div class="zz-skip-header"><a href="#BEGIN">Go to primary content</a></div>
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td></td>
+
+
+<td align="center">
+<a href="GUID-2125BB8B-CC13-4125-8562-F0BFD428F1DC.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table><div class="ind"><a id="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153" name="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153"></a><!-- End Header -->
+<h1 id="JMCOH-GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153" class="sect1"><span class="enumeration_chapter">5 </span>About the JMX Console</h1>
+<div><p>The JMX Console makes it possible to monitor and control running instances of the Java Virtual Machine (JVM) and the application running on it.</p>
+<p>The JMX Console provides real-time information about the Java application's characteristics, such as memory and CPU usage, and JVM activities, such as garbage collection and method optimizations. This information can be used both during development (for example, to find where in an application's life cycle it consumes more memory), and in a deployed environment (for example, to monitor the system health of an application server).</p>
+<p>The JMX Console provides a multi-tabbed interface. Each tab lets you monitor and manage an aspect of the JVM or the application running on it. The set of available tabs depends on the plug-ins you have installed. For more information, see <a href="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm" title="To start the JMX Console, right-click the JVM that you want to connect to in the JVM Browser, and select Start JMX Console.">Using the JMX Console</a>.</p>
+<p>The Java platform has a technically advanced design for monitoring and managing performance, resource consumption, and logging settings of applications. JDK Mission Control uses the Java Management Extensions (JMX) interface for monitoring and managing resources of the JVM and Java applications.</p>
+<p>Like the Simple Network Management Protocol (SNMP) and other management standards, the JMX is a public specification and many vendors of commonly used monitoring products support it. JMX provides a standard way to monitor the Java Runtime Environment (JRE) and applications. The JMX Remote Method Invocation (JMXRMI) API allows that monitoring to be accessed remotely. The tools are accessible through the JMX Managed Bean (MBean) interfaces, which are registered in the management server. Applications can also create their own MBeans and register them in the management server, which can serve as a single point for remote access. A JMX-compliant client, such as the JMX Console, can connect to the platform management server and manage both the Java application and the JVM using JMX technology. For a complete reference on the JMX standard, see the Java Management Extensions API.</p>
+<p>The extra cost of running the JMX Console to monitor a JVM is small and can almost be disregarded. It provides low-cost monitoring and profiling of your application.</p>
+<div class="infoboxnote" id="GUID-D319B54B-FB4B-422E-8B92-50F4FFBF1153__GUID-A72BD337-F518-43DD-8DAC-441962AA4C97"><p class="notep1">Note:</p>If you run the JMX Console on the same computer as the JVM, the JMX Console GUI will consume the resources which could otherwise be used by applications running on the JVM. This can lead to incorrect analysis, if you assume that the applications are supposed to run without the JMX Console.</div>
+</div>
+</div><!-- class="ind" --><!-- Start Footer -->
+<table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
+<col width="86%" /><col width="*" /><tr valign="bottom">
+<td><a href="http://oss.oracle.com/licenses/upl"><br />
+<span class="copyrightlogo">Copyright&#160;&#169;&#160;2018, Oracle&#160;and/or&#160;its&#160;affiliates.&#160;All&#160;rights&#160;reserved.</span></a></td>
+
+
+<td align="center">
+<a href="GUID-2125BB8B-CC13-4125-8562-F0BFD428F1DC.htm">
+<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<span class="icon">Previous</span>
+</a>
+</td>
+<td align="center">
+<a href="GUID-E7631E91-FDF6-48A1-B5C4-8C0B72E515DA.htm">
+<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<span class="icon">Next</span>
+</a>
+</td>
+<td> </td>
+
+
+</tr>
+</table>
+
+<!-- class="footer" -->
+</body>
+</html>

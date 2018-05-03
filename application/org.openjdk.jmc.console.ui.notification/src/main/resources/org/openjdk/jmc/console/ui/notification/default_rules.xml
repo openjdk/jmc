@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<triggers>
+    <notification_rules>
+        <notification_rule>
+            <rule_name>%CPU_HIGH_USAGE_MACHINE_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%CPU_HIGH_USAGE_MACHINE_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>1</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=OperatingSystem/SystemCpuLoad</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>percentage</contenttype>
+                    <maxvalue>90 %</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%CPU_LOW_USAGE_MACHINE_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%CPU_LOW_USAGE_MACHINE_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>1</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=OperatingSystem/SystemCpuLoad</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMin">
+                    <contenttype>percentage</contenttype>
+                    <minvalue>10 %</minvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%PENDING_QUEUE_REQUESTS_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%PENDING_QUEUE_REQUESTS_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>1</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:Name=ThreadPoolRuntime,ServerRuntime=examplesServer,Type=ThreadPoolRuntime/QueueLength</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%CPU_HIGH_USAGE_JVM_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%CPU_HIGH_USAGE_JVM_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>1</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=OperatingSystem/ProcessCpuLoad</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>percentage</contenttype>
+                    <maxvalue>90 %</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%CPU_LOW_USAGE_JVM_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%CPU_LOW_USAGE_JVM_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>1</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=OperatingSystem/ProcessCpuLoad</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMin">
+                    <contenttype>percentage</contenttype>
+                    <minvalue>10 %</minvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%MONITORED_DEADLOCKED_THREADS_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%MONITORED_DEADLOCKED_THREADS_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=Threading/MonitoredDeadlockedThreadCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%DEADLOCKED_THREADS_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%DEADLOCKED_THREADS_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=Threading/DeadlockedThreadCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%THREAD_COUNT_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%THREAD_COUNT_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>5</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://java.lang:type=Threading/ThreadCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>100.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%THREADS_WAITING_FOR_MBEAN_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%THREADS_WAITING_FOR_MBEAN_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:ApplicationRuntime=ejb30,EJBComponentRuntime=domain.jar,MessageDrivenEJBRuntime=WatchProcessMDB_examples-jms!weblogic.examples.ejb30.ExampleQueue,Name=WatchProcessMDB_examples-jms!weblogic.examples.ejb30.ExampleQueue,ServerRuntime=examplesServer,Type=EJBPoolRuntime/WaiterCurrentCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%OPEN_SESSIONS_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%OPEN_SESSIONS_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:ApplicationRuntime=stockEar,Name=examplesServer_/stock,ServerRuntime=examplesServer,Type=WebAppComponentRuntime/OpenSessionsCurrentCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%SERVER_HEALTH_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%SERVER_HEALTH_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>2</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:Name=examplesServer,Type=ServerRuntime/HealthState</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorStringMatch">
+                    <maxvalue>HEALTH_OK</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%PRIMARY_OBJECTS_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%PRIMARY_OBJECTS_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:Name=examplesServer,Type=ServerRuntime/ClusterRuntime</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorStringMatch">
+                    <maxvalue>*</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%SERVER_STATE_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%SERVER_STATE_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>2</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:Name=examplesServer,Type=ServerRuntime/State</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorStringMatch">
+                    <maxvalue>RUNNING</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%LIVE_SET_NAME</rule_name>
+            <rule_path>%RULE_PATH_JAVA_SE</rule_path>
+            <description>%LIVE_SET_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>60</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.sun.management:type=GarbageCollectionAggregator/HeapLiveSet</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>percentage</contenttype>
+                    <maxvalue>85 %</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%PENDING_JMS_MESSAGES_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%PENDING_JMX_MESSAGES_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:JMSConnectionRuntime=connection79,JMSRuntime=examplesServer.jms,Name=session102,ServerRuntime=examplesServer,Type=JMSSessionRuntime/MessagesPendingCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%REQ_WAITING_DB_CONNECTION_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%REQ_WAITING_DB_CONNECTION_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.bea:Name=examples-demo,ServerRuntime=examplesServer,Type=JDBCDataSourceRuntime/WaitingForConnectionCurrentCount</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0.0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+        <notification_rule>
+            <rule_name>%MEMORY_PRESSURE_NAME</rule_name>
+            <rule_path>%RULE_PATH_WLS31</rule_path>
+            <description>%MEMORY_PRESSURE_DESCRIPTION</description>
+            <trigger>
+                <trigger_limit_period>0</trigger_limit_period>
+                <trigger_sustain_time>0</trigger_sustain_time>
+                <trigger_on_what>3</trigger_on_what>
+                <notification_attribute_name>attribute://com.oracle.management:type=ResourcePressureMBean/MemoryPressure</notification_attribute_name>
+                <value_evaluator type="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax">
+                    <contenttype>number</contenttype>
+                    <maxvalue>0</maxvalue>
+                </value_evaluator>
+            </trigger>
+            <notification_action>
+                <notification_action_class>org.openjdk.jmc.alert.TriggerApplicationAlert</notification_action_class>
+                <settings/>
+            </notification_action>
+            <constraints/>
+        </notification_rule>
+    </notification_rules>
+</triggers>

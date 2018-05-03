@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.openjdk.jmc.rjmx.syntheticattribute">
+      <syntheticAttribute
+            attributeName="attribute://org.openjdk.jmc.test:type=Count/Count"
+            class="org.openjdk.jmc.rjmx.test.synthetic.CountingAttribute"
+            description="A test attribute which is updated on each read."
+            readable="true"
+            type="int"
+            writeable="false" />
+      <syntheticAttribute
+            attributeName="attribute://org.openjdk.jmc.test:type=Test/Test"
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestAttribute"
+            description="A test attribute which can be written to."
+            readable="true"
+            type="java.lang.String"
+            writeable="true">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=ClassLoading/Test"
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestAttribute"
+            description="A test attribute added to an existing MBean."
+            readable="true"
+            type="java.lang.String"
+            writeable="true">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Memory/Test"
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestAttribute"
+            description="A test attribute added to an existing MBean containing composites."
+            readable="true"
+            type="java.lang.String"
+            writeable="true">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://org.openjdk.jmc.test:type=Test/Properties"
+            class="org.openjdk.jmc.rjmx.test.synthetic.PropertyTestAttribute"
+            readable="true"
+            type="java.util.Map"
+            writeable="false">
+         <properties>
+            <string
+                  key="denominator"
+                  value="Gegga">
+            </string>
+            <string
+                  key="numerator"
+                  value="Moja">
+            </string>
+            <float
+                  key="factor"
+                  value="0.01">
+            </float>
+            <boolean
+                  key="someboolean"
+                  value="true">
+            </boolean>
+            <integer
+                  key="someinteger"
+                  value="100">
+            </integer>
+		</properties>
+      </syntheticAttribute>
+   </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.syntheticnotification">
+      <syntheticNotification
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestNotification"
+            notificationName="notification://org.openjdk.jmc.test:type=Test/org.openjdk.jmc.test.notification"
+            description="A test notification adding a synthetic MBean."
+            message="Woho! I am a test notification adding a synthetic MBean."
+            type="int">
+      </syntheticNotification>
+      <syntheticNotification
+            notificationName="notification://java.lang:type=ClassLoading/org.openjdk.jmc.test.classnotification"
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestNotification"
+            description="A test notification added to an existing MBean."
+            message="Woho! I am a test notification added to an existing MBean."
+            type="int">
+      </syntheticNotification>
+      <syntheticNotification
+            notificationName="notification://java.lang:type=Memory/java.management.memory.collection.threshold.exceeded"
+            class="org.openjdk.jmc.rjmx.test.synthetic.TestNotification"
+            description="A test notification shadowing an existing MBean notification."
+            message="Woho! I am a test notification shadowing an existing MBean notification."
+            type="int">
+      </syntheticNotification>
+   </extension>
+</plugin>
