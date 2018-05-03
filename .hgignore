@@ -5,8 +5,10 @@ build/
 target/
 bin/
 
-# Ignore workspaces
-ide_workspace/
+# Ignore test recording
+application/tests/org.openjdk.jmc.rjmx.services.jfr.test/recording.jfr
+
+# Ignore build workspace
 workspace/
 
 # Ignore perforce ignore files

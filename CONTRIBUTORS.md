@@ -13,8 +13,9 @@ List of contributors, approximately in order of time spent on project:
 * Klara Ward
 * Mattias Joëlson
 * David Lindholm
+* Henrik Dafgård
 * Ola Westin
-* Per Kroon
+* Per Kroon 
 * Erik Greijus
 * Noora Peura
 * Helena Åberg
