@@ -61,19 +61,20 @@ public final class ChunkReader {
 	private static final int[] JFR_MAGIC = new int[] {'F', 'L', 'R', 0};
 	private static final int ZIP_MAGIC[] = new int[] {31, 139};
 	private static final int GZ_MAGIC[] = new int[] {31, 139};
-	private static final int SHORT_SIZE = 2;
-	private static final int INTEGER_SIZE = 4;
-	private static final int LONG_SIZE = 8;
-	private static final int HEADER_SIZE = INTEGER_SIZE + 2 * SHORT_SIZE + LONG_SIZE;
+	// For JDK 8 this is the size of the magic + version and offset to the meta data event.
+	// For JDK 9 and later, this it the part of the header right up to, and including, the chunk size.
+	private static final int HEADER_SIZE = DataInputToolkit.INTEGER_SIZE + 2 * DataInputToolkit.SHORT_SIZE
+			+ DataInputToolkit.LONG_SIZE;
 
 	/**
 	 * Chunk iterator for an uncompressed JFR file. Efficiently reads a JFR file, chunk by chunk,
 	 * into memory as byte arrays by memory mapping the JFR file, finding the chunk boundaries with
 	 * a minimum of parsing, and then block-transferring the byte arrays. The transfers will be done
 	 * on {@link Iterator#next()}, and the resulting byte array will only be reachable for as long
-	 * as it is referenced. The JFR file must not be zip or gzip compressed. Note that
-	 * {@link Iterator#next()} can throw {@link IllegalArgumentException} if it encounters a
-	 * corrupted chunk.
+	 * as it is referenced. The JFR file must not be zip or gzip compressed.
+	 * <p>
+	 * Note that {@link Iterator#next()} can throw {@link IllegalArgumentException} if it encounters
+	 * a corrupted chunk.
 	 */
 	private static class ChunkIterator implements Iterator<byte[]> {
 		int lastChunkOffset;
@@ -131,15 +132,26 @@ public final class ChunkReader {
 				throw new IllegalArgumentException("Corrupted chunk encountered! Aborting!"); //$NON-NLS-1$
 			}
 
-			// Skipping version, can add version validation here later. Note that we may 
-			// need to update this to support JDK 7u all through 11.
-			int index = lastChunkOffset + INTEGER_SIZE + 2 * SHORT_SIZE;
-			// Setting index to metadata offset
-			index = lastChunkOffset + (int) buffer.getLong(index);
-			// Reading event size
-			int lastEventSize = buffer.getInt(index);
-			index += lastEventSize;
-			int size = index - lastChunkOffset;
+			int index = lastChunkOffset + JFR_MAGIC.length;
+			short versionMSB = buffer.getShort(index);
+			// short versionLSB = buffer.getShort(index + SHORT_SIZE);
+			index += 2 * DataInputToolkit.SHORT_SIZE;
+			int size = 0;
+
+			if (versionMSB >= 1) {
+				// We have a JDK 9+ recording - chunk size can be directly read from header
+				size = (int) buffer.getLong(index);
+				index = lastChunkOffset + size;
+			} else {
+				// Got a pre JDK 9 recording. Need to find the metadata event index, read and 
+				// add the size of the metadata event to find the chunk boundary
+				index = lastChunkOffset + (int) buffer.getLong(index);
+				// Reading the metadata event size
+				int lastEventSize = buffer.getInt(index);
+				index += lastEventSize;
+				size = index - lastChunkOffset;
+			}
+			// Read the chunk and return it
 			byte[] result = new byte[size];
 			buffer.position(lastChunkOffset);
 			buffer.get(result, 0, result.length);
@@ -244,19 +256,31 @@ public final class ChunkReader {
 			System.arraycopy(JFR_MAGIC_BYTES, 0, chunkHeader, 0, JFR_MAGIC_BYTES.length);
 			// Read rest of chunk header
 			readBytesFromStream(chunkHeader, JFR_MAGIC_BYTES.length, HEADER_SIZE - JFR_MAGIC_BYTES.length);
-			long metadataIndex = DataInputToolkit.readLong(chunkHeader, HEADER_SIZE - LONG_SIZE);
-			int eventReadSize = (int) (metadataIndex - HEADER_SIZE + INTEGER_SIZE);
-			byte[] chunkEvents = new byte[eventReadSize];
-			readBytesFromStream(chunkEvents, 0, chunkEvents.length);
-			int metadataEventSize = DataInputToolkit.readInt(chunkEvents, eventReadSize - INTEGER_SIZE) - INTEGER_SIZE;
-			byte[] chunkMetadata = new byte[metadataEventSize];
-			readBytesFromStream(chunkMetadata, 0, chunkMetadata.length);
+			short majorVersion = DataInputToolkit.readShort(chunkHeader, JFR_MAGIC_BYTES.length);
+			byte[] chunkTotal = null;
+			if (majorVersion >= 1) {
+				// JDK 9+ recording
+				long fullSize = DataInputToolkit.readLong(chunkHeader, HEADER_SIZE - DataInputToolkit.LONG_SIZE);
+				int readSize = (int) fullSize - HEADER_SIZE;
+				chunkTotal = new byte[(int) fullSize];
+				System.arraycopy(chunkHeader, 0, chunkTotal, 0, chunkHeader.length);
+				readBytesFromStream(chunkTotal, HEADER_SIZE, readSize);
+			} else {
+				long metadataIndex = DataInputToolkit.readLong(chunkHeader, HEADER_SIZE - DataInputToolkit.LONG_SIZE);
+				int eventReadSize = (int) (metadataIndex - HEADER_SIZE + DataInputToolkit.INTEGER_SIZE);
+				byte[] chunkEvents = new byte[eventReadSize];
+				readBytesFromStream(chunkEvents, 0, chunkEvents.length);
+				int metadataEventSize = DataInputToolkit.readInt(chunkEvents,
+						eventReadSize - DataInputToolkit.INTEGER_SIZE) - DataInputToolkit.INTEGER_SIZE;
+				byte[] chunkMetadata = new byte[metadataEventSize];
+				readBytesFromStream(chunkMetadata, 0, chunkMetadata.length);
 
-			byte[] chunkTotal = new byte[chunkHeader.length + chunkEvents.length + chunkMetadata.length];
-			System.arraycopy(chunkHeader, 0, chunkTotal, 0, chunkHeader.length);
-			System.arraycopy(chunkEvents, 0, chunkTotal, chunkHeader.length, chunkEvents.length);
-			System.arraycopy(chunkMetadata, 0, chunkTotal, chunkHeader.length + chunkEvents.length,
-					chunkMetadata.length);
+				chunkTotal = new byte[chunkHeader.length + chunkEvents.length + chunkMetadata.length];
+				System.arraycopy(chunkHeader, 0, chunkTotal, 0, chunkHeader.length);
+				System.arraycopy(chunkEvents, 0, chunkTotal, chunkHeader.length, chunkEvents.length);
+				System.arraycopy(chunkMetadata, 0, chunkTotal, chunkHeader.length + chunkEvents.length,
+						chunkMetadata.length);
+			}
 			streamState = StreamState.NEXT_CHUNK;
 			return chunkTotal;
 		}
@@ -291,6 +315,7 @@ public final class ChunkReader {
 	 *         chunk
 	 */
 	public static Iterator<byte[]> readChunks(File jfrFile) throws IOException {
+		// We fall back to using a StreamChunkIterator if the file is compressed.
 		if (IOToolkit.isCompressedFile(jfrFile)) {
 			return new StreamChunkIterator(IOToolkit.openUncompressedStream(jfrFile));
 		}
@@ -324,7 +349,17 @@ public final class ChunkReader {
 	public static void main(String[] args) throws IOException {
 		long nanoStart = System.nanoTime();
 		int chunkCount = 0, byteCount = 0;
-		Iterator<byte[]> iter = readChunks(new File(args[0]));
+
+		if (args.length != 1) {
+			System.out.println("Usage: ChunkReader <file>");
+			System.exit(2);
+		}
+		File file = new File(args[0]);
+		if (!file.exists()) {
+			System.out.println("The file " + file.getAbsolutePath() + " does not exist. Exiting...");
+			System.exit(3);
+		}
+		Iterator<byte[]> iter = readChunks(file);
 		while (iter.hasNext()) {
 			byte[] bytes = iter.next();
 			chunkCount += 1;
