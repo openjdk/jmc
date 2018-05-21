@@ -46,9 +46,9 @@
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
         	<unit id="a.jre.javase" version="9.0.0"/>
         	<unit id="config.a.jre.javase" version="9.0.0"/>
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.0.v20180207-1446"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.13.100.v20180308-0630"/>
-            <unit id="org.eclipse.platform.sdk" version="4.8.0.I20180308-0630"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.0.v20180512-1130"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.13.100.v20180516-2000"/>
+            <unit id="org.eclipse.platform.sdk" version="4.8.0.I20180516-2000"/>
             <repository location="http://download.eclipse.org/eclipse/updates/4.8milestones/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
