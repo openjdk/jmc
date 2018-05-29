@@ -60,6 +60,11 @@
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<formats>
+						<win32>zip</win32>
+						<linux>tar.gz</linux>
+						<macosx>tar.gz</macosx>
+					</formats>
 					<products>
 						<product>
 							<id>org.openjdk.jmc</id>
@@ -74,6 +79,7 @@
 						<id>create-product-distributions</id>
 						<goals>
 							<goal>materialize-products</goal>
+							<goal>archive-products</goal>
 						</goals>
 					</execution>
 					<execution>
