@@ -1,0 +1,16 @@
+# Ignore build related folders
+build/
+target/
+bin/
+
+# Ignore test recording
+application/tests/org.openjdk.jmc.rjmx.services.jfr.test/recording.jfr
+
+# Ignore build workspace
+workspace/
+
+# Ignore perforce ignore files
+.p4ignore
+
+# Ignore MacOS X finder files
+.DS_Store
