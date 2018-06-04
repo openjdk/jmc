@@ -46,9 +46,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho-version>1.0.0</tycho-version>
-		<changeSet>0</changeSet>
 		<buildId>${user.name}</buildId>
+		<scmConnection>scm:hg:http://hg.openjdk.java.net/jmc/jmc</scmConnection>
 	</properties>
+	<scm>
+		<connection>${scmConnection}</connection>
+	</scm>
 	<profiles>
 		<profile>
 			<id>photon</id>
@@ -91,31 +94,6 @@
 								</artifact>
 							</target>
 						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>mercurial</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>buildnumber-maven-plugin</artifactId>
-						<version>1.4</version>
-						<inherited>false</inherited>
-						<executions>
-							<execution>
-								<id>build.changeid</id>
-								<phase>initialize</phase>
-								<goals>
-									<goal>hgchangeset</goal>
-								</goals>
-								<configuration>
-									<scmDirectory>${rootDir}</scmDirectory>
-								</configuration>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -229,6 +207,18 @@
 				<artifactId>buildnumber-maven-plugin</artifactId>
 				<version>1.4</version>
 				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+						<configuration>
+							<doCheck>false</doCheck>
+							<doUpdate>false</doUpdate>
+							<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+							<revisionOnScmFailure>no.scm.config.in.pom</revisionOnScmFailure>
+						</configuration>
+					</execution>
 					<execution>
 						<id>build.date</id>
 						<phase>initialize</phase>

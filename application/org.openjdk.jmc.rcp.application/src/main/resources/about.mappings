@@ -34,7 +34,7 @@
 #version
 0=${unqualifiedVersion}
 #changeid
-1=${changeSet}
+1=${buildNumber}
 #date
 2=${build.date}
 #qualifier
