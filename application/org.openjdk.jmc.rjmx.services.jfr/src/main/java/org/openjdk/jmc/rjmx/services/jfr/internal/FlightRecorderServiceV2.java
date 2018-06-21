@@ -93,6 +93,7 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 	private final ICommercialFeaturesService cfs;
 	private final IMBeanHelperService mbhs;
 	private final String serverId;
+	private final IConnectionHandle connection;
 
 	@Override
 	public String getVersion() {
@@ -104,11 +105,16 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 				&& ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.DYNAMIC_JFR_SUPPORTED);
 	}
 
+	private boolean isFlightRecorderCommercial() {
+		return ConnectionToolkit.isHotSpot(connection)
+				&& !ConnectionToolkit.isJavaVersionAboveOrEqual(connection, JavaVersionSupport.JFR_NOT_COMMERCIAL);
+	}
+
 	private boolean isFlightRecorderDisabled(IConnectionHandle handle) {
-		if (cfs != null) {
+		if (cfs != null && isFlightRecorderCommercial()) {
 			return !cfs.isCommercialFeaturesEnabled() || JVMSupportToolkit.isFlightRecorderDisabled(handle, false);
 		} else {
-			return true;
+			return JVMSupportToolkit.isFlightRecorderDisabled(handle, false);
 		}
 	}
 
@@ -124,6 +130,7 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 		if (JVMSupportToolkit.isFlightRecorderDisabled(handle, true)) {
 			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
 		}
+		connection = handle;
 		helper = new FlightRecorderCommunicationHelperV2(handle.getServiceOrThrow(MBeanServerConnection.class));
 		mbhs = handle.getServiceOrThrow(IMBeanHelperService.class);
 		serverId = handle.getServerDescriptor().getGUID();
@@ -470,7 +477,9 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 
 	@Override
 	public boolean isEnabled() {
-		return cfs.isCommercialFeaturesEnabled();
+		return isFlightRecorderCommercial()
+				? cfs.isCommercialFeaturesEnabled()
+				: isAvailable(connection);
 	}
 
 	@Override

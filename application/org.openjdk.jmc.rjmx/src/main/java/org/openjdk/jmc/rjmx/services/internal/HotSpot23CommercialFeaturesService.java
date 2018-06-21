@@ -35,16 +35,19 @@ package org.openjdk.jmc.rjmx.services.internal;
 import javax.management.MBeanServerConnection;
 
 import org.openjdk.jmc.rjmx.ConnectionException;
+import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
 import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
+import javax.management.ObjectName;
 
 public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesService {
 	private final static String VM_FLAG = "UnlockCommercialFeatures"; //$NON-NLS-1$
 	private final static String UNLOCK_COMMAND = "VM.unlock_commercial_features"; //$NON-NLS-1$
 	private final MBeanServerConnection server;
 	private final IDiagnosticCommandService dcs;
+	private final static String JDK_MANAGEMENT_JFR_MBEAN_NAME = "jdk.management.jfr:type=FlightRecorder"; //$NON-NLS-1$
 
 	public HotSpot23CommercialFeaturesService(IConnectionHandle handle)
 			throws ConnectionException, ServiceNotAvailableException {
@@ -53,7 +56,10 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 		try {
 			HotspotManagementToolkit.getVMOption(server, VM_FLAG); // Will fail if option is not available
 		} catch (Exception e) {
-			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
+			// Commercial Feature option is not available but Flight Recorder is.
+			if (!isJfrMBeanAvailable()) {
+				throw new ServiceNotAvailableException(""); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -74,5 +80,20 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 		if (!isCommercialFeaturesEnabled()) {
 			HotspotManagementToolkit.setVMOption(server, VM_FLAG, "true"); //$NON-NLS-1$
 		}
+	}
+
+	private boolean isJfrMBeanAvailable() {
+		try {
+			getJfrMBeanObjectName();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private ObjectName getJfrMBeanObjectName() throws Exception {
+		ObjectName candidateObjectName = ConnectionToolkit.createObjectName(JDK_MANAGEMENT_JFR_MBEAN_NAME);
+		server.getMBeanInfo(candidateObjectName);
+		return candidateObjectName;
 	}
 }

@@ -60,5 +60,7 @@ public class JavaVersionSupport {
 	public static final JavaVersion DEBUG_NON_SAFEPOINTS_IMPLICITLY_ENABLED = JDK_9;
 	// FIXME: Update this if JDK-8054307 is ever backported to 8uX.
 	public static final JavaVersion STRING_IS_BYTE_ARRAY = JDK_9;
+	public static final JavaVersion JDK_11_EA = new JavaVersion(true, 11);
+	public static final JavaVersion JFR_NOT_COMMERCIAL = JDK_11_EA;
 
 }
