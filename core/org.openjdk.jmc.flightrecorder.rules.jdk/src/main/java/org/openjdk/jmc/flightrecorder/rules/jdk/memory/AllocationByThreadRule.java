@@ -68,12 +68,22 @@ public class AllocationByThreadRule implements IRule {
 	private static final String THREAD_RESULT_ID = "Allocations.thread"; //$NON-NLS-1$
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
+		EventAvailability eventAvailabilityInside = RulesToolkit.getEventAvailability(items,
+				JdkTypeIDs.ALLOC_INSIDE_TLAB);
+		EventAvailability eventAvailabilityOutside = RulesToolkit.getEventAvailability(items,
 				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (!(eventAvailability == EventAvailability.AVAILABLE || eventAvailability == EventAvailability.ENABLED)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-					JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
+		if (!RulesToolkit.isEventsEnabled(eventAvailabilityInside, eventAvailabilityOutside)) {
+			return RulesToolkit.getNotApplicableResult(this,
+					MessageFormat.format(Messages.getString(Messages.General_RULE_REQUIRES_ALL_EVENT_TYPES_ENABLED),
+							JdkTypeIDs.ALLOC_INSIDE_TLAB + "," + JdkTypeIDs.ALLOC_OUTSIDE_TLAB));
 		}
+		if (!(eventAvailabilityInside == EventAvailability.AVAILABLE
+				|| eventAvailabilityOutside == EventAvailability.AVAILABLE)) {
+			return RulesToolkit.getNotApplicableResult(this,
+					MessageFormat.format(Messages.getString(Messages.General_RULE_REQUIRES_EVENTS_FROM_ONE_OF_MANY),
+							JdkTypeIDs.ALLOC_INSIDE_TLAB + "," + JdkTypeIDs.ALLOC_OUTSIDE_TLAB));
+		}
+
 		List<IntEntry<IMCThread>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
 				JfrAttributes.EVENT_THREAD);
 		double balance = RulesToolkit.calculateBalanceScore(entries);
@@ -87,9 +97,9 @@ public class AllocationByThreadRule implements IRule {
 		StacktraceModel stacktraceModel = new StacktraceModel(false,
 				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
 		Fork rootFork = stacktraceModel.getRootFork();
-		String relevantTraceHtmlList = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0),
-				rootFork.getItemsInFork());
-
+		String relevantTraceHtmlList = rootFork.getBranchCount() == 0
+				? Messages.getString(Messages.General_NO_STACK_TRACE_AVAILABLE)
+				: StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0), rootFork.getItemsInFork());
 		String message = MessageFormat.format(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE),
 				Encode.forHtml(mostSignificant.getKey().getThreadName()), relevantTraceHtmlList);
 		String longMessage = message + "<p>" + Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG); //$NON-NLS-1$

@@ -142,26 +142,26 @@ public class RulesToolkit {
 	 * Knowledge about the state of affairs of an event type in an IItemCollection.
 	 */
 	public enum EventAvailability {
-				/**
-				 * The type has events available in the collection.
-				 */
-				AVAILABLE,
-				/**
-				 * The type was actively enabled in the collection.
-				 */
-				ENABLED,
-				/**
-				 * The type was actively disabled in the collection.
-				 */
-				DISABLED,
-				/**
-				 * The type is known in the collection, but no events were found.
-				 */
-				NONE,
-				/**
-				 * The type is unknown in the collection.
-				 */
-				UNAVAILABLE
+		/**
+		 * The type has events available in the collection.
+		 */
+		AVAILABLE,
+		/**
+		 * The type was actively enabled in the collection.
+		 */
+		ENABLED,
+		/**
+		 * The type was actively disabled in the collection.
+		 */
+		DISABLED,
+		/**
+		 * The type is known in the collection, but no events were found.
+		 */
+		NONE,
+		/**
+		 * The type is unknown in the collection.
+		 */
+		UNAVAILABLE
 	}
 
 	/**
@@ -374,6 +374,23 @@ public class RulesToolkit {
 	public static boolean isEventsEnabled(IItemCollection items, String ... typeIds) {
 		IQuantity aggregate = items.apply(createEnablementFilter(true, typeIds)).getAggregate(Aggregators.count());
 		return aggregate != null && aggregate.longValue() == typeIds.length;
+	}
+
+	/**
+	 * This method returns false if any {@link EventAvailability} is disabled or unavailable.
+	 * Otherwise true.
+	 * 
+	 * @param eventAvailabilities
+	 *            the {@link EventAvailability} to check
+	 * @return false if any {@link EventAvailability} is disabled or unavailable. Otherwise true.
+	 */
+	public static boolean isEventsEnabled(EventAvailability ... eventAvailabilities) {
+		for (EventAvailability availability : eventAvailabilities) {
+			if (availability == EventAvailability.DISABLED || availability == EventAvailability.UNAVAILABLE) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

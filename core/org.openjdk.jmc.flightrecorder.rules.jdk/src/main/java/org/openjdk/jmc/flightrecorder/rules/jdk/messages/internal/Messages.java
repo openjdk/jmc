@@ -277,6 +277,9 @@ public class Messages {
 	public static final String GcStallRule_TEXT_OK = "GcStallRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String General_CONFIG_CLASS_LIMIT = "General_CONFIG_CLASS_LIMIT"; //$NON-NLS-1$
 	public static final String General_CONFIG_CLASS_LIMIT_LONG = "General_CONFIG_CLASS_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String General_NO_STACK_TRACE_AVAILABLE = "General_NO_STACK_TRACE_AVAILABLE"; //$NON-NLS-1$
+	public static final String General_RULE_REQUIRES_ALL_EVENT_TYPES_ENABLED = "General_RULE_REQUIRES_ALL_EVENT_TYPES_ENABLED"; //$NON-NLS-1$
+	public static final String General_RULE_REQUIRES_EVENTS_FROM_ONE_OF_MANY = "General_RULE_REQUIRES_EVENTS_FROM_ONE_OF_MANY"; //$NON-NLS-1$
 	public static final String General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION = "General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION"; //$NON-NLS-1$
 	public static final String General_UNKNOWN_ADDRESS = "General_UNKNOWN_ADDRESS"; //$NON-NLS-1$
 	public static final String General_UNKNOWN_FILE_NAME = "General_UNKNOWN_FILE_NAME"; //$NON-NLS-1$
