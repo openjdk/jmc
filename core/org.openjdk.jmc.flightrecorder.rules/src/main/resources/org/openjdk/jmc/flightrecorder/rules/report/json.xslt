@@ -132,6 +132,7 @@
 
 <xsl:template match="rule">
               {
+               "id": "<xsl:apply-templates select="id" />",
                "name": "<xsl:apply-templates select="name" />", <xsl:choose><xsl:when test="count(error)>0"><xsl:text>&#xa;               </xsl:text>"error": "<xsl:apply-templates select="error" />"</xsl:when><xsl:otherwise>
                "severity": "<xsl:apply-templates select="severity" />",
                "score": <xsl:apply-templates select="score" />,
