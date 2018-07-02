@@ -77,7 +77,7 @@ public class DMSIncidentRule implements IRule {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, DMS_PATH);
 
 		// Not getting any is good, but only if the event was not unavailable or disabled
-		if (eventAvailability == EventAvailability.UNAVAILABLE || eventAvailability == EventAvailability.DISABLED) {
+		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, DMS_PATH);
 		}
 

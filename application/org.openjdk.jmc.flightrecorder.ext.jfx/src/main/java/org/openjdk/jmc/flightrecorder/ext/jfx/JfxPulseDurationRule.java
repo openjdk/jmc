@@ -77,7 +77,7 @@ public class JfxPulseDurationRule implements IRule {
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.JFX_PULSE_ID);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNAVAILABLE
+		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN
 				|| eventAvailability == EventAvailability.NONE) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JfxConstants.JFX_PULSE_ID);
 		}

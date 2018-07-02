@@ -101,7 +101,7 @@ public final class ClassLeakingRule implements IRule {
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CLASS_LOAD,
 				JdkTypeIDs.CLASS_UNLOAD);
-		if (eventAvailability == EventAvailability.UNAVAILABLE || eventAvailability == EventAvailability.DISABLED) {
+		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CLASS_LOAD,
 					JdkTypeIDs.CLASS_UNLOAD);
 		}

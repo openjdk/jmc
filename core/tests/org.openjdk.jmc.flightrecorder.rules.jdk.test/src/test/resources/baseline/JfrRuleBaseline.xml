@@ -3144,15 +3144,15 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <id>Allocations.class</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Allocated Classes rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<shortDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</shortDescription>
+<longDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</longDescription>
 </rule>
 <rule>
 <id>Allocations.thread</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Threads Allocating rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<shortDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</shortDescription>
+<longDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</longDescription>
 </rule>
 <rule>
 <id>ApplicationHalts</id>

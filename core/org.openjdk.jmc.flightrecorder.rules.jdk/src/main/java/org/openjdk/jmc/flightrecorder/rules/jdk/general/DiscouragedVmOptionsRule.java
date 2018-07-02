@@ -55,7 +55,7 @@ public class DiscouragedVmOptionsRule implements IRule {
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.BOOLEAN_FLAG);
-		if (eventAvailability == EventAvailability.UNAVAILABLE || eventAvailability == EventAvailability.DISABLED) {
+		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.BOOLEAN_FLAG);
 		}
 

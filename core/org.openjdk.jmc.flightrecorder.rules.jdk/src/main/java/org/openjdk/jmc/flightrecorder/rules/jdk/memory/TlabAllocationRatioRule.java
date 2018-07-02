@@ -62,7 +62,7 @@ public class TlabAllocationRatioRule implements IRule {
 
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
 				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNAVAILABLE) {
+		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.ALLOC_INSIDE_TLAB,
 					JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 		}

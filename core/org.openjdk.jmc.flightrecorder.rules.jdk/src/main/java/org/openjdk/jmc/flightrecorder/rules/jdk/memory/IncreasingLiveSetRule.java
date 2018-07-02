@@ -99,7 +99,7 @@ public class IncreasingLiveSetRule implements IRule {
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_SUMMARY);
-		if (eventAvailability == EventAvailability.UNAVAILABLE || eventAvailability == EventAvailability.DISABLED) {
+		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.HEAP_SUMMARY);
 		}
 
@@ -133,7 +133,7 @@ public class IncreasingLiveSetRule implements IRule {
 		// otherwise we just return the basic increasing live set score
 		EventAvailability ea = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OLD_OBJECT_SAMPLE);
 		// FIXME: Should construct an message using memoryIncrease, not use a hard limit
-		if (score >= 25 && (ea == EventAvailability.DISABLED || ea == EventAvailability.UNAVAILABLE)) {
+		if (score >= 25 && (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN)) {
 			String shortMessage = MessageFormat.format(
 					Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),
 					liveSetIncreasePerSecond.displayUsing(IDisplayable.AUTO));

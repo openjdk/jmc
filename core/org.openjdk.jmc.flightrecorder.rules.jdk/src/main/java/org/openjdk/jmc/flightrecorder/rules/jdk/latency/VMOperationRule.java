@@ -88,7 +88,7 @@ public class VMOperationRule implements IRule {
 
 	private Result evaluate(IItemCollection items, IQuantity warningLimit) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_OPERATIONS);
-		if (eventAvailability == EventAvailability.UNAVAILABLE || eventAvailability == EventAvailability.DISABLED) {
+		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_OPERATIONS);
 		}
 

@@ -142,26 +142,47 @@ public class RulesToolkit {
 	 * Knowledge about the state of affairs of an event type in an IItemCollection.
 	 */
 	public enum EventAvailability {
-		/**
-		 * The type has events available in the collection.
+				/**
+				 * The type has events available in the collection.
+				 */
+				AVAILABLE(4),
+				/**
+				 * The type was actively enabled in the collection.
+				 */
+				ENABLED(3),
+				/**
+				 * The type was actively disabled in the collection.
+				 */
+				DISABLED(2),
+				/**
+				 * The type is known in the collection, but no events were found.
+				 */
+				NONE(1),
+				/**
+				 * The type is unknown in the collection.
+				 */
+				UNKNOWN(0);
+
+		/*
+		 * Used to determine the ordering of availabilities.
 		 */
-		AVAILABLE,
+		private final int availabilityScore;
+
+		EventAvailability(int availabilityScore) {
+			this.availabilityScore = availabilityScore;
+		}
+
 		/**
-		 * The type was actively enabled in the collection.
+		 * Returns true if this EventAvailability is less available than the provided one.
+		 * 
+		 * @param availability
+		 *            the {@link EventAvailability} to compare to.
+		 * @return true if this EventAvailability is less available than the provided one, false
+		 *         otherwise.
 		 */
-		ENABLED,
-		/**
-		 * The type was actively disabled in the collection.
-		 */
-		DISABLED,
-		/**
-		 * The type is known in the collection, but no events were found.
-		 */
-		NONE,
-		/**
-		 * The type is unknown in the collection.
-		 */
-		UNAVAILABLE
+		public boolean isLessAvailableThan(EventAvailability availability) {
+			return availabilityScore < availability.availabilityScore;
+		}
 	}
 
 	/**
@@ -386,7 +407,7 @@ public class RulesToolkit {
 	 */
 	public static boolean isEventsEnabled(EventAvailability ... eventAvailabilities) {
 		for (EventAvailability availability : eventAvailabilities) {
-			if (availability == EventAvailability.DISABLED || availability == EventAvailability.UNAVAILABLE) {
+			if (availability == EventAvailability.DISABLED || availability == EventAvailability.UNKNOWN) {
 				return false;
 			}
 		}
@@ -436,7 +457,24 @@ public class RulesToolkit {
 		if (isEventsKnown(items, typeIds)) {
 			return EventAvailability.NONE;
 		}
-		return EventAvailability.UNAVAILABLE;
+		return EventAvailability.UNKNOWN;
+	}
+
+	/**
+	 * Returns the least available EventAvailability from the ones provided. See
+	 * {@link EventAvailability}.
+	 * 
+	 * @return the least available EventAvailability from the ones provided.
+	 */
+	public static EventAvailability getLeastAvailable(EventAvailability ... availabilites) {
+		EventAvailability lowest = EventAvailability.AVAILABLE;
+
+		for (EventAvailability availability : availabilites) {
+			if (availability.isLessAvailableThan(lowest)) {
+				lowest = availability;
+			}
+		}
+		return lowest;
 	}
 
 	/**
@@ -508,7 +546,7 @@ public class RulesToolkit {
 							disabledEventTypeNames),
 					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_LONG),
 							rule.getName(), disabledEventTypeNames));
-		case UNAVAILABLE:
+		case UNKNOWN:
 			// Can't get type names if the event type is unavailable
 			List<String> quotedTypeIds = new ArrayList<>();
 			for (String typeId : typeIds) {

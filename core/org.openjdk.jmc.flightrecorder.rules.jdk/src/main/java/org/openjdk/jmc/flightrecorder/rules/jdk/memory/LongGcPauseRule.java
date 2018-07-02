@@ -77,7 +77,7 @@ public class LongGcPauseRule implements IRule {
 	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.GC_PAUSE,
 				JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNAVAILABLE) {
+		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, EventAvailability.DISABLED, JdkTypeIDs.GC_PAUSE,
 					JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
 		}
