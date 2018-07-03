@@ -119,6 +119,7 @@ public class ImageConstants {
 	public static final String PAGE_GENERAL = "pages/general.png"; //$NON-NLS-1$
 	public static final String PAGE_EXCEPTIONS = "pages/exceptions.png"; //$NON-NLS-1$
 	public static final String PAGE_THREAD_DUMPS = "pages/threaddumps.png"; //$NON-NLS-1$
+	public static final String PAGE_THREADS = "pages/threadgraph.png"; //$NON-NLS-1$
 	public static final String PAGE_JVM_INTERNALS = "pages/jvminformation.png"; //$NON-NLS-1$
 	public static final String PAGE_GC = "pages/gc.png"; //$NON-NLS-1$
 	public static final String PAGE_GC_CONFIGURATION = "pages/gcconfig.png"; //$NON-NLS-1$

@@ -99,7 +99,7 @@ public class ThreadsPage extends AbstractDataPage {
 
 		@Override
 		public ImageDescriptor getImageDescriptor(IState state) {
-			return FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_CHART_BAR);
+			return FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.PAGE_THREADS);
 		}
 
 		@Override
