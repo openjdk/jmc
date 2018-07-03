@@ -66,6 +66,7 @@
 <setting id="cleanup.qualify_static_member_accesses_with_declaring_class" value="true"/>
 <setting id="cleanup.qualify_static_method_accesses_with_declaring_class" value="false"/>
 <setting id="cleanup.remove_private_constructors" value="true"/>
+<setting id="cleanup.remove_redundant_modifiers" value="true"/>
 <setting id="cleanup.remove_redundant_type_arguments" value="true"/>
 <setting id="cleanup.remove_trailing_whitespaces" value="true"/>
 <setting id="cleanup.remove_trailing_whitespaces_all" value="true"/>
