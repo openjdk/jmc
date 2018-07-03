@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -50,7 +50,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that subtracts values of one accessor from the values of another accessor.
-	 * 
+	 *
 	 * @param minuend
 	 *            accessor retrieving the value to subtract from
 	 * @param subtrahend
@@ -72,7 +72,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that adds the values of two accessors.
-	 * 
+	 *
 	 * @param term1
 	 *            accessor retrieving the first value to add
 	 * @param term2
@@ -94,7 +94,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that calculates the average of the values from two accessors.
-	 * 
+	 *
 	 * @param data1
 	 *            accessor retrieving the first value
 	 * @param data2
@@ -117,7 +117,7 @@ public class MemberAccessorToolkit {
 	/**
 	 * Create an accessor that adds half of a delta value to a bias value. Useful for example to
 	 * find a center time if the bias is a start time and the delta is the duration of an event.
-	 * 
+	 *
 	 * @param bias
 	 *            accessor retrieving the bias value
 	 * @param delta
@@ -140,7 +140,7 @@ public class MemberAccessorToolkit {
 	/**
 	 * Create an accessor that subtracts half of a delta value from a bias value. Useful for example
 	 * to find a center time if the bias is an end time and the delta is the duration of an event.
-	 * 
+	 *
 	 * @param bias
 	 *            accessor retrieving the bias value
 	 * @param delta
@@ -162,7 +162,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that constructs ranges based on start and end values.
-	 * 
+	 *
 	 * @param start
 	 *            accessor retrieving the start value
 	 * @param end
@@ -184,7 +184,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that constructs ranges based on start and extent values.
-	 * 
+	 *
 	 * @param start
 	 *            accessor retrieving the start value
 	 * @param extent
@@ -207,7 +207,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that constructs ranges based on end and extent values.
-	 * 
+	 *
 	 * @param extent
 	 *            accessor retrieving the range extent
 	 * @param end
@@ -232,7 +232,7 @@ public class MemberAccessorToolkit {
 	/**
 	 * Create an accessor that constructs point ranges (ranges with zero extent) based on point
 	 * values.
-	 * 
+	 *
 	 * @param point
 	 *            accessor retrieving the point position values
 	 * @return an accessor returning point ranges
@@ -250,7 +250,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that always return the same value.
-	 * 
+	 *
 	 * @param value
 	 *            constant value to return
 	 * @return an accessor returning the constant value
@@ -267,7 +267,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that returns a fixed element index from arrays.
-	 * 
+	 *
 	 * @param index
 	 *            array index to return
 	 * @return an accessor returning the object at the specified index in an array
@@ -284,7 +284,7 @@ public class MemberAccessorToolkit {
 
 	/**
 	 * Create an accessor that returns a specified value from {@link CompositeData} instances.
-	 * 
+	 *
 	 * @param key
 	 *            key of the value to get
 	 * @return an accessor returning the value associated with the specified key

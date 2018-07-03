@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -93,7 +93,7 @@ public class StateToolkit {
 	/**
 	 * Read an XML document from a reader and write its structure to a {@link IWritableState
 	 * writable state}.
-	 * 
+	 *
 	 * @param reader
 	 *            reader to read XML from
 	 * @param state
@@ -107,7 +107,7 @@ public class StateToolkit {
 
 	/**
 	 * Read an XML document from a string and return its structure as a {@link IState state}.
-	 * 
+	 *
 	 * @param document
 	 *            string to read XML from
 	 * @return state reflecting the XML document
@@ -119,7 +119,7 @@ public class StateToolkit {
 	/**
 	 * Read an XML document from a string and return its structure as a {@link IStateful stateful
 	 * object}.
-	 * 
+	 *
 	 * @param document
 	 *            string to read XML from
 	 * @return stateful object reflecting the XML document
@@ -140,7 +140,7 @@ public class StateToolkit {
 	/**
 	 * Read an XML document from a file and return its structure as a {@link IStateful stateful
 	 * object}.
-	 * 
+	 *
 	 * @param document
 	 *            file to read XML from
 	 * @return stateful object reflecting the XML document
@@ -160,7 +160,7 @@ public class StateToolkit {
 
 	/**
 	 * Read an XML document from a file and return its structure as a {@link IState state}.
-	 * 
+	 *
 	 * @param document
 	 *            file to read XML from
 	 * @return state reflecting the XML document
@@ -171,7 +171,7 @@ public class StateToolkit {
 
 	/**
 	 * Create a new writable state.
-	 * 
+	 *
 	 * @param rootName
 	 *            root name of the writable state
 	 * @return a new writable state
@@ -182,7 +182,7 @@ public class StateToolkit {
 
 	/**
 	 * Write a stateful state as an XML string.
-	 * 
+	 *
 	 * @param state
 	 *            state to write as XML
 	 * @return an XML string reflecting the state
@@ -199,7 +199,7 @@ public class StateToolkit {
 
 	/**
 	 * Write a stateful state to a reader as an XML string.
-	 * 
+	 *
 	 * @param state
 	 *            state to write as XML
 	 * @param writer
@@ -213,7 +213,7 @@ public class StateToolkit {
 
 	/**
 	 * Write a boolean value to a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to write to
 	 * @param attribute
@@ -230,7 +230,7 @@ public class StateToolkit {
 
 	/**
 	 * Read a boolean value from a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to read from
 	 * @param attribute
@@ -260,7 +260,7 @@ public class StateToolkit {
 
 	/**
 	 * Write a float value to a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to write to
 	 * @param attribute
@@ -277,7 +277,7 @@ public class StateToolkit {
 
 	/**
 	 * Read a float value from a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to read from
 	 * @param attribute
@@ -304,7 +304,7 @@ public class StateToolkit {
 
 	/**
 	 * Write an integer value to a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to write to
 	 * @param attribute
@@ -321,7 +321,7 @@ public class StateToolkit {
 
 	/**
 	 * Read an integer value from a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to read from
 	 * @param attribute
@@ -348,7 +348,7 @@ public class StateToolkit {
 
 	/**
 	 * Write an enum value to a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to write to
 	 * @param attribute
@@ -365,7 +365,7 @@ public class StateToolkit {
 
 	/**
 	 * Read an enum value from a state.
-	 * 
+	 *
 	 * @param state
 	 *            state to read from
 	 * @param attribute

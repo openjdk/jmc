@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -46,7 +46,7 @@ import java.util.Iterator;
  * <li>You want to reuse a preallocated array.
  * </ul>
  * If you don't have any of those needs, then you might as well use a standard ArrayList instead.
- * 
+ *
  * @param <T>
  *            type of elements in the array
  */
@@ -58,7 +58,7 @@ public class SimpleArray<T> implements Iterable<T> {
 	/**
 	 * Create an instance backed by an array. The array content will be overwritten with elements
 	 * that are subsequently added.
-	 * 
+	 *
 	 * @param initial
 	 *            array to use for storage
 	 */
@@ -70,7 +70,7 @@ public class SimpleArray<T> implements Iterable<T> {
 	 * Create an instance backed by an array with a specified number of preallocated elements. The
 	 * array content after the preallocated elements will be overwritten with elements that are
 	 * subsequently added.
-	 * 
+	 *
 	 * @param initial
 	 *            array to use for storage
 	 * @param size
@@ -87,7 +87,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
 	/**
 	 * Get the element at the specified index.
-	 * 
+	 *
 	 * @param index
 	 *            element index
 	 * @return element at index
@@ -101,7 +101,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
 	/**
 	 * Add an element to the end of the list.
-	 * 
+	 *
 	 * @param element
 	 *            element to add
 	 */
@@ -114,7 +114,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
 	/**
 	 * Add all elements from an array.
-	 * 
+	 *
 	 * @param src
 	 *            array containing elements to add
 	 */
@@ -124,7 +124,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
 	/**
 	 * Add a portion of elements from an array.
-	 * 
+	 *
 	 * @param src
 	 *            array containing elements to add
 	 * @param offset
@@ -144,7 +144,7 @@ public class SimpleArray<T> implements Iterable<T> {
 	/**
 	 * Copy all elements from the backing array to another array. The destination array must be
 	 * large enough to fit all elements.
-	 * 
+	 *
 	 * @param dst
 	 *            array to copy elements to
 	 * @param offset
@@ -162,7 +162,7 @@ public class SimpleArray<T> implements Iterable<T> {
 	/**
 	 * Get the number of stored elements. Note that this is not the same as the size of the backing
 	 * array.
-	 * 
+	 *
 	 * @return the number of stored elements
 	 */
 	public int size() {
@@ -178,7 +178,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
 	/**
 	 * Get an array with all elements. The array length will be equal to the number of elements.
-	 * 
+	 *
 	 * @return an array with all elements
 	 */
 	public T[] elements() {

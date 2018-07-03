@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -56,7 +56,7 @@ public abstract class KeyInValueMap<K, V> implements Iterable<V> {
 
 	/**
 	 * Create a new map.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            initial storage capacity
 	 * @param loadFactor
@@ -148,7 +148,7 @@ public abstract class KeyInValueMap<K, V> implements Iterable<V> {
 	 * This method must be overridden in subclasses so that values can be checked if they match a
 	 * given key. Called by {@link #get(Object, boolean)} when there are multiple values that share
 	 * the same key hash.
-	 * 
+	 *
 	 * @param key
 	 *            key to check
 	 * @param value
@@ -162,7 +162,7 @@ public abstract class KeyInValueMap<K, V> implements Iterable<V> {
 	/**
 	 * This method must be overridden in subclasses so that values can be computed for missing keys.
 	 * Called by {@link #get(Object, boolean)} when the requested key is missing in the map.
-	 * 
+	 *
 	 * @param key
 	 *            key to calculate value for
 	 * @return calculated value
@@ -171,7 +171,7 @@ public abstract class KeyInValueMap<K, V> implements Iterable<V> {
 
 	/**
 	 * Calculate the hash for a key. May be overridden by subclasses.
-	 * 
+	 *
 	 * @param key
 	 *            key to calculate hash for
 	 * @return hash for key
@@ -186,7 +186,7 @@ public abstract class KeyInValueMap<K, V> implements Iterable<V> {
 
 	/**
 	 * Get the key for a value.
-	 * 
+	 *
 	 * @param value
 	 *            value to get key for
 	 * @return key for value

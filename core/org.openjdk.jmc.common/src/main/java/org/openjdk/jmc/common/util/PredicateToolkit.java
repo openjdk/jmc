@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -84,7 +84,7 @@ public class PredicateToolkit {
 	 * Test if a predicate is guaranteed to always evaluate to {@code true}. Note that if this
 	 * method returns {@code false}, then it only means that it is unknown what the predicate will
 	 * return.
-	 * 
+	 *
 	 * @param p
 	 *            a predicate to test
 	 * @return {@code true} if the predicate is guaranteed to evaluate to {@code true}
@@ -97,7 +97,7 @@ public class PredicateToolkit {
 	 * Test if a predicate is guaranteed to always evaluate to {@code false}. Note that if this
 	 * method returns {@code false}, then it only means that it is unknown what the predicate will
 	 * return.
-	 * 
+	 *
 	 * @param p
 	 *            a predicate to test
 	 * @return {@code true} if the predicate is guaranteed to evaluate to {@code false}
@@ -108,7 +108,7 @@ public class PredicateToolkit {
 
 	/**
 	 * Combine a collection of predicates using an AND operation.
-	 * 
+	 *
 	 * @param predicates
 	 *            input predicates
 	 * @return a predicate that evaluates to {@code true} if all input predicates evaluate to
@@ -152,7 +152,7 @@ public class PredicateToolkit {
 
 	/**
 	 * Combine a collection of predicates using an OR operation.
-	 * 
+	 *
 	 * @param predicates
 	 *            input predicates
 	 * @return a predicate that evaluates to {@code true} if at least one of the input predicates
@@ -196,7 +196,7 @@ public class PredicateToolkit {
 
 	/**
 	 * Invert a predicate.
-	 * 
+	 *
 	 * @param predicate
 	 *            predicate to invert
 	 * @return a predicate that evaluates to {@code true} if the input predicate evaluates to
@@ -223,7 +223,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -248,7 +248,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -276,7 +276,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -304,7 +304,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -329,7 +329,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -357,7 +357,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param limit
@@ -386,7 +386,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the range that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param rangeAccessor
 	 *            accessor used to get the range value to check from the input type
 	 * @param limit
@@ -419,7 +419,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the range that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param rangeAccessor
 	 *            accessor used to get the range value to check from the input type
 	 * @param limit
@@ -464,7 +464,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the range that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param rangeAccessor
 	 *            accessor used to get the range value to check from the input type
 	 * @param limit
@@ -496,7 +496,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param item
@@ -522,7 +522,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param item
@@ -549,7 +549,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param item
 	 *            object to compare against
 	 * @param <T>
@@ -572,7 +572,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            accessor used to get the value to check from the input type
 	 * @param items
@@ -627,7 +627,7 @@ public class PredicateToolkit {
 	 * <p>
 	 * The predicate takes an input object as argument but the value that is checked is extracted
 	 * from the input object using a member accessor.
-	 * 
+	 *
 	 * @param valueAccessor
 	 *            string accessor used to get the value to check from the input type
 	 * @param substring

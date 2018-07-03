@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -51,7 +51,7 @@ public class JavaVersion {
 
 	/**
 	 * Create an instance based on a Java version string as reported by a Java runtime.
-	 * 
+	 *
 	 * @param version
 	 *            Java version string
 	 */
@@ -72,7 +72,7 @@ public class JavaVersion {
 
 	/**
 	 * Create an instance based on version numbers.
-	 * 
+	 *
 	 * @param versionNumbers
 	 *            One or more numbers denoting a Java version. The first number is the major
 	 *            version, the second number is the minor version, the third number is the micro
@@ -85,7 +85,7 @@ public class JavaVersion {
 
 	/**
 	 * Create an instance based on version numbers.
-	 * 
+	 *
 	 * @param isEarlyAccess
 	 *            {@code true} if this version should indicate an early access build, {@code false}
 	 *            otherwise
@@ -147,7 +147,7 @@ public class JavaVersion {
 
 	/**
 	 * Compare another version instance with this instance.
-	 * 
+	 *
 	 * @param otherVersion
 	 *            version to compare with
 	 * @return {@code true} if this instance is greater than or equal to {@code otherVersion}
@@ -166,7 +166,7 @@ public class JavaVersion {
 
 	/**
 	 * Check if another version instance has the same major version as this instance.
-	 * 
+	 *
 	 * @param otherVersion
 	 *            version to compare with
 	 * @return {@code true} if this instance has the same major version number as

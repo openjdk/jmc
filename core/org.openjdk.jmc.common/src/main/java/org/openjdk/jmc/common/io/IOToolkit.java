@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -89,7 +89,7 @@ public final class IOToolkit {
 	/**
 	 * Get an input stream for a optionally compressed file. If the file is compressed using either
 	 * GZip or ZIP then an appropriate unpacking will be done.
-	 * 
+	 *
 	 * @param file
 	 *            file to read from
 	 * @return input stream for the unpacked file content
@@ -123,7 +123,7 @@ public final class IOToolkit {
 	/**
 	 * Get an input stream for a optionally compressed input stream. If the input stream is
 	 * compressed using either GZip or ZIP then an appropriate unpacking will be done.
-	 * 
+	 *
 	 * @param stream
 	 *            input stream to read from
 	 * @return input stream for the unpacked content
@@ -249,7 +249,7 @@ public final class IOToolkit {
 
 	/**
 	 * Read lines from a text file.
-	 * 
+	 *
 	 * @see #saveToFile(File, List)
 	 * @param file
 	 *            file to read lines from
@@ -279,7 +279,7 @@ public final class IOToolkit {
 
 	/**
 	 * Write lines to a text file. If the file already exists, it will be overwritten.
-	 * 
+	 *
 	 * @see #loadFromFile(File)
 	 * @param file
 	 *            file to write lines to
@@ -302,7 +302,7 @@ public final class IOToolkit {
 
 	/**
 	 * Read lines from an input stream.
-	 * 
+	 *
 	 * @see #saveToFile(File, List)
 	 * @param is
 	 *            input stream to read lines from
@@ -326,7 +326,7 @@ public final class IOToolkit {
 
 	/**
 	 * Copy all data from an input stream to a file.
-	 * 
+	 *
 	 * @param in
 	 *            input stream to read from
 	 * @param toOutput
@@ -351,7 +351,7 @@ public final class IOToolkit {
 
 	/**
 	 * Copy all data from an input stream to an output stream.
-	 * 
+	 *
 	 * @param is
 	 *            input stream to read from
 	 * @param os
@@ -365,7 +365,7 @@ public final class IOToolkit {
 
 	/**
 	 * Copy all data from an input stream to an output stream.
-	 * 
+	 *
 	 * @param is
 	 *            input stream to read from
 	 * @param os

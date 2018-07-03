@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -50,24 +50,24 @@ public interface IMCFrame {
 	 * Frame compilation types.
 	 */
 	public enum Type {
-		/**
-		 * The frame was executed as native code compiled by the Java JIT compiler.
-		 */
-		JIT_COMPILED,
-		/**
-		 * The frame was executed as interpreted Java byte code.
-		 */
-		INTERPRETED,
-		/**
-		 * The frame was executed as code that was inlined by the Java JIT compiler.
-		 */
-		INLINED,
-		/**
-		 * The frame compilation type is unknown.
-		 */
-		UNKNOWN;
+	/**
+	 * The frame was executed as native code compiled by the Java JIT compiler.
+	 */
+	JIT_COMPILED,
+	/**
+	 * The frame was executed as interpreted Java byte code.
+	 */
+	INTERPRETED,
+	/**
+	 * The frame was executed as code that was inlined by the Java JIT compiler.
+	 */
+	INLINED,
+	/**
+	 * The frame compilation type is unknown.
+	 */
+	UNKNOWN;
 
-		private final String name;
+		private String name;
 
 		private Type() {
 			name = Messages.getString("IMCFrame_Type_" + toString()); //$NON-NLS-1$
@@ -101,8 +101,8 @@ public interface IMCFrame {
 
 	/**
 	 * The compilation type of the frame.
-	 * 
+	 *
 	 * @return the compilation type
 	 */
-	public Type getType();
+	Type getType();
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -66,7 +66,7 @@ public class MethodToolkit {
 
 	/**
 	 * Check if a type name denotes a primitive type.
-	 * 
+	 *
 	 * @param typeName
 	 *            type name to check
 	 * @return {@code true} if the type is primitive, {@code false} if not
@@ -84,7 +84,7 @@ public class MethodToolkit {
 
 	/**
 	 * Create a fully qualified class name based on a package.
-	 * 
+	 *
 	 * @param mcPackage
 	 *            package for the class
 	 * @param className
@@ -97,7 +97,7 @@ public class MethodToolkit {
 
 	/**
 	 * Create a fully qualified class name based on a package.
-	 * 
+	 *
 	 * @param mcPackage
 	 *            package for the class
 	 * @param className
@@ -117,7 +117,7 @@ public class MethodToolkit {
 
 	/**
 	 * Check if a class name denotes a nested class.
-	 * 
+	 *
 	 * @param className
 	 *            class name to check
 	 * @return {@code true} if the class is nested, {@code false} if not
@@ -132,7 +132,7 @@ public class MethodToolkit {
 
 	/**
 	 * Get the top level type of a class. This is the class name without any nested components.
-	 * 
+	 *
 	 * @param className
 	 *            class name with possible nested components
 	 * @return class name without nested components
@@ -149,7 +149,7 @@ public class MethodToolkit {
 	/**
 	 * Get the nested type name of a class. This is the class name without the top level class name.
 	 * If there are multiple nested levels then all levels will be returned.
-	 * 
+	 *
 	 * @param className
 	 *            class name with possible nested components
 	 * @return nested class name part if present, {@code null} if there is no nested class
@@ -165,7 +165,7 @@ public class MethodToolkit {
 
 	/**
 	 * Check if a type name denotes an array.
-	 * 
+	 *
 	 * @param typeName
 	 *            type name to check
 	 * @return {@code true} if the type is an array, {@code false} if not

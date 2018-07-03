@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -174,7 +174,7 @@ public class RulesToolkit {
 
 		/**
 		 * Returns true if this EventAvailability is less available than the provided one.
-		 * 
+		 *
 		 * @param availability
 		 *            the {@link EventAvailability} to compare to.
 		 * @return true if this EventAvailability is less available than the provided one, false
@@ -220,7 +220,7 @@ public class RulesToolkit {
 	/**
 	 * Finds items of a specific type where the given attribute has a value matching that of the
 	 * provided match string.
-	 * 
+	 *
 	 * @param typeId
 	 *            the event type to find matches in
 	 * @param items
@@ -242,7 +242,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets the value of a certain attribute for a given item
-	 * 
+	 *
 	 * @param item
 	 *            the item to get the attribute from
 	 * @param attribute
@@ -262,7 +262,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets a filter for a specific setting for the provided types.
-	 * 
+	 *
 	 * @param settingsName
 	 *            the specific setting to find
 	 * @param typeIds
@@ -295,7 +295,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets the maximum period setting for the specified event types in the given item collection.
-	 * 
+	 *
 	 * @param items
 	 *            the items to find the period setting in
 	 * @param typeIds
@@ -310,7 +310,7 @@ public class RulesToolkit {
 	/**
 	 * If possible, gets the longest period setting that is longer than the specified minimum period
 	 * for the given event types.
-	 * 
+	 *
 	 * @param items
 	 *            the item collection to search through
 	 * @param minPeriod
@@ -335,7 +335,7 @@ public class RulesToolkit {
 
 	/**
 	 * Converts a value persisted as a string by the JVM into an {@link IQuantity}.
-	 * 
+	 *
 	 * @param persistedValue
 	 *            the persisted value to convert
 	 * @return the resulting {@link IQuantity}
@@ -351,7 +351,7 @@ public class RulesToolkit {
 	/**
 	 * Returns a string describing the subset of event types given which have no duration threshold
 	 * set.
-	 * 
+	 *
 	 * @param items
 	 *            the item collection to search
 	 * @param typeIds
@@ -400,7 +400,7 @@ public class RulesToolkit {
 	/**
 	 * This method returns false if any {@link EventAvailability} is disabled or unavailable.
 	 * Otherwise true.
-	 * 
+	 *
 	 * @param eventAvailabilities
 	 *            the {@link EventAvailability} to check
 	 * @return false if any {@link EventAvailability} is disabled or unavailable. Otherwise true.
@@ -463,7 +463,7 @@ public class RulesToolkit {
 	/**
 	 * Returns the least available EventAvailability from the ones provided. See
 	 * {@link EventAvailability}.
-	 * 
+	 *
 	 * @return the least available EventAvailability from the ones provided.
 	 */
 	public static EventAvailability getLeastAvailable(EventAvailability ... availabilites) {
@@ -576,7 +576,7 @@ public class RulesToolkit {
 	/**
 	 * Creates a {@link Result} object for the given {@link IRule} object representing a result
 	 * where there are too few events to properly evaluate a rule.
-	 * 
+	 *
 	 * @param rule
 	 *            the rule to create a {@link Result} object for
 	 * @return an object describing that the rule could not be evaluated due to there not being
@@ -589,7 +589,7 @@ public class RulesToolkit {
 	/**
 	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
-	 * 
+	 *
 	 * @param rule
 	 *            the rule to create a {@link Result} object for
 	 * @param message
@@ -603,7 +603,7 @@ public class RulesToolkit {
 	/**
 	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
-	 * 
+	 *
 	 * @param rule
 	 *            the rule to create a {@link Result} object for
 	 * @param shortMessage
@@ -620,7 +620,7 @@ public class RulesToolkit {
 	/**
 	 * Creates a {@link Result} object describing that at least one of the specified event types
 	 * must be present in the rule's input.
-	 * 
+	 *
 	 * @param rule
 	 *            the rule to create a {@link Result} object for
 	 * @param typeIds
@@ -649,7 +649,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets the Java version for the recording the provided {@link IItemCollection} represents.
-	 * 
+	 *
 	 * @param items
 	 *            the recording to find the version of
 	 * @return an object representing the Java version of the VM the items originate from
@@ -1002,7 +1002,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets the {@link IType} representation of a specific event type in an {@link IItemCollection}.
-	 * 
+	 *
 	 * @param items
 	 *            the items to find the type in
 	 * @param typeId
@@ -1020,7 +1020,7 @@ public class RulesToolkit {
 
 	/**
 	 * Gets a {@link Result} object representing a not applicable result due to a missing attribute.
-	 * 
+	 *
 	 * @param rule
 	 *            the rule which could not be evaluated
 	 * @param type
@@ -1087,7 +1087,7 @@ public class RulesToolkit {
 
 	/**
 	 * Convenience method for getting the start time value from a specific event.
-	 * 
+	 *
 	 * @param item
 	 *            the event to get the start time from
 	 * @return the start time of the provided event
@@ -1098,7 +1098,7 @@ public class RulesToolkit {
 
 	/**
 	 * Convenience method to get the end time value from a specific event.
-	 * 
+	 *
 	 * @param item
 	 *            the event to get the end time from
 	 * @return the end time of the provided event
@@ -1109,7 +1109,7 @@ public class RulesToolkit {
 
 	/**
 	 * Convenience method to get the duration value from a specific event.
-	 * 
+	 *
 	 * @param item
 	 *            the event to get the duration from
 	 * @return the duration of the provided event
@@ -1120,7 +1120,7 @@ public class RulesToolkit {
 
 	/**
 	 * Convenience method to get the event thread value from a specific event.
-	 * 
+	 *
 	 * @param item
 	 *            the event to get the thread value from
 	 * @return the thread the provided event occurred in
@@ -1144,7 +1144,7 @@ public class RulesToolkit {
 	/**
 	 * Calculates the ratio between two {@link IQuantity} values of compatible, linear kind and
 	 * returns it represented as a percentage.
-	 * 
+	 *
 	 * @param antecedent
 	 *            the antecedent (numerator) value
 	 * @param consequent
@@ -1158,7 +1158,7 @@ public class RulesToolkit {
 	/**
 	 * Same calculation as {@link RulesToolkit#toRatioPercent(IQuantity, IQuantity)} but it returns
 	 * the percentage as a string instead.
-	 * 
+	 *
 	 * @param antecedent
 	 *            the antecedent (numerator) value
 	 * @param consequent
@@ -1171,7 +1171,7 @@ public class RulesToolkit {
 
 	/**
 	 * Retrieves all topics that have rules associated with them.
-	 * 
+	 *
 	 * @return all topics associated with any rule
 	 */
 	public static Collection<String> getAllTopics() {
@@ -1267,7 +1267,7 @@ public class RulesToolkit {
 		}
 		/*
 		 * FIXME: Consider defining the method formatting based on preferences.
-		 * 
+		 *
 		 * Currently it's a compromise between keeping the length short, but still being able to
 		 * identify the actual method, even if the line number is a bit incorrect.
 		 */
@@ -1279,7 +1279,7 @@ public class RulesToolkit {
 	 * that contains all flight recorder settings in a comma separated list as a single string it is
 	 * useful to have one place to get the actual setting/value pairs from an
 	 * {@link IItemCollection}.
-	 * 
+	 *
 	 * @param items
 	 *            an item collection containing at least one {@link JdkTypeIDs#STRING_FLAG} event
 	 *            with the value "FlightRecorderOptions"

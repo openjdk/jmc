@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -42,7 +42,7 @@ public class MapToolkit {
 	/**
 	 * A map entry used to store integer values. Used by maps created with
 	 * {@link MapToolkit#createIntMap(int, float)}.
-	 * 
+	 *
 	 * @param <K>
 	 *            key type
 	 */
@@ -74,7 +74,7 @@ public class MapToolkit {
 
 		/**
 		 * Get the entry value.
-		 * 
+		 *
 		 * @return the value corresponding to this entry
 		 */
 		public int getValue() {
@@ -83,7 +83,7 @@ public class MapToolkit {
 
 		/**
 		 * Set the entry value.
-		 * 
+		 *
 		 * @param value
 		 *            the value corresponding to this entry
 		 */
@@ -95,7 +95,7 @@ public class MapToolkit {
 	/**
 	 * Create a map for storing integers based on a given key type. Typically this is used to access
 	 * and update integer values computed from or for the keys.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            initial storage capacity
 	 * @param loadFactor

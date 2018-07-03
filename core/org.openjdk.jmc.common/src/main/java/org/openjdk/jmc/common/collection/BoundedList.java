@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -58,7 +58,7 @@ public class BoundedList<T> implements Iterable<T> {
 	 * wrapping the values.
 	 * <p>
 	 * The most obvious implementation of these methods by a class is like this:
-	 * 
+	 *
 	 * <pre>
 	 * <code>
 	 * public INode&lt;MyValue&gt; getNext() {
@@ -72,32 +72,32 @@ public class BoundedList<T> implements Iterable<T> {
 	 * }
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param <T>
 	 *            type of the stored elements
 	 */
-	public static interface INode<T> {
+	public interface INode<T> {
 		/**
 		 * Get the next node in the list.
-		 * 
+		 *
 		 * @return the next node
 		 */
-		public INode<T> getNext();
+		INode<T> getNext();
 
 		/**
 		 * Set the next node in the list.
-		 * 
+		 *
 		 * @param next
 		 *            the next node
 		 */
-		public void setNext(INode<T> next);
+		void setNext(INode<T> next);
 
 		/**
 		 * Get the value of this node.
-		 * 
+		 *
 		 * @return the node value
 		 */
-		public T getValue();
+		T getValue();
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Create a new bounded list.
-	 * 
+	 *
 	 * @param maxSize
 	 *            maximum number of elements to keep
 	 */
@@ -220,7 +220,7 @@ public class BoundedList<T> implements Iterable<T> {
 	 * Get an iterator from the first available to the last available element at the time the
 	 * iterator was created. Keeping a reference to an iterator for longer than necessary may keep
 	 * memory from properly being reclaimed.
-	 * 
+	 *
 	 * @return an iterator over the list elements
 	 */
 	@Override
@@ -231,7 +231,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Get the first element in the list.
-	 * 
+	 *
 	 * @return the first element
 	 */
 	public synchronized T getFirst() {
@@ -240,7 +240,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Get the last element in the list.
-	 * 
+	 *
 	 * @return the last element
 	 */
 	public synchronized T getLast() {
@@ -249,7 +249,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Get the number of elements in this list.
-	 * 
+	 *
 	 * @return the size of the list
 	 */
 	public synchronized int getSize() {
@@ -258,7 +258,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Get the maximum number of elements to retain in this list.
-	 * 
+	 *
 	 * @return the maximum size of the list
 	 */
 	public synchronized int getMaxSize() {
@@ -267,7 +267,7 @@ public class BoundedList<T> implements Iterable<T> {
 
 	/**
 	 * Set the maximum number of elements to retain in this list.
-	 * 
+	 *
 	 * @param maxSize
 	 *            the maximum size of the list
 	 */

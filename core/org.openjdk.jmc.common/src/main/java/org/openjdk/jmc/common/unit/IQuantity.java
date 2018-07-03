@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -49,11 +49,11 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	IUnit getUnit();
 
 	/**
-	 * Get this quantity expressed in the unit {@code targetUnit}. Note that as a result of
-	 * this conversion, precision may be lost. Partly due to that fact, this method should generally
-	 * not be used. If the ultimate goal is some pure numerical value, there are more suitable
-	 * methods, some of which are listed below, which directly provides such values. In either case,
-	 * the quantity returned from this method should not be kept alive, as the original quantity
+	 * Get this quantity expressed in the unit {@code targetUnit}. Note that as a result of this
+	 * conversion, precision may be lost. Partly due to that fact, this method should generally not
+	 * be used. If the ultimate goal is some pure numerical value, there are more suitable methods,
+	 * some of which are listed below, which directly provides such values. In either case, the
+	 * quantity returned from this method should not be kept alive, as the original quantity
 	 * provides better precision.
 	 *
 	 * @return a quantity, with approximately the same value as this quantity, expressed in
@@ -103,11 +103,10 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	long longValueIn(IUnit targetUnit) throws QuantityConversionException;
 
 	/**
-	 * Get the {@code long} value closest to the numerical quantity value that this quantity
-	 * would have if expressed in the unit {@code targetUnit}. This means that values outside
-	 * the range {@code [} {@link Long#MIN_VALUE}
-	 * {@code ,}{@link Long#MAX_VALUE}{@code ]} will be clamped to the closest extreme.
-	 * Note that as a result of this conversion, precision may be lost.
+	 * Get the {@code long} value closest to the numerical quantity value that this quantity would
+	 * have if expressed in the unit {@code targetUnit}. This means that values outside the range
+	 * {@code [} {@link Long#MIN_VALUE} {@code ,}{@link Long#MAX_VALUE}{@code ]} will be clamped to
+	 * the closest extreme. Note that as a result of this conversion, precision may be lost.
 	 * <p>
 	 * This method is equivalent to {@link #in(IUnit)}@{@code .}{@link #longValue()}, but is
 	 * preferred since it is both cheaper and its name more explicitly conveys the limitations
@@ -121,11 +120,11 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	long clampedLongValueIn(IUnit targetUnit);
 
 	/**
-	 * Get the {@code long} value closest to the floor of the numerical quantity value that
-	 * this quantity would have if expressed in the unit {@code targetUnit}. This means that
-	 * values outside the range{@code [} {@link Long#MIN_VALUE}
-	 * {@code , }{@link Long#MAX_VALUE} {@code ]} will be clamped to the closest extreme.
-	 * Note that as a result of this conversion, precision may be lost.
+	 * Get the {@code long} value closest to the floor of the numerical quantity value that this
+	 * quantity would have if expressed in the unit {@code targetUnit}. This means that values
+	 * outside the range{@code [} {@link Long#MIN_VALUE} {@code , }{@link Long#MAX_VALUE} {@code ]}
+	 * will be clamped to the closest extreme. Note that as a result of this conversion, precision
+	 * may be lost.
 	 *
 	 * @return the floor of the numerical quantity, as a {@code long}
 	 * @throws IllegalArgumentException
@@ -136,9 +135,9 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	/**
 	 * Get the {@code int} value closest to the floor of the numerical quantity value that this
 	 * quantity would have if expressed in the unit {@code targetUnit}. This means that values
-	 * outside the range{@code [} {@link Integer#MIN_VALUE}
-	 * {@code , }{@link Integer#MAX_VALUE} {@code ]} will be clamped to the closest
-	 * extreme. Note that as a result of this conversion, precision may be lost.
+	 * outside the range{@code [} {@link Integer#MIN_VALUE} {@code , }{@link Integer#MAX_VALUE}
+	 * {@code ]} will be clamped to the closest extreme. Note that as a result of this conversion,
+	 * precision may be lost.
 	 *
 	 * @return the floor of the numerical quantity, as an {@code int}
 	 * @throws IllegalArgumentException
@@ -148,8 +147,8 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 
 	/**
 	 * Get the numerical quantity value that this quantity would have if expressed in the unit
-	 * {@code targetUnit}, as a {@code double}. Note that as a result of this conversion,
-	 * precision may be lost.
+	 * {@code targetUnit}, as a {@code double}. Note that as a result of this conversion, precision
+	 * may be lost.
 	 *
 	 * @return the numerical quantity, as a {@code double}
 	 * @throws IllegalArgumentException
@@ -159,11 +158,11 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 
 	/**
 	 * Get the numerical quantity value that this quantity would have if expressed in the unit
-	 * {@code targetUnit}, as either a {@link Long} or a {@link Number} with at least the
-	 * precision of {@code double}. If this quantity is exact, the unit conversion is known to
-	 * be exact, and the result can be exactly represented in a {@code long}, a {@link Long}
-	 * will be returned. Otherwise, some other {@link Number} implementation, such as {@link Double}
-	 * will be returned. Note that as a result of this conversion, precision may be lost.
+	 * {@code targetUnit}, as either a {@link Long} or a {@link Number} with at least the precision
+	 * of {@code double}. If this quantity is exact, the unit conversion is known to be exact, and
+	 * the result can be exactly represented in a {@code long}, a {@link Long} will be returned.
+	 * Otherwise, some other {@link Number} implementation, such as {@link Double} will be returned.
+	 * Note that as a result of this conversion, precision may be lost.
 	 *
 	 * @return the numerical quantity, as a {@link Long} if exact, otherwise as some other
 	 *         {@link Number}
@@ -182,8 +181,8 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	long longValue();
 
 	/**
-	 * Get the numerical quantity value of this quantity as a {@code double}. This may cause
-	 * loss of precision.
+	 * Get the numerical quantity value of this quantity as a {@code double}. This may cause loss of
+	 * precision.
 	 *
 	 * @return the numerical quantity, as a {@code double}
 	 */
@@ -192,7 +191,7 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	/**
 	 * Get the numerical quantity value that this quantity, as either a {@link Long} or a
 	 * {@link Number} with at least the precision of {@code double}.
-	 * 
+	 *
 	 * @return the numerical quantity
 	 */
 	Number numberValue();
@@ -227,8 +226,8 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	boolean isLinear();
 
 	/**
-	 * Returns a new quantity that is the arithmetic sum of this quantity and {@code addend},
-	 * if such an operation is defined for this kind of quantity. This operation is commutative, so
+	 * Returns a new quantity that is the arithmetic sum of this quantity and {@code addend}, if
+	 * such an operation is defined for this kind of quantity. This operation is commutative, so
 	 * that {@code a.add(b)} produces the same result, or throws the same kind of exception, as
 	 * {@code b.add(a)}.
 	 * <p>
@@ -246,9 +245,9 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 
 	/**
 	 * Returns a new quantity that is the arithmetic difference of this quantity and
-	 * {@code subtrahend}, if such an operation is defined for this kind of quantity. This
-	 * operation is anti-commutative when this quantity and {@code subtrahend} are of the same
-	 * kind. That is, when the result is {@linkplain #isLinear() linear}.
+	 * {@code subtrahend}, if such an operation is defined for this kind of quantity. This operation
+	 * is anti-commutative when this quantity and {@code subtrahend} are of the same kind. That is,
+	 * when the result is {@linkplain #isLinear() linear}.
 	 * <p>
 	 * Quantities of the same kind may be subtracted, giving a linear result. Additionally, a linear
 	 * quantity may be subtracted from a non-linear quantity, provided their kinds are related.
@@ -260,8 +259,8 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	IQuantity subtract(IQuantity subtrahend) throws IllegalArgumentException;
 
 	/**
-	 * Returns a new quantity that is this quantity multiplied with {@code factor}, if this is
-	 * a linear quantity. Otherwise, this operation is undefined and
+	 * Returns a new quantity that is this quantity multiplied with {@code factor}, if this is a
+	 * linear quantity. Otherwise, this operation is undefined and
 	 * {@link UnsupportedOperationException} will be thrown.
 	 *
 	 * @return this quantity multiplied with {@code factor}
@@ -271,8 +270,8 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	IQuantity multiply(long factor) throws UnsupportedOperationException;
 
 	/**
-	 * Returns a new quantity that is this quantity multiplied with {@code factor}, if this is
-	 * a linear quantity. Otherwise, this operation is undefined and
+	 * Returns a new quantity that is this quantity multiplied with {@code factor}, if this is a
+	 * linear quantity. Otherwise, this operation is undefined and
 	 * {@link UnsupportedOperationException} will be thrown.
 	 *
 	 * @return this quantity multiplied with {@code factor}
@@ -282,12 +281,10 @@ public interface IQuantity extends IItem, IDisplayable, Comparable<IQuantity> {
 	IQuantity multiply(double factor) throws UnsupportedOperationException;
 
 	/**
-	 * Compute the ratio of this quantity to the given {@code consequent} quantity, if both
-	 * are of the same linear kind. Otherwise, this operation is undefined and an exception is
-	 * thrown.
+	 * Compute the ratio of this quantity to the given {@code consequent} quantity, if both are of
+	 * the same linear kind. Otherwise, this operation is undefined and an exception is thrown.
 	 *
-	 * @return the ratio of this quantity to {@code consequent}, as a {@code double}
-	 *         fraction
+	 * @return the ratio of this quantity to {@code consequent}, as a {@code double} fraction
 	 * @throws UnsupportedOperationException
 	 *             if this quantity is not linear
 	 * @throws IllegalArgumentException

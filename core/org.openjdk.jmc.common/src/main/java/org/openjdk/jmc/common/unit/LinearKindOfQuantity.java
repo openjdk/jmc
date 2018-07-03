@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -129,7 +129,7 @@ public class LinearKindOfQuantity extends KindOfQuantity<LinearUnit> {
 		return interactive ? NUMBER_FORMAT_INTERACTIVE_HOLDER.get() : NUMBER_FORMAT_DISPLAY_HOLDER.get();
 	}
 
-	public static interface LinearUnitSelector extends UnitSelector<LinearUnit> {
+	public interface LinearUnitSelector extends UnitSelector<LinearUnit> {
 		/*
 		 * FIXME: Specify "best", so that for example a lower value is preferred, and whether the
 		 * upper or implicit lower limit is exclusive, to make the result well defined.
@@ -193,7 +193,7 @@ public class LinearKindOfQuantity extends KindOfQuantity<LinearUnit> {
 	public static class DualUnitFormatter extends DisplayFormatter<IQuantity> {
 		/*
 		 * Related to (the mantissa of) Double.MIN_VALUE but with safety factor above 1000.
-		 * 
+		 *
 		 * This value is equal to 0x0.0000000001P0 but since Fortify can't handle hexadecimal
 		 * doubles we use longBitsToDouble instead.
 		 */
@@ -667,12 +667,12 @@ public class LinearKindOfQuantity extends KindOfQuantity<LinearUnit> {
 			throws QuantityConversionException {
 		/*
 		 * Treat non-breaking spaces as regular breaking spaces.
-		 * 
+		 *
 		 * Note that non-breaking space should be used between number and unit in regular (display)
 		 * formatters, and also between digit groups for some locales. However, for interactive
 		 * parsing or content assist purposes, we shouldn't distinguish between them, since they
 		 * cannot be visually distinguished.
-		 * 
+		 *
 		 * (Since display formatting outnumbers interactive formatting/parsing by at least several
 		 * magnitudes, and contains a superset of the information, it makes sense to keep
 		 * information used both for display and interactively with non-braking space, where
