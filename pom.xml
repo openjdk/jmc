@@ -37,6 +37,37 @@
 	<artifactId>missioncontrol</artifactId>
 	<version>7.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<name>JDK Mission Control</name>
+	<description>Java Mission Control is an advanced set of tools that enables 
+		efficient and detailed analysis of the extensive of data collected by 
+		Java Flight Recorder. The tool chain enables developers and 
+		administrators to collect and analyze data from Java applications 
+		running locally or deployed in production environments.
+	</description>
+  	<url>http://jdk.java.net/jmc</url>
+  	<licenses>
+		<license>
+			<name>Universal Permissive License Version 1.0</name>
+			<url>http://oss.oracle.com/licenses/upl</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<organization>
+		<name>Oracle</name>
+		<url>https://www.oracle.com</url>
+	</organization>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+	</issueManagement>
+	<mailingLists>
+		<mailingList>
+			<name>jmc dev</name>
+			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+		</mailingList>
+	</mailingLists>
 	<modules>
 		<module>core</module>
 		<module>application</module>
@@ -52,6 +83,12 @@
 	<scm>
 		<connection>${scmConnection}</connection>
 	</scm>
+	<distributionManagement>
+			<snapshotRepository>
+			<id>jmc-publish-snapshot</id>
+			<url>${snapshot.repo}</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<profiles>
 		<profile>
 			<id>photon</id>
@@ -101,6 +138,14 @@
 	</profiles>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
