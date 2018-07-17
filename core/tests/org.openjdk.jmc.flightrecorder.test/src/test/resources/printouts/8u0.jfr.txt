@@ -30,7 +30,7 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
 #  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063157208110511 epochns</(endTime)>
   <eventThread name="Thread">VM JFR Buffer Thread</eventThread>
   <stackTrace>
@@ -44,7 +44,7 @@
   <allocationSize name="Allocation Size">24 B</allocationSize>
   <tlabSize name="TLAB Size">136312 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063158206868058 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <stackTrace>
@@ -55,7 +55,7 @@
   <allocationSize name="Allocation Size">96 B</allocationSize>
   <tlabSize name="TLAB Size">136336 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063158221195360 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -102,7 +102,7 @@
   <allocationSize name="Allocation Size">192 B</allocationSize>
   <tlabSize name="TLAB Size">77488 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063159229020128 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -134,7 +134,7 @@
   <allocationSize name="Allocation Size">1040 B</allocationSize>
   <tlabSize name="TLAB Size">78336 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063161242009214 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -162,7 +162,7 @@
   <allocationSize name="Allocation Size">32 B</allocationSize>
   <tlabSize name="TLAB Size">77328 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063163255267259 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -193,7 +193,7 @@
   <allocationSize name="Allocation Size">1040 B</allocationSize>
   <tlabSize name="TLAB Size">78336 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063164260833831 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -250,7 +250,7 @@
   <allocationSize name="Allocation Size">80 B</allocationSize>
   <tlabSize name="TLAB Size">77376 B</tlabSize>
 </event>
-<event name="Allocation in new TLAB" path="com.oracle.jdk.ObjectAllocationInNewTLAB">
+<event name="Allocation in new TLAB" path="jdk.ObjectAllocationInNewTLAB">
   <(endTime) name="End Time">1524063166278500901 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -271,7 +271,7 @@
   <allocationSize name="Allocation Size">528 B</allocationSize>
   <tlabSize name="TLAB Size">77824 B</tlabSize>
 </event>
-<event name="CPU Information" path="com.oracle.jdk.CPUInformation">
+<event name="CPU Information" path="jdk.CPUInformation">
   <(endTime) name="End Time">1524063167208719867 epochns</(endTime)>
   <cpu name="Type">Intel (null) (HT) SSE SSE2 SSE3 SSSE3 SSE4.1 SSE4.2 Core Intel64</cpu>
   <description name="Description">Brand: Intel(R) Core(TM) i7-6660U CPU @ 2.40GHz, Vendor: GenuineIntel
@@ -284,152 +284,152 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <cores name="Cores">2</cores>
   <hwThreads name="Hardware Threads">4</hwThreads>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063159203763849 epochns</(endTime)>
   <jvmUser name="JVM User">0.0036090207286179066</jvmUser>
   <jvmSystem name="JVM System">0.0014480628306046128</jvmSystem>
   <machineTotal name="Machine Total">0.10075566917657852</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063160205869984 epochns</(endTime)>
   <jvmUser name="JVM User">0.0026460401713848114</jvmUser>
   <jvmSystem name="JVM System">0.0012290501035749912</jvmSystem>
   <machineTotal name="Machine Total">0.1820448935031891</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063161206019831 epochns</(endTime)>
   <jvmUser name="JVM User">0.004103283863514662</jvmUser>
   <jvmSystem name="JVM System">0.001320723327808082</jvmSystem>
   <machineTotal name="Machine Total">0.10972568392753601</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063162206770135 epochns</(endTime)>
   <jvmUser name="JVM User">0.0037539759650826454</jvmUser>
   <jvmSystem name="JVM System">0.001447705551981926</jvmSystem>
   <machineTotal name="Machine Total">0.11999999731779099</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063163208844956 epochns</(endTime)>
   <jvmUser name="JVM User">0.003961910493671894</jvmUser>
   <jvmSystem name="JVM System">0.001407285570167005</jvmSystem>
   <machineTotal name="Machine Total">0.13216957449913025</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063164209603970 epochns</(endTime)>
   <jvmUser name="JVM User">0.005837896838784218</jvmUser>
   <jvmSystem name="JVM System">0.0014008268481120467</jvmSystem>
   <machineTotal name="Machine Total">0.1371571123600006</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063165210699410 epochns</(endTime)>
   <jvmUser name="JVM User">0.0024994865525513887</jvmUser>
   <jvmSystem name="JVM System">0.0013946868712082505</jvmSystem>
   <machineTotal name="Machine Total">0.12999999523162842</machineTotal>
 </event>
-<event name="CPU Load" path="com.oracle.jdk.CPULoad">
+<event name="CPU Load" path="jdk.CPULoad">
   <(endTime) name="End Time">1524063166213434200 epochns</(endTime)>
   <jvmUser name="JVM User">0.0015827696770429611</jvmUser>
   <jvmSystem name="JVM System">0.001365525764413178</jvmSystem>
   <machineTotal name="Machine Total">0.10918114334344864</machineTotal>
 </event>
-<event name="CPU Time Stamp Counter" path="com.oracle.jdk.CPUTimeStampCounter">
+<event name="CPU Time Stamp Counter" path="jdk.CPUTimeStampCounter">
   <(endTime) name="End Time">1524063167208782136 epochns</(endTime)>
   <fastTimeEnabled name="Fast Time">true</fastTimeEnabled>
   <fastTimeAutoEnabled name="Trusted Platform">true</fastTimeAutoEnabled>
   <osFrequency name="OS Frequency Per Second">1000000000</osFrequency>
   <fastTimeFrequency name="Fast Time Frequency per Second">2400000000</fastTimeFrequency>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063158203496927 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3731</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063159203768565 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3732</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063160205903658 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3733</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063161206023748 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3733</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063162206774294 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3733</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063163208849192 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3733</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063164209608008 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3733</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063165210704431 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3738</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Class Loading Statistics" path="com.oracle.jdk.ClassLoadingStatistics">
+<event name="Class Loading Statistics" path="jdk.ClassLoadingStatistics">
   <(endTime) name="End Time">1524063166213438823 epochns</(endTime)>
   <loadedClassCount name="Loaded Class Count">3738</loadedClassCount>
   <unloadedClassCount name="Unloaded Class Count">0</unloadedClassCount>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063158207092127 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063159209642893 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063160210005925 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063161210251615 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063162210621310 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063163215935770 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063164220496728 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063165223562087 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Exception Statistics" path="com.oracle.jdk.ExceptionStatistics">
+<event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <(endTime) name="End Time">1524063166224743815 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
   <throwables name="Exceptions Created">699</throwables>
 </event>
-<event name="Flight Recording" path="com.oracle.jdk.ActiveRecording">
+<event name="Flight Recording" path="jdk.ActiveRecording">
   <(endTime) name="End Time">1524063157209059886 epochns</(endTime)>
   <compress name="Compress Recording File">false</compress>
   <recordingStart name="Recording Start">1524063157206 epochms</recordingStart>
@@ -440,7 +440,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <name name="Name">My Recording</name>
   <id name="Id">1</id>
 </event>
-<event name="GC Configuration" path="com.oracle.jdk.GCConfiguration">
+<event name="GC Configuration" path="jdk.GCConfiguration">
   <(endTime) name="End Time">1524063167208786880 epochns</(endTime)>
   <youngCollector name="Young Garbage Collector">ParallelScavenge</youngCollector>
   <oldCollector name="Old Garbage Collector">ParallelOld</oldCollector>
@@ -452,7 +452,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <pauseTarget name="Pause Target">-9223372036854775808 ms</pauseTarget>
   <gcTimeRatio name="GC Time Ratio">99</gcTimeRatio>
 </event>
-<event name="GC Heap Configuration" path="com.oracle.jdk.GCHeapConfiguration">
+<event name="GC Heap Configuration" path="jdk.GCHeapConfiguration">
   <(endTime) name="End Time">1524063167208789095 epochns</(endTime)>
   <minSize name="Minimum Heap Size">6815736 B</minSize>
   <maxSize name="Maximum Heap Size">4294967296 B</maxSize>
@@ -462,24 +462,24 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <objectAlignment name="Object Alignment">8 B</objectAlignment>
   <heapAddressBits name="Heap Address Size">32</heapAddressBits>
 </event>
-<event name="GC Survivor Configuration" path="com.oracle.jdk.GCSurvivorConfiguration">
+<event name="GC Survivor Configuration" path="jdk.GCSurvivorConfiguration">
   <(endTime) name="End Time">1524063167208787755 epochns</(endTime)>
   <maxTenuringThreshold name="Maximum Tenuring Threshold">15</maxTenuringThreshold>
   <initialTenuringThreshold name="Initial Tenuring Threshold">7</initialTenuringThreshold>
 </event>
-<event name="GC TLAB Configuration" path="com.oracle.jdk.GCTLABConfiguration">
+<event name="GC TLAB Configuration" path="jdk.GCTLABConfiguration">
   <(endTime) name="End Time">1524063167208788310 epochns</(endTime)>
   <usesTLABs name="TLABs Used">true</usesTLABs>
   <minTLABSize name="Minimum TLAB Size">2048 B</minTLABSize>
   <tlabRefillWasteLimit name="TLAB Refill Waste Limit">64 B</tlabRefillWasteLimit>
 </event>
-<event name="GC Young Generation Configuration" path="com.oracle.jdk.YoungGenerationConfiguration">
+<event name="GC Young Generation Configuration" path="jdk.YoungGenerationConfiguration">
   <(endTime) name="End Time">1524063167208789742 epochns</(endTime)>
   <minSize name="Minimum Young Generation Size">1572864 B</minSize>
   <maxSize name="Maximum Young Generation Size">1431306240 B</maxSize>
   <newRatio name="New Ratio">2</newRatio>
 </event>
-<event name="JVM Information" path="com.oracle.jdk.JVMInformation">
+<event name="JVM Information" path="jdk.JVMInformation">
   <(endTime) name="End Time">1524063167208686502 epochns</(endTime)>
   <jvmName name="JVM Name">Java HotSpot(TM) 64-Bit Server VM</jvmName>
   <jvmVersion name="JVM Version">Java HotSpot(TM) 64-Bit Server VM (25.0-b70) for bsd-amd64 JRE (1.8.0-b132), built on Mar  4 2014 03:11:43 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</jvmVersion>
@@ -488,7 +488,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <javaArguments name="Java Application Arguments">jdk1.8.0.jdk/Contents/Home/lib/jconsole.jar</javaArguments>
   <jvmStartTime name="JVM Start Time">1524063139749 epochms</jvmStartTime>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157215047083 epochns</startTime>
   <(endTime) name="End Time">1524063157317245095 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -502,7 +502,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157317270463 epochns</startTime>
   <(endTime) name="End Time">1524063157420801166 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -516,7 +516,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157420825348 epochns</startTime>
   <(endTime) name="End Time">1524063157524668470 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -530,7 +530,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157524696127 epochns</startTime>
   <(endTime) name="End Time">1524063157628355232 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -544,7 +544,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157628398397 epochns</startTime>
   <(endTime) name="End Time">1524063157730557334 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -558,7 +558,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157730582265 epochns</startTime>
   <(endTime) name="End Time">1524063157833304769 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -572,7 +572,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157833334878 epochns</startTime>
   <(endTime) name="End Time">1524063157936991498 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -586,7 +586,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063157937028475 epochns</startTime>
   <(endTime) name="End Time">1524063158040449357 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -600,7 +600,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158040487234 epochns</startTime>
   <(endTime) name="End Time">1524063158142005915 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -614,7 +614,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158142041681 epochns</startTime>
   <(endTime) name="End Time">1524063158242860690 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -628,7 +628,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158208100505 epochns</startTime>
   <(endTime) name="End Time">1524063159209575039 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -643,7 +643,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158242899362 epochns</startTime>
   <(endTime) name="End Time">1524063158346976590 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -657,7 +657,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158347119132 epochns</startTime>
   <(endTime) name="End Time">1524063158450710385 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -671,7 +671,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158450740631 epochns</startTime>
   <(endTime) name="End Time">1524063158551389803 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -685,7 +685,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158551427529 epochns</startTime>
   <(endTime) name="End Time">1524063158653028169 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -699,7 +699,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158653067067 epochns</startTime>
   <(endTime) name="End Time">1524063158758112415 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -713,7 +713,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158758153072 epochns</startTime>
   <(endTime) name="End Time">1524063158858212748 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -727,7 +727,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158858237945 epochns</startTime>
   <(endTime) name="End Time">1524063158958374220 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -741,7 +741,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063158958410176 epochns</startTime>
   <(endTime) name="End Time">1524063159059345717 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -755,7 +755,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159059389235 epochns</startTime>
   <(endTime) name="End Time">1524063159160000435 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -769,7 +769,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159160032744 epochns</startTime>
   <(endTime) name="End Time">1524063159260743094 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -783,7 +783,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159209676956 epochns</startTime>
   <(endTime) name="End Time">1524063160209954627 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -798,7 +798,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159260769195 epochns</startTime>
   <(endTime) name="End Time">1524063159360947859 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -812,7 +812,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159360978357 epochns</startTime>
   <(endTime) name="End Time">1524063159461705447 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -826,7 +826,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159461730856 epochns</startTime>
   <(endTime) name="End Time">1524063159563943985 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -840,7 +840,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159563968336 epochns</startTime>
   <(endTime) name="End Time">1524063159667489510 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -854,7 +854,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159667536085 epochns</startTime>
   <(endTime) name="End Time">1524063159767903710 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -868,7 +868,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159767951558 epochns</startTime>
   <(endTime) name="End Time">1524063159869365550 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -882,7 +882,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159869404346 epochns</startTime>
   <(endTime) name="End Time">1524063159969453741 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -896,7 +896,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063159969493020 epochns</startTime>
   <(endTime) name="End Time">1524063160070816290 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -910,7 +910,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160070847416 epochns</startTime>
   <(endTime) name="End Time">1524063160174709801 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -924,7 +924,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160174740475 epochns</startTime>
   <(endTime) name="End Time">1524063160277070984 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -938,7 +938,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160210037427 epochns</startTime>
   <(endTime) name="End Time">1524063161210166035 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -953,7 +953,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160277100563 epochns</startTime>
   <(endTime) name="End Time">1524063160377192870 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -967,7 +967,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160377234351 epochns</startTime>
   <(endTime) name="End Time">1524063160480721540 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -981,7 +981,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160480757127 epochns</startTime>
   <(endTime) name="End Time">1524063160584169145 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -995,7 +995,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160584207125 epochns</startTime>
   <(endTime) name="End Time">1524063160687759993 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1009,7 +1009,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160687799430 epochns</startTime>
   <(endTime) name="End Time">1524063160790820388 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1023,7 +1023,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160790852044 epochns</startTime>
   <(endTime) name="End Time">1524063160891425197 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1037,7 +1037,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160891458330 epochns</startTime>
   <(endTime) name="End Time">1524063160992787051 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1051,7 +1051,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063160992836319 epochns</startTime>
   <(endTime) name="End Time">1524063161094065518 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1065,7 +1065,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161094106055 epochns</startTime>
   <(endTime) name="End Time">1524063161194238119 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1079,7 +1079,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161194264317 epochns</startTime>
   <(endTime) name="End Time">1524063161296777963 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1093,7 +1093,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161210278820 epochns</startTime>
   <(endTime) name="End Time">1524063162210570774 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1108,7 +1108,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161296808266 epochns</startTime>
   <(endTime) name="End Time">1524063161400219041 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1122,7 +1122,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161400264186 epochns</startTime>
   <(endTime) name="End Time">1524063161505059281 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1136,7 +1136,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161505097353 epochns</startTime>
   <(endTime) name="End Time">1524063161607973228 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1150,7 +1150,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161608009772 epochns</startTime>
   <(endTime) name="End Time">1524063161710462110 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1164,7 +1164,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161710498630 epochns</startTime>
   <(endTime) name="End Time">1524063161812592104 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1178,7 +1178,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161812629535 epochns</startTime>
   <(endTime) name="End Time">1524063161917550580 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1192,7 +1192,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063161917596272 epochns</startTime>
   <(endTime) name="End Time">1524063162018175388 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1206,7 +1206,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162018215460 epochns</startTime>
   <(endTime) name="End Time">1524063162120430105 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1220,7 +1220,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162120468897 epochns</startTime>
   <(endTime) name="End Time">1524063162224763860 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1234,7 +1234,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162210651679 epochns</startTime>
   <(endTime) name="End Time">1524063163215872902 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1249,7 +1249,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162224796610 epochns</startTime>
   <(endTime) name="End Time">1524063162329810315 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1263,7 +1263,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162329845255 epochns</startTime>
   <(endTime) name="End Time">1524063162433407127 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1277,7 +1277,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162433443757 epochns</startTime>
   <(endTime) name="End Time">1524063162534098966 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1291,7 +1291,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162534134331 epochns</startTime>
   <(endTime) name="End Time">1524063162637809910 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1305,7 +1305,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162637849536 epochns</startTime>
   <(endTime) name="End Time">1524063162738066563 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1319,7 +1319,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162738107609 epochns</startTime>
   <(endTime) name="End Time">1524063162839353594 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1333,7 +1333,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162839400432 epochns</startTime>
   <(endTime) name="End Time">1524063162943473617 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1347,7 +1347,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063162943520270 epochns</startTime>
   <(endTime) name="End Time">1524063163043645304 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1361,7 +1361,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163043676336 epochns</startTime>
   <(endTime) name="End Time">1524063163147752351 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1375,7 +1375,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163147795325 epochns</startTime>
   <(endTime) name="End Time">1524063163247884100 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1389,7 +1389,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163215975942 epochns</startTime>
   <(endTime) name="End Time">1524063164220420996 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1404,7 +1404,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163247918460 epochns</startTime>
   <(endTime) name="End Time">1524063163350482223 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1418,7 +1418,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163350521665 epochns</startTime>
   <(endTime) name="End Time">1524063163450990436 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1432,7 +1432,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163451024766 epochns</startTime>
   <(endTime) name="End Time">1524063163551313565 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1446,7 +1446,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163551355868 epochns</startTime>
   <(endTime) name="End Time">1524063163652172160 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1460,7 +1460,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163652216632 epochns</startTime>
   <(endTime) name="End Time">1524063163757270660 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1474,7 +1474,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163757308882 epochns</startTime>
   <(endTime) name="End Time">1524063163858684991 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1488,7 +1488,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163858719939 epochns</startTime>
   <(endTime) name="End Time">1524063163961694150 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1502,7 +1502,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063163961742585 epochns</startTime>
   <(endTime) name="End Time">1524063164064597201 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1516,7 +1516,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164064636109 epochns</startTime>
   <(endTime) name="End Time">1524063164167427962 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1530,7 +1530,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164167476525 epochns</startTime>
   <(endTime) name="End Time">1524063164267976496 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1544,7 +1544,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164220582192 epochns</startTime>
   <(endTime) name="End Time">1524063165223466453 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1559,7 +1559,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164268006060 epochns</startTime>
   <(endTime) name="End Time">1524063164368151002 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1573,7 +1573,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164368218364 epochns</startTime>
   <(endTime) name="End Time">1524063164469648676 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1587,7 +1587,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164469687041 epochns</startTime>
   <(endTime) name="End Time">1524063164573794154 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1601,7 +1601,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164573829629 epochns</startTime>
   <(endTime) name="End Time">1524063164677142290 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1615,7 +1615,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164677190915 epochns</startTime>
   <(endTime) name="End Time">1524063164778148996 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1629,7 +1629,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164778172424 epochns</startTime>
   <(endTime) name="End Time">1524063164879611346 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1643,7 +1643,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164879645228 epochns</startTime>
   <(endTime) name="End Time">1524063164984242936 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1657,7 +1657,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063164984273252 epochns</startTime>
   <(endTime) name="End Time">1524063165084825752 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1671,7 +1671,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165084881221 epochns</startTime>
   <(endTime) name="End Time">1524063165187740337 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1685,7 +1685,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165187775663 epochns</startTime>
   <(endTime) name="End Time">1524063165291275899 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1699,7 +1699,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165223645937 epochns</startTime>
   <(endTime) name="End Time">1524063166224683364 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1714,7 +1714,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165291316132 epochns</startTime>
   <(endTime) name="End Time">1524063165392686330 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1728,7 +1728,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165392717088 epochns</startTime>
   <(endTime) name="End Time">1524063165496640942 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1742,7 +1742,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165496674933 epochns</startTime>
   <(endTime) name="End Time">1524063165600188919 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1756,7 +1756,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165600237154 epochns</startTime>
   <(endTime) name="End Time">1524063165700791453 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1770,7 +1770,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165700837718 epochns</startTime>
   <(endTime) name="End Time">1524063165801444882 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1784,7 +1784,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165801473223 epochns</startTime>
   <(endTime) name="End Time">1524063165903777853 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1798,7 +1798,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063165903820095 epochns</startTime>
   <(endTime) name="End Time">1524063166007191468 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1812,7 +1812,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166007226922 epochns</startTime>
   <(endTime) name="End Time">1524063166110934940 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1826,7 +1826,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166110965398 epochns</startTime>
   <(endTime) name="End Time">1524063166213404201 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1840,7 +1840,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166213449359 epochns</startTime>
   <(endTime) name="End Time">1524063166317487823 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1854,7 +1854,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166225002174 epochns</startTime>
   <(endTime) name="End Time">1524063167207905360 epochns</(endTime)>
   <eventThread name="Thread">JFR request timer</eventThread>
@@ -1869,7 +1869,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659944196960</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166317530325 epochns</startTime>
   <(endTime) name="End Time">1524063166422743920 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1883,7 +1883,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166422783237 epochns</startTime>
   <(endTime) name="End Time">1524063166524457895 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1897,7 +1897,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166524497220 epochns</startTime>
   <(endTime) name="End Time">1524063166624718125 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1911,7 +1911,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166624751851 epochns</startTime>
   <(endTime) name="End Time">1524063166727485802 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1925,7 +1925,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166727521955 epochns</startTime>
   <(endTime) name="End Time">1524063166829776199 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1939,7 +1939,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166829802150 epochns</startTime>
   <(endTime) name="End Time">1524063166934132739 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1953,7 +1953,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063166934168470 epochns</startTime>
   <(endTime) name="End Time">1524063167038354990 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1967,7 +1967,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Monitor Wait" path="com.oracle.jdk.JavaMonitorWait">
+<event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524063167038389814 epochns</startTime>
   <(endTime) name="End Time">1524063167140035460 epochns</(endTime)>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
@@ -1981,70 +1981,70 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <timedOut name="Timed Out">true</timedOut>
   <address name="Monitor Address">140659961937424</address>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063158203491180 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063159203767770 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063160205901926 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063161206022257 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063162206773297 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063163208848072 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063164209606510 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063165210703520 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Java Thread Statistics" path="com.oracle.jdk.JavaThreadStatistics">
+<event name="Java Thread Statistics" path="jdk.JavaThreadStatistics">
   <(endTime) name="End Time">1524063166213437720 epochns</(endTime)>
   <activeCount name="Active Threads">19</activeCount>
   <daemonCount name="Daemon Threads">16</daemonCount>
   <accumulatedCount name="Accumulated Threads">22</accumulatedCount>
   <peakCount name="Peak Threads">19</peakCount>
 </event>
-<event name="Method Profiling Sample" path="com.oracle.jdk.ExecutionSample">
+<event name="Method Profiling Sample" path="jdk.ExecutionSample">
   <(endTime) name="End Time">1524063157215137596 epochns</(endTime)>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
   <stackTrace>
@@ -2108,1657 +2108,1657 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   </stackTrace>
   <state name="Thread State">STATE_RUNNABLE</state>
 </event>
-<event name="OS Information" path="com.oracle.jdk.OSInformation">
+<event name="OS Information" path="jdk.OSInformation">
   <(endTime) name="End Time">1524063167208717723 epochns</(endTime)>
   <osVersion name="OS Version">Bsduname:Darwin 16.7.0 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64 x86_64
 </osVersion>
 </event>
-<event name="Physical Memory" path="com.oracle.jdk.PhysicalMemory">
+<event name="Physical Memory" path="jdk.PhysicalMemory">
   <(endTime) name="End Time">1524063157208041538 epochns</(endTime)>
   <totalSize name="Total Size">17179869184 B</totalSize>
   <usedSize name="Used Size">16659435520 B</usedSize>
 </event>
-<event name="Physical Memory" path="com.oracle.jdk.PhysicalMemory">
+<event name="Physical Memory" path="jdk.PhysicalMemory">
   <(endTime) name="End Time">1524063167208683827 epochns</(endTime)>
   <totalSize name="Total Size">17179869184 B</totalSize>
   <usedSize name="Used Size">16668917760 B</usedSize>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157209932100 epochns</(endTime)>
   <settingFor name="Setting For">Flight Recording</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157209932100 epochns</(endTime)>
   <settingFor name="Setting For">Flight Recording</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157209932100 epochns</(endTime)>
   <settingFor name="Setting For">Flight Recording</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210050430 epochns</(endTime)>
   <settingFor name="Setting For">Recording Setting</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210050430 epochns</(endTime)>
   <settingFor name="Setting For">Recording Setting</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210050430 epochns</(endTime)>
   <settingFor name="Setting For">Recording Setting</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210093896 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Start</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210093896 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Start</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210093896 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Start</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210163151 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread End</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210163151 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread End</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210163151 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread End</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210193715 epochns</(endTime)>
   <settingFor name="Setting For">Java Exception</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210193715 epochns</(endTime)>
   <settingFor name="Setting For">Java Exception</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210193715 epochns</(endTime)>
   <settingFor name="Setting For">Java Exception</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210234103 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210234103 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210234103 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210234103 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210269828 epochns</(endTime)>
   <settingFor name="Setting For">Java Error</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210269828 epochns</(endTime)>
   <settingFor name="Setting For">Java Error</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210269828 epochns</(endTime)>
   <settingFor name="Setting For">Java Error</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210305986 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Park</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210305986 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Park</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210305986 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Park</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210305986 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Park</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210338134 epochns</(endTime)>
   <settingFor name="Setting For">Exception Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210338134 epochns</(endTime)>
   <settingFor name="Setting For">Exception Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">1000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210338134 epochns</(endTime)>
   <settingFor name="Setting For">Exception Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210377106 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210377106 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210377106 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210377106 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210410755 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210410755 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210410755 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210410755 epochns</(endTime)>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210453854 epochns</(endTime)>
   <settingFor name="Setting For">Class Load</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210453854 epochns</(endTime)>
   <settingFor name="Setting For">Class Load</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210453854 epochns</(endTime)>
   <settingFor name="Setting For">Class Load</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210453854 epochns</(endTime)>
   <settingFor name="Setting For">Class Load</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210480024 epochns</(endTime)>
   <settingFor name="Setting For">Class Unload</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210480024 epochns</(endTime)>
   <settingFor name="Setting For">Class Unload</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210480024 epochns</(endTime)>
   <settingFor name="Setting For">Class Unload</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210507330 epochns</(endTime)>
   <settingFor name="Setting For">Heap Summary</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210507330 epochns</(endTime)>
   <settingFor name="Setting For">Heap Summary</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210507330 epochns</(endTime)>
   <settingFor name="Setting For">Heap Summary</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210537100 epochns</(endTime)>
   <settingFor name="Setting For">Metaspace Summary</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210537100 epochns</(endTime)>
   <settingFor name="Setting For">Metaspace Summary</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210537100 epochns</(endTime)>
   <settingFor name="Setting For">Metaspace Summary</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210619157 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Scavenge Heap Summary</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210619157 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Scavenge Heap Summary</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210619157 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Scavenge Heap Summary</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210660634 epochns</(endTime)>
   <settingFor name="Setting For">Garbage Collection</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210660634 epochns</(endTime)>
   <settingFor name="Setting For">Garbage Collection</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210660634 epochns</(endTime)>
   <settingFor name="Setting For">Garbage Collection</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210660634 epochns</(endTime)>
   <settingFor name="Setting For">Garbage Collection</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210704036 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210704036 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210704036 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210704036 epochns</(endTime)>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210758745 epochns</(endTime)>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210758745 epochns</(endTime)>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210758745 epochns</(endTime)>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210758745 epochns</(endTime)>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210810516 epochns</(endTime)>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210810516 epochns</(endTime)>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210810516 epochns</(endTime)>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210810516 epochns</(endTime)>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210858413 epochns</(endTime)>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210858413 epochns</(endTime)>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210858413 epochns</(endTime)>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210858413 epochns</(endTime)>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210905787 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Information</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210905787 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Information</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210905787 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Information</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210947970 epochns</(endTime)>
   <settingFor name="Setting For">GC Reference Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210947970 epochns</(endTime)>
   <settingFor name="Setting For">GC Reference Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210947970 epochns</(endTime)>
   <settingFor name="Setting For">GC Reference Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210988772 epochns</(endTime)>
   <settingFor name="Setting For">Object Count after GC</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210988772 epochns</(endTime)>
   <settingFor name="Setting For">Object Count after GC</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157210988772 epochns</(endTime)>
   <settingFor name="Setting For">Object Count after GC</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211037313 epochns</(endTime)>
   <settingFor name="Setting For">Promotion Failed</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211037313 epochns</(endTime)>
   <settingFor name="Setting For">Promotion Failed</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211037313 epochns</(endTime)>
   <settingFor name="Setting For">Promotion Failed</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211078250 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Failed</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211078250 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Failed</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211078250 epochns</(endTime)>
   <settingFor name="Setting For">Evacuation Failed</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211118819 epochns</(endTime)>
   <settingFor name="Setting For">Concurrent Mode Failure</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211118819 epochns</(endTime)>
   <settingFor name="Setting For">Concurrent Mode Failure</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211118819 epochns</(endTime)>
   <settingFor name="Setting For">Concurrent Mode Failure</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211168793 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211168793 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211168793 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211168793 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211200702 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211200702 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211200702 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211200702 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211241760 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211241760 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211241760 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211241760 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211281690 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211281690 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211281690 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211281690 epochns</(endTime)>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">0 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211322495 epochns</(endTime)>
   <settingFor name="Setting For">Compilation</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211322495 epochns</(endTime)>
   <settingFor name="Setting For">Compilation</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211322495 epochns</(endTime)>
   <settingFor name="Setting For">Compilation</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211322495 epochns</(endTime)>
   <settingFor name="Setting For">Compilation</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">100000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211356840 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Phase</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211356840 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Phase</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211356840 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Phase</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211356840 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Phase</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211805510 epochns</(endTime)>
   <settingFor name="Setting For">Compilation Failure</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211805510 epochns</(endTime)>
   <settingFor name="Setting For">Compilation Failure</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211805510 epochns</(endTime)>
   <settingFor name="Setting For">Compilation Failure</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211840869 epochns</(endTime)>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211840869 epochns</(endTime)>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211840869 epochns</(endTime)>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211840869 epochns</(endTime)>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">100000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211877110 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Full</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211877110 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Full</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211877110 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Full</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211911789 epochns</(endTime)>
   <settingFor name="Setting For">VM Operation</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211911789 epochns</(endTime)>
   <settingFor name="Setting For">VM Operation</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211911789 epochns</(endTime)>
   <settingFor name="Setting For">VM Operation</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211911789 epochns</(endTime)>
   <settingFor name="Setting For">VM Operation</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">10000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211947280 epochns</(endTime)>
   <settingFor name="Setting For">Allocation in new TLAB</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211947280 epochns</(endTime)>
   <settingFor name="Setting For">Allocation in new TLAB</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211947280 epochns</(endTime)>
   <settingFor name="Setting For">Allocation in new TLAB</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211990655 epochns</(endTime)>
   <settingFor name="Setting For">Allocation outside TLAB</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211990655 epochns</(endTime)>
   <settingFor name="Setting For">Allocation outside TLAB</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157211990655 epochns</(endTime)>
   <settingFor name="Setting For">Allocation outside TLAB</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212035170 epochns</(endTime)>
   <settingFor name="Setting For">JVM Information</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212035170 epochns</(endTime)>
   <settingFor name="Setting For">JVM Information</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212035170 epochns</(endTime)>
   <settingFor name="Setting For">JVM Information</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212060566 epochns</(endTime)>
   <settingFor name="Setting For">OS Information</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212060566 epochns</(endTime)>
   <settingFor name="Setting For">OS Information</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212060566 epochns</(endTime)>
   <settingFor name="Setting For">OS Information</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212088376 epochns</(endTime)>
   <settingFor name="Setting For">Initial System Property</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212088376 epochns</(endTime)>
   <settingFor name="Setting For">Initial System Property</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212088376 epochns</(endTime)>
   <settingFor name="Setting For">Initial System Property</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212125341 epochns</(endTime)>
   <settingFor name="Setting For">Initial Environment Variable</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212125341 epochns</(endTime)>
   <settingFor name="Setting For">Initial Environment Variable</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212125341 epochns</(endTime)>
   <settingFor name="Setting For">Initial Environment Variable</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212165297 epochns</(endTime)>
   <settingFor name="Setting For">System Process</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212165297 epochns</(endTime)>
   <settingFor name="Setting For">System Process</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212165297 epochns</(endTime)>
   <settingFor name="Setting For">System Process</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212209488 epochns</(endTime)>
   <settingFor name="Setting For">CPU Information</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212209488 epochns</(endTime)>
   <settingFor name="Setting For">CPU Information</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212209488 epochns</(endTime)>
   <settingFor name="Setting For">CPU Information</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212241273 epochns</(endTime)>
   <settingFor name="Setting For">CPU Time Stamp Counter</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212241273 epochns</(endTime)>
   <settingFor name="Setting For">CPU Time Stamp Counter</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212241273 epochns</(endTime)>
   <settingFor name="Setting For">CPU Time Stamp Counter</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212270657 epochns</(endTime)>
   <settingFor name="Setting For">CPU Load</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212270657 epochns</(endTime)>
   <settingFor name="Setting For">CPU Load</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">1000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212270657 epochns</(endTime)>
   <settingFor name="Setting For">CPU Load</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212296140 epochns</(endTime)>
   <settingFor name="Setting For">Thread Context Switch Rate</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212296140 epochns</(endTime)>
   <settingFor name="Setting For">Thread Context Switch Rate</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">10000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212296140 epochns</(endTime)>
   <settingFor name="Setting For">Thread Context Switch Rate</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212333597 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212333597 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">1000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212333597 epochns</(endTime)>
   <settingFor name="Setting For">Java Thread Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212362695 epochns</(endTime)>
   <settingFor name="Setting For">Class Loading Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212362695 epochns</(endTime)>
   <settingFor name="Setting For">Class Loading Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">1000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212362695 epochns</(endTime)>
   <settingFor name="Setting For">Class Loading Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212393830 epochns</(endTime)>
   <settingFor name="Setting For">Thread Allocation Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212393830 epochns</(endTime)>
   <settingFor name="Setting For">Thread Allocation Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212393830 epochns</(endTime)>
   <settingFor name="Setting For">Thread Allocation Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212444202 epochns</(endTime)>
   <settingFor name="Setting For">Physical Memory</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212444202 epochns</(endTime)>
   <settingFor name="Setting For">Physical Memory</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212444202 epochns</(endTime)>
   <settingFor name="Setting For">Physical Memory</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212460957 epochns</(endTime)>
   <settingFor name="Setting For">Method Profiling Sample</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212460957 epochns</(endTime)>
   <settingFor name="Setting For">Method Profiling Sample</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">10 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212460957 epochns</(endTime)>
   <settingFor name="Setting For">Method Profiling Sample</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212476156 epochns</(endTime)>
   <settingFor name="Setting For">Method Sampling Information</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212476156 epochns</(endTime)>
   <settingFor name="Setting For">Method Sampling Information</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212476156 epochns</(endTime)>
   <settingFor name="Setting For">Method Sampling Information</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212476156 epochns</(endTime)>
   <settingFor name="Setting For">Method Sampling Information</settingFor>
   <name name="Setting Name">threshold</name>
   <value name="Setting Value">1000000 ns</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212491744 epochns</(endTime)>
   <settingFor name="Setting For">Thread Dump</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212491744 epochns</(endTime)>
   <settingFor name="Setting For">Thread Dump</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">60000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212491744 epochns</(endTime)>
   <settingFor name="Setting For">Thread Dump</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212504919 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212504919 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">1000 ms</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212504919 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212518641 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212518641 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212518641 epochns</(endTime)>
   <settingFor name="Setting For">Compiler Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212532145 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212532145 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212532145 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212545584 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212545584 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212545584 epochns</(endTime)>
   <settingFor name="Setting For">Code Cache Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212561930 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Statistics</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212561930 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Statistics</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212561930 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Statistics</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212576110 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212576110 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212576110 epochns</(endTime)>
   <settingFor name="Setting For">Code Sweeper Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212599540 epochns</(endTime)>
   <settingFor name="Setting For">Long Flag</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212599540 epochns</(endTime)>
   <settingFor name="Setting For">Long Flag</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212599540 epochns</(endTime)>
   <settingFor name="Setting For">Long Flag</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212615840 epochns</(endTime)>
   <settingFor name="Setting For">Unsigned Long Flag</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212615840 epochns</(endTime)>
   <settingFor name="Setting For">Unsigned Long Flag</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212615840 epochns</(endTime)>
   <settingFor name="Setting For">Unsigned Long Flag</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212632779 epochns</(endTime)>
   <settingFor name="Setting For">Double Flag</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212632779 epochns</(endTime)>
   <settingFor name="Setting For">Double Flag</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212632779 epochns</(endTime)>
   <settingFor name="Setting For">Double Flag</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212645832 epochns</(endTime)>
   <settingFor name="Setting For">Boolean Flag</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212645832 epochns</(endTime)>
   <settingFor name="Setting For">Boolean Flag</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212645832 epochns</(endTime)>
   <settingFor name="Setting For">Boolean Flag</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212658783 epochns</(endTime)>
   <settingFor name="Setting For">String Flag</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212658783 epochns</(endTime)>
   <settingFor name="Setting For">String Flag</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212658783 epochns</(endTime)>
   <settingFor name="Setting For">String Flag</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212671091 epochns</(endTime)>
   <settingFor name="Setting For">Object Count</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212671091 epochns</(endTime)>
   <settingFor name="Setting For">Object Count</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212671091 epochns</(endTime)>
   <settingFor name="Setting For">Object Count</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212684502 epochns</(endTime)>
   <settingFor name="Setting For">GC Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212684502 epochns</(endTime)>
   <settingFor name="Setting For">GC Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212684502 epochns</(endTime)>
   <settingFor name="Setting For">GC Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212698205 epochns</(endTime)>
   <settingFor name="Setting For">GC Survivor Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212698205 epochns</(endTime)>
   <settingFor name="Setting For">GC Survivor Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212698205 epochns</(endTime)>
   <settingFor name="Setting For">GC Survivor Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212712929 epochns</(endTime)>
   <settingFor name="Setting For">GC TLAB Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212712929 epochns</(endTime)>
   <settingFor name="Setting For">GC TLAB Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212712929 epochns</(endTime)>
   <settingFor name="Setting For">GC TLAB Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212726460 epochns</(endTime)>
   <settingFor name="Setting For">GC Heap Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212726460 epochns</(endTime)>
   <settingFor name="Setting For">GC Heap Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212726460 epochns</(endTime)>
   <settingFor name="Setting For">GC Heap Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212741590 epochns</(endTime)>
   <settingFor name="Setting For">GC Young Generation Configuration</settingFor>
   <name name="Setting Name">enabled</name>
   <value name="Setting Value">true</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212741590 epochns</(endTime)>
   <settingFor name="Setting For">GC Young Generation Configuration</settingFor>
   <name name="Setting Name">period</name>
   <value name="Setting Value">everyChunk</value>
 </event>
-<event name="Recording Setting" path="com.oracle.jdk.ActiveSetting">
+<event name="Recording Setting" path="jdk.ActiveSetting">
   <(endTime) name="End Time">1524063157212741590 epochns</(endTime)>
   <settingFor name="Setting For">GC Young Generation Configuration</settingFor>
   <name name="Setting Name">stacktrace</name>
   <value name="Setting Value">false</value>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">AWT-Shutdown</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">C2 CompilerThread0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">C2 CompilerThread1</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">JFR request timer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">VM JFR Buffer Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">1016 B</allocated>
   <eventThread name="Thread">Finalizer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">120 B</allocated>
   <eventThread name="Thread">Reference Handler</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">12608 B</allocated>
   <eventThread name="Thread">C1 CompilerThread2</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">129048 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(3)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">1312 B</allocated>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">13176 B</allocated>
   <eventThread name="Thread">RMI TCP Accept-0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">14912 B</allocated>
   <eventThread name="Thread">JMX server connection timeout 27</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">160 B</allocated>
   <eventThread name="Thread">Java2D Disposer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">1860592 B</allocated>
   <eventThread name="Thread">Attach Listener</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">256680 B</allocated>
   <eventThread name="Thread">AppKit Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">274656 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(2)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">32 B</allocated>
   <eventThread name="Thread">RMI Scheduler(0)</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">552 B</allocated>
   <eventThread name="Thread">DestroyJavaVM</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">552 B</allocated>
   <eventThread name="Thread">Signal Dispatcher</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">63624 B</allocated>
   <eventThread name="Thread">Service Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">7129896 B</allocated>
   <eventThread name="Thread">AWT-EventQueue-0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">7372784 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063157208016184 epochns</(endTime)>
   <allocated name="Allocated">7992 B</allocated>
   <eventThread name="Thread">TimerQueue</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">AWT-Shutdown</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">C2 CompilerThread0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">0 B</allocated>
   <eventThread name="Thread">C2 CompilerThread1</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">1016 B</allocated>
   <eventThread name="Thread">Finalizer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">120 B</allocated>
   <eventThread name="Thread">Reference Handler</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">12856 B</allocated>
   <eventThread name="Thread">C1 CompilerThread2</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">129048 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(3)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">1312 B</allocated>
   <eventThread name="Thread">Java2D Queue Flusher</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">13176 B</allocated>
   <eventThread name="Thread">RMI TCP Accept-0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">1448 B</allocated>
   <eventThread name="Thread">JFR request timer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">14912 B</allocated>
   <eventThread name="Thread">JMX server connection timeout 27</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">160 B</allocated>
   <eventThread name="Thread">Java2D Disposer</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">1860592 B</allocated>
   <eventThread name="Thread">Attach Listener</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">256680 B</allocated>
   <eventThread name="Thread">AppKit Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">274656 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(2)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">32 B</allocated>
   <eventThread name="Thread">RMI Scheduler(0)</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">552 B</allocated>
   <eventThread name="Thread">DestroyJavaVM</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">552 B</allocated>
   <eventThread name="Thread">Signal Dispatcher</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">63624 B</allocated>
   <eventThread name="Thread">Service Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">7129896 B</allocated>
   <eventThread name="Thread">AWT-EventQueue-0</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">7768 B</allocated>
   <eventThread name="Thread">VM JFR Buffer Thread</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">7839136 B</allocated>
   <eventThread name="Thread">RMI TCP Connection(1)-10.161.183.200</eventThread>
 </event>
-<event name="Thread Allocation Statistics" path="com.oracle.jdk.ThreadAllocationStatistics">
+<event name="Thread Allocation Statistics" path="jdk.ThreadAllocationStatistics">
   <(endTime) name="End Time">1524063167208668560 epochns</(endTime)>
   <allocated name="Allocated">7992 B</allocated>
   <eventThread name="Thread">TimerQueue</eventThread>

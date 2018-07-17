@@ -409,8 +409,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -797,8 +797,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -1185,8 +1185,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -1573,8 +1573,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -1605,7 +1605,7 @@
 <severity>OK</severity>
 <score>0.0</score>
 <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 11:17:05 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: com.oracle.jdk.SafepointBegin.</longDescription>
+<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 11:17:05 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
 </rule>
 <rule>
 <id>BufferLost</id>
@@ -1961,8 +1961,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -1993,7 +1993,7 @@
 <severity>OK</severity>
 <score>0.0</score>
 <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 8:54:33 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: com.oracle.jdk.SafepointBegin.</longDescription>
+<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 8:54:33 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
 </rule>
 <rule>
 <id>BufferLost</id>
@@ -2349,8 +2349,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -2737,8 +2737,8 @@
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -2769,7 +2769,7 @@
 <severity>OK</severity>
 <score>11.086075208333334</score>
 <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 2.217 % during 1 min starting at 9/24/15 10:08:56 AM. 0.027 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 1.882 %. 0.021 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: com.oracle.jdk.SafepointBegin.</longDescription>
+<longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 2.217 % during 1 min starting at 9/24/15 10:08:56 AM. 0.027 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 1.882 %. 0.021 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
 </rule>
 <rule>
 <id>BufferLost</id>
@@ -3127,8 +3127,8 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>
@@ -3144,15 +3144,15 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <id>Allocations.class</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</shortDescription>
-<longDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</longDescription>
+<shortDescription>This rule requires events to be available from one of the following event types: jdk.ObjectAllocationInNewTLAB, jdk.ObjectAllocationOutsideTLAB.</shortDescription>
+<longDescription>This rule requires events to be available from one of the following event types: jdk.ObjectAllocationInNewTLAB, jdk.ObjectAllocationOutsideTLAB.</longDescription>
 </rule>
 <rule>
 <id>Allocations.thread</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</shortDescription>
-<longDescription>This rule requires events to be available from one of the following event types: com.oracle.jdk.ObjectAllocationInNewTLAB, com.oracle.jdk.ObjectAllocationOutsideTLAB.</longDescription>
+<shortDescription>This rule requires events to be available from one of the following event types: jdk.ObjectAllocationInNewTLAB, jdk.ObjectAllocationOutsideTLAB.</shortDescription>
+<longDescription>This rule requires events to be available from one of the following event types: jdk.ObjectAllocationInNewTLAB, jdk.ObjectAllocationOutsideTLAB.</longDescription>
 </rule>
 <rule>
 <id>ApplicationHalts</id>
@@ -3515,8 +3515,8 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <id>biasedLockingRevocation</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
-<shortDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.</shortDescription>
-<longDescription>The Biased Locking Revocation rule requires the following event types: 'com.oracle.jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+<shortDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.</shortDescription>
+<longDescription>The Biased Locking Revocation rule requires the following event types: 'jdk.BiasedLockClassRevocation'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>biasedLockingRevocationPause</id>

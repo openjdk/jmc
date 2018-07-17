@@ -39,15 +39,24 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
  * Contains type IDs for events that are produced by JDK 7 and 8.
  */
 @SuppressWarnings({"nls", "unused"})
-public final class JdkTypeIDsPreJdk9 {
-	private final static String PREFIX = "com.oracle.jdk.";
+final class JdkTypeIDsPreJdk11 {
+	/**
+	 * The prefix used for JDK 11 and later
+	 */
+	private final static String PREFIX = "jdk.";
+
+	/**
+	 * The prefix used for JDK 9 and 10.
+	 */
+	private final static String PREFIX_9_10 = "com.oracle.jdk.";
 
 	/*
 	 * Package scope producer id constants
 	 */
-	private static final String JVM_EVENT_ID_ROOT = "http://www.oracle.com/hotspot/jvm/"; //$NON-NLS-1$
-	private static final String JDK_EVENT_ID_ROOT = "http://www.oracle.com/hotspot/jdk/"; //$NON-NLS-1$
-	private static final String JFR_INFO_EVENT_ID_ROOT = "http://www.oracle.com/hotspot/jfr-info/"; //$NON-NLS-1$
+	private static final String EVENT_ID_ROOT = "http://www.oracle.com/hotspot/"; //$NON-NLS-1$
+	private static final String JVM_EVENT_ID_ROOT = EVENT_ID_ROOT + "jvm/"; //$NON-NLS-1$
+	private static final String JDK_EVENT_ID_ROOT = EVENT_ID_ROOT + "jdk/"; //$NON-NLS-1$
+	private static final String JFR_INFO_EVENT_ID_ROOT = EVENT_ID_ROOT + "jfr-info/"; //$NON-NLS-1$
 
 	/*
 	 * Unused JDK9 constants
@@ -58,23 +67,23 @@ public final class JdkTypeIDsPreJdk9 {
 	 * FIXME: VMError is commented out since the build cannot handle warnings on lines containing
 	 * the text 'error'. Restore when we are sure that the build works with it.
 	 */
-//	private final static String VMError = PREFIX + "VMError"; // "vm.runtime.vm_error";
-	private final static String ClassLoaderStatistics = PREFIX + "ClassLoaderStatistics"; // "java.statistics.class_loaders";
+//	private final static String VMError = PREFIX_9_10 + "VMError"; // "vm.runtime.vm_error";
+	private final static String ClassLoaderStatistics = PREFIX_9_10 + "ClassLoaderStatistics"; // "java.statistics.class_loaders";
 
 	// GC
-	private final static String G1HeapSummary = PREFIX + "G1HeapSummary"; // "vm.gc.heap.g1_summary";
-	private final static String GC_G1MMU = PREFIX + "GCG1MMU"; // "vm.gc.detailed.g1_mmu_info";
-	private final static String PromoteObjectInNewPLAB = PREFIX + "PromoteObjectInNewPLAB"; // "vm.gc.detailed.object_promotion_in_new_PLAB";
-	private final static String PromoteObjectOutsidePLAB = PREFIX + "PromoteObjectOutsidePLAB"; // "vm.gc.detailed.object_promotion_outside_PLAB";
+	private final static String G1HeapSummary = PREFIX_9_10 + "G1HeapSummary"; // "vm.gc.heap.g1_summary";
+	private final static String GC_G1MMU = PREFIX_9_10 + "GCG1MMU"; // "vm.gc.detailed.g1_mmu_info";
+	private final static String PromoteObjectInNewPLAB = PREFIX_9_10 + "PromoteObjectInNewPLAB"; // "vm.gc.detailed.object_promotion_in_new_PLAB";
+	private final static String PromoteObjectOutsidePLAB = PREFIX_9_10 + "PromoteObjectOutsidePLAB"; // "vm.gc.detailed.object_promotion_outside_PLAB";
 
 	// Compiler
-	private final static String CompilerInlining = PREFIX + "CompilerInlining"; // "vm.compiler.optimization.inlining";
+	private final static String CompilerInlining = PREFIX_9_10 + "CompilerInlining"; // "vm.compiler.optimization.inlining";
 
 	// OS
-	private final static String LoadedModules = PREFIX + "LoadedModules"; // "vm.runtime.loaded_modules";
+	private final static String LoadedModules = PREFIX_9_10 + "LoadedModules"; // "vm.runtime.loaded_modules";
 
 	// Flight Recorder
-	private final static String DumpReason = PREFIX + "DumpReason"; // "flight_recorder.dump_reason";
+	private final static String DumpReason = PREFIX_9_10 + "DumpReason"; // "flight_recorder.dump_reason";
 
 	/*
 	 * JDK8 constants
@@ -200,13 +209,36 @@ public final class JdkTypeIDsPreJdk9 {
 	final static String RECORDING_SETTING = JFR_INFO_EVENT_ID_ROOT + "recordings/recording_setting";
 
 	/**
-	 * Translate a pre-JDK 9 type id into a JDK 9 type id.
+	 * Determine if a typeId needs to be transformed into a JDK 11 type id.
 	 *
 	 * @param typeId
-	 *            Pre-JDK 9 type id
-	 * @return JDK 9 type id
+	 *            type id
+	 * @return true if transformation is needed, false otherwise.
 	 */
-	static String translate(String typeId) {
+	public static boolean needTransform(String typeId) {
+		if (typeId.startsWith(PREFIX)) {
+			return false;
+		}
+		return typeId.startsWith(EVENT_ID_ROOT) || typeId.startsWith(PREFIX_9_10);
+	}
+
+	/**
+	 * Translate a pre-JDK 11 type id into a JDK 11 type id.
+	 *
+	 * @param typeId
+	 *            Pre-JDK 11 type id
+	 * @return JDK 11 type id
+	 */
+	public static String translate(String typeId) {
+		if (typeId.startsWith(PREFIX_9_10)) {
+			if (typeId.endsWith("AllocationRequiringGc")) {
+				return JdkTypeIDs.GC_DETAILED_ALLOCATION_REQUIRING_GC;
+			}
+			if (typeId.endsWith("GCG1MMU")) {
+				return JdkTypeIDs.GC_G1MMU;
+			}
+			return PREFIX + typeId.substring(PREFIX_9_10.length());
+		}
 		switch (typeId) {
 		case CPU_LOAD:
 			return JdkTypeIDs.CPU_LOAD;

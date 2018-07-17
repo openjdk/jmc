@@ -60,7 +60,7 @@ import org.openjdk.jmc.flightrecorder.test.util.PrintoutsToolkit;
 @SuppressWarnings("nls")
 public class FilteredRecordingTest {
 	private static final String JVM_INFORMATION_REGEXP = ".*JVMInformation";
-	private static final String COM_ORACLE_JDK_JVM_INFORMATION = "com.oracle.jdk.JVMInformation";
+	private static final String COM_ORACLE_JDK_JVM_INFORMATION = "jdk.JVMInformation";
 
 	@Test
 	public void testIncludeEventTypeFilter() throws IOException, CouldNotLoadRecordingException {

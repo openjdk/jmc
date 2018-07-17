@@ -68,7 +68,8 @@ public final class FlightRecordingLoader {
 	private static final String SINGLE_THREADED_PARSER_PROPERTY_KEY = "org.openjdk.jmc.flightrecorder.parser.singlethreaded"; //$NON-NLS-1$
 	private static final int MIN_MEMORY_PER_THREAD = 300 * 1024 * 1024; // Unless the chunks are very big, 300MB of available memory per parallel chunk load should be plenty
 	private static final short VERSION_0 = 0; // JDK7 & JDK8
-	private static final short VERSION_1 = 1; // JDK9
+	private static final short VERSION_1 = 1; // JDK9 & JDK10
+	private static final short VERSION_2 = 2; // JDK11
 	private static final byte[] FLIGHT_RECORDER_MAGIC = {'F', 'L', 'R', '\0'};
 
 	public static EventArray[] loadStream(InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk)
@@ -177,6 +178,7 @@ public final class FlightRecordingLoader {
 		case VERSION_0:
 			return ChunkLoaderV0.getInfo(nextChunk, nextChunkPos);
 		case VERSION_1:
+		case VERSION_2:
 			return ChunkLoaderV1.getInfo(nextChunk, nextChunkPos);
 		default:
 			throw new VersionNotSupportedException();
@@ -296,6 +298,7 @@ public final class FlightRecordingLoader {
 				case VERSION_0:
 					return ChunkLoaderV0.create(chunk, context);
 				case VERSION_1:
+				case VERSION_2:
 					return ChunkLoaderV1.create(chunk, context);
 				default:
 					throw new VersionNotSupportedException();

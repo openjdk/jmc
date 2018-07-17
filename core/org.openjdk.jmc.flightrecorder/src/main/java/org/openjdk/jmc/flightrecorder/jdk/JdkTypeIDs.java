@@ -36,14 +36,14 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 
 /**
- * Contains type IDs for events that are produced by JDK 9. These strings can be compared to the
+ * Contains type IDs for events that are produced by JDK 11+. These strings can be compared to the
  * result of {@link IType#getIdentifier()} and for creating filters with
  * {@link ItemFilters#type(String)}.
  */
 @SuppressWarnings("nls")
 public final class JdkTypeIDs {
 
-	private final static String PREFIX = "com.oracle.jdk.";
+	private final static String PREFIX = "jdk.";
 
 	public static final String CPU_LOAD = PREFIX + "CPULoad";
 	public static final String EXECUTION_SAMPLE = PREFIX + "ExecutionSample";
@@ -151,7 +151,7 @@ public final class JdkTypeIDs {
 	public static final String GC_COLLECTOR_OLD_GARBAGE_COLLECTION = PREFIX + "OldGarbageCollection";
 	public static final String GC_COLLECTOR_PAROLD_GARBAGE_COLLECTION = PREFIX + "ParallelOldGarbageCollection";
 	public static final String GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION = PREFIX + "YoungGarbageCollection";
-	public static final String GC_DETAILED_ALLOCATION_REQUIRING_GC = PREFIX + "AllocationRequiringGc";
+	public static final String GC_DETAILED_ALLOCATION_REQUIRING_GC = PREFIX + "AllocationRequiringGC";
 	public static final String GC_DETAILED_EVACUATION_FAILED = PREFIX + "EvacuationFailed";
 	public static final String GC_DETAILED_EVACUATION_INFO = PREFIX + "EvacuationInformation";
 	public static final String GC_DETAILED_OBJECT_COUNT_AFTER_GC = PREFIX + "ObjectCountAfterGC";

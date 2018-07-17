@@ -119,19 +119,30 @@ class TypeManager {
 	private static final Map<Long, StructContentType<Object[]>> STRUCT_TYPES = new HashMap<>();
 
 	private class TypeEntry {
-		private static final String STRUCT_TYPE_STACK_TRACE = "com.oracle.jfr.types.StackTrace"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_STACK_FRAME = "com.oracle.jfr.types.StackFrame"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_METHOD = "com.oracle.jfr.types.Method"; //$NON-NLS-1$
 		private static final String STRUCT_TYPE_CLASS = "java.lang.Class"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_CLASS_LOADER = "com.oracle.jfr.types.ClassLoader"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_MODULE = "com.oracle.jfr.types.Module"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_PACKAGE = "com.oracle.jfr.types.Package"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_OLD_OBJECT = "com.oracle.jfr.types.OldObject"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_OLD_OBJECT_ARRAY = "com.oracle.jfr.types.OldObjectArray"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_OLD_OBJECT_FIELD = "com.oracle.jfr.types.OldObjectField"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_OLD_OBJECT_GC_ROOT = "com.oracle.jfr.types.OldObjectGcRoot"; //$NON-NLS-1$
-		private static final String STRUCT_TYPE_THREAD_GROUP = "com.oracle.jfr.types.ThreadGroup"; //$NON-NLS-1$
 		private static final String STRUCT_TYPE_THREAD = "java.lang.Thread"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_STACK_TRACE = "com.oracle.jfr.types.StackTrace"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_STACK_TRACE_2 = "jdk.types.StackTrace"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_STACK_FRAME = "com.oracle.jfr.types.StackFrame"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_STACK_FRAME_2 = "jdk.types.StackFrame"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_METHOD = "com.oracle.jfr.types.Method"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_METHOD_2 = "jdk.types.Method"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_CLASS_LOADER = "com.oracle.jfr.types.ClassLoader"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_CLASS_LOADER_2 = "jdk.types.ClassLoader"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_MODULE = "com.oracle.jfr.types.Module"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_MODULE_2 = "jdk.types.Module"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_PACKAGE = "com.oracle.jfr.types.Package"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_PACKAGE_2 = "jdk.types.Package"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT = "com.oracle.jfr.types.OldObject"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_2 = "jdk.types.OldObject"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_ARRAY = "com.oracle.jfr.types.OldObjectArray"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_ARRAY_2 = "jdk.types.OldObjectArray"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_FIELD = "com.oracle.jfr.types.OldObjectField"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_FIELD_2 = "jdk.types.OldObjectField"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_GC_ROOT = "com.oracle.jfr.types.OldObjectGcRoot"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_OLD_OBJECT_GC_ROOT_2 = "jdk.types.OldObjectGcRoot"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_THREAD_GROUP = "com.oracle.jfr.types.ThreadGroup"; //$NON-NLS-1$
+		private static final String STRUCT_TYPE_THREAD_GROUP_2 = "jdk.types.ThreadGroup"; //$NON-NLS-1$
 
 		final ClassElement element;
 		final FastAccessNumberMap<Object> constants;
@@ -167,8 +178,11 @@ class TypeManager {
 						reader = new PrimitiveReader(element.typeIdentifier);
 					}
 				} else {
-					AbstractStructReader typeReader = createStructReader(element.typeIdentifier, element.label,
-							element.description, fieldCount);
+					AbstractStructReader typeReader = element.typeIdentifier.startsWith("jdk.") //$NON-NLS-1$
+							? createStructReaderV2(element.typeIdentifier, element.label, element.description,
+									fieldCount)
+							: createStructReaderV1(element.typeIdentifier, element.label, element.description,
+									fieldCount);
 					// assign before resolving field since it may be recursive
 					reader = typeReader;
 					for (int i = 0; i < fieldCount; i++) {
@@ -182,7 +196,45 @@ class TypeManager {
 			return reader;
 		}
 
-		private AbstractStructReader createStructReader(
+		private AbstractStructReader createStructReaderV2(
+			String identifier, String name, String description, int fieldCount) {
+			switch (identifier) {
+			case STRUCT_TYPE_THREAD_GROUP_2:
+				return new ReflectiveReader(JfrThreadGroup.class, fieldCount, UnitLookup.THREAD_GROUP);
+			case STRUCT_TYPE_CLASS_LOADER_2:
+				return new ReflectiveReader(JfrJavaClassLoader.class, fieldCount, UnitLookup.CLASS_LOADER);
+			case STRUCT_TYPE_OLD_OBJECT_GC_ROOT_2:
+				return new ReflectiveReader(JfrOldObjectGcRoot.class, fieldCount, UnitLookup.OLD_OBJECT_GC_ROOT);
+			case STRUCT_TYPE_OLD_OBJECT_2:
+				return new ReflectiveReader(JfrOldObject.class, fieldCount, UnitLookup.OLD_OBJECT);
+			case STRUCT_TYPE_OLD_OBJECT_ARRAY_2:
+				return new ReflectiveReader(JfrOldObjectArray.class, fieldCount, UnitLookup.OLD_OBJECT_ARRAY);
+			case STRUCT_TYPE_OLD_OBJECT_FIELD_2:
+				return new ReflectiveReader(JfrOldObjectField.class, fieldCount, UnitLookup.OLD_OBJECT_FIELD);
+			case STRUCT_TYPE_METHOD_2:
+				return new ReflectiveReader(JfrMethod.class, fieldCount, UnitLookup.METHOD);
+			case STRUCT_TYPE_STACK_FRAME_2:
+				return new ReflectiveReader(JfrFrame.class, fieldCount, UnitLookup.STACKTRACE_FRAME);
+			case STRUCT_TYPE_STACK_TRACE_2:
+				return new ReflectiveReader(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
+			case STRUCT_TYPE_MODULE_2:
+				return new ReflectiveReader(JfrJavaModule.class, fieldCount, UnitLookup.MODULE);
+			case STRUCT_TYPE_PACKAGE_2:
+				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
+			default:
+				synchronized (STRUCT_TYPES) {
+					StructContentType<Object[]> structType = STRUCT_TYPES.get(element.classId);
+					if (structType == null) {
+						structType = new StructContentType<>(element.typeIdentifier, element.label,
+								element.description);
+						STRUCT_TYPES.put(element.classId, structType);
+					}
+					return new StructReader(structType, fieldCount);
+				}
+			}
+		}
+
+		private AbstractStructReader createStructReaderV1(
 			String identifier, String name, String description, int fieldCount) {
 			switch (identifier) {
 			case STRUCT_TYPE_THREAD:
