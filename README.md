@@ -281,6 +281,12 @@ Here is an example for Mac OS X:
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc -vm $JAVA_HOME/bin
 ```
 
+Here is an Linux example:
+
+```bash
+target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc -vm $JAVA_HOME/bin
+```
+
 And here is an example for Windows x64:
 
 ```bash
@@ -294,7 +300,11 @@ First make sure that you have installed the Mercurial Plug-in for Eclipse (Mercu
 2. Next open (File | Open...) the Eclipse target platform of interest, for example releng/platform-definitions/platform-definition-photon/platform.target
 3. In the upper right corner of the platform editor that opens, click the link "Set as Active Target Platform"
 4. Import the projects you are interested in (core and/or application) into a recent Eclipse.
-5. If importing the application projects, make sure you create a user library (Preferences | Java/Build Path/User Libraries) named JMC_JDK, and add (Add External JARs...) the following JARs from a JDK 8 (u40 or above) to the User Library: tools.jar (<JDK>/lib/tools.jar), jconsole.jar (<JDK>/lib/jconsole.jar), jfxswt.jar (<JDK>/jre/lib/jfxswt.jar), and finally the jfxrt.jar (<JDK>/jre/lib/ext/jfxrt.jar).
+5. If importing the application projects, make sure you create a user library (Preferences | Java/Build Path/User Libraries) named JMC_JDK, and add (Add External JARs...) the following JARs from a JDK 8 (u40 or above) to the User Library:
+ - tools.jar (<JDK>/lib/tools.jar)
+ - jconsole.jar (<JDK>/lib/jconsole.jar)
+ - jfxswt.jar (<JDK>/jre/lib/jfxswt.jar)
+ - jfxrt.jar (<JDK>/jre/lib/ext/jfxrt.jar)
 
 Note that importing configuration/ide/eclipse as an Eclipse project should automatically make the development launchers available to you.
 
