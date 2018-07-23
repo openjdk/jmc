@@ -199,12 +199,16 @@ public final class ChunkReader {
 
 		@Override
 		public boolean hasNext() {
+			boolean hasNext = false;
 			if (streamState == StreamState.NEXT_CHUNK) {
-				return validateJFRMagic();
+				hasNext = validateJFRMagic();
 			} else if (streamState == StreamState.JFR_CHECKED) {
-				return true;
+				hasNext = true;
 			}
-			return false;
+			if (!hasNext) {
+				IOToolkit.closeSilently(inputStream);
+			}
+			return hasNext;
 		}
 
 		private boolean validateJFRMagic() {
