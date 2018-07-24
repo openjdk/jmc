@@ -81,7 +81,7 @@ public class AllocationByThreadRule implements IRule {
 				|| eventAvailabilityOutside == EventAvailability.AVAILABLE)) {
 			return RulesToolkit.getNotApplicableResult(this,
 					MessageFormat.format(Messages.getString(Messages.General_RULE_REQUIRES_EVENTS_FROM_ONE_OF_MANY),
-							JdkTypeIDs.ALLOC_INSIDE_TLAB + ", " + JdkTypeIDs.ALLOC_OUTSIDE_TLAB));
+							JdkTypeIDs.ALLOC_INSIDE_TLAB + ", " + JdkTypeIDs.ALLOC_OUTSIDE_TLAB)); //$NON-NLS-1$
 		}
 
 		List<IntEntry<IMCThread>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),

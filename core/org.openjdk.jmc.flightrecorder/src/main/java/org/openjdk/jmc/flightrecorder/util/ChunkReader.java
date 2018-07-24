@@ -355,12 +355,12 @@ public final class ChunkReader {
 		int chunkCount = 0, byteCount = 0;
 
 		if (args.length != 1) {
-			System.out.println("Usage: ChunkReader <file>");
+			System.out.println("Usage: ChunkReader <file>"); //$NON-NLS-1$
 			System.exit(2);
 		}
 		File file = new File(args[0]);
 		if (!file.exists()) {
-			System.out.println("The file " + file.getAbsolutePath() + " does not exist. Exiting...");
+			System.out.println("The file " + file.getAbsolutePath() + " does not exist. Exiting..."); //$NON-NLS-1$ //$NON-NLS-2$
 			System.exit(3);
 		}
 		Iterator<byte[]> iter = readChunks(file);
