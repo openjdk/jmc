@@ -173,11 +173,9 @@ public class SyntheticAttributeExtension implements IParserExtension {
 	@Override
 	public String getValueInterpretation(String eventTypeId, String fieldId) {
 		if (REC_SETTING_EVENT_ID_ATTRIBUTE.getIdentifier().equals(fieldId)
-				&& JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(eventTypeId)) {
-			return JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION;
-		}
-		if (REC_SETTING_EVENT_ID_ATTRIBUTE.getIdentifier().equals(fieldId)
-				&& JdkTypeIDs.RECORDING_SETTING.equals(JdkTypeIDsPreJdk11.translate(eventTypeId))) {
+				&& (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(eventTypeId) ||
+				    JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(eventTypeId) ||
+				    JdkTypeIDs.RECORDING_SETTING.equals(eventTypeId))) {
 			return JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION;
 		}
 		return null;

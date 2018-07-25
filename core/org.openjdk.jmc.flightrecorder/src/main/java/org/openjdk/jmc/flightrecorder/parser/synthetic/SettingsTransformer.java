@@ -53,7 +53,7 @@ import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
 import org.openjdk.jmc.flightrecorder.parser.ValueField;
 
 /**
- * Event sink that transforms pre JDK 9 event types to their equivalent JDK 9 types. JDK 9 input
+ * Event sink that transforms pre JDK 11 event types to their equivalent JDK 11 types. JDK 11 input
  * data will be passed through mostly untouched.
  */
 class SettingsTransformer implements IEventSink {
@@ -103,7 +103,7 @@ class SettingsTransformer implements IEventSink {
 			new ValueField(SyntheticAttributeExtension.REC_SETTING_EVENT_ID_ATTRIBUTE),
 			new ValueField(JdkAttributes.REC_SETTING_NAME), new ValueField(JdkAttributes.REC_SETTING_VALUE));
 
-	// Renamed attributes from pre JDK 9: <event id, <pre 9 attribute id, 9 attribute id>>
+	// Renamed attributes from pre JDK 11: <event id, <pre 11 attribute id, 11 attribute id>>
 	private static final Map<String, Map<String, String>> attributeRenameMap;
 
 	// JDK-8157024 constant for the field id
@@ -214,10 +214,8 @@ class SettingsTransformer implements IEventSink {
 	public void addEvent(Object[] values) {
 		LabeledIdentifier type = (LabeledIdentifier) values[typeIndex];
 		if (type != null) {
-			if (JdkTypeIDsPreJdk11.needTransform(type.getInterfaceId())) {
-				type = new LabeledIdentifier(JdkTypeIDsPreJdk11.translate(type.getInterfaceId()),
-						type.getImplementationId(), type.getName(), type.getDeclaredDescription());
-			}
+			type = new LabeledIdentifier(JdkTypeIDsPreJdk11.translate(type.getInterfaceId()),
+				type.getImplementationId(), type.getName(), type.getDeclaredDescription());
 			if (endTimeIndex < 0) {
 				values[typeIndex] = type;
 				sink.addEvent(values);
@@ -280,13 +278,14 @@ class SettingsTransformer implements IEventSink {
 			public IEventSink create(
 				String identifier, String label, String[] category, String description,
 				List<ValueField> dataStructure) {
-				boolean needsTransform = JdkTypeIDsPreJdk11.needTransform(identifier);
 				if (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) ||
-						(needsTransform &&
-								JdkTypeIDs.RECORDING_SETTING.equals(JdkTypeIDsPreJdk11.translate(identifier)))) {
+					JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier)) {
 					SettingsTransformer st = new SettingsTransformer(subFactory, label, category, description,
 							dataStructure);
-					if (st.isValid() || (needsTransform && st.isValidV1())) {
+					if ((JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) &&
+					     st.isValid()) ||
+						(JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier) &&
+						 st.isValidV1())) {
 						return st;
 					} else {
 						// FIXME: Avoid System.err.println

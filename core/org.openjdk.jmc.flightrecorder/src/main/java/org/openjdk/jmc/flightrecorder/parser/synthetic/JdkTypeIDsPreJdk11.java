@@ -207,20 +207,7 @@ final class JdkTypeIDsPreJdk11 {
 
 	final static String RECORDINGS = JFR_INFO_EVENT_ID_ROOT + "recordings/recording";
 	final static String RECORDING_SETTING = JFR_INFO_EVENT_ID_ROOT + "recordings/recording_setting";
-
-	/**
-	 * Determine if a typeId needs to be transformed into a JDK 11 type id.
-	 *
-	 * @param typeId
-	 *            type id
-	 * @return true if transformation is needed, false otherwise.
-	 */
-	public static boolean needTransform(String typeId) {
-		if (typeId.startsWith(PREFIX)) {
-			return false;
-		}
-		return typeId.startsWith(EVENT_ID_ROOT) || typeId.startsWith(PREFIX_9_10);
-	}
+        final static String JDK9_RECORDING_SETTING = PREFIX_9_10 + "ActiveSetting";
 
 	/**
 	 * Translate a pre-JDK 11 type id into a JDK 11 type id.
