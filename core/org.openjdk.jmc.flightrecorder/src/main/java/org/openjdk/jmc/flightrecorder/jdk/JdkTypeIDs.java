@@ -43,6 +43,10 @@ import org.openjdk.jmc.common.item.ItemFilters;
 @SuppressWarnings("nls")
 public final class JdkTypeIDs {
 
+	/*
+	 * Whenever the PREFIX is changed, corresponding changes must be made in
+	 * application/org.openjdk.jmc.flightrecorder.ui/defaultPages.xml
+	 */
 	private final static String PREFIX = "jdk.";
 
 	public static final String CPU_LOAD = PREFIX + "CPULoad";
@@ -164,6 +168,8 @@ public final class JdkTypeIDs {
 	public static final String GC_G1_EVACUATION_YOUNG_STATS = PREFIX + "G1EvacuationYoungStatistics";
 	public static final String GC_G1_EVACUATION_OLD_STATS = PREFIX + "G1EvacuationOldStatistics";
 	public static final String GC_G1_BASIC_IHOP = PREFIX + "G1BasicIHOP";
+	public static final String GC_G1_HEAP_REGION_TYPE_CHANGE = PREFIX + "G1HeapRegionTypeChange";
+	public static final String GC_G1_HEAP_REGION_INFORMATION = PREFIX + "G1HeapRegionInformation";
 	public static final String BIASED_LOCK_SELF_REVOCATION = PREFIX + "BiasedLockSelfRevocation";
 	public static final String BIASED_LOCK_REVOCATION = PREFIX + "BiasedLockRevocation";
 	public static final String BIASED_LOCK_CLASS_REVOCATION = PREFIX + "BiasedLockClassRevocation";

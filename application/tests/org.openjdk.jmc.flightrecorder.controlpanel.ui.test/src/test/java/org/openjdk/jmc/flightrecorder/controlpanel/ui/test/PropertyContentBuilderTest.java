@@ -63,6 +63,7 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.Pat
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.Property;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContainer.EventNode;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContainer.FolderNode;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContentBuilder;
 import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 
@@ -132,8 +133,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 			classLoadingStatisticsID = jvm("java/statistics/class_loading");
 			break;
 		case V2:
-			threadAllocationID = v2("com.oracle.jdk.ThreadAllocationStatistics");
-			classLoadingStatisticsID = v2("com.oracle.jdk.ClassLoadingStatistics");
+			threadAllocationID = v2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS);
+			classLoadingStatisticsID = v2(JdkTypeIDs.CLASS_LOAD_STATISTICS);
 			break;
 		}
 
@@ -160,8 +161,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 			classLoadingStatisticsID = jvm("java/statistics/class_loading");
 			break;
 		case V2:
-			threadAllocationID = v2("com.oracle.jdk.ThreadAllocationStatistics");
-			classLoadingStatisticsID = v2("com.oracle.jdk.ClassLoadingStatistics");
+			threadAllocationID = v2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS);
+			classLoadingStatisticsID = v2(JdkTypeIDs.CLASS_LOAD_STATISTICS);
 			break;
 		}
 

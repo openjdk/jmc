@@ -59,6 +59,7 @@ import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.configuration.internal.CommonConstraints;
 import org.openjdk.jmc.flightrecorder.configuration.internal.EventTypeIDV1;
 import org.openjdk.jmc.flightrecorder.configuration.internal.EventTypeIDV2;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 
 /**
@@ -102,8 +103,8 @@ public class OnlineEventOptionsTest {
 				unknownTypeID = typeV1;
 				invalidTypeID = typeV2;
 			} else {
-				periodicTypeID = new EventTypeIDV2("com.oracle.jdk.JavaThreadStatistics");
-				latencyTypeID = new EventTypeIDV2("com.oracle.jdk.ThreadSleep");
+				periodicTypeID = new EventTypeIDV2(JdkTypeIDs.THREAD_STATISTICS);
+				latencyTypeID = new EventTypeIDV2(JdkTypeIDs.THREAD_SLEEP);
 				unknownTypeID = typeV2;
 				invalidTypeID = typeV1;
 			}

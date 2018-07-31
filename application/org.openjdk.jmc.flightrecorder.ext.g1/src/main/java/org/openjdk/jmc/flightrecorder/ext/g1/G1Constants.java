@@ -44,6 +44,7 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 
 @SuppressWarnings("nls")
 public final class G1Constants {
@@ -67,8 +68,8 @@ public final class G1Constants {
 	public static final IAttribute<IQuantity> REGION_INDEX = attr("index", "Index", NUMBER);
 	public static final IAttribute<IQuantity> REGION_ALLOC_CONTEXT = attr("allocContext", "Allocation Context", NUMBER);
 
-	private static final String HEAP_REGION_TYPE_CHANGE = "com.oracle.jdk.G1HeapRegionTypeChange";
-	private static final String HEAP_REGION_INFORMATION = "com.oracle.jdk.G1HeapRegionInformation";
+	private static final String HEAP_REGION_TYPE_CHANGE = JdkTypeIDs.GC_G1_HEAP_REGION_TYPE_CHANGE;
+	private static final String HEAP_REGION_INFORMATION = JdkTypeIDs.GC_G1_HEAP_REGION_INFORMATION;
 
 	public static final IItemFilter HEAP_REGION_TYPE_CHANGES = ItemFilters.type(HEAP_REGION_TYPE_CHANGE);
 	public static final IItemFilter HEAP_REGION_DUMPS = ItemFilters.type(HEAP_REGION_INFORMATION);

@@ -52,6 +52,7 @@ import org.openjdk.jmc.flightrecorder.configuration.internal.EventTypeIDV2;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationModel;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
@@ -88,10 +89,10 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 		Assume.assumeTrue(version.equals(SchemaVersion.V2));
 		EventConfiguration config = getEventConfig("categories.jfc", false);
 
-		IEventTypeID threadAllocationStatistics = new EventTypeIDV2("com.oracle.jdk.ThreadAllocationStatistics");
+		IEventTypeID threadAllocationStatistics = new EventTypeIDV2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS);
 		assertCategory(new String[] {"Our Special Java Category", "Thread"}, config, threadAllocationStatistics);
 
-		IEventTypeID monitorWait = new EventTypeIDV2("com.oracle.jdk.JavaMonitorWait");
+		IEventTypeID monitorWait = new EventTypeIDV2(JdkTypeIDs.MONITOR_WAIT);
 		assertCategory(new String[] {"Our Special Java Category"}, config, monitorWait);
 	}
 
@@ -101,28 +102,28 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 	public void testPushServerInfoToXmlModelConfigValueUnchanged() throws Exception {
 		Assume.assumeTrue(version.equals(SchemaVersion.V2));
 		EventConfiguration config = getEventConfig("categories.jfc", false);
-		assertOptionValue(config, "27 ms", "com.oracle.jdk.JavaMonitorWait", "threshold");
+		assertOptionValue(config, "27 ms", JdkTypeIDs.MONITOR_WAIT, "threshold");
 	}
 
 	@Test
 	public void testPushServerInfoToXmlModelWithOverrideConfigValueUnchanged() throws Exception {
 		Assume.assumeTrue(version.equals(SchemaVersion.V2));
 		EventConfiguration config = getEventConfig("categories.jfc", true);
-		assertOptionValue(config, "27 ms", "com.oracle.jdk.JavaMonitorWait", "threshold");
+		assertOptionValue(config, "27 ms", JdkTypeIDs.MONITOR_WAIT, "threshold");
 	}
 
 	@Test
 	public void testPushServerInfoToXmlModelDefaultValueUnchanged() throws Exception {
 		Assume.assumeTrue(version.equals(SchemaVersion.V2));
 		EventConfiguration config = getEventConfig("categories.jfc", false);
-		assertOptionValue(config, "0 ns", "com.oracle.jdk.ThreadSleep", "threshold");
+		assertOptionValue(config, "0 ns", JdkTypeIDs.THREAD_SLEEP, "threshold");
 	}
 
 	@Test
 	public void testPushServerInfoToXmlModelWithOverrideDefaultValueUnchanged() throws Exception {
 		Assume.assumeTrue(version.equals(SchemaVersion.V2));
 		EventConfiguration config = getEventConfig("categories.jfc", true);
-		assertOptionValue(config, "0 ns", "com.oracle.jdk.ThreadSleep", "threshold");
+		assertOptionValue(config, "0 ns", JdkTypeIDs.THREAD_SLEEP, "threshold");
 	}
 
 	private void assertOptionValue(EventConfiguration config, String valueString, String typeId, String optionKey) {
@@ -139,13 +140,13 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 		getEventConfig("categories.jfc", false);
 		Map<? extends IEventTypeID, ? extends IEventTypeInfo> serverInfos = service.getEventTypeInfoMapByID();
 
-		IEventTypeID classloadingStatistics = new EventTypeIDV2("com.oracle.jdk.ClassLoadingStatistics");
+		IEventTypeID classloadingStatistics = new EventTypeIDV2(JdkTypeIDs.CLASS_LOAD_STATISTICS);
 		assertArrayEquals(
 				classloadingStatistics.getFullKey() + "did not get the expected category provided from server ",
 				new String[] {"Java Application", "Statistics"},
 				serverInfos.get(classloadingStatistics).getHierarchicalCategory());
 
-		IEventTypeID activeRecording = new EventTypeIDV2("com.oracle.jdk.ActiveRecording");
+		IEventTypeID activeRecording = new EventTypeIDV2(JdkTypeIDs.RECORDINGS);
 		assertArrayEquals(activeRecording.getFullKey() + "did not get the expected category provided from server ",
 				new String[] {"Flight Recorder"}, serverInfos.get(activeRecording).getHierarchicalCategory());
 	}
@@ -156,10 +157,10 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 
 		EventConfiguration config = getEventConfig("descriptions.jfc", false);
 
-		IEventTypeID threadAllocationStatistics = new EventTypeIDV2("com.oracle.jdk.ThreadAllocationStatistics");
+		IEventTypeID threadAllocationStatistics = new EventTypeIDV2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS);
 		assertEquals("Did not get the expected label for " + threadAllocationStatistics.getFullKey(),
 				"Thread Allocation Statistics Special Label", config.getEventLabel(threadAllocationStatistics));
-		IEventTypeID activeRecording = new EventTypeIDV2("com.oracle.jdk.ActiveRecording");
+		IEventTypeID activeRecording = new EventTypeIDV2(JdkTypeIDs.RECORDINGS);
 		assertEquals("Did not get the expected label for " + activeRecording.getFullKey(), "Flight Recording",
 				config.getEventLabel(activeRecording));
 	}
@@ -170,9 +171,9 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 
 		EventConfiguration config = getEventConfig("descriptions.jfc", false);
 
-		assertOptionMetadata(config, "com.oracle.jdk.ThreadSleep", "stackTrace", "Stack Trace", "Record stack traces",
+		assertOptionMetadata(config, JdkTypeIDs.THREAD_SLEEP, "stackTrace", "Stack Trace", "Record stack traces",
 				"jdk.jfr.Flag");
-		assertOptionMetadata(config, "com.oracle.jdk.ThreadSleep", "threshold", "Threshold",
+		assertOptionMetadata(config, JdkTypeIDs.THREAD_SLEEP, "threshold", "Threshold",
 				"Record event with duration above or equal to threshold", "jdk.jfr.Timespan");
 	}
 
@@ -182,10 +183,10 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 
 		EventConfiguration config = getEventConfig("descriptions.jfc", true);
 
-		IEventTypeID threadAllocationStatistics = new EventTypeIDV2("com.oracle.jdk.ThreadAllocationStatistics");
+		IEventTypeID threadAllocationStatistics = new EventTypeIDV2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS);
 		assertCategory(new String[] {"Java Application", "Statistics"}, config, threadAllocationStatistics);
 
-		IEventTypeID monitorWait = new EventTypeIDV2("com.oracle.jdk.JavaMonitorWait");
+		IEventTypeID monitorWait = new EventTypeIDV2(JdkTypeIDs.MONITOR_WAIT);
 		assertCategory(new String[] {"Java Application"}, config, monitorWait);
 	}
 

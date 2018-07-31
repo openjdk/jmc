@@ -15,3 +15,4 @@ Require-Bundle: org.junit,
  org.openjdk.jmc.flightrecorder.configuration
 Export-Package: org.openjdk.jmc.rjmx.services.jfr.test
 Automatic-Module-Name: org.openjdk.jmc.rjmx.services.jfr.test
+Import-Package: org.openjdk.jmc.flightrecorder.jdk

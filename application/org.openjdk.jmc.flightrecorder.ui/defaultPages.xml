@@ -215,23 +215,23 @@
             </threadLane>
             <threadLane name="Java Latencies" enabled="true">
                 <filter kind="OR">
-                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorEnter"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.SocketRead"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.Compilation"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ExecutionSampling"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.SocketWrite"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ClassLoad"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ThreadPark"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.FileWrite"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ThreadSleep"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorWait"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.FileRead"/>
+                    <filter kind="TYPE" type="jdk.JavaMonitorEnter"/>
+                    <filter kind="TYPE" type="jdk.SocketRead"/>
+                    <filter kind="TYPE" type="jdk.Compilation"/>
+                    <filter kind="TYPE" type="jdk.ExecutionSampling"/>
+                    <filter kind="TYPE" type="jdk.SocketWrite"/>
+                    <filter kind="TYPE" type="jdk.ClassLoad"/>
+                    <filter kind="TYPE" type="jdk.ThreadPark"/>
+                    <filter kind="TYPE" type="jdk.FileWrite"/>
+                    <filter kind="TYPE" type="jdk.ThreadSleep"/>
+                    <filter kind="TYPE" type="jdk.JavaMonitorWait"/>
+                    <filter kind="TYPE" type="jdk.FileRead"/>
                 </filter>
             </threadLane>
             <threadLane name="JVM Compiler">
                 <filter kind="OR">
-                    <filter kind="TYPE" type="com.oracle.jdk.SweepCodeCache"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.CompilerPhase"/>
+                    <filter kind="TYPE" type="jdk.SweepCodeCache"/>
+                    <filter kind="TYPE" type="jdk.CompilerPhase"/>
                 </filter>
             </threadLane>
           <threadLane name="Other Types" enabled="false" editable="false" isRestLane="true"/>
@@ -372,23 +372,23 @@
             </threadLane>
             <threadLane name="Java Latencies" enabled="true">
                 <filter kind="OR">
-                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorEnter"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.SocketRead"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.Compilation"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ExecutionSampling"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.SocketWrite"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ClassLoad"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ThreadPark"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.FileWrite"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.ThreadSleep"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.JavaMonitorWait"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.FileRead"/>
+                    <filter kind="TYPE" type="jdk.JavaMonitorEnter"/>
+                    <filter kind="TYPE" type="jdk.SocketRead"/>
+                    <filter kind="TYPE" type="jdk.Compilation"/>
+                    <filter kind="TYPE" type="jdk.ExecutionSampling"/>
+                    <filter kind="TYPE" type="jdk.SocketWrite"/>
+                    <filter kind="TYPE" type="jdk.ClassLoad"/>
+                    <filter kind="TYPE" type="jdk.ThreadPark"/>
+                    <filter kind="TYPE" type="jdk.FileWrite"/>
+                    <filter kind="TYPE" type="jdk.ThreadSleep"/>
+                    <filter kind="TYPE" type="jdk.JavaMonitorWait"/>
+                    <filter kind="TYPE" type="jdk.FileRead"/>
                 </filter>
             </threadLane>
             <threadLane name="JVM Compiler">
                 <filter kind="OR">
-                    <filter kind="TYPE" type="com.oracle.jdk.SweepCodeCache"/>
-                    <filter kind="TYPE" type="com.oracle.jdk.CompilerPhase"/>
+                    <filter kind="TYPE" type="jdk.SweepCodeCache"/>
+                    <filter kind="TYPE" type="jdk.CompilerPhase"/>
                 </filter>
             </threadLane>
           <threadLane name="Other Types" enabled="false" editable="false" isRestLane="true"/>

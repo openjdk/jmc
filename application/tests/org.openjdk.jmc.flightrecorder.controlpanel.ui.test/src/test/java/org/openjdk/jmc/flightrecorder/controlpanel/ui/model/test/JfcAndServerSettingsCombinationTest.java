@@ -42,6 +42,7 @@ import org.openjdk.jmc.common.unit.IConstrainedMap;
 import org.openjdk.jmc.flightrecorder.configuration.events.EventOptionID;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
@@ -93,7 +94,7 @@ public class JfcAndServerSettingsCombinationTest extends JfrControlTestCase {
 			assertOptionEquals(jvm("java/thread_end", "enabled"), Boolean.TRUE, cfg);
 			break;
 		case V2:
-			assertOptionEquals(v2("com.oracle.jdk.ThreadEnd", "enabled"), Boolean.TRUE, cfg);
+			assertOptionEquals(v2(JdkTypeIDs.JAVA_THREAD_END, "enabled"), Boolean.TRUE, cfg);
 			break;
 		}
 	}
@@ -108,7 +109,7 @@ public class JfcAndServerSettingsCombinationTest extends JfrControlTestCase {
 			break;
 		case V2:
 			assertOptionEquals(v2("org.openjdk.jmc.ExtraEventForTesting", "enabled"), Boolean.TRUE, cfg);
-			assertContains(v2("com.oracle.jdk.ThreadAllocationStatistics", "enabled"), cfg);
+			assertContains(v2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS, "enabled"), cfg);
 			break;
 		}
 	}
@@ -122,8 +123,8 @@ public class JfcAndServerSettingsCombinationTest extends JfrControlTestCase {
 			assertNotContains(jfr_info("recordings/recording", "enabled"), cfg);
 			break;
 		case V2:
-			assertOptionEquals(v2("com.oracle.jdk.JavaExceptionThrow", "enabled"), Boolean.FALSE, cfg);
-			assertNotContains(v2("com.oracle.jdk.ActiveRecording", "enabled"), cfg);
+			assertOptionEquals(v2(JdkTypeIDs.EXCEPTIONS_THROWN, "enabled"), Boolean.FALSE, cfg);
+			assertNotContains(v2(JdkTypeIDs.RECORDINGS, "enabled"), cfg);
 			break;
 		}
 	}
@@ -139,10 +140,10 @@ public class JfcAndServerSettingsCombinationTest extends JfrControlTestCase {
 			assertNotContains(jvm("java/statistics/thread_allocation", "extraTestOption"), cfg);
 			break;
 		case V2:
-			assertNotContains(v2("com.oracle.jdk.JavaThreadStatistics", "enabled"), cfg);
-			assertContains(v2("com.oracle.jdk.ThreadAllocationStatistics", "enabled"), cfg);
-			assertNotContains(v2("com.oracle.jdk.ClassLoadingStatistics", "enabledButWrongForTest"), cfg);
-			assertNotContains(v2("com.oracle.jdk.ThreadAllocationStatistics", "extraTestOption"), cfg);
+			assertNotContains(v2(JdkTypeIDs.THREAD_STATISTICS, "enabled"), cfg);
+			assertContains(v2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS, "enabled"), cfg);
+			assertNotContains(v2(JdkTypeIDs.CLASS_LOAD_STATISTICS, "enabledButWrongForTest"), cfg);
+			assertNotContains(v2(JdkTypeIDs.THREAD_ALLOCATION_STATISTICS, "extraTestOption"), cfg);
 			break;
 		}
 	}
