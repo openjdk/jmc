@@ -38,6 +38,12 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
 import javax.management.remote.JMXServiceURL;
@@ -56,9 +62,11 @@ import com.sun.tools.attach.VirtualMachine;
 public class LocalConnectionDescriptor implements IConnectionDescriptor {
 
 	private static final String SELF_HOST_NAME = "localhost"; //$NON-NLS-1$
+	private static final String ATTACH_TIMED_OUT_ERROR_MESSAGE = "Timed out attempting to attach to target JVM!"; //$NON-NLS-1$
 	private static final String COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE = "Could not retrieve the in-memory service URL after starting the in-memory agent!"; //$NON-NLS-1$
 	private final boolean isAutoStartAgent = fetchAutoStartAgentFromStore();
 	private final int pid;
+	private static final int TIMEOUT_THRESHOLD = 5;
 	private final boolean attachable;
 	private JMXServiceURL url;
 
@@ -99,27 +107,37 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	private void tryAgentLoadingStyleOfStartingTheAgent(String pid) throws LazyServiceURLResolveException {
 		// This is hotspot style starting of the agent. We do this
 		// pretty much the way JConsole does it.
-		VirtualMachine vm = null;
 		try {
-			vm = VirtualMachine.attach(pid);
-			String home = vm.getSystemProperties().getProperty("java.home"); //$NON-NLS-1$
-			// Normally in ${java.home}/jre/lib/management-agent.jar but might
-			// be in ${java.home}/lib in build environments.
-			String agent = home + File.separator + "jre" + File.separator + "lib" + File.separator //$NON-NLS-1$ //$NON-NLS-2$
-					+ "management-agent.jar"; //$NON-NLS-1$
-			File f = new File(agent);
-			if (!f.exists()) {
-				agent = home + File.separator + "lib" + File.separator + "management-agent.jar"; //$NON-NLS-1$ //$NON-NLS-2$
-				f = new File(agent);
-				if (!f.exists()) {
-					throw new LazyServiceURLResolveException("Management agent not found"); //$NON-NLS-1$
+			// Add a timeout here so we don't block forever if the JVM is busy/suspended. See JMC-5398
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			Future<Void> future = service.submit(new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					VirtualMachine vm = VirtualMachine.attach(pid);
+					String home = vm.getSystemProperties().getProperty("java.home"); //$NON-NLS-1$
+					// Normally in ${java.home}/jre/lib/management-agent.jar but might
+					// be in ${java.home}/lib in build environments.
+					String agent = home + File.separator + "jre" + File.separator + "lib" + File.separator //$NON-NLS-1$ //$NON-NLS-2$
+							+ "management-agent.jar"; //$NON-NLS-1$
+					File f = new File(agent);
+					if (!f.exists()) {
+						agent = home + File.separator + "lib" + File.separator + "management-agent.jar"; //$NON-NLS-1$ //$NON-NLS-2$
+						f = new File(agent);
+						if (!f.exists()) {
+							throw new LazyServiceURLResolveException("Management agent not found"); //$NON-NLS-1$
+						}
+					}
+					agent = f.getCanonicalPath();
+					vm.loadAgent(agent, "com.sun.management.jmxremote"); //$NON-NLS-1$
+					Properties agentProps = vm.getAgentProperties();
+					setAddress((String) agentProps.get(LocalJVMToolkit.LOCAL_CONNECTOR_ADDRESS_PROP));
+					vm.detach();
+					return null;
 				}
-			}
-			agent = f.getCanonicalPath();
-			vm.loadAgent(agent, "com.sun.management.jmxremote"); //$NON-NLS-1$
-			Properties agentProps = vm.getAgentProperties();
-			setAddress((String) agentProps.get(LocalJVMToolkit.LOCAL_CONNECTOR_ADDRESS_PROP));
-			vm.detach();
+			});
+			future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
+		} catch (TimeoutException t) {
+			throw new LazyServiceURLResolveException(ATTACH_TIMED_OUT_ERROR_MESSAGE, t);
 		} catch (Exception x) {
 			LazyServiceURLResolveException lsure = new LazyServiceURLResolveException(
 					"Attach not supported for the JVM with PID " + pid //$NON-NLS-1$
@@ -158,23 +176,38 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	 * @throws AttachNotSupportedException
 	 */
 	private void tryJCMDStyleStartingOfTheAgent(String name)
-			throws AttachNotSupportedException, IOException, AgentLoadException {
-		VirtualMachine vm = null;
+			throws IOException, AgentLoadException {
 		try {
-			// First try getting some versioning information
-			vm = VirtualMachine.attach(name);
-			LocalJVMToolkit.executeCommandForPid(vm, name, "ManagementAgent.start_local"); //$NON-NLS-1$
-			// Get in memory Service URL...
-			JMXServiceURL inMemURL = LocalJVMToolkit.getInMemoryURLFromPID(Integer.parseInt(name));
-			if (inMemURL == null) {
-				BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE, COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
-				throw new LazyServiceURLResolveException(COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
-			}
-			url = inMemURL;
-		} finally {
-			if (vm != null) {
-				vm.detach();
-			}
+			// Enforce a timeout here to ensure we don't block forever if the JVM is busy/suspended. See JMC-5398
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			Future<Void> future = service.submit(new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					VirtualMachine vm = null;
+					try {
+						// First try getting some versioning information
+						vm = VirtualMachine.attach(name);
+						LocalJVMToolkit.executeCommandForPid(vm, name, "ManagementAgent.start_local"); //$NON-NLS-1$
+						// Get in memory Service URL...
+						JMXServiceURL inMemURL = LocalJVMToolkit.getInMemoryURLFromPID(Integer.parseInt(name));
+						if (inMemURL == null) {
+							BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE, COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
+							throw new LazyServiceURLResolveException(COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
+						}
+						url = inMemURL;
+					} finally {
+						if (vm != null) {
+							vm.detach();
+						}
+					}
+					return null;
+				}
+			});
+			future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
+		} catch (TimeoutException t) {
+			throw new LazyServiceURLResolveException(ATTACH_TIMED_OUT_ERROR_MESSAGE, t);
+		} catch (Exception e) {
+			throw new LazyServiceURLResolveException(COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
 		}
 	}
 

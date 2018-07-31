@@ -46,6 +46,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import javax.management.remote.JMXServiceURL;
@@ -111,6 +116,8 @@ public class LocalJVMToolkit {
 	static final String JVM_ARGS_PROP = "sun.jvm.args"; //$NON-NLS-1$
 	static final String JVM_FLAGS_PROP = "sun.jvm.flags"; //$NON-NLS-1$
 	static final String JAVA_COMMAND_PROP = "sun.java.command"; //$NON-NLS-1$
+	
+	private static final int TIMEOUT_THRESHOLD = 5;
 
 	private LocalJVMToolkit() {
 		// Toolkit
@@ -167,7 +174,7 @@ public class LocalJVMToolkit {
 					connDesc = createMonitoredJvmDescriptor(host, (Integer) vmid);
 				}
 
-				if (includeUnconnectables
+				if ((includeUnconnectables && connDesc != null)
 						|| (connDesc != null && !connDesc.getServerDescriptor().getJvmInfo().isUnconnectable())) {
 					map.put(vmid, connDesc);
 				}
@@ -176,79 +183,92 @@ public class LocalJVMToolkit {
 	}
 
 	private static DiscoveryEntry createMonitoredJvmDescriptor(MonitoredHost host, Integer vmid) {
-		DiscoveryEntry connDesc;
-		int pid = vmid.intValue();
-		String name = vmid.toString(); // default to pid if name not available
-		Connectable connectable = NO;
-		JVMType type = JVMType.OTHER;
-		JVMArch jvmArch = JVMArch.OTHER;
-		boolean isDebug = false;
-		String address = null;
-		String version = null;
-		String jvmArgs = null;
 		try {
-			// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
-			MonitoredVm mvm = host.getMonitoredVm(new VmIdentifier(name));
-			try {
-				// use the command line as the display name
-				name = MonitoredVmUtil.commandLine(mvm);
-				jvmArgs = MonitoredVmUtil.jvmArgs(mvm);
-				StringMonitor sm = (StringMonitor) mvm.findByName("java.property.java.vm.name"); //$NON-NLS-1$
-				if (sm != null) {
-					type = getJVMType(sm.stringValue());
-				}
+			// Enforce a timeout here to make sure we don't block forever if the JVM is busy/suspended. See JMC-5398
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			Future<DiscoveryEntry> future = service.submit(new Callable<DiscoveryEntry>() {
+				@Override
+				public DiscoveryEntry call() throws Exception {
+					DiscoveryEntry connDesc;
+					int pid = vmid.intValue();
+					String name = vmid.toString(); // default to pid if name not available
+					Connectable connectable = NO;
+					JVMType type = JVMType.OTHER;
+					JVMArch jvmArch = JVMArch.OTHER;
+					boolean isDebug = false;
+					String address = null;
+					String version = null;
+					String jvmArgs = null;
+					try {
+						// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
+						MonitoredVm mvm = host.getMonitoredVm(new VmIdentifier(name));
+						try {
+							// use the command line as the display name
+							name = MonitoredVmUtil.commandLine(mvm);
+							jvmArgs = MonitoredVmUtil.jvmArgs(mvm);
+							StringMonitor sm = (StringMonitor) mvm.findByName("java.property.java.vm.name"); //$NON-NLS-1$
+							if (sm != null) {
+								type = getJVMType(sm.stringValue());
+							}
 
-				sm = (StringMonitor) mvm.findByName("java.property.java.version"); //$NON-NLS-1$
-				if (sm != null) {
-					version = sm.stringValue();
-				}
+							sm = (StringMonitor) mvm.findByName("java.property.java.version"); //$NON-NLS-1$
+							if (sm != null) {
+								version = sm.stringValue();
+							}
 
-				if (version == null) {
-					// Use java.vm.version when java.version is not exposed as perfcounter (HotSpot 1.5 and JRockit)
-					sm = (StringMonitor) mvm.findByName("java.property.java.vm.version"); //$NON-NLS-1$
-					if (sm != null) {
-						String vmVersion = sm.stringValue();
-						if (type == JVMType.JROCKIT) {
-							version = JavaVMVersionToolkit.decodeJavaVersion(vmVersion);
-						} else {
-							version = JavaVMVersionToolkit.parseJavaVersion(vmVersion);
+							if (version == null) {
+								// Use java.vm.version when java.version is not exposed as perfcounter (HotSpot 1.5 and JRockit)
+								sm = (StringMonitor) mvm.findByName("java.property.java.vm.version"); //$NON-NLS-1$
+								if (sm != null) {
+									String vmVersion = sm.stringValue();
+									if (type == JVMType.JROCKIT) {
+										version = JavaVMVersionToolkit.decodeJavaVersion(vmVersion);
+									} else {
+										version = JavaVMVersionToolkit.parseJavaVersion(vmVersion);
+									}
+								}
+							}
+							if (version == null) {
+								version = "0"; //$NON-NLS-1$
+							}
+
+							if (sm != null) {
+								isDebug = isDebug(sm.stringValue());
+							}
+							// NOTE: isAttachable seems to return true even if a real attach is not possible.
+							// attachable = MonitoredVmUtil.isAttachable(mvm);
+
+							jvmArch = getArch(vmid);
+							// Check if the in-memory agent has been started, in that case we can connect anyway
+							JMXServiceURL inMemURL = null;
+							try {
+								inMemURL = LocalJVMToolkit.getInMemoryURLFromPID(vmid);
+							} catch (IOException e) {
+								BrowserAttachPlugin.getPluginLogger().log(Level.WARNING,
+										"Got exception when trying to get in-memory url for jvm with PID " + vmid, e); //$NON-NLS-1$
+							}
+							if (inMemURL != null) {
+								connectable = MGMNT_AGENT_STARTED;
+							}
+
+							// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
+							address = AttachToolkit.importFromPid(pid);
+						} finally {
+							// Although the current implementation of LocalMonitoredVm for Windows doesn't do much here, we should always call detach.
+							mvm.detach();
 						}
+					} catch (Exception x) {
+						// ignore
 					}
+					connDesc = createDescriptor(name, jvmArgs, vmid, connectable, type, jvmArch, address, version, isDebug);
+					return connDesc;
 				}
-				if (version == null) {
-					version = "0"; //$NON-NLS-1$
-				}
-
-				if (sm != null) {
-					isDebug = isDebug(sm.stringValue());
-				}
-				// NOTE: isAttachable seems to return true even if a real attach is not possible.
-				// attachable = MonitoredVmUtil.isAttachable(mvm);
-
-				jvmArch = getArch(vmid);
-				// Check if the in-memory agent has been started, in that case we can connect anyway
-				JMXServiceURL inMemURL = null;
-				try {
-					inMemURL = LocalJVMToolkit.getInMemoryURLFromPID(vmid);
-				} catch (IOException e) {
-					BrowserAttachPlugin.getPluginLogger().log(Level.WARNING,
-							"Got exception when trying to get in-memory url for jvm with PID " + vmid, e); //$NON-NLS-1$
-				}
-				if (inMemURL != null) {
-					connectable = MGMNT_AGENT_STARTED;
-				}
-
-				// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
-				address = AttachToolkit.importFromPid(pid);
-			} finally {
-				// Although the current implementation of LocalMonitoredVm for Windows doesn't do much here, we should always call detach.
-				mvm.detach();
-			}
-		} catch (Exception x) {
-			// ignore
+			});
+			return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, "Failed to create descriptor for jvm with PID " + vmid, e);
+			return null;
 		}
-		connDesc = createDescriptor(name, jvmArgs, vmid, connectable, type, jvmArch, address, version, isDebug);
-		return connDesc;
 	}
 
 	/*
@@ -314,7 +334,7 @@ public class LocalJVMToolkit {
 
 					if (connDesc != null && !connDesc.getServerDescriptor().getJvmInfo().isUnconnectable()) {
 						map.put(vmid, connDesc);
-					}
+					} 
 				}
 			} catch (NumberFormatException e) {
 				// do not support vmid different than pid
@@ -323,53 +343,65 @@ public class LocalJVMToolkit {
 	}
 
 	private static DiscoveryEntry createAttachableJvmDescriptor(VirtualMachineDescriptor vmd) {
-		DiscoveryEntry connDesc = null;
-		Connectable connectable;
-		boolean isDebug = false;
-		JVMType jvmType = JVMType.OTHER;
-		JVMArch jvmArch = JVMArch.OTHER;
-		String address = null;
-		String version = null;
-		String javaArgs = null;
-		String jvmArgs = null;
-		String jvmVersion = null;
-
 		try {
-			// Attach creates one process handle on Windows.
-			// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
-			VirtualMachine vm = VirtualMachine.attach(vmd);
-			try {
-				connectable = ATTACHABLE;
-				// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
-				Properties props = null;
-				try {
-					props = vm.getSystemProperties();
-				} catch (IOException e) {
-					BrowserAttachPlugin.getPluginLogger().log(Level.FINER,
-							"Got the following exception message when getting system properties from vm with PID " //$NON-NLS-1$
-									+ vmd + ": " + e.getMessage()); //$NON-NLS-1$
-
-				}
-				if (props != null) {
-					String vmName = props.getProperty("java.vm.name"); //$NON-NLS-1$
-					jvmType = getJVMType(vmName);
-					version = props.getProperty("java.version"); //$NON-NLS-1$
-					jvmVersion = props.getProperty("java.vm.version"); //$NON-NLS-1$
-					isDebug = isDebug(jvmVersion);
-					jvmArch = JVMArch.getJVMArch(props);
-				}
-				Properties agentProps = vm.getAgentProperties();
-				address = (String) agentProps.get(LOCAL_CONNECTOR_ADDRESS_PROP);
-				javaArgs = resolveCommandLine(vm, vmd.displayName(), props, agentProps);
-				jvmArgs = (String) agentProps.get("sun.jvm.args"); //$NON-NLS-1$
-
-			} finally {
-				// Always detach. Releases one process handle on Windows.
-				vm.detach();
-			}
-		} catch (AttachNotSupportedException x) {
-			// Not attachable
-			connectable = NO;
+			// Enforce a timeout here to ensure we don't block forever if the JVM is busy or suspended. See JMC-5398.
+			 ExecutorService service = Executors.newSingleThreadExecutor();
+			 Future<DiscoveryEntry> future = service.submit(new Callable<DiscoveryEntry>() {
+				 @Override
+				 public DiscoveryEntry call() throws Exception {
+					DiscoveryEntry connDesc = null;
+					Connectable connectable;
+					boolean isDebug = false;
+					JVMType jvmType = JVMType.OTHER;
+					JVMArch jvmArch = JVMArch.OTHER;
+					String address = null;
+					String version = null;
+					String javaArgs = null;
+					String jvmArgs = null;
+					String jvmVersion = null;
+					VirtualMachine vm = null;
+					try {
+						// Attach creates one process handle on Windows.
+						// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
+						vm = VirtualMachine.attach(vmd);
+						connectable = ATTACHABLE;
+						// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
+						Properties props = null;
+						try {
+							props = vm.getSystemProperties();
+						} catch (IOException e) {
+							BrowserAttachPlugin.getPluginLogger().log(Level.FINER,
+									"Got the following exception message when getting system properties from vm with PID " //$NON-NLS-1$
+											+ vmd + ": " + e.getMessage()); //$NON-NLS-1$
+						}
+						if (props != null) {
+							String vmName = props.getProperty("java.vm.name"); //$NON-NLS-1$
+							jvmType = getJVMType(vmName);
+							version = props.getProperty("java.version"); //$NON-NLS-1$
+							jvmVersion = props.getProperty("java.vm.version"); //$NON-NLS-1$
+							isDebug = isDebug(jvmVersion);
+							jvmArch = JVMArch.getJVMArch(props);
+						}
+						Properties agentProps = vm.getAgentProperties();
+						address = (String) agentProps.get(LOCAL_CONNECTOR_ADDRESS_PROP);
+						javaArgs = resolveCommandLine(vm, vmd.displayName(), props, agentProps);
+						jvmArgs = (String) agentProps.get("sun.jvm.args"); //$NON-NLS-1$
+					} catch (AttachNotSupportedException x) {
+						// Not attachable
+						connectable = NO;
+					} finally {
+						// Always detach. Releases one process handle on Windows.
+						vm.detach();
+					}
+					if (connectable.isAttachable()) {
+						connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType, jvmArch,
+								address, version, isDebug);
+					}
+					BrowserAttachPlugin.getPluginLogger().info("Done resolving PID " + vmd); //$NON-NLS-1$
+					return connDesc;
+				 }
+			 });
+			 return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
 		} catch (Throwable t) {
 			// Serious problem for this JVM, let's skip this one.
 			if (!isErrorMessageSent) {
@@ -382,12 +414,6 @@ public class LocalJVMToolkit {
 			}
 			return null;
 		}
-		if (connectable.isAttachable()) {
-			connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType, jvmArch,
-					address, version, isDebug);
-		}
-		BrowserAttachPlugin.getPluginLogger().info("Done resolving PID " + vmd); //$NON-NLS-1$
-		return connDesc;
 	}
 
 	private static MonitoredHost getMonitoredHost() {
