@@ -3,10 +3,10 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/JemmyAWTInput-1.0.jar" sourcepath="JemmyAWTInput"/>
-	<classpathentry kind="lib" path="lib/JemmyBrowser-1.0.jar" sourcepath="JemmyBrowser"/>
-	<classpathentry kind="lib" path="lib/JemmyCore-1.0.jar" sourcepath="JemmyCore"/>
-	<classpathentry kind="lib" path="lib/JemmySWT-1.0.jar" sourcepath="JemmySWT"/>
+	<classpathentry kind="lib" path="lib/jemmy-awt-input-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/jemmy-browser-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/jemmy-core-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/jemmy-swt-1.0.2.jar"/>
 	<classpathentry kind="output" path="target/test-classes"/>
 </classpath>
 <!-- NB! Need to use classpath from jar.classpath when running in Tendril -->
