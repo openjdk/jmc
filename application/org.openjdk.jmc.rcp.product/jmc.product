@@ -101,6 +101,7 @@
       <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
+      <plugin id="org.openjdk.jmc.osgi.extension" fragment="true" startLevel="4" />
       <property name="eclipse.application" value="org.openjdk.jmc.rcp.application.app" />
       <property name="eclipse.home.location" value="$osgi.install.area$" />
       <property name="eclipse.p2.profile" value="JMC" />

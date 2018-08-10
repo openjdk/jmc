@@ -5,10 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.javafx.osgi
 Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ClassPath: .,
- external:$java.home$/lib/ext/jfxrt.jar,
- external:$java.home$/lib/jfxswt.jar,
- external:$java.home$/lib/javafx-swt.jar
+Bundle-ClassPath: .
 Eclipse-BuddyPolicy: app
 Export-Package: com.sun.javafx.binding,
  com.sun.javafx.scene.control,

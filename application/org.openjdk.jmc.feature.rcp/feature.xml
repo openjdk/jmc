@@ -88,6 +88,14 @@
       <import plugin="org.eclipse.equinox.p2.director.app"/>
    </requires>
 
+  <plugin
+         id="org.openjdk.jmc.osgi.extension"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
    <plugin
          id="org.openjdk.jmc.rcp.application"
          download-size="0"

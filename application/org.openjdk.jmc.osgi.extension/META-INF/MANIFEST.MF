@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mission Control External class loader
+Bundle-SymbolicName: org.openjdk.jmc.osgi.extension
+Bundle-Version: 7.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.eclipse.osgi;bundle-version="[3.10.0,4.0.0)"
+Automatic-Module-Name: org.openjdk.jmc.ext.hook
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

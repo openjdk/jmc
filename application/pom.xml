@@ -91,6 +91,7 @@
 		<module>org.openjdk.jmc.jdp</module>
 		<module>org.openjdk.jmc.joverflow</module>
 		<module>org.openjdk.jmc.joverflow.ui</module>
+		<module>org.openjdk.jmc.osgi.extension</module>
 		<module>org.openjdk.jmc.pde</module>
 		<module>org.openjdk.jmc.rcp.application</module>
 		<module>org.openjdk.jmc.rcp.intro</module>
