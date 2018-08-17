@@ -95,6 +95,7 @@ import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.XYDataRenderer;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.column.TableSettings;
+import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 
@@ -220,15 +221,18 @@ public class JavaApplicationPage extends AbstractDataPage {
 		JavaApplicationUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 			super(ALL_THREAD_EVENTS, getDataSource(), parent, toolkit, pageContainer, state, getName(), tableFilter,
 					getIcon(), flavorSelectorState);
-			mm = MCContextMenuManager.create(chartLegend.getControl());
+			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
 
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
 			lanes.updateContextMenu(mm);
+			lanes.updateContextMenu(MCContextMenuManager.create(chartLegend.getControl()));
 			buildChart();
 
 			addResultActions(form);
 			tableFilterComponent.loadState(state.getChild(METHOD_PROFILING_TABLE_FILTER));
-
+			form.getToolBarManager()
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm), Messages.ThreadsPage_EDIT_LANES,
+							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager().add(new Separator());
 			OrientationAction.installActions(form, sash);
 
