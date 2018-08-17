@@ -540,6 +540,13 @@
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
 
+	<!-- Spotbugs says vm is guaranteed to be null at L394. Perhaps it depends on 
+		JDK version, but it should indeed be able to be non-null. -->
+	<Match>
+		<Class name="org.openjdk.jmc.browser.attach.LocalJVMToolkit$3" />
+		<Bug pattern="NP_GUARANTEED_DEREF_ON_EXCEPTION_PATH" />
+	</Match>
+
 	<!-- These are okay, since we never write to individual elements in the 
 		array. The array is always substituted for an entirely new array. -->
 	<Match>
