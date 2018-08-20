@@ -16,3 +16,6 @@ workspace/
 
 # Ignore MacOS X finder files
 .DS_Store
+
+# Ignore patch files
+*.patch
