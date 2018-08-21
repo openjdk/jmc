@@ -15,10 +15,10 @@ Require-Bundle: org.junit,
  org.eclipse.ui,
  org.openjdk.jmc.flightrecorder
 Bundle-ClassPath: .,
- lib/JemmyCore-1.0.jar,
- lib/JemmySWT-1.0.jar,
- lib/JemmyAWTInput-1.0.jar,
- lib/JemmyBrowser-1.0.jar
+ lib/jemmy-core-1.0.2.jar,
+ lib/jemmy-swt-1.0.2.jar,
+ lib/jemmy-awt-input-1.0.2.jar,
+ lib/jemmy-browser-1.0.2.jar
 Import-Package: org.openjdk.jmc.alert,
  org.openjdk.jmc.browser.attach,
  org.openjdk.jmc.browser.views,
