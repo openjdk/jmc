@@ -335,7 +335,8 @@ public class EventBrowserPage extends AbstractDataPage {
 			Composite parent = oldListControl.getParent();
 			oldListControl.dispose();
 			list = DataPageToolkit.createSimpleItemList(parent, itemListBuilder, container,
-					new TableSettings(orderBy, listColumns), Messages.EventBrowserPage_EVENT_BROWSER_SELECTION);
+					DataPageToolkit.createTableSettingsByOrderByAndColumnsWithDefaultOrdering(orderBy, listColumns),
+					Messages.EventBrowserPage_EVENT_BROWSER_SELECTION);
 			parent.layout();
 			list.show(filteredItems);
 		}

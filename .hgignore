@@ -19,3 +19,6 @@ workspace/
 
 # Ignore patch files
 *.patch
+
+# Ignore jar files
+*.jar

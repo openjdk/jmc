@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -145,6 +146,7 @@ import org.openjdk.jmc.ui.charts.XYDataRenderer;
 import org.openjdk.jmc.ui.charts.XYQuantities;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
+import org.openjdk.jmc.ui.column.TableSettings.ColumnSettings;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
@@ -176,17 +178,24 @@ public class DataPageToolkit {
 		};
 	}
 
-	private static Map<String, Color> fieldColorMap = new HashMap<>();
+	private static final Map<String, Color> FIELD_COLOR_MAP = new HashMap<>();
+	private static final Map<String, Integer> DEFAULT_COLUMNS_ORDER;
 
 	static {
 
 		// FIXME: Create FieldAppearance class, similar to TypeAppearence?
-		fieldColorMap.put(JdkAttributes.MACHINE_TOTAL.getIdentifier(), new Color(255, 128, 0));
-		fieldColorMap.put(JdkAttributes.JVM_SYSTEM.getIdentifier(), new Color(128, 128, 128));
-		fieldColorMap.put(JdkAttributes.JVM_USER.getIdentifier(), new Color(0, 0, 255));
-		fieldColorMap.put(JdkAttributes.JVM_TOTAL.getIdentifier(), new Color(64, 64, 191));
+		FIELD_COLOR_MAP.put(JdkAttributes.MACHINE_TOTAL.getIdentifier(), new Color(255, 128, 0));
+		FIELD_COLOR_MAP.put(JdkAttributes.JVM_SYSTEM.getIdentifier(), new Color(128, 128, 128));
+		FIELD_COLOR_MAP.put(JdkAttributes.JVM_USER.getIdentifier(), new Color(0, 0, 255));
+		FIELD_COLOR_MAP.put(JdkAttributes.JVM_TOTAL.getIdentifier(), new Color(64, 64, 191));
 
 		// FIXME: Handle ColorProvider and combined events
+		Map<String, Integer> columnsOrderMap = new HashMap<>();
+		columnsOrderMap.put(createColumnId(JfrAttributes.START_TIME), 1);
+		columnsOrderMap.put(createColumnId(JfrAttributes.DURATION), 2);
+		columnsOrderMap.put(createColumnId(JfrAttributes.END_TIME), 3);
+		columnsOrderMap.put(createColumnId(JfrAttributes.EVENT_THREAD), 4);
+		DEFAULT_COLUMNS_ORDER = Collections.unmodifiableMap(columnsOrderMap);
 	}
 
 	public static final Color ALLOCATION_COLOR = new Color(64, 144, 230);
@@ -198,11 +207,39 @@ public class DataPageToolkit {
 	public static final String RESULT_ACTION_ID = "resultAction"; //$NON-NLS-1$
 
 	public static Color getFieldColor(String fieldId) {
-		return fieldColorMap.getOrDefault(fieldId, ColorToolkit.getDistinguishableColor(fieldId));
+		return FIELD_COLOR_MAP.getOrDefault(fieldId, ColorToolkit.getDistinguishableColor(fieldId));
 	}
 
 	public static Color getFieldColor(IAttribute<?> attribute) {
 		return getFieldColor(attribute.getIdentifier());
+	}
+
+	public static TableSettings createTableSettingsByOrderByAndColumnsWithDefaultOrdering(
+		final String orderBy, final Collection<ColumnSettings> columns) {
+		final Stream<ColumnSettings> defaultOrderColumns = columns.stream()
+				.filter(c -> DEFAULT_COLUMNS_ORDER.containsKey(c.getId())).filter(c -> !c.isHidden())
+				.sorted((c1, c2) -> Integer.compare(DEFAULT_COLUMNS_ORDER.get(c1.getId()),
+						DEFAULT_COLUMNS_ORDER.get(c2.getId())));
+		final Stream<ColumnSettings> naturalOrderColumns = columns.stream()
+				.filter(c -> !DEFAULT_COLUMNS_ORDER.containsKey(c.getId()))
+				.sorted((c1, c2) -> String.CASE_INSENSITIVE_ORDER.compare(c1.getId(), c2.getId()));
+		final List<ColumnSettings> resultColumns = Stream.concat(defaultOrderColumns, naturalOrderColumns)
+				.collect(Collectors.toList());
+		return new TableSettings(orderBy, resultColumns);
+	}
+
+	public static TableSettings createTableSettingsByAllAndVisibleColumns(
+		final Collection<String> allColumns, final Collection<String> visibleColumns) {
+		final List<ColumnSettings> defaultListCols = new ArrayList<>();
+		for (String columnId : allColumns) {
+			defaultListCols.add(new ColumnSettings(columnId, !visibleColumns.contains(columnId), null, null));
+		}
+		return createTableSettingsByOrderByAndColumnsWithDefaultOrdering(null, defaultListCols);
+	}
+
+	private static String createColumnId(IAttribute<?> attr) {
+		return new StringBuilder().append(attr.getIdentifier()).append(":")
+				.append(attr.getContentType().getIdentifier()).toString();
 	}
 
 	public static IAction createAttributeCheckAction(IAttribute<?> attribute, Consumer<Boolean> onChange) {

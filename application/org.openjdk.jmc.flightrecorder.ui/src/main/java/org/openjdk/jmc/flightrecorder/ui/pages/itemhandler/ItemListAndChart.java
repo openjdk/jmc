@@ -67,6 +67,7 @@ import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
+import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.FilterComponent;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.HistogramSelection;
@@ -153,9 +154,11 @@ class ItemListAndChart {
 
 		// FIXME: Should we use the state here, if the columns have been updated?
 		// FIXME: Should we change the column state if the user explicitly has configured the columns?
-		TableSettings itemListSettings = TableSettings.forStateAndColumns(
-				state != null ? state.getChild(LIST_SETTINGS) : null, acc.getAllAttributes().keySet(),
-				acc.getCommonAttributes().keySet());
+		final TableSettings itemListSettings = state == null
+				? DataPageToolkit.createTableSettingsByAllAndVisibleColumns(acc.getAllAttributes().keySet(),
+						acc.getCommonAttributes().keySet())
+				: TableSettings.forStateAndColumns(state.getChild(LIST_SETTINGS), acc.getAllAttributes().keySet(),
+						acc.getCommonAttributes().keySet());
 
 		Composite listComposite = toolkit.createComposite(tabFolder);
 		listComposite.setLayout(GridLayoutFactory.swtDefaults().create());
