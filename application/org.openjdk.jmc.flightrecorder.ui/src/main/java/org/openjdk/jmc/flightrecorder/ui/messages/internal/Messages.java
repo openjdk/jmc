@@ -170,6 +170,7 @@ public class Messages extends NLS {
 	public static String GCConfigurationPage_SECTION_YOUNG_CONFIG;
 	public static String GarbageCollectionsPage_COMMITTED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_COMMITTED_METASPACE_DELTA;
+	public static String GarbageCollectionsPage_DISABLED_TOOLTIP;
 	public static String GarbageCollectionsPage_LIST_SELECTION;
 	public static String GarbageCollectionsPage_METASPACE_SELECTION;
 	public static String GarbageCollectionsPage_METASPACE_TITLE;

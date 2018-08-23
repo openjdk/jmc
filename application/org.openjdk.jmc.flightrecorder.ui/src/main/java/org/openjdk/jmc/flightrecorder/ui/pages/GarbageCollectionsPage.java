@@ -67,8 +67,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -107,6 +110,7 @@ import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemRow;
+import org.openjdk.jmc.flightrecorder.ui.common.ThreadGraphLanes;
 import org.openjdk.jmc.flightrecorder.ui.common.TypeLabelProvider;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
@@ -156,6 +160,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 	private static final ReferenceStatisticsType[] REF_TYPE = ReferenceStatisticsType.values();
 	private static final String SASH = "sash"; //$NON-NLS-1$
 	private static final String TABLE_SASH = "tableSash"; //$NON-NLS-1$
+	private static final String THREAD_LANES = "threadLane"; // $NON-NLS-1$
 	private static final String GCS = "gcs"; //$NON-NLS-1$
 	private static final String CHART = "chart"; //$NON-NLS-1$
 	private static final String PHASE_TABLE_FILTER = "phaseTableFilter"; //$NON-NLS-1$
@@ -163,6 +168,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 	private static final String METASPACE_TABLE_FILTER = "metaspaceTableFilter"; //$NON-NLS-1$
 	private static final String PHASE_LIST = "phaseList"; //$NON-NLS-1$
 	private static final String METASPACE_LIST = "metaspaceList"; //$NON-NLS-1$
+	private static final String ACTIVITY_LANES_ID = "threadActivityLanes"; //$NON-NLS-1$
 
 	private final static Color LONGEST_PAUSE_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter();
 	private final static Color SUM_OF_PAUSES_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter().brighter();
@@ -220,6 +226,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		PHASES.addColumn(JdkAttributes.GC_PHASE_NAME);
 		PHASES.addColumn(JfrAttributes.DURATION);
 		PHASES.addColumn(JfrAttributes.START_TIME);
+		PHASES.addColumn(JfrAttributes.EVENT_THREAD);
 		PHASES.addColumn(JdkAttributes.GC_ID);
 
 		METASPACE.addColumn(JdkAttributes.GC_METASPACE_USED);
@@ -243,6 +250,10 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private final ChartCanvas chartCanvas;
 		private final ColumnManager gcList;
 		private IXDataRenderer renderRoot = RendererToolkit.empty();
+		private IAction GCEventThread = DataPageToolkit.createCheckAction(
+				Messages.JavaApplicationPage_THREAD_ACTIVITY_ACTION,
+				Messages.JavaApplicationPage_THREAD_ACTIVITY_ACTION_DESC, ACTIVITY_LANES_ID,
+				FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES), b -> buildChart());
 		private final IAction enablePhases = ActionToolkit.checkAction(b -> buildChart(),
 				Messages.GarbageCollectionsPage_ROW_PAUSE_PHASES, Messages.GarbageCollectionsPage_ROW_PAUSE_PHASES_DESC,
 				FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_PARTS), "phases"); //$NON-NLS-1$
@@ -253,7 +264,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private final List<IAction> allChartSeriesActions = Stream.concat(
 				Stream.concat(HEAP_SUMMARY.getAttributes().stream(), METASPACE_SUMMARY.getAttributes().stream())
 						.map(a -> createAttributeCheckAction(a, b -> buildChart())),
-				Stream.of(longestPause, sumOfPauses, enablePhases)).collect(Collectors.toList());
+				Stream.of(longestPause, sumOfPauses, enablePhases, GCEventThread)).collect(Collectors.toList());
 		private final Set<String> excludedAttributeIds;
 		private FilterComponent tableFilter;
 		private XYChart gcChart;
@@ -265,6 +276,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private CTabFolder gcInfoFolder;
 		private IItemCollection selectionItems;
 		private FlavorSelector flavorSelector;
+		private ThreadGraphLanes lanes;
+		private MCContextMenuManager mm;
 
 		GarbageCollectionsUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 			this.pageContainer = pageContainer;
@@ -310,6 +323,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				updatePhaseList();
 				updateMetaspaceList();
 			});
+
 			SelectionStoreActionToolkit.addSelectionStoreActions(gcList.getViewer(), pageContainer.getSelectionStore(),
 					() -> ItemCollectionToolkit.build(gcSelectedGcItems()),
 					Messages.GarbageCollectionsPage_LIST_SELECTION, itemListMm);
@@ -363,6 +377,12 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, false, true);
 			gd.widthHint = 180;
 			chartLegend.setLayoutData(gd);
+			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
+			lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANES)));
+			IAction editLanesAction = ActionToolkit.action(() -> lanes.openEditLanesDialog(mm),
+					Messages.ThreadsPage_EDIT_LANES, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
+			form.getToolBarManager().add(editLanesAction);
+			
 			DataPageToolkit.createChartTimestampTooltip(chartCanvas);
 			gcChart = new XYChart(pageContainer.getRecordingRange(), renderRoot, 180);
 			gcChart.setVisibleRange(timelineRange.getStart(), timelineRange.getEnd());
@@ -383,6 +403,21 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			gcList.setSelectionState(gcListSelection);
 			phasesList.getManager().setSelectionState(phasesSelection);
 			metaspaceList.getManager().setSelectionState(metaspaceSelection);
+			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
+			lanes.updateContextMenu(mm);
+			
+			// Older recordings may not have thread information in pause events.
+			// In those cases there is no need for the thread activity actions.
+			if (!getDataSource().getItems().apply(ItemFilters.and(ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD),
+					JdkFilters.GC_PAUSE)).hasItems()) {
+				editLanesAction.setEnabled(false);
+				editLanesAction.setToolTipText(Messages.GarbageCollectionsPage_DISABLED_TOOLTIP);
+				GCEventThread.setEnabled(false);
+				GCEventThread.setDescription(Messages.GarbageCollectionsPage_DISABLED_TOOLTIP);
+				for (IAction action : lanes.getContextMenuActions()) {
+					action.setEnabled(false);
+				}
+			}
 		}
 
 		private void updatePhaseList() {
@@ -481,6 +516,20 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				ItemRow l4 = buildSpanRow(allItems, JdkTypeIDs.GC_PAUSE_L4);
 				rows.add(RendererToolkit.uniformRows(Arrays.asList(pauses, l1, l2, l3, l4), enablePhases.getText()));
 			}
+			IItemFilter pauseThreadsFilter = ItemFilters.and(JdkFilters.GC_PAUSE, ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD));
+			// Thread information may not be available in earlier recordings, ensure we actually have items before proceeding
+			if (GCEventThread.isChecked() && phasesList.getSelection().get().count() > 0 
+					&& allItems.apply(pauseThreadsFilter).hasItems()) {
+				// Get the event threads from the selected events
+				IAggregator<Set<IMCThread>, ?> distinctThreadsAggregator = Aggregators.distinct(JfrAttributes.EVENT_THREAD);
+				IItemCollection items = ItemCollectionToolkit.build(phasesList.getSelection().get());
+				Set<IMCThread> threads = items.getAggregate(distinctThreadsAggregator);
+				List<IXDataRenderer> renderers = threads.stream().map((thread) ->lanes.buildThreadRenderer(thread,
+						getDataSource().getItems().apply(ItemFilters.equals(JfrAttributes.EVENT_THREAD, thread))))
+						.collect(Collectors.toList());
+				rows.add(RendererToolkit.uniformRows(renderers));
+			}
+
 			renderRoot = RendererToolkit.layers(RendererToolkit.uniformRows(rows), buildTableSelectionRenderer());
 			chartCanvas.replaceRenderer(renderRoot);
 		}

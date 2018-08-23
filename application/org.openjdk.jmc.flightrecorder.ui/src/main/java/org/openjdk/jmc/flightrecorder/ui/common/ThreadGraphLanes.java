@@ -91,10 +91,12 @@ public class ThreadGraphLanes {
 	private List<LaneDefinition> naLanes;
 	private Supplier<StreamModel> dataSourceSupplier;
 	private Runnable buildChart;
+	private List<IAction> actions;
 
 	public ThreadGraphLanes(Supplier<StreamModel> dataSourceSupplier, Runnable buildChart) {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
+		this.actions = new ArrayList<>();
 	}
 
 	public void openEditLanesDialog(MCContextMenuManager mm) {
@@ -226,6 +228,7 @@ public class ThreadGraphLanes {
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
 			action.setId(EDIT_LANES);
 			mm.add(action);
+			actions.add(action);
 			mm.add(new Separator());
 		}
 		laneDefs.stream().forEach(ld -> {
@@ -246,7 +249,12 @@ public class ThreadGraphLanes {
 			checkAction.setChecked(ld.isEnabled());
 			// FIXME: Add a tooltip here
 			mm.add(checkAction);
+			actions.add(checkAction);
 		});
+	}
+	
+	public List<IAction> getContextMenuActions() {
+		return actions;
 	}
 
 }
