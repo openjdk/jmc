@@ -215,7 +215,7 @@ public class ItemHandlerPage extends AbstractDataPage {
 		private final ItemListAndChart itemListAndChart;
 		private IRange<IQuantity> currentRange;
 		private IItemCollection filteredItems;
-		AttributeComponentConfiguration acc;
+		private AttributeComponentConfiguration acc;
 		private IItemCollection selectionItems;
 		private String[] topics;
 

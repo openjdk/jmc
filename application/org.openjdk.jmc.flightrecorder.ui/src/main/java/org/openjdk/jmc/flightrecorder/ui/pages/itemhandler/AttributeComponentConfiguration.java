@@ -79,7 +79,7 @@ class AttributeComponentConfiguration {
 
 	private void forEachType(IItemCollection items) {
 		if (items != null) {
-			ItemCollectionToolkit.stream(items).filter(IItemIterable::hasItems).map(IItemIterable::getType)
+			ItemCollectionToolkit.stream(items).map(IItemIterable::getType)
 					.forEach(type -> {
 						allTypes.put(type.getIdentifier(), type);
 						for (IAttribute<?> a : type.getAttributes()) {
