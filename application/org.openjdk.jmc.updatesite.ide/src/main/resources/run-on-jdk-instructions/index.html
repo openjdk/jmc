@@ -36,9 +36,8 @@
 	<p>Follow the instructions below to run on a HotSpot JDK.</p>
 	<p>The easiest way to change the JVM on which to start Eclipse is by modifying the eclipse.ini file. You can also set the -vm on the command line used to start Eclipse. In windows you would typically do that in the shortcut you use to launch Eclipse. Here is an example ini file:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk7_40/jre/bin/</code></p></blockquote> 
 	<p>You can also configure JVM options by using -vmargs on commandline or eclipse.ini:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk8_131/jre/bin/<br>-vmargs<br>&lt;JVM options on separate lines&gt;</code></p></blockquote> 
-	<p>If you use JDK 9 to run Eclipse, the following JVM options are needed for Mission Control to work properly:</p>
+	<p>If you use JDK 9 (or later) to run Eclipse, the following JVM options are needed for Mission Control to work properly:</p>
 	 <blockquote> <p><code>-Djdk.attach.allowAttachSelf=true
-	 <br>--add-modules=java.xml.bind,java.xml.ws.annotation
 	 <br>--add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
 	 <br>--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
 	 <br>--add-exports=java.management/sun.management=ALL-UNNAMED
