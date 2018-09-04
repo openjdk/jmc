@@ -44,9 +44,10 @@
 	 <br>--add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED
 	 <br>--add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED
 	 <br>--add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED
-	 <br>--add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED
 	 <br>--add-opens=java.base/java.net=ALL-UNNAMED
 	 <br>--add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED</code></p> </blockquote> 
+	<p>If running on Windows, also add:</p>
+	<blockquote> <p><code>--add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED</code></p> </blockquote> 	
 	<p>If running on Mac OS, also add:</p>
 	<blockquote> <p><code>--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED</code></p> </blockquote> 
 	<p>If running on Linux, also add:</p>
