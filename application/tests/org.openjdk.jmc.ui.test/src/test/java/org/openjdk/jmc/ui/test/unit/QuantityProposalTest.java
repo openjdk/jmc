@@ -48,12 +48,12 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.openjdk.jmc.common.test.MCTestCase;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.ITypedQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.rjmx.test.MCTestCase;
 import org.openjdk.jmc.ui.misc.LinearQuantityProposalProvider;
 import org.openjdk.jmc.ui.test.unit.QuantityProposalTest.UnitProposalTest;
 

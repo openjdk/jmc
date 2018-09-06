@@ -51,7 +51,6 @@ import org.openjdk.jmc.rjmx.test.triggers.NotificationTestSuite;
 @SuiteClasses({RJMXTestSuite.class, InternalTestSuite.class, ServicesTestSuite.class, SubscriptionTestSuite.class,
 		SubscriptionInternalTestSuite.class, SyntheticTestSuite.class, NotificationTestSuite.class,
 		JVMSupportToolkitTest.class
-
 })
 public class AllRJMXTests {
 

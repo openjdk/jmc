@@ -9,7 +9,6 @@ Eclipse-BuddyPolicy: app
 Import-Package: javax.mail,
  javax.mail.internet
 Export-Package: org.openjdk.jmc.rjmx,
- org.openjdk.jmc.common,
  org.openjdk.jmc.rjmx.actionprovider;
   x-friends:="org.openjdk.jmc.console.ui,
    org.openjdk.jmc.joverflow.ui,
@@ -18,11 +17,19 @@ Export-Package: org.openjdk.jmc.rjmx,
    org.openjdk.jmc.browser",
  org.openjdk.jmc.rjmx.actionprovider.internal;x-internal:=true,
  org.openjdk.jmc.rjmx.descriptorprovider;x-friends:="org.openjdk.jmc.browser.jdp,org.openjdk.jmc.browser.attach",
- org.openjdk.jmc.rjmx.internal;x-friends:="org.openjdk.jmc.browser,org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.console.uitest,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.internal;
+  x-friends:="org.openjdk.jmc.browser,
+   org.openjdk.jmc.console.ui.mbeanbrowser,
+   org.openjdk.jmc.console.uitest,
+   org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.messages.internal;x-friends:="org.openjdk.jmc.test.jemmy,org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.persistence.internal;x-friends:="org.openjdk.jmc.console.persistence",
  org.openjdk.jmc.rjmx.preferences;x-friends:="org.openjdk.jmc.console.ui,org.openjdk.jmc.rjmx.ui",
- org.openjdk.jmc.rjmx.servermodel;x-friends:="org.openjdk.jmc.browser,org.openjdk.jmc.test.jemmy,org.openjdk.jmc.rcp.intro,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.servermodel;
+  x-friends:="org.openjdk.jmc.browser,
+   org.openjdk.jmc.test.jemmy,
+   org.openjdk.jmc.rcp.intro,
+   org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.servermodel.internal;x-friends:="org.openjdk.jmc.browser",
  org.openjdk.jmc.rjmx.services;
   x-friends:="org.openjdk.jmc.alert,
@@ -38,9 +45,17 @@ Export-Package: org.openjdk.jmc.rjmx,
    org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.services.internal;x-friends:="org.openjdk.jmc.rjmx.services.jfr,org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.subscription,
- org.openjdk.jmc.rjmx.subscription.internal;x-friends:="org.openjdk.jmc.console.persistence,org.openjdk.jmc.rjmx.ui,org.openjdk.jmc.console.ui.subscriptions,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.subscription.internal;
+  x-friends:="org.openjdk.jmc.console.persistence,
+   org.openjdk.jmc.rjmx.ui,
+   org.openjdk.jmc.console.ui.subscriptions,
+   org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.subscription.storage.internal;x-internal:=true,
- org.openjdk.jmc.rjmx.triggers;x-friends:="org.openjdk.jmc.console.ui.notification,org.openjdk.jmc.alert,org.openjdk.jmc.console.twitter,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.triggers;
+  x-friends:="org.openjdk.jmc.console.ui.notification,
+   org.openjdk.jmc.alert,
+   org.openjdk.jmc.console.twitter,
+   org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.triggers.actions.internal;x-friends:="org.openjdk.jmc.console.ui.notification",
  org.openjdk.jmc.rjmx.triggers.condition.internal;x-friends:="org.openjdk.jmc.console.ui.notification,org.openjdk.jmc.test.jemmy",
  org.openjdk.jmc.rjmx.triggers.constraints.internal;x-internal:=true,
@@ -50,7 +65,7 @@ Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.util.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.console.ui,org.openjdk.jmc.rjmx.ui"
 Require-Bundle: org.openjdk.jmc.ui.common;visibility:=reexport,
  org.openjdk.jmc.commands,
- org.openjdk.jmc.common
+ org.openjdk.jmc.common;visibility:=reexport
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
