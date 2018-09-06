@@ -117,7 +117,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 				<configuration>
-					<argLine>-Duser.language=en -Duser.region=nl</argLine>
+					<argLine>-Duser.language=en -Duser.region=nl -Djava.locale.providers=JRE,CLDR</argLine>
 					<includes>${test.includes}</includes>
 					<excludes>${test.excludes}</excludes>
 					<failIfNoTests>${fail.if.no.tests}</failIfNoTests>
