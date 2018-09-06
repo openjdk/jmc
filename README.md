@@ -192,6 +192,9 @@ mvn jetty:run
 Then in another terminal (in the project root):
 
 ```bash
+cd core
+mvn clean install
+cd ..
 mvn package
 ```
 Note that you may need to define proxy settings if you happen to be behind a firewall. In your ~/.m2/settings.xml file (if you have none, simply create one), add:

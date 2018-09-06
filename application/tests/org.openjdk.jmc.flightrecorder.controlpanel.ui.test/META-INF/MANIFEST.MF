@@ -7,12 +7,12 @@ Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
- org.openjdk.jmc.common.test,
  org.openjdk.jmc.rjmx.test,
  org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
  org.openjdk.jmc.rjmx.services.jfr,
- org.openjdk.jmc.rjmx.services.jfr.test
+ org.openjdk.jmc.rjmx.services.jfr.test,
+ org.openjdk.jmc.ui.common
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui.test
 Import-Package: org.openjdk.jmc.flightrecorder.jdk

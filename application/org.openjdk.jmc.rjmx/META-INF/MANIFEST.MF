@@ -9,6 +9,7 @@ Eclipse-BuddyPolicy: app
 Import-Package: javax.mail,
  javax.mail.internet
 Export-Package: org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.common,
  org.openjdk.jmc.rjmx.actionprovider;
   x-friends:="org.openjdk.jmc.console.ui,
    org.openjdk.jmc.joverflow.ui,
@@ -48,7 +49,8 @@ Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.triggers.internal;x-friends:="org.openjdk.jmc.alert,org.openjdk.jmc.console.ui.notification,org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.util.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.console.ui,org.openjdk.jmc.rjmx.ui"
 Require-Bundle: org.openjdk.jmc.ui.common;visibility:=reexport,
- org.openjdk.jmc.commands
+ org.openjdk.jmc.commands,
+ org.openjdk.jmc.common
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

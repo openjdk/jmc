@@ -8,7 +8,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.rjmx,
- org.openjdk.jmc.common.test
+ org.openjdk.jmc.common
 Export-Package: org.openjdk.jmc.rjmx.test,
- org.openjdk.jmc.rjmx.test.testutil
+ org.openjdk.jmc.rjmx.test.testutil,
+ org.openjdk.jmc.common.test
 Automatic-Module-Name: org.openjdk.jmc.rjmx.test

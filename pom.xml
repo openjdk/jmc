@@ -69,7 +69,6 @@
 		</mailingList>
 	</mailingLists>
 	<modules>
-		<module>core</module>
 		<module>application</module>
 		<module>releng</module>
 	</modules>
