@@ -7,6 +7,7 @@ Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
+ org.openjdk.jmc.common.test,
  org.openjdk.jmc.rjmx.test,
  org.openjdk.jmc.rjmx.services.jfr,
  org.openjdk.jmc.rjmx,

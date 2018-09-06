@@ -77,6 +77,7 @@
            </dependency>
    </dependencies>
    <build>
+    <testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
