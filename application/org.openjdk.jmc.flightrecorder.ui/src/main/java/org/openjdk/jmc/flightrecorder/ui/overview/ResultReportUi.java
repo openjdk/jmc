@@ -39,8 +39,11 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,13 +52,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.CloseWindowListener;
+import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-
+import org.eclipse.swt.widgets.Shell;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -79,6 +87,8 @@ public class ResultReportUi {
 
 	private static final String OVERVIEW_MAKE_SCALABLE = "overview.makeScalable();"; //$NON-NLS-1$
 	private static final String OVERVIEW_UPDATE_PAGE_HEADERS_VISIBILITY = "overview.updatePageHeadersVisibility();"; //$NON-NLS-1$
+	private static final Pattern HTML_ANCHOR_PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>");
+	private static final String OPEN_BROWSER_WINDOW = "openWindowByUrl";
 
 	private static class Linker extends BrowserFunction {
 
@@ -141,6 +151,19 @@ public class ResultReportUi {
 			return null;
 		}
 
+	}
+
+	public class OpenWindowFunction extends BrowserFunction {
+
+		public OpenWindowFunction (final Browser browser, final String name) {
+		    super(browser, name);
+		}
+		public Object function (Object[] arguments) {
+			final String url = String.valueOf(arguments[0]);
+		    final String title = String.valueOf(arguments[1]);
+		    openBrowserByUrl(url, title);
+		    return null;
+		}
 	}
 
 	private static class PageContainerResultProvider implements HtmlResultProvider {
@@ -224,14 +247,64 @@ public class ResultReportUi {
 	private Collection<HtmlResultGroup> descriptors;
 	private boolean isSinglePage = false;
 
+	private void openBrowserByUrl(final String url, final String title) {
+		final Display display = Display.getDefault();
+		final Shell shell = new Shell(display);
+		shell.setText(title);
+		shell.setLayout(new FillLayout());
+		final Browser browser = new Browser(shell, SWT.NONE);
+		initializeBrowser(display, browser, shell);
+		shell.open();
+		browser.setUrl(url);
+	}
+
+	private void initializeBrowser(final Display display, final Browser browser, final Shell shell) {
+		browser.addOpenWindowListener(new OpenWindowListener() {
+			public void open(WindowEvent event) {
+				  initializeBrowser(display, browser, shell);
+				  event.browser = browser;
+			    }
+		});
+		browser.addCloseWindowListener(new CloseWindowListener() {
+			  public void close(WindowEvent event) {
+				  Browser browser = (Browser)event.widget;
+			      Shell shell = browser.getShell();
+			      shell.close();
+			  }
+	    });
+	}
+
+	/*
+     * We replace the anchors in the HTML when running in the JMC UI to make
+     * it possible to follow them. See JMC-5419 for more information.
+     */
+	private static String adjustAnchorFollowAction(String html) {
+		Map<String, String> map = new HashMap<>();
+		Matcher m = HTML_ANCHOR_PATTERN.matcher(html);
+		while (m.find()) {
+			map.put(m.group(1), m.group(2));
+		}
+		for(Map.Entry<String, String> e: map.entrySet()){
+			html = html.replace(e.getKey(), openWindowMethod(e.getKey(), e.getValue()));
+		}
+		return html;
+	}
+
+	private static String openWindowMethod(String url, String name){
+        return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027")
+                .append(url).append("\u0027").append(',').append("\u0027")
+                .append(name).append("\u0027").append(")").toString();
+    }
+
 	public ResultReportUi(boolean isSinglePage) {
 		this.isSinglePage = isSinglePage;
 	}
 
 	public List<String> getHtml(IPageContainer editor) {
 		List<String> overviewHtml = new ArrayList<>(1);
-		overviewHtml.add(RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor), descriptors,
+		String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor), descriptors,
 				resultExpandedStates, true));
+		overviewHtml.add(adjustedHtml);
 		return overviewHtml;
 	}
 
@@ -245,8 +318,10 @@ public class ResultReportUi {
 						.allMatch(d -> d > RulesHtmlToolkit.IN_PROGRESS && d < Severity.INFO.getLimit()) && !showOk;
 				browser.evaluate(String.format("overview.allOk(%b);", allOk)); //$NON-NLS-1$
 			} catch (SWTException swte) {
-				browser.setText(RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor),
-						descriptors, resultExpandedStates, false));
+				String html = RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor),
+						descriptors, resultExpandedStates, false);
+				String adjustedHtml = adjustAnchorFollowAction(html);
+				browser.setText(adjustedHtml);
 			}
 		}
 	}
@@ -276,7 +351,8 @@ public class ResultReportUi {
 						continue;
 					}
 					long score = Math.round(result.getScore());
-					String quoteEscape = RulesHtmlToolkit.getDescription(result).replaceAll("\\\"", "\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
+					String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.getDescription(result));//$NON-NLS-1$ //$NON-NLS-2$
+					String quoteEscape = adjustedHtml.replaceAll("\\\"", "\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
 					String description = quoteEscape.replaceAll("\n", "</br>"); //$NON-NLS-1$ //$NON-NLS-2$
 					script.append(String.format("overview.updateResult(\"%s\", %d, \"%s\");", //$NON-NLS-1$
 							result.getRule().getId(), score, description));
@@ -310,9 +386,11 @@ public class ResultReportUi {
 					try {
 						FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
 								"Could not update single result, redrawing html view. " + e.getMessage()); //$NON-NLS-1$
-						browser.setText(isSinglePage ? RulesHtmlToolkit.generateSinglePageHtml(results)
+						String html = isSinglePage ? RulesHtmlToolkit.generateSinglePageHtml(results)
 								: RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor),
-										descriptors, resultExpandedStates, false));
+										descriptors, resultExpandedStates, false);
+						String adjustedHtml = adjustAnchorFollowAction(html);
+						browser.setText(adjustedHtml);
 					} catch (Exception e1) {
 						FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not update Result Overview", //$NON-NLS-1$
 								e1);
@@ -346,11 +424,13 @@ public class ResultReportUi {
 			String html = isSinglePage ? RulesHtmlToolkit.generateSinglePageHtml(results)
 					: RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor), descriptors,
 							resultExpandedStates, false);
-			browser.setText(html, true);
+			String adjustedHtml = adjustAnchorFollowAction(html);
+			browser.setText(adjustedHtml, true);
 			browser.setJavascriptEnabled(true);
 			browser.addProgressListener(new ProgressAdapter() {
 				@Override
 				public void completed(ProgressEvent event) {
+					new OpenWindowFunction(browser, OPEN_BROWSER_WINDOW); //$NON-NLS-1$
 					new Linker(browser, "linker", descriptors, editor); //$NON-NLS-1$
 					new Expander(browser, "expander"); //$NON-NLS-1$
 					browser.execute(String.format("overview.showOk(%b);", showOk)); //$NON-NLS-1$
