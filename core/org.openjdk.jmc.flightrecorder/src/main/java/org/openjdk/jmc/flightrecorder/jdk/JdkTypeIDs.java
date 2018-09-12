@@ -63,6 +63,7 @@ public final class JdkTypeIDs {
 	public static final String ALLOC_INSIDE_TLAB = PREFIX + "ObjectAllocationInNewTLAB";
 	public static final String ALLOC_OUTSIDE_TLAB = PREFIX + "ObjectAllocationOutsideTLAB";
 	public static final String VM_INFO = PREFIX + "JVMInformation";
+	public static final String CLASS_DEFINE = PREFIX + "ClassDefine";
 	public static final String CLASS_LOAD = PREFIX + "ClassLoad";
 	public static final String CLASS_UNLOAD = PREFIX + "ClassUnload";
 	public static final String CLASS_LOAD_STATISTICS = PREFIX + "ClassLoadingStatistics";

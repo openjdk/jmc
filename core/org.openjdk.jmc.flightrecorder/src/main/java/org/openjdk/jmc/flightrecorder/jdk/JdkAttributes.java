@@ -712,6 +712,10 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CLASS_DEFINING_CLASSLOADER), CLASS);
 	private static final IAttribute<IMCType> CLASS_INITIATING_CLASSLOADER_V0 = attr("initiatingClassLoader", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_INITIATING_CLASSLOADER), CLASS);
+	private static final IAttribute<IMCType> PARENT_CLASSLOADER_V0 = attr("parentClassLoader", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_PARENT_CLASSLOADER), CLASS);
+	private static final IAttribute<IMCType> CLASSLOADER_V0 = attr("classLoader", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_CLASSLOADER), CLASS);
 
 	public static final IAttribute<IMCClassLoader> CLASS_DEFINING_CLASSLOADER = Attribute
 			.canonicalize(new Attribute<IMCClassLoader>("definingClassLoader", //$NON-NLS-1$
@@ -739,6 +743,44 @@ public final class JdkAttributes {
 				public <U> IMemberAccessor<IMCClassLoader, U> customAccessor(IType<U> type) {
 					// V1 is handled by the standard accessor
 					final IMemberAccessor<IMCType, U> accessorV0 = CLASS_INITIATING_CLASSLOADER_V0.getAccessor(type);
+					if (accessorV0 != null) {
+						return new IMemberAccessor<IMCClassLoader, U>() {
+							@Override
+							public IMCClassLoader getMember(U i) {
+								IMCType type = accessorV0.getMember(i);
+								return new MCClassLoader(type, null);
+							}
+						};
+					}
+					return null;
+				}
+			});
+	public static final IAttribute<IMCClassLoader> PARENT_CLASSLOADER = Attribute
+			.canonicalize(new Attribute<IMCClassLoader>("parentClassLoader", //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_PARENT_CLASSLOADER), null, CLASS_LOADER) {
+				@Override
+				public <U> IMemberAccessor<IMCClassLoader, U> customAccessor(IType<U> type) {
+					// V1 is handled by the standard accessor
+					final IMemberAccessor<IMCType, U> accessorV0 = PARENT_CLASSLOADER_V0.getAccessor(type);
+					if (accessorV0 != null) {
+						return new IMemberAccessor<IMCClassLoader, U>() {
+							@Override
+							public IMCClassLoader getMember(U i) {
+								IMCType type = accessorV0.getMember(i);
+								return new MCClassLoader(type, null);
+							}
+						};
+					}
+					return null;
+				}
+			});
+	public static final IAttribute<IMCClassLoader> CLASSLOADER = Attribute
+			.canonicalize(new Attribute<IMCClassLoader>("classLoader", //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_CLASSLOADER), null, CLASS_LOADER) {
+				@Override
+				public <U> IMemberAccessor<IMCClassLoader, U> customAccessor(IType<U> type) {
+					// V1 is handled by the standard accessor
+					final IMemberAccessor<IMCType, U> accessorV0 = CLASSLOADER_V0.getAccessor(type);
 					if (accessorV0 != null) {
 						return new IMemberAccessor<IMCClassLoader, U>() {
 							@Override
@@ -781,11 +823,58 @@ public final class JdkAttributes {
 					};
 				}
 			});
+	public static final IAttribute<String> PARENT_CLASSLOADER_STRING = Attribute
+			.canonicalize(new Attribute<String>("parentClassLoader.string", //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_PARENT_CLASSLOADER), null, PLAIN_TEXT) {
+				@Override
+				public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IMCClassLoader, U> accessor = PARENT_CLASSLOADER.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<String, U>() {
+						@Override
+						public String getMember(U i) {
+							IMCClassLoader cl = accessor.getMember(i);
+							return cl == null ? null : FormatToolkit.getHumanReadable(cl);
+						}
+					};
+				}
+			});
+
+	public static final IAttribute<String> CLASSLOADER_STRING = Attribute
+			.canonicalize(new Attribute<String>("classLoader.string", //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_CLASSLOADER), null, PLAIN_TEXT) {
+				@Override
+				public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IMCClassLoader, U> accessor = CLASSLOADER.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<String, U>() {
+						@Override
+						public String getMember(U i) {
+							IMCClassLoader cl = accessor.getMember(i);
+							return cl == null ? null : FormatToolkit.getHumanReadable(cl);
+						}
+					};
+				}
+			});
 
 	public static final IAttribute<IMCType> CLASS_LOADED = attr("loadedClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_LOADED), CLASS);
 	public static final IAttribute<IMCType> CLASS_UNLOADED = attr("unloadedClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_UNLOADED), CLASS);
+	public static final IAttribute<IMCType> CLASS_DEFINED = attr("definedClass", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_CLASS_DEFINED), CLASS);
+	public static final IAttribute<IQuantity> ANONYMOUS_BLOCK_SIZE = attr("anonymousBlockSize", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_ANONYMOUS_BLOCK_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> ANONYMOUS_CHUNK_SIZE = attr("anonymousChunkSize", // $NON-NLS-1$ 
+			Messages.getString(Messages.ATTR_ANONYMOUS_CHUNK_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> ANONYMOUS_CLASS_COUNT = attr("anonymousClassCount", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_ANONYMOUS_CLASS_COUNT), NUMBER);
+	public static final IAttribute<IQuantity> BLOCK_SIZE = attr("blockSize", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_BLOCK_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> CHUNK_SIZE = attr("chunkSize", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_CHUNK_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> CLASS_COUNT = attr("classCount", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_CLASS_COUNT), NUMBER);
+	public static final IAttribute<IQuantity> CLASS_LOADER_DATA = attr("classLoaderData", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_CLASSLOADER_DATA), ADDRESS);	
 
 	public static final IAttribute<IQuantity> COMPILER_COMPILATION_ID = attr("compileId", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMPILER_COMPILATION_ID), NUMBER);

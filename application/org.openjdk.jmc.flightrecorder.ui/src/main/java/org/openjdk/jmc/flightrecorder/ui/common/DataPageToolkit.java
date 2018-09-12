@@ -845,6 +845,10 @@ public class DataPageToolkit {
 						? JdkAttributes.CLASS_DEFINING_CLASSLOADER_STRING : a)
 				.map(a -> a.equals(JdkAttributes.CLASS_INITIATING_CLASSLOADER)
 						? JdkAttributes.CLASS_INITIATING_CLASSLOADER_STRING : a)
+				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER)
+						? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
+				.map(a -> a.equals(JdkAttributes.CLASSLOADER)
+						? JdkAttributes.CLASSLOADER_STRING : a)
 				.filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
 						|| (a.getContentType().getPersister() != null))
 				.distinct();

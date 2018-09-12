@@ -681,12 +681,30 @@
                     <column hidden="true" id="startTime" width="120"/>
                     <column hidden="false" id="(endTime)" width="120"/>
                 </classLoadingTable>
-                <classUnloadingTable sortColumn="(endTime)">
+                <classUnloadingTable sortColumn="(endTime)" sortAscending="true">
+                	<column hidden="false" id="(endTime)" width="150"/>
                     <column hidden="false" id="unloadedClass" width="400"/>
                     <column hidden="false" id="definingClassLoader" width="250"/>
                     <column hidden="true" id="eventThread" width="150"/>
-                    <column hidden="false" id="(endTime)" width="150"/>
                 </classUnloadingTable>
+                <classDefineTable sortColumn="startTime" sortAscending="true">
+                    <column hidden="false" id="startTime" width="150"/>
+                	<column hidden="false" id="definingClassLoader" width="250"/>
+                	<column hidden="false" id="definedClass" width="400"/>
+                	<column hidden="true" id="eventThread" width="150"/>
+                </classDefineTable>
+                <classLoaderStatisticsTable sortColumn="startTime">
+                	<column hidden="false" id="startTime" width="150"/>
+                	<column hidden="false" id="classLoader" width="250"/>
+                	<column hidden="false" id="anonymousBlockSize" width="150"/>
+                	<column hidden="false" id="anonymousChunkSize" width="150"/>
+                	<column hidden="false" id="anonymousClassCount" width="150"/>
+                	<column hidden="false" id="blockSize" width="150"/>
+                	<column hidden="false" id="chunkSize" width="150"/>
+                	<column hidden="false" id="classCount" width="150"/>
+                	<column hidden="false" id="classLoaderData" width="250"/>
+                	<column hidden="false" id="parentClassLoader" width="250"/>
+                </classLoaderStatisticsTable>
                 <chart>
                     <checkedAction id="loadedClassCount"/>
                     <checkedAction id="unloadedClassCount"/>

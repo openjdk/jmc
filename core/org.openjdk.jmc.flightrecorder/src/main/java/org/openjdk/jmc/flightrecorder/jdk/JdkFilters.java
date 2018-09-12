@@ -86,8 +86,11 @@ public final class JdkFilters {
 	public static final IItemFilter THROWABLES_STATISTICS = ItemFilters.type(JdkTypeIDs.THROWABLES_STATISTICS);
 	public static final IItemFilter CLASS_UNLOAD = ItemFilters.type(JdkTypeIDs.CLASS_UNLOAD);
 	public static final IItemFilter CLASS_LOAD_STATISTICS = ItemFilters.type(JdkTypeIDs.CLASS_LOAD_STATISTICS);
+	public static final IItemFilter CLASS_LOADER_STATISTICS = ItemFilters.type(JdkTypeIDs.CLASS_LOADER_STATISTICS);
 	public static final IItemFilter CLASS_LOAD = ItemFilters.type(JdkTypeIDs.CLASS_LOAD);
 	public static final IItemFilter CLASS_LOAD_OR_UNLOAD = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD);
+	public static final IItemFilter CLASS_DEFINE = ItemFilters.type(JdkTypeIDs.CLASS_DEFINE);
+	public static final IItemFilter CLASS_LOADER_EVENTS = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD, CLASS_DEFINE, CLASS_LOADER_STATISTICS);
 	public static final IItemFilter MONITOR_ENTER = ItemFilters.type(JdkTypeIDs.MONITOR_ENTER);
 	public static final IItemFilter FILE_OR_SOCKET_IO = ItemFilters.type(JdkTypeIDs.SOCKET_READ,
 			JdkTypeIDs.SOCKET_WRITE, JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE);

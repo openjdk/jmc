@@ -55,6 +55,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASSLOADER_LOADE
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASSLOADER_UNLOADED_COUNT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_DEFINING_CLASSLOADER;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_INITIATING_CLASSLOADER;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_DEFINED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_LOADED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_UNLOADED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.COMMAND_LINE;
@@ -142,6 +143,9 @@ public final class JdkQueries {
 			.select(END_TIME, EVENT_THREAD, FLR_DATA_LOST).build();
 	public static final IItemQuery CLASS_LOAD = fromWhere(JdkFilters.CLASS_LOAD)
 			.select(CLASS_LOADED, CLASS_DEFINING_CLASSLOADER, CLASS_INITIATING_CLASSLOADER, EVENT_THREAD, DURATION)
+			.build();
+	public static final IItemQuery CLASS_DEFINE = fromWhere(JdkFilters.CLASS_DEFINE)
+			.select(CLASS_DEFINED, CLASS_DEFINING_CLASSLOADER)
 			.build();
 	public static final IItemQuery CLASS_LOAD_STATISTICS = fromWhere(JdkFilters.CLASS_LOAD_STATISTICS)
 			.select(CLASSLOADER_LOADED_COUNT, CLASSLOADER_UNLOADED_COUNT).build();

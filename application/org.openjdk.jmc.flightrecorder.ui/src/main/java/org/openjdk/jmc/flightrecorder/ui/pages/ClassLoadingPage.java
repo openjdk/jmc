@@ -32,10 +32,16 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.pages;
 
+
+import static org.openjdk.jmc.common.item.ItemQueryBuilder.fromWhere;
+
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,10 +56,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
+import org.openjdk.jmc.common.IMCClassLoader;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -131,6 +138,8 @@ public class ClassLoadingPage extends AbstractDataPage {
 	private static final ItemHistogramBuilder CLASSLOADER_HISTOGRAM = new ItemHistogramBuilder();
 	private static final ItemListBuilder CLASS_LOADING_LIST = new ItemListBuilder();
 	private static final ItemListBuilder CLASS_UNLOADING_LIST = new ItemListBuilder();
+	private static final ItemListBuilder CLASS_DEFINE_LIST = new ItemListBuilder();
+	private static final ItemListBuilder CLASS_LOADER_STATISTICS_LIST = new ItemListBuilder();
 	private static final Map<String, Boolean> LEGEND_ITEMS = new LinkedHashMap<>();
 	private static final String LOADED_COUNT = "loadedCount"; //$NON-NLS-1$
 	private static final String UNLOADED_COUNT = "unloadedCount"; //$NON-NLS-1$
@@ -154,11 +163,27 @@ public class ClassLoadingPage extends AbstractDataPage {
 		CLASS_LOADING_LIST.addColumn(JfrAttributes.DURATION);
 		CLASS_LOADING_LIST.addColumn(JfrAttributes.END_TIME);
 		CLASS_LOADING_LIST.addColumn(JfrAttributes.EVENT_THREAD);
+		
 		CLASS_UNLOADING_LIST.addColumn(JfrAttributes.EVENT_TIMESTAMP);
 		CLASS_UNLOADING_LIST.addColumn(JfrAttributes.EVENT_THREAD);
 		CLASS_UNLOADING_LIST.addColumn(JdkAttributes.CLASS_UNLOADED);
 		CLASS_UNLOADING_LIST.addColumn(JdkAttributes.CLASS_DEFINING_CLASSLOADER);
-
+		
+		CLASS_DEFINE_LIST.addColumn(JfrAttributes.START_TIME);
+		CLASS_DEFINE_LIST.addColumn(JdkAttributes.CLASS_DEFINING_CLASSLOADER);
+		CLASS_DEFINE_LIST.addColumn(JdkAttributes.CLASS_DEFINED);
+		CLASS_DEFINE_LIST.addColumn(JfrAttributes.EVENT_THREAD);
+		
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.ANONYMOUS_BLOCK_SIZE);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.ANONYMOUS_CHUNK_SIZE);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.ANONYMOUS_CLASS_COUNT);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.BLOCK_SIZE);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.CHUNK_SIZE);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.CLASS_COUNT);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.CLASS_LOADER_DATA);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.PARENT_CLASSLOADER);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JdkAttributes.CLASSLOADER);
+		CLASS_LOADER_STATISTICS_LIST.addColumn(JfrAttributes.START_TIME);
 		// FIXME: Need to make a label provider for this
 		// FIXME: Want to have this in the same order
 
@@ -173,8 +198,12 @@ public class ClassLoadingPage extends AbstractDataPage {
 		private final ChartCanvas classLoadingChart;
 		private final ItemList classLoadingTable;
 		private final ItemList classUnloadingTable;
+		private final ItemList classDefineTable;
+		private final ItemList classLoaderStatisticsTable;
 		private FilterComponent classLoadingFilter;
 		private FilterComponent classUnloadingFilter;
+		private FilterComponent classDefineFilter;
+		private FilterComponent classLoaderStatisticsFilter;
 		private final SashForm sash;
 		private final IPageContainer pageContainer;
 		private IItemCollection selectionItems;
@@ -192,6 +221,7 @@ public class ClassLoadingPage extends AbstractDataPage {
 		private final List<IAction> allChartSeriesActions = Stream
 				.concat(Stream.of(classLoadAction, classUnloadAction), statsActions).collect(Collectors.toList());
 		private CTabFolder tabFolder;
+		private CTabFolder classloaderFolder;
 		private XYChart chart;
 		private IRange<IQuantity> timeRange;
 		private FlavorSelector flavorSelector;
@@ -220,7 +250,9 @@ public class ClassLoadingPage extends AbstractDataPage {
 					JfrAttributes.LIFETIME, Messages.ClassLoadingPage_CLASS_LOADING_TIMELINE_SELECTION,
 					classLoadingChart.getContextMenu());
 
-			classloaderHistogram = CLASSLOADER_HISTOGRAM.buildWithoutBorder(sash,
+			classloaderFolder = new CTabFolder(sash, SWT.NONE);
+
+			classloaderHistogram = CLASSLOADER_HISTOGRAM.buildWithoutBorder(classloaderFolder,
 					JdkAttributes.CLASS_DEFINING_CLASSLOADER, TableSettings.forState(state.getChild(HISTOGRAM)));
 			classloaderHistogramFilter = FilterComponent.createFilterComponent(classloaderHistogram, null,
 					getDataSource().getItems().apply(JdkFilters.CLASS_LOAD_OR_UNLOAD),
@@ -236,8 +268,37 @@ public class ClassLoadingPage extends AbstractDataPage {
 			classLoaderHistogramMm.add(classloaderHistogramFilter.getShowFilterAction());
 			classLoaderHistogramMm.add(classloaderHistogramFilter.getShowSearchAction());
 			classloaderHistogramFilter.loadState(state.getChild(HISTOGRAM_FILTER));
+			DataPageToolkit.addTabItem(classloaderFolder, classloaderHistogramFilter.getComponent(),
+					Messages.ClassLoadingPage_CLASS_LOADER_TAB);
 
 			ItemHistogramWithInput.chain(classloaderHistogram, this::updateTables);
+
+			classLoaderStatisticsTable = CLASS_LOADER_STATISTICS_LIST.buildWithoutBorder(classloaderFolder,
+					TableSettings.forState(state.getChild(CLASS_LOADER_STATISTICS_TABLE)));
+			classLoaderStatisticsTable.getManager().getViewer().addSelectionChangedListener(e -> {
+				// The standard aggregators will skip the null classloader, so we need to do this manually.
+				IItemCollection selection = ItemCollectionToolkit.build(classLoaderStatisticsTable.getSelection().get());
+				Stream<IMCClassLoader> stream = ItemCollectionToolkit.values(selection, JdkAttributes.CLASSLOADER).get().distinct();
+				Set<IMCClassLoader> selected = stream.collect(Collectors.toSet());
+				IItemFilter selectionFilter =  ItemFilters.and(ItemFilters.or(JdkFilters.CLASS_LOAD_OR_UNLOAD,
+				JdkFilters.CLASS_DEFINE), ItemFilters.memberOf(JdkAttributes.CLASS_DEFINING_CLASSLOADER, selected));
+ 				IItemCollection filteredItems = getDataSource().getItems().apply(selectionFilter);
+				pageContainer.showSelection(filteredItems);
+				updateTables(filteredItems);
+			});
+			classLoaderStatisticsFilter = FilterComponent.createFilterComponent(classLoaderStatisticsTable, null,
+					getDataSource().getItems().apply(JdkFilters.CLASS_LOADER_STATISTICS),
+					pageContainer.getSelectionStore()::getSelections, this::onClassLoaderStatisticsFilterChange);
+			MCContextMenuManager classLoaderStatisticsTableMm = MCContextMenuManager
+					.create(classLoaderStatisticsTable.getManager().getViewer().getControl());
+			ColumnMenusFactory.addDefaultMenus(classLoaderStatisticsTable.getManager(), classLoaderStatisticsTableMm);
+			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), classLoaderStatisticsTable,
+					Messages.ClassLoadingPage_CLASS_LOADER_STATISTICS_LIST_SELECTION, classLoaderStatisticsTableMm);
+			classLoaderStatisticsTableMm.add(classLoaderStatisticsFilter.getShowFilterAction());
+			classLoaderStatisticsTableMm.add(classLoaderStatisticsFilter.getShowSearchAction());
+			classLoaderStatisticsFilter.loadState(state.getChild(CLASS_LOADER_STATISTICS_FILTER));
+			DataPageToolkit.addTabItem(classloaderFolder, classLoaderStatisticsFilter.getComponent(),
+					Messages.ClassLoadingPage_CLASS_LOADER_STATISTICS_TAB_TITLE);
 
 			tabFolder = new CTabFolder(sash, SWT.NONE);
 
@@ -258,6 +319,24 @@ public class ClassLoadingPage extends AbstractDataPage {
 			classLoadingFilter.loadState(state.getChild(CLASS_LOADING_FILTER));
 			DataPageToolkit.addTabItem(tabFolder, classLoadingFilter.getComponent(),
 					Messages.ClassLoadingPage_CLASS_LOADING_TAB_TITLE);
+			
+			classDefineTable = CLASS_DEFINE_LIST.buildWithoutBorder(tabFolder,
+					TableSettings.forState(state.getChild(CLASS_DEFINE_TABLE)));
+			classDefineTable.getManager().getViewer().addSelectionChangedListener(e -> pageContainer
+					.showSelection(ItemCollectionToolkit.build(classDefineTable.getSelection().get())));
+			classDefineFilter = FilterComponent.createFilterComponent(classDefineTable, null,
+					getDataSource().getItems().apply(JdkFilters.CLASS_DEFINE),
+					pageContainer.getSelectionStore()::getSelections, this::onClassDefineFilterChange);
+			MCContextMenuManager classDefineTableMm = MCContextMenuManager
+					.create(classDefineTable.getManager().getViewer().getControl());
+			ColumnMenusFactory.addDefaultMenus(classDefineTable.getManager(), classDefineTableMm);
+			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), classDefineTable,
+					Messages.ClassLoadingPage_CLASS_DEFINE_LIST_SELECTION, classDefineTableMm);
+			classDefineTableMm.add(classDefineFilter.getShowFilterAction());
+			classDefineTableMm.add(classDefineFilter.getShowSearchAction());
+			classDefineFilter.loadState(state.getChild(CLASS_DEFINE_FILTER));
+			DataPageToolkit.addTabItem(tabFolder, classDefineFilter.getComponent(),
+					Messages.ClassLoadingPage_CLASS_DEFINE_TAB_TITLE);
 
 			classUnloadingTable = CLASS_UNLOADING_LIST.buildWithoutBorder(tabFolder,
 					TableSettings.forState(state.getChild(CLASS_UNLOADING_TABLE)));
@@ -278,6 +357,7 @@ public class ClassLoadingPage extends AbstractDataPage {
 					Messages.ClassLoadingPage_CLASS_UNLOADING_TAB_TITLE);
 
 			tabFolder.setSelection(tabFolderIndex);
+			classloaderFolder.setSelection(tabFolderIndex);
 
 			PersistableSashForm.loadState(sash, state.getChild(SASH));
 			flavorSelector = FlavorSelector.itemsWithTimerange(form, TABLE_FILTER, getDataSource().getItems(),
@@ -287,20 +367,30 @@ public class ClassLoadingPage extends AbstractDataPage {
 			onHistogramFilterChange(histogramFilter);
 			onClassLoadFilterChange(classLoadTableFilter);
 			onClassUnloadFilterChange(classUnloadTableFilter);
+			onClassDefineFilterChange(classDefineTableFilter);
+			onClassLoaderStatisticsFilterChange(classLoaderStatisticsTableFilter);
 
 			classloaderHistogram.getManager().setSelectionState(histogramSelection);
 			classLoadingTable.getManager().setSelectionState(classLoadingTableSelection);
 			classUnloadingTable.getManager().setSelectionState(classUnloadingTableSelection);
+			classDefineTable.getManager().setSelectionState(classDefineTableSelection);
+			classLoaderStatisticsTable.getManager().setSelectionState(classLoaderStatisticsTableSelection);
 		}
 
 		private void onHistogramFilterChange(IItemFilter filter) {
 			classloaderHistogramFilter.filterChangeHelper(filter, classloaderHistogram,
-					getDataSource().getItems().apply(JdkFilters.CLASS_LOAD_OR_UNLOAD));
+					getDataSource().getItems().apply(ItemFilters.or(JdkFilters.CLASS_LOAD_OR_UNLOAD, JdkFilters.CLASS_DEFINE)));
 			if (classLoadingFilter != null) {
 				classLoadingFilter.notifyListener();
 			}
 			if (classUnloadingFilter != null) {
 				classUnloadingFilter.notifyListener();
+			}
+			if (classDefineFilter != null) {
+				classDefineFilter.notifyListener();
+			}
+			if (classLoaderStatisticsFilter != null) {
+				classLoaderStatisticsFilter.notifyListener();
 			}
 			histogramFilter = filter;
 		}
@@ -316,16 +406,32 @@ public class ClassLoadingPage extends AbstractDataPage {
 					getDataSource().getItems().apply(JdkFilters.CLASS_UNLOAD));
 			classUnloadTableFilter = filter;
 		}
-
+		
+		private void onClassDefineFilterChange(IItemFilter filter) {
+			classDefineFilter.filterChangeHelper(filter, classDefineTable,
+					getDataSource().getItems().apply(JdkFilters.CLASS_DEFINE));
+			classDefineTableFilter = filter;
+		}
+		
+		private void onClassLoaderStatisticsFilterChange(IItemFilter filter) {
+			classLoaderStatisticsFilter.filterChangeHelper(filter, classLoaderStatisticsTable,
+					getDataSource().getItems().apply(JdkFilters.CLASS_LOADER_STATISTICS));
+			classLoaderStatisticsTableFilter = filter;
+		}
+	
 		@Override
 		public void saveTo(IWritableState state) {
 			PersistableSashForm.saveState(sash, state.createChild(SASH));
 			classloaderHistogram.getManager().getSettings().saveState(state.createChild(HISTOGRAM));
 			classLoadingTable.getManager().getSettings().saveState(state.createChild(CLASS_LOADING_TABLE));
 			classUnloadingTable.getManager().getSettings().saveState(state.createChild(CLASS_UNLOADING_TABLE));
+			classDefineTable.getManager().getSettings().saveState(state.createChild(CLASS_DEFINE_TABLE));
+			classLoaderStatisticsTable.getManager().getSettings().saveState(state.createChild(CLASS_LOADER_STATISTICS_TABLE));
 			classloaderHistogramFilter.saveState(state.createChild(HISTOGRAM_FILTER));
 			classLoadingFilter.saveState(state.createChild(CLASS_LOADING_FILTER));
 			classUnloadingFilter.saveState(state.createChild(CLASS_UNLOADING_FILTER));
+			classDefineFilter.saveState(state.createChild(CLASS_DEFINE_FILTER));
+			classLoaderStatisticsFilter.saveState(state.createChild(CLASS_LOADER_STATISTICS_FILTER));
 			ActionToolkit.saveCheckState(state.createChild(CHART), allChartSeriesActions.stream());
 
 			saveToLocal();
@@ -335,6 +441,8 @@ public class ClassLoadingPage extends AbstractDataPage {
 			histogramSelection = classloaderHistogram.getManager().getSelectionState();
 			classLoadingTableSelection = classLoadingTable.getManager().getSelectionState();
 			classUnloadingTableSelection = classUnloadingTable.getManager().getSelectionState();
+			classDefineTableSelection = classDefineTable.getManager().getSelectionState();
+			classLoaderStatisticsTableSelection = classLoaderStatisticsTable.getManager().getSelectionState();
 			tabFolderIndex = tabFolder.getSelectionIndex();
 			flavorSelectorState = flavorSelector.getFlavorSelectorState();
 		}
@@ -395,9 +503,11 @@ public class ClassLoadingPage extends AbstractDataPage {
 		}
 
 		private void updateTables(IItemCollection selectedItems) {
-			if (classLoadingTable != null && classUnloadingTable != null) {
+			if (classLoadingTable != null && classUnloadingTable != null && classDefineTable != null
+					&& classLoaderStatisticsTable != null) {
 				classLoadingTable.show(selectedItems.apply(JdkQueries.CLASS_LOAD.getFilter()));
 				classUnloadingTable.show(selectedItems.apply(JdkQueries.CLASS_UNLOAD.getFilter()));
+				classDefineTable.show(selectedItems.apply(JdkQueries.CLASS_DEFINE.getFilter()));
 			}
 		}
 
@@ -417,8 +527,12 @@ public class ClassLoadingPage extends AbstractDataPage {
 	private static final String HISTOGRAM_FILTER = "histogramFilter"; //$NON-NLS-1$
 	private static final String CLASS_LOADING_TABLE = "classLoadingTable"; //$NON-NLS-1$
 	private static final String CLASS_UNLOADING_TABLE = "classUnloadingTable"; //$NON-NLS-1$
+	private static final String CLASS_DEFINE_TABLE = "classDefineTable"; //$NON-NLS-1$
+	private static final String CLASS_LOADER_STATISTICS_TABLE = "classLoaderStatisticsTable"; //$NON-NLS-1$
 	private static final String CLASS_LOADING_FILTER = "classLoadingFilter"; //$NON-NLS-1$
 	private static final String CLASS_UNLOADING_FILTER = "classUnloadingFilter"; //$NON-NLS-1$
+	private static final String CLASS_DEFINE_FILTER = "classDefineFilter"; //$NON-NLS-1$
+	private static final String CLASS_LOADER_STATISTICS_FILTER = "classLoaderStatisticsFilter"; //$NON-NLS-1$
 	private static final String CHART = "chart"; //$NON-NLS-1$
 
 	@Override
@@ -429,9 +543,13 @@ public class ClassLoadingPage extends AbstractDataPage {
 	private SelectionState histogramSelection;
 	private SelectionState classLoadingTableSelection;
 	private SelectionState classUnloadingTableSelection;
+	private SelectionState classDefineTableSelection;
+	private SelectionState classLoaderStatisticsTableSelection;
 	private IItemFilter histogramFilter;
 	private IItemFilter classLoadTableFilter;
 	private IItemFilter classUnloadTableFilter;
+	private IItemFilter classDefineTableFilter;
+	private IItemFilter classLoaderStatisticsTableFilter;
 	private int tabFolderIndex = 0;
 	private IRange<IQuantity> timelineRange;
 	private FlavorSelectorState flavorSelectorState;

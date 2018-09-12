@@ -61,6 +61,10 @@ public class Messages extends NLS {
 	public static String ClassLoadingPage_AGGR_CLASSES_UNLOADED_BY_CLASSLOADER;
 	public static String ClassLoadingPage_AGGR_CLASSES_UNLOADED_BY_CLASSLOADER_DESC;
 	public static String ClassLoadingPage_AGGR_CLASSES_UNLOADED_DESC;
+	public static String ClassLoadingPage_CLASS_LOADER_TAB;
+	public static String ClassLoadingPage_CLASS_LOADER_STATISTICS_ACTION;
+	public static String ClassLoadingPage_CLASS_LOADER_STATISTICS_LIST_SELECTION;
+	public static String ClassLoadingPage_CLASS_LOADER_STATISTICS_TAB_TITLE;
 	public static String ClassLoadingPage_CLASS_LOADING_ACTION;
 	public static String ClassLoadingPage_CLASS_LOADING_ACTION_DESC;
 	public static String ClassLoadingPage_CLASS_LOADING_HISTOGRAM_SELECTION;
@@ -71,6 +75,9 @@ public class Messages extends NLS {
 	public static String ClassLoadingPage_CLASS_UNLOADING_ACTION_DESC;
 	public static String ClassLoadingPage_CLASS_UNLOADING_LIST_SELECTION;
 	public static String ClassLoadingPage_CLASS_UNLOADING_TAB_TITLE;
+	public static String ClassLoadingPage_CLASS_DEFINE_ACTION;
+	public static String ClassLoadingPage_CLASS_DEFINE_LIST_SELECTION;
+	public static String ClassLoadingPage_CLASS_DEFINE_TAB_TITLE;
 	public static String ClassLoadingPage_PAGE_NAME;
 	public static String ClassLoadingPage_ROW_CLASSES_LOADED;
 	public static String ClassLoadingPage_ROW_CLASSES_UNLOADED;
