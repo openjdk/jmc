@@ -293,7 +293,7 @@ public class ResultReportUi {
 	private static String openWindowMethod(String url, String name){
         return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027")
                 .append(url).append("\u0027").append(',').append("\u0027")
-                .append(name).append("\u0027").append(")").toString();
+                .append(name).append("\u0027").append(");return false;").toString();
     }
 
 	public ResultReportUi(boolean isSinglePage) {
