@@ -111,19 +111,20 @@ public class RulesToolkit {
 	public static final String REC_SETTING_NAME_PERIOD = "period"; //$NON-NLS-1$
 	public static final String REC_SETTING_PERIOD_EVERY_CHUNK = "everyChunk"; //$NON-NLS-1$
 
+	/*
+	 * Returns the type name, as available in the recording settings, or simply the type id, if not
+	 * available.
+	 */
 	private static final IAccessorFactory<String> TYPE_NAME_ACCESSOR_FACTORY = new IAccessorFactory<String>() {
-
 		@Override
-		public <T> IMemberAccessor<String, T> getAccessor(IType<T> type) {
+		public <T> IMemberAccessor<String, T> getAccessor(final IType<T> type) {
 			final IMemberAccessor<LabeledIdentifier, T> ta = JdkAttributes.REC_SETTING_FOR.getAccessor(type);
 			return new IMemberAccessor<String, T>() {
-
 				@Override
 				public String getMember(T inObject) {
-					LabeledIdentifier eventType = ta.getMember(inObject);
-					return eventType == null ? null : eventType.getName();
+					LabeledIdentifier labeledIdentifier = ta.getMember(inObject);
+					return labeledIdentifier == null ? type.getIdentifier() : labeledIdentifier.getName();
 				}
-
 			};
 		}
 	};
@@ -422,7 +423,7 @@ public class RulesToolkit {
 	 *            the collection to check.
 	 * @param typeIds
 	 *            the identifiers for the event types to check.
-	 * @return true if all of the required event types were known to be explicitly enabled.
+	 * @return true if all of the required event types were known to be explicitly disabled.
 	 */
 	private static boolean isEventsDisabled(IItemCollection items, String ... typeIds) {
 		IQuantity aggregate = items.apply(createEnablementFilter(false, typeIds)).getAggregate(Aggregators.count());
@@ -942,6 +943,9 @@ public class RulesToolkit {
 		return items.apply(filter).getAggregate(Aggregators.distinct(JdkAttributes.REC_SETTING_VALUE));
 	}
 
+	/*
+	 * Returns the names of the _explicitly_ disabled event types.
+	 */
 	private static String getDisabledEventTypeNames(IItemCollection items, String ... typeIds) {
 		return getEventTypeNames(items.apply(createEnablementFilter(false, typeIds)));
 	}

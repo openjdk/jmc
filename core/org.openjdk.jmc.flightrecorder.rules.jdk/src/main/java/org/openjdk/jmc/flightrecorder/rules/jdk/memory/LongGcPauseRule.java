@@ -78,7 +78,7 @@ public class LongGcPauseRule implements IRule {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.GC_PAUSE,
 				JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
 		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, EventAvailability.DISABLED, JdkTypeIDs.GC_PAUSE,
+			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.GC_PAUSE,
 					JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
 		}
 		IQuantity maxPause = items.getAggregate(JdkAggregators.LONGEST_GC_PAUSE);
