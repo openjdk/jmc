@@ -6,6 +6,8 @@ Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.openjdk.jmc.flightrecorder.rules,
+ org.openjdk.jmc.flightrecorder.rules.report, 
+ org.openjdk.jmc.flightrecorder.rules.report.html,
  org.openjdk.jmc.flightrecorder.rules.report.html.internal;x-friends:="org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.flightrecorder.rules.tree,
  org.openjdk.jmc.flightrecorder.rules.util

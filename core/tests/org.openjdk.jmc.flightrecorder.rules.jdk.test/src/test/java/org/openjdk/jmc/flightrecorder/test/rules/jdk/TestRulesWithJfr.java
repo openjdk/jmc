@@ -101,8 +101,8 @@ import org.xml.sax.SAXException;
 public class TestRulesWithJfr {
 	private static final String JFR_RULE_BASELINE_JFR = "JfrRuleBaseline.xml";
 	private static final String BASELINE_DIR = "baseline";
-	private static final String RECORDINGS_DIR = "jfr";
-	private static final String RECORDINGS_INDEXFILE = "index.txt";
+	static final String RECORDINGS_DIR = "jfr";
+	static final String RECORDINGS_INDEXFILE = "index.txt";
 
 	private TimeZone defaultTimeZone;
 	
