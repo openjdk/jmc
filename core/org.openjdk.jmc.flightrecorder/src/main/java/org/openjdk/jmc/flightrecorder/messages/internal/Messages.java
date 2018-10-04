@@ -50,6 +50,9 @@ public class Messages {
 	public static final String ATTR_EVENT_TIMESTAMP_DESC = "ATTR_EVENT_TIMESTAMP_DESC"; //$NON-NLS-1$
 	public static final String ATTR_EVENT_TYPE = "ATTR_EVENT_TYPE"; //$NON-NLS-1$
 	public static final String ATTR_EVENT_TYPE_DESC = "ATTR_EVENT_TYPE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_TYPE_ID = "ATTR_EVENT_TYPE_ID"; //$NON-NLS-1$
+	public static final String ATTR_EVENT_TYPE_ID_DESC = "ATTR_EVENT_TYPE_ID_DESC"; //$NON-NLS-1$
+
 	public static final String ATTR_FLR_DATA_LOST = "ATTR_FLR_DATA_LOST"; //$NON-NLS-1$
 	public static final String ATTR_FLR_DATA_LOST_DESC = "ATTR_FLR_DATA_LOST_DESC"; //$NON-NLS-1$
 	public static final String ATTR_LIFETIME = "ATTR_LIFETIME"; //$NON-NLS-1$

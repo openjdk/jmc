@@ -62,7 +62,7 @@ public class RecordingToolkit {
 		return TestToolkit.getProjectDirectory(RecordingToolkit.class, RECORDINGS_DIRECTORY);
 	}
 
-	static IOResourceSet getRecordings() throws IOException {
+	public static IOResourceSet getRecordings() throws IOException {
 		return TestToolkit.getResourcesInDirectory(RecordingToolkit.class, RECORDINGS_DIRECTORY, RECORDINGS_INDEXFILE);
 	}
 
