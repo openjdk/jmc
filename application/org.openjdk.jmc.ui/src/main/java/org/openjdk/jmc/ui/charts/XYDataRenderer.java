@@ -44,6 +44,8 @@ import java.util.Collections;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.LinearUnit;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.ui.charts.AWTChartToolkit.IColorProvider;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor.IBucket;
@@ -200,9 +202,11 @@ public class XYDataRenderer implements IXDataRenderer {
 
 		if (yAxisMin != null && yAxisMax != null) {
 			FontMetrics fm = context.getFontMetrics();
-			// If min=max, expand range to be [min, min+1]
+			// If min=max, expand range to be [min, min+1], or [min, min+1024] in the case of 
+			//a graph measured in bytes
 			if (yAxisMin.compareTo(yAxisMax) == 0) {
-				yAxisMax = yAxisMin.getUnit().quantity(yAxisMin.doubleValue() + 1);
+				int offset = yAxisMin.getUnit() == UnitLookup.BYTE ? 1024 : 1;
+				yAxisMax = yAxisMin.getUnit().quantity(yAxisMin.doubleValue() + offset);
 			} else {
 				// Add sufficient padding to ensure that labels for ticks <= yAxisMax fit,
 				// and constant value graphs are discernible.
