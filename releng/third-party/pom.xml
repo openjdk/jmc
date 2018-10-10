@@ -42,7 +42,7 @@
 			<plugin>
 				<groupId>org.reficio</groupId>
 				<artifactId>p2-maven-plugin</artifactId>
-				<version>1.2.0-SNAPSHOT</version>
+				<version>1.2.0</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -138,10 +138,4 @@
 			<url>http://repository.ops4j.org/maven2/</url>
 		</repository>
 	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>reficio</id>
-			<url>http://repo.reficio.org/maven/</url>
-		</pluginRepository>
-	</pluginRepositories>
 </project>
