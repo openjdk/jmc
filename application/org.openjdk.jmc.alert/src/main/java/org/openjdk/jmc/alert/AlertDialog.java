@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -196,25 +197,14 @@ public class AlertDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Control dialogArea = super.createDialogArea(parent);
-
-		GridData gd = null;
-
-		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		Composite composite = new Composite((Composite) dialogArea, SWT.NONE);
-		composite.setLayoutData(gd);
-
-		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.heightHint = 100;
-		TableViewer viewer = createViewer(composite);
-		viewer.getTable().setLayoutData(gd);
-
-		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gd.heightHint = 100;
-		m_text = createMessage(composite);
-		m_text.setLayoutData(gd);
-
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
+		SashForm sash = new SashForm((Composite) dialogArea, SWT.VERTICAL);
+		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		TableViewer viewer = createViewer(sash);
+		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		m_text = createMessage(sash);
+		m_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		sash.setWeights(new int[] {75,25});
+		sash.setLayout(new GridLayout());
 		return dialogArea;
 	}
 
