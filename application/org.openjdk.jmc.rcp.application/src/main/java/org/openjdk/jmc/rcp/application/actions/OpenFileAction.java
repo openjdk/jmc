@@ -47,6 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.rcp.application.ApplicationPlugin;
 import org.openjdk.jmc.ui.MCPathEditorInput;
 import org.openjdk.jmc.ui.WorkbenchToolkit;
+import org.openjdk.jmc.ui.common.util.Environment;
 
 /**
  * Class for opening a file
@@ -140,7 +141,10 @@ public class OpenFileAction extends Action {
 	public static void openFile(IWorkbenchWindow inWindow) {
 		FileDialog dialog = new FileDialog(inWindow.getShell(), SWT.OPEN | SWT.MULTI);
 		dialog.setFilterPath(getDefaultFilterPath());
-		setFilterNamesAndExtensions(dialog);
+		// FIXME: Workaround for Eclipse bug 540164. See JMC-6171.
+		if (Environment.getOSType() != Environment.OSType.MAC) {
+			setFilterNamesAndExtensions(dialog);
+		}
 		dialog.setText(Messages.OpenFileAction_OPEN_FILE_TITLE);
 
 		if (dialog.open() == null) {
