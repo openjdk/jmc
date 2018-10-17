@@ -110,6 +110,20 @@
 	</modules>
 	<profiles>
 		<profile>
+			<id>no-jfr</id>
+			<activation>
+				<property>
+					<name>java.runtime.name</name>
+					<value>OpenJDK Runtime Environment</value>
+				</property>
+                                <jdk>(,11)</jdk>
+			</activation>
+			<properties>
+				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest</jfr.tests>
+				<jfr.vmargs></jfr.vmargs>
+			</properties>
+		</profile>
+		<profile>
 			<id>uitests</id>
 			<modules>
 				<module>uitests</module>
@@ -119,6 +133,8 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<jfr.tests></jfr.tests>
+		<jfr.vmargs>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder</jfr.vmargs>
 	</properties>
 
 	<dependencies>

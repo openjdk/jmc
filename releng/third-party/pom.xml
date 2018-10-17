@@ -108,7 +108,7 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[1.8.0-40,9.0.0)</version>
+									<version>[1.8.0-40,)</version>
 									<message>Building JMC requires Java 8 version JDK 1.8.0_40 or later</message>
 								</requireJavaVersion>
 							</rules>		
