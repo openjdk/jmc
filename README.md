@@ -293,7 +293,28 @@ target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc -vm $JAVA_HOME/bin
 And here is an example for Windows x64:
 
 ```bash
-missioncontrol\target\products\org.openjdk.jmc\win32\win32\x86_64\jmc.exe -vm %JAVA_HOME%\bin
+target\products\org.openjdk.jmc\win32\win32\x86_64\jmc.exe -vm %JAVA_HOME%\bin
+```
+
+## Using the Built JMC Update Site in Eclipse
+As part of the JMC build, the JMC update sites will be built. 
+
+There is one update site for the stand-alone RCP application, providing plug-ins for the stand-alone release of JMC:
+
+```bash
+application/org.openjdk.jmc.updatesite.rcp/target/
+```
+
+There is another update site for the Eclipse plug-ins, providing plug-ins for running JMC inside of Eclipse:
+
+```bash
+application/org.openjdk.jmc.updatesite.ide/target/
+```
+
+To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
+
+```bash
+application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-7.0.0-SNAPSHOT.zip
 ```
 
 ## Setting Up for Development and Launching in Eclipse
