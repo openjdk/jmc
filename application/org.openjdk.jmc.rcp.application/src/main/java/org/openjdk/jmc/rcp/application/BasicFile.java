@@ -74,7 +74,7 @@ class BasicFile implements MCFile {
 	private static void write(InputStream in, File toOutput, boolean append) throws IOException {
 		File parent = toOutput.getParentFile();
 		if (parent.isDirectory() || parent.mkdirs()) {
-			IOToolkit.write(in, toOutput, false);
+			IOToolkit.write(in, toOutput, append);
 		} else {
 			throw new IOException();
 		}
