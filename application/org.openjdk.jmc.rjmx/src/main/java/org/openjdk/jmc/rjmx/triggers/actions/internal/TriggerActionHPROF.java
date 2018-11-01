@@ -44,6 +44,7 @@ import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
+import org.openjdk.jmc.ui.common.util.Filename;
 
 /**
  * This notification action triggers a hprof dump.
@@ -70,7 +71,7 @@ public class TriggerActionHPROF extends TriggerAction {
 	 */
 	@Override
 	public void handleNotificationEvent(TriggerEvent e) throws Exception {
-		String fileName = getSetting("filename").getString(); //$NON-NLS-1$
+		String fileName = Filename.splitFilename(getSetting("filename").getString()).asRandomFilename().toString(); //$NON-NLS-1$
 		Boolean onlyLive = getSetting("only_live").getBoolean(); //$NON-NLS-1$
 		if (onlyLive == null) {
 			onlyLive = Boolean.TRUE;
