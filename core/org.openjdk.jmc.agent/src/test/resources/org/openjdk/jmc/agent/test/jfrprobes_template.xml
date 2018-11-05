@@ -410,5 +410,31 @@
 			</method>
 			<loggingtype>jfr</loggingtype>
 		</event>
+		<event id="demo.jfr.testR1">
+			<name>JFR Hello World Reflective Access Event 1 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
+			<path>demo/jfrhelloworldeventC1</path>
+			<!-- kind {INSTANT, DURATION, TIMED} -->
+			<kind>DURATION</kind>
+			<stacktrace>true</stacktrace>
+			<thread>true</thread>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR3</name>						
+				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<!-- Note that this will only work if we allow toString -->
+				<parameter index="0">
+					<name>Gurka ID Attribute</name>
+					<description>The one and only converted Gurk-parameter</description>
+					<contenttype>None</contenttype>	
+					<fieldaccess>
+						<field>gurkID</field>
+						<type>I</type>
+					</fieldaccess>
+					<onlyonexception>false</onlyonexception>
+				</parameter>
+			</method>
+			<loggingtype>jfr</loggingtype>
+		</event>
 	</events>
 </jfragent>

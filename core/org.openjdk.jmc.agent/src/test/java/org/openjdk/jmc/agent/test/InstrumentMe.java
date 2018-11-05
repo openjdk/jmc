@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.agent.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,11 +41,25 @@ import java.util.List;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class InstrumentMe {
-	public static void main(String[] args) throws InterruptedException {
-		InstrumentMe instance = new InstrumentMe();
-		while (true) {
-			runStatic();
-			runInstance(instance);
+	public static void main(String[] args) throws InterruptedException, IOException {
+		Thread runner = new Thread(new Runner(), "InstrumentMe Runner");
+		runner.setDaemon(true);
+		System.out.println("Press <enter> at any time to quit");
+		System.out.println("Now starting looping through the instrumentation examples");
+		runner.start();
+		System.in.read();
+	}
+
+	private final static class Runner implements Runnable {
+		public void run() {
+			InstrumentMe instance = new InstrumentMe();
+			while (true) {
+				try {
+					InstrumentMe.runStatic();
+					InstrumentMe.runInstance(instance);
+				} catch (InterruptedException e) {
+				}
+			}
 		}
 	}
 
