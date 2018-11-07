@@ -749,6 +749,24 @@ public class DataPageToolkit {
 		return null;
 	}
 
+	/**
+	 * Return a disabled Action.
+	 *
+	 * @param text
+	 *            text to be displayed by the MenuItem, and represent it as it's id.
+	 * @return an Action containing the desired text, which will be disabled in a UI component.
+	 */
+	public static IAction disabledAction(String text) {
+		IAction disabledAction = new Action(text) {
+			@Override
+			public boolean isEnabled() {
+				return false;
+			}
+		};
+		disabledAction.setId(text);
+		return disabledAction;
+	}
+
 	public static FilterEditor buildFilterSelector(
 		Composite parent, IItemFilter filter, IItemCollection items, Supplier<Stream<SelectionStoreEntry>> selections,
 		Consumer<IItemFilter> onSelect, boolean hasBorder) {
@@ -784,11 +802,17 @@ public class DataPageToolkit {
 								});
 							});
 					if (!selectionFlavors.isEmpty()) {
+						if (manager.find(Messages.FILTER_NO_SELECTION_AVAILABLE) != null) {
+							manager.remove(Messages.FILTER_NO_SELECTION_AVAILABLE);
+						}
 						manager.add(selectionFlavors);
+					} else {
+						manager.add(disabledAction(Messages.FILTER_NO_SELECTION_AVAILABLE));
 					}
 				});
 			}
 		});
+
 		// FIXME: This could potentially move into the FilterEditor class
 		MenuManager addAttributeValuePredicate = new MenuManager(Messages.FILTER_ADD_FROM_ATTRIBUTE);
 		editor.getContextMenu().prependToGroup(MCContextMenuManager.GROUP_NEW, addAttributeValuePredicate);
@@ -801,7 +825,11 @@ public class DataPageToolkit {
 				if (attributes == null) {
 					attributes = attributeSupplier.get();
 				}
-				attributes.stream().distinct().sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
+				if (!attributes.isEmpty()) {
+					if (manager.find(Messages.FILTER_NO_ATTRIBUTE_AVAILABLE) != null) {
+						manager.remove(Messages.FILTER_NO_ATTRIBUTE_AVAILABLE);
+					}
+					attributes.stream().distinct().sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
 						.forEach(attr -> {
 							addAttributeValuePredicate.add(new Action(attr.getName()) {
 								@Override
@@ -811,6 +839,10 @@ public class DataPageToolkit {
 								}
 							});
 						});
+				} else {
+					manager.add(disabledAction(Messages.FILTER_NO_ATTRIBUTE_AVAILABLE));
+				}
+
 			}
 		});
 		return editor;

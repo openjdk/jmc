@@ -139,6 +139,8 @@ public class Messages extends NLS {
 	public static String FILE_OPENER_ZIPPED_FILE_TITLE;
 	public static String FILTER_ADD_FROM_ATTRIBUTE;
 	public static String FILTER_ADD_FROM_SELECTION;
+	public static String FILTER_NO_ATTRIBUTE_AVAILABLE;
+	public static String FILTER_NO_SELECTION_AVAILABLE;
 	public static String FILTER_SHOW_FILTER_ACTION;
 	public static String FILTER_SHOW_SEARCH_ACTION;
 	public static String FLAVOR_CONTAINS;
