@@ -50,10 +50,9 @@
             <repository location="http://download.eclipse.org/releases/photon/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-	        <!-- TODO: Replace with Babel for Photon once it's available, don't forget thirdparty approvals. -->
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.7.0.v20171231020002"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.7.0.v20171231020002"/>
-            <repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.1/oxygen"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.8.0.v20180815020001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.8.0.v20180815020001"/>
+            <repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.0/photon/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
