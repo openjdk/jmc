@@ -112,7 +112,7 @@
 			<id>uitests</id>
 			<properties>
 				<ui.test.run>true</ui.test.run>
-				<ui.test.excludes>${test.excludes}</ui.test.excludes>
+				<ui.test.excludes>${test.excludes},${jfr.tests}</ui.test.excludes>
 			</properties>
 		</profile>
 		<profile>
