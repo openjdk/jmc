@@ -443,6 +443,9 @@ public class Messages {
 	public static final String ATTR_YOUNG_COLLECTOR_DESC = "ATTR_YOUNG_COLLECTOR_DESC"; //$NON-NLS-1$
 	public static final String ATTR_YOUNG_GENERATION_MAX_SIZE = "ATTR_YOUNG_GENERATION_MAX_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; // $NON-NLS-1$
+	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; // $NON-NLS-1$
+	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; // $NON-NLS-1$
 
 	private Messages() {
 	}

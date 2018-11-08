@@ -36,6 +36,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.cpu.HighJvmCpuRule
 org.openjdk.jmc.flightrecorder.rules.jdk.cpu.ManyRunningProcessesRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ErrorRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ExceptionRule
+org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.FatalErrorRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.BufferLostRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLoadingRule

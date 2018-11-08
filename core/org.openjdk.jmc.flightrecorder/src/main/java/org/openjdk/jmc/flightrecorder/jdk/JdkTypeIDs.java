@@ -144,6 +144,7 @@ public final class JdkTypeIDs {
 	public static final String JAVA_THREAD_END = PREFIX + "ThreadEnd";
 
 	public static final String VM_OPERATIONS = PREFIX + "ExecuteVMOperation";
+	public static final String VM_SHUTDOWN = PREFIX + "Shutdown";
 
 	public static final String THREAD_STATISTICS = PREFIX + "JavaThreadStatistics";
 	public static final String CONTEXT_SWITCH_RATE = PREFIX + "ThreadContextSwitchRate";

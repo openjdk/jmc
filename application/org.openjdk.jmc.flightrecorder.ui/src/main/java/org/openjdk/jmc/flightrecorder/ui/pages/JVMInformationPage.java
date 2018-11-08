@@ -165,6 +165,8 @@ public class JVMInformationPage extends AbstractDataPage {
 			infoViewer.addAggregate(JdkAggregators.JVM_VERSION);
 			infoViewer.addAggregate(JdkAggregators.JVM_ARGUMENTS);
 			infoViewer.addAggregate(JdkAggregators.JAVA_ARGUMENTS);
+			infoViewer.addAggregate(JdkAggregators.JVM_SHUTDOWN_TIME);
+			infoViewer.addAggregate(JdkAggregators.JVM_SHUTDOWN_REASON);
 			jvmInfSection.setClient(infoViewer.getControl());
 
 			Section allFlagsSection = CompositeToolkit.createSection(sash, toolkit,

@@ -161,6 +161,13 @@
 <longDescription>The program generated 0 exceptions per second during 1.017 s starting at 4/26/18 12:10:30 PM.</longDescription>
 </rule>
 <rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+</rule>
+<rule>
 <id>FewSampledThreads</id>
 <severity>Information</severity>
 <score>29.510744962334375</score>
@@ -547,6 +554,13 @@
 <score>0.0</score>
 <shortDescription>The program generated 0 exceptions per second during 1.210 s starting at 4/26/18 12:12:47 PM.</shortDescription>
 <longDescription>The program generated 0 exceptions per second during 1.210 s starting at 4/26/18 12:12:47 PM.</longDescription>
+</rule>
+<rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>FewSampledThreads</id>
@@ -937,6 +951,13 @@
 <longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+</rule>
+<rule>
 <id>FewSampledThreads</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -1323,6 +1344,13 @@
 <score>0.0</score>
 <shortDescription>The program generated 0 exceptions per second during 1.000 s starting at 4/25/18 11:38:36 AM.</shortDescription>
 <longDescription>The program generated 0 exceptions per second during 1.000 s starting at 4/25/18 11:38:36 AM.</longDescription>
+</rule>
+<rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>FewSampledThreads</id>
@@ -1713,6 +1741,13 @@
 <longDescription>The program generated 0 exceptions per second during 999.487 ms starting at 4/4/14 11:17:06 AM.</longDescription>
 </rule>
 <rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+</rule>
+<rule>
 <id>FewSampledThreads</id>
 <severity>OK</severity>
 <score>0.0</score>
@@ -2099,6 +2134,13 @@
 <score>0.0</score>
 <shortDescription>The program generated 0 exceptions per second during 1.009 s starting at 4/4/14 8:54:34 AM.</shortDescription>
 <longDescription>The program generated 0 exceptions per second during 1.009 s starting at 4/4/14 8:54:34 AM.</longDescription>
+</rule>
+<rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>FewSampledThreads</id>
@@ -2489,6 +2531,13 @@
 <longDescription>The program generated 0 exceptions per second during 1.054 s starting at 4/24/18 10:08:53 AM.</longDescription>
 </rule>
 <rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
+</rule>
+<rule>
 <id>FewSampledThreads</id>
 <severity>Information</severity>
 <score>29.510744962334375</score>
@@ -2875,6 +2924,13 @@
 <score>2.573808918421875</score>
 <shortDescription>The program generated 515 exceptions per second during 28.060 s starting at 9/24/15 10:08:58 AM.</shortDescription>
 <longDescription>The program generated 515 exceptions per second during 28.060 s starting at 9/24/15 10:08:58 AM.</longDescription>
+</rule>
+<rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>FewSampledThreads</id>
@@ -3265,6 +3321,13 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Exception Statistics'.</shortDescription>
 <longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>Fatal Errors</id>
+<severity>Not Applicable</severity>
+<score>-1.0</score>
+<shortDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.</shortDescription>
+<longDescription>The Fatal Errors rule requires the following event types: 'jdk.Shutdown'.&lt;p&gt;They are either not available in this version of Java, or must be enabled in a third-party component. If you are using an older Java version, then you can consider upgrading.</longDescription>
 </rule>
 <rule>
 <id>FewSampledThreads</id>

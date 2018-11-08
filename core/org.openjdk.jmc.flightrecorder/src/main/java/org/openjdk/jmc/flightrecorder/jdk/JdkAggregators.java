@@ -118,6 +118,11 @@ public final class JdkAggregators {
 	public static final IAggregator<String, ?> JVM_VERSION = distinctAsString(VM_INFO, JdkAttributes.JVM_VERSION);
 	public static final IAggregator<String, ?> JAVA_ARGUMENTS = distinctAsString(VM_INFO, JdkAttributes.JAVA_ARGUMENTS);
 	public static final IAggregator<String, ?> JVM_ARGUMENTS = distinctAsString(VM_INFO, JdkAttributes.JVM_ARGUMENTS);
+	
+	public static final IAggregator<IQuantity, ?> JVM_SHUTDOWN_TIME = min(Messages.getString(Messages.ATTR_SHUTDOWN_TIME), null,
+			JdkTypeIDs.VM_SHUTDOWN, JfrAttributes.START_TIME);
+	public static final IAggregator<String, ?> JVM_SHUTDOWN_REASON = distinctAsString(JdkTypeIDs.VM_SHUTDOWN,
+			JdkAttributes.SHUTDOWN_REASON);
 	// CPU info
 	public static final IAggregator<IQuantity, ?> MIN_HW_THREADS = min(HW_THREADS.getName(), null, CPU_INFORMATION,
 			HW_THREADS);

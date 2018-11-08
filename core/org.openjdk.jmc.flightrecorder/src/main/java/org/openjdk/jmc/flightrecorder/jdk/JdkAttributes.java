@@ -700,6 +700,10 @@ public final class JdkAttributes {
 	public static final IAttribute<String> DUMP_REASON_RECORDING_ID = attr("recordingId", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID),
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID_DESC), PLAIN_TEXT);
+	
+	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", // $NON-NLS-1$
+			Messages.getString(Messages.ATTR_SHUTDOWN_REASON),
+			Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC), PLAIN_TEXT);
 
 	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = attr("loadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),

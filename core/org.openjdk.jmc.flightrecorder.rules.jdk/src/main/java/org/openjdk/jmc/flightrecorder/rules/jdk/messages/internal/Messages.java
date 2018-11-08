@@ -199,6 +199,10 @@ public class Messages {
 	public static final String ExceptionRule_RULE_NAME = "ExceptionRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String ExceptionRule_TEXT_INFO_LONG = "ExceptionRule_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ExceptionRule_TEXT_MESSAGE = "ExceptionRule_TEXT_MESSAGE"; //$NON-NLS-1$
+	public static final String FatalErrorRule_RULE_NAME = "FatalErrorRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String FatalErrorRule_TEXT_OK = "FatalErrorRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String FatalErrorRule_TEXT_INFO = "FatalErrorRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String FatalErrorRule_TEXT_WARN = "FatalErrorRule_TEXT_WARN"; //$NON-NLS-1$
 	public static final String FasttimeRule_TEXT_WARN = "FasttimeRule_TEXT_WARN"; //$NON-NLS-1$
 	public static final String FasttimeRule_TEXT_WARN_LONG = "FasttimeRule_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD = "FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD"; //$NON-NLS-1$
