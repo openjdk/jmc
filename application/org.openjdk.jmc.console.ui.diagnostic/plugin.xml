@@ -47,9 +47,9 @@
             name="%TAB_DIAGNOSTIC_COMMAND"
             placement="/#7.0">
             <class class="org.openjdk.jmc.console.ui.diagnostic.form.DiagnosticTab">
-        		<column id="name" hidden="true" width="200"/>
-				<column id="description" width="400"/>
+				<column id="name" width="200"/>
 				<column id="value" width="200"/>
+				<column id="description" width="400"/>
 				<column id="type" hidden="true" width="150"/>
             </class>
       </consolePage>
