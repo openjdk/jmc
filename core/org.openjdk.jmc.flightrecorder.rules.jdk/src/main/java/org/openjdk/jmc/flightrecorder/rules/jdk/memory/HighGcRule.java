@@ -86,7 +86,8 @@ public class HighGcRule implements IRule {
 			String longMessage = message + " " + Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO_LONG); //$NON-NLS-1$
 			if (!RulesToolkit.isEventsEnabled(items, JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB)) {
 				longMessage = longMessage + "<p>" //$NON-NLS-1$
-						+ Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO_LONG_ALLOC_DISABLED);
+						+ RulesToolkit.getEnabledEventTypesRecommendation(items,
+								JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 			}
 			return new Result(this, score, message, longMessage, JdkQueries.GC_PAUSE);
 		}

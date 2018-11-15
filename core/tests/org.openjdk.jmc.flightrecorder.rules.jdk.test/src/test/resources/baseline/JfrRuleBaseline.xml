@@ -2619,7 +2619,7 @@
 <severity>OK</severity>
 <score>2.054924803137792</score>
 <shortDescription>The JVM was paused for 100 % of the time during 9.017 ms starting at 4/24/18 10:08:53 AM.</shortDescription>
-<longDescription>The JVM was paused for 100 % of the time during 9.017 ms starting at 4/24/18 10:08:53 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.&lt;p&gt;Some allocation events were disabled in this recording. Enable them to help with troubleshooting this problem.</longDescription>
+<longDescription>The JVM was paused for 100 % of the time during 9.017 ms starting at 4/24/18 10:08:53 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.&lt;p&gt;To improve rule accuracy and/or get more details for further investigation, it is recommended to enable the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</longDescription>
 </rule>
 <rule>
 <id>HighJvmCpu</id>

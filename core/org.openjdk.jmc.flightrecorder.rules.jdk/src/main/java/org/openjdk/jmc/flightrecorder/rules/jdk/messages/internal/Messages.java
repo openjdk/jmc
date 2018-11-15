@@ -302,7 +302,6 @@ public class Messages {
 	public static final String HighGcRuleFactory_RULE_NAME = "HighGcRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String HighGcRuleFactory_TEXT_INFO = "HighGcRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String HighGcRuleFactory_TEXT_INFO_LONG = "HighGcRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
-	public static final String HighGcRuleFactory_TEXT_INFO_LONG_ALLOC_DISABLED = "HighGcRuleFactory_TEXT_INFO_LONG_ALLOC_DISABLED"; //$NON-NLS-1$
 	public static final String HighGcRuleFactory_TEXT_OK = "HighGcRuleFactory_TEXT_OK"; //$NON-NLS-1$
 	public static final String HighJvmCpuRule_AGGR_MAX_ENDTIME = "HighJvmCpuRule_AGGR_MAX_ENDTIME"; //$NON-NLS-1$
 	public static final String HighJvmCpuRule_AGGR_MIN_ENDTIME = "HighJvmCpuRule_AGGR_MIN_ENDTIME"; //$NON-NLS-1$
