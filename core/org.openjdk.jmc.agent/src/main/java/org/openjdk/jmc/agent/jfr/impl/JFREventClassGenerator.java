@@ -42,14 +42,13 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Parameter;
-import org.openjdk.jmc.agent.jfr.JFREventType;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFREventClassGenerator {
 	private static final String CLASS_NAME_INSTANT_EVENT = "com/oracle/jrockit/jfr/InstantEvent"; //$NON-NLS-1$
-	private static final String CLASS_NAME_TIMED_EVENT = "com/oracle/jrockit/jfr/TimedEvent"; //$NON-NLS-1$
 	private static final String CLASS_NAME_DURATION_EVENT = "com/oracle/jrockit/jfr/DurationEvent"; //$NON-NLS-1$
+	private static final String CLASS_NAME_TIMED_EVENT = "com/oracle/jrockit/jfr/TimedEvent"; //$NON-NLS-1$
 
 	/**
 	 * Generates an event class.
@@ -62,11 +61,9 @@ public class JFREventClassGenerator {
 	 */
 	public static byte[] generateEventClass(JFRTransformDescriptor td) throws Exception {
 		ClassWriter cw = new ClassWriter(0);
-		if (td.getEventType() == JFREventType.INSTANT || td.getEventType() == JFREventType.UNDEFINED) {
-			throw new UnsupportedOperationException("EventType " + td.getEventType() + " currently unsupported."); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		// TODO: Add support for different locations
 		cw.visit(Opcodes.V1_7, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, td.getEventClassName(), null,
-				getEventTypeName(td.getEventType()), null);
+				getEventTypeName(JFREventType.TIMED), null);
 
 		cw.visitSource(TypeUtils.getNamePart(td.getEventClassName()) + TypeUtils.JAVA_FILE_EXTENSION, null);
 
@@ -136,7 +133,7 @@ public class JFREventClassGenerator {
 		mv.visitLineNumber(19, l0);
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitFieldInsn(Opcodes.GETSTATIC, className, "token", "Lcom/oracle/jrockit/jfr/EventToken;"); //$NON-NLS-1$ //$NON-NLS-2$
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CLASS_NAME_DURATION_EVENT, "<init>", //$NON-NLS-1$
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CLASS_NAME_TIMED_EVENT, "<init>", //$NON-NLS-1$
 				"(Lcom/oracle/jrockit/jfr/EventToken;)V", false); //$NON-NLS-1$
 		Label l1 = new Label();
 		mv.visitLabel(l1);
@@ -174,7 +171,7 @@ public class JFREventClassGenerator {
 		av0.visit("description", td.getEventDescription()); //$NON-NLS-1$
 		av0.visit("path", td.getEventPath()); //$NON-NLS-1$
 		av0.visit("stacktrace", td.isRecordStackTrace()); //$NON-NLS-1$
-		av0.visit("thread", td.isRecordThread()); //$NON-NLS-1$
+		av0.visit("thread", true); //$NON-NLS-1$
 		av0.visitEnd();
 	}
 
@@ -188,6 +185,6 @@ public class JFREventClassGenerator {
 			return CLASS_NAME_INSTANT_EVENT;
 		case UNDEFINED:
 		}
-		return CLASS_NAME_DURATION_EVENT;
+		return CLASS_NAME_TIMED_EVENT;
 	}
 }

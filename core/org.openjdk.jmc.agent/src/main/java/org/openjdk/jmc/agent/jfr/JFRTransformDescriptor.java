@@ -46,42 +46,29 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 public class JFRTransformDescriptor extends TransformDescriptor {
 	private final static String ATTRIBUTE_EVENT_NAME = "name"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_JFR_EVENT_DESCRIPTION = "description"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_JFR_EVENT_KIND = "kind"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_JFR_EVENT_PATH = "path"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_STACK_TRACE = "stacktrace"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_THREAD = "thread"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_REUSE = "reuse"; //$NON-NLS-1$
 
-	private final JFREventType eventType;
 	private final String classPrefix;
 	private final String eventDescription;
 	private final String eventClassName;
 	private final String eventName;
 	private final String eventPath;
 	private final boolean recordStackTrace;
-	private final boolean recordThread;
-	private final boolean reuseEventObject;
 	private final boolean allowToString;
 	private final List<Parameter> parameters;
 
 	public JFRTransformDescriptor(String id, String className, Method method,
 			Map<String, String> transformationAttributes, List<Parameter> parameters) {
 		super(id, className, method, transformationAttributes);
-		eventType = initializeEventType();
 		classPrefix = initializeClassPrefix();
 		eventName = initializeEventName();
 		eventClassName = initializeEventClassName();
 		eventPath = initializeEventPath();
 		eventDescription = initializeEventDescription();
 		recordStackTrace = getBoolean(ATTRIBUTE_STACK_TRACE, true);
-		recordThread = getBoolean(ATTRIBUTE_THREAD, true);
-		reuseEventObject = getBoolean(ATTRIBUTE_REUSE, false);
 		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, true);
 		this.parameters = parameters;
-	}
-
-	public JFREventType getEventType() {
-		return eventType;
 	}
 
 	public String getEventClassName() {
@@ -108,27 +95,8 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return recordStackTrace;
 	}
 
-	public boolean isRecordThread() {
-		return recordThread;
-	}
-
-	public boolean isReuseEventObject() {
-		return reuseEventObject;
-	}
-
 	public boolean isAllowToString() {
 		return allowToString;
-	}
-
-	private JFREventType initializeEventType() {
-		String kind = getTransformationAttribute(ATTRIBUTE_JFR_EVENT_KIND);
-		JFREventType type = JFREventType.parse(kind);
-		if (type == JFREventType.UNDEFINED) {
-			Logger.getLogger(JFRTransformDescriptor.class.getName()).log(Level.INFO,
-					"The event kind was set to " + kind + ". Will assume DURATION."); //$NON-NLS-1$ //$NON-NLS-2$
-			type = JFREventType.DURATION;
-		}
-		return type;
 	}
 
 	private String initializeClassPrefix() {

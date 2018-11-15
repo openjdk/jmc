@@ -30,28 +30,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.text.impl;
+package org.openjdk.jmc.agent.jfr.impl;
 
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+public enum JFREventType {
+	INSTANT, DURATION, TIMED, UNDEFINED;
 
-public class LoggerClassVisitor extends ClassVisitor {
-	private final TextTransformDescriptor transformDescriptor;
-
-	public LoggerClassVisitor(ClassWriter cv, TextTransformDescriptor descriptor) {
-		super(Opcodes.ASM5, cv);
-		this.transformDescriptor = descriptor;
-	}
-
-	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-		if (name.equals(transformDescriptor.getMethod().getName())
-				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new LoggerMethodAdvisor(transformDescriptor, Opcodes.ASM5, mv, access, name, desc);
+	public static JFREventType parse(String string) {
+		if (string == null) {
+			return UNDEFINED;
 		}
-		return mv;
+		JFREventType et = JFREventType.valueOf(string.toUpperCase().trim());
+		if (et == null) {
+			return UNDEFINED;
+		}
+		return et;
 	}
 }

@@ -47,8 +47,6 @@ import org.openjdk.jmc.agent.jfr.VersionResolver;
 import org.openjdk.jmc.agent.jfr.VersionResolver.JFRVersion;
 import org.openjdk.jmc.agent.jfr.impl.JFRClassVisitor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextClassVisitor;
-import org.openjdk.jmc.agent.text.impl.LoggerClassVisitor;
-import org.openjdk.jmc.agent.text.impl.TextTransformDescriptor;
 
 public class Transformer implements ClassFileTransformer {
 	private TransformRegistry registry;
@@ -83,12 +81,7 @@ public class Transformer implements ClassFileTransformer {
 	private byte[] doTransform(
 		TransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
 		ProtectionDomain protectionDomain) {
-		if (td instanceof TextTransformDescriptor) {
-			return doTextLogging((TextTransformDescriptor) td, classfileBuffer);
-		} else if (td instanceof JFRTransformDescriptor) {
-			return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, protectionDomain);
-		}
-		return classfileBuffer;
+		return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, protectionDomain);
 	}
 
 	private byte[] doJFRLogging(
@@ -104,20 +97,6 @@ public class Transformer implements ClassFileTransformer {
 			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT
 					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, protectionDomain)
 					: new JFRClassVisitor(classWriter, td, definingClassLoader, protectionDomain);
-			ClassReader reader = new ClassReader(classfileBuffer);
-			reader.accept(visitor, 0);
-			return classWriter.toByteArray();
-		} catch (Throwable t) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"Failed to instrument " + td.getMethod().toString(), t); //$NON-NLS-1$
-			return classfileBuffer;
-		}
-	}
-
-	private byte[] doTextLogging(TextTransformDescriptor td, byte[] classfileBuffer) {
-		try {
-			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			LoggerClassVisitor visitor = new LoggerClassVisitor(classWriter, td);
 			ClassReader reader = new ClassReader(classfileBuffer);
 			reader.accept(visitor, 0);
 			return classWriter.toByteArray();

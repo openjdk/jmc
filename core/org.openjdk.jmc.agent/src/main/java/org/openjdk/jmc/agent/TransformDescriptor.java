@@ -34,10 +34,8 @@ package org.openjdk.jmc.agent;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.text.impl.TextTransformDescriptor;
 
 /**
  * General metadata describing a transform to take place for a method.
@@ -108,17 +106,7 @@ public abstract class TransformDescriptor {
 	 */
 	public static TransformDescriptor create(
 		String id, String internalName, Method method, Map<String, String> values, List<Parameter> parameters) {
-		TransformType transformType = TransformType.parse(values.get(ATTRIBUTE_LOGGING_TYPE));
-		if (transformType == TransformType.TEXT) {
-			return new TextTransformDescriptor(id, internalName, method, values);
-		} else if (transformType == TransformType.JFR) {
-			return new JFRTransformDescriptor(id, internalName, method, values, parameters);
-		} else {
-			Logger.getLogger(Transformer.class.getName()).warning(
-					String.format("Unknown logging type requested: %s. Will skip instrumenting %s.%s.", values.get( //$NON-NLS-1$
-							"loggingtype"), internalName, method)); //$NON-NLS-1$
-			return null;
-		}
+		return new JFRTransformDescriptor(id, internalName, method, values, parameters);
 	}
 
 	@Override
