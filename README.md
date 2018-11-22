@@ -284,7 +284,7 @@ Here is an example for Mac OS X:
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc -vm $JAVA_HOME/bin
 ```
 
-Here is an Linux example:
+Here is an example for Linux:
 
 ```bash
 target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc -vm $JAVA_HOME/bin
