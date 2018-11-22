@@ -63,7 +63,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<excludes>${ui.flr.test.excludes},**/*StackTraceComponentTest*,**/*MemoryLeakTest*,**/*RangeNavigatorComponentTest*,**/performance/*,**/jvmflags/*</excludes>
 				</configuration>
@@ -71,7 +71,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<dependency-resolution>
 						<extraRequirements>

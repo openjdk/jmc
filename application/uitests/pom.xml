@@ -158,7 +158,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<product>org.openjdk.jmc.rcp.application.product</product>
 					<application>org.openjdk.jmc.rcp.application.app</application>

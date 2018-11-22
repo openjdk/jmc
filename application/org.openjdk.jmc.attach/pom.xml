@@ -45,7 +45,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<!-- Disable error for forbidden access to sun.management.* APIs -->
 					<compilerArgument>-err:-forbidden</compilerArgument>
