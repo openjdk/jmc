@@ -32,7 +32,9 @@
  */
 package org.openjdk.jmc.ui.misc;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -42,8 +44,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
-
+import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.ui.preferences.PreferenceConstants;
 
 public class AwtCanvas {
 	private ImageData imageDataSWT;
@@ -64,13 +67,26 @@ public class AwtCanvas {
 			byte[] byteData = ((DataBufferByte) imageAWT.getRaster().getDataBuffer()).getData();
 			imageDataSWT = new ImageData(width, height, 24, vpPalette, scanlinePad, byteData);
 			Graphics2D graphicsAWT = imageAWT.createGraphics();
+			setAntiAliasing(graphicsAWT);
+			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12));
 			fixDPI(graphicsAWT);
 			return graphicsAWT;
 		} else {
 			Graphics2D graphicsAWT = imageAWT.createGraphics();
+			setAntiAliasing(graphicsAWT);
+			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12));
 			graphicsAWT.clearRect(0, 0, width, height);
 			fixDPI(graphicsAWT);
 			return graphicsAWT;
+		}
+	}
+	
+	private void setAntiAliasing(Graphics2D ctx) {
+		Boolean antiAliasing = UIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.P_ANTI_ALIASING);
+		if (antiAliasing) {
+			ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		} else {
+			ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		}
 	}
 
