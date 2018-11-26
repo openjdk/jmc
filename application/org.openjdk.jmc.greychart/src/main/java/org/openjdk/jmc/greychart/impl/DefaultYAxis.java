@@ -167,13 +167,13 @@ public class DefaultYAxis extends AbstractAxis implements YAxis {
 	}
 
 	private void paintTitle(Graphics2D ctx, AffineTransform labelTrans, AffineTransform titleTrans) {
+		Rectangle titleBounds = ctx.getFontMetrics().getStringBounds(getTitle(), ctx).getBounds();
 		ctx.setTransform(titleTrans);
 		ctx.setColor(getTitleColor());
 		// calculate size for "legend" boxes in title
 		int boxSize = Math.max(2, ctx.getFontMetrics().getHeight() / 2);
 		// calculate padding, title bounds and text width
 		int padding = Math.max(1, Math.round(boxSize * .5f));
-		Rectangle titleBounds = ctx.getFontMetrics().getStringBounds(getTitle(), ctx).getBounds();
 		int textWidth = titleBounds.width;
 		// add space for "legend" boxes in title, if necessary
 		OptimizingProvider[] providers = new OptimizingProvider[0];
