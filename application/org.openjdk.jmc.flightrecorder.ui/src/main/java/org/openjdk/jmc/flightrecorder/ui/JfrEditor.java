@@ -48,6 +48,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressIndicator;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
@@ -66,6 +67,7 @@ import org.eclipse.ui.INavigationLocationProvider;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -91,10 +93,6 @@ import org.openjdk.jmc.ui.misc.SelectionProvider;
 public class JfrEditor extends EditorPart implements INavigationLocationProvider, IPageContainer {
 
 	public static final String RULE_CONFIGURATION_PREFERENCE_ID = "ruleConfiguration"; //$NON-NLS-1$
-
-	public static final String INVALID_RECORDING_DIALOG_TITLE = "Page could not display data"; //$NON-NLS-1$
-
-	public static final String INVALID_RECORDING_DIALOG_TEXT = "The page cannot be shown correctly for this recording. The recording may be from an old JVM, or invalid in some other way."; //$NON-NLS-1$
 
 	public static final String EDITOR_ID = "org.openjdk.jmc.flightrecorder.ui.JfrEditor"; //$NON-NLS-1$
 
@@ -238,14 +236,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 				setTopics(Collections.emptyList());
 			}
 		} catch (RuntimeException e1) {
-			boolean showModalDialog = Boolean.parseBoolean(
-					System.getProperty("org.openjdk.jmc.flightrecorder.ui.JfrEditor.showModalErrorDialog")); //$NON-NLS-1$
-			if (showModalDialog) {
-				DialogToolkit.showExceptionDialogAsync(getSite().getShell().getDisplay(),
-						INVALID_RECORDING_DIALOG_TITLE, INVALID_RECORDING_DIALOG_TEXT, e1);
-			} else {
-				displayErrorPage(currentPage, e1);
-			}
+			displayErrorPage(currentPage, e1);
 		}
 		resultContainer.layout();
 	}
@@ -262,17 +253,27 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		composite.setLayout(new GridLayout(1, false));
 		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 
-		CLabel errorLabel = new CLabel(composite, SWT.WRAP);
-		errorLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-		errorLabel
+		CLabel errorTitleLabel = new CLabel(composite, SWT.WRAP);
+		errorTitleLabel.setLayoutData(GridDataFactory.swtDefaults().create());
+		errorTitleLabel
 				.setImage(FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_ERROR).createImage());
-		errorLabel
+		errorTitleLabel
 				.setText(NLS.bind(Messages.JFR_EDITOR_PAGE_CANNOT_BE_DISPLAYED, page.getName()).replaceAll("&", "&&")); //$NON-NLS-1$ //$NON-NLS-2$
+		errorTitleLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
 
-		Text text = new Text(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
-		text.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		text.setText(ExceptionToolkit.toString(cause));
+		Label errorTextLabel = new Label(composite, SWT.WRAP);
+		errorTextLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		errorTextLabel.setText(Messages.JFR_EDITOR_INVALID_RECORDING_TEXT);
+
+		ExpandableComposite ec = toolkit
+				.createExpandableComposite(composite, ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
+		ec.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		ec.setText(Messages.STACKTRACE_VIEW_STACK_TRACE);
+
+		Text stackTraceText = new Text(ec, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
+		stackTraceText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		stackTraceText.setText(ExceptionToolkit.toString(cause));
+		ec.setClient(stackTraceText);
 	}
 
 	void refreshPages() {

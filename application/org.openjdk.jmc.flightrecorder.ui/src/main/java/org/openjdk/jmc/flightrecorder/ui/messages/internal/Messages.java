@@ -232,6 +232,7 @@ public class Messages extends NLS {
 	public static String ItemHandlerPage_SET_TOPICS_DIALOG_MESSAGE;
 	public static String ItemHandlerPage_SET_TOPICS_TITLE;
 	public static String ItemHandlerPage_SHOW_FILTER_ACTION;
+	public static String JFR_EDITOR_INVALID_RECORDING_TEXT;
 	public static String JFR_EDITOR_NO_PAGES_TO_SHOW;
 	public static String JFR_EDITOR_PAGE_CANNOT_BE_DISPLAYED;
 	public static String JFR_EDITOR_RULES_CANCELLED;
