@@ -39,10 +39,12 @@ import java.util.logging.Level;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.repository.IRepository;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.openjdk.jmc.rcp.application.ApplicationPlugin;
+import org.openjdk.jmc.rcp.application.Messages;
 
 /**
  * Toolkit for managing P2 repositories.
@@ -71,5 +73,8 @@ public final class P2Toolkit {
 
 		IMetadataRepositoryManager metadataManager = ProvUI.getMetadataRepositoryManager(ui.getSession());
 		metadataManager.addRepository(repoUri);
+
+		metadataManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME, Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
+		artifactManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME, Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
 	}
 }

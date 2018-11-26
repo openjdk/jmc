@@ -59,6 +59,7 @@ public class Messages extends NLS {
 	public static String LockedWorkspaceDialog_LOCKED_WORKSPACE3_TEXT;
 	public static String LockedWorkspaceDialog_LOCKED_WORKSPACE_TITLE;
 	public static String LockedWorkspaceDialog_OK_BUTTON_TEXT;
+	public static String JMC_RCP_P2_UPDATESITE_NICK_NAME;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
