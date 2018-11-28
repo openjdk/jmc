@@ -91,6 +91,25 @@ public class MethodProfilingDataProvider {
 
 	};
 
+	public static final IAccessorFactory<IMCStackTrace> PATH_ACCESSOR_FACTORY = new IAccessorFactory<IMCStackTrace>() {
+
+		@Override
+		public <T> IMemberAccessor<IMCStackTrace, T> getAccessor(IType<T> type) {
+			final IMemberAccessor<IMCStackTrace, T> sta = JfrAttributes.EVENT_STACKTRACE.getAccessor(type);
+			return new IMemberAccessor<IMCStackTrace, T>() {
+
+				@Override
+				public IMCStackTrace getMember(T inObject) {
+					IMCStackTrace st = sta.getMember(inObject);
+					if (st != null && !st.getFrames().isEmpty()) {
+						return st;
+					}
+					return null;
+				}
+			};
+		}
+	};
+
 	/**
 	 * Function that calculates a value representing how balanced the set of top frames is as a
 	 * number in the range [0,1]. A high number indicates that there are some frames occurring more

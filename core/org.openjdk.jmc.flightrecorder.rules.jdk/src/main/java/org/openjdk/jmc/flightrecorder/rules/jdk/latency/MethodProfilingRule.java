@@ -50,6 +50,7 @@ import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
 import org.openjdk.jmc.common.item.GroupingAggregator;
@@ -84,6 +85,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowVisitor;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 
 /**
  * Rule that calculates the top method balance in a sliding window throughout the recording with a
@@ -95,6 +97,11 @@ public class MethodProfilingRule implements IRule {
 	 * Constant value of the maximum number of samples the JVM attempts per sampling period.
 	 */
 	private static final double SAMPLES_PER_PERIOD = 5;
+
+	/**
+	 * Constant value of the maximum number of stack frames to display for the hottest path.
+	 */
+	private static final int MAX_STACK_DEPTH = 10;
 
 	/**
 	 * A simple class for storing execution sample period settings, allowing the sliding window to
@@ -136,11 +143,13 @@ public class MethodProfilingRule implements IRule {
 
 	private static class MethodProfilingWindowResult {
 		IMCMethod method;
+		IMCStackTrace path;
 		IQuantity ratioOfAllPossibleSamples;
 		IRange<IQuantity> window;
 
-		public MethodProfilingWindowResult(IMCMethod method, IQuantity ratio, IRange<IQuantity> window) {
+		public MethodProfilingWindowResult(IMCMethod method, IMCStackTrace path, IQuantity ratio, IRange<IQuantity> window) {
 			this.method = method;
+			this.path = path;
 			this.ratioOfAllPossibleSamples = ratio;
 			this.window = window;
 		}
@@ -218,9 +227,9 @@ public class MethodProfilingRule implements IRule {
 			return RulesToolkit.getNotApplicableResult(this,
 					Messages.getString(Messages.HotMethodsRuleFactory_NOT_ENOUGH_SAMPLES));
 		}
-		Pair<MethodProfilingWindowResult, Map<IMCMethod, MethodProfilingWindowResult>> interestingMethods = getInterestingMethods(
+		Pair<MethodProfilingWindowResult, Map<IMCStackTrace, MethodProfilingWindowResult>> interestingMethods = getInterestingMethods(
 				windowResults);
-		Map<IMCMethod, MethodProfilingWindowResult> percentByMethod = interestingMethods.right;
+		Map<IMCStackTrace, MethodProfilingWindowResult> percentByMethod = interestingMethods.right;
 		MethodProfilingWindowResult mostInterestingResult = interestingMethods.left;
 		if (mostInterestingResult == null) { // Couldn't find any interesting methods
 			return new Result(this, 0, Messages.getString(Messages.HotMethodsRuleFactory_TEXT_OK));
@@ -237,18 +246,25 @@ public class MethodProfilingRule implements IRule {
 							false),
 					mostInterestingResult.ratioOfAllPossibleSamples.displayUsing(IDisplayable.AUTO),
 					windowSize.displayUsing(IDisplayable.AUTO));
+			String formattedPath = "<ul>" + //$NON-NLS-1$
+					FormatToolkit.getHumanReadable(mostInterestingResult.path, false, false, true, true, true, false,
+							MAX_STACK_DEPTH, null, "<li>", //$NON-NLS-1$
+							"</li>" //$NON-NLS-1$
+							) + "</ul>"; //$NON-NLS-1$
 			String longDescription = MessageFormat.format(
 					Messages.getString(Messages.HotMethodsRuleFactory_TEXT_INFO_LONG),
-					buildResultList(percentByMethod));
+					buildResultList(percentByMethod),
+					formattedPath
+					);
 			result = new Result(this, mappedScore, shortDescription, shortDescription + "<p>" + longDescription); //$NON-NLS-1$
 		}
 		return result;
 	}
 
-	private String buildResultList(Map<IMCMethod, MethodProfilingWindowResult> percentByMethod) {
+	private String buildResultList(Map<IMCStackTrace, MethodProfilingWindowResult> percentByMethod) {
 		StringBuilder longList = new StringBuilder();
 		longList.append("<ul>"); //$NON-NLS-1$
-		for (Entry<IMCMethod, MethodProfilingWindowResult> entry : percentByMethod.entrySet()) {
+		for (Entry<IMCStackTrace, MethodProfilingWindowResult> entry : percentByMethod.entrySet()) {
 			longList.append("<li>"); //$NON-NLS-1$
 			longList.append(entry.getValue());
 			longList.append("</li>"); //$NON-NLS-1$
@@ -257,9 +273,9 @@ public class MethodProfilingRule implements IRule {
 		return longList.toString();
 	}
 
-	private Pair<MethodProfilingWindowResult, Map<IMCMethod, MethodProfilingWindowResult>> getInterestingMethods(
+	private Pair<MethodProfilingWindowResult, Map<IMCStackTrace, MethodProfilingWindowResult>> getInterestingMethods(
 		List<MethodProfilingWindowResult> windowResults) {
-		Map<IMCMethod, MethodProfilingWindowResult> percentByMethod = new HashMap<>();
+		Map<IMCStackTrace, MethodProfilingWindowResult> percentByMethod = new HashMap<>();
 		IQuantity maxRawScore = UnitLookup.PERCENT_UNITY.quantity(0);
 		MethodProfilingWindowResult mostInterestingResult = null;
 		for (MethodProfilingWindowResult result : windowResults) {
@@ -268,11 +284,11 @@ public class MethodProfilingRule implements IRule {
 					mostInterestingResult = result;
 					maxRawScore = result.ratioOfAllPossibleSamples;
 				}
-				if (result.method != null && performSigmoidMap(
+				if (result.path != null && performSigmoidMap(
 						result.ratioOfAllPossibleSamples.doubleValueIn(UnitLookup.PERCENT_UNITY)) >= 25) {
-					MethodProfilingWindowResult r = percentByMethod.get(result.method);
+					MethodProfilingWindowResult r = percentByMethod.get(result.path);
 					if (r == null || result.ratioOfAllPossibleSamples.compareTo(r.ratioOfAllPossibleSamples) > 0) {
-						percentByMethod.put(result.method, result);
+						percentByMethod.put(result.path, result);
 					}
 				}
 			}
@@ -310,23 +326,23 @@ public class MethodProfilingRule implements IRule {
 			public void visitWindow(IItemCollection items, IQuantity startTime, IQuantity endTime) {
 				IRange<IQuantity> windowRange = QuantityRange.createWithEnd(startTime, endTime);
 				if (RulesToolkit.getSettingMaxPeriod(items, JdkTypeIDs.EXECUTION_SAMPLE) == null) {
-					Pair<IQuantity, IMCMethod> resultPair = performCalculation(items, settings.getSetting(startTime));
+					Pair<IQuantity, IMCStackTrace> resultPair = performCalculation(items, settings.getSetting(startTime));
 					if (resultPair != null) {
-						rawScores.add(new MethodProfilingWindowResult(resultPair.right, resultPair.left, windowRange));
+						rawScores.add(new MethodProfilingWindowResult(resultPair.right.getFrames().get(0).getMethod(), resultPair.right, resultPair.left, windowRange));
 					}
 				} else {
 					Set<IQuantity> settingTimes = items.apply(settingsFilter)
 							.getAggregate(Aggregators.distinct(JfrAttributes.START_TIME));
 					IQuantity start = startTime;
-					List<Pair<IQuantity, IMCMethod>> scores = new ArrayList<>(settingTimes.size());
+					List<Pair<IQuantity, IMCStackTrace>> scores = new ArrayList<>(settingTimes.size());
 					for (IQuantity settingTime : settingTimes) {
 						IItemFilter window = ItemFilters.interval(JfrAttributes.END_TIME, start, true, settingTime,
 								true);
 						scores.add(performCalculation(items.apply(window), settings.getSetting(start)));
 						start = settingTime;
 					}
-					Map<IMCMethod, IQuantity> scoresByMethod = new HashMap<>();
-					for (Pair<IQuantity, IMCMethod> score : scores) {
+					Map<IMCStackTrace, IQuantity> scoresByMethod = new HashMap<>();
+					for (Pair<IQuantity, IMCStackTrace> score : scores) {
 						if (score != null) {
 							if (scoresByMethod.get(score.right) == null) {
 								scoresByMethod.put(score.right, score.left);
@@ -336,15 +352,16 @@ public class MethodProfilingRule implements IRule {
 						}
 					}
 					IQuantity sumScore = UnitLookup.PERCENT_UNITY.quantity(0);
-					IMCMethod maxMethod = null;
-					for (Entry<IMCMethod, IQuantity> entry : scoresByMethod.entrySet()) {
+					IMCStackTrace hottestPath = null;
+					for (Entry<IMCStackTrace, IQuantity> entry : scoresByMethod.entrySet()) {
 						if (entry.getValue().compareTo(sumScore) > 0) {
-							maxMethod = entry.getKey();
+							hottestPath = entry.getKey();
 							sumScore = sumScore.add(entry.getValue());
 						}
 					}
 					IQuantity averageOfAllPossibleSamples = sumScore.multiply(1d / scores.size());
-					rawScores.add(new MethodProfilingWindowResult(maxMethod, averageOfAllPossibleSamples, windowRange));
+					IMCMethod hottestMethod = (hottestPath == null ? null : hottestPath.getFrames().get(0).getMethod());
+					rawScores.add(new MethodProfilingWindowResult(hottestMethod, hottestPath, averageOfAllPossibleSamples, windowRange));
 				}
 			}
 
@@ -363,13 +380,14 @@ public class MethodProfilingRule implements IRule {
 			 * @return a double value in the interval [0,1] with 1 being a system in completely
 			 *         saturated load with only one method called
 			 */
-			private Pair<IQuantity, IMCMethod> performCalculation(IItemCollection items, IQuantity period) {
+			private Pair<IQuantity, IMCStackTrace> performCalculation(IItemCollection items, IQuantity period) {
 				IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);
 				final IMCMethod[] maxMethod = new IMCMethod[1];
+				final IMCStackTrace[] maxPath = new IMCStackTrace[1];
 				// Using this GroupingAggregator because it's the only way to extract the keys from the aggregation along with values
-				IAggregator<IQuantity, ?> aggregator = GroupingAggregator.build("", "", //$NON-NLS-1$ //$NON-NLS-2$
-						MethodProfilingDataProvider.TOP_FRAME_ACCESSOR_FACTORY, Aggregators.count(),
-						new GroupingAggregator.IGroupsFinisher<IQuantity, IMCMethod, CountConsumer>() {
+				IAggregator<IQuantity, ?> aggregator = GroupingAggregator.build("", "", //$NON-NLS-1$ //$NON_NLS_2$
+						MethodProfilingDataProvider.PATH_ACCESSOR_FACTORY, Aggregators.count(),
+						new GroupingAggregator.IGroupsFinisher<IQuantity, IMCStackTrace, CountConsumer>() {
 
 							@Override
 							public IType<IQuantity> getValueType() {
@@ -377,22 +395,42 @@ public class MethodProfilingRule implements IRule {
 							}
 
 							@Override
-							public IQuantity getValue(Iterable<? extends GroupEntry<IMCMethod, CountConsumer>> groups) {
-								IQuantity maxCount = UnitLookup.NUMBER_UNITY.quantity(0);
+							public IQuantity getValue(Iterable<? extends GroupEntry<IMCStackTrace, CountConsumer>> groupEntries) {
+								HashMap<IMCMethod, IQuantity> map = new HashMap<>();
+								HashMap<IMCMethod, IMCStackTrace> pathMap = new HashMap<>();
 								int total = 0;
-								for (GroupEntry<IMCMethod, CountConsumer> group : groups) {
+								// When we group by stack trace we can run into situations where the top frames are otherwise the same
+								// for our purposes (finding the hottest method), but they differ by BCI, throwing off the count.
+								// so we should collect further on the method for the top frame.
+								for (GroupEntry<IMCStackTrace, CountConsumer> group : groupEntries) {
 									total += group.getConsumer().getCount();
-									int count = group.getConsumer().getCount();
-									if (count > maxCount.longValue()) {
-										maxMethod[0] = group.getKey();
-										maxCount = UnitLookup.NUMBER_UNITY.quantity(count);
+									IMCMethod topFrameMethod = group.getKey().getFrames().get(0).getMethod();
+									if (map.get(topFrameMethod) == null) {
+										map.put(topFrameMethod, UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount()));
+										pathMap.put(topFrameMethod, group.getKey());
+									} else {
+										IQuantity old = map.get(topFrameMethod);
+										map.put(topFrameMethod, old.add(UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount())));
 									}
 								}
-								return maxCount.multiply(1d / total);
+								if (!pathMap.isEmpty() && !map.isEmpty()) {
+									Entry<IMCMethod, IQuantity> topEntry = Collections.max(map.entrySet(), new Comparator<Entry<IMCMethod, IQuantity>>() {
+										@Override
+										public int compare(Entry<IMCMethod, IQuantity> arg0,
+												Entry<IMCMethod, IQuantity> arg1) {
+											return arg0.getValue().compareTo(arg1.getValue());
+										}
+									});
+									maxPath[0] = pathMap.get(topEntry.getKey());
+									maxMethod[0] = topEntry.getKey();
+									return topEntry.getValue().multiply(1d/total);
+								}
+								return UnitLookup.NUMBER_UNITY.quantity(0);
 							}
-						});
+				});
+
 				IQuantity maxRatio = filteredItems.getAggregate(aggregator);
-				Pair<IQuantity, IMCMethod> result = null;
+				Pair<IQuantity, IMCStackTrace> result = null;
 				if (maxMethod[0] != null && maxRatio != null && period != null) { // ignoring if there are no samples or if we don't yet know the periodicity
 					double periodsPerSecond = 1 / period.doubleValueIn(UnitLookup.SECOND);
 					double maxSamplesPerSecond = SAMPLES_PER_PERIOD * periodsPerSecond;
@@ -404,7 +442,7 @@ public class MethodProfilingRule implements IRule {
 					double highestRatioOfSamples = maxRatio.doubleValueIn(UnitLookup.NUMBER_UNITY);
 					IQuantity percentOfAllPossibleSamples = UnitLookup.PERCENT_UNITY
 							.quantity(highestRatioOfSamples * relevancy);
-					result = new Pair<>(percentOfAllPossibleSamples, maxMethod[0]);
+					result = new Pair<>(percentOfAllPossibleSamples, maxPath[0]);
 				}
 				return result;
 			}
