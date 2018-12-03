@@ -43,7 +43,7 @@
     <booleanAttribute key="clearConfig" value="true"/>
     <booleanAttribute key="clearws" value="true"/>
     <booleanAttribute key="clearwslog" value="false"/>
-    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/JMC RCP plug-ins"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/JMC RCP plug-ins (JDK 8)"/>
     <booleanAttribute key="default" value="false"/>
     <stringAttribute key="featureDefaultLocation" value="workspace"/>
     <stringAttribute key="featurePluginResolution" value="workspace"/>
@@ -56,10 +56,10 @@
         <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
     </listAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED -Dorg.eclipse.swt.internal.carbon.smallFonts"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:+UseG1GC -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.openjdk.jmc.rcp.application.product"/>
     <setAttribute key="selected_features">
