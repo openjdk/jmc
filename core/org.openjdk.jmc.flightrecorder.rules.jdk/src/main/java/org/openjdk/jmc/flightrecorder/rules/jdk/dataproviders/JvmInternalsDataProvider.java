@@ -32,10 +32,10 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Helper class used to share analysis of JVM related information, such as flags.
@@ -43,33 +43,33 @@ import java.util.Set;
 @SuppressWarnings("nls")
 public class JvmInternalsDataProvider {
 
-	private static final String[] PREFIXES = new String[] {"Xmx", "Xms", "Xmn", "Xss", "Xmaxjitcodesize"};
+	private static final String[] PREFIXES = new String[] {"-Xmx", "-Xms", "-Xmn", "-Xss", "-Xmaxjitcodesize"};
 	/**
 	 * Options that are OK to use multiple times if different values are provided. Check for
 	 * duplicates using the full argument.
 	 */
-	private static final String[] VERBATIM = new String[] {"verbose", "-add-exports"};
+	private static final String[] VERBATIM = new String[] {"-verbose", "--add-exports", "--add-opens"};
 	private static final Map<String, String> EQUIVALENT = new HashMap<>();
 
 	static {
-		putBiMap("Xbatch", "BackgroundCompilation");
-		putBiMap("Xmaxjitcodesize", "ReservedCodeCacheSize");
-		putBiMap("Xmx", "MaxHeapSize");
-		putBiMap("Xmn", "NewSize");
-		putBiMap("Xss", "ThreadStackSize");
-		putBiMap("Xusealtsigs", "UseAltSigs");
-		putBiMap("cp", "classpath");
-		putBiMap("esa", "enablesystemassertions");
-		putBiMap("dsa", "disablesystemassertions");
-		putBiMap("Xconcgc", "UseConcMarkSweepGC");
-		putBiMap("Xnoconcgc", "UseConcMarkSweepGC");
-		putBiMap("Xnoclassgc", "ClassUnloading");
-		putBiMap("Xminf", "MinHeapFreeRatio");
-		putBiMap("Xmaxf", "MaxHeapFreeRatio");
-		putBiMap("Xrs", "ReduceSignalUsage");
-		putBiMap("Dcom.sun.management", "ManagementServer");
-		putBiMap("Xshare:dump", "DumpSharedSpaces");
-		putBiMap("Xboundthreads", "UseBoundThreads");
+		putBiMap("-Xbatch", "BackgroundCompilation");
+		putBiMap("-Xmaxjitcodesize", "ReservedCodeCacheSize");
+		putBiMap("-Xmx", "MaxHeapSize");
+		putBiMap("-Xmn", "NewSize");
+		putBiMap("-Xss", "ThreadStackSize");
+		putBiMap("-Xusealtsigs", "UseAltSigs");
+		putBiMap("-cp", "classpath");
+		putBiMap("-esa", "enablesystemassertions");
+		putBiMap("-dsa", "disablesystemassertions");
+		putBiMap("-Xconcgc", "UseConcMarkSweepGC");
+		putBiMap("-Xnoconcgc", "UseConcMarkSweepGC");
+		putBiMap("-Xnoclassgc", "ClassUnloading");
+		putBiMap("-Xminf", "MinHeapFreeRatio");
+		putBiMap("-Xmaxf", "MaxHeapFreeRatio");
+		putBiMap("-Xrs", "ReduceSignalUsage");
+		putBiMap("-Dcom.sun.management", "ManagementServer");
+		putBiMap("-Xshare:dump", "DumpSharedSpaces");
+		putBiMap("-Xboundthreads", "UseBoundThreads");
 		putBiMap("AlwaysTenure", "NeverTenure");
 		putBiMap("ResizeTLE", "ResizeTLAB");
 		putBiMap("PrintTLE", "PrintTLAB");
@@ -77,10 +77,10 @@ public class JvmInternalsDataProvider {
 		putBiMap("UseTLE", "UseTLAB");
 		putBiMap("UsePermISM", "UseISM");
 		putBiMap("G1MarkStackSize", "CMSMarkStackSize");
-		putBiMap("Xms", "InitialHeapSize");
+		putBiMap("-Xms", "InitialHeapSize");
 		putBiMap("DisplayVMOutputToStderr", "DisplayVMOutputToStdout");
-		putBiMap("Xverify", "BytecodeVerificationLocal");
-		putBiMap("Xverify", "BytecodeVerificationRemote");
+		putBiMap("-Xverify", "BytecodeVerificationLocal");
+		putBiMap("-Xverify", "BytecodeVerificationRemote");
 		putBiMap("DefaultMaxRAMFraction", "MaxRAMFraction");
 		putBiMap("CMSMarkStackSizeMax", "MarkStackSizeMax");
 		putBiMap("ParallelMarkingThreads", "ConcGCThreads");
@@ -100,14 +100,13 @@ public class JvmInternalsDataProvider {
 	 *            the set of JVM flags to check
 	 * @return a set of all duplicated JVM flags
 	 */
-	public static Set<String> checkDuplicates(String arguments) {
-		HashSet<String> seenFlags = new HashSet<>();
-		HashSet<String> dupes = new HashSet<>();
-		String[] argumentArray = arguments.split(" -");
+	public static Collection<ArrayList<String>> checkDuplicates(String arguments) {
+		HashMap<String, String> seenFlags = new HashMap<>();
+		HashMap<String, ArrayList<String>> dupes = new HashMap<>();
+		String[] argumentArray = arguments.split(" ");
 		if (argumentArray.length == 1 && argumentArray[0].equals("")) {
-			return dupes;
+			return dupes.values();
 		}
-		argumentArray[0] = argumentArray[0].substring(1);
 		for (String fullArgument : argumentArray) {
 			boolean verbatim = false;
 			for (int i = 0; i < VERBATIM.length; i++) {
@@ -122,7 +121,7 @@ public class JvmInternalsDataProvider {
 			} else {
 				String[] split = fullArgument.split("[=:]", 3);
 				argument = split[0];
-				if ("XX".equals(split[0])) {
+				if ("-XX".equals(split[0])) {
 					argument = split[1];
 					if (argument.startsWith("+") || argument.startsWith("-")) {
 						argument = argument.substring(1);
@@ -132,22 +131,24 @@ public class JvmInternalsDataProvider {
 					argument = scrubPrefix(argument, PREFIXES[i]);
 				}
 				String equivalentArgument = EQUIVALENT.get(argument);
-				if (equivalentArgument != null && !seenFlags.contains(argument)
-						&& seenFlags.contains(equivalentArgument)) {
-					String longerArgument = equivalentArgument.length() > argument.length() ? equivalentArgument
-							: argument;
-					String shorterArgument = equivalentArgument.length() > argument.length() ? argument
-							: equivalentArgument;
-					String combinedArgument = String.format("%s (%s)", longerArgument, shorterArgument);
-					dupes.add(combinedArgument);
+				if (equivalentArgument != null && !seenFlags.containsKey(argument)
+						&& seenFlags.containsKey(equivalentArgument)) {
+					argument = equivalentArgument;
 				}
 			}
-			if (seenFlags.contains(argument)) {
-				dupes.add(argument);
+			if (seenFlags.containsKey(argument)) {
+				if (!dupes.containsKey(argument)) {
+					dupes.put(argument, new ArrayList<String>());
+					dupes.get(argument).add(seenFlags.get(argument));
+				}
+				dupes.get(argument).add(fullArgument);
+
 			}
-			seenFlags.add(argument);
+			else {
+				seenFlags.put(argument, fullArgument);
+			}		
 		}
-		return dupes;
+		return dupes.values();
 	}
 
 	private static String scrubPrefix(String argument, String prefix) {

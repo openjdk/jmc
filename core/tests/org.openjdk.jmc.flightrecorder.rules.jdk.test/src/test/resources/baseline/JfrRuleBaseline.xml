@@ -2909,7 +2909,7 @@
 <severity>Information</severity>
 <score>50.0</score>
 <shortDescription>There were 2 JVM duplicated flags.</shortDescription>
-<longDescription>There were 2 JVM duplicated flags. Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. Try to find all the places where the flag is defined and keep only one. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;Xverify&lt;/li&gt;&lt;li&gt;Djava.endorsed.dirs&lt;/li&gt;&lt;/ul&gt;</longDescription>
+<longDescription>There were 2 JVM duplicated flags. Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. Try to find all the places where the flag is defined and keep only one. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;-Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed, -Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed&lt;/li&gt;&lt;li&gt;-Xverify:none, -Xverify:none&lt;/li&gt;&lt;/ul&gt;</longDescription>
 </rule>
 <rule>
 <id>Errors</id>
@@ -3305,8 +3305,8 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <id>DuplicateFlags</id>
 <severity>Information</severity>
 <score>50.0</score>
-<shortDescription>There were 6 JVM duplicated flags.</shortDescription>
-<longDescription>There were 6 JVM duplicated flags. Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. Try to find all the places where the flag is defined and keep only one. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;Xmx&lt;/li&gt;&lt;li&gt;NewSize&lt;/li&gt;&lt;li&gt;Dweblogic.home&lt;/li&gt;&lt;li&gt;-add-opens&lt;/li&gt;&lt;li&gt;MaxNewSize&lt;/li&gt;&lt;li&gt;Xms&lt;/li&gt;&lt;/ul&gt;</longDescription>
+<shortDescription>There were 5 JVM duplicated flags.</shortDescription>
+<longDescription>There were 5 JVM duplicated flags. Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. Try to find all the places where the flag is defined and keep only one. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;-XX:NewSize=65m, -XX:NewSize=65m&lt;/li&gt;&lt;li&gt;-Dweblogic.home=C:\weblogic\src122130_build\Oracle_Home\wlserver/server, -Dweblogic.home=C:\weblogic\SRC122~1\ORACLE~1\wlserver\server&lt;/li&gt;&lt;li&gt;-Xmx500m, -Xmx500m&lt;/li&gt;&lt;li&gt;-Xms160m, -Xms160m&lt;/li&gt;&lt;li&gt;-XX:MaxNewSize=65m, -XX:MaxNewSize=65m&lt;/li&gt;&lt;/ul&gt;</longDescription>
 </rule>
 <rule>
 <id>Errors</id>

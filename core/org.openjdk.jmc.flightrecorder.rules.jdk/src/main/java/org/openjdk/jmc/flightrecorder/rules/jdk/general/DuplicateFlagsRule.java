@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -72,14 +73,15 @@ public class DuplicateFlagsRule implements IRule {
 		// FIXME: Should we check if there are different jvm args in different chunks?
 		Set<String> args = jvmInfoItems.getAggregate(Aggregators.distinct(JdkAttributes.JVM_ARGUMENTS));
 		if (args != null && !args.isEmpty()) {
-
-			Set<String> dupes = JvmInternalsDataProvider.checkDuplicates(args.iterator().next());
+			
+			Collection<ArrayList<String>> dupes = JvmInternalsDataProvider.
+					checkDuplicates(args.iterator().next());
 
 			if (!dupes.isEmpty()) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("<ul>"); //$NON-NLS-1$
-				for (String dupe : dupes) {
-					sb.append("<li>" + Encode.forHtml(dupe) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$
+				for (ArrayList<String> dupe : dupes) {
+					sb.append("<li>" + Encode.forHtml(String.join(", ", dupe)) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				sb.append("</ul>"); //$NON-NLS-1$
 				String shortDescription = dupes.size() > 1
