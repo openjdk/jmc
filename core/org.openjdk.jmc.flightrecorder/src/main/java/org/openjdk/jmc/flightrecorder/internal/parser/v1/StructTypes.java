@@ -66,6 +66,7 @@ class StructTypes {
 
 	private final static JfrMethod UNKNOWN_METHOD = new JfrMethod();
 	private final static JfrJavaClass UNKNOWN_CLASS = new JfrJavaClass();
+	private final static JfrJavaPackage UNKNOWN_PACKAGE = new JfrJavaPackage();
 
 	static class JfrThread implements IMCThread {
 
@@ -144,7 +145,9 @@ class StructTypes {
 		@Override
 		public String getName() {
 			if (!convertedName) {
-				name = MethodToolkit.refTypeToBinaryJLS((String) name);
+				if (name != null) {
+					name = MethodToolkit.refTypeToBinaryJLS((String) name);
+				}
 				convertedName = true;
 			}
 			return (String) name;
@@ -303,6 +306,9 @@ class StructTypes {
 
 		@Override
 		public IMCPackage getPackage() {
+			if (_package == null) {
+				_package = UNKNOWN_PACKAGE;
+			}
 			return (IMCPackage) _package;
 		}
 
@@ -316,8 +322,10 @@ class StructTypes {
 
 		private void convertNames() {
 			if (!convertedNames) {
-				name = MethodToolkit.refTypeToBinaryJLS((String) name);
-				if (getPackageName().length() > 0) {
+				if (name != null) {
+					name = MethodToolkit.refTypeToBinaryJLS((String) name);
+				}
+				if (getPackageName() != null && getPackageName().length() > 0) {
 					typeName = ((String) name).substring(getPackageName().length() + 1);
 				} else {
 					typeName = (String) name;
