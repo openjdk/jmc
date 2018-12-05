@@ -396,6 +396,8 @@ public class Messages {
 	public static final String MethodProfilingRule_RULE_NAME = "MethodProfilingRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_WINDOW_SIZE = "MethodProfilingRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_WINDOW_SIZE_DESC = "MethodProfilingRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
+	public static final String MethodProfilingRule_EXCLUDED_PACKAGES = "MethodProfilingRule_EXCLUDED_PACKAGES"; //$NON-NLS-1$
+	public static final String MethodProfilingRule_EXCLUDED_PACKAGES_DESC = "MethodProfilingRule_EXCLUDED_PACKAGES_DESC"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO = "NumberOfGcThreadsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$

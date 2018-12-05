@@ -47,9 +47,13 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.IMCPackage;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
@@ -70,6 +74,7 @@ import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
+import org.openjdk.jmc.common.util.MCStackTrace;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -85,7 +90,6 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowVisitor;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 
 /**
  * Rule that calculates the top method balance in a sliding window throughout the recording with a
@@ -168,7 +172,12 @@ public class MethodProfilingRule implements IRule {
 			Messages.getString(Messages.MethodProfilingRule_WINDOW_SIZE),
 			Messages.getString(Messages.MethodProfilingRule_WINDOW_SIZE_DESC), UnitLookup.TIMESPAN,
 			UnitLookup.SECOND.quantity(30));
-	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WINDOW_SIZE);
+	public static final TypedPreference<String> EXCLUDED_PACKAGE_REGEXP = new TypedPreference<>(
+			"method.profiling.evaluation.excluded.package", //$NON-NLS-1$
+			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES),
+			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES_DESC),
+			UnitLookup.PLAIN_TEXT.getPersister(), "java\\.(lang|util)");
+	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WINDOW_SIZE, EXCLUDED_PACKAGE_REGEXP);
 
 	/**
 	 * Private Callable implementation specifically used to avoid storing the FutureTask as a field.
@@ -217,10 +226,17 @@ public class MethodProfilingRule implements IRule {
 
 		IQuantity windowSize = valueProvider.getPreferenceValue(WINDOW_SIZE);
 		IQuantity slideSize = UnitLookup.SECOND.quantity(windowSize.ratioTo(UnitLookup.SECOND.quantity(2)));
-
+		String excludedPattern = valueProvider.getPreferenceValue(EXCLUDED_PACKAGE_REGEXP);
+		Pattern excludes;
+		try {
+			excludes = Pattern.compile(excludedPattern);
+		} catch (Exception e) {
+			// Make sure we don't blow up on an invalid pattern.
+			excludes = Pattern.compile("");
+		}
 		List<MethodProfilingWindowResult> windowResults = new ArrayList<>();
 		IUnorderedWindowVisitor visitor = createWindowVisitor(settings, settingsFilter, windowSize, windowResults,
-				evaluationTask);
+				evaluationTask, excludes);
 		SlidingWindowToolkit.slidingWindowUnordered(visitor, items, windowSize, slideSize);
 		// If a window visitor over a non empty quantity of events is guaranteed to always generate at minimum one raw score, this can be removed.
 		if (windowResults.isEmpty()) {
@@ -320,7 +336,7 @@ public class MethodProfilingRule implements IRule {
 	 */
 	private IUnorderedWindowVisitor createWindowVisitor(
 		final PeriodRangeMap settings, final IItemFilter settingsFilter, final IQuantity windowSize,
-		final List<MethodProfilingWindowResult> rawScores, final FutureTask<Result> evaluationTask) {
+		final List<MethodProfilingWindowResult> rawScores, final FutureTask<Result> evaluationTask, final Pattern excludes) {
 		return new IUnorderedWindowVisitor() {
 			@Override
 			public void visitWindow(IItemCollection items, IQuantity startTime, IQuantity endTime) {
@@ -403,14 +419,17 @@ public class MethodProfilingRule implements IRule {
 								// for our purposes (finding the hottest method), but they differ by BCI, throwing off the count.
 								// so we should collect further on the method for the top frame.
 								for (GroupEntry<IMCStackTrace, CountConsumer> group : groupEntries) {
+									IMCStackTrace trace = processPath(group.getKey());
 									total += group.getConsumer().getCount();
-									IMCMethod topFrameMethod = group.getKey().getFrames().get(0).getMethod();
-									if (map.get(topFrameMethod) == null) {
-										map.put(topFrameMethod, UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount()));
-										pathMap.put(topFrameMethod, group.getKey());
-									} else {
-										IQuantity old = map.get(topFrameMethod);
-										map.put(topFrameMethod, old.add(UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount())));
+									if (!trace.getFrames().isEmpty()) {
+										IMCMethod topFrameMethod = trace.getFrames().get(0).getMethod();
+										if (map.get(topFrameMethod) == null) {
+											map.put(topFrameMethod, UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount()));
+											pathMap.put(topFrameMethod, trace);
+										} else {
+											IQuantity old = map.get(topFrameMethod);
+											map.put(topFrameMethod, old.add(UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount())));
+										}
 									}
 								}
 								if (!pathMap.isEmpty() && !map.isEmpty()) {
@@ -426,6 +445,24 @@ public class MethodProfilingRule implements IRule {
 									return topEntry.getValue().multiply(1d/total);
 								}
 								return UnitLookup.NUMBER_UNITY.quantity(0);
+							}
+
+							private IMCStackTrace processPath(IMCStackTrace path) {
+								List<IMCFrame> frames = new ArrayList<>(path.getFrames());
+								List<IMCFrame> framesToDrop = new ArrayList<IMCFrame>();
+								// Drop any frames that match the excluded pattern, thereby treating the first non-matching frame that we encounter as the hot one.
+								for (IMCFrame frame : frames) {
+									IMCPackage p = frame.getMethod().getType().getPackage();
+									// Under some circumstances p.getName() will return a raw null, we need to handle this case.
+									Matcher m = excludes.matcher(p.getName() == null ? "" : p.getName());
+									if (m.matches()) {
+										framesToDrop.add(frame);
+									} else {
+										break;
+									}
+								}
+								frames.removeAll(framesToDrop);
+								return new MCStackTrace(frames, path.getTruncationState());
 							}
 				});
 

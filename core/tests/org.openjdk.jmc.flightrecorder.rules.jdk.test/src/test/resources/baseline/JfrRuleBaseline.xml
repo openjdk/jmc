@@ -3082,7 +3082,7 @@
 <rule>
 <id>MethodProfiling</id>
 <severity>OK</severity>
-<score>1.0227792539479768</score>
+<score>0.8005001984324781</score>
 <shortDescription>No methods where optimization would be particularly efficient could be detected.</shortDescription>
 <longDescription>No methods where optimization would be particularly efficient could be detected.</longDescription>
 </rule>
