@@ -230,6 +230,53 @@ public class ReferenceTreeModel {
 	}
 
 	/**
+	 * @param timerange
+	 *            a range of time that specifies which root objects to retrieve
+	 * @return a list of all Roots which has a leaked object during the specified time range
+	 */
+	public Collection<ReferenceTreeObject> getLeakObjects(IRange<IQuantity> timerange) {
+		List<ReferenceTreeObject> objects = new ArrayList<>();
+		for (ReferenceTreeObject referenceTreeObject : leakObjects) {
+			IQuantity itemTime = referenceTreeObject.getTimestamp();
+			if (timerange.getStart().compareTo(itemTime) <= 0 && timerange.getEnd().compareTo(itemTime) >= 0) {
+				ReferenceTreeObject parent = referenceTreeObject.getParent();
+				if (parent == null) {
+					objects.add(referenceTreeObject);
+					continue;
+				}
+				while (parent.getParent() != null) {
+					parent = parent.getParent();
+				}
+
+				if (objects.contains(parent) == false) {
+					objects.add(parent);
+				}
+			}
+		}
+		return objects;
+	}
+
+	/**
+	 * A helper method to calculate number of Referenced Object within specified period.
+	 * @param timerange
+	 *            a range of time that specifies which root objects to retrieve
+	 * @param referenceTreeObject
+	 *            leak candidate
+	 * @return number of leaked object during the specified timerange for a given
+	 * 			  leak candidate
+	 */
+	public int getLeakCountInRange(IRange<IQuantity> timerange, ReferenceTreeObject referenceTreeObject) {
+		int referencecount = 0;
+		for (ReferenceTreeObject rtObject : leakObjects) {
+			if (rtObject.getRootObject().equals(referenceTreeObject.getRootObject()) &&
+					timerange.getStart().compareTo(rtObject.getTimestamp()) <= 0 && timerange.getEnd().compareTo(rtObject.getTimestamp()) >= 0) {
+				++referencecount;
+			}
+		}
+		return referencecount;
+	}
+
+	/**
 	 * @return a list of the actual objects sampled by the Old Object Sample event
 	 */
 	public List<ReferenceTreeObject> getLeakObjects() {
@@ -304,6 +351,18 @@ public class ReferenceTreeModel {
 			} else {
 				if (last != null) {
 					node.addChild(last);
+
+					// Update Root Object with oldObjectSample ref
+					ReferenceTreeObject parent = node.getParent();
+					if (parent == null) {
+						node.updateOldObjectSamples(map.get(objectAccessor.getMember(item).getAddress()));
+					}
+					else {
+						while (parent.getParent() != null) {
+							parent = parent.getParent();
+						}
+						parent.updateOldObjectSamples(map.get(objectAccessor.getMember(item).getAddress()));
+					}
 				}
 				root = false;
 				break;
@@ -316,6 +375,7 @@ public class ReferenceTreeModel {
 		if (last != null) {
 			if (root) {
 				rootObjects.add(last);
+				last.updateOldObjectSamples(map.get(objectAccessor.getMember(item).getAddress()));
 				rootObjectsByLeakItems.put(item, last);
 			}
 		}

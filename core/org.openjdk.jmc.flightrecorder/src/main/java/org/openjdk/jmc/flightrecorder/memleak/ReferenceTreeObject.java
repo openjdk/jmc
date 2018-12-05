@@ -34,8 +34,11 @@ package org.openjdk.jmc.flightrecorder.memleak;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.openjdk.jmc.common.IMCOldObject;
@@ -57,6 +60,7 @@ public class ReferenceTreeObject implements IMCOldObject {
 
 	private final List<ReferenceTreeObject> children = new ArrayList<>();
 	private final Set<IItem> items = new HashSet<>();
+	private final Map<IQuantity, ReferenceTreeObject> oldObjectSamples = new HashMap<>();
 
 	private String rootDescription;
 	private IMCOldObject object;
@@ -273,9 +277,42 @@ public class ReferenceTreeObject implements IMCOldObject {
 		this.parent = parent;
 	}
 
+	/**
+	 * @return the Root object
+	 */
+	public ReferenceTreeObject getRootObject() {
+		if (this.parent == null) {
+			return this;
+		} else {
+			ReferenceTreeObject rto = this.parent;
+			while (rto.getParent() != null) {
+				rto = rto.getParent();
+			}
+			return rto;
+		}
+	}
+
 	@Override
 	public int getReferrerSkip() {
 		return object.getReferrerSkip();
+	}
+
+	/**
+	 * @return Map containing allocation time and its oldObjectReference object
+	 */
+	public Map<IQuantity, ReferenceTreeObject> getOldObjectSamples() {
+		return Collections.unmodifiableMap(oldObjectSamples);
+	}
+
+	/**
+	 * This method updates the Root object's Map with allocationTime and its oldObjectReference object (leaves). 
+	 *  
+	 * @param oldobjectrefnode
+	 *            oldObjectReference leaf node
+	 *            
+	 */
+	public void updateOldObjectSamples(ReferenceTreeObject oldobjectrefnode) {
+		oldObjectSamples.put(oldobjectrefnode.getTimestamp(), oldobjectrefnode);
 	}
 
 	/**

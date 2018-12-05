@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
@@ -138,6 +139,24 @@ public class MemoryLeakPage extends AbstractDataPage {
 
 		IRange<IQuantity> timeRange = null;
 
+		private final Predicate<ReferenceTreeObject> withinTimeRangePredicateFromRootObject = rto -> {
+			if (timeRange != null) {
+				if (rto.getTimestamp().compareTo(timeRange.getStart()) >= 0
+						&& rto.getTimestamp().compareTo(timeRange.getEnd()) <= 0) {
+					return true;
+				} else if (rto.getRootObject().getOldObjectSamples() != null && rto.getRootObject().getOldObjectSamples().size() > 1) {
+					for (Map.Entry<IQuantity, ReferenceTreeObject> rt : rto.getRootObject().getOldObjectSamples().entrySet()) {
+						if (rt.getKey().compareTo(timeRange.getStart()) >= 0
+								&& rt.getKey().compareTo(timeRange.getEnd()) <= 0) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			return true;
+		};
+
 		private final Predicate<ReferenceTreeObject> withinTimeRangePredicate = rto -> {
 			if (timeRange != null) {
 				return rto.getTimestamp().compareTo(timeRange.getStart()) >= 0
@@ -160,7 +179,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 				ReferenceTreeObject object = (ReferenceTreeObject) element;
 				List<ReferenceTreeObject> children = object.getChildren();
 				if (timeRange != null) {
-					return children.stream().anyMatch(withinTimeRangePredicate);
+					return children.stream().anyMatch(withinTimeRangePredicateFromRootObject);
 				}
 				return !children.isEmpty();
 			}
@@ -181,7 +200,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 			if (inputElement instanceof Collection<?>) {
 				Collection<ReferenceTreeObject> collection = (Collection<ReferenceTreeObject>) inputElement;
 				if (timeRange != null) {
-					return collection.stream().filter(withinTimeRangePredicate).toArray();
+					return collection.stream().filter(withinTimeRangePredicateFromRootObject).toArray();
 				}
 				return collection.toArray();
 			}
@@ -194,7 +213,12 @@ public class MemoryLeakPage extends AbstractDataPage {
 				ReferenceTreeObject object = (ReferenceTreeObject) element;
 				List<ReferenceTreeObject> children = object.getChildren();
 				if (timeRange != null) {
-					return children.stream().filter(withinTimeRangePredicate).toArray();
+					// oldObjectRef has more than 1 child, Select only thos node which are from OldObjectSampleRef (leaf node) Objects
+					if (children.size() > 1) {
+						return children.stream().filter(withinTimeRangePredicate).toArray();
+					} else {
+						return children.stream().filter(withinTimeRangePredicateFromRootObject).toArray();
+					}
 				}
 				return children.toArray();
 			}
@@ -248,7 +272,12 @@ public class MemoryLeakPage extends AbstractDataPage {
 				new TypedLabelProvider<ReferenceTreeObject>(ReferenceTreeObject.class) {
 					@Override
 					protected String getTextTyped(ReferenceTreeObject object) {
-						return object == null ? "" : Integer.toString(object.getItems().size()); //$NON-NLS-1$
+						IRange<IQuantity> selectionRange = chart.getSelectionRange();
+						if (selectionRange == null) {
+							return object == null ? "" : Integer.toString(object.getObjectsKeptAliveCount()); //$NON-NLS-1$
+						} else {
+							return (object == null || selectionRange == null) ? "" : Integer.toString(model.getLeakCountInRange(selectionRange, object)); //$NON-NLS-1$
+						}
 					};
 				}).style(SWT.RIGHT).comparator((o1, o2) -> {
 					if (o1 instanceof ReferenceTreeObject && o2 instanceof ReferenceTreeObject) {
@@ -310,7 +339,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 					state.getChild(REFERENCE_TREE), null);
 			model = ReferenceTreeModel.buildReferenceTree(getDataSource().getItems().apply(TABLE_ITEMS));
 			model.getLeakCandidates(0.5d); // this doesn't really matter, since we're not saving the return value
-			aggregatedReferenceTree.setInput(model.getRootObjects());
+			aggregatedReferenceTree.setInput(model.getLeakObjects());
 			chartCanvas.replaceRenderer(createChart());
 
 			PersistableSashForm.loadState(mainSash, state.getChild(MAIN_SASH));
@@ -379,7 +408,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 					if (selectionRange != null) {
 						((ReferenceTreeContentProvider) aggregatedReferenceTree
 								.getContentProvider()).timeRange = selectionRange;
-						aggregatedReferenceTree.setInput(model.getRootObjects(selectionRange));
+						aggregatedReferenceTree.setInput(model.getLeakObjects(selectionRange));
 					} else {
 						((ReferenceTreeContentProvider) aggregatedReferenceTree.getContentProvider()).timeRange = null;
 						aggregatedReferenceTree.setInput(model.getRootObjects());
