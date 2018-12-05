@@ -87,7 +87,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 
 	private Class<?> generateEventClass() throws Exception {
 		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor);
-		return TypeUtils.getUnsafe().defineClass(transformDescriptor.getEventClassName(), eventClass, 0,
+		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0,
 				eventClass.length, definingClassLoader, protectionDomain);
 	}
 }

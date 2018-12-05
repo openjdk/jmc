@@ -13,10 +13,16 @@ mvn clean package
 ## Running the agent
 The agent can be tried out using the included example program.
 
-Here is an example for running the example program with JDK 7 or JDK 8:
+Here is an example for running the example program with Oracle JDK 7 to Oracle JDK 10:
 
 ```bash
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+```
+
+Here is an example for running the example program with OpenJDK 11+:
+
+```bash
+java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
 ```
 
 ## Known Issues

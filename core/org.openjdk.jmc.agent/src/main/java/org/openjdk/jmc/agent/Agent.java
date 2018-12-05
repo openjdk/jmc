@@ -53,7 +53,7 @@ public class Agent {
 	/**
 	 * This should be generated as part of the build later.
 	 */
-	public final static String VERSION = "0.0.1"; //$NON-NLS-1$
+	public final static String VERSION = "0.0.2"; //$NON-NLS-1$
 	private final static String DEFAULT_CONFIG = "jfrprobes.xml"; //$NON-NLS-1$
 
 	@SuppressWarnings("unused")
@@ -135,6 +135,6 @@ public class Agent {
 	}
 
 	private static void printVersion() {
-		Logger.getLogger(Agent.class.getName()).info(String.format("JMC BCI agent v%s", VERSION)); //$NON-NLS-1$
+		getLogger().info(String.format("JMC BCI agent v%s", VERSION)); //$NON-NLS-1$
 	}
 }

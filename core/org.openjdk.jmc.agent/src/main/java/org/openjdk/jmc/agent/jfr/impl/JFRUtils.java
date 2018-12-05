@@ -92,7 +92,7 @@ public class JFRUtils {
 			return producer;
 		} catch (Exception e) {
 			System.err.println(
-					"Failed to create producer for JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder.");
+					"Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder.");
 			System.err.println("No BCI generated JFR events will be available.");
 			e.printStackTrace();
 		}

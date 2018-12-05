@@ -34,17 +34,19 @@ package org.openjdk.jmc.agent.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openjdk.jmc.agent.Parameter;
-import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-
-import sun.misc.Unsafe;
+import org.openjdk.jmc.agent.Agent;
+import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
 /**
  * Helper methods for doing transforms.
@@ -60,6 +62,17 @@ public final class TypeUtils {
 	public static final Type STRING_TYPE = Type.getType("Ljava/lang/String;"); //$NON-NLS-1$
 
 	public static final Object STRING_INTERNAL_NAME = "java/lang/String"; //$NON-NLS-1$
+
+	private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
+	private final static String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
+
+	private static final Object UNSAFE;
+	private static final Method UNSAFE_DEFINE_CLASS_METHOD;
+
+	static {
+		UNSAFE = getUnsafe();
+		UNSAFE_DEFINE_CLASS_METHOD = getUnsafeDefineClassMethod(UNSAFE);
+	}
 
 	/**
 	 * The file extension for java source files (.java).
@@ -108,29 +121,21 @@ public final class TypeUtils {
 		return String.valueOf(o);
 	}
 
-	/**
-	 * Type agnostic array toString() which also handles primitive arrays.
-	 */
-	private static String toString(Object o, int length) {
-		int iMax = length - 1;
-		if (iMax == -1) {
-			return "[]"; //$NON-NLS-1$
+	public static Class<?> defineClass(String eventClassName, byte[] eventClass, int i, int length,
+			ClassLoader definingClassLoader, ProtectionDomain protectionDomain) {
+		try {
+			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD.invoke(UNSAFE, eventClassName, eventClass, i, length,
+					definingClassLoader, protectionDomain);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Agent.getLogger().log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
 		}
-
-		StringBuilder b = new StringBuilder();
-		b.append('[');
-		for (int i = 0;; i++) {
-			b.append(Array.get(o, i));
-			if (i == iMax) {
-				return b.append(']').toString();
-			}
-			b.append(", "); //$NON-NLS-1$
-		}
+		return null;
 	}
 
 	/**
-	 * Ensure that the operand is on the stack before calling. If type is void, this is a noop, and
-	 * depending on your use case you may instead want to push Opcodes.ACONST_NULL.
+	 * Ensure that the operand is on the stack before calling. If type is void, this
+	 * is a noop, and depending on your use case you may instead want to push
+	 * Opcodes.ACONST_NULL.
 	 */
 	public static void visitBox(MethodVisitor mv, Type type) {
 		switch (type.getSort()) {
@@ -161,10 +166,6 @@ public final class TypeUtils {
 			emitBox(mv, "(D)Ljava/lang/Object;"); //$NON-NLS-1$
 			break;
 		}
-	}
-
-	private static void emitBox(MethodVisitor mv, String desc) {
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "box", desc, false); //$NON-NLS-1$
 	}
 
 	public static boolean isValidJavaIdentifier(String identifier) {
@@ -213,18 +214,6 @@ public final class TypeUtils {
 		return fqcn;
 	}
 
-	public static Unsafe getUnsafe() {
-		// Lovely, but this seems to be the only way
-		try {
-			Field f = Unsafe.class.getDeclaredField("theUnsafe"); //$NON-NLS-1$
-			f.setAccessible(true);
-			return (Unsafe) f.get(null);
-		} catch (Exception e) {
-			Logger.getLogger(JFRUtils.class.getName()).log(Level.SEVERE, "Could not access Unsafe!", e); //$NON-NLS-1$
-		}
-		return null;
-	}
-
 	public static void stringify(MethodVisitor mv, Parameter param, Type argumentType) {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "toString", //$NON-NLS-1$
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
@@ -247,13 +236,82 @@ public final class TypeUtils {
 	}
 
 	/**
-	 * Transforms a FQN in internal form, so that it can be used in e.g. formal descriptors.
+	 * Transforms a FQN in internal form, so that it can be used in e.g. formal
+	 * descriptors.
 	 *
-	 * @param className
-	 *            the fully qualified class name in internal form.
+	 * @param className the fully qualified class name in internal form.
 	 * @return the transformed class name.
 	 */
 	public static String parameterize(String className) {
 		return "L" + className + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/**
+	 * Type agnostic array toString() which also handles primitive arrays.
+	 */
+	private static String toString(Object o, int length) {
+		int iMax = length - 1;
+		if (iMax == -1) {
+			return "[]"; //$NON-NLS-1$
+		}
+
+		StringBuilder b = new StringBuilder();
+		b.append('[');
+		for (int i = 0;; i++) {
+			b.append(Array.get(o, i));
+			if (i == iMax) {
+				return b.append(']').toString();
+			}
+			b.append(", "); //$NON-NLS-1$
+		}
+	}
+
+	private static void emitBox(MethodVisitor mv, String desc) {
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "box", desc, false); //$NON-NLS-1$
+	}
+
+	private static Object getUnsafe() {
+		// Lovely, but this seems to be the only way
+		Class<?> unsafeClass = getUnsafeClass();
+		try {
+			Field f = unsafeClass.getDeclaredField("theUnsafe"); //$NON-NLS-1$
+			f.setAccessible(true);
+			return f.get(null);
+		} catch (Exception e) {
+			Logger.getLogger(JFRUtils.class.getName()).log(Level.SEVERE, "Could not access Unsafe!", e); //$NON-NLS-1$
+		}
+		return null;
+	}
+
+	private static Method getUnsafeDefineClassMethod(Object unsafe) {
+		try {
+			return unsafe.getClass().getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class,
+					ClassLoader.class, ProtectionDomain.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			System.out.println(
+					"Could not find, or access, any defineClass method. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
+			e.printStackTrace();
+			System.out.flush();
+			System.exit(3);
+		}
+		return null;
+	}
+
+	private static Class<?> getUnsafeClass() {
+		Class<?> clazz = null;
+		try {
+			clazz = Class.forName(UNSAFE_JDK_11_CLASS);
+		} catch (ClassNotFoundException e) {
+			try {
+				clazz = Class.forName(UNSAFE_JDK_7_CLASS);
+			} catch (ClassNotFoundException e1) {
+				System.out.println(
+						"Could not find, or access, any Unsafe class. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
+				e1.printStackTrace();
+				System.out.flush();
+				System.exit(2);
+			}
+		}
+		return clazz;
 	}
 }
