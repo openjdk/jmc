@@ -318,7 +318,9 @@ application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide
 ```
 
 ## Setting Up for Development and Launching in Eclipse
-First make sure that you have installed the Mercurial Plug-in for Eclipse (MercurialEclipse). It can be installed from the Eclipse Marketplace (Help | Eclipse Marketplace...). At the time of writing, version 2.2 was the most recent one.
+First make sure that you have a recent version of Eclipse. An Eclipse 2018-09 with the JDK 11 plug-in installed (available from Eclipse Marketplace) will do. You may also want to install the Mercurial Plug-in for Eclipse (MercurialEclipse). The Eclipse Marketplace is available under **Help | Eclipse Marketplace...**.
+
+To set Eclipse up for JMC development, do the following:
 
 1. First ensure that you have started the jetty server in the first step of building JMC.
 2. Next open (File | Open...) the Eclipse target platform of interest, for example releng/platform-definitions/platform-definition-photon/platform.target
