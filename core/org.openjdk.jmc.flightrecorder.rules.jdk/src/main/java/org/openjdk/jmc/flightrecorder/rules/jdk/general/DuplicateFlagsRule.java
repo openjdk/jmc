@@ -44,6 +44,7 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
+import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -81,7 +82,7 @@ public class DuplicateFlagsRule implements IRule {
 				StringBuilder sb = new StringBuilder();
 				sb.append("<ul>"); //$NON-NLS-1$
 				for (ArrayList<String> dupe : dupes) {
-					sb.append("<li>" + Encode.forHtml(String.join(", ", dupe)) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("<li>" + Encode.forHtml(StringToolkit.join(dupe, ", ")) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				sb.append("</ul>"); //$NON-NLS-1$
 				String shortDescription = dupes.size() > 1
