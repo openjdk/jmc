@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--   
    Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
    
@@ -31,18 +31,27 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.releng</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>platform-definitions</artifactId>
-	<packaging>pom</packaging>
-	<modules>
-		<module>platform-definition-oxygen</module>
-		<module>platform-definition-photon</module>
-		<module>platform-definition-2018-09</module>
-	</modules>
-</project>
+<?pde version="3.8"?><target name="jmc-target-2018-09" sequenceNumber="47">
+    <locations>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
+            <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
+            <unit id="javax.mail.dsn" version="1.4.0"/>
+            <unit id="org.owasp.encoder" version="1.2.1"/>
+            <unit id="org.twitter4j.core" version="4.0.6"/>
+            <repository location="http://localhost:8080/site"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.equinox.executable.feature.group"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.13.200.v20180906-0745"/>
+            <unit id="org.eclipse.platform.sdk" version="4.9.0.I20180906-0745"/>
+            <repository location="http://download.eclipse.org/releases/2018-09/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.8.0.v20180815020001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.8.0.v20180815020001"/>
+            <repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.0/photon/"/>
+        </location>
+    </locations>
+    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+</target>
