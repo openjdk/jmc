@@ -32,34 +32,17 @@
  */
 package org.openjdk.jmc.rjmx.services.internal;
 
-import org.openjdk.jmc.common.version.JavaVersion;
-import org.openjdk.jmc.rjmx.ConnectionException;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
-import org.openjdk.jmc.rjmx.services.IServiceFactory;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
-public class CommercialFeaturesServiceFactory implements IServiceFactory<ICommercialFeaturesService> {
-
+public class Jdk11CommercialFeaturesService implements ICommercialFeaturesService {
+	
 	@Override
-	public ICommercialFeaturesService getServiceInstance(IConnectionHandle handle)
-			throws ConnectionException, ServiceNotAvailableException {
-		// Optimization - using already available information instead of doing more round trips.
-		// It's always a bit precarious to look at version instead of capability, but in this case
-		// it should be safe - the commercial features flag is not coming back
-		JVMDescriptor descriptor = handle.getServerDescriptor().getJvmInfo();
-		if (descriptor != null) {
-			JavaVersion version = new JavaVersion(descriptor.getJavaVersion());
-			if (version.getMajorVersion() >= 11) {
-				return new Jdk11CommercialFeaturesService();
-			}
-		}
-		return new HotSpot23CommercialFeaturesService(handle);
+	public boolean isCommercialFeaturesEnabled() {
+		return true;
 	}
 
 	@Override
-	public Class<ICommercialFeaturesService> getServiceType() {
-		return ICommercialFeaturesService.class;
+	public void enableCommercialFeatures() throws Exception {
+		// Noop
 	}
 }

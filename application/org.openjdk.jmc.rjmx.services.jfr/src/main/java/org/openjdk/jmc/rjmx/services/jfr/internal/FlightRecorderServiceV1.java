@@ -104,6 +104,9 @@ public class FlightRecorderServiceV1 implements IFlightRecorderService {
 	private List<EventTypeMetadataV1> eventTypeMetas;
 	private Map<Integer, EventTypeMetadataV1> eventTypeMetaByInt;
 	private Map<EventTypeIDV1, EventTypeMetadataV1> eventTypeInfoById;
+	// Optimization to do less JMX invocations. If, against all odds, it gets disabled,
+	// after having been enabled, we get an exception, and will handle things there.
+	private boolean wasEnabled;
 	private final ICommercialFeaturesService cfs;
 	private final IMBeanHelperService mbhs;
 	private final String serverId;
@@ -444,7 +447,15 @@ public class FlightRecorderServiceV1 implements IFlightRecorderService {
 
 	@Override
 	public boolean isEnabled() {
-		return cfs.isCommercialFeaturesEnabled();
+		if (!wasEnabled) {
+			boolean isEnabled = cfs.isCommercialFeaturesEnabled();
+			if (isEnabled) {
+				wasEnabled = true;
+			}
+			return isEnabled;
+		} else {
+			return wasEnabled;
+		}
 	}
 
 	@Override

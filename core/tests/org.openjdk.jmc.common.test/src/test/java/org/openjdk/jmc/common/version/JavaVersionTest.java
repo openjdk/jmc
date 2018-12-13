@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.common.version;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -187,5 +188,11 @@ public class JavaVersionTest {
 		JavaVersion version17 = new JavaVersion("1.7"); //$NON-NLS-1$
 
 		assertTrue(version17u0.equals(version17));
+	}
+	
+	@Test
+	public void testNullStringArgument() {
+		JavaVersion nullVersion = new JavaVersion((String) null);
+		assertEquals(JavaVersion.UNKNOWN, nullVersion.getMajorVersion());
 	}
 }

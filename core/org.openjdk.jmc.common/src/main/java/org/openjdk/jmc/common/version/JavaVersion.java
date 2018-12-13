@@ -44,10 +44,11 @@ public class JavaVersion {
 
 	private final int[] versionNumbers;
 	private final boolean isEarlyAccess;
+
 	/**
 	 * Constant denoting an unparsable number.
 	 */
-	private static final int UNKNOWN = -1;
+	public static final int UNKNOWN = -1;
 
 	/**
 	 * Create an instance based on a Java version string as reported by a Java runtime.
@@ -56,6 +57,11 @@ public class JavaVersion {
 	 *            Java version string
 	 */
 	public JavaVersion(String version) {
+		if (version == null) {
+			versionNumbers = null;
+			isEarlyAccess = false;
+			return;
+		}
 		String[] numbers = version.split("[\\._]"); //$NON-NLS-1$
 		int offset = 0;
 		int versionNumbersLength = numbers.length;
@@ -98,26 +104,6 @@ public class JavaVersion {
 	public JavaVersion(boolean isEarlyAccess, int ... versionNumbers) {
 		this.versionNumbers = versionNumbers;
 		this.isEarlyAccess = isEarlyAccess;
-	}
-
-	private int parseNumber(int index, String[] numbers) {
-		if (index + 1 > numbers.length) {
-			return UNKNOWN;
-		}
-		StringBuilder numberStringBuilder = new StringBuilder();
-		for (int i = 0; i < numbers[index].length(); i++) {
-			char c = numbers[index].charAt(i);
-			if (Character.isDigit(c)) {
-				numberStringBuilder.append(c);
-			} else {
-				break;
-			}
-		}
-		try {
-			return Integer.parseInt(numberStringBuilder.toString());
-		} catch (NumberFormatException nfe) {
-			return UNKNOWN;
-		}
 	}
 
 	@Override
@@ -181,6 +167,9 @@ public class JavaVersion {
 	 * @return the major version number
 	 */
 	public int getMajorVersion() {
+		if (versionNumbers == null) {
+			return UNKNOWN;
+		}
 		return versionNumbers[0];
 	}
 
@@ -203,5 +192,25 @@ public class JavaVersion {
 	 */
 	public boolean isEarlyAccess() {
 		return isEarlyAccess;
+	}
+
+	private int parseNumber(int index, String[] numbers) {
+		if (index + 1 > numbers.length) {
+			return UNKNOWN;
+		}
+		StringBuilder numberStringBuilder = new StringBuilder();
+		for (int i = 0; i < numbers[index].length(); i++) {
+			char c = numbers[index].charAt(i);
+			if (Character.isDigit(c)) {
+				numberStringBuilder.append(c);
+			} else {
+				break;
+			}
+		}
+		try {
+			return Integer.parseInt(numberStringBuilder.toString());
+		} catch (NumberFormatException nfe) {
+			return UNKNOWN;
+		}
 	}
 }

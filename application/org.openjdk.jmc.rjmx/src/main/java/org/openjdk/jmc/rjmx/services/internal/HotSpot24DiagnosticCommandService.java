@@ -187,7 +187,7 @@ public class HotSpot24DiagnosticCommandService implements IDiagnosticCommandServ
 			isMultiple = Boolean.parseBoolean(d.getFieldValue(ARGUMENT_MULITPLE).toString());
 			isRequired = Boolean.parseBoolean(d.getFieldValue(ARGUMENT_MANDATORY).toString());
 			RJMXPlugin.getDefault().getLogger()
-					.fine("DiagnosticCommandArg() " + getType() + ' ' + getName() + ' ' + getDescription() //$NON-NLS-1$
+					.finest("DiagnosticCommandArg created: " + getType() + ' ' + getName() + ' ' + getDescription() //$NON-NLS-1$
 							+ (isRequired ? " isRequired" : "") //$NON-NLS-1$ //$NON-NLS-2$
 							+ (isOption ? " isOption" : "") + (isMultiple ? " isMultiple" : "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
@@ -200,7 +200,7 @@ public class HotSpot24DiagnosticCommandService implements IDiagnosticCommandServ
 			super(d.getFieldValue(NAME).toString(), d.getFieldValue(DESCRIPTION).toString(), returnType,
 					extractSignature((Descriptor) d.getFieldValue(ARGUMENTS)), extractImpact(d));
 			RJMXPlugin.getDefault().getLogger()
-					.fine("DiagnosticCommand() " + getName() + ' ' + getReturnType() + ' ' + getImpact()); //$NON-NLS-1$
+					.finest("DiagnosticCommand created: " + getName() + ' ' + getReturnType() + ' ' + getImpact()); //$NON-NLS-1$
 		}
 
 		@Override
@@ -287,6 +287,7 @@ public class HotSpot24DiagnosticCommandService implements IDiagnosticCommandServ
 	}
 
 	private void refreshOperations() throws Exception {
+		RJMXPlugin.getDefault().getLogger().finer("Refreshing diagnostic operations");
 		MBeanInfo info = m_mbeanServer.getMBeanInfo(DIAGNOSTIC_BEAN);
 		operations = new ArrayList<>(info.getOperations().length);
 		commandNameToOperation.clear();

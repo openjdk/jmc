@@ -90,6 +90,9 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 	private List<EventTypeMetadataV2> eventTypeMetas;
 	private Map<EventTypeIDV2, EventTypeMetadataV2> eventTypeInfoById;
 	private Map<org.openjdk.jmc.flightrecorder.configuration.events.EventOptionID, OptionInfo<?>> optionInfoById;
+	// Optimization to do less JMX invocations. If, against all odds, it gets disabled,
+	// after having been enabled, we get an exception, and will handle things there.
+	private boolean wasEnabled;
 	private final ICommercialFeaturesService cfs;
 	private final IMBeanHelperService mbhs;
 	private final String serverId;
@@ -477,9 +480,16 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 
 	@Override
 	public boolean isEnabled() {
-		return isFlightRecorderCommercial()
-				? cfs.isCommercialFeaturesEnabled()
-				: isAvailable(connection);
+		if (!wasEnabled) {
+			boolean isEnabled = isFlightRecorderCommercial() ? cfs.isCommercialFeaturesEnabled()
+					: isAvailable(connection);
+			if (isEnabled) {
+				wasEnabled = true;
+			}
+			return isEnabled;
+		} else {
+			return wasEnabled;
+		}
 	}
 
 	@Override
