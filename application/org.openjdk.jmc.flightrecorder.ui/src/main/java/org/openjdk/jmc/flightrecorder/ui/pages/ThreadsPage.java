@@ -162,10 +162,10 @@ public class ThreadsPage extends AbstractDataPage {
 			sash.setOrientation(SWT.HORIZONTAL);
 			mm.add(new Separator());
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
-			lanes.updateContextMenu(mm);
+			lanes.updateContextMenu(mm, false);
 
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm), Messages.ThreadsPage_EDIT_LANES,
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false), Messages.ThreadsPage_EDIT_LANES,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();

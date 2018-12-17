@@ -224,14 +224,14 @@ public class JavaApplicationPage extends AbstractDataPage {
 			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
 
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
-			lanes.updateContextMenu(mm);
-			lanes.updateContextMenu(MCContextMenuManager.create(chartLegend.getControl()));
+			lanes.updateContextMenu(mm, false);
+			lanes.updateContextMenu(MCContextMenuManager.create(chartLegend.getControl()), true);
 			buildChart();
 
 			addResultActions(form);
 			tableFilterComponent.loadState(state.getChild(METHOD_PROFILING_TABLE_FILTER));
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm), Messages.ThreadsPage_EDIT_LANES,
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false), Messages.ThreadsPage_EDIT_LANES,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager().add(new Separator());
 			OrientationAction.installActions(form, sash);

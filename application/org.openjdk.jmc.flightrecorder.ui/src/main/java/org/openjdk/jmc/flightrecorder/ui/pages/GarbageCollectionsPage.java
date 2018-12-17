@@ -54,6 +54,7 @@ import java.util.stream.Stream;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -335,8 +336,10 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 
 			gcInfoFolder = new CTabFolder(tableSash, SWT.NONE);
 			phasesList = PHASES.buildWithoutBorder(gcInfoFolder, TableSettings.forState(state.getChild(PHASE_LIST)));
-			phasesList.getManager().getViewer().addSelectionChangedListener(
-					e -> pageContainer.showSelection(ItemCollectionToolkit.build(phasesList.getSelection().get())));
+			phasesList.getManager().getViewer().addSelectionChangedListener(e -> {
+					buildChart();	
+					pageContainer.showSelection(ItemCollectionToolkit.build(phasesList.getSelection().get()));
+			});
 			phasesFilter = FilterComponent.createFilterComponent(phasesList, phasesFilterState,
 					getDataSource().getItems().apply(JdkFilters.GC_PAUSE_PHASE),
 					pageContainer.getSelectionStore()::getSelections, this::onPhasesFilterChange);
@@ -372,14 +375,14 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			chartCanvas = new ChartCanvas(chartContainer);
 			chartCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			ActionToolkit.loadCheckState(state.getChild(CHART), allChartSeriesActions.stream());
-			Control chartLegend = ActionUiToolkit.buildCheckboxControl(chartContainer,
-					allChartSeriesActions.stream().filter(a -> includeAttribute(a.getId())), true);
+			CheckboxTableViewer chartLegend = ActionUiToolkit.buildCheckboxViewer(chartContainer,
+					allChartSeriesActions.stream().filter(a -> includeAttribute(a.getId())));
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, false, true);
 			gd.widthHint = 180;
-			chartLegend.setLayoutData(gd);
+			chartLegend.getControl().setLayoutData(gd);
 			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
 			lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANES)));
-			IAction editLanesAction = ActionToolkit.action(() -> lanes.openEditLanesDialog(mm),
+			IAction editLanesAction = ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false),
 					Messages.ThreadsPage_EDIT_LANES, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
 			form.getToolBarManager().add(editLanesAction);
 			
@@ -404,7 +407,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			phasesList.getManager().setSelectionState(phasesSelection);
 			metaspaceList.getManager().setSelectionState(metaspaceSelection);
 			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
-			lanes.updateContextMenu(mm);
+			lanes.updateContextMenu(mm, false);
+			lanes.updateContextMenu(MCContextMenuManager.create(chartLegend.getControl()), true);
 			
 			// Older recordings may not have thread information in pause events.
 			// In those cases there is no need for the thread activity actions.

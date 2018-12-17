@@ -99,14 +99,14 @@ public class ThreadGraphLanes {
 		this.actions = new ArrayList<>();
 	}
 
-	public void openEditLanesDialog(MCContextMenuManager mm) {
+	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
 		EventTypeFolderNode typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
 				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
-		updateContextMenu(mm);
+		updateContextMenu(mm, isLegendMenu);
 		buildChart.run();
 	}
 
@@ -214,16 +214,26 @@ public class ThreadGraphLanes {
 		naLanes = lanesByApplicability.get(false);
 		return Collections.emptyList();
 	}
+	
+	//create two action identifiers to handle the chart context menu and the legend context menu
+	private List<String> chartActionIdentifiers = new ArrayList<>();
+	private List<String> legendActionIdentifiers = new ArrayList<>();
 
-	private List<String> actionIdentifiers = new ArrayList<>();
-
-	public void updateContextMenu(MCContextMenuManager mm) {
-		for (String id : actionIdentifiers) {
-			mm.remove(id);
+	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
+		
+		if(isLegendMenu) {
+			for (String id : legendActionIdentifiers) {
+				mm.remove(id);
+			}
+			legendActionIdentifiers.clear();
+		} else { 	
+			for (String id : chartActionIdentifiers) {
+				mm.remove(id);
+			}
+			chartActionIdentifiers.clear();
 		}
-		actionIdentifiers.clear();
 		if (mm.indexOf(EDIT_LANES) == -1) {
-			IAction action = ActionToolkit.action(() -> this.openEditLanesDialog(mm),
+			IAction action = ActionToolkit.action(() -> this.openEditLanesDialog(mm, isLegendMenu),
 					Messages.JavaApplicationPage_EDIT_THREAD_LANES_ACTION,
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
 			action.setId(EDIT_LANES);
@@ -245,7 +255,11 @@ public class ThreadGraphLanes {
 			};
 			String identifier = ld.getName() + checkAction.hashCode();
 			checkAction.setId(identifier);
-			actionIdentifiers.add(identifier);
+			if(isLegendMenu) {
+				legendActionIdentifiers.add(identifier);
+			} else {
+				chartActionIdentifiers.add(identifier);
+			}
 			checkAction.setChecked(ld.isEnabled());
 			// FIXME: Add a tooltip here
 			mm.add(checkAction);
