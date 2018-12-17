@@ -40,6 +40,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.ClassRule;
@@ -51,13 +55,14 @@ import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
 import org.openjdk.jmc.test.jemmy.MCUITestRule;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.helpers.ConnectionHelper;
+import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxConsole;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTabFolder;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCToolBar;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTree;
-import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxConsole;
+import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 /**
  * Class for for testing MBean Browser related actions in the JMX Console.
@@ -77,6 +82,9 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 	private static final String RESULT_TREE_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TREE_NAME;;
 	private static final String RESULT_TAB_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TAB_NAME;
 	private static final String MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME = org.openjdk.jmc.console.ui.mbeanbrowser.notifications.MBeanNotificationLogInspector.MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME;
+	private static final String VALUE_COLUMN_NAME = org.openjdk.jmc.rjmx.ui.attributes.Messages.AttributeInspector_VALUE_COLUMN_HEADER;
+	private static final int DEFAULT_FONT_HEIGHT = 11;
+	private static final int TEXT_FONT_HEIGHT = 16;
 
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {
@@ -97,8 +105,24 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 
 	@ClassRule
 	public static MCUITestRule classTestRule = new MCUITestRule(verboseRuleOutput) {
+
+		private FontData[] saveDefaultFont;
+		private FontData[] saveTextFont;
+
 		@Override
 		public void before() {
+			// Set default and text font to some predefined, but different, sizes
+			DisplayToolkit.safeSyncExec(() -> {
+				FontData[] defaultFontData = JFaceResources.getDefaultFont().getFontData();
+				saveDefaultFont = FontDescriptor.copy(defaultFontData);
+				defaultFontData[0].setHeight(DEFAULT_FONT_HEIGHT);
+				JFaceResources.getFontRegistry().put(JFaceResources.DEFAULT_FONT, defaultFontData);
+
+				FontData[] textFontData = JFaceResources.getTextFont().getFontData();
+				saveTextFont = FontDescriptor.copy(textFontData);
+				textFontData[0].setHeight(TEXT_FONT_HEIGHT);
+				JFaceResources.getFontRegistry().put(JFaceResources.TEXT_FONT, textFontData);
+			});
 			// not using the default test connection since we're starting threads of interest in this particular JVM
 			MC.jvmBrowser.connect("The JVM Running Mission Control");
 			initialiseTestThreads();
@@ -107,6 +131,15 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 		@Override
 		public void after() {
 			terminateTestThreads();
+			// Restore original font sizes
+			DisplayToolkit.safeSyncExec(() -> {
+				if (saveDefaultFont != null) {
+					JFaceResources.getFontRegistry().put(JFaceResources.DEFAULT_FONT, saveDefaultFont);
+				}
+				if (saveTextFont != null) {
+					JFaceResources.getFontRegistry().put(JFaceResources.TEXT_FONT, saveTextFont);
+				}
+			});
 		}
 	};
 
@@ -330,6 +363,52 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 
 		// Verify
 		Assert.assertTrue("-1", patternMatcher(resultFolder.getText(), "-1"));
+	}
+
+	/**
+	 * Verify that the Mbean Browser page Operations works as expected
+	 */
+	@Test
+	public void testValueFontSize() {
+		// Select the Threading MBean
+		MCTree.getByName(MBEANBROWSER_TREE_NAME).select("java.lang", "Threading");
+
+		// Select the attributes tab
+		MCTabFolder.getByTabName(ATTRIBUTES_TAB).select(ATTRIBUTES_TAB);
+
+		// Finding the table that contains an item that matches the command we want to perform
+		MCTable operationsTable = getOperationsTable(THREAD_INFO_COMMAND);
+
+		MCTree paramsTree = null;
+
+		// Get the indexes of the matching commands
+		List<Integer> indexes = operationsTable.getItemIndexes(THREAD_INFO_COMMAND);
+
+		// For each of the indexes select each item until we find the one we need
+		for (int i : indexes) {
+			operationsTable.select(i);
+			MCTree thisTree = MCTree.getByItem("p0");
+			if (!thisTree.hasItem("p1")) {
+				paramsTree = thisTree;
+				break;
+			}
+		}
+		// Make sure that we actually found a matching command
+		Assert.assertNotNull("Could not find the parameter tree", paramsTree);
+
+		// Get the font used by the Value column in the tree
+		int valueColIdx = paramsTree.getColumnIndex(VALUE_COLUMN_NAME);
+		paramsTree.select("p0");
+		List<Font> fonts = paramsTree.getSelectedItemFonts();
+		Font valueFont = fonts.get(valueColIdx);
+
+		// Ensure that the font is the text font, but sized to match the default font
+		final Font[] textFontHolder = new Font[1];
+		DisplayToolkit.safeSyncExec(() -> {
+			textFontHolder[0] = JFaceResources.getFontRegistry().getItalic(JFaceResources.TEXT_FONT);
+		});
+		FontData[] expectedFontData = FontDescriptor.createFrom(textFontHolder[0]).setHeight(DEFAULT_FONT_HEIGHT).getFontData();
+		Assert.assertArrayEquals(expectedFontData, valueFont.getFontData());
 	}
 
 	private List<String> getLatestNotificationLogEntry(MCTree logTree) {

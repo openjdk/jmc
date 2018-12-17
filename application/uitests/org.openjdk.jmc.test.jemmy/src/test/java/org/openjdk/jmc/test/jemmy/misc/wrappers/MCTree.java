@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -397,6 +398,33 @@ public class MCTree extends MCJemmyBase {
 					texts.add(selectedItem.getText());
 				}
 				setOutput(texts);
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return fetcher.getOutput();
+	}
+
+	/**
+	 * Returns a list of the currently selected tree item's fonts, ordered
+	 * by column
+	 *
+	 * @return a {@link List} of {@link Font}
+	 */
+	public List<Font> getSelectedItemFonts() {
+		Fetcher<List<Font>> fetcher = new Fetcher<List<Font>>() {
+			@Override
+			public void run() {
+				List<Font> fonts = new ArrayList<>();
+				int columnCount = getColumnCount();
+				TreeItem selectedItem = control.as(TreeWrap.class).getSelectedItem();
+				if (columnCount > 0) {
+					for (int i = 0; i < columnCount; i++) {
+						fonts.add(selectedItem.getFont(i));
+					}
+				} else {
+					fonts.add(selectedItem.getFont());
+				}
+				setOutput(fonts);
 			}
 		};
 		Display.getDefault().syncExec(fetcher);

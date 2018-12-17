@@ -33,6 +33,8 @@
 package org.openjdk.jmc.rjmx.ui.attributes;
 
 import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -42,6 +44,8 @@ import org.openjdk.jmc.rjmx.services.IReadOnlyAttribute;
 import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
 public class ValueColumnLabelProvider extends TypedLabelProvider<IReadOnlyAttribute> {
+
+	private static final String FIXED_TEXT_FONT = "org.openjdk.jmc.fixedtextfont"; //$NON-NLS-1$
 
 	public ValueColumnLabelProvider() {
 		super(IReadOnlyAttribute.class);
@@ -54,10 +58,23 @@ public class ValueColumnLabelProvider extends TypedLabelProvider<IReadOnlyAttrib
 
 	@Override
 	protected Font getFontTyped(IReadOnlyAttribute attribute) {
-		if (isValid(attribute)) {
-			return JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+		if (!JFaceResources.getFontRegistry().hasValueFor(FIXED_TEXT_FONT)) {
+			createFixedSizeTextFont();
 		}
-		return JFaceResources.getFontRegistry().getItalic(JFaceResources.TEXT_FONT);
+		if (isValid(attribute)) {
+			return JFaceResources.getFontRegistry().get(FIXED_TEXT_FONT);
+		}
+		return JFaceResources.getFontRegistry().getItalic(FIXED_TEXT_FONT);
+	}
+
+	private void createFixedSizeTextFont() {
+		FontRegistry registry = JFaceResources.getFontRegistry();
+		// Take the height of the first FontData. In practice, there should only be one.
+		int defaultHeight = registry.get(JFaceResources.DEFAULT_FONT).getFontData()[0].getHeight();
+
+		// Modify the TEXT_FONT to have the same height as the DEFAULT_FONT.
+		FontDescriptor textFontDesc = registry.getDescriptor(JFaceResources.TEXT_FONT).setHeight(defaultHeight);
+		registry.put(FIXED_TEXT_FONT, textFontDesc.getFontData());
 	}
 
 	@Override
