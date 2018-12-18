@@ -60,6 +60,12 @@ public final class TypeHandling {
 	private static final HashMap<String, String> formalPrimitiveMap = new HashMap<>();
 	private static final String VALUE_COMPOSITE_DATA = "CompositeData"; //$NON-NLS-1$
 	private static final String VALUE_TABULAR_DATA = "TabularData"; //$NON-NLS-1$
+	private static final String DOUBLE_NAN = "Double.NaN"; //$NON-NLS-1$
+	private static final String DOUBLE_NEGATIVE_INFINITY = "Double.NEGATIVE_INFINITY"; //$NON-NLS-1$
+	private static final String FLOAT_NAN = "Float.NaN"; //$NON-NLS-1$
+	private static final String FLOAT_NEGATIVE_INFINITY = "Float.NEGATIVE_INFINITY"; //$NON-NLS-1$
+	private static final String INTEGER_MIN_VALUE = "Integer.MIN_VALUE"; //$NON-NLS-1$
+	private static final String LONG_MIN_VALUE = "Long.MIN_VALUE"; //$NON-NLS-1$
 
 	static {
 		formalPrimitiveMap.put("B", "byte"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -164,7 +170,7 @@ public final class TypeHandling {
 			} else if (value instanceof Map) {
 				return createSizeString(value.getClass().getName(), ((Map<?, ?>) value).size());
 			} else if (isMinTimespan(value)) {
-				return "-\u221e"; //$NON-NLS-1$
+				return Messages.getString(Messages.MISSING_VALUE);
 			} else if (isMaxTimespan(value)) {
 				return "\u221e"; //$NON-NLS-1$
 			} else if (value instanceof IDisplayable) {
@@ -224,6 +230,53 @@ public final class TypeHandling {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Check for missing values, and return the numeric value in string format
+	 *
+	 * JMC-6256: JMC doesn't respect Long.MIN_VALUE as a missing value
+	 *
+	 * As per the bug report, the following values should be considered "missing"
+	 * - Integer.MIN_VALUE
+	 * - Long.MIN_VALUE
+	 * - Double.NaN
+	 * - Double.NEGATIVE_INFINITY
+	 * - Float.NaN
+	 * - Float.NEGATIVE_INFINITY
+	 *
+	 * @param value
+	 *            the numeric value to be converted to a string
+	 * @return a string with the numeric value, or a N/A message
+	 */
+	public static String getNumericString(Number value) {
+		StringBuilder sb = new StringBuilder();
+		if (value.getClass() == Integer.class) {
+			if (value.intValue() == Integer.MIN_VALUE) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), INTEGER_MIN_VALUE));
+			}
+		} else if (value.getClass() == Long.class) {
+			if (value.longValue() == Long.MIN_VALUE) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), LONG_MIN_VALUE));
+			}
+		} else if (value.getClass() == Double.class) {
+			if (value.doubleValue() == Double.NEGATIVE_INFINITY) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), DOUBLE_NEGATIVE_INFINITY));
+			} else if (Double.isNaN(value.doubleValue())) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), DOUBLE_NAN));
+			}
+		} else if (value.getClass() == Float.class) {
+			if (Float.isNaN(value.floatValue())) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), FLOAT_NAN));
+			}
+			else if (value.floatValue() == Float.NEGATIVE_INFINITY) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), FLOAT_NEGATIVE_INFINITY));
+			}
+		}
+		if (sb.length() == 0) {
+			sb.append(TypeHandling.getValueString(value));
+		}
+		return sb.toString();
 	}
 
 	/**

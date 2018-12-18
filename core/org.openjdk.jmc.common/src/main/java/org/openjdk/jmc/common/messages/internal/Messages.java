@@ -55,6 +55,8 @@ public class Messages {
 	public static final String ItemAggregate_TOTAL = "ItemAggregate_TOTAL"; //$NON-NLS-1$
 	public static final String ItemAggregate_VARIANCE = "ItemAggregate_VARIANCE"; //$NON-NLS-1$
 	public static final String ItemAggregate_VARIANCEP = "ItemAggregate_VARIANCEP"; //$NON-NLS-1$
+	public static final String MISSING_VALUE = "MISSING_VALUE"; //$NON-NLS-1$
+	public static final String MISSING_VALUE_TOOLTIP = "MISSING_VALUE_TOOLTIP"; //$NON-NLS-1$
 	public static final String QuantityConversionException_CONSTRAINTS_DO_NOT_MATCH = "QuantityConversionException_CONSTRAINTS_DO_NOT_MATCH"; //$NON-NLS-1$
 	public static final String QuantityConversionException_NO_UNIT_MSG = "QuantityConversionException_NO_UNIT_MSG"; //$NON-NLS-1$
 	public static final String QuantityConversionException_TOO_HIGH_MSG = "QuantityConversionException_TOO_HIGH_MSG"; //$NON-NLS-1$

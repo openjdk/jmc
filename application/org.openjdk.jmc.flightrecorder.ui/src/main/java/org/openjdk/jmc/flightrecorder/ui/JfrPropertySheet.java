@@ -303,9 +303,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 
 				// FIXME: Merge with TypeHandling.getValueString
 				private String getValueString(Object value) {
-					if (value instanceof IDisplayable) {
-						return ((IDisplayable) value).displayUsing(IDisplayable.AUTO);
-					} else if (value instanceof IItemCollection) {
+					if (value instanceof IItemCollection) {
 						return itemCollectionDescription((IItemCollection) value);
 					} else if (value instanceof IDescribable) {
 						return ((IDescribable) value).getName();
@@ -314,6 +312,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 						return "[" + values[0].getName() + " ... " //$NON-NLS-1$ //$NON-NLS-2$
 								+ values[values.length - 1].getName() + "]"; //$NON-NLS-1$
 					} else if (value instanceof Object[]) {
+
 						return limitedDeepToString((Object[]) value, this::getValueString);
 					} else if (value instanceof Collection) {
 						return limitedDeepToString(((Collection<?>) value).toArray(), this::getValueString);
@@ -324,6 +323,9 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 				@Override
 				protected String getToolTipTextTyped(PropertySheetRow p) {
 					Object value = p.getValue();
+					if (value instanceof IQuantity) {
+						return TypeHandling.getNumericString(((IQuantity) value).numberValue());
+					}
 					return JfrPropertySheet.getVerboseString(value);
 				};
 
