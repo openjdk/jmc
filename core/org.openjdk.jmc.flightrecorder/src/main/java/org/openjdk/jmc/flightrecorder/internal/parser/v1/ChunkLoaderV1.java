@@ -80,17 +80,16 @@ public class ChunkLoaderV1 implements IChunkLoader {
 
 		// Read events
 		long index = header.getBodyStartOffset();
-		while (true) {
+		while (index < header.getChunkSize()) {
 			input.seek(index);
 			int size = input.readInt();
 			long type = input.readLong();
-			if (type == ChunkMetadata.METADATA_EVENT_TYPE) {
-				return data;
-			} else if (type != CONSTANT_POOL_EVENT_TYPE) {
+			if (type != CONSTANT_POOL_EVENT_TYPE && type != ChunkMetadata.METADATA_EVENT_TYPE) {
 				manager.readEvent(type, input);
 			}
 			index += size;
 		}
+		return data;
 	}
 
 	private static long readConstantPoolEvent(IDataInput input, TypeManager manager)

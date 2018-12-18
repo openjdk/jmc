@@ -41,6 +41,7 @@ import java.io.OutputStream;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.TestToolkit;
+import org.openjdk.jmc.common.test.io.IOResource;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
@@ -66,10 +67,23 @@ public class RecordingToolkit {
 		return TestToolkit.getResourcesInDirectory(RecordingToolkit.class, RECORDINGS_DIRECTORY, RECORDINGS_INDEXFILE);
 	}
 
+	public static IItemCollection getNamedRecording(String recordingName) throws IOException, CouldNotLoadRecordingException {
+		return getFlightRecording(TestToolkit.getNamedResource(RecordingToolkit.class, RECORDINGS_DIRECTORY, recordingName));
+	}
+	
+	public static InputStream getNamedRecordingResource(String recordingName) throws IOException {
+		return TestToolkit.getNamedResource(RecordingToolkit.class, RECORDINGS_DIRECTORY, recordingName).open();
+	}
+	
 	public static IItemCollection getFlightRecording(IOResourceSet resourceSet)
 			throws IOException, CouldNotLoadRecordingException {
+		return getFlightRecording(resourceSet.getResource(0));
+	}
+
+	public static IItemCollection getFlightRecording(IOResource resource)
+			throws IOException, CouldNotLoadRecordingException {
 		File tmpRecording = createResultFile("recordingTest", "tmp_recording", true);
-		InputStream is = resourceSet.getResource(0).open();
+		InputStream is = resource.open();
 		OutputStream os = new FileOutputStream(tmpRecording);
 		int read = 0;
 		byte[] tmp = new byte[4096];
@@ -80,7 +94,7 @@ public class RecordingToolkit {
 		IOToolkit.closeSilently(is);
 		return JfrLoaderToolkit.loadEvents(tmpRecording);
 	}
-
+	
 	public static File createResultFile(String prefix, String suffix, boolean deleteTempOnExit) throws IOException {
 		String resultDir = System.getProperty("results.dir");
 		File resultFile;

@@ -93,6 +93,14 @@ public final class TestToolkit {
 		}
 		return new IOResourceSet(resources);
 	}
+	
+	public static IOResource getNamedResource(Class<?> clazz, String directory, String fileName) throws IOException {
+		String resourceName = directory + '/' + fileName;
+		if (clazz.getClassLoader().getResource(resourceName) == null) {
+			throw new IOException("Resource not found: " + resourceName);
+		}
+		return new ResourceResource(clazz, directory, fileName);
+	}
 
 	/**
 	 * Asserts that two resource have the same textual content. The resource are compared line by

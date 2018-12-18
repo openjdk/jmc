@@ -66,6 +66,10 @@ public final class ChunkReader {
 	private static final int HEADER_SIZE = DataInputToolkit.INTEGER_SIZE + 2 * DataInputToolkit.SHORT_SIZE
 			+ DataInputToolkit.LONG_SIZE;
 
+	private ChunkReader() {
+		throw new UnsupportedOperationException("Not to be instantiated"); //$NON-NLS-1$
+	}
+	
 	/**
 	 * Chunk iterator for an uncompressed JFR file. Efficiently reads a JFR file, chunk by chunk,
 	 * into memory as byte arrays by memory mapping the JFR file, finding the chunk boundaries with
