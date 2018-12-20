@@ -161,14 +161,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.sun.mail.jakarta.mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.sun.activation.jakarta.activation"
+         id="javax.mail.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -176,6 +169,27 @@
 
    <plugin
          id="javax.mail.dsn"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.mail.imap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.mail.pop3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.mail.smtp"
          download-size="0"
          install-size="0"
          version="0.0.0"

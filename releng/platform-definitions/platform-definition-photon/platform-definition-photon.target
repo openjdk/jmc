@@ -34,9 +34,11 @@
 <?pde version="3.8"?><target name="jmc-target-photon" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
-            <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
+            <unit id="javax.mail.api" version="1.4.0"/>
             <unit id="javax.mail.dsn" version="1.4.0"/>
+            <unit id="javax.mail.imap" version="1.4.0"/>
+            <unit id="javax.mail.pop3" version="1.4.0"/>
+            <unit id="javax.mail.smtp" version="1.4.0"/>
             <unit id="org.owasp.encoder" version="1.2.1"/>
             <unit id="org.twitter4j.core" version="4.0.6"/>
             <repository location="http://localhost:8080/site"/>
