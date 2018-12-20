@@ -71,6 +71,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.memory.AllocationByThreadRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.ApplicationHaltsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.AutoBoxingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.CompressedOopsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.FullGcRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcLockerRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcFreedRatioRule

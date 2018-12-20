@@ -36,20 +36,39 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 
 public enum CollectorType {
-	SERIAL_OLD, PARALLEL_OLD, G1_OLD, CMS, UNKNOWN;
 
-	public static CollectorType getOldCollectorType(IItemCollection items) {
-		String oc = items.getAggregate(JdkAggregators.OLD_COLLECTOR);
+	CMS("ConcurrentMarkSweep"), //$NON-NLS-1$
+	DEF_NEW("DefNew"), //$NON-NLS-1$
+	G1_FULL("G1Full"), //$NON-NLS-1$
+	G1_NEW("G1New"), //$NON-NLS-1$
+	G1_OLD("G1Old"), //$NON-NLS-1$
+	PAR_NEW("ParNew"), //$NON-NLS-1$
+	PARALLEL_OLD("ParallelOld"), //$NON-NLS-1$
+	PARALLEL_SCAVENGE("ParallelScavenge"), //$NON-NLS-1$
+	PS_MARK_SWEEP("PSMarkSweep"), //$NON-NLS-1$
+	SERIAL_OLD("SerialOld"), //$NON-NLS-1$,
+	Z("Z"), //$NON-NLS-1$
+	NA("N/A"), //$NON-NLS-1$
+	UNKNOWN(""), //$NON-NLS-1$
+	;
+
+	private final String collectorName;
+
+	private CollectorType(final String collectorName) {
+		this.collectorName = collectorName;
+	}
+
+	public String getCollectorName() {
+		return this.collectorName;
+	}
+
+	public static CollectorType getOldCollectorType(final IItemCollection items) {
+		final String oc = items.getAggregate(JdkAggregators.OLD_COLLECTOR);
 		if (oc != null) {
-			switch (oc) {
-			case "SerialOld": //$NON-NLS-1$
-				return CollectorType.SERIAL_OLD;
-			case "ParallelOld": //$NON-NLS-1$
-				return CollectorType.PARALLEL_OLD;
-			case "ConcurrentMarkSweep": //$NON-NLS-1$
-				return CollectorType.CMS;
-			case "G1Old": //$NON-NLS-1$
-				return CollectorType.G1_OLD;
+			for (final CollectorType collectorType : CollectorType.values()) {
+				if (collectorType.getCollectorName().equals(oc)) {
+					return collectorType;
+				}
 			}
 		}
 		return CollectorType.UNKNOWN;

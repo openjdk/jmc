@@ -246,6 +246,11 @@ public class Messages {
 	public static final String FlightRecordingSupportRule_TEXT_OK = "FlightRecordingSupportRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_LONG = "FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_SHORT = "FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_SHORT"; //$NON-NLS-1$
+	public static final String FullGcRule_RULE_NAME="FullGcRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String FullGcRule_OTHER_COLLECTOR_IN_USE="FullGcRule_OTHER_COLLECTOR_IN_USE"; //$NON-NLS-1$
+	public static final String FullGcRule_FULL_GC_OCCURRED_TITLE="FullGcRule_FULL_GC_OCCURRED_TITLE"; //$NON-NLS-1$
+	public static final String FullGcRule_FULL_GC_OCCURRED_DESC="FullGcRule_FULL_GC_OCCURRED_DESC"; //$NON-NLS-1$
+	public static final String FullGcRule_NO_FULL_GC_OCCURRED="FullGcRule_NO_FULL_GC_OCCURRED"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_FEW_GCS_LIMIT = "GcFreedRatioRule_FEW_GCS_LIMIT"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_FEW_GCS_LIMIT_DESC = "GcFreedRatioRule_FEW_GCS_LIMIT_DESC"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_GC_FREED_RATIO_INFO_LIMIT = "GcFreedRatioRule_GC_FREED_RATIO_INFO_LIMIT"; //$NON-NLS-1$

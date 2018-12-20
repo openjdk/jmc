@@ -2,6 +2,8 @@ allocation_10s_before.jfr
 allocation_10s_fixed.jfr
 crash_jdk9.jfr
 flight_recording_hidden.jfr
+full_gc_cms.jfr
+full_gc_g1.jfr
 parallel-gc_cpu.jfr
 parallel-on-singlecpu.jfr
 stringdedup_enabled_jdk9.jfr
