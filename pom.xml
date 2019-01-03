@@ -412,6 +412,69 @@
 								</resources>
 							</configuration>
 						</execution>
+						<execution>
+							<id>copy-resources-to-linux</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/x86_64/legal
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-windows</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/win32/win32/x86_64/legal
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-mac</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/x86_64/legal
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
 					</executions>
 				</plugin>
 			</plugins>
