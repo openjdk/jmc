@@ -68,7 +68,7 @@ public final class UpdateSiteURLToolkit {
 					do {
 						site = props.getProperty("updatesite." + i++); //$NON-NLS-1$
 						if (site != null) {
-							updateSites.add(MessageFormat.format(site, ApplicationPlugin.FULL_VERSION));
+							updateSites.add(MessageFormat.format(site, ApplicationPlugin.VERSION));
 						}
 					} while (site != null);
 				}
