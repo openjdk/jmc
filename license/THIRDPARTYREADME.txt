@@ -1,8 +1,11 @@
 %% The following notice is provided with respect to ASM Bytecode 
-Manipulation Framework v6.1.1, which may be included with this product.
+Manipulation Framework v7.0, which may be included with this product.
 
 ASM License
 
+ASM is released under the following 3-Clause BSD License:
+
+ASM: a very small and fast Java bytecode manipulation framework
 Copyright (c) 2000-2011 INRIA, France Telecom
 All rights reserved.
 
