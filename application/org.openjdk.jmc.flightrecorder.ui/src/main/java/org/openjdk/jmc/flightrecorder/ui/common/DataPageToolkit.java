@@ -238,7 +238,7 @@ public class DataPageToolkit {
 	}
 
 	private static String createColumnId(IAttribute<?> attr) {
-		return new StringBuilder().append(attr.getIdentifier()).append(":")
+		return new StringBuilder().append(attr.getIdentifier()).append(":") //$NON-NLS-1$
 				.append(attr.getContentType().getIdentifier()).toString();
 	}
 

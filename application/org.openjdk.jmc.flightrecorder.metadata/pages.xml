@@ -35,6 +35,7 @@
       <page
             factory="org.openjdk.jmc.flightrecorder.metadata"
             id="mc.flr.page.metadata"
+            parent="org.openjdk.jmc.flightrecorder.ui.eventbrowser"
             weight="/#9.0">
   		<state>
            <attributeTable sortColumn="id">

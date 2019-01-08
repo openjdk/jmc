@@ -33,7 +33,7 @@
 -->
 <pages>
 	<page factory="org.openjdk.jmc.flightrecorder.ext.jfx" id="mc.flr.page.javafx"
-		weight="/#9.0">
+		weight="/#5JavaFx">
 		<state>
 			<mainSash weights="2,1" />
 			<tableSash weights="15,8" horizontal="true" />

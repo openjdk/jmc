@@ -176,7 +176,7 @@ public class MethodProfilingRule implements IRule {
 			"method.profiling.evaluation.excluded.package", //$NON-NLS-1$
 			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES),
 			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES_DESC),
-			UnitLookup.PLAIN_TEXT.getPersister(), "java\\.(lang|util)");
+			UnitLookup.PLAIN_TEXT.getPersister(), "java\\.(lang|util)"); //$NON-NLS-1$
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WINDOW_SIZE, EXCLUDED_PACKAGE_REGEXP);
 
 	/**
@@ -232,7 +232,7 @@ public class MethodProfilingRule implements IRule {
 			excludes = Pattern.compile(excludedPattern);
 		} catch (Exception e) {
 			// Make sure we don't blow up on an invalid pattern.
-			excludes = Pattern.compile("");
+			excludes = Pattern.compile(""); //$NON-NLS-1$
 		}
 		List<MethodProfilingWindowResult> windowResults = new ArrayList<>();
 		IUnorderedWindowVisitor visitor = createWindowVisitor(settings, settingsFilter, windowSize, windowResults,
@@ -401,7 +401,7 @@ public class MethodProfilingRule implements IRule {
 				final IMCMethod[] maxMethod = new IMCMethod[1];
 				final IMCStackTrace[] maxPath = new IMCStackTrace[1];
 				// Using this GroupingAggregator because it's the only way to extract the keys from the aggregation along with values
-				IAggregator<IQuantity, ?> aggregator = GroupingAggregator.build("", "", //$NON-NLS-1$ //$NON_NLS_2$
+				IAggregator<IQuantity, ?> aggregator = GroupingAggregator.build("", "", //$NON-NLS-1$ //$NON-NLS-2$
 						MethodProfilingDataProvider.PATH_ACCESSOR_FACTORY, Aggregators.count(),
 						new GroupingAggregator.IGroupsFinisher<IQuantity, IMCStackTrace, CountConsumer>() {
 
@@ -454,7 +454,7 @@ public class MethodProfilingRule implements IRule {
 								for (IMCFrame frame : frames) {
 									IMCPackage p = frame.getMethod().getType().getPackage();
 									// Under some circumstances p.getName() will return a raw null, we need to handle this case.
-									Matcher m = excludes.matcher(p.getName() == null ? "" : p.getName());
+									Matcher m = excludes.matcher(p.getName() == null ? "" : p.getName()); //$NON-NLS-1$
 									if (m.matches()) {
 										framesToDrop.add(frame);
 									} else {

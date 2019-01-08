@@ -33,11 +33,7 @@
 package org.openjdk.jmc.flightrecorder.ui.pages;
 
 
-import static org.openjdk.jmc.common.item.ItemQueryBuilder.fromWhere;
-
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +56,6 @@ import org.openjdk.jmc.common.IMCClassLoader;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
-import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;

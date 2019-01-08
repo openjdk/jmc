@@ -266,7 +266,7 @@ public class LocalJVMToolkit {
 			});
 			return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
 		} catch (Exception e) {
-			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, "Failed to create descriptor for jvm with PID " + vmid, e);
+			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, "Failed to create descriptor for jvm with PID " + vmid, e); //$NON-NLS-1$
 			return null;
 		}
 	}

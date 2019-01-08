@@ -68,13 +68,13 @@ public class AwtCanvas {
 			imageDataSWT = new ImageData(width, height, 24, vpPalette, scanlinePad, byteData);
 			Graphics2D graphicsAWT = imageAWT.createGraphics();
 			setAntiAliasing(graphicsAWT);
-			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12));
+			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12)); //$NON-NLS-1$
 			fixDPI(graphicsAWT);
 			return graphicsAWT;
 		} else {
 			Graphics2D graphicsAWT = imageAWT.createGraphics();
 			setAntiAliasing(graphicsAWT);
-			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12));
+			graphicsAWT.setFont(new Font("OptionPane.font", Font.PLAIN, 12)); //$NON-NLS-1$
 			graphicsAWT.clearRect(0, 0, width, height);
 			fixDPI(graphicsAWT);
 			return graphicsAWT;

@@ -44,7 +44,6 @@ import java.util.Collections;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.ui.charts.AWTChartToolkit.IColorProvider;

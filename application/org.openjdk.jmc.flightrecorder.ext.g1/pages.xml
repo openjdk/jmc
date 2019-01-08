@@ -32,7 +32,7 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <pages>
-	<page factory="org.openjdk.jmc.flightrecorder.ext.g1" id="org.openjdk.jmc.flightrecorder.ext.g1">
+	<page factory="org.openjdk.jmc.flightrecorder.ext.g1" id="org.openjdk.jmc.flightrecorder.ext.g1" parent="org.openjdk.jmc.flightrecorder.ui.jvminternals">
 		<state>
 		</state>
 	</page>

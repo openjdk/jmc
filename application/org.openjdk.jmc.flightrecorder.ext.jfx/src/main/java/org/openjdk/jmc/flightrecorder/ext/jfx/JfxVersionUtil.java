@@ -32,34 +32,53 @@
  */
 package org.openjdk.jmc.flightrecorder.ext.jfx;
 
-import org.eclipse.osgi.util.NLS;
+import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.ext.jfx.messages"; //$NON-NLS-1$
+/**
+ * Package local helper.
+ */
+final class JfxVersionUtil {
+	enum JavaFxEventAvailability {
+		None, JavaFx8, JavaFx12
+	}
+	
+	static JavaFxEventAvailability getAvailability(IItemCollection items) {
+		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_12);
+		if (RulesToolkit.isEventsEnabled(eventAvailability)) {
+			return JavaFxEventAvailability.JavaFx12;
+		}		
+		eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_8);
+		if (RulesToolkit.isEventsEnabled(eventAvailability)) {
+			return JavaFxEventAvailability.JavaFx8;
+		}
+		return JavaFxEventAvailability.None;
+	}
+	
 
-	public static String JfxConstants_INPUT_TYPE;
-	public static String JfxConstants_PHASE_NAME;
-	public static String JfxConstants_PULSE_ID;
-	public static String JfxConstants_PULSE_START;
-	public static String JfxConstants_PULSE_START_DESCRIPTION;
-	public static String JfxPage_INPUT;
-	public static String JfxPage_INPUTS;
-	public static String JfxPage_INPUT_HISTOGRAM_SELECTION;
-	public static String JfxPage_JAVA_FX;
-	public static String JfxPage_PHASES;
-	public static String JfxPage_PHASE_TABLE_SELECTION;
-	public static String JfxPage_PULSE_HISTOGRAM_SELECTION;
-	public static String JfxPulseDurationRule_CAPTION_PREFERENCE_TARGET_FRAME_RATE;
-	public static String JfxPulseDurationRule_DESCRIPTION_PREFERENCE_TARGET_FRAME_RATE;
-	public static String JfxPulseDurationRule_NAME;
-	public static String JfxPulseDurationRule_OK;
-	public static String JfxPulseDurationRule_WARNING;
-	public static String JfxPulseDurationRule_WARNING_LONG;
-
-	static {
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	static String getPulseTypeId(JavaFxEventAvailability availability) {
+		if (availability == JavaFxEventAvailability.JavaFx8) {
+			return JfxConstants.TYPE_ID_PULSE_PHASE_8;
+		}
+		return JfxConstants.TYPE_ID_PULSE_PHASE_12;
 	}
 
-	private Messages() {
+
+	static IAttribute<IQuantity> getPulseIdAttribute(JavaFxEventAvailability availability) {
+		if (availability == JavaFxEventAvailability.JavaFx8) {
+			return JfxConstants.ATTRIBUTE_PULSE_ID_8;
+		}
+		return JfxConstants.ATTRIBUTE_PULSE_ID_12;
+	}
+
+
+	static IAttribute<String> getPhaseNameAttribute(JavaFxEventAvailability availability) {
+		if (availability == JavaFxEventAvailability.JavaFx8) {
+			return JfxConstants.ATTRIBUTE_PHASE_NAME_8;
+		}
+		return JfxConstants.ATTRIBUTE_PHASE_NAME_12;
 	}
 }

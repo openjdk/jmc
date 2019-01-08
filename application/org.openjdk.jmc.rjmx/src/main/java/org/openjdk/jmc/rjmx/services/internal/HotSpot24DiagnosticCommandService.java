@@ -287,7 +287,7 @@ public class HotSpot24DiagnosticCommandService implements IDiagnosticCommandServ
 	}
 
 	private void refreshOperations() throws Exception {
-		RJMXPlugin.getDefault().getLogger().finer("Refreshing diagnostic operations");
+		RJMXPlugin.getDefault().getLogger().finer("Refreshing diagnostic operations"); //$NON-NLS-1$
 		MBeanInfo info = m_mbeanServer.getMBeanInfo(DIAGNOSTIC_BEAN);
 		operations = new ArrayList<>(info.getOperations().length);
 		commandNameToOperation.clear();

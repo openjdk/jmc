@@ -87,8 +87,8 @@ public class ResultReportUi {
 
 	private static final String OVERVIEW_MAKE_SCALABLE = "overview.makeScalable();"; //$NON-NLS-1$
 	private static final String OVERVIEW_UPDATE_PAGE_HEADERS_VISIBILITY = "overview.updatePageHeadersVisibility();"; //$NON-NLS-1$
-	private static final Pattern HTML_ANCHOR_PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>");
-	private static final String OPEN_BROWSER_WINDOW = "openWindowByUrl";
+	private static final Pattern HTML_ANCHOR_PATTERN = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>"); //$NON-NLS-1$
+	private static final String OPEN_BROWSER_WINDOW = "openWindowByUrl"; //$NON-NLS-1$
 
 	private static class Linker extends BrowserFunction {
 
@@ -291,9 +291,9 @@ public class ResultReportUi {
 	}
 
 	private static String openWindowMethod(String url, String name){
-        return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027")
-                .append(url).append("\u0027").append(',').append("\u0027")
-                .append(name).append("\u0027").append(");return false;").toString();
+        return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                .append(url).append("\u0027").append(',').append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$
+                .append(name).append("\u0027").append(");return false;").toString();  //$NON-NLS-1$//$NON-NLS-2$
     }
 
 	public ResultReportUi(boolean isSinglePage) {
@@ -351,7 +351,7 @@ public class ResultReportUi {
 						continue;
 					}
 					long score = Math.round(result.getScore());
-					String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.getDescription(result));//$NON-NLS-1$ //$NON-NLS-2$
+					String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.getDescription(result));
 					String quoteEscape = adjustedHtml.replaceAll("\\\"", "\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
 					String description = quoteEscape.replaceAll("\n", "</br>"); //$NON-NLS-1$ //$NON-NLS-2$
 					script.append(String.format("overview.updateResult(\"%s\", %d, \"%s\");", //$NON-NLS-1$
@@ -430,7 +430,7 @@ public class ResultReportUi {
 			browser.addProgressListener(new ProgressAdapter() {
 				@Override
 				public void completed(ProgressEvent event) {
-					new OpenWindowFunction(browser, OPEN_BROWSER_WINDOW); //$NON-NLS-1$
+					new OpenWindowFunction(browser, OPEN_BROWSER_WINDOW);
 					new Linker(browser, "linker", descriptors, editor); //$NON-NLS-1$
 					new Expander(browser, "expander"); //$NON-NLS-1$
 					browser.execute(String.format("overview.showOk(%b);", showOk)); //$NON-NLS-1$

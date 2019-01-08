@@ -156,5 +156,9 @@ public class DataPageDescriptor implements IPageDefinition {
 	public ImageDescriptor getImageDescriptor() {
 		return factory.getImageDescriptor(pageState);
 	}
-
+	
+	@Override
+	public String toString() {
+		return getId() + " children:" + String.valueOf(children); //$NON-NLS-1$
+	}
 }

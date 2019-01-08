@@ -56,6 +56,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.ext.jfx.JfxVersionUtil.JavaFxEventAvailability;
 import org.openjdk.jmc.flightrecorder.ui.IDataPageFactory;
 import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
@@ -115,7 +116,7 @@ public class JfxPage extends AbstractDataPage {
 
 	private static final ItemHistogramBuilder BY_PULSE_HISTOGRAM = new ItemHistogramBuilder();
 	private static final ItemHistogramBuilder INPUT_HISTOGRAM = new ItemHistogramBuilder();
-	private static final ItemListBuilder PHASE_LIST = new ItemListBuilder();
+	private final ItemListBuilder phaseList = new ItemListBuilder();
 
 	private static final String TOTAL_DURATION = "totalDuration"; //$NON-NLS-1$
 	private static final String PULSE_START = "pulseStart"; //$NON-NLS-1$
@@ -124,12 +125,6 @@ public class JfxPage extends AbstractDataPage {
 		BY_PULSE_HISTOGRAM.addCountColumn();
 		BY_PULSE_HISTOGRAM.addColumn(TOTAL_DURATION, Aggregators.sum(JfrAttributes.DURATION));
 		BY_PULSE_HISTOGRAM.addColumn(PULSE_START, JfxConstants.PULSE_START);
-
-		PHASE_LIST.addColumn(JfrAttributes.DURATION);
-		PHASE_LIST.addColumn(JfrAttributes.START_TIME);
-		PHASE_LIST.addColumn(JfxConstants.PHASE_NAME);
-		PHASE_LIST.addColumn(JfrAttributes.EVENT_THREAD);
-		PHASE_LIST.addColumn(JfxConstants.PULSE_ID);
 
 		INPUT_HISTOGRAM.addCountColumn();
 		INPUT_HISTOGRAM.addColumn(TOTAL_DURATION, Aggregators.sum(JfrAttributes.DURATION));
@@ -171,6 +166,8 @@ public class JfxPage extends AbstractDataPage {
 			this.items = items;
 			Form form = DataPageToolkit.createForm(parent, toolkit, name, icon);
 
+			JavaFxEventAvailability availability = JfxVersionUtil.getAvailability(getItems());
+			
 			mainSash = new SashForm(form.getBody(), SWT.VERTICAL | SWT.SMOOTH);
 			toolkit.adapt(mainSash);
 			tableSash = new SashForm(mainSash, SWT.HORIZONTAL | SWT.SMOOTH);
@@ -179,7 +176,7 @@ public class JfxPage extends AbstractDataPage {
 			Section phases = CompositeToolkit.createSection(tableSash, toolkit, Messages.JfxPage_PHASES);
 			phasesSash = new SashForm(phases, SWT.HORIZONTAL | SWT.SMOOTH);
 			phases.setClient(phasesSash);
-			pulsesTable = BY_PULSE_HISTOGRAM.buildWithoutBorder(phasesSash, JfxConstants.PULSE_ID,
+			pulsesTable = BY_PULSE_HISTOGRAM.buildWithoutBorder(phasesSash, JfxVersionUtil.getPulseIdAttribute(availability),
 					getPulseTableSettings(state.getChild(PULSES_TABLE)));
 			pulsesFilter = FilterComponent.createFilterComponent(pulsesTable, pulsesTableFilter,
 					getItems().apply(JfxConstants.JFX_PULSE_FILTER), pageContainer.getSelectionStore()::getSelections,
@@ -189,7 +186,13 @@ public class JfxPage extends AbstractDataPage {
 					pulsesFilter.getShowSearchAction(), pulsesFilter.getShowFilterAction());
 			pulsesFilter.loadState(state.getChild(PULSES_FILTER));
 
-			phasesTable = PHASE_LIST.buildWithoutBorder(phasesSash, getPhaseListSettings(state.getChild(PHASES_TABLE)));
+			phaseList.addColumn(JfrAttributes.DURATION);
+			phaseList.addColumn(JfrAttributes.START_TIME);
+			phaseList.addColumn(JfxVersionUtil.getPhaseNameAttribute(availability));
+			phaseList.addColumn(JfrAttributes.EVENT_THREAD);
+			phaseList.addColumn(JfxVersionUtil.getPulseIdAttribute(availability));
+			
+			phasesTable = phaseList.buildWithoutBorder(phasesSash, getPhaseListSettings(state.getChild(PHASES_TABLE)));
 			phasesFilter = FilterComponent.createFilterComponent(phasesTable, phasesTableFilter,
 					getItems().apply(JfxConstants.JFX_PULSE_FILTER), pageContainer.getSelectionStore()::getSelections,
 					this::onPhasesFilterChange);
@@ -370,9 +373,10 @@ public class JfxPage extends AbstractDataPage {
 	}
 
 	private static IXDataRenderer buildThreadRenderer(Object threadName, IItemCollection items) {
+		// Attribute only used for looking up color and name information here
 		IXDataRenderer phaseRenderer = DataPageToolkit.buildSpanRenderer(items,
-				DataPageToolkit.getAttributeValueColor(JfxConstants.PHASE_NAME));
-		return new ItemRow(String.valueOf(threadName), JfxConstants.PHASE_NAME.getDescription(), phaseRenderer, items);
+				DataPageToolkit.getAttributeValueColor(JfxConstants.ATTRIBUTE_PHASE_NAME_12));
+		return new ItemRow(String.valueOf(threadName), JfxConstants.ATTRIBUTE_PHASE_NAME_12.getDescription(), phaseRenderer, items);
 	}
 
 	private static TableSettings getPulseTableSettings(IState state) {
@@ -390,8 +394,8 @@ public class JfxPage extends AbstractDataPage {
 			return new TableSettings(JfrAttributes.DURATION.getIdentifier(),
 					Arrays.asList(new ColumnSettings(JfrAttributes.DURATION.getIdentifier(), false, 100, false),
 							new ColumnSettings(JfrAttributes.DURATION.getIdentifier(), false, 200, false),
-							new ColumnSettings(JfxConstants.PHASE_NAME.getIdentifier(), false, 100, false),
-							new ColumnSettings(JfxConstants.PULSE_ID.getIdentifier(), false, 100, false),
+							new ColumnSettings(JfxConstants.ATTRIBUTE_PHASE_NAME_12.getIdentifier(), false, 100, false),
+							new ColumnSettings(JfxConstants.ATTRIBUTE_PULSE_ID_12.getIdentifier(), false, 100, false),
 							new ColumnSettings(JfrAttributes.EVENT_THREAD.getIdentifier(), false, 200, false)));
 		} else {
 			return new TableSettings(state);

@@ -82,7 +82,7 @@ public class DuplicateFlagsRule implements IRule {
 				StringBuilder sb = new StringBuilder();
 				sb.append("<ul>"); //$NON-NLS-1$
 				for (ArrayList<String> dupe : dupes) {
-					sb.append("<li>" + Encode.forHtml(StringToolkit.join(dupe, ", ")) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("<li>" + Encode.forHtml(StringToolkit.join(dupe, ", ")) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				sb.append("</ul>"); //$NON-NLS-1$
 				String shortDescription = dupes.size() > 1

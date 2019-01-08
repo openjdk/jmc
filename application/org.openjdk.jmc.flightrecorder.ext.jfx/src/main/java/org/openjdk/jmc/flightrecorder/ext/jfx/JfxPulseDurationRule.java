@@ -52,10 +52,10 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.ext.jfx.JfxVersionUtil.JavaFxEventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 public class JfxPulseDurationRule implements IRule {
 	private static final String RESULT_ID = "pulseDuration"; //$NON-NLS-1$
@@ -76,18 +76,23 @@ public class JfxPulseDurationRule implements IRule {
 			.<TypedPreference<?>> asList(CONFIG_TARGET_FRAME_RATE);
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.JFX_PULSE_ID);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN
-				|| eventAvailability == EventAvailability.NONE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JfxConstants.JFX_PULSE_ID);
+		JavaFxEventAvailability availability = JfxVersionUtil.getAvailability(items);
+		if (availability == JavaFxEventAvailability.None) {
+			// Could possibly check the JVM version for better suggestions here, but not very important
+			return RulesToolkit.getEventAvailabilityResult(this, items,
+					RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_12),
+					JfxConstants.TYPE_ID_PULSE_PHASE_12);
 		}
+
 		IQuantity targetFramerate = valueProvider.getPreferenceValue(CONFIG_TARGET_FRAME_RATE);
 		ITypedQuantity<LinearUnit> targetPhaseTime = UnitLookup.MILLISECOND
 				.quantity(1000.0 / targetFramerate.longValue());
 		IItemFilter longDurationFilter = ItemFilters.more(JfrAttributes.DURATION, targetPhaseTime);
-		IItemFilter longPhasesFilter = ItemFilters.and(longDurationFilter, ItemFilters.type(JfxConstants.JFX_PULSE_ID));
+		IItemFilter longPhasesFilter = ItemFilters.and(longDurationFilter,
+				ItemFilters.type(JfxVersionUtil.getPulseTypeId(availability)));
 		IQuantity longPhases = items.getAggregate(Aggregators.count(longPhasesFilter));
-		IQuantity allPhases = items.getAggregate(Aggregators.count(ItemFilters.type(JfxConstants.JFX_PULSE_ID)));
+		IQuantity allPhases = items
+				.getAggregate(Aggregators.count(ItemFilters.type(JfxVersionUtil.getPulseTypeId(availability))));
 		if (longPhases != null && longPhases.doubleValue() > 0) {
 			double ratioOfLongPhases = longPhases.ratioTo(allPhases);
 			double mappedScore = RulesToolkit.mapExp100(ratioOfLongPhases, 0.05, 0.5);

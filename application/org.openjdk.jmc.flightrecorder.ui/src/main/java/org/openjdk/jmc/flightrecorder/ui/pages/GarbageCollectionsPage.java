@@ -64,7 +64,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -161,7 +160,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 	private static final ReferenceStatisticsType[] REF_TYPE = ReferenceStatisticsType.values();
 	private static final String SASH = "sash"; //$NON-NLS-1$
 	private static final String TABLE_SASH = "tableSash"; //$NON-NLS-1$
-	private static final String THREAD_LANES = "threadLane"; // $NON-NLS-1$
+	private static final String THREAD_LANES = "threadLane"; //$NON-NLS-1$
 	private static final String GCS = "gcs"; //$NON-NLS-1$
 	private static final String CHART = "chart"; //$NON-NLS-1$
 	private static final String PHASE_TABLE_FILTER = "phaseTableFilter"; //$NON-NLS-1$
