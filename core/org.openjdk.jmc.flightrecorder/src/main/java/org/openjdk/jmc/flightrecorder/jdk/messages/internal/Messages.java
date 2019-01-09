@@ -314,6 +314,7 @@ public class Messages {
 	public static final String ATTR_JAVA_ARGUMENTS = "ATTR_JAVA_ARGUMENTS"; //$NON-NLS-1$
 	public static final String ATTR_JVM_ARGUMENTS = "ATTR_JVM_ARGUMENTS"; //$NON-NLS-1$
 	public static final String ATTR_JVM_NAME = "ATTR_JVM_NAME"; //$NON-NLS-1$
+	public static final String ATTR_JVM_PID = "ATTR_JVM_PID"; //$NON-NLS-1$
 	public static final String ATTR_JVM_START_TIME = "ATTR_JVM_START_TIME"; //$NON-NLS-1$
 	public static final String ATTR_JVM_SYSTEM = "ATTR_JVM_SYSTEM"; //$NON-NLS-1$
 	public static final String ATTR_JVM_SYSTEM_DESC = "ATTR_JVM_SYSTEM_DESC"; //$NON-NLS-1$

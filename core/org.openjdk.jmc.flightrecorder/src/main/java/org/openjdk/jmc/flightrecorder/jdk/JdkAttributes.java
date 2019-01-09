@@ -441,6 +441,8 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_JVM_START_TIME), TIMESTAMP);
 	public static final IAttribute<String> JVM_NAME = attr("jvmName", Messages.getString(Messages.ATTR_JVM_NAME), //$NON-NLS-1$
 			PLAIN_TEXT);
+	public static final IAttribute<IQuantity> JVM_PID = attr("pid", Messages.getString(Messages.ATTR_JVM_PID), //$NON-NLS-1$
+			NUMBER);
 	public static final IAttribute<String> JVM_VERSION = attr("jvmVersion", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_JVM_VERSION), PLAIN_TEXT);
 	public static final IAttribute<String> JVM_ARGUMENTS = attr("jvmArguments", //$NON-NLS-1$

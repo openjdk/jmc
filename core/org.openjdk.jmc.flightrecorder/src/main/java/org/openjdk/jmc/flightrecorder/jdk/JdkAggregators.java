@@ -113,6 +113,8 @@ public final class JdkAggregators {
 
 	// VM Info
 	public static final IAggregator<String, ?> JVM_NAME = distinctAsString(VM_INFO, JdkAttributes.JVM_NAME);
+	public static final IAggregator<IQuantity, ?> JVM_PID = min(JdkAttributes.JVM_PID.getName(), null,
+			VM_INFO, JdkAttributes.JVM_PID);
 	public static final IAggregator<IQuantity, ?> JVM_START_TIME = min(JdkAttributes.JVM_START_TIME.getName(), null,
 			VM_INFO, JdkAttributes.JVM_START_TIME);
 	public static final IAggregator<String, ?> JVM_VERSION = distinctAsString(VM_INFO, JdkAttributes.JVM_VERSION);

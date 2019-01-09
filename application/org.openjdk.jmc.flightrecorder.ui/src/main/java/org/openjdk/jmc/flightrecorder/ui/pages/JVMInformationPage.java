@@ -162,6 +162,7 @@ public class JVMInformationPage extends AbstractDataPage {
 			infoViewer = new ItemAggregateViewer(jvmInfSection, toolkit);
 			infoViewer.addAggregate(JdkAggregators.JVM_START_TIME);
 			infoViewer.addAggregate(JdkAggregators.JVM_NAME);
+			infoViewer.addAggregate(JdkAggregators.JVM_PID);
 			infoViewer.addAggregate(JdkAggregators.JVM_VERSION);
 			infoViewer.addAggregate(JdkAggregators.JVM_ARGUMENTS);
 			infoViewer.addAggregate(JdkAggregators.JAVA_ARGUMENTS);
