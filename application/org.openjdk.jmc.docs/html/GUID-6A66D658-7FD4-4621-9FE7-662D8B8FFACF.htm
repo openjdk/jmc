@@ -56,9 +56,9 @@
 <div class="section"><p class="subhead1">Using the Class Loading Page: Selections and Aspects</p><p>Use the drop-down menus at the top of the page to choose a selection and aspect if desired. Data from other pages can be saved to the selection drop-down menu by dragging an area of a chart (or selecting data from a table) and choosing <span class="bold">Store Selection</span> or <span class="bold">Store Selection and Set As Focused Selection</span> from the context menu.</p>
 <div class="p">The following controls provide additional behavior:<ul style="list-style-type: disc;"><li><p><span class="bold">Show concurrent</span>: Show all events concurrent to the selected aspect.</p>
 </li>
-<li><p><span class="bold">Intersecting</span>: Show all events that intersect the original events, or only those contained in the same timespan.</p>
+<li><p><span class="bold">Contained</span>: Only show events that are fully contained in the time range from the active selection aspect</p>
 </li>
-<li><p><span class="bold">All threads</span>: Show events in all threads or only in threads related to the original events.</p>
+<li><p><span class="bold">Same threads</span>: Only show events in threads related to the active selection aspect.</p>
 </li>
 </ul>
 </div>
@@ -75,7 +75,9 @@
 </li>
 </ul>
 </div>
-<p>Table columns are labeled as follows:</p>
+<p>The first table contains the  <span class="bold">Class Loaders</span> and  <span class="bold">Class Statistics</span> subtabs.</p>
+<p>Table Columns are labeled as follows:</p>
+<p><span class="bold">Class Loaders Tab</span></p>
 <div class="p"><ul style="list-style-type: disc;"><li><p><span class="bold">Defining Class Loader</span>: The defining class loader.</p>
 </li>
 <li><p><span class="bold">Classes Loaded</span>: The number of classes loaded by this class loader.</p>
@@ -84,7 +86,16 @@
 </li>
 </ul>
 </div>
-<p>This page also contains <span class="bold">Class Loading</span> and <span class="bold">Class Unloading</span> subtabs.</p>
+<p><span class="bold">Class Loader Statistics Tab</span></p>
+<div class="p"><ul style="list-style-type: disc;"><li><p><span class="bold">Start Time</span>: The defining class loader.</p>
+</li>
+<li><p><span class="bold">Classes Loaded</span>: The number of classes loaded by this class loader.</p>
+</li>
+<li><p><span class="bold">Classes Unloaded</span>: The number of classes unloaded.</p>
+</li>
+</ul>
+</div>
+<p>This page also contains <span class="bold">Class Loading</span>, <span class="bold">Class Defining</span> and <span class="bold">Class Unloading</span> subtabs.</p>
 <p><span class="bold">Class Loading Tab</span></p>
 <ul style="list-style-type: disc;"><li><p><span class="bold">Loaded Class</span>: The name of the loaded class.</p>
 </li>
@@ -99,6 +110,14 @@
 <li><p><span class="bold">End Time</span>: The end time of the class loading event.</p>
 </li>
 </ul>
+<p><span class="bold">Class Defining Tab</span></p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Start Time</span>: The time at which the class was defined.</p>
+</li>
+<li><p><span class="bold">Defining Class Loader</span>: The name of the defining class loader.</p>
+</li>
+<li><p><span class="bold">Defined</span>: The name of the class that was defined</p>
+</li>
+</ul>
 <p><span class="bold">Class Unloading Tab</span></p>
 <ul style="list-style-type: disc;"><li><p><span class="bold">Unloaded Class</span>: The name of the unloaded class.</p>
 </li>
@@ -111,9 +130,15 @@
 <!-- class="section" -->
 <div class="section"><p class="subhead1">Using the Class Loading Page: Configuring Rules</p><p>You can set configuration attributes for the rules associated with this page by clicking the <span class="bold">Edit Configuration</span> icon.</p>
 <p>The following options are available:</p>
+<div class="p"><span class="bold">Class Leak</span><ul style="list-style-type: disc;"><li><p><span class="bold">Warning limit</span>: The number of loads to a class that should trigger a warning.</p>
+</li>
+<li><p><span class="bold">Class limit</span>: the maximum number of classes exceeding the Warning Limit to report.</p>
+</li>
+</ul>
+</div>
 <div class="p"><span class="bold">Class Loading Pressure</span><ul style="list-style-type: disc;"><li><p><span class="bold">Classloading duration limit</span>: The shortest classloading duration that should trigger a warning.</p>
 </li>
-<li><p><span class="bold">Classloading ration limit</span>: The minimum ratio between time spent in classloading and the total duration of the recording.</p>
+<li><p><span class="bold">Classloading ratio limit</span>: The minimum ratio between time spent in classloading and the total duration of the recording.</p>
 </li>
 </ul>
 </div>

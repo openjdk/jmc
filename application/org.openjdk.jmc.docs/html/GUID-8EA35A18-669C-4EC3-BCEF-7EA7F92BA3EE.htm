@@ -57,9 +57,9 @@
 <div class="section"><p class="subhead1">Using the Java Application Page: Selections and Aspects</p><p>Use the drop-down menus at the top of the page to choose a selection and aspect if desired. Data from other pages can be saved to the selection drop-down menu by dragging an area of a chart (or selecting data from a table) and choosing <span class="bold">Store Selection</span> or <span class="bold">Store Selection and Set As Focused Selection</span> from the context menu.</p>
 <div class="p">The following controls provide additional behavior:<ul style="list-style-type: disc;"><li><p><span class="bold">Show concurrent</span>: Show all events concurrent to the selected aspect.</p>
 </li>
-<li><p><span class="bold">Intersecting</span>: Show all events that intersect the original events, or only those contained in the same timespan.</p>
+<li><p><span class="bold">Contained</span>: Only show events that are fully contained in the time range from the active selection aspect</p>
 </li>
-<li><p><span class="bold">All threads</span>: Show events in all threads or only in threads related to the original events.</p>
+<li><p><span class="bold">Same threads</span>: Only show events in threads related to the active selection aspect.</p>
 </li>
 <li><p><span class="bold">Time Range</span>: Zoom to time range on relevant places on the page, or clear the time range zoom.</p>
 </li>
@@ -88,7 +88,9 @@ You can select any of the following to be displayed on the graph:</div>
 </li>
 <li><p><span class="bold">JVM + Application</span>: Total CPU used by the JVM process.</p>
 </li>
-<li><p><span class="bold">Profiling</span>: The number of profiling samples. The color represents the distribution of the top stack trace frames (red = most samples in a few methods, yellow = samples are evenly distributed).</p>
+<li><p><span class="bold">used Heap</span>: Total memory allocated by objects on the heap.</p>
+</li>
+<li><p><span class="bold">Method Profiling</span>: The number of profiling samples. The color represents the distribution of the top stack trace frames (red = most samples in a few methods, yellow = samples are evenly distributed).</p>
 </li>
 <li><p><span class="bold">Total Allocation</span>: An estimate of the total allocation. This is not an exact value.</p>
 </li>
@@ -102,6 +104,14 @@ You can select any of the following to be displayed on the graph:</div>
 <!-- class="section" -->
 <div class="section"><p class="subhead1">Using the Java Application Page: Configuring Rules</p><p>You can set configuration attributes for the rules associated with this page by clicking the <span class="bold">Edit Configuration</span> icon.</p>
 <p>The following options are available:</p>
+<div class="p"><span class="bold">Application Halts</span><ul style="list-style-type: disc;"><li><p><span class="bold">Application Halts Info Limit</span>: Ratio between application halts and execution time within the time window needed to trigger an info notice.</p>
+</li>
+<li><p><span class="bold">Application Halts Warning Limit</span>: Ratio between application halts and execution time within the time window needed to trigger a warning notice.</p>
+</li>
+<li><p><span class="bold">Application Halts Time Window Size</span>: Time window used for evaluating the rule</p>
+</li>
+</ul>
+</div>
 <div class="p"><span class="bold">High JVM CPU Load</span><ul style="list-style-type: disc;"><li><p><span class="bold">JVM CPU Usage Info Limit</span>: The amount of CPU used by the JVM needed to trigger an info notice.</p>
 </li>
 <li><p><span class="bold">Minimum CPU Load Period</span>: Minimum CPU load period to trigger a warning.</p>
@@ -109,11 +119,18 @@ You can select any of the following to be displayed on the graph:</div>
 <li><p><span class="bold">Missing Sample Limit</span>: Minimum missing samples to trigger a warning.</p>
 </li>
 </ul>
-<span class="bold">Hot Methods</span><ul style="list-style-type: disc;"><li><p></p>
-</li>
-</ul>
 </div>
 <div class="p"><span class="bold">Parallel Threads</span><ul style="list-style-type: disc;"><li><p><span class="bold">Sampled Threads Ratio Limit</span>: Ratio between sampled threads and hardware threads needed to trigger a warning.</p>
+</li>
+<li><p><span class="bold">Min Used CPU Ratio</span>: Minimum used CPU Ratio for the application to not be considered idle.</p>
+</li>
+<li><p><span class="bold">Short Recording Limit</span>: Minimum length of recording to be considered </p>
+</li>
+<li><p><span class="bold">CPU Window Size</span>: Sliding window size used to calculate CPU Usage</p>
+</li>
+<li><p><span class="bold">Min Total Sample Count</span>: Minimum number of samples in the recording required to evaluate this rule</p>
+</li>
+<li><p><span class="bold">Min Sample Count Per Thread</span>: Minimum number of samples in a thread required to consider this thread as sampled</p>
 </li>
 </ul>
 </div>

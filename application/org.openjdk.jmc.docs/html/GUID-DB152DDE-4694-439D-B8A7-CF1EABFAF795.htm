@@ -56,9 +56,9 @@
 <div class="section"><p class="subhead1">Using the Code Cache Page: Selections and Aspects</p><p>Use the drop-down menus at the top of the page to choose a selection and aspect if desired. Data from other pages can be saved to the selection drop-down menu by dragging an area of a chart (or selecting data from a table) and choosing <span class="bold">Store Selection</span> or <span class="bold">Store Selection and Set As Focused Selection</span> from the context menu.</p>
 <div class="p">The following controls provide additional behavior:<ul style="list-style-type: disc;"><li><p><span class="bold">Show concurrent</span>: Show all events concurrent to the selected aspect.</p>
 </li>
-<li><p><span class="bold">Intersecting</span>: Show all events that intersect the original events, or only those contained in the same timespan.</p>
+<li><p><span class="bold">Contained</span>: Only show events that are fully contained in the time range from the active selection aspect</p>
 </li>
-<li><p><span class="bold">All threads</span>: Show events in all threads or only in threads related to the original events.</p>
+<li><p><span class="bold">Same threads</span>: Only show events in threads related to the active selection aspect.</p>
 </li>
 </ul>
 </div>
@@ -67,41 +67,53 @@
 <div class="section"><p class="subhead1">Using the Code Cache Page: Tables and Graphs</p><p>You can select the following data to be displayed on the graph:</p>
 <ul style="list-style-type: disc;"><li><p><span class="bold">Entries</span>:</p>
 </li>
-<li><p><span class="bold">Methods</span>:</p>
+<li><p><span class="bold">Profiled Nmethods Unallocated</span>: Amount of unallocated space in the profiled nmethods heap.</p>
 </li>
-<li><p><span class="bold">Adaptors</span>:</p>
+<li><p><span class="bold">non-Profiled Nmethods Unallocated</span>: Amount of unallocated space in the non-profiled nmethods heap.</p>
 </li>
-<li><p><span class="bold">Unallocated</span>:</p>
+<li><p><span class="bold">Non-Nmethods Unallocated</span>: Amount of unallocated space in the non-nmethods heap.</p>
+</li>
+<li><p><span class="bold">Profiled Nmethod Entries</span>: Amount of entries in the profiled nmethods heap.</p>
+</li>
+<li><p><span class="bold">Non-Profiled Nmethod Entires</span>: Amount of entries in the non-profiled nmethods heap.</p>
+</li>
+<li><p><span class="bold">Non-Nmethods Entries</span>: Amount of entries in the non-nmethods heap.</p>
+</li>
+<li><p><span class="bold">Non-Nmethods Adaptors</span>: Amount of adaptors in the non-nmethods heap.</p>
+</li>
+<li><p><span class="bold">Profiled Methods</span>: Amount of entries in the profiled nmethods heap.</p>
+</li>
+<li><p><span class="bold">Non-Profiled Methods</span>: Amount of entries in the non-profiled nmethods heap.</p>
 </li>
 <li><p><span class="bold">Methods Swept</span>: The total number of methods swept.</p>
 </li>
-<li><p><span class="bold">Methods Flushed</span></p>
-: The total number of methods flushed.</li>
-<li><p><span class="bold">Methods Reclaimed</span></p>
-: The total number methods reclaimed.</li>
+<li><p><span class="bold">Methods Flushed</span>: The total number of methods flushed.</p>
+</li>
+<li><p><span class="bold">Methods Reclaimed</span>: The total number methods reclaimed.</p>
+</li>
 <li><p><span class="bold">Methods Zombified</span>: The total number of methods zombified.</p>
 </li>
 <li><p><span class="bold">Sweeps</span>: The number of code cache sweeps.</p>
 </li>
 </ul>
 <p>Table columns are labeled as follows:</p>
-<ul style="list-style-type: disc;"><li><p><span class="bold">Start Time</span>: </p>
+<ul style="list-style-type: disc;"><li><p><span class="bold">Start Time</span>: The start time of the code cache sweep.</p>
 </li>
 <li><p><span class="bold">Sweep Index</span>: </p>
 </li>
 <li><p><span class="bold">Sweep Fraction Index</span>: </p>
 </li>
-<li><p><span class="bold">Duration</span>: </p>
+<li><p><span class="bold">Duration</span>: The time the sweep took to complete.</p>
 </li>
-<li><p><span class="bold">Methods Flushed</span>: </p>
+<li><p><span class="bold">Methods Flushed</span>: The number of methods flushed during the sweep.</p>
 </li>
-<li><p><span class="bold">Methods Reclaimed</span>:</p>
+<li><p><span class="bold">Methods Reclaimed</span>: The number of methods reclaimed during the sweep.</p>
 </li>
-<li><p><span class="bold">Methods Swept</span>: </p>
+<li><p><span class="bold">Methods Swept</span>: The number of methods swept during the sweep.</p>
 </li>
-<li><p><span class="bold">Methods Zombified</span></p>
-:</li>
-<li><p><span class="bold">Thread</span>: </p>
+<li><p><span class="bold">Methods Zombified</span>: The number of methods zombified during the sweep.</p>
+</li>
+<li><p><span class="bold">Thread</span>: The name of the thread that ran the sweep. </p>
 </li>
 </ul>
 <p></p>

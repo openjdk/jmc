@@ -43,7 +43,7 @@
 
 </tr>
 </table><div class="ind"><a id="GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" name="GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A"></a><!-- End Header -->
-<h1 id="JMCOH-GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" class="sect1"><span class="enumeration_chapter">8 </span>Frequently Asked Questions</h1>
+<h1 id="JMCOH-GUID-3EC7E6C3-6A64-4659-B99E-CA675A9F6E0A" class="sect1"><span class="enumeration_chapter">4 </span>Frequently Asked Questions</h1>
 <div><p>This section lists Frequently Asked Questions about JDK Mission Control.</p>
 <div class="section"><p class="subhead1">I cannot connect to the JVM. What could be the problem?</p><div class="p">Consider the following:<ul style="list-style-type: disc;"><li><p>Are you using the correct protocol?</p>
 <p>Ensure that you are using the same version of the JVM that you want to monitor as is being used by the JVM running the JMC client.</p>
@@ -54,7 +54,7 @@
 <p>Note that running JMX over RMI requires two ports and that one of the ports will not be known beforehand.</p>
 </li>
 <li><p>Is the communication caught in a firewall?</p>
-<p>For more information, see "JDK Mission Control Communications" in the&#160;Introduction to JDK Mission Control&#160;on the Oracle Technology Network.</p>
+<p>For more information, see <a href="GUID-97B37847-8E31-43F2-AA78-E5EBD28EC99A.htm" title="This section details how the JVM is monitored using JMC">JDK Mission Control Communications</a>.</p>
 </li>
 </ul>
 </div>
@@ -71,13 +71,11 @@
 <p>If all else fails, you can try specifying the&#160;<tt>java.rmi.server.hostname</tt>&#160;system property. Note that this can affect applications running on the JVM.</p>
 </div>
 <!-- class="section" -->
-<div class="section"><p class="subhead1">I am getting exceptions during startup about classes not being found. What is wrong?</p><p>Ensure that you are using&#160;<tt>JAVA_HOME/bin/jmc</tt>&#160;to start the JMC client.</p>
+<div class="section"><p class="subhead1">I am getting exceptions during startup about classes not being found. What is wrong?</p>
 </div>
 <!-- class="section" -->
 <div class="section"><p class="subhead1">Why does JDK Mission Control fail to find any local JVMs?</p><p>Consider the following:</p>
-<ul style="list-style-type: disc;"><li><p>Make sure that you are using <code>JAVA_HOME/bin/jmc</code> to start the JMC client.</p>
-</li>
-<li><p>If you are running JMC from Eclipse, make sure that Eclipse is running on a JDK (not JRE).</p>
+<ul style="list-style-type: disc;"><li><p>If you are running JMC from Eclipse, make sure that Eclipse is running on a JDK (not JRE).</p>
 </li>
 <li><p>Make sure that there is a directory named <code>hsperfdata_<span class="codeinlineitalic">username</span></code> in the system's <code>tmp</code> directory, that it is writable by the user running JMC, and that the file system supports access control lists (ACLs).</p>
 </li>
