@@ -3888,7 +3888,7 @@
 <severity>Information</severity>
 <score>58.89187525739308</score>
 <shortDescription>The live set on the heap seems to increase with a speed of about 638 KiB per second during the recording.</shortDescription>
-<longDescription>The live set on the heap seems to increase with a speed of about 638 KiB per second during the recording.&lt;p&gt;This may be due to a memory leak in the application or it may be an artifact of a short recording. More information can be gathered by using the 'Old Object Sample' event, if available.</longDescription>
+<longDescription>The live set on the heap seems to increase with a speed of about 638 KiB per second during the recording.&lt;p&gt;This may be due to a memory leak in the application or it may be an artifact of a short recording if the JVM has recently been started. The recording began 3.249&#160;s after the JVM was started. More information can be gathered by using the Old Object Sample event, if available.</longDescription>
 </rule>
 <rule>
 <id>IncreasingMetaSpaceLiveSet</id>

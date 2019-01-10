@@ -57,6 +57,7 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.BinaryPrefix;
+import org.openjdk.jmc.common.unit.DecimalPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -134,11 +135,13 @@ public class IncreasingLiveSetRule implements IRule {
 		EventAvailability ea = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OLD_OBJECT_SAMPLE);
 		// FIXME: Should construct an message using memoryIncrease, not use a hard limit
 		if (score >= 25 && (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN)) {
+			IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START).subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
 			String shortMessage = MessageFormat.format(
 					Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),
 					liveSetIncreasePerSecond.displayUsing(IDisplayable.AUTO));
 			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO_LONG);
+					+ MessageFormat.format(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO_LONG),
+							timeAfterJVMStart.displayUsing(IDisplayable.AUTO));
 			return new Result(this, score, shortMessage, longMessage, JdkQueries.HEAP_SUMMARY_AFTER_GC);
 		} else if (score < 25) {
 			return new Result(this, score, Messages.getString(Messages.IncreasingLiveSetRule_TEXT_OK));
