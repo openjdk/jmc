@@ -34,10 +34,10 @@
 <feature
       id="org.openjdk.jmc.feature.rcp.ja"
       label="%name"
-      version="7.0.0.qualifier"
+      version="7.1.0.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="7.0.0.qualifier">
+      license-feature-version="7.1.0.qualifier">
 
    <description url="%descriptionUrl">
       %description

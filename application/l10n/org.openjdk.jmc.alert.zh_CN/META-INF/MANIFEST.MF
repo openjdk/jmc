@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Simplified Chinese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.alert.zh_CN
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.alert;bundle-version="7.0.0"
+Fragment-Host: org.openjdk.jmc.alert;bundle-version="7.1.0"
 Bundle-Localization: plugin
 Automatic-Module-Name: org.openjdk.jmc.alert.zh_CN

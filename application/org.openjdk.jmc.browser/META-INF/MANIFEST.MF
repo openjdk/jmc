@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: JVMBrowser Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.browser;singleton:=true
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.browser.JVMBrowserPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.ui,

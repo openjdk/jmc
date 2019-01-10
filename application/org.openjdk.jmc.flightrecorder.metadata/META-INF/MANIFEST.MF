@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JFR Metadata Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.metadata;singleton:=true
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui

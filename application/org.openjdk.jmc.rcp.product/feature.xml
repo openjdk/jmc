@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.rcp.product"
       label="%name"
-      version="7.0.0.qualifier"
+      version="7.1.0.qualifier"
       provider-name="%provider">
 
    <description url="%descriptionUrl">

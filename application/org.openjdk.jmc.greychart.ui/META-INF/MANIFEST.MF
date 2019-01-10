@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Greychart UI Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.greychart.ui
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.openjdk.jmc.greychart;visibility:=reexport,

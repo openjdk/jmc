@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: JMX Data Persistence Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.console.persistence;singleton:=true
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.console.persistence.PersistencePlugin
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin

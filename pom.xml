@@ -35,7 +35,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol</artifactId>
-	<version>7.0.0-SNAPSHOT</version>
+	<version>7.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>JDK Mission Control</name>
 	<description>Java Mission Control is an advanced set of tools that enables 
@@ -112,7 +112,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-photon</artifactId>
-									<version>7.0.0-SNAPSHOT</version>
+									<version>7.1.0-SNAPSHOT</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -133,7 +133,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-oxygen</artifactId>
-									<version>7.0.0-SNAPSHOT</version>
+									<version>7.1.0-SNAPSHOT</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -154,7 +154,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2018-09</artifactId>
-									<version>7.0.0-SNAPSHOT</version>
+									<version>7.1.0-SNAPSHOT</version>
 								</artifact>
 							</target>
 						</configuration>

@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.feature.license"
       label="JDK Mission Control License Feature"
-      version="7.0.0.qualifier"
+      version="7.1.0.qualifier"
       provider-name="Oracle">
 
    <description url="http://www.oracle.com/missioncontrol">

@@ -33,7 +33,7 @@
 -->
 <?pde version="3.5"?>
 
-<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="7.0.0" useFeatures="true" includeLaunchers="true">
+<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="7.1.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="../org.openjdk.jmc.rcp.application/icons/mission_control_abt_Oracle.gif"/>
@@ -109,7 +109,7 @@
       <property name="eclipse.p2.unsignedPolicy" value="prompt" />
       <property name="eclipse.product" value="org.openjdk.jmc.rcp.application.product" />
       <property name="osgi.bundles.defaultStartLevel" value="4" />
-      <property name="osgi.instance.area.default" value="@user.home/.jmc/7.0.0" />
+      <property name="osgi.instance.area.default" value="@user.home/.jmc/7.1.0" />
       <property name="osgi.signedcontent.support" value="true" />
       <property name="osgi.splashPath" value="platform:/base/plugins/org.openjdk.jmc.rcp.application" />
    </configurations>

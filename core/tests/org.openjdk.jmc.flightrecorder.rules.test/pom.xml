@@ -36,10 +36,10 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.core.tests</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>7.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>flightrecorder.rules.test</artifactId>
-	<version>7.0.0-SNAPSHOT</version>
+	<version>7.1.0-SNAPSHOT</version>
    <dependencies>
            <dependency>
                    <groupId>org.openjdk.jmc</groupId>

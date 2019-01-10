@@ -37,7 +37,7 @@
       version="0.0.4.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="7.0.0.qualifier">
+      license-feature-version="7.1.0.qualifier">
 
    <description url="%descriptionUrl">
       %description

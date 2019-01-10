@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Name: Common Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.common;singleton:=true
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.common,
  org.openjdk.jmc.common.collection,

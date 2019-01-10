@@ -61,7 +61,7 @@ import org.openjdk.jmc.rjmx.subscription.PolicyFactory;
 public class BasicCommunicationTest extends ServerHandleTestCase {
 	final static int DEFAULT_PORT = 0;
 	final static String DEFAULT_HOST = "localhost".intern(); //$NON-NLS-1$
-	final static String ALTERNATIVE_HOST = "127.0.0.1".intern(); //$NON-NLS-1$
+	final static String ALTERNATIVE_HOST = "127.1.0.1".intern(); //$NON-NLS-1$
 
 	/**
 	 * Attempts creating a {@link JMXConnectionDescriptor} with a bunch of options.

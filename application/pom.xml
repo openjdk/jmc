@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>7.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
@@ -141,27 +141,27 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
