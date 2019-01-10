@@ -253,9 +253,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menu.add(new GroupMarker(IWorkbenchActionConstants.IMPORT_EXT));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		// these three lines create the list of "recent" files
-		menu.add(ContributionItemFactory.REOPEN_EDITORS.create(window));
-		menu.add(new GroupMarker(IWorkbenchActionConstants.MRU));
+		// this is where OPEN_CONNECTION is placed via plugin.xml from org.openjdk.jmc.browser
+		menu.add(new Separator());
+
+		// create a submenu for the list of Recent Files
+		MenuManager recentMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_MENU_RECENT_FILES_TEXT,
+				ContributionItemFactory.REOPEN_EDITORS.getId());
+		recentMenu.add(ContributionItemFactory.REOPEN_EDITORS.create(window));
+		recentMenu.add(new GroupMarker(IWorkbenchActionConstants.MRU));
+		menu.add(recentMenu);
 		menu.add(new Separator());
 
 		menu.add(getAction(ActionFactory.QUIT.getId()));

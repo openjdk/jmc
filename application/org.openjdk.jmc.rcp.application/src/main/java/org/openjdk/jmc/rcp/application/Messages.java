@@ -46,6 +46,7 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_MENU_ITEM_OTN_TEXT;
 	public static String ApplicationActionBarAdvisor_MENU_NAVIGATE_TEXT;
 	public static String ApplicationActionBarAdvisor_MENU_NEW_TEXT;
+	public static String ApplicationActionBarAdvisor_MENU_RECENT_FILES_TEXT;
 	public static String ApplicationActionBarAdvisor_MENU_WINDOW_TEXT;
 	public static String ApplicationActionBarAdvisor_SHOW_PERSPECTIVE_MENU_TEXT;
 	public static String ApplicationActionBarAdvisor_SHOW_VIEW_MENU_TEXT;
