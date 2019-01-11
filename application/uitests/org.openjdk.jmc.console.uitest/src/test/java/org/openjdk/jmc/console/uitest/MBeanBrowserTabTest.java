@@ -83,7 +83,7 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 	private static final String RESULT_TAB_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TAB_NAME;
 	private static final String MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME = org.openjdk.jmc.console.ui.mbeanbrowser.notifications.MBeanNotificationLogInspector.MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME;
 	private static final String VALUE_COLUMN_NAME = org.openjdk.jmc.rjmx.ui.attributes.Messages.AttributeInspector_VALUE_COLUMN_HEADER;
-	private static final int DEFAULT_FONT_HEIGHT = 11;
+	private static final int DEFAULT_FONT_HEIGHT = JFaceResources.getDefaultFont().getFontData()[0].getHeight();
 	private static final int TEXT_FONT_HEIGHT = 16;
 
 	@Rule
