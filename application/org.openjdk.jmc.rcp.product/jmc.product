@@ -48,7 +48,7 @@
    <launcherArgs>
       <programArgs>--launcher.appendVmargs
       </programArgs>
-      <programArgsLin>-vm ../../bin/
+      <programArgsLin>-vm /usr/bin/java
       </programArgsLin>
       <programArgsMac>-ws cocoa -vm ../jdk/Contents/Home/bin/
       </programArgsMac>
