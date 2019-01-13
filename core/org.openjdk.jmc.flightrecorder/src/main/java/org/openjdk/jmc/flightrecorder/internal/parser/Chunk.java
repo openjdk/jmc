@@ -87,7 +87,7 @@ public class Chunk {
 	 * @return the current buffer for the chunk data
 	 */
 	public byte[] fill(long upToPosition) throws IOException, InvalidJfrFileException {
-		int fillUpTo = getArrayPosistion(upToPosition);
+		int fillUpTo = getArrayPosition(upToPosition);
 		if (data.length < fillUpTo) {
 			data = Arrays.copyOf(data, (int) (fillUpTo * 1.2));
 		}
@@ -106,7 +106,7 @@ public class Chunk {
 	 *            chunk relative position
 	 */
 	public void skip(long upToPosition) throws IOException, InvalidJfrFileException {
-		int skipUpTo = getArrayPosistion(upToPosition);
+		int skipUpTo = getArrayPosition(upToPosition);
 		if (skipUpTo > position) {
 			int skipped = input.skipBytes(skipUpTo - position);
 			position += skipped;
@@ -124,7 +124,7 @@ public class Chunk {
 		return data;
 	}
 
-	private static int getArrayPosistion(long pos) throws InvalidJfrFileException {
+	private static int getArrayPosition(long pos) throws InvalidJfrFileException {
 		if (pos > Integer.MAX_VALUE) {
 			throw new InvalidJfrFileException();
 		} else {
