@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -41,6 +41,27 @@
             <unit id="javax.mail.smtp" version="1.4.0"/>
             <unit id="org.owasp.encoder" version="1.2.1"/>
             <unit id="org.twitter4j.core" version="4.0.6"/>
+            <unit id="org.openjfx.javafx-base.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-base.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-base.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.linux" version="11.0.1"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
