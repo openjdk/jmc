@@ -82,7 +82,7 @@
 		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
 		<maven.resources.version>3.0.2</maven.resources.version>
 		<m2e.lifecycle.version>1.0.0</m2e.lifecycle.version>
-		<spotbugs.version>3.1.3</spotbugs.version>
+		<spotbugs.version>3.1.10</spotbugs.version>
 		<buildId>${user.name}</buildId>
 		<scmConnection>scm:hg:http://hg.openjdk.java.net/jmc/jmc</scmConnection>
 	</properties>
