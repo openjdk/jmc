@@ -48,8 +48,8 @@
    <launcherArgs>
       <programArgs>--launcher.appendVmargs
       </programArgs>
-      <programArgsLin>-vm /usr/bin/java
-      </programArgsLin>
+      <!-- use default Java from PATH on Linux -->
+      <programArgsLin></programArgsLin>
       <programArgsMac>-ws cocoa -vm ../jdk/Contents/Home/bin/
       </programArgsMac>
       <programArgsWin>-vm ./
