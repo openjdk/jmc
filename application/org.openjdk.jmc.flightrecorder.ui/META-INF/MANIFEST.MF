@@ -9,7 +9,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.flightrecorder;visibility:=reexport,
  org.openjdk.jmc.ui;visibility:=reexport,
- org.openjdk.jmc.javafx.osgi,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.jdk,
  org.openjdk.jmc.flightrecorder.configuration,

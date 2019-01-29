@@ -7,6 +7,12 @@ Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
 Eclipse-BuddyPolicy: app
+Import-Package: javafx.application,
+ javafx.embed.swt,
+ javafx.fxml,
+ javafx.scene,
+ javafx.scene.control,
+ javafx.scene.image
 Export-Package: org.openjdk.jmc.javafx.osgi
 Require-Bundle: org.eclipse.swt;resolution:=optional,
  org.eclipse.jface
