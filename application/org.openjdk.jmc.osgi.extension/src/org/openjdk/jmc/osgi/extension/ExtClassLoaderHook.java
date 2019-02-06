@@ -79,11 +79,8 @@ public class ExtClassLoaderHook extends ClassLoaderHook {
 					Object configuration = moduleLayerClass.getMethod("configuration").invoke(bootLayer);
 					Object of = moduleFinderClass.getMethod("of", Path[].class).invoke(null,
 							new Object[] {new Path[0]});
-					Set<String> roots = new HashSet<String>() {
-						{
-							add(FX_SWT_SYMBOLIC_NAME);
-						}
-					};
+					Set<String> roots = new HashSet<String>();
+					roots.add(FX_SWT_SYMBOLIC_NAME);
 					Object cf = configurationClass
 							.getMethod("resolve", moduleFinderClass, moduleFinderClass, Collection.class)
 							.invoke(configuration, discover, of, roots);
