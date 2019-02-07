@@ -32,13 +32,10 @@
  */
 package org.openjdk.jmc.ui.common.security;
 
-import java.io.Serializable;
-
 /**
  * Credentials only stored in memory
  */
-public class InMemoryCredentials implements ICredentials, Serializable {
-	private static final long serialVersionUID = -5482702745093210010L;
+public class InMemoryCredentials implements ICredentials {
 	private final String username;
 	private final String password;
 
