@@ -38,9 +38,9 @@
 	<version>7.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>JDK Mission Control</name>
-	<description>Java Mission Control is an advanced set of tools that enables 
+	<description>JDK Mission Control is an advanced set of tools that enables 
 		efficient and detailed analysis of the extensive of data collected by 
-		Java Flight Recorder. The tool chain enables developers and 
+		JDK Flight Recorder. The tool chain enables developers and 
 		administrators to collect and analyze data from Java applications 
 		running locally or deployed in production environments.
 	</description>
