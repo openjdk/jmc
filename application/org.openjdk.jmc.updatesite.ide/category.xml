@@ -96,10 +96,7 @@
 	<category-def name="Base (Required)" label="Base (Required)">
 		<category name="Mission Control" />
 		<description>
-			Eclipse plug-ins for Mission Control. This is the base
-			set of plug-ins
-			required for running Mission Control inside of
-			Eclipse.
+			Eclipse plug-ins for Mission Control. This is the base set of plug-ins required for running Mission Control inside of Eclipse.
 		</description>
 	</category-def>
 	<category-def name="Console" label="Console">
@@ -118,22 +115,19 @@
 	<!-- Experimental plug-in categories -->
 	<category-def name="Mission Control (Experimental)" label="Mission Control (Experimental)">
 		<description>
-			Experimental (unsupported) Eclipse plug-ins for Mission
-			Control
+			Experimental (unsupported) Eclipse plug-ins for Mission Control
 		</description>
 	</category-def>
 	<category-def name="Console (Experimental)" label="Console">
 		<category name="Mission Control (Experimental)" />
 		<description>
-			Experimental (unsupported) plug-ins for the Mission
-			Control Management Console.
+			Experimental (unsupported) plug-ins for the Mission Control Management Console.
 		</description>
 	</category-def>
 	<category-def name="Flight Recorder (Experimental)" label="Flight Recorder">
 		<category name="Mission Control (Experimental)" />
 		<description>
-			Experimental (unsupported) plug-ins for the Flight
-			Recorder.
+			Experimental (unsupported) plug-ins for the Flight Recorder.
 		</description>
 	</category-def>
 	<category-def name="Other (Experimental)" label="Other">
