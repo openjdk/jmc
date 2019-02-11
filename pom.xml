@@ -81,7 +81,6 @@
 		<maven.directory.version>0.2</maven.directory.version>
 		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
 		<maven.resources.version>3.0.2</maven.resources.version>
-		<m2e.lifecycle.version>1.0.0</m2e.lifecycle.version>
 		<spotbugs.version>3.1.10</spotbugs.version>
 		<buildId>${user.name}</buildId>
 		<scmConnection>scm:hg:http://hg.openjdk.java.net/jmc/jmc</scmConnection>
@@ -343,34 +342,6 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>${m2e.lifecycle.version}</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>buildnumber-maven-plugin</artifactId>
-										<versionRange>[1.2,)</versionRange>
-										<goals>
-											<goal>create-timestamp</goal>
-											<goal>hgchangeset</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnConfiguration>true</runOnConfiguration>
-											<runOnIncremental>true</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
