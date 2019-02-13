@@ -112,7 +112,7 @@ final class MBeanOperationWrapper extends AbstractOperation<SimpleAttributeInfo>
 	}
 
 	static Collection<IOperation> createOperations(
-		ObjectName objectName, MBeanOperationInfo[] operations, MBeanServerConnection connection) {
+		MBeanServerConnection connection, ObjectName objectName, MBeanOperationInfo[] operations) {
 		List<IOperation> wrappedOperations = new ArrayList<>();
 		for (MBeanOperationInfo info : operations) {
 			wrappedOperations.add(new MBeanOperationWrapper(connection, objectName, info));
