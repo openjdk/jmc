@@ -7,5 +7,6 @@
 			<accessrule kind="accessible" pattern="sun/management/**"/>
 		</accessrules>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JMC_JDK"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
