@@ -75,7 +75,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.version>1.2.0</tycho.version>
+		<tycho.version>1.3.0</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.2</maven.directory.version>
