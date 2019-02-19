@@ -149,19 +149,21 @@ public class MethodProfilingRule implements IRule {
 		IMCMethod method;
 		IMCStackTrace path;
 		IQuantity ratioOfAllPossibleSamples;
+		IQuantity ratioOfActualSamples;
 		IRange<IQuantity> window;
 
-		public MethodProfilingWindowResult(IMCMethod method, IMCStackTrace path, IQuantity ratio, IRange<IQuantity> window) {
+		public MethodProfilingWindowResult(IMCMethod method, IMCStackTrace path, IQuantity ratio, IQuantity actualRatio, IRange<IQuantity> window) {
 			this.method = method;
 			this.path = path;
 			this.ratioOfAllPossibleSamples = ratio;
+			this.ratioOfActualSamples = actualRatio;
 			this.window = window;
 		}
 
 		@Override
 		public String toString() {
 			return FormatToolkit.getHumanReadable(method, false, false, true, true, true, false) + " (" //$NON-NLS-1$
-					+ ratioOfAllPossibleSamples.displayUsing(IDisplayable.AUTO) + ") " //$NON-NLS-1$
+					+ ratioOfActualSamples.displayUsing(IDisplayable.AUTO) + " of samples) " //$NON-NLS-1$
 					+ window.displayUsing(IDisplayable.AUTO);
 		}
 	}
@@ -261,7 +263,8 @@ public class MethodProfilingRule implements IRule {
 					FormatToolkit.getHumanReadable(mostInterestingResult.method, false, false, true, false, true,
 							false),
 					mostInterestingResult.ratioOfAllPossibleSamples.displayUsing(IDisplayable.AUTO),
-					windowSize.displayUsing(IDisplayable.AUTO));
+					windowSize.displayUsing(IDisplayable.AUTO),
+					mostInterestingResult.ratioOfActualSamples.displayUsing(IDisplayable.AUTO));
 			String formattedPath = "<ul>" + //$NON-NLS-1$
 					FormatToolkit.getHumanReadable(mostInterestingResult.path, false, false, true, true, true, false,
 							MAX_STACK_DEPTH, null, "<li>", //$NON-NLS-1$
@@ -342,42 +345,46 @@ public class MethodProfilingRule implements IRule {
 			public void visitWindow(IItemCollection items, IQuantity startTime, IQuantity endTime) {
 				IRange<IQuantity> windowRange = QuantityRange.createWithEnd(startTime, endTime);
 				if (RulesToolkit.getSettingMaxPeriod(items, JdkTypeIDs.EXECUTION_SAMPLE) == null) {
-					Pair<IQuantity, IMCStackTrace> resultPair = performCalculation(items, settings.getSetting(startTime));
+					Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> resultPair = performCalculation(items, settings.getSetting(startTime));
 					if (resultPair != null) {
-						rawScores.add(new MethodProfilingWindowResult(resultPair.right.getFrames().get(0).getMethod(), resultPair.right, resultPair.left, windowRange));
+						rawScores.add(new MethodProfilingWindowResult(resultPair.right.getFrames().get(0).getMethod(), resultPair.right,
+								resultPair.left.left, resultPair.left.right, windowRange));
 					}
 				} else {
 					Set<IQuantity> settingTimes = items.apply(settingsFilter)
 							.getAggregate(Aggregators.distinct(JfrAttributes.START_TIME));
 					IQuantity start = startTime;
-					List<Pair<IQuantity, IMCStackTrace>> scores = new ArrayList<>(settingTimes.size());
+					List<Pair<Pair<IQuantity, IQuantity>, IMCStackTrace>> scores = new ArrayList<>(settingTimes.size());
 					for (IQuantity settingTime : settingTimes) {
 						IItemFilter window = ItemFilters.interval(JfrAttributes.END_TIME, start, true, settingTime,
 								true);
 						scores.add(performCalculation(items.apply(window), settings.getSetting(start)));
 						start = settingTime;
 					}
-					Map<IMCStackTrace, IQuantity> scoresByMethod = new HashMap<>();
-					for (Pair<IQuantity, IMCStackTrace> score : scores) {
+					Map<IMCStackTrace, Pair<IQuantity, IQuantity>> scoresByMethod = new HashMap<>();
+					for (Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> score : scores) {
 						if (score != null) {
 							if (scoresByMethod.get(score.right) == null) {
 								scoresByMethod.put(score.right, score.left);
 							} else {
-								scoresByMethod.put(score.right, score.left.add(scoresByMethod.get(score.right)));
+								scoresByMethod.put(score.right, new Pair<>(score.left.left.add(scoresByMethod.get(score.right).left),
+										score.left.right.add(scoresByMethod.get(score.right).right)));
 							}
 						}
 					}
 					IQuantity sumScore = UnitLookup.PERCENT_UNITY.quantity(0);
+					IQuantity actualScore = UnitLookup.PERCENT_UNITY.quantity(0);
 					IMCStackTrace hottestPath = null;
-					for (Entry<IMCStackTrace, IQuantity> entry : scoresByMethod.entrySet()) {
-						if (entry.getValue().compareTo(sumScore) > 0) {
+					for (Entry<IMCStackTrace, Pair<IQuantity, IQuantity>> entry : scoresByMethod.entrySet()) {
+						if (entry.getValue().left.compareTo(sumScore) > 0) {
 							hottestPath = entry.getKey();
-							sumScore = sumScore.add(entry.getValue());
+							actualScore = entry.getValue().right;
+							sumScore = sumScore.add(entry.getValue().left);
 						}
 					}
 					IQuantity averageOfAllPossibleSamples = sumScore.multiply(1d / scores.size());
 					IMCMethod hottestMethod = (hottestPath == null ? null : hottestPath.getFrames().get(0).getMethod());
-					rawScores.add(new MethodProfilingWindowResult(hottestMethod, hottestPath, averageOfAllPossibleSamples, windowRange));
+					rawScores.add(new MethodProfilingWindowResult(hottestMethod, hottestPath, averageOfAllPossibleSamples, actualScore, windowRange));
 				}
 			}
 
@@ -396,7 +403,7 @@ public class MethodProfilingRule implements IRule {
 			 * @return a double value in the interval [0,1] with 1 being a system in completely
 			 *         saturated load with only one method called
 			 */
-			private Pair<IQuantity, IMCStackTrace> performCalculation(IItemCollection items, IQuantity period) {
+			private Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> performCalculation(IItemCollection items, IQuantity period) {
 				IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);
 				final IMCMethod[] maxMethod = new IMCMethod[1];
 				final IMCStackTrace[] maxPath = new IMCStackTrace[1];
@@ -467,7 +474,7 @@ public class MethodProfilingRule implements IRule {
 				});
 
 				IQuantity maxRatio = filteredItems.getAggregate(aggregator);
-				Pair<IQuantity, IMCStackTrace> result = null;
+				Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> result = null;
 				if (maxMethod[0] != null && maxRatio != null && period != null) { // ignoring if there are no samples or if we don't yet know the periodicity
 					double periodsPerSecond = 1 / period.doubleValueIn(UnitLookup.SECOND);
 					double maxSamplesPerSecond = SAMPLES_PER_PERIOD * periodsPerSecond;
@@ -477,9 +484,10 @@ public class MethodProfilingRule implements IRule {
 					double maxSamplesInPeriod = maxSamplesPerSecond * windowSize.doubleValueIn(UnitLookup.SECOND);
 					double relevancy = samplesInPeriod / maxSamplesInPeriod;
 					double highestRatioOfSamples = maxRatio.doubleValueIn(UnitLookup.NUMBER_UNITY);
+					IQuantity percentOfActualSamples = UnitLookup.PERCENT_UNITY.quantity(highestRatioOfSamples);
 					IQuantity percentOfAllPossibleSamples = UnitLookup.PERCENT_UNITY
 							.quantity(highestRatioOfSamples * relevancy);
-					result = new Pair<>(percentOfAllPossibleSamples, maxPath[0]);
+					result = new Pair<>(new Pair<>(percentOfAllPossibleSamples, percentOfActualSamples), maxPath[0]);
 				}
 				return result;
 			}
