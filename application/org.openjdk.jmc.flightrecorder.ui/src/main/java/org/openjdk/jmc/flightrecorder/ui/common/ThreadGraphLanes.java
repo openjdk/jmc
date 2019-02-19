@@ -36,6 +36,7 @@ import static org.openjdk.jmc.ui.charts.QuantitySpanRenderer.MISSING_END;
 import static org.openjdk.jmc.ui.charts.QuantitySpanRenderer.MISSING_START;
 
 import java.awt.Color;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -92,6 +93,7 @@ public class ThreadGraphLanes {
 	private Supplier<StreamModel> dataSourceSupplier;
 	private Runnable buildChart;
 	private List<IAction> actions;
+	private String tooltipTitle;
 
 	public ThreadGraphLanes(Supplier<StreamModel> dataSourceSupplier, Runnable buildChart) {
 		this.dataSourceSupplier = dataSourceSupplier;
@@ -125,7 +127,20 @@ public class ThreadGraphLanes {
 		return ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]));
 	}
 
+	private void setTooltipTitle(String description) {
+		this.tooltipTitle = description;
+	}
+
+	private String getTooltipTitle() {
+		return this.tooltipTitle;
+	}
+
+	private void resetTooltipTitle() {
+		this.tooltipTitle = null;
+	}
+
 	public IXDataRenderer buildThreadRenderer(Object thread, IItemCollection items) {
+		this.resetTooltipTitle();
 		String threadName = thread == null ? "" : ((IMCThread) thread).getThreadName(); //$NON-NLS-1$
 		// FIXME: Workaround since this method can be called from super class constructor. Refactor to avoid this.
 		List<LaneDefinition> laneFilters = this.laneDefs == null ? Collections.emptyList() : this.laneDefs;
@@ -135,15 +150,21 @@ public class ThreadGraphLanes {
 			if (laneItems.iterator().hasNext()) {
 				ISpanSeries<IItem> laneSeries = QuantitySeries.max(laneItems, JfrAttributes.START_TIME,
 						JfrAttributes.END_TIME);
-				lanes.add(new ItemRow(SpanRenderer.withBoundaries(laneSeries, DataPageToolkit.ITEM_COLOR), laneItems));
+				this.setTooltipTitle(MessageFormat.format(Messages.ThreadsPage_LANE_TOOLTIP_TITLE, threadName, lane.getName()));
+				lanes.add(new ItemRow(SpanRenderer.withBoundaries(laneSeries, DataPageToolkit.ITEM_COLOR, this.getTooltipTitle()), laneItems));
 			}
 		});
 		IXDataRenderer renderer = !lanes.isEmpty() ? RendererToolkit.uniformRows(lanes)
 				: new ItemRow(RendererToolkit.empty(), ItemCollectionToolkit.EMPTY);
 		IItemCollection itemsAndThreadLifespan = addThreadLifeSpanEvents(thread, items);
-		// FIXME: Add a description
+		// If the lane doesn't match a filter, display the Thread name as the tooltip title
+		if (this.getTooltipTitle() == null) {
+			this.setTooltipTitle(threadName);
+		} else {
+			this.resetTooltipTitle();
+		}
 		return new QuantitySpanRenderer(threadRanges(threadName, itemsAndThreadLifespan), renderer, THREAD_BG_COLOR, 10,
-				threadName, null);
+				threadName, this.getTooltipTitle());
 	}
 
 	private IItemCollection addThreadLifeSpanEvents(Object thread, final IItemCollection items) {

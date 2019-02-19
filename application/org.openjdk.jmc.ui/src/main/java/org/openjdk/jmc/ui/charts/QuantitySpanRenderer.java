@@ -100,6 +100,7 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 		private final IRenderedRow content;
 		private final Paint paint;
 		private final int margin;
+		private String description;
 
 		public QuantitySpanRendering(int margin, XYQuantities<?> points, IRenderedRow content, Paint paint, String text,
 				String description) {
@@ -109,6 +110,7 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 			this.points = points;
 			this.content = content;
 			this.paint = paint;
+			this.description = description;
 		}
 
 		@Override
@@ -169,6 +171,11 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 			public IQuantity getEndX() {
 				IQuantity org = super.getEndX();
 				return (org == MISSING_END) ? null : org;
+			}
+
+			@Override
+			public String getDescription() {
+				return description;
 			}
 		}
 

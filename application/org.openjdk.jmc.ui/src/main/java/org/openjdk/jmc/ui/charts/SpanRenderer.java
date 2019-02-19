@@ -46,19 +46,25 @@ public class SpanRenderer<T> implements IXDataRenderer {
 	private final ISpanSeries<T> series;
 	private final IColorProvider<? super T> colorProvider;
 	private final boolean markBoundaries;
+	private final String description;
 
 	public static <T> IXDataRenderer withBoundaries(ISpanSeries<T> series, IColorProvider<? super T> colorProvider) {
-		return new SpanRenderer<>(series, colorProvider, true);
+		return new SpanRenderer<>(series, colorProvider, true, null);
+	}
+
+	public static <T> IXDataRenderer withBoundaries(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, String description) {
+		return new SpanRenderer<>(series, colorProvider, true, description);
 	}
 
 	public static <T> IXDataRenderer build(ISpanSeries<T> series, IColorProvider<? super T> colorProvider) {
-		return new SpanRenderer<>(series, colorProvider, false);
+		return new SpanRenderer<>(series, colorProvider, false, null);
 	}
 
-	private SpanRenderer(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, boolean markBoundaries) {
+	private SpanRenderer(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, boolean markBoundaries, String description) {
 		this.series = series;
 		this.colorProvider = colorProvider;
 		this.markBoundaries = markBoundaries;
+		this.description = description;
 	}
 
 	@Override
@@ -67,7 +73,7 @@ public class SpanRenderer<T> implements IXDataRenderer {
 		// Need to set y range to same as x range to be able to draw spans (and eliminate creation of quantities).
 		quantities.setYRange(xRange);
 		AWTChartToolkit.drawSpan(context, quantities, height, markBoundaries, colorProvider);
-		return new SpanRendering<>(height, quantities, series, colorProvider);
+		return new SpanRendering<>(height, quantities, series, colorProvider, description);
 	}
 
 	private static class SpanRendering<T> extends RenderedRowBase {
@@ -75,14 +81,15 @@ public class SpanRenderer<T> implements IXDataRenderer {
 		private final IColorProvider<? super T> colorProvider;
 		private final ISpanSeries<T> series;
 		private final XYQuantities<T[]> points;
+		private String description;
 
 		SpanRendering(int height, XYQuantities<T[]> quantities, ISpanSeries<T> series,
-				IColorProvider<? super T> colorProvider) {
+				IColorProvider<? super T> colorProvider, String description) {
 			super(height);
 			this.points = quantities;
 			this.series = series;
 			this.colorProvider = colorProvider;
-
+			this.description = description;
 		}
 
 		@Override
@@ -134,6 +141,11 @@ public class SpanRenderer<T> implements IXDataRenderer {
 				T[] payload = points.getPayload();
 				IQuantity start = series.getStartX(payload[index]);
 				return start == null ? super.getStartX() : start;
+			}
+
+			@Override
+			public String getDescription() {
+				return description;
 			}
 
 		}

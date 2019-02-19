@@ -490,6 +490,7 @@ public class Messages extends NLS {
 	public static String TABLECOMPONENT_NONE;
 	public static String ThreadDumpsPage_PAGE_NAME;
 	public static String ThreadsPage_EDIT_LANES;
+	public static String ThreadsPage_LANE_TOOLTIP_TITLE;
 	public static String ThreadsPage_NAME;
 	public static String TlabPage_PAGE_NAME;
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS;

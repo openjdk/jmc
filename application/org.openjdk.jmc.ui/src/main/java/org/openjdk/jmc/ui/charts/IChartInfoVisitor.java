@@ -145,6 +145,8 @@ public interface IChartInfoVisitor {
 		IDisplayable getWidth();
 
 		Object getPayload();
+
+		String getDescription();
 	}
 
 	public interface ITick {
