@@ -391,7 +391,9 @@ public class LocalJVMToolkit {
 						connectable = NO;
 					} finally {
 						// Always detach. Releases one process handle on Windows.
-						vm.detach();
+						if (vm != null) {
+							vm.detach();
+						}
 					}
 					if (connectable.isAttachable()) {
 						connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType, jvmArch,
