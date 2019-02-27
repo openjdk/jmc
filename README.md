@@ -184,7 +184,8 @@ Prerequisites for building Mission Control:
 First get third party dependencies into a local p2 repo and make it available on localhost:
 
 ```bash
-cd missioncontrolfolder/releng/third-party
+cd missioncontrolfolder [where you just cloned the sources]
+cd releng/third-party
 mvn p2:site
 mvn jetty:run
 ```
