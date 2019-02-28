@@ -54,14 +54,14 @@ import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 // NOTE: If you change the verbatim test YOU MUST update the corresponding package.html document.
 public class ServicesPackageExampleTest extends RjmxTestCase {
 	public void packageExampleFunctionalityVerbatim() throws Exception {
-		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle handle = IServerHandle.create(descriptor);
 		try {
-			IConnectionHandle connection = handle.connect("Run Diagnostic commands"); //$NON-NLS-1$
+			IConnectionHandle connection = handle.connect("Run Diagnostic commands");
 			assumeHasDiagnosticCommandsService(connection);
 			IDiagnosticCommandService dcmd = connection.getServiceOrThrow(IDiagnosticCommandService.class);
 			for (IOperation operation : dcmd.getOperations()) {
-				System.out.println(dcmd.runCtrlBreakHandlerWithResult(String.format("help %s", operation.getName()))); //$NON-NLS-1$
+				System.out.println(dcmd.runCtrlBreakHandlerWithResult(String.format("help %s", operation.getName())));
 			}
 		} finally {
 			handle.dispose();
@@ -70,16 +70,16 @@ public class ServicesPackageExampleTest extends RjmxTestCase {
 
 	@Test
 	public void testPackageExampleFunctionality() throws Exception {
-		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle handle = IServerHandle.create(descriptor);
 		try {
-			IConnectionHandle connection = handle.connect("Run Diagnostic commands"); //$NON-NLS-1$
+			IConnectionHandle connection = handle.connect("Run Diagnostic commands");
 			assumeHasDiagnosticCommandsService(connection);
 			IDiagnosticCommandService dcmd = connection.getServiceOrThrow(IDiagnosticCommandService.class);
 			for (IOperation operation : dcmd.getOperations()) {
 				String command = operation.getName();
-				assertNotNull("Could not retrieve help for the command: " + command, //$NON-NLS-1$
-						dcmd.runCtrlBreakHandlerWithResult(String.format("help %s", command))); //$NON-NLS-1$
+				assertNotNull("Could not retrieve help for the command: " + command,
+						dcmd.runCtrlBreakHandlerWithResult(String.format("help %s", command)));
 			}
 		} finally {
 			handle.dispose();

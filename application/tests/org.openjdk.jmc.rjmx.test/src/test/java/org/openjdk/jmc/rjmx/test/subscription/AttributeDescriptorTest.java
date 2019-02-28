@@ -125,40 +125,40 @@ public class AttributeDescriptorTest {
 
 	@Test
 	public void testCreateFromQualifiedName1() throws Exception {
-		MRI descriptor = MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/Arch"); //$NON-NLS-1$
+		MRI descriptor = MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/Arch");
 		assertEquals(createDescriptor1(), descriptor);
 	}
 
 	@Test
 	public void testCreateFromQualifiedName2() throws Exception {
-		MRI descriptor = MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/Arch/Sub"); //$NON-NLS-1$
+		MRI descriptor = MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/Arch/Sub");
 		assertEquals(Type.ATTRIBUTE, descriptor.getType());
-		assertEquals("java.lang:type=OperatingSystem", descriptor.getObjectName().getCanonicalName()); //$NON-NLS-1$
-		assertEquals("Arch/Sub", descriptor.getDataPath()); //$NON-NLS-1$
+		assertEquals("java.lang:type=OperatingSystem", descriptor.getObjectName().getCanonicalName());
+		assertEquals("Arch/Sub", descriptor.getDataPath());
 	}
 
 	@Test
 	public void testMalformedQualifiedName1() throws Exception {
 		try {
-			MRI.createFromQualifiedName("smurf://java.lang:type=OperatingSystem/Arch"); //$NON-NLS-1$
+			MRI.createFromQualifiedName("smurf://java.lang:type=OperatingSystem/Arch");
 		} catch (IllegalArgumentException iae) {
 			return;
 		}
-		assertTrue("Should not be possible to create an attribute with the type smurf!", false); //$NON-NLS-1$
+		assertTrue("Should not be possible to create an attribute with the type smurf!", false);
 	}
 
 	@Test
 	public void testMalformedQualifiedName2() throws Exception {
 		try {
-			MRI.createFromQualifiedName("java.lang:type=OperatingSystem/Arch"); //$NON-NLS-1$
+			MRI.createFromQualifiedName("java.lang:type=OperatingSystem/Arch");
 		} catch (IllegalArgumentException iae) {
 			return;
 		}
-		assertTrue("Should not be possible to create an attribute name without specifying a type!", false); //$NON-NLS-1$
+		assertTrue("Should not be possible to create an attribute name without specifying a type!", false);
 	}
 
 	private MRI createDescriptor1() throws Exception {
-		return new MRI(Type.ATTRIBUTE, new ObjectName("java.lang:type=OperatingSystem"), "Arch"); //$NON-NLS-1$ //$NON-NLS-2$
+		return new MRI(Type.ATTRIBUTE, new ObjectName("java.lang:type=OperatingSystem"), "Arch");
 	}
 
 }

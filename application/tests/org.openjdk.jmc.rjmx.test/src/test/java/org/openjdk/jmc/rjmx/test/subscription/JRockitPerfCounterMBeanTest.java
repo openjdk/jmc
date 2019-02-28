@@ -53,7 +53,7 @@ public class JRockitPerfCounterMBeanTest extends RjmxTestCase {
 			} catch (Exception e) {
 				fail(e.toString());
 			}
-			assertMin("Should at least have started one thread!", 1, startedThreads); //$NON-NLS-1$
+			assertMin("Should at least have started one thread!", 1, startedThreads);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

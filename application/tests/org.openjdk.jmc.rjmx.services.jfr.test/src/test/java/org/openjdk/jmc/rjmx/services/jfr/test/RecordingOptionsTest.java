@@ -79,7 +79,7 @@ public class RecordingOptionsTest extends JfrTestCase {
 	@Test
 	public void testValidateOption() throws Exception {
 		RecordingOptionsBuilder builder = new RecordingOptionsBuilder(getFlightRecorderService());
-		builder.addByKey(RecordingOptionsBuilder.KEY_DURATION, "20s"); //$NON-NLS-1$
+		builder.addByKey(RecordingOptionsBuilder.KEY_DURATION, "20s");
 		IConstrainedMap<String> options = builder.build();
 		try {
 			ValidationToolkit.validate(options);
@@ -94,7 +94,7 @@ public class RecordingOptionsTest extends JfrTestCase {
 		IMutableConstrainedMap<String> options = service.getDefaultRecordingOptions().emptyWithSameConstraints();
 		try {
 			// Not allowed to put string representations directly in options map anymore.
-			options.put(RecordingOptionsBuilder.KEY_DURATION, "20s"); //$NON-NLS-1$
+			options.put(RecordingOptionsBuilder.KEY_DURATION, "20s");
 			fail("Expected exception to be thrown for invalid options");
 		} catch (Exception expected) {
 		}
@@ -104,7 +104,7 @@ public class RecordingOptionsTest extends JfrTestCase {
 	@Test
 	public void testStringOptions() throws Exception {
 		RecordingOptionsBuilder builder = new RecordingOptionsBuilder(getFlightRecorderService());
-		builder.addByKey(RecordingOptionsBuilder.KEY_DURATION, "20s"); //$NON-NLS-1$
+		builder.addByKey(RecordingOptionsBuilder.KEY_DURATION, "20s");
 		IConstrainedMap<String> map = builder.build();
 		assertSame(SECOND.quantity(20), (IQuantity) map.get(RecordingOptionsBuilder.KEY_DURATION));
 	}
@@ -115,11 +115,11 @@ public class RecordingOptionsTest extends JfrTestCase {
 		IFlightRecorderService service = getFlightRecorderService();
 		RecordingOptionsBuilder builder = new RecordingOptionsBuilder(service);
 		boolean hasCompressed = "1.0".equals(service.getVersion());
-		props.put(RecordingOptionsBuilder.KEY_DURATION, "45 ms"); //$NON-NLS-1$
+		props.put(RecordingOptionsBuilder.KEY_DURATION, "45 ms");
 		Date myDate = new Date();
 		if (hasCompressed) {
-			props.put(RecordingOptionsBuilder.KEY_DESTINATION_FILE, "myfile"); //$NON-NLS-1$
-			props.put(RecordingOptionsBuilder.KEY_DESTINATION_COMPRESSED, "true"); //$NON-NLS-1$
+			props.put(RecordingOptionsBuilder.KEY_DESTINATION_FILE, "myfile");
+			props.put(RecordingOptionsBuilder.KEY_DESTINATION_COMPRESSED, "true");
 			// FIXME: Do we really want to support parsing Date.toString() format?
 //			props.put(RecordingOptionsBuilder.KEY_START_TIME, myDate.toString());
 			props.put(RecordingOptionsBuilder.KEY_START_TIME, Long.toString(myDate.getTime()));
@@ -127,7 +127,7 @@ public class RecordingOptionsTest extends JfrTestCase {
 		IConstrainedMap<String> options = builder.fromProperties(props).build();
 		assertSame(MILLISECOND.quantity(45), (IQuantity) options.get(RecordingOptionsBuilder.KEY_DURATION));
 		if (hasCompressed) {
-			assertEquals("myfile", options.get(RecordingOptionsBuilder.KEY_DESTINATION_FILE)); //$NON-NLS-1$
+			assertEquals("myfile", options.get(RecordingOptionsBuilder.KEY_DESTINATION_FILE));
 			assertEquals(Boolean.TRUE, options.get(RecordingOptionsBuilder.KEY_DESTINATION_COMPRESSED));
 			assertSame(UnitLookup.fromDate(myDate), (IQuantity) options.get(RecordingOptionsBuilder.KEY_START_TIME));
 		}

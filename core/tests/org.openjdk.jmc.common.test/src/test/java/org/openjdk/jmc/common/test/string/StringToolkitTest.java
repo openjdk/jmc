@@ -44,8 +44,8 @@ public class StringToolkitTest {
 
 	@Test
 	public void testJoin() {
-		assertEquals("apa-kossa", StringToolkit.join(Arrays.asList("apa", "kossa"), "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		assertEquals("2.-4711", StringToolkit.join(Arrays.asList(Integer.valueOf(2), Integer.valueOf(4711)), ".-")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("apa-kossa", StringToolkit.join(Arrays.asList("apa", "kossa"), "-"));
+		assertEquals("2.-4711", StringToolkit.join(Arrays.asList(Integer.valueOf(2), Integer.valueOf(4711)), ".-"));
 	}
 
 }

@@ -88,11 +88,11 @@ public abstract class JfrTestCase extends RjmxTestCase {
 
 	protected IRecordingDescriptor startContinuousRecording() throws Exception {
 		Random rnd = new Random();
-		String name = "test_recording_" + rnd.nextInt() % 4711; //$NON-NLS-1$
+		String name = "test_recording_" + rnd.nextInt() % 4711;
 		IFlightRecorderService service = getFlightRecorderService();
 		IConstrainedMap<String> recordingOptions = new RecordingOptionsBuilder(service).name(name).duration(0L).build();
 		IRecordingDescriptor recording = service.start(recordingOptions, service.getDefaultEventOptions());
-		System.out.println("Started " + recording.getName()); //$NON-NLS-1$
+		System.out.println("Started " + recording.getName());
 		IConstrainedMap<String> options = service.getRecordingOptions(recording);
 		Object durationOption = options.get(RecordingOptionsBuilder.KEY_DURATION);
 		// FIXME: It seems duration may be null for continuous recordings on Java 9 and later. Check with specification.
@@ -117,7 +117,7 @@ public abstract class JfrTestCase extends RjmxTestCase {
 			Thread.sleep(1000);
 		}
 		assertEquals(IRecordingDescriptor.RecordingState.STOPPED, recording.getState());
-		System.out.println("Stopped " + recording.getName()); //$NON-NLS-1$
+		System.out.println("Stopped " + recording.getName());
 		service.close(recording);
 		recording = service.getUpdatedRecordingDescription(recording);
 		assertNull(recording);

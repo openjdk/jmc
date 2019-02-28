@@ -48,11 +48,11 @@ public final class TestToolkit {
 	public static final Random RND = new Random();
 
 	private TestToolkit() {
-		throw new UnsupportedOperationException("Not to be instantiated."); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Not to be instantiated.");
 	}
 
 	public static byte[] getByteCode(Class<?> c) throws IOException {
-		InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class"); //$NON-NLS-1$
+		InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class");
 		return readFully(is, -1, true);
 	}
 
@@ -75,7 +75,7 @@ public final class TestToolkit {
 			int cc = is.read(output, pos, bytesToRead);
 			if (cc < 0) {
 				if (readAll && length != Integer.MAX_VALUE) {
-					throw new EOFException("Detect premature EOF"); //$NON-NLS-1$
+					throw new EOFException("Detect premature EOF");
 				} else {
 					if (output.length != pos) {
 						output = Arrays.copyOf(output, pos);
@@ -103,7 +103,7 @@ public final class TestToolkit {
 	public static InputStream getProbesXML(String testName) {
 		try {
 			String s = readTemplate();
-			s = s.replaceAll("%TEST_NAME%", testName); //$NON-NLS-1$
+			s = s.replaceAll("%TEST_NAME%", testName);
 			return new ByteArrayInputStream(s.getBytes());
 
 		} catch (IOException e) {
@@ -113,7 +113,7 @@ public final class TestToolkit {
 	}
 
 	private static String readTemplate() throws IOException {
-		InputStream inputStream = InstrumentMe.class.getResourceAsStream("jfrprobes_template.xml"); //$NON-NLS-1$
+		InputStream inputStream = InstrumentMe.class.getResourceAsStream("jfrprobes_template.xml");
 		String s = readString(inputStream);
 		closeSilently(inputStream);
 		return s;
@@ -132,7 +132,7 @@ public final class TestToolkit {
 		StringBuilder builder = new StringBuilder();
 		try {
 			while ((s = reader.readLine()) != null) {
-				builder.append(s + "\r"); //$NON-NLS-1$
+				builder.append(s + "\r");
 			}
 			s = builder.toString();
 		} finally {

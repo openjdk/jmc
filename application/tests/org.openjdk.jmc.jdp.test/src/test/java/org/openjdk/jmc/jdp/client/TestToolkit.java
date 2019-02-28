@@ -50,7 +50,7 @@ public final class TestToolkit {
 	private static final String HEXES = "0123456789ABCDEF";
 	private final static SecureRandom RND = new SecureRandom();
 	public static final int TEST_MULTICAST_PORT = 7711;
-	private static final String TEST_MULTICAST_ADDRESS_STRING = "224.0.23.177"; //$NON-NLS-1$
+	private static final String TEST_MULTICAST_ADDRESS_STRING = "224.0.23.177";
 	public static final InetAddress TEST_MULTICAST_ADDRESS;
 
 	static {
@@ -59,7 +59,7 @@ public final class TestToolkit {
 			tmp = InetAddress.getByName(TEST_MULTICAST_ADDRESS_STRING);
 		} catch (UnknownHostException e) {
 			// Multicast address by IP, should never happen!
-			JDPClientTest.LOGGER.log(Level.SEVERE, "Could not create test multicast address!", e); //$NON-NLS-1$ //$NON-NLS-2$
+			JDPClientTest.LOGGER.log(Level.SEVERE, "Could not create test multicast address!", e);
 		}
 		TEST_MULTICAST_ADDRESS = tmp;
 	}

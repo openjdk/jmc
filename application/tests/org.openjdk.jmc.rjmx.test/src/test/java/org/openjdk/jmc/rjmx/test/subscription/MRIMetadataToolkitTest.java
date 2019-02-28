@@ -43,9 +43,9 @@ public class MRIMetadataToolkitTest {
 
 	@Test
 	public void testIsNumerical() {
-		assertTrue(MRIMetadataToolkit.isNumerical("int")); //$NON-NLS-1$
-		assertTrue(MRIMetadataToolkit.isNumerical("java.lang.Integer")); //$NON-NLS-1$
-		assertFalse(MRIMetadataToolkit.isNumerical("gurka")); //$NON-NLS-1$
+		assertTrue(MRIMetadataToolkit.isNumerical("int"));
+		assertTrue(MRIMetadataToolkit.isNumerical("java.lang.Integer"));
+		assertFalse(MRIMetadataToolkit.isNumerical("gurka"));
 	}
 
 }

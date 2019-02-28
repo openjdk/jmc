@@ -152,10 +152,10 @@ public class BoundedListTest {
 	@Test
 	public void testEmptyIterator() {
 		BoundedList<Integer> bl = new BoundedList<>(10);
-		assertFalse("Empty list should have no elements!", bl.iterator().hasNext()); //$NON-NLS-1$
+		assertFalse("Empty list should have no elements!", bl.iterator().hasNext());
 		try {
 			bl.iterator().next();
-			fail("next should have generated an exception!"); //$NON-NLS-1$
+			fail("next should have generated an exception!");
 		} catch (NoSuchElementException el) {
 			// Fall through...
 		}
@@ -194,10 +194,10 @@ public class BoundedListTest {
 		final BoundedList<Long> bl = new BoundedList<>(20);
 		ProducerThread t = new ProducerThread(bl);
 		ValidationThread[] validators = new ValidationThread[10];
-		new Thread(t, "Producer").start(); //$NON-NLS-1$
+		new Thread(t, "Producer").start();
 		for (int i = 0; i < validators.length; i++) {
 			validators[i] = new ValidationThread(bl);
-			new Thread(validators[i], "Validator " + i).start(); //$NON-NLS-1$
+			new Thread(validators[i], "Validator " + i).start();
 		}
 		Thread.sleep(30000);
 		for (ValidationThread validator : validators) {
@@ -206,12 +206,12 @@ public class BoundedListTest {
 		t.stop();
 		long maxNo = 0;
 		for (ValidationThread validator : validators) {
-			assertEquals("Failed count validation!", -1, validator.countError); //$NON-NLS-1$
-			assertEquals("Failed sequence validation!", -1, validator.sequenceError); //$NON-NLS-1$
+			assertEquals("Failed count validation!", -1, validator.countError);
+			assertEquals("Failed sequence validation!", -1, validator.sequenceError);
 			maxNo = Math.max(maxNo, validator.maxNum);
 		}
-		System.out.println("Allocated up to " + t.counter); //$NON-NLS-1$
-		System.out.println("Max no was " + maxNo); //$NON-NLS-1$
+		System.out.println("Allocated up to " + t.counter);
+		System.out.println("Max no was " + maxNo);
 	}
 
 	// FIXME: This test has been commented out for a long time. Check if it is still relevant and either remove or reintroduce it.
@@ -222,7 +222,7 @@ public class BoundedListTest {
 //		// Adding a few billion numbers, just to show that we do not leak under normal circumstances...
 //		for (long i = 1; i <= Integer.MAX_VALUE; i++) {
 //			if (i % (Integer.MAX_VALUE / 20) == 0) {
-//				System.out.println(String.format("Passed %.0f%%", (i * 100f) / Integer.MAX_VALUE)); //$NON-NLS-1$
+//				System.out.println(String.format("Passed %.0f%%", (i * 100f) / Integer.MAX_VALUE));
 //			}
 //			bl.add(i);
 //		}

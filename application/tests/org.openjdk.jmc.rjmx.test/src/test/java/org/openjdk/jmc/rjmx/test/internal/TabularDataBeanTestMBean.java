@@ -60,39 +60,39 @@ public class TabularDataBeanTestMBean implements ITabularDataBeanTestMBean {
 	public TabularDataBeanTestMBean() {
 		CompositeType simpleCompositeType;
 		try {
-			simpleCompositeType = new CompositeType("simpleCompositeType", "compdescription", //$NON-NLS-1$ //$NON-NLS-2$
-					new String[] {"djur", "bil", "apa", "båt"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					new String[] {"ett djur", "en bil", "en apa", "en båt"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			simpleCompositeType = new CompositeType("simpleCompositeType", "compdescription",
+					new String[] {"djur", "bil", "apa", "båt"},
+					new String[] {"ett djur", "en bil", "en apa", "en båt"},
 					new OpenType[] {SimpleType.STRING, SimpleType.STRING, SimpleType.STRING, SimpleType.STRING,});
 
-			TabularType simpleTabularType = new TabularType("simpleTabularTypeName", "tabdescription", //$NON-NLS-1$ //$NON-NLS-2$
-					simpleCompositeType, new String[] {"djur", "bil", "apa", "båt"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			TabularType simpleTabularType = new TabularType("simpleTabularTypeName", "tabdescription",
+					simpleCompositeType, new String[] {"djur", "bil", "apa", "båt"});
 
 			OpenType<?>[] compositeContentsTypes = new OpenType[5];
 			String[] compositeKeys = new String[5];
 			String[] compositeDescriptions = new String[5];
 			compositeContentsTypes[0] = simpleTabularType;
-			compositeKeys[0] = "Tab Data"; //$NON-NLS-1$
-			compositeDescriptions[0] = "tab data desc"; //$NON-NLS-1$
+			compositeKeys[0] = "Tab Data";
+			compositeDescriptions[0] = "tab data desc";
 			compositeContentsTypes[4] = simpleCompositeType;
-			compositeKeys[4] = "Comp Data"; //$NON-NLS-1$
-			compositeDescriptions[4] = "comp data desc"; //$NON-NLS-1$
+			compositeKeys[4] = "Comp Data";
+			compositeDescriptions[4] = "comp data desc";
 			compositeContentsTypes[3] = new ArrayType<String>(2, SimpleType.STRING);
-			compositeKeys[3] = "Array Data"; //$NON-NLS-1$
-			compositeDescriptions[3] = "comp data desc"; //$NON-NLS-1$
+			compositeKeys[3] = "Array Data";
+			compositeDescriptions[3] = "comp data desc";
 			for (int i = 1; i < 3; i++) {
 				compositeContentsTypes[i] = SimpleType.STRING;
-				compositeKeys[i] = "StringIndex" + i; //$NON-NLS-1$
-				compositeDescriptions[i] = "description" + i; //$NON-NLS-1$
+				compositeKeys[i] = "StringIndex" + i;
+				compositeDescriptions[i] = "description" + i;
 			}
-			CompositeType complexCompositeType = new CompositeType("ComplexCompositeTypeName", //$NON-NLS-1$
-					"complex composite type desc", compositeKeys, compositeDescriptions, compositeContentsTypes); //$NON-NLS-1$
-			TabularType complexTabularType = new TabularType("ComplexTabularTypeName", "complex tabular type", //$NON-NLS-1$ //$NON-NLS-2$
+			CompositeType complexCompositeType = new CompositeType("ComplexCompositeTypeName",
+					"complex composite type desc", compositeKeys, compositeDescriptions, compositeContentsTypes);
+			TabularType complexTabularType = new TabularType("ComplexTabularTypeName", "complex tabular type",
 					complexCompositeType, compositeKeys);
 
 			CompositeData simpleCompositeData = new CompositeDataSupport(simpleCompositeType,
-					new String[] {"djur", "bil", "apa", "båt"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					new String[] {"häst", "corvette", "lemur", "nautilus"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					new String[] {"djur", "bil", "apa", "båt"},
+					new String[] {"häst", "corvette", "lemur", "nautilus"});
 			TabularDataSupport simpleTabularData = new TabularDataSupport(simpleTabularType);
 			simpleTabularData.put(simpleCompositeData);
 			/*
@@ -102,14 +102,14 @@ public class TabularDataBeanTestMBean implements ITabularDataBeanTestMBean {
 			 */
 
 			compTest = new CompositeDataSupport(complexCompositeType, compositeKeys,
-					new Object[] {simpleTabularData, "string2", "string3", //$NON-NLS-1$ //$NON-NLS-2$
-							new String[][] {{"string1_1", "string1_2"}, {"string2_1", "string2_2"}}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					new Object[] {simpleTabularData, "string2", "string3",
+							new String[][] {{"string1_1", "string1_2"}, {"string2_1", "string2_2"}},
 							simpleCompositeData});
 			tabTest = new TabularDataSupport(complexTabularType);
 			tabTest.put(compTest);
 			tabTest.put(new CompositeDataSupport(complexCompositeType, compositeKeys,
-					new Object[] {simpleTabularData, "secondcomp2", "secondcomp3", //$NON-NLS-1$ //$NON-NLS-2$
-							new String[][] {{"array1_1", "array1_2"}, {"array2_1", "array2_2"}}, simpleCompositeData})); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					new Object[] {simpleTabularData, "secondcomp2", "secondcomp3",
+							new String[][] {{"array1_1", "array1_2"}, {"array2_1", "array2_2"}}, simpleCompositeData}));
 			/*
 			 * tabTest.put(complexCompositeData); tabTest.put(complexCompositeData);
 			 * tabTest.put(complexCompositeData); tabTest.put(complexCompositeData);
@@ -155,7 +155,7 @@ public class TabularDataBeanTestMBean implements ITabularDataBeanTestMBean {
 		try {
 			try {
 				ManagementFactory.getPlatformMBeanServer().createMBean(TabularDataBeanTestMBean.class.getName(),
-						new ObjectName("com.jrockit", "name", "TestMBean")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						new ObjectName("com.jrockit", "name", "TestMBean"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

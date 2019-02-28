@@ -64,8 +64,8 @@ public class NotificationAttributeSubscriptionTest extends RjmxTestCase implemen
 			MRI descriptor = null;
 			synchronized (this) {
 				// Starting up a subscription on a one shot attribute.
-				descriptor = new MRI(Type.NOTIFICATION, "com.sun.management:type=GarbageCollectionAggregator", //$NON-NLS-1$
-						"com.sun.management.gc.notification"); //$NON-NLS-1$
+				descriptor = new MRI(Type.NOTIFICATION, "com.sun.management:type=GarbageCollectionAggregator",
+						"com.sun.management.gc.notification");
 				getAttributeSubscriptionService().addMRIValueListener(descriptor, this);
 
 				secondThreadException = null;

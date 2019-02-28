@@ -56,7 +56,7 @@ public class PieChartTester {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("Adding value!"); //$NON-NLS-1$
+			System.out.println("Adding value!");
 		}
 
 		/**
@@ -64,7 +64,7 @@ public class PieChartTester {
 		 */
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("Entered graph!"); //$NON-NLS-1$
+			System.out.println("Entered graph!");
 		}
 
 		/**
@@ -72,7 +72,7 @@ public class PieChartTester {
 		 */
 		@Override
 		public void mouseExited(MouseEvent e) {
-			System.out.println("Exited graph!"); //$NON-NLS-1$
+			System.out.println("Exited graph!");
 		}
 	}
 
@@ -88,11 +88,11 @@ public class PieChartTester {
 		addNumberSeries(graph, seriesProvider, 40);
 		addNumberSeries(graph, seriesProvider, 60);
 		addNumberSeries(graph, seriesProvider, 80);
-		graph.setTitle("Test pie chart"); //$NON-NLS-1$
+		graph.setTitle("Test pie chart");
 		graph.setMetadataProvider(new DefaultMetadataProvider());
 		graph.setDataProvider(seriesProvider);
 		GreyChartPanel panel = new GreyChartPanel(graph);
-		panel.setName("default pie chart"); //$NON-NLS-1$
+		panel.setName("default pie chart");
 		panel.addMouseListener(new MyMouseListener());
 		ChartRenderingToolkit.testComponent(panel, 320, 250);
 	}

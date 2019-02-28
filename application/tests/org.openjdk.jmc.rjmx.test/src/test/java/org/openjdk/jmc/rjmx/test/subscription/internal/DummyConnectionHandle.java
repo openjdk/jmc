@@ -60,8 +60,8 @@ public class DummyConnectionHandle implements IConnectionHandle {
 			 * we would like to check this at compile time, but there was no way to do that yet. JSR
 			 * 308 and the Checker Framework should change that.)
 			 */
-			throw new IllegalArgumentException("Will not be able to create dummy implementations of " //$NON-NLS-1$
-					+ serviceInterface.getName() + " since the service is not an interface"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Will not be able to create dummy implementations of "
+					+ serviceInterface.getName() + " since the service is not an interface");
 		}
 		T service = getServiceOrNull(serviceInterface);
 		if (service == null) {
@@ -119,7 +119,7 @@ public class DummyConnectionHandle implements IConnectionHandle {
 
 	@Override
 	public String getDescription() {
-		return "Dummy"; //$NON-NLS-1$
+		return "Dummy";
 	}
 
 	@Override

@@ -74,14 +74,14 @@ public class BinaryPrefixTest extends MCTestCase {
 			BinaryPrefix prefix = BinaryPrefix.getFloorPrefix(val);
 
 			if ((i++ % 10) == 0) {
-				assertGreaterThan("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertGreaterThan("For value " + val, oldLog1024, log1024);
 				if (oldPrefix == null) {
 					assertNotNull(prefix);
 				} else {
 					assertGreaterThan(oldPrefix, prefix);
 				}
 			} else {
-				assertEquals("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertEquals("For value " + val, oldLog1024, log1024);
 				assertSame(oldPrefix, prefix);
 			}
 
@@ -101,14 +101,14 @@ public class BinaryPrefixTest extends MCTestCase {
 			BinaryPrefix prefix = BinaryPrefix.getFloorPrefix(val);
 
 			if ((i++ % 10) == 0) {
-				assertGreaterThan("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertGreaterThan("For value " + val, oldLog1024, log1024);
 				if (oldPrefix == null) {
 					assertNotNull(prefix);
 				} else {
 					assertGreaterThan(oldPrefix, prefix);
 				}
 			} else {
-				assertEquals("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertEquals("For value " + val, oldLog1024, log1024);
 				assertSame(oldPrefix, prefix);
 			}
 
@@ -127,14 +127,14 @@ public class BinaryPrefixTest extends MCTestCase {
 			BinaryPrefix prefix = BinaryPrefix.getFloorPrefix(val);
 
 			if ((i++ % 10) == 0) {
-				assertGreaterThan("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertGreaterThan("For value " + val, oldLog1024, log1024);
 				if (oldPrefix == null) {
 					assertNotNull(prefix);
 				} else {
 					assertGreaterThan(oldPrefix, prefix);
 				}
 			} else {
-				assertEquals("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertEquals("For value " + val, oldLog1024, log1024);
 				assertSame(oldPrefix, prefix);
 			}
 
@@ -154,14 +154,14 @@ public class BinaryPrefixTest extends MCTestCase {
 			BinaryPrefix prefix = BinaryPrefix.getFloorPrefix(val);
 
 			if ((i++ % 10) == 0) {
-				assertGreaterThan("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertGreaterThan("For value " + val, oldLog1024, log1024);
 				if (oldPrefix == null) {
 					assertNotNull(prefix);
 				} else {
 					assertGreaterThan(oldPrefix, prefix);
 				}
 			} else {
-				assertEquals("For value " + val, oldLog1024, log1024); //$NON-NLS-1$
+				assertEquals("For value " + val, oldLog1024, log1024);
 				assertSame(oldPrefix, prefix);
 			}
 

@@ -134,7 +134,7 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 	}
 
 	protected void appendTitle(String title) {
-		text.append("<p><b>").append(title).append("</b></p>");
+		text.append("<p><b>").append(title).append("</b></p>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected void appendAtIfNew(IDisplayable newAt) {

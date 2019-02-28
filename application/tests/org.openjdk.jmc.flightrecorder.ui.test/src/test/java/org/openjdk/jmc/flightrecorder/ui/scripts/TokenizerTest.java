@@ -44,31 +44,31 @@ import org.openjdk.jmc.commands.Tokenizer;
 public class TokenizerTest {
 	@Test
 	public void testQuotedString() {
-		Tokenizer tokenizer = new Tokenizer("my text \"is such a nice text\""); //$NON-NLS-1$
+		Tokenizer tokenizer = new Tokenizer("my text \"is such a nice text\"");
 		Iterator<Token> tokenIter = tokenizer.iterator();
 		Token token = tokenIter.next();
-		assertEquals("my", token.getText()); //$NON-NLS-1$
+		assertEquals("my", token.getText());
 		token = tokenIter.next();
-		assertEquals("text", token.getText()); //$NON-NLS-1$
+		assertEquals("text", token.getText());
 		token = tokenIter.next();
-		assertEquals("is such a nice text", token.getText()); //$NON-NLS-1$
+		assertEquals("is such a nice text", token.getText());
 		assertEquals(true, token.isInQuotes());
 	}
 
 	@Test
 	public void testMultipleRows() {
-		Tokenizer tokenizer = new Tokenizer("row1;row2;row3"); //$NON-NLS-1$
+		Tokenizer tokenizer = new Tokenizer("row1;row2;row3");
 		Iterator<Token> tokenIter = tokenizer.iterator();
 		Token token = tokenIter.next();
-		assertEquals("row1", token.getText()); //$NON-NLS-1$
+		assertEquals("row1", token.getText());
 		assertEquals(0, token.getRow());
 		tokenIter.next();
 		token = tokenIter.next();
-		assertEquals("row2", token.getText()); //$NON-NLS-1$
+		assertEquals("row2", token.getText());
 		assertEquals(1, token.getRow());
 		tokenIter.next();
 		token = tokenIter.next();
-		assertEquals("row3", token.getText()); //$NON-NLS-1$
+		assertEquals("row3", token.getText());
 		assertEquals(2, token.getRow());
 	}
 }

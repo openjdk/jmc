@@ -60,7 +60,7 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		ISubscriptionService subscriptionService = handle.getServiceOrThrow(ISubscriptionService.class);
 		try {
-			MRI attributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI attributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad");
 			subscriptionService.addMRIValueListener(attributeDescriptor, this);
 			synchronized (this) {
 				for (int i = 0; i < 4; i++) {
@@ -81,8 +81,8 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		ISubscriptionService subscriptionService = handle.getServiceOrThrow(ISubscriptionService.class);
 		try {
-			MRI availableProcessorsAttribute = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-					"AvailableProcessors"); //$NON-NLS-1$
+			MRI availableProcessorsAttribute = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+					"AvailableProcessors");
 
 			subscriptionService.addMRIValueListener(availableProcessorsAttribute, this);
 
@@ -109,8 +109,8 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 	public void testGetAttributeSubscriptionOne() {
 		try {
 			// Starting up a subscription on a one shot attribute.
-			MRI physicalMemoryUsedAttribute = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-					"UsedPhysicalMemorySize"); //$NON-NLS-1$
+			MRI physicalMemoryUsedAttribute = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+					"UsedPhysicalMemorySize");
 			getAttributeSubscriptionService().addMRIValueListener(physicalMemoryUsedAttribute, this);
 
 			synchronized (this) {
@@ -128,9 +128,9 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 	public void testGetAttributeSubscriptionTwo() {
 		try {
 			// Starting up a subscription on a one shot attribute.
-			MRI tcad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "UsedPhysicalMemorySize"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI tcad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "UsedPhysicalMemorySize");
 			getAttributeSubscriptionService().addMRIValueListener(tcad, this);
-			MRI tstcad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "FreePhysicalMemorySize"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI tstcad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "FreePhysicalMemorySize");
 			getAttributeSubscriptionService().addMRIValueListener(tstcad, this);
 
 			for (int i = 0; i < 7; i++) {
@@ -156,7 +156,7 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 	public void testGetSyntheticSubscription() {
 		try {
 			// Starting up a subscription on a one shot attribute.
-			MRI synthad = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsagePercent"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI synthad = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsagePercent");
 			getAttributeSubscriptionService().addMRIValueListener(synthad, this);
 
 			synchronized (this) {
@@ -175,7 +175,7 @@ public class AttributeSubscriptionTest extends RjmxTestCase implements IMRIValue
 		try {
 			// Starting up a subscription on a one shot attribute.
 
-			MRI synthad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "PhysicalMemoryUsagePercent"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI synthad = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "PhysicalMemoryUsagePercent");
 			getAttributeSubscriptionService().addMRIValueListener(synthad, this);
 
 			synchronized (this) {

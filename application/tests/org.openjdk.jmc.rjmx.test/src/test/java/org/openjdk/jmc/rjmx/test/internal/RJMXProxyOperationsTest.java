@@ -48,7 +48,7 @@ public class RJMXProxyOperationsTest extends RjmxTestCase {
 	public void testCtrlBreakHandler() throws Exception {
 		assumeHotSpot8OrLater(getConnectionHandle());
 
-		String help = getDiagnosticCommandService().runCtrlBreakHandlerWithResult("help"); //$NON-NLS-1$
+		String help = getDiagnosticCommandService().runCtrlBreakHandlerWithResult("help");
 		Assert.assertNotNull(help);
 	}
 

@@ -60,8 +60,8 @@ import org.openjdk.jmc.rjmx.subscription.PolicyFactory;
  */
 public class BasicCommunicationTest extends ServerHandleTestCase {
 	final static int DEFAULT_PORT = 0;
-	final static String DEFAULT_HOST = "localhost".intern(); //$NON-NLS-1$
-	final static String ALTERNATIVE_HOST = "127.1.0.1".intern(); //$NON-NLS-1$
+	final static String DEFAULT_HOST = "localhost".intern();
+	final static String ALTERNATIVE_HOST = "127.1.0.1".intern();
 
 	/**
 	 * Attempts creating a {@link JMXConnectionDescriptor} with a bunch of options.
@@ -76,9 +76,9 @@ public class BasicCommunicationTest extends ServerHandleTestCase {
 
 	@Test
 	public void testIConnectionHandle() throws Exception {
-		IConnectionHandle handle = getDefaultServer().connect("Test"); //$NON-NLS-1$
-		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", //$NON-NLS-1$
-				"ThreadCount"); //$NON-NLS-1$
+		IConnectionHandle handle = getDefaultServer().connect("Test");
+		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading",
+				"ThreadCount");
 		MBeanServerConnection connection = handle.getServiceOrThrow(MBeanServerConnection.class);
 		assertBetween(1L, 1000L,
 				((Number) connection.getAttribute(descriptor.getObjectName(), descriptor.getDataPath())).longValue());
@@ -87,7 +87,7 @@ public class BasicCommunicationTest extends ServerHandleTestCase {
 
 	@Test
 	public void testServerHandle() throws Exception {
-		IConnectionHandle handle = getDefaultServer().connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = getDefaultServer().connect("Test");
 
 		assertEquals(1, getDefaultServer().getConnectionHandles().length);
 		assertEquals(handle, getDefaultServer().getConnectionHandles()[0]);
@@ -98,12 +98,12 @@ public class BasicCommunicationTest extends ServerHandleTestCase {
 
 	protected void muppTestConnection() throws Exception {
 		ConnectionDescriptorBuilder builder = new ConnectionDescriptorBuilder();
-		IConnectionDescriptor descriptor = builder.hostName("localhost").port(0).build(); //$NON-NLS-1$
-		IConnectionHandle handle = IServerHandle.create(descriptor).connect("Test"); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = builder.hostName("localhost").port(0).build();
+		IConnectionHandle handle = IServerHandle.create(descriptor).connect("Test");
 
 		ISubscriptionService service = handle.getServiceOrThrow(ISubscriptionService.class);
-		MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", //$NON-NLS-1$
-				"ThreadCount"); //$NON-NLS-1$
+		MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading",
+				"ThreadCount");
 		service.addMRIValueListener(attribute, new IMRIValueListener() {
 			@Override
 			public void valueChanged(MRIValueEvent event) {

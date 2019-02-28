@@ -66,12 +66,12 @@ import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 @SuppressWarnings("nls")
 public class RJMXConnectionTest extends RjmxTestCase {
 	// The MBEANS vital to console functionality.
-	public final static String[] MBEAN_NAMES = {"java.lang:type=OperatingSystem", "java.lang:type=ClassLoading", //$NON-NLS-1$ //$NON-NLS-2$
-			"java.lang:type=Threading", "java.lang:type=Compilation", "java.lang:type=Memory", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"java.lang:type=Runtime", "java.lang:type=MemoryPool,*", "java.lang:type=GarbageCollector,*", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"java.lang:type=MemoryManager,*"}; //$NON-NLS-1$
+	public final static String[] MBEAN_NAMES = {"java.lang:type=OperatingSystem", "java.lang:type=ClassLoading",
+			"java.lang:type=Threading", "java.lang:type=Compilation", "java.lang:type=Memory",
+			"java.lang:type=Runtime", "java.lang:type=MemoryPool,*", "java.lang:type=GarbageCollector,*",
+			"java.lang:type=MemoryManager,*"};
 
-	public final static String[] MBEAN_CLASS_NAMES = {"sun.management.RuntimeImpl"}; //$NON-NLS-1$
+	public final static String[] MBEAN_CLASS_NAMES = {"sun.management.RuntimeImpl"};
 
 	public static final int MIN_CPUS = 1;
 	public static final int MAX_CPUS = 1024;
@@ -79,7 +79,7 @@ public class RJMXConnectionTest extends RjmxTestCase {
 	private MRI[] ATTRIBUTES_OS;
 
 	// Only use this one for testing!
-	private final static String[] ATTRIBUTE_SPEC_NAME = {"SpecName"}; //$NON-NLS-1$
+	private final static String[] ATTRIBUTE_SPEC_NAME = {"SpecName"};
 	private RJMXConnection m_connection;
 
 	/**
@@ -99,9 +99,9 @@ public class RJMXConnectionTest extends RjmxTestCase {
 	}
 
 	public static MRI[] getOSAttributes() {
-		return new MRI[] {new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"), //$NON-NLS-1$ //$NON-NLS-2$
-				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad"), //$NON-NLS-1$ //$NON-NLS-2$
-				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "AvailableProcessors")}; //$NON-NLS-1$ //$NON-NLS-2$
+		return new MRI[] {new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"),
+				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad"),
+				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "AvailableProcessors")};
 	}
 
 	@After
@@ -134,7 +134,7 @@ public class RJMXConnectionTest extends RjmxTestCase {
 					break;
 				}
 			}
-			assertTrue("MBean names did not contain: " + element, found); //$NON-NLS-1$
+			assertTrue("MBean names did not contain: " + element, found);
 		}
 	}
 
@@ -182,14 +182,14 @@ public class RJMXConnectionTest extends RjmxTestCase {
 		}
 		// No longer check all the class names
 		for (String element : MBEAN_CLASS_NAMES) {
-			assertTrue("Returned infos did not contain MBean class name: " + element, infos //$NON-NLS-1$
+			assertTrue("Returned infos did not contain MBean class name: " + element, infos
 					.containsKey(element));
 		}
 
 		MBeanInfo loggingInfo = infos.get(MBEAN_CLASS_NAMES[0]);
-		assertNotNull("MBeanInfo was null for " + MBEAN_CLASS_NAMES[0], loggingInfo); //$NON-NLS-1$
+		assertNotNull("MBeanInfo was null for " + MBEAN_CLASS_NAMES[0], loggingInfo);
 		MBeanAttributeInfo[] attrInfo = loggingInfo.getAttributes();
-		assertNotNull("MBeanAttributeInfo was null for " + MBEAN_CLASS_NAMES[0], attrInfo); //$NON-NLS-1$
+		assertNotNull("MBeanAttributeInfo was null for " + MBEAN_CLASS_NAMES[0], attrInfo);
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class RJMXConnectionTest extends RjmxTestCase {
 		Object attr = m_connection
 				.getAttributeValue(new MRI(Type.ATTRIBUTE, getObjectName(MBEAN_NAMES[5]), ATTRIBUTE_SPEC_NAME[0]));
 		assertNotNull(attr);
-		assertTrue(String.valueOf(attr).contains("Virtual Machine")); //$NON-NLS-1$
+		assertTrue(String.valueOf(attr).contains("Virtual Machine"));
 	}
 
 	public void handleRJMXException(Exception exception) {

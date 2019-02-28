@@ -81,7 +81,7 @@ public class RenderingOutOfOrderTester {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("Adding value!"); //$NON-NLS-1$
+			System.out.println("Adding value!");
 			doStep();
 		}
 
@@ -90,7 +90,7 @@ public class RenderingOutOfOrderTester {
 		 */
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("Entered graph!"); //$NON-NLS-1$
+			System.out.println("Entered graph!");
 		}
 
 		/**
@@ -98,7 +98,7 @@ public class RenderingOutOfOrderTester {
 		 */
 		@Override
 		public void mouseExited(MouseEvent e) {
-			System.out.println("Exited graph!"); //$NON-NLS-1$
+			System.out.println("Exited graph!");
 		}
 
 	}
@@ -123,7 +123,7 @@ public class RenderingOutOfOrderTester {
 		SAW_DATA = new TimestampDataSeries();
 		provider.addDataSeries(SAW_DATA);
 		provider.addDataSeries(SINUS_DATA);
-		String title = "Out of order rendering test. Click for next point!"; //$NON-NLS-1$
+		String title = "Out of order rendering test. Click for next point!";
 		DefaultXYGreyChart<ITimestampedData> graph = new DefaultXYGreyChart<>();
 
 		DefaultYAxis yaxis_left = new DefaultYAxis(graph);
@@ -134,7 +134,7 @@ public class RenderingOutOfOrderTester {
 		yaxis_left.setNumberOfTicks(20);
 		yaxis_left.setAlwaysShowZero(false);
 		yaxis_left.setAutoPadding(0.05);
-		yaxis_left.setTitle("Saw value"); //$NON-NLS-1$
+		yaxis_left.setTitle("Saw value");
 		yaxis_left.setPosition(Position.LEFT);
 		yaxis_right.setMin(MIN_Y);
 		yaxis_right.setMax(MAX_Y);
@@ -142,7 +142,7 @@ public class RenderingOutOfOrderTester {
 		yaxis_right.setNumberOfTicks(20);
 		yaxis_right.setAlwaysShowZero(false);
 		yaxis_right.setAutoPadding(0.05);
-		yaxis_right.setTitle("Sine value"); //$NON-NLS-1$
+		yaxis_right.setTitle("Sine value");
 		yaxis_right.setPosition(Position.RIGHT);
 
 		graph.setMetadataProvider(new DefaultMetadataProvider());
@@ -158,14 +158,14 @@ public class RenderingOutOfOrderTester {
 		graph.addYAxis(yaxis_left);
 		graph.addYAxis(yaxis_right);
 
-		graph.getXAxis().setTitle("Time"); //$NON-NLS-1$
+		graph.getXAxis().setTitle("Time");
 
 		panel = new GreyChartPanel(graph);
 		graph.setIndexRenderer(new DefaultVerticalIndexRenderer(graph));
 		panel.setBackground(new Color(240, 240, 240));
 
 		panel.addMouseListener(new MyMouseListener());
-		panel.setName("rendering performance"); //$NON-NLS-1$
+		panel.setName("rendering performance");
 		panel.setBackground(Color.WHITE);
 		panel.getChart().getPlotRenderer().setBackground(Color.LIGHT_GRAY);
 		// Range chosen to provoke interpolation.

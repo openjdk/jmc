@@ -57,29 +57,29 @@ public class ConsoleAttributeInfoManagerTest extends RjmxTestCase {
 
 	@Test
 	public void testGetAttributeInfo() {
-		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"AvailableProcessors"); //$NON-NLS-1$
+		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"AvailableProcessors");
 		IMRIMetadata info = m_manager.getMetadata(descriptor);
 		assertNotNull(info);
 
 		assertEquals(5000,
 				((IIntervalUpdatePolicy) UpdatePolicyToolkit.getUpdatePolicy(m_connectionHandle, info.getMRI()))
 						.getIntervalTime());
-		assertMin("Description shorter than expected.", 10, info.getDescription().length()); //$NON-NLS-1$
-		assertMin("Display name shorter than expected.", 4, MRIMetadataToolkit.getDisplayName(m_connectionHandle, //$NON-NLS-1$
+		assertMin("Description shorter than expected.", 10, info.getDescription().length());
+		assertMin("Display name shorter than expected.", 4, MRIMetadataToolkit.getDisplayName(m_connectionHandle,
 				info.getMRI()).length());
 		assertTrue(info.getMRI().getParentMRIs().length == 0);
 	}
 
 	@Test
 	public void testCompositeIsChild() {
-		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed");
 		IMRIMetadata info = m_manager.getMetadata(descriptor);
 		assertNotNull(info);
-		MRI parent = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI parent = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage");
 		IMRIMetadata parentInfo = m_manager.getMetadata(parent);
 		assertNotNull(parentInfo);
-		assertTrue("Info not child to parent!", parent.isChild(descriptor)); //$NON-NLS-1$
+		assertTrue("Info not child to parent!", parent.isChild(descriptor));
 	}
 
 	@Before

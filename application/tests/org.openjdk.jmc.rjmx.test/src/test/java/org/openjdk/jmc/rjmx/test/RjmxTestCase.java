@@ -66,29 +66,29 @@ public class RjmxTestCase extends MCTestCase {
 	/**
 	 * The host running the management server.
 	 */
-	public final static String PROPERTY_RJMX_HOST = "jmc.test.rjmx.host"; //$NON-NLS-1$
+	public final static String PROPERTY_RJMX_HOST = "jmc.test.rjmx.host";
 
 	/**
 	 * The port of the management server. (Used for both JMX over RMI and RMP.)
 	 */
-	public final static String PROPERTY_RJMX_PORT = "jmc.test.rjmx.port"; //$NON-NLS-1$
+	public final static String PROPERTY_RJMX_PORT = "jmc.test.rjmx.port";
 
 	/**
 	 * Boolean option to use RMP to talk to the management server. (False means to use JMX over
 	 * RMI.)
 	 */
-	public final static String PROPERTY_RJMX_RMP = "jmc.test.rjmx.rmp"; //$NON-NLS-1$
+	public final static String PROPERTY_RJMX_RMP = "jmc.test.rjmx.rmp";
 
 	/**
 	 * The service URL to the management server. (If set, has precedence over host, port and
 	 * protocol.)
 	 */
-	public final static String PROPERTY_JMX_SERVICE_URL = "jmc.test.rjmx.serviceURL"; //$NON-NLS-1$
+	public final static String PROPERTY_JMX_SERVICE_URL = "jmc.test.rjmx.serviceURL";
 
 	/**
 	 * The default host to test against.
 	 */
-	public final static String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
+	public final static String DEFAULT_HOST = "localhost";
 
 	protected String m_host;
 	protected IConnectionHandle m_connectionHandle;
@@ -129,19 +129,19 @@ public class RjmxTestCase extends MCTestCase {
 	protected static boolean probe(IConnectionDescriptor descriptor) {
 		long start = System.currentTimeMillis();
 		try {
-			System.out.println("Probing Service URL " + descriptor.createJMXServiceURL() + " ..."); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("Probing Service URL " + descriptor.createJMXServiceURL() + " ...");
 			IConnectionHandle handle = createConnectionHandle(descriptor);
 			long up = System.currentTimeMillis();
-			System.out.println("... connected in " + (up - start) + " ms ..."); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("... connected in " + (up - start) + " ms ...");
 			// Just in case we fail ...
 			start = up;
 			handle.close();
 			long down = System.currentTimeMillis();
-			System.out.println("... closed in " + (down - start) + " ms."); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("... closed in " + (down - start) + " ms.");
 			return true;
 		} catch (Exception e) {
 			long fail = System.currentTimeMillis();
-			System.out.println("... failed in " + (fail - start) + " ms."); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("... failed in " + (fail - start) + " ms.");
 			return false;
 		}
 	}
@@ -169,7 +169,7 @@ public class RjmxTestCase extends MCTestCase {
 	 */
 	public static void getServerProperties(IConnectionHandle connector, Properties props, String prefix)
 			throws Exception {
-		System.out.println("Retrieving system properties (prefixed with '" + prefix + "') ..."); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("Retrieving system properties (prefixed with '" + prefix + "') ...");
 		MBeanServerConnection server = connector.getServiceOrThrow(MBeanServerConnection.class);
 		Map<String, String> systemProperties = ConnectionToolkit.getRuntimeBean(server).getSystemProperties();
 		if (systemProperties != null) {
@@ -177,7 +177,7 @@ public class RjmxTestCase extends MCTestCase {
 				props.setProperty(prefix + e.getKey(), e.getValue());
 			}
 		} else {
-			System.out.println("Could not retrieve system properties"); //$NON-NLS-1$
+			System.out.println("Could not retrieve system properties");
 		}
 	}
 
@@ -193,10 +193,10 @@ public class RjmxTestCase extends MCTestCase {
 	 */
 	public static void getServerProperties(IConnectionDescriptor connDesc, Properties props, String prefix)
 			throws Exception {
-		System.out.println("Connecting to " + connDesc.createJMXServiceURL() + " ..."); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("Connecting to " + connDesc.createJMXServiceURL() + " ...");
 		IConnectionHandle connectionHandle = createConnectionHandle(connDesc);
 		getServerProperties(connectionHandle, props, prefix);
-		System.out.println("Disconnecting ..."); //$NON-NLS-1$
+		System.out.println("Disconnecting ...");
 		connectionHandle.close();
 	}
 
@@ -220,7 +220,7 @@ public class RjmxTestCase extends MCTestCase {
 	 */
 	private static IConnectionHandle createConnectionHandle(IConnectionDescriptor descriptor)
 			throws IOException, FailedLoginException, ConnectionException {
-		return IServerHandle.create(descriptor).connect("Test"); //$NON-NLS-1$
+		return IServerHandle.create(descriptor).connect("Test");
 	}
 
 	/**
@@ -263,22 +263,22 @@ public class RjmxTestCase extends MCTestCase {
 	}
 
 	protected void assumeHotSpot8OrLater(IConnectionHandle handle) {
-		Assume.assumeTrue("This test assumes JDK 8 (HotSpot 25) or later!", ConnectionToolkit.isHotSpot(handle) //$NON-NLS-1$
+		Assume.assumeTrue("This test assumes JDK 8 (HotSpot 25) or later!", ConnectionToolkit.isHotSpot(handle)
 				&& ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JDK_8));
 	}
 
 	protected void assumeHotSpot7u4OrLater(IConnectionHandle handle) {
-		Assume.assumeTrue("This test assumes JDK 7u4 (HotSpot 23) or later!", ConnectionToolkit.isHotSpot(handle) //$NON-NLS-1$
+		Assume.assumeTrue("This test assumes JDK 7u4 (HotSpot 23) or later!", ConnectionToolkit.isHotSpot(handle)
 				&& ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JDK_7_U_4));
 	}
 
 	protected void assumeHotSpot7u12OrLater(IConnectionHandle handle) {
-		Assume.assumeTrue("This test assumes JDK 7u12 (HotSpot 24) or later!", ConnectionToolkit.isHotSpot(handle) //$NON-NLS-1$
+		Assume.assumeTrue("This test assumes JDK 7u12 (HotSpot 24) or later!", ConnectionToolkit.isHotSpot(handle)
 				&& ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JDK_7_U_40));
 	}
 
 	protected void assumeHasDiagnosticCommandsService(IConnectionHandle handle) {
-		Assume.assumeTrue("This test needs a working diagnostic commands service!", //$NON-NLS-1$
+		Assume.assumeTrue("This test needs a working diagnostic commands service!",
 				handle.hasService(IDiagnosticCommandService.class));
 	}
 }

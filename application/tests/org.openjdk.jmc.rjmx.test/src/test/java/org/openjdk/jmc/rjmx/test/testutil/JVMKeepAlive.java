@@ -53,8 +53,8 @@ public class JVMKeepAlive {
 	private static int m_aliveTime;
 	private static long m_startTime = System.currentTimeMillis();
 	public static final int DEFAULT_KILL_PORT = 4713;
-	public static final byte[] KILL_MESSAGE = "KILL".getBytes(); //$NON-NLS-1$
-	private static final String PROPERTY_KILL_PORT = "jmc.test.kill.port"; //$NON-NLS-1$
+	public static final byte[] KILL_MESSAGE = "KILL".getBytes();
+	private static final String PROPERTY_KILL_PORT = "jmc.test.kill.port";
 
 	/**
 	 * Small server that listens for datagram packets on the specified port and kills the JVM when
@@ -76,8 +76,8 @@ public class JVMKeepAlive {
 			} catch (NumberFormatException nfe) {
 				port = DEFAULT_KILL_PORT;
 			}
-			System.out.println(buildClassNamePrefix(JVMKeepAliveSlayer.class) + "Send kill command to port " + port //$NON-NLS-1$
-					+ " to kill me."); //$NON-NLS-1$
+			System.out.println(buildClassNamePrefix(JVMKeepAliveSlayer.class) + "Send kill command to port " + port
+					+ " to kill me.");
 
 			try {
 				try (DatagramSocket s = new DatagramSocket(port)) {
@@ -89,7 +89,7 @@ public class JVMKeepAlive {
 			} catch (IOException e) {
 				System.out.println(buildClassNamePrefix(JVMKeepAliveSlayer.class) + e.getMessage());
 				System.out.println(buildClassNamePrefix(JVMKeepAliveSlayer.class)
-						+ "Proceeding without JRockitKeepAliveSlayer..."); //$NON-NLS-1$
+						+ "Proceeding without JRockitKeepAliveSlayer...");
 				return;
 			}
 		}
@@ -97,7 +97,7 @@ public class JVMKeepAlive {
 	}
 
 	private static String buildClassNamePrefix(Class<?> clazz) {
-		return '[' + clazz.getName() + "] "; //$NON-NLS-1$
+		return '[' + clazz.getName() + "] ";
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class JVMKeepAlive {
 		Thread t = new Thread(new JVMKeepAliveSlayer(), buildClassNamePrefix(JVMKeepAliveSlayer.class));
 		t.start();
 
-		System.out.println(buildClassNamePrefix(JVMKeepAlive.class) + "Started..."); //$NON-NLS-1$
+		System.out.println(buildClassNamePrefix(JVMKeepAlive.class) + "Started...");
 
 		while (m_aliveTime == 0 || (System.currentTimeMillis() - m_startTime) / 1000 <= m_aliveTime) {
 			try {

@@ -54,10 +54,10 @@ public class JfrAttributesTest {
 	@Test
 	public void testGetEventTypes() throws IOException, CouldNotLoadRecordingException {
 		IItemCollection events = RecordingToolkit.getFlightRecording(RecordingToolkit.getRecordings());
-		String typesStr = events.getAggregate(Aggregators.distinctAsString(JfrAttributes.EVENT_TYPE_ID, ", ")); //$NON-NLS-1$
+		String typesStr = events.getAggregate(Aggregators.distinctAsString(JfrAttributes.EVENT_TYPE_ID, ", "));
 		
 		IAggregator<Set<IType<?>>, ?> distinct = Aggregators.distinct(JfrAttributes.EVENT_TYPE);
 		Set<IType<?>> types = events.getAggregate(distinct);
-		assertEquals(types.size(), typesStr.split(",").length); //$NON-NLS-1$
+		assertEquals(types.size(), typesStr.split(",").length);
 	}
 }

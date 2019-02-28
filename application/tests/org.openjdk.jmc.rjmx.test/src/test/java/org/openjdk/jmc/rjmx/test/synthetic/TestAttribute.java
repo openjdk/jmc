@@ -40,7 +40,7 @@ import org.openjdk.jmc.rjmx.subscription.internal.AbstractSyntheticAttribute;
  * A synthetic test attribute that can be set and read.
  */
 public class TestAttribute extends AbstractSyntheticAttribute {
-	private String lastValue = "Mission Control <3"; //$NON-NLS-1$
+	private String lastValue = "Mission Control <3";
 
 	@Override
 	public Object getValue(MBeanServerConnection connection) {
@@ -52,7 +52,7 @@ public class TestAttribute extends AbstractSyntheticAttribute {
 		if (value == null || value instanceof String) {
 			lastValue = (String) value;
 		} else {
-			throw new AssertionError(String.format("The value was not a String! (%s)", value.getClass())); //$NON-NLS-1$
+			throw new AssertionError(String.format("The value was not a String! (%s)", value.getClass()));
 		}
 	}
 

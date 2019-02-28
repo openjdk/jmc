@@ -51,7 +51,7 @@ public class TestDefaultTransformRegistry {
 	@Test
 	public void testHasPendingTransforms() throws FileNotFoundException, XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXML("HasPendingTransforms")); //$NON-NLS-1$
+				.from(TestToolkit.getProbesXML("HasPendingTransforms"));
 		assertNotNull(registry);
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
 	}
@@ -59,14 +59,14 @@ public class TestDefaultTransformRegistry {
 	@Test
 	public void testFrom() throws FileNotFoundException, XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXML("From")); //$NON-NLS-1$
+				.from(TestToolkit.getProbesXML("From"));
 		assertNotNull(registry);
 	}
 
 	@Test
 	public void testGetTransformData() throws FileNotFoundException, XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXML("GetTransformData")); //$NON-NLS-1$
+				.from(TestToolkit.getProbesXML("GetTransformData"));
 		assertNotNull(registry);
 		List<TransformDescriptor> transformData = registry.getTransformData(Type.getInternalName(InstrumentMe.class));
 		assertNotNull(transformData);

@@ -36,13 +36,13 @@ package org.openjdk.jmc.rjmx.test.testutil;
  * Toolkit for testing related methods.
  */
 public class TestToolkit {
-	public final static String PROPERTY_TESTS_QUIET = "jmc.test.rjmx.quiet"; //$NON-NLS-1$
+	public final static String PROPERTY_TESTS_QUIET = "jmc.test.rjmx.quiet";
 
 	static {
 		String quiet = System.getProperty(PROPERTY_TESTS_QUIET);
 		// If unset, use quiet as default.
 		if (quiet == null) {
-			System.setProperty(PROPERTY_TESTS_QUIET, "true"); //$NON-NLS-1$
+			System.setProperty(PROPERTY_TESTS_QUIET, "true");
 		}
 	}
 

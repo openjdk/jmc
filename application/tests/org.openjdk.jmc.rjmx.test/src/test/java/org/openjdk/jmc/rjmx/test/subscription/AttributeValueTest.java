@@ -112,12 +112,12 @@ public class AttributeValueTest extends RjmxTestCase {
 
 	private static List<MRI> createCommonAttributesList(IConnectionHandle connectionHandle) {
 		List<MRI> fetchList = new ArrayList<>();
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad")); //$NON-NLS-1$ //$NON-NLS-2$
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad")); //$NON-NLS-1$ //$NON-NLS-2$
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"TotalPhysicalMemorySize")); //$NON-NLS-1$
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"UsedPhysicalMemorySize")); //$NON-NLS-1$
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad"));
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"TotalPhysicalMemorySize"));
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"UsedPhysicalMemorySize"));
 		return fetchList;
 	}
 }

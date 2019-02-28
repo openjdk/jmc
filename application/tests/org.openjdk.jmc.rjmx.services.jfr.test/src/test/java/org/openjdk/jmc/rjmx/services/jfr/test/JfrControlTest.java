@@ -91,7 +91,7 @@ public class JfrControlTest extends JfrTestCase {
 
 		IQuantity duration = MILLISECOND.quantity(5000);
 		Random rnd = new Random();
-		String name = "test_recording_" + rnd.nextInt() % 4711; //$NON-NLS-1$
+		String name = "test_recording_" + rnd.nextInt() % 4711;
 		IFlightRecorderService service = getFlightRecorderService();
 		IConstrainedMap<String> recordingOptions = new RecordingOptionsBuilder(service).name(name).duration(duration)
 				.build();
@@ -101,7 +101,7 @@ public class JfrControlTest extends JfrTestCase {
 		assertNotNull(durationOption);
 		assertSame(duration, (IQuantity) durationOption);
 		assertEquals(IRecordingDescriptor.RecordingState.RUNNING, recording.getState());
-		System.out.println("Started " + recording.getName()); //$NON-NLS-1$
+		System.out.println("Started " + recording.getName());
 		assertEquals(name, recording.getName());
 
 		service.stop(recording);
@@ -113,7 +113,7 @@ public class JfrControlTest extends JfrTestCase {
 			Thread.sleep(1000);
 		}
 		assertEquals(IRecordingDescriptor.RecordingState.STOPPED, recording.getState());
-		System.out.println("Stopped " + recording.getName()); //$NON-NLS-1$
+		System.out.println("Stopped " + recording.getName());
 		service.close(recording);
 		recording = service.getUpdatedRecordingDescription(recording);
 		assertNull(recording);
@@ -142,7 +142,7 @@ public class JfrControlTest extends JfrTestCase {
 		while ((lastRead = stream.read(bytes)) != -1) {
 			read += lastRead;
 		}
-		assertMin("Should have read something!", 1, read); //$NON-NLS-1$
+		assertMin("Should have read something!", 1, read);
 		stream.close();
 		stopRecording(recording);
 	}

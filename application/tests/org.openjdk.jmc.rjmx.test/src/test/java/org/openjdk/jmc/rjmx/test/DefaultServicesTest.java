@@ -51,23 +51,23 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 
 	@Test
 	public void testMBeanServerConnection() throws Exception {
-		IConnectionHandle handle = getDefaultServer().connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = getDefaultServer().connect("Test");
 		MBeanServerConnection connection = handle.getServiceOrThrow(MBeanServerConnection.class);
 
 		String[] domains = connection.getDomains();
 		assertNotNull(connection.getDomains());
 		// At least java.lang, no matter what, or we're breaking J2SE compliance...
 		for (String domain : domains) {
-			if (domain.equals("java.lang")) { //$NON-NLS-1$
+			if (domain.equals("java.lang")) {
 				return;
 			}
 		}
-		fail("Could not find java.lang.management among the domains!"); //$NON-NLS-1$
+		fail("Could not find java.lang.management among the domains!");
 	}
 
 	@Test
 	public void xtestMBeanHelperService() throws Exception {
-		IConnectionHandle handle = getDefaultServer().connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = getDefaultServer().connect("Test");
 		IMBeanHelperService helper = handle.getServiceOrThrow(IMBeanHelperService.class);
 
 		// FIXME: JMC-4270 - Server time approximation is not reliable. Disabling until a solution is found.
@@ -75,12 +75,12 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 //
 //		// The server time calculations should not be this much off.
 //		long diff = time - helper.getApproximateServerTime(time);
-//		assertLessThan("Server time approximation off by more than five seconds", 5000L, Math.abs(diff)); //$NON-NLS-1$
-//		System.out.println("DefaultServicesTest.testMBeanHelperService(): Server time approximation difference = " //$NON-NLS-1$
-//				+ Math.abs(diff) + " ms"); //$NON-NLS-1$
+//		assertLessThan("Server time approximation off by more than five seconds", 5000L, Math.abs(diff));
+//		System.out.println("DefaultServicesTest.testMBeanHelperService(): Server time approximation difference = "
+//				+ Math.abs(diff) + " ms");
 
 		// Should at least contain the java.lang mbeans. Just testing for the Threading one.
-		assertTrue("Could not find the Threading MBean!", helper.getMBeanNames().contains( //$NON-NLS-1$
-				new ObjectName("java.lang:type=Threading"))); //$NON-NLS-1$
+		assertTrue("Could not find the Threading MBean!", helper.getMBeanNames().contains(
+				new ObjectName("java.lang:type=Threading")));
 	}
 }

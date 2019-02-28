@@ -65,7 +65,7 @@ public class MockCollections {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
 			builder.append(formatter.format(values[i]));
-			builder.append("\n"); //$NON-NLS-1$
+			builder.append("\n");
 		}
 		return builder.toString();
 	}

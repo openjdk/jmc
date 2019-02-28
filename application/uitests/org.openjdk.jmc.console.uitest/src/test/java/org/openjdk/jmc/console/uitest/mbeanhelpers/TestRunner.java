@@ -58,7 +58,7 @@ public abstract class TestRunner extends Thread {
 	public void stopRunning() {
 		loopRun(false);
 		runLast();
-		System.out.println("Stopping " + this.getClass().getName()); //$NON-NLS-1$
+		System.out.println("Stopping " + this.getClass().getName());
 	}
 
 	public void setArgs(String[] args) {
@@ -80,7 +80,7 @@ public abstract class TestRunner extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("Starting " + this.getClass().getName()); //$NON-NLS-1$
+		System.out.println("Starting " + this.getClass().getName());
 		runFirst();
 		while (loopRun) {
 			runLoop();

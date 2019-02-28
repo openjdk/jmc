@@ -75,7 +75,7 @@ public class RenderingPerformanceTester {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("Adding value!"); //$NON-NLS-1$
+			System.out.println("Adding value!");
 			if (m_adder != null) {
 				m_adder.doStep();
 			}
@@ -86,7 +86,7 @@ public class RenderingPerformanceTester {
 		 */
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("Entered graph!"); //$NON-NLS-1$
+			System.out.println("Entered graph!");
 		}
 
 		/**
@@ -94,7 +94,7 @@ public class RenderingPerformanceTester {
 		 */
 		@Override
 		public void mouseExited(MouseEvent e) {
-			System.out.println("Exited graph!"); //$NON-NLS-1$
+			System.out.println("Exited graph!");
 		}
 
 	}
@@ -114,7 +114,7 @@ public class RenderingPerformanceTester {
 		SAW_DATA = new TimestampDataSeries();
 		provider.addDataSeries(SAW_DATA);
 		provider.addDataSeries(SINUS_DATA);
-		String title = "Mode: "; //$NON-NLS-1$
+		String title = "Mode: ";
 		DefaultXYGreyChart<ITimestampedData> graph = new DefaultXYGreyChart<>();
 
 		DefaultYAxis yaxis_left = new DefaultYAxis(graph);
@@ -125,7 +125,7 @@ public class RenderingPerformanceTester {
 		yaxis_left.setNumberOfTicks(20);
 		yaxis_left.setAlwaysShowZero(false);
 		yaxis_left.setAutoPadding(0.05);
-		yaxis_left.setTitle("Saw value"); //$NON-NLS-1$
+		yaxis_left.setTitle("Saw value");
 		yaxis_left.setPosition(Position.LEFT);
 		yaxis_right.setMin(MIN_Y);
 		yaxis_right.setMax(MAX_Y);
@@ -133,7 +133,7 @@ public class RenderingPerformanceTester {
 		yaxis_right.setNumberOfTicks(20);
 		yaxis_right.setAlwaysShowZero(false);
 		yaxis_right.setAutoPadding(0.05);
-		yaxis_right.setTitle("Sine value"); //$NON-NLS-1$
+		yaxis_right.setTitle("Sine value");
 		yaxis_right.setPosition(Position.RIGHT);
 //		yaxis.setVisible(false);
 //		xaxis.setVisible(false);
@@ -151,17 +151,17 @@ public class RenderingPerformanceTester {
 		graph.addYAxis(yaxis_left);
 		graph.addYAxis(yaxis_right);
 
-		graph.getXAxis().setTitle("Time"); //$NON-NLS-1$
+		graph.getXAxis().setTitle("Time");
 
 		panel = new GreyChartPanel(graph);
 		graph.setIndexRenderer(new DefaultVerticalIndexRenderer(graph));
 		panel.setBackground(new Color(240, 240, 240));
 
-		if (set.contains("gradient")) { //$NON-NLS-1$
-			title += "gradient "; //$NON-NLS-1$
+		if (set.contains("gradient")) {
+			title += "gradient ";
 		}
-		if (set.contains("fill")) { //$NON-NLS-1$
-			title += "fill "; //$NON-NLS-1$
+		if (set.contains("fill")) {
+			title += "fill ";
 		}
 //		if (set.contains("averaging")) {
 //			((DefaultXYLineRenderer) graph.getSeriesPlotRenderer())
@@ -174,7 +174,7 @@ public class RenderingPerformanceTester {
 //		}
 
 		panel.addMouseListener(new MyMouseListener());
-		panel.setName("rendering performance"); //$NON-NLS-1$
+		panel.setName("rendering performance");
 		panel.setBackground(Color.WHITE);
 		panel.getChart().getPlotRenderer().setBackground(Color.LIGHT_GRAY);
 		graph.setAntialiasingEnabled(false);

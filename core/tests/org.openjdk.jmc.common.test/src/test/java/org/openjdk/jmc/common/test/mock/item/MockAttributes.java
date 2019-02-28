@@ -40,14 +40,14 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 
 @SuppressWarnings("nls")
 public class MockAttributes {
-	public static final String DOUBLE_VALUE_ID = "mock/doubletype"; //$NON-NLS-1$
-	public static final String LONG_INDEX_ID = "mock/index"; //$NON-NLS-1$
+	public static final String DOUBLE_VALUE_ID = "mock/doubletype";
+	public static final String LONG_INDEX_ID = "mock/index";
 	/*
 	 * NOTE: Need to be the same as the actual attribute used in Flight Recorder. Maybe use constant
 	 * from somewhere else? If stacktrace mocking is moved to flightrecorder.test then we could
 	 * perhaps use accessor from there.
 	 */
-	public static final String STACKTRACE_ID = "stackTrace"; //$NON-NLS-1$
+	public static final String STACKTRACE_ID = "stackTrace";
 
 	public static final IAttribute<IQuantity> DOUBLE_VALUE = Attribute.attr(DOUBLE_VALUE_ID, "A double value",
 			UnitLookup.NUMBER);

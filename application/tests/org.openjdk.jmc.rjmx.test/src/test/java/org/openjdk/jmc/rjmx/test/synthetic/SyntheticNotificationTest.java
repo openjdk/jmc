@@ -83,7 +83,7 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		handle = getDefaultServer().connect("Test"); //$NON-NLS-1$
+		handle = getDefaultServer().connect("Test");
 		connection = handle.getServiceOrThrow(MBeanServerConnection.class);
 		gotNotification = false;
 	}
@@ -99,7 +99,7 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 	@Test
 	public void testGetNotificationMetadata() throws InstanceNotFoundException, IntrospectionException,
 			MalformedObjectNameException, ReflectionException, NullPointerException, IOException {
-		MBeanInfo info = connection.getMBeanInfo(new ObjectName("org.openjdk.jmc.test:type=Test")); //$NON-NLS-1$
+		MBeanInfo info = connection.getMBeanInfo(new ObjectName("org.openjdk.jmc.test:type=Test"));
 		assertTrue(info.getNotifications().length > 0);
 	}
 
@@ -109,7 +109,7 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 	@Test
 	public void testCombinedMetadata() throws InstanceNotFoundException, IntrospectionException,
 			MalformedObjectNameException, ReflectionException, NullPointerException, IOException {
-		MBeanInfo info = connection.getMBeanInfo(new ObjectName("org.openjdk.jmc.test:type=Test")); //$NON-NLS-1$
+		MBeanInfo info = connection.getMBeanInfo(new ObjectName("org.openjdk.jmc.test:type=Test"));
 		assertTrue(info.getNotifications().length > 0);
 		assertTrue(info.getAttributes().length > 0);
 	}
@@ -120,7 +120,7 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 	@Test
 	public void testOverloadMetadata() throws InstanceNotFoundException, IntrospectionException,
 			MalformedObjectNameException, ReflectionException, NullPointerException, IOException {
-		MBeanInfo info = connection.getMBeanInfo(new ObjectName("java.lang:type=ClassLoading")); //$NON-NLS-1$
+		MBeanInfo info = connection.getMBeanInfo(new ObjectName("java.lang:type=ClassLoading"));
 		assertTrue(info.getNotifications().length > 0);
 		assertTrue(info.getAttributes().length > 0);
 	}
@@ -131,17 +131,17 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 	@Test
 	public void testShadowMetadata() throws InstanceNotFoundException, IntrospectionException,
 			MalformedObjectNameException, ReflectionException, NullPointerException, IOException {
-		Assume.assumeTrue("FIXME: Shadowing does not work yet!", false); //$NON-NLS-1$
-		MBeanInfo info = connection.getMBeanInfo(new ObjectName("java.lang:type=Memory")); //$NON-NLS-1$
+		Assume.assumeTrue("FIXME: Shadowing does not work yet!", false);
+		MBeanInfo info = connection.getMBeanInfo(new ObjectName("java.lang:type=Memory"));
 		assertTrue(info.getNotifications().length > 0);
 		for (MBeanNotificationInfo notificationInfo : info.getNotifications()) {
-			if (notificationInfo.getName().equals("java.management.memory.collection.threshold.exceeded")) { //$NON-NLS-1$
-				assertTrue("Failed to shadow description", notificationInfo.getDescription().contains("shadow")); //$NON-NLS-1$ //$NON-NLS-2$
-				assertTrue("Got the wrong type:" + notificationInfo.getNotifTypes()[0], "int".equals(notificationInfo //$NON-NLS-1$ //$NON-NLS-2$
+			if (notificationInfo.getName().equals("java.management.memory.collection.threshold.exceeded")) {
+				assertTrue("Failed to shadow description", notificationInfo.getDescription().contains("shadow"));
+				assertTrue("Got the wrong type:" + notificationInfo.getNotifTypes()[0], "int".equals(notificationInfo
 						.getNotifTypes()[0]));
 			} else {
-				assertTrue("Should NOT contain shadow!", !notificationInfo.getDescription().contains("shadow")); //$NON-NLS-1$ //$NON-NLS-2$
-				assertTrue("Should not be int!", !"int".equals(notificationInfo.getNotifTypes()[0])); //$NON-NLS-1$ //$NON-NLS-2$
+				assertTrue("Should NOT contain shadow!", !notificationInfo.getDescription().contains("shadow"));
+				assertTrue("Should not be int!", !"int".equals(notificationInfo.getNotifTypes()[0]));
 			}
 		}
 	}
@@ -151,16 +151,16 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 			NullPointerException, IOException, InterruptedException, ListenerNotFoundException {
 		Notification notif = null;
 		SyntheticNotificationListener listener = new SyntheticNotificationListener();
-		ObjectName testMBean = new ObjectName("org.openjdk.jmc.test:type=Test"); //$NON-NLS-1$
+		ObjectName testMBean = new ObjectName("org.openjdk.jmc.test:type=Test");
 		connection.addNotificationListener(testMBean, listener, null, null);
 		synchronized (this) {
 			this.wait(30000);
 			notif = listener.getLastNotification();
 		}
-		assertTrue("Never got any notification!", gotNotification); //$NON-NLS-1$
+		assertTrue("Never got any notification!", gotNotification);
 		assertNotNull(notif);
-		assertTrue("Expected a user data > 0!", ((Integer) notif.getUserData()) > 0); //$NON-NLS-1$
-		assertTrue("Expected Woho!", notif.getMessage().startsWith("Woho!")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue("Expected a user data > 0!", ((Integer) notif.getUserData()) > 0);
+		assertTrue("Expected Woho!", notif.getMessage().startsWith("Woho!"));
 		connection.removeNotificationListener(testMBean, listener, null, null);
 	}
 }

@@ -49,12 +49,12 @@ public class JmxOperatingSystemTest extends RjmxTestCase {
 	public void testGetCPULoad() {
 		try {
 			Object data = getMBeanServerConnection().getAttribute(ConnectionToolkit.OPERATING_SYSTEM_BEAN_NAME,
-					"SystemCpuLoad"); //$NON-NLS-1$
+					"SystemCpuLoad");
 			double cpuLoad = ((Number) data).doubleValue();
 
 			// A negative value is returned if load is not available
-			assertMax("CPU Load", 100.0, cpuLoad); //$NON-NLS-1$
-			TestToolkit.println("CPU Load: " + cpuLoad); //$NON-NLS-1$
+			assertMax("CPU Load", 100.0, cpuLoad);
+			TestToolkit.println("CPU Load: " + cpuLoad);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -64,12 +64,12 @@ public class JmxOperatingSystemTest extends RjmxTestCase {
 	public void testGetCPUJVMLoad() {
 		try {
 			Object data = getMBeanServerConnection().getAttribute(ConnectionToolkit.OPERATING_SYSTEM_BEAN_NAME,
-					"ProcessCpuLoad"); //$NON-NLS-1$
+					"ProcessCpuLoad");
 			double jvmLoad = ((Number) data).doubleValue();
 
 			// A negative value is returned if load is not available
-			assertMax("JVM Load", 100.0, jvmLoad); //$NON-NLS-1$
-			TestToolkit.println("JVM Load: " + jvmLoad); //$NON-NLS-1$
+			assertMax("JVM Load", 100.0, jvmLoad);
+			TestToolkit.println("JVM Load: " + jvmLoad);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -79,9 +79,9 @@ public class JmxOperatingSystemTest extends RjmxTestCase {
 	public void testGetTotalPhysicalMemory() {
 		try {
 			Object data = getMBeanServerConnection().getAttribute(ConnectionToolkit.OPERATING_SYSTEM_BEAN_NAME,
-					"TotalPhysicalMemorySize"); //$NON-NLS-1$
+					"TotalPhysicalMemorySize");
 			long totalPhysicalMemory = ((Number) data).longValue();
-			assertMin("TotalPhysicalMemory", 256 * 1024 * 1024L, totalPhysicalMemory); //$NON-NLS-1$
+			assertMin("TotalPhysicalMemory", 256 * 1024 * 1024L, totalPhysicalMemory);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -91,9 +91,9 @@ public class JmxOperatingSystemTest extends RjmxTestCase {
 	public void testGetUsedPhysicalMemory() {
 		try {
 			Object data = getMBeanServerConnection().getAttribute(ConnectionToolkit.OPERATING_SYSTEM_BEAN_NAME,
-					"UsedPhysicalMemorySize"); //$NON-NLS-1$
+					"UsedPhysicalMemorySize");
 			long usedPhysicalMemory = ((Number) data).longValue();
-			assertMin("UsedPhysicalMemory", 16 * 1024 * 1024L, usedPhysicalMemory); //$NON-NLS-1$
+			assertMin("UsedPhysicalMemory", 16 * 1024 * 1024L, usedPhysicalMemory);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

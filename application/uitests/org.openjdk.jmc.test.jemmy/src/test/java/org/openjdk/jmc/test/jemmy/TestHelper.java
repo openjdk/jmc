@@ -50,7 +50,7 @@ import org.openjdk.jmc.ui.WorkbenchToolkit;
 public class TestHelper {
 
 	public static File createResultFile(String prefix, String suffix, boolean deleteTempOnExit) throws IOException {
-		String resultDir = System.getProperty("results.dir"); //$NON-NLS-1$
+		String resultDir = System.getProperty("results.dir");
 		File resultFile;
 		if (resultDir != null) {
 			resultFile = new File(resultDir, prefix + '.' + System.currentTimeMillis() + '.' + suffix);
@@ -70,7 +70,7 @@ public class TestHelper {
 			robot = new Robot();
 			BufferedImage screenShot = robot
 					.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			ImageIO.write(screenShot, "PNG", TestHelper.createResultFile(name, "dump.png", false)); //$NON-NLS-1$ //$NON-NLS-2$
+			ImageIO.write(screenShot, "PNG", TestHelper.createResultFile(name, "dump.png", false));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (AWTException e) {

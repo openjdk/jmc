@@ -63,13 +63,13 @@ public class ContentTypeTest extends MCTestCase {
 
 	static public void assertContains(String expectedSubStr, String actual) {
 		if (!actual.contains(expectedSubStr)) {
-			fail("expected to contain:<" + expectedSubStr + "> did not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fail("expected to contain:<" + expectedSubStr + "> did not:<" + actual + ">");
 		}
 	}
 
 	static public void assertNotContain(String unexpectedSubStr, String actual) {
 		if (actual.contains(unexpectedSubStr)) {
-			fail("didn't expect to contain:<" + unexpectedSubStr + "> did:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fail("didn't expect to contain:<" + unexpectedSubStr + "> did:<" + actual + ">");
 		}
 	}
 

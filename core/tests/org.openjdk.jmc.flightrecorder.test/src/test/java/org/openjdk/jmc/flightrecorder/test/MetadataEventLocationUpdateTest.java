@@ -26,8 +26,8 @@ import org.openjdk.jmc.flightrecorder.util.ChunkReader;
 public final class MetadataEventLocationUpdateTest {
 	private static final int CHUNK_COUNT_FLUSH_RECORDINGS = 2;
 	private static final int CHUNK_COUNT_METADATA_RECORDINGS = 1;
-	private static final String[] TYPES_TO_CHECK = {"jdk.GCPhaseParallel", "jdk.CompilerInlining"}; //$NON-NLS-1$ //$NON-NLS-2$
-	private static final String[] TYPES_TO_CHECK_FLUSH = {"jdk.ModuleExport", "jdk.BooleanFlag", "jdk.JavaMonitorWait"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] TYPES_TO_CHECK = {"jdk.GCPhaseParallel", "jdk.CompilerInlining"};
+	private static final String[] TYPES_TO_CHECK_FLUSH = {"jdk.ModuleExport", "jdk.BooleanFlag", "jdk.JavaMonitorWait"};
 
 	private static final long[] EXPECTED_COUNTS_CONTROL = {12584, 7283};
 	private static final long[] EXPECTED_COUNTS_NEW = {27738, 6883};
@@ -37,11 +37,11 @@ public final class MetadataEventLocationUpdateTest {
 
 	private static final int EXPECTED_NUMBER_OF_TYPES_FLUSH_RECORDINGS = 133;
 
-	private static final String RECORDING_METADATA_CONTROL = "metadata_control.jfr"; //$NON-NLS-1$
-	private static final String RECORDING_METADATA_NEW = "metadata_new.jfr"; //$NON-NLS-1$
+	private static final String RECORDING_METADATA_CONTROL = "metadata_control.jfr";
+	private static final String RECORDING_METADATA_NEW = "metadata_new.jfr";
 
-	private static final String RECORDING_FLUSH_METADATA = "flush_metadata.jfr"; //$NON-NLS-1$
-	private static final String RECORDING_FLUSH_INCREMENTAL_METADATA = "flush_incremental_metadata.jfr"; //$NON-NLS-1$
+	private static final String RECORDING_FLUSH_METADATA = "flush_metadata.jfr";
+	private static final String RECORDING_FLUSH_INCREMENTAL_METADATA = "flush_incremental_metadata.jfr";
 
 	@Test
 	public void testChunkSplitter() throws IOException, CouldNotLoadRecordingException {
@@ -71,7 +71,7 @@ public final class MetadataEventLocationUpdateTest {
 		Set<String> newTypes = newEvents.getAggregate(distinctTypesAggregator);
 		newTypes.removeAll(controlTypes);
 		// The new flush event should be the one remaining
-		assertTrue(newTypes.contains("jdk.Flush")); //$NON-NLS-1$
+		assertTrue(newTypes.contains("jdk.Flush"));
 		assertEquals(1, newTypes.size());
 	}
 

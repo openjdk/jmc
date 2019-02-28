@@ -76,9 +76,9 @@ public class NotificationModelTest extends RjmxTestCase
 		m_notificationRegistry.registerRule(rule, serverGuid);
 		Collection<TriggerRule> rulesList = m_notificationRegistry.getRegisteredRules(serverGuid);
 
-		assertTrue("Failed to register anything at all!", rulesList.size() > 0); //$NON-NLS-1$
+		assertTrue("Failed to register anything at all!", rulesList.size() > 0);
 		TriggerRule regRule = rulesList.iterator().next();
-		assertTrue("Failed rule comparison!", regRule == rule); //$NON-NLS-1$
+		assertTrue("Failed rule comparison!", regRule == rule);
 	}
 
 	/**
@@ -94,18 +94,18 @@ public class NotificationModelTest extends RjmxTestCase
 		String serverGuid = m_connectionHandle.getServerDescriptor().getGUID();
 		m_notificationRegistry.registerRule(rule, serverGuid);
 		m_notificationRegistry.unregisterRule(rule, serverGuid);
-		assertTrue("Failed to unregister rule!", m_notificationRegistry.getRegisteredRules(serverGuid).size() == 0); //$NON-NLS-1$
+		assertTrue("Failed to unregister rule!", m_notificationRegistry.getRegisteredRules(serverGuid).size() == 0);
 	}
 
 	private TriggerRule createTestNotificationRule() throws Exception {
 		assertTrue(m_connectionHandle.isConnected());
 		NotificationTrigger trigger = new NotificationTrigger();
-		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used");
 		IMRIMetadata metadata = getMRIMetadataService().getMetadata(mri);
 		IUnit unit = UnitLookup.getUnitOrNull(metadata.getUnitString());
 		trigger.setAttributeDescriptor(mri);
 		trigger.setValueEvaluator(new ValueEvaluatorNumberMin(unit.quantity(100000)));
-		return new TriggerRule("TestRule", trigger, new NotificationActionCallback(this)); //$NON-NLS-1$
+		return new TriggerRule("TestRule", trigger, new NotificationActionCallback(this));
 	}
 
 	/**

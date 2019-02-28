@@ -182,7 +182,7 @@ public class StacktraceTestToolkit {
 			handleBranch(branch, frameSeparator, indent, traces);
 			Fork endFork = branch.getEndFork();
 			walkStacktraceTree(endFork, frameSeparator, indent + "    ", traces);
-			traces.add(""); //$NON-NLS-1$
+			traces.add("");
 		}
 		return traces;
 	}

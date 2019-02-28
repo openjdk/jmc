@@ -40,16 +40,16 @@ public class JavaVMVersionToolkitTest {
 
 	@Test
 	public void testParseJavaVersion() {
-		assertEquals("1.7", JavaVMVersionToolkit.parseJavaVersion("1.7.0-ea")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals("1.5", JavaVMVersionToolkit.parseJavaVersion("1.5.0_24-b02")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals("1.6", JavaVMVersionToolkit.parseJavaVersion("1.6")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("1.7", JavaVMVersionToolkit.parseJavaVersion("1.7.0-ea"));
+		assertEquals("1.5", JavaVMVersionToolkit.parseJavaVersion("1.5.0_24-b02"));
+		assertEquals("1.6", JavaVMVersionToolkit.parseJavaVersion("1.6"));
 	}
 
 	@Test
 	public void testDecodeJavaversion() {
-		assertEquals("1.5", //$NON-NLS-1$
-				JavaVMVersionToolkit.decodeJavaVersion("R28.0.2-7-134974-1.5.0_24-20100611-1706-windows-x86_64")); //$NON-NLS-1$
-		assertEquals("1.6", JavaVMVersionToolkit //$NON-NLS-1$
-				.decodeJavaVersion("DEBUG-R28.2.0-33-142110-1.6.0_22-20110309-2111-windows-x86_64")); //$NON-NLS-1$
+		assertEquals("1.5",
+				JavaVMVersionToolkit.decodeJavaVersion("R28.0.2-7-134974-1.5.0_24-20100611-1706-windows-x86_64"));
+		assertEquals("1.6", JavaVMVersionToolkit
+				.decodeJavaVersion("DEBUG-R28.2.0-33-142110-1.6.0_22-20110309-2111-windows-x86_64"));
 	}
 }

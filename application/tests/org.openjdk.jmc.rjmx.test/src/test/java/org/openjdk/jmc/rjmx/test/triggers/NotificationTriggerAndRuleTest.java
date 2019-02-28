@@ -87,11 +87,11 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 	@Test
 	public void testUnregisterRule() throws FailedLoginException, IOException {
 		TriggerRule rule = createTestNotificationRule(
-				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad")); //$NON-NLS-1$ //$NON-NLS-2$
+				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		String serverGuid = UUID.randomUUID().toString();
 		m_notificationRegistry.registerRule(rule, serverGuid);
 		m_notificationRegistry.unregisterRule(rule, serverGuid);
-		assertEquals("Failed to remove rule!", m_notificationRegistry.getRegisteredRules(serverGuid).size(), 0); //$NON-NLS-1$
+		assertEquals("Failed to remove rule!", m_notificationRegistry.getRegisteredRules(serverGuid).size(), 0);
 	}
 
 	/**
@@ -108,17 +108,17 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 		String serverGuid = m_connectionHandle.getServerDescriptor().getGUID();
 		m_notificationRegistry.activateTriggersFor(m_connectionHandle);
 		m_notificationRegistry.registerRule(rule, serverGuid);
-		assertEquals("Didn't register rule!", 1, m_notificationRegistry.getRegisteredRules(serverGuid).size()); //$NON-NLS-1$
+		assertEquals("Didn't register rule!", 1, m_notificationRegistry.getRegisteredRules(serverGuid).size());
 		synchronized (m_notifObj) {
 
 			try {
 				m_notifObj.wait(TIMEOUT);
 			} catch (InterruptedException e) {
-				fail("Timedout while waiting for notification!"); //$NON-NLS-1$
+				fail("Timedout while waiting for notification!");
 			}
 		}
 		m_notificationRegistry.unregisterRule(rule, serverGuid);
-		assertNotNull("Never received any notification!", m_lastEvent); //$NON-NLS-1$
+		assertNotNull("Never received any notification!", m_lastEvent);
 	}
 
 	/**
@@ -136,22 +136,22 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 		assertTrue(!aRule.isComplete());
 
 		TriggerRule anotherRule = createTestNotificationRule(
-				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad")); //$NON-NLS-1$ //$NON-NLS-2$
+				new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		assertTrue(anotherRule.hasAction());
 		assertTrue(!anotherRule.hasConstraints());
 		assertTrue(anotherRule.hasTrigger());
 		assertTrue(anotherRule.isComplete());
-		assertEquals("TestRule", anotherRule.toString()); //$NON-NLS-1$
-		assertEquals("TestRule", anotherRule.getName()); //$NON-NLS-1$
+		assertEquals("TestRule", anotherRule.toString());
+		assertEquals("TestRule", anotherRule.getName());
 
-		aRule.setName("Abrakadabra"); //$NON-NLS-1$
+		aRule.setName("Abrakadabra");
 		// Test sorting
 		assertTrue(aRule.compareTo(anotherRule) < 0);
 	}
 
 	private TriggerRule createTestNotificationRule(MRI descriptor) {
 		NotificationTrigger trigger = new NotificationTrigger(descriptor, new ValueEvaluatorBoolean());
-		return new TriggerRule("TestRule", trigger, new NotificationActionCallback(this)); //$NON-NLS-1$
+		return new TriggerRule("TestRule", trigger, new NotificationActionCallback(this));
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 	@Override
 	public void onNotificationAction(TriggerEvent e) {
 		synchronized (m_notifObj) {
-			TestToolkit.println("Got a callback: " + e); //$NON-NLS-1$
+			TestToolkit.println("Got a callback: " + e);
 			m_lastEvent = e;
 			m_notifObj.notify();
 		}
@@ -174,8 +174,8 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 	 * @throws IOException
 	 */
 	protected TriggerRule createRule() throws Exception {
-		MRI uptimeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", //$NON-NLS-1$
-				"Uptime"); //$NON-NLS-1$
+		MRI uptimeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime",
+				"Uptime");
 		long uptime = ConnectionToolkit.getRuntimeBean(getMBeanServerConnection()).getUptime();
 		IMRIMetadata metadata = getMRIMetadataService().getMetadata(uptimeDescriptor);
 		IUnit unit = UnitLookup.getUnitOrDefault(metadata.getUnitString());

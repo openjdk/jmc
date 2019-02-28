@@ -49,7 +49,7 @@ public class PropertyTestAttribute extends AbstractSyntheticAttribute implements
 
 	@Override
 	public void setValue(MBeanServerConnection connection, Object value) {
-		throw new AssertionError("Not writeable!"); //$NON-NLS-1$
+		throw new AssertionError("Not writeable!");
 	}
 
 	@Override

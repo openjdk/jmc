@@ -117,7 +117,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 	// @jmx.mbean.description("Abstract Webservice deployer")
 	// @javax.management.ManagedAttribute
 	public Testable() {
-		this("Hello there"); //$NON-NLS-1$
+		this("Hello there");
 	}
 
 	public Testable(String s) {
@@ -168,7 +168,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 		_long = Long.valueOf(Long.MAX_VALUE);
 		nullLong = null;
 
-		bigInteger = new BigInteger("123456789012345678901234567890"); //$NON-NLS-1$
+		bigInteger = new BigInteger("123456789012345678901234567890");
 		nullBigInteger = null;
 
 		primitiveFloat = Float.MIN_VALUE;
@@ -179,7 +179,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 		_double = Double.valueOf(Math.PI);
 		nullDouble = null;
 
-		string = "Hello there"; //$NON-NLS-1$
+		string = "Hello there";
 		nullString = null;
 
 		primitiveArray = new int[] {1, 2, 3};
@@ -192,28 +192,28 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 		}
 		nullStringArray = null;
 
-		multiArray = new String[][] {{"1-1", "1-2", "1-3"}, {"2-2", "2-3"}, {null}, null}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		multiArray = new String[][] {{"1-1", "1-2", "1-3"}, {"2-2", "2-3"}, {null}, null};
 		nullMultiArray = null;
 
-		collection = Arrays.asList("one", "two", "three"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		collection = Arrays.asList("one", "two", "three");
 		map = new Hashtable<>();
-		map.put("one", Integer.valueOf(1)); //$NON-NLS-1$
-		map.put("two", Integer.valueOf(2)); //$NON-NLS-1$
-		map.put("three", Integer.valueOf(3)); //$NON-NLS-1$
+		map.put("one", Integer.valueOf(1));
+		map.put("two", Integer.valueOf(2));
+		map.put("three", Integer.valueOf(3));
 		largeMap = new Hashtable<>();
 		for (int i = 0; i < 256; i += 1) {
-			largeMap.put("nr_" + i, Integer.valueOf(i)); //$NON-NLS-1$
+			largeMap.put("nr_" + i, Integer.valueOf(i));
 		}
 
-		editableObjectArray = new Object[] {1, Float.valueOf(1.5f), "two", null}; //$NON-NLS-1$
+		editableObjectArray = new Object[] {1, Float.valueOf(1.5f), "two", null};
 		editableCollection = new ArrayList<>();
 		editableCollection.add(1);
 		editableCollection.add(Float.valueOf(1.5f));
-		editableCollection.add("two"); //$NON-NLS-1$
+		editableCollection.add("two");
 		editableMap = new Hashtable<>();
 		editableMap.put(0, 1);
 		editableMap.put(1, Float.valueOf(1.5f));
-		editableMap.put(2, "two"); //$NON-NLS-1$
+		editableMap.put(2, "two");
 	}
 
 	// Boolean
@@ -723,9 +723,9 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 	@Override
 	public Collection<Object> getReadOnlyObjectCollection() {
 		Collection<Object> c = new ArrayList<>();
-		c.add("one"); //$NON-NLS-1$
-		c.add("two"); //$NON-NLS-1$
-		c.add("three"); //$NON-NLS-1$
+		c.add("one");
+		c.add("two");
+		c.add("three");
 		return c;
 	}
 
@@ -772,7 +772,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 
 	@Override
 	public TestContainer getUneditableTestContainer() {
-		return new TestContainer(new String[] {"this", "is", "an", "opaque", "object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		return new TestContainer(new String[] {"this", "is", "an", "opaque", "object"});
 	}
 
 	@Override
@@ -827,9 +827,9 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 				long oldLastTime = lastTime;
 				lastTime = System.currentTimeMillis();
 //				System.out.println("Current time: " + getAliveTime());
-				sendNotification(new AttributeChangeNotification(this, sequenceNumber++, lastTime, "Update", //$NON-NLS-1$
-						"AliveTime", "long", Long.valueOf(oldLastTime - startTime), //$NON-NLS-1$ //$NON-NLS-2$
-						Long.valueOf(lastTime - startTime))); //$NON-NLS-1$ //$NON-NLS-2$
+				sendNotification(new AttributeChangeNotification(this, sequenceNumber++, lastTime, "Update",
+						"AliveTime", "long", Long.valueOf(oldLastTime - startTime),
+						Long.valueOf(lastTime - startTime)));
 				try {
 					wait(Math.max(1, updateTime));
 				} catch (InterruptedException e) {
@@ -867,7 +867,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 	@Override
 	public boolean killExistingHelloMBean(String name) {
 		try {
-			ObjectName mbeanName = new ObjectName("SimpleAgent:name=" + name); //$NON-NLS-1$
+			ObjectName mbeanName = new ObjectName("SimpleAgent:name=" + name);
 			ManagementFactory.getPlatformMBeanServer().unregisterMBean(mbeanName);
 			return true;
 		} catch (Exception e) {
@@ -882,7 +882,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 		ObjectName mbeanName = null;
 
 		try {
-			mbeanName = new ObjectName("SimpleAgent:name=" + name + ',' + type); //$NON-NLS-1$
+			mbeanName = new ObjectName("SimpleAgent:name=" + name + ',' + type);
 			ManagementFactory.getPlatformMBeanServer().registerMBean(test, mbeanName);
 			return true;
 		} catch (Exception e) {
@@ -894,7 +894,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 
 	@Override
 	public boolean startNewHelloMBean(String name) {
-		return startNewHelloMBeanWithType(name, "type=added"); //$NON-NLS-1$
+		return startNewHelloMBeanWithType(name, "type=added");
 	}
 
 	@Override
@@ -916,7 +916,7 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 	public MBeanNotificationInfo[] getNotificationInfo() {
 		String[] types = new String[] {AttributeChangeNotification.ATTRIBUTE_CHANGE};
 		String name = AttributeChangeNotification.class.getName();
-		String description = "An attribute of this MBean has changed"; //$NON-NLS-1$
+		String description = "An attribute of this MBean has changed";
 		MBeanNotificationInfo info = new MBeanNotificationInfo(types, name, description);
 		return new MBeanNotificationInfo[] {info};
 	}

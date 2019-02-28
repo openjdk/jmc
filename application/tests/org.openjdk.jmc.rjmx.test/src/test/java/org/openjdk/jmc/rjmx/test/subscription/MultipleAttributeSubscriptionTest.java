@@ -55,12 +55,12 @@ public class MultipleAttributeSubscriptionTest extends RjmxTestCase implements I
 	 */
 	@Test
 	public void testMultipleSubscriptions() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		ISubscriptionService service = handle.getServiceOrThrow(ISubscriptionService.class);
 
-		MRI cpuAttributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI cpuAttributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad");
 		service.addMRIValueListener(cpuAttributeDescriptor, this);
-		MRI loadAttributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI loadAttributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad");
 		service.addMRIValueListener(loadAttributeDescriptor, this);
 
 		synchronized (this) {

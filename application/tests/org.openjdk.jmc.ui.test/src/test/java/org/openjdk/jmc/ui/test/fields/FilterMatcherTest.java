@@ -50,37 +50,37 @@ public class FilterMatcherTest {
 
 	@Test
 	public void testMatch() throws Exception {
-		assertTrue(match("", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("foo", "")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("", "foo")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(match("", ""));
+		assertFalse(match("foo", ""));
+		assertFalse(match("", "foo"));
 
-		assertTrue(match("foo", "foo")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("foo", "bar")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(match("foo", "foo"));
+		assertFalse(match("foo", "bar"));
 
-		assertTrue(match("foo", "f?o")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("f?o", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("???", "foo")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(match("foo", "f?o"));
+		assertTrue(match("foo", "???"));
+		assertTrue(match("f?o", "???"));
+		assertFalse(match("???", "foo"));
 
-		assertTrue(match("", "*")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("", "**")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "*")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "**")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "*foo*")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "**f**o**o**")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("barfoobar", "*foo*")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(match("", "*"));
+		assertTrue(match("", "**"));
+		assertTrue(match("foo", "*"));
+		assertTrue(match("foo", "**"));
+		assertTrue(match("foo", "*foo*"));
+		assertTrue(match("foo", "**f**o**o**"));
+		assertTrue(match("barfoobar", "*foo*"));
 
-		assertTrue(matchCaseUnsensitive("fOo", "foO")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(matchCaseUnsensitive("fOo", "foO"));
 	}
 
 	@Test
 	public void testRegexpMatch() throws Exception {
-		assertTrue(match("foo", "regexp:.*")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "regexp:fo.")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("foo", "regexp:f.")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "regexp:.o.")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertFalse(match("foo", "regexp:bo.")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue(match("foo", "regexp: .o.")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(match("foo", "regexp:.*"));
+		assertTrue(match("foo", "regexp:fo."));
+		assertFalse(match("foo", "regexp:f."));
+		assertTrue(match("foo", "regexp:.o."));
+		assertFalse(match("foo", "regexp:bo."));
+		assertTrue(match("foo", "regexp: .o."));
 //		assertFalse(match("foo", "regexp:*"));
 	}
 }

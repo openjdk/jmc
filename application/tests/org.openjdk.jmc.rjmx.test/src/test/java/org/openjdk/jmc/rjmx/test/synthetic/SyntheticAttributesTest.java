@@ -61,43 +61,43 @@ import org.openjdk.jmc.rjmx.subscription.internal.AttributeValueToolkit;
 import org.openjdk.jmc.rjmx.test.ServerHandleTestCase;
 
 public class SyntheticAttributesTest extends ServerHandleTestCase {
-	private final static String NEW_VALUE = "new value"; //$NON-NLS-1$
+	private final static String NEW_VALUE = "new value";
 	protected IConnectionHandle localConnection;
 
 	@Test
 	public void testLookupDomain() throws Exception {
-		assertTrue("Could not find the test domain!", containsDomain("org.openjdk.jmc.test")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue("Could not find the test domain!", containsDomain("org.openjdk.jmc.test"));
 	}
 
 	@Test
 	public void testFindNonSyntheticDomain() throws Exception {
-		assertTrue("Could not find the java.lang domain!", containsDomain("java.lang")); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue("Could not find the java.lang domain!", containsDomain("java.lang"));
 	}
 
 	@Test
 	public void testFindMBean() throws Exception {
 		ObjectName mbean = getSyntheticAttributeDescriptor().getObjectName();
-		assertTrue("Could not find the test mbean!", containsMBean(mbean)); //$NON-NLS-1$
+		assertTrue("Could not find the test mbean!", containsMBean(mbean));
 	}
 
 	@Test
 	public void testFindNonSyntheticMBean() throws Exception {
-		ObjectName mbean = new ObjectName("java.lang:type=Runtime"); //$NON-NLS-1$
-		assertTrue("Could not find the Runtime mbean!", containsMBean(mbean)); //$NON-NLS-1$
+		ObjectName mbean = new ObjectName("java.lang:type=Runtime");
+		assertTrue("Could not find the Runtime mbean!", containsMBean(mbean));
 	}
 
 	@Test
 	public void testGetAttribute() throws Exception {
 		MRI descriptor = getSyntheticAttributeDescriptor();
 		Object value = getAttributeValue(descriptor);
-		assertNotNull("Could not retrieve the attribute value", value); //$NON-NLS-1$
+		assertNotNull("Could not retrieve the attribute value", value);
 	}
 
 	@Test
 	public void testGetCompositeAttribute() throws Exception {
 		MRI descriptor = getCompositeAttributeDescriptor();
 		Object value = getAttributeValue(descriptor);
-		assertNotNull("Could not retrieve the attribute value", value); //$NON-NLS-1$
+		assertNotNull("Could not retrieve the attribute value", value);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		MRI descriptor = getSyntheticAttributeDescriptor();
 		AttributeList list = getAttributeValues(descriptor.getObjectName(), new String[] {descriptor.getDataPath()});
 		Object value = list.get(0);
-		assertNotNull("Could not retrieve the attribute value", value); //$NON-NLS-1$
+		assertNotNull("Could not retrieve the attribute value", value);
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 			names.add(ad.getDataPath());
 		}
 		AttributeList list = getAttributeValues(objectName, names.toArray(new String[descriptors.length]));
-		assertEquals("Could not retrieve all values", descriptors.length, list.size()); //$NON-NLS-1$
+		assertEquals("Could not retrieve all values", descriptors.length, list.size());
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 			names.add(ad.getDataPath());
 		}
 		Collection<Object> list = getAttributeValuesThroughMBeanHelperService(objectName, names);
-		assertEquals("Could not retrieve all values", descriptors.length, list.size()); //$NON-NLS-1$
+		assertEquals("Could not retrieve all values", descriptors.length, list.size());
 	}
 
 	@Test
@@ -137,10 +137,10 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		MRI syntheticDescriptor = getExtendedSyntheticAttributeDescriptor();
 		MRI nonsyntheticDescriptor = getNonSyntheticDescriptor();
 		ObjectName mbean = syntheticDescriptor.getObjectName();
-		assertTrue("Not same MBean", mbean.equals(nonsyntheticDescriptor.getObjectName())); //$NON-NLS-1$
+		assertTrue("Not same MBean", mbean.equals(nonsyntheticDescriptor.getObjectName()));
 		String[] attributes = new String[] {nonsyntheticDescriptor.getDataPath(), syntheticDescriptor.getDataPath()};
 		AttributeList values = getAttributeValues(mbean, attributes);
-		assertTrue("Not two values", values.size() == 2); //$NON-NLS-1$
+		assertTrue("Not two values", values.size() == 2);
 		for (Object attribute : values) {
 			assertNotNull(((Attribute) attribute).getValue());
 		}
@@ -150,7 +150,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 	public void testGetExtendedAttribute() throws Exception {
 		MRI descriptor = getExtendedSyntheticAttributeDescriptor();
 		Object value = getAttributeValue(descriptor);
-		assertNotNull("Could not retrieve the extended attribute value", value); //$NON-NLS-1$
+		assertNotNull("Could not retrieve the extended attribute value", value);
 	}
 
 	@Test
@@ -159,9 +159,9 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		String newValue = NEW_VALUE;
 		String oldValue = (String) getAttributeValue(descriptor);
 		setAttributeValue(descriptor, newValue);
-		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(descriptor)); //$NON-NLS-1$
+		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(descriptor));
 		setAttributeValue(descriptor, oldValue);
-		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(descriptor)); //$NON-NLS-1$
+		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(descriptor));
 	}
 
 	@Test
@@ -170,9 +170,9 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		String newValue = NEW_VALUE;
 		String oldValue = (String) getAttributeValue(descriptor);
 		setAttributeValue(descriptor, newValue);
-		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(descriptor)); //$NON-NLS-1$
+		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(descriptor));
 		setAttributeValue(descriptor, oldValue);
-		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(descriptor)); //$NON-NLS-1$
+		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(descriptor));
 	}
 
 	@Test
@@ -180,11 +180,11 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> values = (Map<String, Object>) getAttributeValue(
 				getPropertiesSyntheticAttributeDescriptor());
-		assertEquals("Gegga", values.get("denominator")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals("Moja", values.get("numerator")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertEquals(100, values.get("someinteger")); //$NON-NLS-1$
-		assertEquals(0.01f, values.get("factor")); //$NON-NLS-1$
-		assertEquals(true, values.get("someboolean")); //$NON-NLS-1$
+		assertEquals("Gegga", values.get("denominator"));
+		assertEquals("Moja", values.get("numerator"));
+		assertEquals(100, values.get("someinteger"));
+		assertEquals(0.01f, values.get("factor"));
+		assertEquals(true, values.get("someboolean"));
 	}
 
 	@Test
@@ -217,11 +217,11 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 
 		setAttributeValues(new MRI[] {synthethicDescriptor, normalDescriptor},
 				new Object[] {newValue, Boolean.valueOf(!value.booleanValue())});
-		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(synthethicDescriptor)); //$NON-NLS-1$
+		assertEquals("Could not set the attribute value!", NEW_VALUE, getAttributeValue(synthethicDescriptor));
 		assertNotSame(value, getAttributeValue(normalDescriptor));
 
 		setAttributeValues(new MRI[] {synthethicDescriptor, normalDescriptor}, new Object[] {oldValue, value});
-		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(synthethicDescriptor)); //$NON-NLS-1$
+		assertEquals("Could not restore old attribute value!", oldValue, getAttributeValue(synthethicDescriptor));
 		assertEquals(value, getAttributeValue(normalDescriptor));
 
 	}
@@ -235,14 +235,14 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		assertTrue(attributeInfo.isReadable());
 		assertTrue(attributeInfo.isWritable());
 		assertFalse(attributeInfo.isIs());
-		assertEquals("java.lang.String", attributeInfo.getType()); //$NON-NLS-1$
+		assertEquals("java.lang.String", attributeInfo.getType());
 	}
 
 	@Test
 	public void testExtendedMetadata() throws Exception {
 		MRI descriptor = getExtendedSyntheticAttributeDescriptor();
 		MBeanInfo info = getMetadata(descriptor);
-		assertTrue(info.getDescription().contains("Extended")); //$NON-NLS-1$
+		assertTrue(info.getDescription().contains("Extended"));
 
 		MBeanAttributeInfo extendedInfo = null;
 		for (MBeanAttributeInfo attr : info.getAttributes()) {
@@ -255,7 +255,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 		assertTrue(attributeInfo.isReadable());
 		assertTrue(attributeInfo.isWritable());
 		assertFalse(attributeInfo.isIs());
-		assertEquals("java.lang.String", attributeInfo.getType()); //$NON-NLS-1$
+		assertEquals("java.lang.String", attributeInfo.getType());
 	}
 
 	private MBeanAttributeInfo findCorresponding(MBeanAttributeInfo[] attributes, MRI descriptor) {
@@ -268,7 +268,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 	}
 
 	private MRI getPropertiesSyntheticAttributeDescriptor() {
-		return MRI.createFromQualifiedName("attribute://org.openjdk.jmc.test:type=Test/Properties"); //$NON-NLS-1$
+		return MRI.createFromQualifiedName("attribute://org.openjdk.jmc.test:type=Test/Properties");
 	}
 
 	private boolean containsMBean(ObjectName mbean) throws Exception {
@@ -279,25 +279,25 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 	}
 
 	private MRI getSyntheticAttributeDescriptor() {
-		return MRI.createFromQualifiedName("attribute://org.openjdk.jmc.test:type=Test/Test"); //$NON-NLS-1$
+		return MRI.createFromQualifiedName("attribute://org.openjdk.jmc.test:type=Test/Test");
 	}
 
 	private MRI getExtendedSyntheticAttributeDescriptor() {
-		return MRI.createFromQualifiedName("attribute://java.lang:type=ClassLoading/Test"); //$NON-NLS-1$
+		return MRI.createFromQualifiedName("attribute://java.lang:type=ClassLoading/Test");
 	}
 
 	private MRI getNonSyntheticDescriptor() {
-		return MRI.createFromQualifiedName("attribute://java.lang:type=ClassLoading/Verbose"); //$NON-NLS-1$
+		return MRI.createFromQualifiedName("attribute://java.lang:type=ClassLoading/Verbose");
 	}
 
 	private MRI getCompositeAttributeDescriptor() {
-		return MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/TotalPhysicalMemorySize"); //$NON-NLS-1$
+		return MRI.createFromQualifiedName("attribute://java.lang:type=OperatingSystem/TotalPhysicalMemorySize");
 	}
 
 	private MRI[] getCombinedAttributeDescriptors() {
-		return new MRI[] {MRI.createFromQualifiedName("attribute://java.lang:type=Memory/HeapMemoryUsage/used"), //$NON-NLS-1$
-				MRI.createFromQualifiedName("attribute://java.lang:type=Memory/NonHeapMemoryUsage/max"), //$NON-NLS-1$
-				MRI.createFromQualifiedName("attribute://java.lang:type=Memory/Verbose")}; //$NON-NLS-1$
+		return new MRI[] {MRI.createFromQualifiedName("attribute://java.lang:type=Memory/HeapMemoryUsage/used"),
+				MRI.createFromQualifiedName("attribute://java.lang:type=Memory/NonHeapMemoryUsage/max"),
+				MRI.createFromQualifiedName("attribute://java.lang:type=Memory/Verbose")};
 	}
 
 	private boolean containsDomain(String checkDomain) throws Exception {
@@ -360,7 +360,7 @@ public class SyntheticAttributesTest extends ServerHandleTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		localConnection = getDefaultServer().connect("Test"); //$NON-NLS-1$
+		localConnection = getDefaultServer().connect("Test");
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class UpdatePolicyTest extends RjmxTestCase implements IMRIValueListener 
 
 	private void helpUpdatePolicyLookup(MRI mri) throws Exception {
 		IUpdatePolicy policy = UpdatePolicyToolkit.getUpdatePolicy(getConnectionHandle(), mri);
-		assertNotNull("Policy is null!", policy); //$NON-NLS-1$
+		assertNotNull("Policy is null!", policy);
 	}
 
 	@Test
@@ -170,11 +170,11 @@ public class UpdatePolicyTest extends RjmxTestCase implements IMRIValueListener 
 	}
 
 	private MRI getExistingAttribute() {
-		return new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "UsedPhysicalMemorySize"); //$NON-NLS-1$ //$NON-NLS-2$
+		return new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "UsedPhysicalMemorySize");
 	}
 
 	private MRI getNonExistingAttribute() {
-		return new MRI(Type.ATTRIBUTE, "this.could.possible.not:really=exist,as=an", "attribute"); //$NON-NLS-1$ //$NON-NLS-2$
+		return new MRI(Type.ATTRIBUTE, "this.could.possible.not:really=exist,as=an", "attribute");
 	}
 
 	@Override

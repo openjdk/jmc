@@ -79,8 +79,8 @@ public class MCTestCase {
 	 */
 	static public void assertMaskedEquals(String message, long expected, long actual, long mask) {
 		if (((expected ^ actual) & mask) != 0) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "masked with " + hex(mask) + " expected:<" + hex(expected) + "> was not:<" + hex(actual) + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "masked with " + hex(mask) + " expected:<" + hex(expected) + "> was not:<" + hex(actual) + ">");
 		}
 	}
 
@@ -92,7 +92,7 @@ public class MCTestCase {
 	}
 
 	protected static String hex(long val) {
-		return "0x" + Long.toHexString(val); //$NON-NLS-1$
+		return "0x" + Long.toHexString(val);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertBetween(String message, T min, T max, T actual) {
 		if ((min.compareTo(actual) > 0) || (max.compareTo(actual) < 0)) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "expected in:[" + min + ", " + max + "] was not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "expected in:[" + min + ", " + max + "] was not:<" + actual + ">");
 		}
 	}
 
@@ -119,8 +119,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertMax(String message, T max, T actual) {
 		if (max.compareTo(actual) < 0) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "expected max:<" + max + "> was not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "expected max:<" + max + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -137,8 +137,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertMin(String message, T min, T actual) {
 		if (min.compareTo(actual) > 0) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "expected min:<" + min + "> was not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "expected min:<" + min + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -155,8 +155,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertLessThan(String message, T greaterVal, T actual) {
 		if (greaterVal.compareTo(actual) <= 0) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "expected less than:<" + greaterVal + "> was not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "expected less than:<" + greaterVal + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -173,8 +173,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<? super T>> void assertGreaterThan(String message, T lesserVal, T actual) {
 		if (lesserVal.compareTo(actual) >= 0) {
-			Assert.fail(((message != null) ? message + ' ' : "") //$NON-NLS-1$
-					+ "expected greater than:<" + lesserVal + "> was not:<" + actual + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Assert.fail(((message != null) ? message + ' ' : "")
+					+ "expected greater than:<" + lesserVal + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -200,22 +200,22 @@ public class MCTestCase {
 	}
 
 	protected void skipIfEarlierThan8u0() {
-		Assume.assumeTrue("This feature is only valid on JDK8u0 or later.", //$NON-NLS-1$
+		Assume.assumeTrue("This feature is only valid on JDK8u0 or later.",
 				(getClientVersion().compareTo(JVMVersion.JDK8)) >= 0);
 	}
 
 	protected void skipIfEarlierThan7u40() {
-		Assume.assumeTrue("This feature is only valid on JDK7u40 or later.", //$NON-NLS-1$
+		Assume.assumeTrue("This feature is only valid on JDK7u40 or later.",
 				(getClientVersion().compareTo(JVMVersion.JDK7u40)) >= 0);
 	}
 
 	protected void skipIfEarlierThan7u4() {
-		Assume.assumeTrue("This feature is only valid on JDK7u4 or later.", //$NON-NLS-1$
+		Assume.assumeTrue("This feature is only valid on JDK7u4 or later.",
 				(getClientVersion().compareTo(JVMVersion.JDK7u4)) >= 0);
 	}
 
 	protected void skipIfEarlierThan7u0() {
-		Assume.assumeTrue("This feature is only valid on JDK7u0 or later.", //$NON-NLS-1$
+		Assume.assumeTrue("This feature is only valid on JDK7u0 or later.",
 				(getClientVersion().compareTo(JVMVersion.JDK7)) >= 0);
 	}
 
@@ -225,10 +225,10 @@ public class MCTestCase {
 	}
 
 	private JVMVersion getClientVersion() {
-		if (JavaVMVersionToolkit.isJRockitJVMName(System.getProperty("java.vm.name"))) { //$NON-NLS-1$
+		if (JavaVMVersionToolkit.isJRockitJVMName(System.getProperty("java.vm.name"))) {
 			return JVMVersion.JRockit;
-		} else if (JavaVMVersionToolkit.isHotspotJVMName(System.getProperty("java.vm.name"))) { //$NON-NLS-1$
-			JavaVersion javaVersion = new JavaVersion(System.getProperty("java.version")); //$NON-NLS-1$
+		} else if (JavaVMVersionToolkit.isHotspotJVMName(System.getProperty("java.vm.name"))) {
+			JavaVersion javaVersion = new JavaVersion(System.getProperty("java.version"));
 			if (javaVersion.isGreaterOrEqualThan(JavaVersionSupport.JDK_8)) {
 				return JVMVersion.JDK8;
 			} else if (javaVersion.isGreaterOrEqualThan(JavaVersionSupport.JDK_7_U_40)) {

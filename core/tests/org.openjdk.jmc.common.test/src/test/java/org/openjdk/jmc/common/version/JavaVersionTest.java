@@ -42,32 +42,32 @@ public class JavaVersionTest {
 
 	@Test
 	public void testJava9NewShortGEQJava9OldVersion() {
-		JavaVersion ver1 = new JavaVersion("9"); //$NON-NLS-1$
-		JavaVersion ver2 = new JavaVersion("1.9.foo"); //$NON-NLS-1$
+		JavaVersion ver1 = new JavaVersion("9");
+		JavaVersion ver2 = new JavaVersion("1.9.foo");
 
 		assertTrue(ver1.isGreaterOrEqualThan(ver2));
 	}
 
 	@Test
 	public void testJava9NewShortEQJava9NewLongSameVersion() {
-		JavaVersion version9 = new JavaVersion("9-ea"); //$NON-NLS-1$
-		JavaVersion version9000 = new JavaVersion("9.0.0.0-ea"); //$NON-NLS-1$
+		JavaVersion version9 = new JavaVersion("9-ea");
+		JavaVersion version9000 = new JavaVersion("9.0.0.0-ea");
 
 		assertTrue(version9000.equals(version9));
 	}
 
 	@Test
 	public void testJava9NewShortWithExtraEQJava9NewLongSameVersion() {
-		JavaVersion version190 = new JavaVersion("9-ea+19-BR-435345"); //$NON-NLS-1$
-		JavaVersion version900 = new JavaVersion("9.0.0.0-ea"); //$NON-NLS-1$
+		JavaVersion version190 = new JavaVersion("9-ea+19-BR-435345");
+		JavaVersion version900 = new JavaVersion("9.0.0.0-ea");
 
 		assertTrue(version900.equals(version190));
 	}
 
 	@Test
 	public void testJava9NewWithExtraGEQJava9OldVersion() {
-		JavaVersion version913 = new JavaVersion("9.1.3.0"); //$NON-NLS-1$
-		JavaVersion version190 = new JavaVersion("1.9.0-ea+19-BR-435345"); //$NON-NLS-1$
+		JavaVersion version913 = new JavaVersion("9.1.3.0");
+		JavaVersion version190 = new JavaVersion("1.9.0-ea+19-BR-435345");
 
 		assertTrue(version913.isGreaterOrEqualThan(version190));
 	}
@@ -78,32 +78,32 @@ public class JavaVersionTest {
 	 */
 	@Test
 	public void testJava9OldVersionGEQJava9NewWithExtra() {
-		JavaVersion version913 = new JavaVersion("9.1.3.0"); //$NON-NLS-1$
-		JavaVersion version192 = new JavaVersion("1.9.2-ea+19-BR-435345"); //$NON-NLS-1$
+		JavaVersion version913 = new JavaVersion("9.1.3.0");
+		JavaVersion version192 = new JavaVersion("1.9.2-ea+19-BR-435345");
 
 		assertTrue(version192.isGreaterOrEqualThan(version913));
 	}
 
 	@Test
 	public void testJava9LongVersionisGreaterOrEqualsJava9ShortVersion() {
-		JavaVersion version9 = new JavaVersion("9"); //$NON-NLS-1$
-		JavaVersion version921 = new JavaVersion("9.2.1.0"); //$NON-NLS-1$
+		JavaVersion version9 = new JavaVersion("9");
+		JavaVersion version921 = new JavaVersion("9.2.1.0");
 
 		assertTrue(version921.isGreaterOrEqualThan(version9));
 	}
 
 	@Test
 	public void testJava9isGreaterOrEqualsVersion() {
-		JavaVersion version913 = new JavaVersion("9.1.3.0-ea"); //$NON-NLS-1$
-		JavaVersion version921 = new JavaVersion("9.2.1.0"); //$NON-NLS-1$
+		JavaVersion version913 = new JavaVersion("9.1.3.0-ea");
+		JavaVersion version921 = new JavaVersion("9.2.1.0");
 
 		assertTrue(version921.isGreaterOrEqualThan(version913));
 	}
 
 	@Test
 	public void testJava9isGreaterOrEqualsVersionEA() {
-		JavaVersion version921ea = new JavaVersion("9.2.1.0-ea"); //$NON-NLS-1$
-		JavaVersion version921 = new JavaVersion("9.2.1.0"); //$NON-NLS-1$
+		JavaVersion version921ea = new JavaVersion("9.2.1.0-ea");
+		JavaVersion version921 = new JavaVersion("9.2.1.0");
 
 		assertTrue(version921.isGreaterOrEqualThan(version921ea));
 		assertTrue(!version921ea.isGreaterOrEqualThan(version921));
@@ -111,32 +111,32 @@ public class JavaVersionTest {
 
 	@Test
 	public void testGreaterOrEqualsMediumVsLongVersion() {
-		JavaVersion version123 = new JavaVersion("1.2.3"); //$NON-NLS-1$
-		JavaVersion version12245 = new JavaVersion("1.2.2.4.5"); //$NON-NLS-1$
+		JavaVersion version123 = new JavaVersion("1.2.3");
+		JavaVersion version12245 = new JavaVersion("1.2.2.4.5");
 
 		assertTrue(version123.isGreaterOrEqualThan(version12245));
 	}
 
 	@Test
 	public void testGreaterOrEqualsLongVsMediumVersion() {
-		JavaVersion version12345 = new JavaVersion("1.2.3.4.5"); //$NON-NLS-1$
-		JavaVersion version12 = new JavaVersion("1.2"); //$NON-NLS-1$
+		JavaVersion version12345 = new JavaVersion("1.2.3.4.5");
+		JavaVersion version12 = new JavaVersion("1.2");
 
 		assertTrue(version12345.isGreaterOrEqualThan(version12));
 	}
 
 	@Test
 	public void testJava9isGreaterOrEqualsThanJava8Version() {
-		JavaVersion version903 = new JavaVersion("9.0.3.0-ea"); //$NON-NLS-1$
-		JavaVersion version8u40 = new JavaVersion("1.8.0_40"); //$NON-NLS-1$
+		JavaVersion version903 = new JavaVersion("9.0.3.0-ea");
+		JavaVersion version8u40 = new JavaVersion("1.8.0_40");
 
 		assertTrue(version903.isGreaterOrEqualThan(version8u40));
 	}
 
 	@Test
 	public void testGEQ() {
-		JavaVersion version16 = new JavaVersion("1.6.0_14ea"); //$NON-NLS-1$
-		JavaVersion version17 = new JavaVersion("1.7.0_0"); //$NON-NLS-1$
+		JavaVersion version16 = new JavaVersion("1.6.0_14ea");
+		JavaVersion version17 = new JavaVersion("1.7.0_0");
 
 		assertTrue(version17.isGreaterOrEqualThan(version16));
 		assertFalse(version16.isGreaterOrEqualThan(version17));
@@ -146,8 +146,8 @@ public class JavaVersionTest {
 
 	@Test
 	public void testGEQJava7EA() {
-		JavaVersion version17ea = new JavaVersion("1.7.0_0ea"); //$NON-NLS-1$
-		JavaVersion version17 = new JavaVersion("1.7.0_0"); //$NON-NLS-1$
+		JavaVersion version17ea = new JavaVersion("1.7.0_0ea");
+		JavaVersion version17 = new JavaVersion("1.7.0_0");
 
 		assertTrue(version17.isGreaterOrEqualThan(version17ea));
 		assertFalse(version17ea.isGreaterOrEqualThan(version17));
@@ -155,8 +155,8 @@ public class JavaVersionTest {
 
 	@Test
 	public void testGEQWithMicro() {
-		JavaVersion version142 = new JavaVersion("1.4.2_14"); //$NON-NLS-1$
-		JavaVersion version131 = new JavaVersion("1.3.1_67"); //$NON-NLS-1$
+		JavaVersion version142 = new JavaVersion("1.4.2_14");
+		JavaVersion version131 = new JavaVersion("1.3.1_67");
 
 		assertTrue(version142.isGreaterOrEqualThan(version131));
 		assertFalse(version131.isGreaterOrEqualThan(version142));
@@ -166,8 +166,8 @@ public class JavaVersionTest {
 
 	@Test
 	public void testGEQCropped() {
-		JavaVersion version17 = new JavaVersion("1.7"); //$NON-NLS-1$
-		JavaVersion version17u12 = new JavaVersion("1.7.0_12"); //$NON-NLS-1$
+		JavaVersion version17 = new JavaVersion("1.7");
+		JavaVersion version17u12 = new JavaVersion("1.7.0_12");
 
 		assertTrue(version17u12.isGreaterOrEqualThan(version17));
 		assertFalse(version17u12.equals(version17));
@@ -175,8 +175,8 @@ public class JavaVersionTest {
 
 	@Test
 	public void testIsReverseNumbers() {
-		JavaVersion version17u13 = new JavaVersion("1.7.12_13ea"); //$NON-NLS-1$
-		JavaVersion version17u31 = new JavaVersion("1.7.12_31"); //$NON-NLS-1$
+		JavaVersion version17u13 = new JavaVersion("1.7.12_13ea");
+		JavaVersion version17u31 = new JavaVersion("1.7.12_31");
 
 		assertTrue(version17u31.isGreaterOrEqualThan(version17u13));
 		assertFalse(version17u31.equals(version17u13));
@@ -184,8 +184,8 @@ public class JavaVersionTest {
 
 	@Test
 	public void testOldVersionShortAndLongEquals() {
-		JavaVersion version17u0 = new JavaVersion("1.7.0_0"); //$NON-NLS-1$
-		JavaVersion version17 = new JavaVersion("1.7"); //$NON-NLS-1$
+		JavaVersion version17u0 = new JavaVersion("1.7.0_0");
+		JavaVersion version17 = new JavaVersion("1.7");
 
 		assertTrue(version17u0.equals(version17));
 	}

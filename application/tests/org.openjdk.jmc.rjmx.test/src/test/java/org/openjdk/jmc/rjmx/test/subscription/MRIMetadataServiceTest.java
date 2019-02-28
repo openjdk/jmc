@@ -59,16 +59,16 @@ import org.openjdk.jmc.rjmx.test.RjmxTestCase;
  * Tests the basic functionality of the {@link IMRIMetadataService}.
  */
 public class MRIMetadataServiceTest extends RjmxTestCase {
-	private static final String MOOH = "Mooh!"; //$NON-NLS-1$
-	private static final String MY_COW = "MyCow"; //$NON-NLS-1$
+	private static final String MOOH = "Mooh!";
+	private static final String MY_COW = "MyCow";
 
 	@Test
 	public void testGetAttributeInfo() throws Exception {
 		@SuppressWarnings("nls")
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"SystemCpuLoad")); //$NON-NLS-1$
+		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"SystemCpuLoad"));
 		assertNotNull(info);
 		assertNotNull(info.getMRI());
 		assertNotNull(info.getValueType());
@@ -78,10 +78,10 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testGetMetadata() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"SystemCpuLoad")); //$NON-NLS-1$
+		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"SystemCpuLoad"));
 		assertNotNull(info);
 
 		String description = info.getDescription();
@@ -92,22 +92,22 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testGetExtendedProperties() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
 		IMRIMetadata info = service
-				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used")); //$NON-NLS-1$ //$NON-NLS-2$
+				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used"));
 		assertNotNull(info);
-		assertTrue("Should be numerical", MRIMetadataToolkit.isNumerical(info)); //$NON-NLS-1$
-		assertNotNull(info.getMetadata("color")); //$NON-NLS-1$
+		assertTrue("Should be numerical", MRIMetadataToolkit.isNumerical(info));
+		assertNotNull(info.getMetadata("color"));
 	}
 
 	@Test
 	public void testGetNumericalMetadata() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		evaluateNumericalMetadata(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"), false); //$NON-NLS-1$ //$NON-NLS-2$
+		evaluateNumericalMetadata(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"), false);
 		evaluateNumericalMetadata(service,
-				new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"), true); //$NON-NLS-1$ //$NON-NLS-2$
+				new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"), true);
 		handle.close();
 	}
 
@@ -119,17 +119,17 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testAttributeTypes() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"), //$NON-NLS-1$ //$NON-NLS-2$
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"),
 				MemoryUsage.class);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"), //$NON-NLS-1$ //$NON-NLS-2$
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"),
 				Long.TYPE);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "JMImplementation:type=MBeanServerDelegate", //$NON-NLS-1$
-				"ImplementationVendor"), String.class); //$NON-NLS-1$
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "InputArguments"), //$NON-NLS-1$ //$NON-NLS-2$
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "JMImplementation:type=MBeanServerDelegate",
+				"ImplementationVendor"), String.class);
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "InputArguments"),
 				List.class);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "SystemProperties"), //$NON-NLS-1$ //$NON-NLS-2$
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "SystemProperties"),
 				Map.class);
 		handle.close();
 	}
@@ -139,12 +139,12 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 		assertNotNull(info);
 		String typeName = stripGenericType(info.getValueType());
 		if (clazz.isPrimitive()) {
-			assertTrue("Not assignable!", clazz.getName().equals(typeName)); //$NON-NLS-1$
+			assertTrue("Not assignable!", clazz.getName().equals(typeName));
 		} else {
 			try {
-				assertTrue("Not assignable!", clazz.isAssignableFrom(Class.forName(typeName))); //$NON-NLS-1$
+				assertTrue("Not assignable!", clazz.isAssignableFrom(Class.forName(typeName)));
 			} catch (ClassNotFoundException e) {
-				assertTrue("Could not instantiate metadata type " + typeName, false); //$NON-NLS-1$
+				assertTrue("Could not instantiate metadata type " + typeName, false);
 			}
 		}
 	}
@@ -160,28 +160,28 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testSetMetadata() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", //$NON-NLS-1$
-				"SystemCpuLoad")); //$NON-NLS-1$
+		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
+				"SystemCpuLoad"));
 		assertNotNull(info);
-		service.setMetadata(info.getMRI(), "testgegga", "Oh, testgegga!"); //$NON-NLS-1$ //$NON-NLS-2$
-		String testGegga = (String) service.getMetadata(info.getMRI(), "testgegga"); //$NON-NLS-1$
-		assertEquals("Oh, testgegga!", testGegga); //$NON-NLS-1$
+		service.setMetadata(info.getMRI(), "testgegga", "Oh, testgegga!");
+		String testGegga = (String) service.getMetadata(info.getMRI(), "testgegga");
+		assertEquals("Oh, testgegga!", testGegga);
 		handle.close();
 	}
 
 	@Test
 	public void testSetMetadataInDifferentConnections() throws Exception {
-		Assume.assumeTrue("Will not pass until BUG XYZ is fixed", false); //$NON-NLS-1$
+		Assume.assumeTrue("Will not pass until BUG XYZ is fixed", false);
 
 		IConnectionHandle handle1 = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor())
-				.connect("Test"); //$NON-NLS-1$
+				.connect("Test");
 		IConnectionHandle handle2 = IServerHandle.create(LocalRJMXTestToolkit.createAlternativeDescriptor())
-				.connect("Test"); //$NON-NLS-1$
+				.connect("Test");
 		IMRIMetadataService service1 = LocalRJMXTestToolkit.getInfoService(handle1);
 		IMRIMetadataService service2 = LocalRJMXTestToolkit.getInfoService(handle2);
-		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"); //$NON-NLS-1$ //$NON-NLS-2$
+		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad");
 		service1.setMetadata(mri, MY_COW, MOOH);
 		assertNotNull(service1.getMetadata(mri, MY_COW));
 		assertEquals(MOOH, service1.getMetadata(mri, MY_COW));
@@ -192,31 +192,31 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testOverrideDefultMetadata() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", //$NON-NLS-1$
-				"HeapMemoryUsage/committed"); //$NON-NLS-1$
+		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory",
+				"HeapMemoryUsage/committed");
 		IMRIMetadata info = service.getMetadata(mri);
 		String description = info.getDescription();
-		String newDescription = "[ja]" + description; //$NON-NLS-1$
+		String newDescription = "[ja]" + description;
 		service.setMetadata(mri, IMRIMetadataProvider.KEY_DESCRIPTION, newDescription);
-		assertEquals("Description not updated", newDescription, info.getDescription()); //$NON-NLS-1$
+		assertEquals("Description not updated", newDescription, info.getDescription());
 		handle.close();
 	}
 
 	@Test
 	public void testCompositeIsChild() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test"); //$NON-NLS-1$
+		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage")); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue("MRI is not composite!", MRIMetadataToolkit.isComposite(info)); //$NON-NLS-1$
+		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage"));
+		assertTrue("MRI is not composite!", MRIMetadataToolkit.isComposite(info));
 		int childCount = 0;
 		for (MRI mri : handle.getServiceOrThrow(IMRIService.class).getMRIs()) {
 			if (info.getMRI().isChild(mri)) {
 				childCount++;
 			}
 		}
-		assertEquals("There is not four composite children!", 4, childCount); //$NON-NLS-1$
+		assertEquals("There is not four composite children!", 4, childCount);
 		handle.close();
 	}
 }

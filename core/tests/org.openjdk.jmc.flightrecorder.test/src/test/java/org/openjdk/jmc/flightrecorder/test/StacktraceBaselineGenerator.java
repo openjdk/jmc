@@ -47,7 +47,7 @@ public class StacktraceBaselineGenerator {
 		File stacktracesDirectory = StacktraceTestToolkit.getStacktracesDirectory();
 		File recordingDirectory = RecordingToolkit.getRecordingDirectory();
 
-		System.out.println("Deleting all files in directory " + stacktracesDirectory); //$NON-NLS-1$
+		System.out.println("Deleting all files in directory " + stacktracesDirectory);
 		for (File file : stacktracesDirectory.listFiles()) {
 			if (!file.delete()) {
 				System.out.println("Could not remove old files!\nExiting!");
@@ -56,10 +56,10 @@ public class StacktraceBaselineGenerator {
 		}
 
 		for (File recordingFile : recordingDirectory.listFiles()) {
-			File stacktraceFile = new File(stacktracesDirectory, recordingFile.getName() + ".txt"); //$NON-NLS-1$
-			System.out.println("Generating " + stacktraceFile + " ..."); //$NON-NLS-1$ //$NON-NLS-2$
+			File stacktraceFile = new File(stacktracesDirectory, recordingFile.getName() + ".txt");
+			System.out.println("Generating " + stacktraceFile + " ...");
 			StacktraceTestToolkit.printStacktraces(recordingFile, stacktraceFile);
-			System.out.println(" finished!"); //$NON-NLS-1$
+			System.out.println(" finished!");
 		}
 	}
 }

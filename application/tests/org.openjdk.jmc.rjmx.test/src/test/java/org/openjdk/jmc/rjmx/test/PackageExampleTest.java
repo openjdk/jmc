@@ -74,12 +74,12 @@ public class PackageExampleTest {
 	 */
 	@Test
 	public void testPackageExampleVerbatim() throws Exception {
-		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle serverHandle = IServerHandle.create(descriptor);
-		IConnectionHandle handle = serverHandle.connect("Usage description"); //$NON-NLS-1$
+		IConnectionHandle handle = serverHandle.connect("Usage description");
 		try {
 			ISubscriptionService service = handle.getServiceOrThrow(ISubscriptionService.class);
-			MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount");
 			service.addMRIValueListener(attribute, new IMRIValueListener() {
 				@Override
 				public void valueChanged(MRIValueEvent event) {
@@ -98,12 +98,12 @@ public class PackageExampleTest {
 	@Test
 	public void testPackageExampleFunctionality() throws Exception {
 		ConnectionDescriptorBuilder builder = new ConnectionDescriptorBuilder();
-		IConnectionDescriptor descriptor = builder.hostName("localhost").port(0).build(); //$NON-NLS-1$
-		IConnectionHandle handle = IServerHandle.create(descriptor).connect("Usage description"); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = builder.hostName("localhost").port(0).build();
+		IConnectionHandle handle = IServerHandle.create(descriptor).connect("Usage description");
 		try {
 			ISubscriptionService service = handle.getServiceOrThrow(ISubscriptionService.class);
 			gotEvent = false;
-			MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount"); //$NON-NLS-1$ //$NON-NLS-2$
+			MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount");
 			service.addMRIValueListener(attribute, new IMRIValueListener() {
 				@Override
 				public void valueChanged(MRIValueEvent event) {
@@ -121,7 +121,7 @@ public class PackageExampleTest {
 		} finally {
 			IOToolkit.closeSilently(handle);
 		}
-		assertTrue("Never got any event!", gotEvent); //$NON-NLS-1$
+		assertTrue("Never got any event!", gotEvent);
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class PackageExampleTest {
 			IServerDescriptor descriptor = server.getServerHandle().getServerDescriptor();
 			if (descriptor.getJvmInfo() != null
 					&& Integer.valueOf(Environment.getThisPID()).equals(descriptor.getJvmInfo().getPid())) {
-				IConnectionHandle handle = server.getServerHandle().connect("Usage description"); //$NON-NLS-1$
+				IConnectionHandle handle = server.getServerHandle().connect("Usage description");
 				try {
 					handle.getServiceOrThrow(IMBeanHelperService.class).getMBeanNames().size();
 					return;

@@ -54,11 +54,11 @@ import org.openjdk.jmc.ui.common.util.Environment;
 @SuppressWarnings("nls")
 public class SecureStoreTest {
 
-	private final String pwd = "test"; //$NON-NLS-1$
-	private final String family = "family"; //$NON-NLS-1$
-	private final String family2 = "family2"; //$NON-NLS-1$
-	private final String value1 = "1"; //$NON-NLS-1$
-	private final String value2 = "2"; //$NON-NLS-1$
+	private final String pwd = "test";
+	private final String family = "family";
+	private final String family2 = "family2";
+	private final String value1 = "1";
+	private final String value2 = "2";
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -89,7 +89,7 @@ public class SecureStoreTest {
 		SecureStore store = new SecureStore(prefs);
 		store.initialize();
 		store.setPassword(pwd);
-		store.setEncryptionCipher("UnknownCipher"); //$NON-NLS-1$
+		store.setEncryptionCipher("UnknownCipher");
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class SecureStoreTest {
 		store.insert(null, true, value1);
 		store = new SecureStore(prefs);
 		try {
-			store.initialize("other"); //$NON-NLS-1$
+			store.initialize("other");
 			fail();
 		} catch (Exception e) {
 		}
@@ -155,7 +155,7 @@ public class SecureStoreTest {
 			store.initialize(pwd);
 			assertEquals(cipher, store.getEncryptionCipher());
 			assertEquals(value1, store.get(key));
-			System.out.println(cipher + " tested ok"); //$NON-NLS-1$
+			System.out.println(cipher + " tested ok");
 		}
 	}
 
@@ -168,9 +168,9 @@ public class SecureStoreTest {
 		String key = store.insert(null, true, value1);
 		store = new SecureStore(prefs);
 		store.initialize(pwd);
-		store.setPassword("newPwd"); //$NON-NLS-1$
+		store.setPassword("newPwd");
 		store = new SecureStore(prefs);
-		store.initialize("newPwd"); //$NON-NLS-1$
+		store.initialize("newPwd");
 		assertEquals(value1, store.get(key));
 	}
 

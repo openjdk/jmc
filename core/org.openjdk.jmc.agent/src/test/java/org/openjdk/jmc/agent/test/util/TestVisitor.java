@@ -49,61 +49,61 @@ public class TestVisitor extends ClassVisitor {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		System.out.println("Visiting class: " + name); //$NON-NLS-1$
-		System.out.println("Class Major Version: " + version); //$NON-NLS-1$
-		System.out.println("Super class: " + superName); //$NON-NLS-1$
-		System.out.println("Signature: " + signature); //$NON-NLS-1$
-		System.out.println("Interfaces: " + Arrays.toString(interfaces)); //$NON-NLS-1$
+		System.out.println("Visiting class: " + name);
+		System.out.println("Class Major Version: " + version);
+		System.out.println("Super class: " + superName);
+		System.out.println("Signature: " + signature);
+		System.out.println("Interfaces: " + Arrays.toString(interfaces));
 
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 
 	@Override
 	public void visitOuterClass(String owner, String name, String desc) {
-		System.out.println("Outer class: " + owner); //$NON-NLS-1$
+		System.out.println("Outer class: " + owner);
 		super.visitOuterClass(owner, name, desc);
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		System.out.println("Annotation: " + desc); //$NON-NLS-1$
+		System.out.println("Annotation: " + desc);
 		return super.visitAnnotation(desc, visible);
 	}
 
 	@Override
 	public void visitAttribute(Attribute attr) {
-		System.out.println("Class Attribute: " + attr.type); //$NON-NLS-1$
+		System.out.println("Class Attribute: " + attr.type);
 		super.visitAttribute(attr);
 	}
 
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-		System.out.println("Inner Class: " + innerName + " defined in " + outerName); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("Inner Class: " + innerName + " defined in " + outerName);
 		super.visitInnerClass(name, outerName, innerName, access);
 	}
 
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		System.out.println("Field: " + name + " " + desc + " value:" + value); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		System.out.println("Field: " + name + " " + desc + " value:" + value);
 		return super.visitField(access, name, desc, signature, value);
 	}
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Visit ended"); //$NON-NLS-1$
+		System.out.println("Visit ended");
 		super.visitEnd();
 	}
 
 	@Override
 	public MethodVisitor visitMethod(
 		int access, String name, String descriptor, String signature, String[] exceptions) {
-		System.out.println("Method: " + name + descriptor); //$NON-NLS-1$
+		System.out.println("Method: " + name + descriptor);
 		return super.visitMethod(access, name, descriptor, signature, exceptions);
 	}
 
 	@Override
 	public void visitSource(String source, String debug) {
-		System.out.println("Source: " + source); //$NON-NLS-1$
+		System.out.println("Source: " + source);
 		super.visitSource(source, debug);
 	}
 

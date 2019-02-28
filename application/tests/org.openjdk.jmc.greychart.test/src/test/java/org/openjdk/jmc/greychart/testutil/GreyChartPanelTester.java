@@ -52,7 +52,7 @@ import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
  * Little test program creating a graph containing a huge amount of data.
  */
 public class GreyChartPanelTester {
-	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
+	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("HH:mm:ss");
 
 	/**
 	 * Program entry point.
@@ -73,7 +73,7 @@ public class GreyChartPanelTester {
 
 			@Override
 			public String getUnitString(Number min, Number max) {
-				return ""; //$NON-NLS-1$
+				return "";
 			}
 		});
 
@@ -90,11 +90,11 @@ public class GreyChartPanelTester {
 
 //		((DefaultXYLineRenderer) graph.getSeriesPlotRenderer()).setMode(DefaultXYLineRenderer.RENDERING_MODE_AVERAGING);
 		GreyChartPanel panel = new GreyChartPanel(graph);
-		panel.setName(" graph with lot's of entries"); //$NON-NLS-1$
+		panel.setName(" graph with lot's of entries");
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Changed structure!"); //$NON-NLS-1$
+				System.out.println("Changed structure!");
 				provider.sendNotification();
 			}
 		});

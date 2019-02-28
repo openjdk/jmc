@@ -46,12 +46,12 @@ public class NotificationActionCallback implements ITriggerAction {
 	/**
 	 * Action name.
 	 */
-	public static final String NAME = "Callback action"; //$NON-NLS-1$
+	public static final String NAME = "Callback action";
 
 	/**
 	 * Description. Won't be used for this class.
 	 */
-	public static final String DESCRIPTION = "Blablablablablablabla"; //$NON-NLS-1$
+	public static final String DESCRIPTION = "Blablablablablablabla";
 
 	private final NotificationActionCallbackReceiver m_receiver;
 

@@ -86,6 +86,6 @@ public class ProgressCircleTester {
 	}
 
 	private static String getStatusText(ProgressCircle c) {
-		return String.format("Antialiasing is %s. Press mouse to change!", c.isAntialiasing() ? "on" : "off"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return String.format("Antialiasing is %s. Press mouse to change!", c.isAntialiasing() ? "on" : "off");
 	}
 }

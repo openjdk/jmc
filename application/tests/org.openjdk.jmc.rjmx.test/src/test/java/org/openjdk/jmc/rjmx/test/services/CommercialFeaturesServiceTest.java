@@ -66,7 +66,7 @@ public class CommercialFeaturesServiceTest extends ServerHandleTestCase {
 		if (!service.isCommercialFeaturesEnabled()) {
 			service.enableCommercialFeatures();
 		}
-		assertTrue("Commercial features should now be enabled!", service.isCommercialFeaturesEnabled()); //$NON-NLS-1$
+		assertTrue("Commercial features should now be enabled!", service.isCommercialFeaturesEnabled());
 	}
 
 	private ICommercialFeaturesService getCommercialFeaturesService() throws ConnectionException {
@@ -78,7 +78,7 @@ public class CommercialFeaturesServiceTest extends ServerHandleTestCase {
 		ICommercialFeaturesService service = handle.getServiceOrNull(ICommercialFeaturesService.class);
 
 		assertNotNull(
-				"Could not retrieve the commercial features service. Please make sure that you are connecting to a Java 7u4 or later JVM.", //$NON-NLS-1$
+				"Could not retrieve the commercial features service. Please make sure that you are connecting to a Java 7u4 or later JVM.",
 				service);
 		return service;
 	}

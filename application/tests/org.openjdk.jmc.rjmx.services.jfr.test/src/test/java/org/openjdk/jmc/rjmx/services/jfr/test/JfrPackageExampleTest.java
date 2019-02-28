@@ -63,9 +63,9 @@ public class JfrPackageExampleTest extends RjmxTestCase {
 
 	@Test
 	public void testPackageExample1FunctionalityVerbatim() throws Exception {
-		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle serverHandle = IServerHandle.create(descriptor);
-		IConnectionHandle handle = serverHandle.connect("Get JFR recording info"); //$NON-NLS-1$
+		IConnectionHandle handle = serverHandle.connect("Get JFR recording info");
 		try {
 			IFlightRecorderService jfr = handle.getServiceOrThrow(IFlightRecorderService.class);
 			for (IRecordingDescriptor desc : jfr.getAvailableRecordings()) {
@@ -78,7 +78,7 @@ public class JfrPackageExampleTest extends RjmxTestCase {
 
 	@Test
 	public void testPackageExample2FunctionalityVerbatim() throws Exception {
-		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(); //$NON-NLS-1$
+		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle serverHandle = IServerHandle.create(descriptor);
 		IConnectionHandle handle = serverHandle.connect("Start time bound flight recording");
 		try {
