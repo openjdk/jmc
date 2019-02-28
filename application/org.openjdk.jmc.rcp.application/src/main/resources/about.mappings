@@ -41,3 +41,7 @@
 3=${buildQualifier}
 #buildid
 4=${buildId}
+# Critical Patch Update Id
+5=${patchId}
+#embedded JDK version
+6=${jdkVersion}

@@ -83,6 +83,11 @@
 		<maven.resources.version>3.0.2</maven.resources.version>
 		<spotbugs.version>3.1.10</spotbugs.version>
 		<buildId>${user.name}</buildId>
+		<!-- Critical Patch Update Id. Used in a release where _only_ the embedded
+		     JDK has changed. Set to .[cpu sequence number], e.g. .1 -->
+		<patchId></patchId>
+		<!-- The version of the JDK to embed, e.g. 12.0.2 -->
+		<jdkVersion></jdkVersion>
 		<scmConnection>scm:hg:http://hg.openjdk.java.net/jmc/jmc</scmConnection>
 	</properties>
 	<scm>
