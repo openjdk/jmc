@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -83,7 +83,7 @@
 									<id>org.twitter4j:twitter4j-core:4.0.6</id>
 								</artifact>
 								<artifact>
-									<id>javax.mail:mailapi:1.4</id>
+									<id>com.sun.mail:jakarta.mail:1.6.3</id>
 									<override>true</override>
 									<instructions>
 										<Import-Package>*;resolution:=optional</Import-Package>
@@ -91,13 +91,7 @@
 									</instructions>
 								</artifact>
 								<artifact>
-									<id>javax.mail:imap:1.4</id>
-								</artifact>
-								<artifact>
-									<id>javax.mail:pop3:1.4</id>
-								</artifact>
-								<artifact>
-									<id>javax.mail:smtp:1.4</id>
+									<id>com.sun.activation:jakarta.activation:1.2.1</id>
 								</artifact>
 								<artifact>
 									<id>javax.mail:dsn:1.4</id>
