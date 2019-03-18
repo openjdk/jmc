@@ -44,6 +44,7 @@
 		<module>org.openjdk.jmc.flightrecorder.configuration.test</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.test</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.test</module>
+		<module>org.openjdk.jmc.flightrecorder.ext.jfx.test</module>
 		<module>org.openjdk.jmc.flightrecorder.ui.test</module>
 		<module>org.openjdk.jmc.greychart.test</module>
 		<module>org.openjdk.jmc.ide.launch.test</module>

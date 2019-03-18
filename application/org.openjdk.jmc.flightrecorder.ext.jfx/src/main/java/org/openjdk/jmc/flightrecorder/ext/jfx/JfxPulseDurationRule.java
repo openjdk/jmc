@@ -65,12 +65,11 @@ public class JfxPulseDurationRule implements IRule {
 	 * This preference is a workaround because it was deemed too time consuming to add automatic
 	 * detection.
 	 */
-	// FIXME: This should really be in Hz, but could not find it in the UnitLookup. Using count for now.
 	public static final TypedPreference<IQuantity> CONFIG_TARGET_FRAME_RATE = new TypedPreference<>(
 			"jfr.pulse.target.framerate", //$NON-NLS-1$
 			Messages.JfxPulseDurationRule_CAPTION_PREFERENCE_TARGET_FRAME_RATE,
-			Messages.JfxPulseDurationRule_DESCRIPTION_PREFERENCE_TARGET_FRAME_RATE, UnitLookup.NUMBER,
-			UnitLookup.NUMBER_UNITY.quantity(60));
+			Messages.JfxPulseDurationRule_DESCRIPTION_PREFERENCE_TARGET_FRAME_RATE, UnitLookup.FREQUENCY,
+			UnitLookup.HERTZ.quantity(60));
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(CONFIG_TARGET_FRAME_RATE);
@@ -101,7 +100,8 @@ public class JfxPulseDurationRule implements IRule {
 					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING,
 							UnitLookup.PERCENT_UNITY.quantity(ratioOfLongPhases).displayUsing(IDisplayable.AUTO),
 							targetPhaseTime.displayUsing(IDisplayable.AUTO)),
-					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING_LONG, targetFramerate));
+					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING_LONG, 
+							targetFramerate.displayUsing(IDisplayable.AUTO)));
 		}
 		return new Result(this, 0, Messages.JfxPulseDurationRule_OK);
 	}

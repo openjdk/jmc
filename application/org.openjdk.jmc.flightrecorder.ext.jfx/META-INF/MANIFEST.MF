@@ -10,5 +10,6 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.util
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.jfx
+Export-Package: org.openjdk.jmc.flightrecorder.ext.jfx;x-friends:="org.openjdk.jmc.flightrecorder.ext.jfx.test"
 
 

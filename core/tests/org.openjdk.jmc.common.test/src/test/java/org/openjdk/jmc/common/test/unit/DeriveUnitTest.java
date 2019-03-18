@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openjdk.jmc.common.test.MCTestCase;
 import org.openjdk.jmc.common.unit.BinaryPrefix;
+import org.openjdk.jmc.common.unit.DecimalPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
@@ -52,6 +53,7 @@ public class DeriveUnitTest extends MCTestCase {
 	private LinearUnit one;
 	private LinearUnit B, kiB, MiB;
 	private LinearUnit ms, s, min, h, d, wk, y;
+	private LinearUnit Hz, kHz, MHz, mHz, uHz;
 
 	@Before
 	public void setUp() throws Exception {
@@ -67,6 +69,13 @@ public class DeriveUnitTest extends MCTestCase {
 		d = span.getUnit("d");
 		wk = span.getUnit("wk");
 		y = span.getUnit("a");
+		
+		Hz = UnitLookup.HERTZ;
+		LinearKindOfQuantity freq = UnitLookup.FREQUENCY;
+		kHz = freq.getUnit(DecimalPrefix.KILO);
+		MHz = freq.getUnit(DecimalPrefix.MEGA);
+		mHz = freq.getUnit(DecimalPrefix.MILLI);
+		uHz = freq.getUnit(DecimalPrefix.MICRO);
 	}
 
 	private void assertDerivedUnit(IUnit expectedUnit, IQuantity quantity) throws Exception {
@@ -96,6 +105,18 @@ public class DeriveUnitTest extends MCTestCase {
 		assertDerivedUnit(null, B.quantity(0.5));
 
 		assertDerivedUnit(null, B.quantity(0.1));
+	}
+	
+	@Test
+	public void testFrequencies() throws Exception {
+		assertDerivedUnit(Hz, Hz.quantity(1));
+		assertDerivedUnit(Hz, Hz.quantity(999));
+		assertDerivedUnit(kHz, Hz.quantity(1000));
+		assertDerivedUnit(kHz, kHz.quantity(999));
+		assertDerivedUnit(MHz, kHz.quantity(1000));
+		
+		assertDerivedUnit(mHz, Hz.quantity(0.5));
+		assertDerivedUnit(uHz, mHz.quantity(0.5));
 	}
 
 	@Test

@@ -42,6 +42,7 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.MILLI;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.NANO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.NONE;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.PICO;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.TERA;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.YOCTO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
 
@@ -128,6 +129,7 @@ final public class UnitLookup {
 	public static final ContentType<LabeledIdentifier> LABELED_IDENTIFIER = createSyntheticContentType(
 			"labeledIdentifier");
 	public static final LinearKindOfQuantity ADDRESS = createAddress();
+	public static final LinearKindOfQuantity FREQUENCY = createFrequency();
 	public static final ContentType<Boolean> FLAG = createFlag("boolean");
 	public static final ContentType<IType<?>> TYPE = createSyntheticContentType("type");
 	public static final TimestampUnit EPOCH_MS = TIMESTAMP.getUnit("epochms");
@@ -147,6 +149,7 @@ final public class UnitLookup {
 	public static final LinearUnit HOUR = TIMESPAN.getUnit("h");
 	public static final LinearUnit DAY = TIMESPAN.getUnit("d");
 	public static final LinearUnit YEAR = TIMESPAN.getUnit("a");
+	public static final LinearUnit HERTZ = FREQUENCY.getUnit(NONE);
 
 	// Attributes matching RAW_NUMBER and UNIT content types. Use sparingly.
 	public static final IAttribute<Number> NUMERICAL_ATTRIBUTE = attr("numerical", "Numerical", //$NON-NLS-1$ //$NON-NLS-2$
@@ -164,6 +167,7 @@ final public class UnitLookup {
 		quantityKinds.add(PERCENTAGE);
 		quantityKinds.add(NUMBER);
 		quantityKinds.add(ADDRESS);
+		quantityKinds.add(FREQUENCY);
 
 		Map<String, RangeContentType<?>> rangeTypes = new HashMap<>();
 		for (KindOfQuantity<?> kind : quantityKinds) {
@@ -224,7 +228,7 @@ final public class UnitLookup {
 	}
 
 	public static List<KindOfQuantity<?>> getKindsOfQuantity() {
-		return Arrays.<KindOfQuantity<?>> asList(MEMORY, TIMESPAN, TIMESTAMP, NUMBER, PERCENTAGE);
+		return Arrays.<KindOfQuantity<?>> asList(MEMORY, TIMESPAN, TIMESTAMP, NUMBER, PERCENTAGE, FREQUENCY);
 	}
 
 	public static List<ContentType<?>> getAllContentTypes() {
@@ -443,6 +447,17 @@ final public class UnitLookup {
 		memory.addFormatter(new KindOfQuantity.VerboseFormatter<>(memory));
 
 		return memory;
+	}
+	
+	private static LinearKindOfQuantity createFrequency() {
+		LinearKindOfQuantity frequency = new LinearKindOfQuantity("frequency", "Hz", EnumSet.range(NONE, TERA),
+				EnumSet.range(YOCTO, YOTTA));
+
+		frequency.addFormatter(new LinearKindOfQuantity.AutoFormatter(frequency, "Dynamic"));
+		frequency.addFormatter(new KindOfQuantity.ExactFormatter<>(frequency));
+		frequency.addFormatter(new KindOfQuantity.VerboseFormatter<>(frequency));
+
+		return frequency;
 	}
 
 	private static void addQuantities(
