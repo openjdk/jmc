@@ -121,6 +121,7 @@
 					<includes>${test.includes}</includes>
 					<excludes>${test.excludes}</excludes>
 					<failIfNoTests>${fail.if.no.tests}</failIfNoTests>
+					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
 		</plugins>
