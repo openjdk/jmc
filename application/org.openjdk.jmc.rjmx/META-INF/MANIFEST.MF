@@ -24,7 +24,10 @@ Export-Package: org.openjdk.jmc.rjmx,
    org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.messages.internal;x-friends:="org.openjdk.jmc.test.jemmy,org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.persistence.internal;x-friends:="org.openjdk.jmc.console.persistence",
- org.openjdk.jmc.rjmx.preferences;x-friends:="org.openjdk.jmc.console.ui,org.openjdk.jmc.rjmx.ui",
+ org.openjdk.jmc.rjmx.preferences;
+  x-friends:="org.openjdk.jmc.console.ui,
+   org.openjdk.jmc.rjmx.ui,
+   org.openjdk.jmc.console.uitest",
  org.openjdk.jmc.rjmx.servermodel;
   x-friends:="org.openjdk.jmc.browser,
    org.openjdk.jmc.test.jemmy,

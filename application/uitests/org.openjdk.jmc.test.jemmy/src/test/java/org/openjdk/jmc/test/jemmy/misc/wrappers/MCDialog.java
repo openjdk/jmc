@@ -299,6 +299,17 @@ public class MCDialog extends MCJemmyBase {
 	}
 
 	/**
+	 * Returns the current text found in the named text field
+	 *
+	 * @param name
+	 *            the name of the text field instance
+	 * @return the text from the text field
+	 */
+	public String getText(String name) {
+		return MCText.getByName(getDialogShell(), name).getText();
+	}
+
+	/**
 	 * Finds a text input field with the supplied tooltip text and replaces that text.
 	 *
 	 * @param tooltip

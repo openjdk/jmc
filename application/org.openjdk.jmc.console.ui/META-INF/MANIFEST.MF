@@ -20,7 +20,9 @@ Export-Package: org.openjdk.jmc.console.ui.actions;
    org.openjdk.jmc.console.ui.mbeanbrowser,
    org.openjdk.jmc.console.ui.notification",
  org.openjdk.jmc.console.ui.editor,
- org.openjdk.jmc.console.ui.editor.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.rcp.intro"
+ org.openjdk.jmc.console.ui.editor.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.rcp.intro",
+ org.openjdk.jmc.console.ui.messages.internal;x-friends:="org.openjdk.jmc.console.uitest",
+ org.openjdk.jmc.console.ui.preferences;x-friends:="org.openjdk.jmc.console.uitest"
 Bundle-ClassPath: .
 Import-Package: javax.annotation;version="1.0.0",
  javax.inject;version="1.0.0"

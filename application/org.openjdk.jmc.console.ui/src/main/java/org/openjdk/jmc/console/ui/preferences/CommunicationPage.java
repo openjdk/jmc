@@ -45,6 +45,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -65,6 +66,14 @@ import org.openjdk.jmc.ui.preferences.LongQuantityFieldEditor;
  * Preference dialog responsible for communications settings
  */
 public class CommunicationPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+	public static final String TEXT_FIELD_NAME_KEY = "name"; //$NON-NLS-1$
+	public static final String UPDATE_INTERVAL_FIELD_NAME = "preference.communication.text.interval"; //$NON-NLS-1$
+	public static final String RETAINED_EVENT_FIELD_NAME = "preference.communication.text.retained"; //$NON-NLS-1$
+	public static final String SERVER_HOST_FIELD_NAME = "preference.communication.text.host"; //$NON-NLS-1$
+	public static final String SERVER_PORT_FIELD_NAME = "preference.communication.text.port"; //$NON-NLS-1$
+	public static final String USERNAME_FIELD_NAME = "preference.communication.text.username"; //$NON-NLS-1$
+	public static final String PASSWORD_FIELD_NAME = "preference.communication.text.password"; //$NON-NLS-1$
+
 	private IntFieldEditor mailServerPort;
 	private Text userField;
 	private Text passwordField;
@@ -83,22 +92,30 @@ public class CommunicationPage extends FieldEditorPreferencePage implements IWor
 
 	@Override
 	public void createFieldEditors() {
+		Composite updateIntervalParent = getFieldEditorParent();
 		LongQuantityFieldEditor updateInterval = new LongQuantityFieldEditor(PreferencesKeys.PROPERTY_UPDATE_INTERVAL,
-				Messages.CommunicationPage_CAPTION_DEFAULT_UPDATE_INTERVAL, getFieldEditorParent(), MILLISECOND);
+				Messages.CommunicationPage_CAPTION_DEFAULT_UPDATE_INTERVAL, updateIntervalParent, MILLISECOND);
 		updateInterval.setValidRange(MILLISECOND.quantity(1), MILLISECOND.quantity(Integer.MAX_VALUE));
+		updateInterval.getTextControl(updateIntervalParent).setData(TEXT_FIELD_NAME_KEY, UPDATE_INTERVAL_FIELD_NAME);
 		addField(updateInterval);
 
+		Composite retainedEventParent = getFieldEditorParent();
 		IntegerFieldEditor retainedEventValues = new IntegerFieldEditor(PreferencesKeys.PROPERTY_RETAINED_EVENT_VALUES,
-				Messages.CommunicationPage_CAPTION_RETAINED_EVENT_VALUES, getFieldEditorParent());
+				Messages.CommunicationPage_CAPTION_RETAINED_EVENT_VALUES, retainedEventParent);
 		retainedEventValues.setValidRange(1, Integer.MAX_VALUE);
+		retainedEventValues.getTextControl(retainedEventParent).setData(TEXT_FIELD_NAME_KEY, RETAINED_EVENT_FIELD_NAME);
 		addField(retainedEventValues);
 
+		Composite mailServerParent = getFieldEditorParent();
 		StringFieldEditor mailServer = new StringFieldEditor(PreferencesKeys.PROPERTY_MAIL_SERVER,
-				Messages.CommunicationPage_CAPTION_MAIL_SERVER, getFieldEditorParent());
+				Messages.CommunicationPage_CAPTION_MAIL_SERVER, mailServerParent);
+		mailServer.getTextControl(mailServerParent).setData(TEXT_FIELD_NAME_KEY, SERVER_HOST_FIELD_NAME);
 		addField(mailServer);
 
+		Composite mailServerPortParent = getFieldEditorParent();
 		mailServerPort = new IntFieldEditor(PreferencesKeys.PROPERTY_MAIL_SERVER_PORT,
-				Messages.CommunicationPage_CAPTION_MAIL_SERVER_PORT, getFieldEditorParent());
+				Messages.CommunicationPage_CAPTION_MAIL_SERVER_PORT, mailServerPortParent);
+		mailServerPort.getTextControl(mailServerPortParent).setData(TEXT_FIELD_NAME_KEY, SERVER_PORT_FIELD_NAME);
 		addField(mailServerPort);
 
 		BooleanFieldEditor mailServerSecure = new BooleanFieldEditor(PreferencesKeys.PROPERTY_MAIL_SERVER_SECURE,
@@ -114,11 +131,13 @@ public class CommunicationPage extends FieldEditorPreferencePage implements IWor
 		userLabel.setText(Messages.CommunicationPage_CAPTION_MAIL_SERVER_USER);
 		userField = new Text(getFieldEditorParent(), SWT.SINGLE | SWT.BORDER);
 		userField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		userField.setData(TEXT_FIELD_NAME_KEY, USERNAME_FIELD_NAME);
 
 		Label passLabel = new Label(getFieldEditorParent(), SWT.NONE);
 		passLabel.setText(Messages.CommunicationPage_CAPTION_MAIL_SERVER_PASSWORD);
 		passwordField = new Text(getFieldEditorParent(), SWT.PASSWORD | SWT.SINGLE | SWT.BORDER);
 		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		passwordField.setData(TEXT_FIELD_NAME_KEY, PASSWORD_FIELD_NAME);
 	}
 
 	private void loadCredentials() {
@@ -146,6 +165,14 @@ public class CommunicationPage extends FieldEditorPreferencePage implements IWor
 		super.performOk();
 		storeCredentials();
 		return true;
+	}
+
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		// Restore username and password to defaults manually, since they do not use FieldEditors
+		userField.setText(PreferencesKeys.DEFAULT_MAIL_SERVER_USER);
+		passwordField.setText(PreferencesKeys.DEFAULT_MAIL_SERVER_PASSWORD);
 	}
 
 	private void storeCredentials() {
