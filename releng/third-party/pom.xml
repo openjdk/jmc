@@ -35,7 +35,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>external-dependencies</artifactId>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 	<version>7.1.0-SNAPSHOT</version>
 	<properties>
 		<openjfx.base-Import-Package>*;resolution:=optional</openjfx.base-Import-Package>
@@ -345,15 +345,18 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.5.v20120716</version>
+				<version>9.4.14.v20181114</version>
 				<configuration>
 					<scanIntervalSeconds>60</scanIntervalSeconds>
 					<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
 					<webApp>
 						<contextPath>/site</contextPath>
 					</webApp>
+					<httpConnector>
+						<port>8080</port>
+					</httpConnector>
 				</configuration>
 			</plugin>
 			<plugin>
