@@ -52,6 +52,7 @@ public final class JdkTypeIDs {
 	public static final String CPU_LOAD = PREFIX + "CPULoad";
 	public static final String EXECUTION_SAMPLE = PREFIX + "ExecutionSample";
 	public static final String EXECUTION_SAMPLING_INFO_EVENT_ID = PREFIX + "ExecutionSampling";
+	public static final String NATIVE_METHOD_SAMPLE = PREFIX + "NativeMethodSample";
 	public static final String PROCESSES = PREFIX + "SystemProcess";
 	public static final String OS_MEMORY_SUMMARY = PREFIX + "PhysicalMemory";
 	public static final String OS_INFORMATION = PREFIX + "OSInformation";
