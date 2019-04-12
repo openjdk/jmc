@@ -201,11 +201,16 @@ public class XYChart {
 	private void renderText(Graphics2D context, IRenderedRow row) {
 		String text = row.getName();
 		int height = row.getHeight();
-		if (height > 20) {
+		if (height >= context.getFontMetrics().getHeight()) {
 			if (text != null) {
 				context.setColor(Color.BLACK);
+				int y;
 				if (height > 40) {
 					context.drawLine(-xOffset, height - 1, -15, height - 1);
+					y = height - context.getFontMetrics().getHeight() / 2;
+				} else {
+					// draw the string in the middle of the row
+					y = ((height - context.getFontMetrics().getHeight()) / 2) + context.getFontMetrics().getAscent();
 				}
 				int charsWidth = context.getFontMetrics().charsWidth(text.toCharArray(), 0, text.length());
 				if (charsWidth > xOffset) {
@@ -213,7 +218,7 @@ public class XYChart {
 							+ context.getFontMetrics().charsWidth(ELLIPSIS.toCharArray(), 0, ELLIPSIS.length()));
 					text = text.substring(0, ((int) (text.length() * fitRatio)) - 1) + ELLIPSIS;
 				}
-				context.drawString(text, -xOffset + 2, height - 4);
+				context.drawString(text, -xOffset + 2, y);
 			} else {
 				List<IRenderedRow> subdivision = row.getNestedRows();
 				if (!subdivision.isEmpty()) {
