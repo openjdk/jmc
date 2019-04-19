@@ -93,7 +93,7 @@
 			<plugin>
 				<groupId>name.abuchen</groupId>
 				<artifactId>fix-info-plist-maven-plugin</artifactId>
-				<version>1.2</version>
+				<version>1.5</version>
 				<executions>
 					<execution>
 						<id>fix-info-plist</id>
