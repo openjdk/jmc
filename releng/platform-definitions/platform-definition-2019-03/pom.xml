@@ -35,16 +35,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.releng</artifactId>
+		<artifactId>platform-definitions</artifactId>
 		<version>7.1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>platform-definitions</artifactId>
-	<packaging>pom</packaging>
-	<modules>
-		<!-- Photon will be deprecated eventually - don't use it! -->
-		<module>platform-definition-photon</module>
-		<module>platform-definition-2018-09</module>
-		<module>platform-definition-2018-12</module>
-		<module>platform-definition-2019-03</module>
-	</modules>
+	<artifactId>platform-definition-2019-03</artifactId>
+	<packaging>eclipse-target-definition</packaging>
 </project>

@@ -38,6 +38,6 @@
 		<artifactId>platform-definitions</artifactId>
 		<version>7.1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>platform-definition-oxygen</artifactId>
+	<artifactId>platform-definition-2018-12</artifactId>
 	<packaging>eclipse-target-definition</packaging>
 </project>

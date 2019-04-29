@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   
+   Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?pde version="3.8"?>
+<target name="jmc-target-2019-03" sequenceNumber="47">
+    <locations>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
+            <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
+            <unit id="javax.mail.dsn" version="1.4.0"/>
+            <unit id="org.owasp.encoder" version="1.2.1"/>
+            <unit id="org.twitter4j.core" version="4.0.6"/>
+            <unit id="org.openjfx.javafx-base.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-base.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-base.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-fxml.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-media.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-controls.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-graphics.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-swing.linux" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.mac" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.win" version="11.0.1"/>
+            <unit id="org.openjfx.javafx-web.linux" version="11.0.1"/>
+            <repository location="http://localhost:8080/site"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.equinox.executable.feature.group"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.13.400.v20190307-0943"/>
+            <unit id="org.eclipse.platform.sdk" version="4.11.0.I20190307-0500"/>
+            <repository location="http://download.eclipse.org/releases/2019-03/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+						<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.10.0.v20190126060001"/>
+						<unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.10.0.v20190126060001"/>
+						<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/2018-12/"/>
+        </location>
+    </locations>
+    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+</target>

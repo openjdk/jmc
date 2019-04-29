@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.equinox.p2.updatechecker,
  org.eclipse.swt,
  org.eclipse.ui.themes;resolution:=optional
+Require-Capability: osgi.extender; filter:="(&(osgi.extender=osgi.component)(version>=1.2)(!(version>=2.0)))"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.rcp.application.actions
 Service-Component: OSGI-INF/policy_component.xml
