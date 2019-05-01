@@ -14,3 +14,6 @@ workspace/
 
 # Ignore MacOS X finder files
 .DS_Store
+
+# Useful for local m2 cache when docker building
+.m2

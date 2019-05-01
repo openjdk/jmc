@@ -276,6 +276,15 @@ The above will not run StacktraceModelTest, as that is also matched by "test.exc
 
 Note that if UI-tests are supposed to be part of the filtered run the "uitests" profile needs to be specified as well. Otherwise the UI won't start up and so the tests fail.
 
+
+## Building using docker and docker-compose
+
+```
+docker-compose -f docker/docker-compose.yml run jmc
+```
+
+Once build has finished the results will be in the `target` directory
+
 ## Running the Locally Built JMC
 The built JMC will end up in the `target` folder in the root. To run it, go to `target/products/org.openjdk.jmc/<platform>` to find the launcher. Don't forget to override the vm flag with the JVM you wish to use for running JMC.
 

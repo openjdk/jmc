@@ -22,3 +22,6 @@ workspace/
 
 # Ignore jar files
 *.jar
+
+# Useful for local m2 cache when docker building
+.m2

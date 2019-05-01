@@ -1,0 +1,31 @@
+version: '3'
+services:
+  p2:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile-p2
+    ports:
+      - "8080:8080"
+  jmc:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile-jmc
+    depends_on:
+      - start_dependencies
+    volumes:
+      - ../.m2:/root/.m2
+      - ../target/:/target
+  start_dependencies:
+    image: alpine:3.9
+    depends_on:
+      - p2
+    command: >
+      /bin/ash -c "
+      apk update && apk add curl;
+      while ! curl http://p2:8080/site/;
+        do
+          echo sleeping;
+          sleep 1;
+        done;
+        echo Connected!;
+      "
