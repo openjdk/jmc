@@ -34,8 +34,8 @@ package org.openjdk.jmc.test.jemmy.misc.wrappers;
 
 import java.util.List;
 
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.TabFolder;
 import org.jemmy.control.Wrap;
 import org.jemmy.interfaces.Parent;
 import org.jemmy.interfaces.Selectable;
@@ -48,7 +48,7 @@ import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 public class MCInstallation extends MCJemmyBase {
 	private MCDialog aboutDialog;
 	private MCDialog installationDetails;
-	private final Wrap<? extends TabFolder> tabFolder;
+	private final Wrap<? extends CTabFolder> tabFolder;
 
 	public enum Tabs {
 		INSTALLED_SOFTWARE("Installed Software"),
@@ -213,7 +213,7 @@ public class MCInstallation extends MCJemmyBase {
 		// Note: Different name when running from Eclipse
 		installationDetails = new MCDialog("Installation Details");
 
-		tabFolder = installationDetails.getDialogShell().as(Parent.class, TabFolder.class).lookup(TabFolder.class)
+		tabFolder = installationDetails.getDialogShell().as(Parent.class, CTabFolder.class).lookup(CTabFolder.class)
 				.wrap();
 
 		// Installed Software is the default tab
