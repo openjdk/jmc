@@ -185,7 +185,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			toolkit.adapt(treeSash);
 			typeFilterTree = DataPageToolkit.buildEventTypeTree(treeSash, toolkit, this::onTypeChange, false);
 			MCContextMenuManager mm = typeFilterTree.getMenuManager();
-			IAction addPageAction = ActionToolkit.action(this::addPage,
+			IAction addPageAction = ActionToolkit.action(() -> DataPageToolkit.addPage(selectedTypes),
 					Messages.EventBrowserPage_NEW_PAGE_USING_TYPES_ACTION, NEW_PAGE_ICON);
 			mm.appendToGroup(MCContextMenuManager.GROUP_NEW, addPageAction);
 
@@ -228,11 +228,6 @@ public class EventBrowserPage extends AbstractDataPage {
 //				typeFilterTree.getViewer().getTree().setTopItem(typeFilterTree.getViewer().getTree().getItem(topIndex));
 //			}
 			list.getManager().setSelectionState(tableSelection);
-		}
-
-		private void addPage() {
-			PageManager pm = FlightRecorderUI.getDefault().getPageManager();
-			pm.makeRoot(pm.createPage(ItemHandlerPage.Factory.class, new ItemHandlerUiStandIn(selectedTypes)));
 		}
 
 		private void setTypesWithoutEvents(boolean checked) {

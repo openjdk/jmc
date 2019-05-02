@@ -36,6 +36,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,6 +52,8 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
@@ -89,6 +92,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.TypeHandling;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
+import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionBase;
@@ -115,10 +119,12 @@ import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 // FIXME: fields - units - filters - icons etc. should be handled more properly
 public class JfrPropertySheet extends Page implements IPropertySheetPage {
 
+	private static final ImageDescriptor NEW_PAGE_ICON = FlightRecorderUI.getDefault()
+			.getMCImageDescriptor(ImageConstants.ICON_NEW_PAGE);
 	private static final String HELP_CONTEXT_ID = FlightRecorderUI.PLUGIN_ID + ".JfrPropertiesView"; //$NON-NLS-1$
 	private static final Object TOO_MANY_VALUES = new Object();
 	private static final PropertySheetRow CALCULATING = new PropertySheetRow(null, null);
-
+	private static Set<IType<?>> selectedTypes = Collections.emptySet();
 	private static class PropertySheetRowSelection extends FlavoredSelectionBase {
 
 		private final PropertySheetRow row;
@@ -298,10 +304,12 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 					} else if (value == TOO_MANY_VALUES) {
 						return Messages.JFR_PROPERTIES_TOO_MANY_VALUES;
 					}
+					updateSelectedTypes(value);
 					return getValueString(value);
 				};
 
 				// FIXME: Merge with TypeHandling.getValueString
+				@SuppressWarnings("unchecked")
 				private String getValueString(Object value) {
 					if (value instanceof IItemCollection) {
 						return itemCollectionDescription((IItemCollection) value);
@@ -312,9 +320,10 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 						return "[" + values[0].getName() + " ... " //$NON-NLS-1$ //$NON-NLS-2$
 								+ values[values.length - 1].getName() + "]"; //$NON-NLS-1$
 					} else if (value instanceof Object[]) {
-
 						return limitedDeepToString((Object[]) value, this::getValueString);
-					} else if (value instanceof Collection) {
+					} else if (value instanceof Collection<?>) {
+						selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value)
+							.stream().collect(Collectors.toSet());
 						return limitedDeepToString(((Collection<?>) value).toArray(), this::getValueString);
 					}
 					return TypeHandling.getValueString(value);
@@ -328,8 +337,18 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 					}
 					return JfrPropertySheet.getVerboseString(value);
 				};
-
 			}).build();
+
+	private static void updateSelectedTypes(Object value) {
+		if (value instanceof IType<?>) {
+			selectedTypes = new HashSet<IType<?>>();
+			selectedTypes.add((IType<?>) value);
+		}
+		else if (value instanceof Collection<?>) {
+			selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value)
+					.stream().collect(Collectors.toSet());
+		}
+	}
 
 	private static String limitedDeepToString(Object[] array, Function<Object, String> valueToStringProvider) {
 		return limitedDeepToString(array, new StringBuilder(), true, valueToStringProvider);
@@ -443,6 +462,9 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 			return null;
 		};
 		// FIXME: Break out to other place where these actions are added to menus
+		IAction addPageAction = ActionToolkit.action(() -> DataPageToolkit.addPage(selectedTypes),
+				Messages.EventBrowserPage_NEW_PAGE_USING_TYPES_ACTION, NEW_PAGE_ICON);
+		mm.appendToGroup(MCContextMenuManager.GROUP_NEW, addPageAction);
 		mm.appendToGroup(MCContextMenuManager.GROUP_EDIT,
 				ActionToolkit.forListSelection(viewer, Messages.STORE_SELECTION_ACTION, false,
 						actionProvider.apply(controller.getSelectionStore()::addSelection)));

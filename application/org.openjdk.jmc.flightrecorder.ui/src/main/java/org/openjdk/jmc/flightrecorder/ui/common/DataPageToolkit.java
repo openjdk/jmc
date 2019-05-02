@@ -128,10 +128,13 @@ import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
+import org.openjdk.jmc.flightrecorder.ui.PageManager;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.CompositeKeyHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.overview.ResultOverview;
+import org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage;
+import org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage.ItemHandlerUiStandIn;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFilterFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore.SelectionStoreEntry;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
@@ -1151,4 +1154,8 @@ public class DataPageToolkit {
 				&& JfrAttributes.START_TIME.getAccessor(type) != JfrAttributes.END_TIME.getAccessor(type);
 	}
 
+	public static void addPage(Set<IType<?>> selectedTypes) {
+		PageManager pm = FlightRecorderUI.getDefault().getPageManager();
+		pm.makeRoot(pm.createPage(ItemHandlerPage.Factory.class, new ItemHandlerUiStandIn(selectedTypes)));
+	}
 }
