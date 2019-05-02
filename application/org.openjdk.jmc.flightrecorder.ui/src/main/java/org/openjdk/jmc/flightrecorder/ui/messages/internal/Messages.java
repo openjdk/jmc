@@ -152,6 +152,7 @@ public class Messages extends NLS {
 	public static String FLAVOR_SELECTED_RANGE;
 	public static String FOLDER_COULD_NOT_BE_CREATED;
 	public static String FileIOPage_DURATION_SELECTION;
+	public static String FileIOPage_SIZE_SELECTION;
 	public static String FileIOPage_HISTOGRAM_SELECTION;
 	public static String FileIOPage_LOG_SELECTION;
 	public static String FileIOPage_PAGE_NAME;
@@ -210,6 +211,7 @@ public class Messages extends NLS {
 	public static String IO_PAGE_DURATIONS_DESCRIPTION;
 	public static String IO_PAGE_EVENT_LOG_DESCRIPTION;
 	public static String IO_PAGE_TIMELINE_DESCRIPTION;
+	public static String IO_PAGE_SIZE_DESCRIPTION;
 	public static String ITEMHANDLER_CHART_DESCRIPTION;
 	public static String ITEMHANDLER_CHART_TITLE;
 	public static String ITEMHANDLER_LIST_DESCRIPTION;
@@ -346,6 +348,7 @@ public class Messages extends NLS {
 	public static String PAGES_DURATIONS;
 	public static String PAGES_EVENT_LOG;
 	public static String PAGES_TIMELINE;
+	public static String PAGES_SIZE;
 	public static String PAGE_CHANGE_ICON_CHOOSE_IMAGE_FILE;
 	public static String PAGE_CHANGE_ICON_CURRENT_ICON;
 	public static String PAGE_CHANGE_ICON_MENU_ACTION;
@@ -463,6 +466,7 @@ public class Messages extends NLS {
 	public static String SocketIOPage_BY_HOST_AND_PORT_ACTION;
 	public static String SocketIOPage_BY_PORT_ACTION;
 	public static String SocketIOPage_DURATION_SELECTION;
+	public static String SocketIOPage_SIZE_SELECTION;
 	public static String SocketIOPage_HISTOGRAM_SELECTION;
 	public static String SocketIOPage_HOST_AND_PORT;
 	public static String SocketIOPage_LOG_SELECTION;

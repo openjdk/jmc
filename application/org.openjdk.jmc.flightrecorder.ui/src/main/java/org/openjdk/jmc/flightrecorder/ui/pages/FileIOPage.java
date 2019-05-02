@@ -169,6 +169,7 @@ public class FileIOPage extends AbstractDataPage {
 
 		private final ChartCanvas timelineCanvas;
 		private final ChartCanvas durationCanvas;
+		private final ChartCanvas sizeCanvas;
 		private XYChart timelineChart;
 		private IRange<IQuantity> timeRange;
 		private IItemCollection selectionItems;
@@ -220,7 +221,14 @@ public class FileIOPage extends AbstractDataPage {
 			DataPageToolkit.createChartTooltip(durationCanvas);
 
 			CTabItem t3 = new CTabItem(tabFolder, SWT.NONE);
-			t3.setToolTipText(Messages.IO_PAGE_EVENT_LOG_DESCRIPTION);
+			t3.setToolTipText(Messages.IO_PAGE_SIZE_DESCRIPTION);
+			sizeCanvas = new ChartCanvas(tabFolder);
+			t3.setText(Messages.PAGES_SIZE);
+			t3.setControl(sizeCanvas);
+			DataPageToolkit.createChartTooltip(sizeCanvas);
+
+			CTabItem t4 = new CTabItem(tabFolder, SWT.NONE);
+			t4.setToolTipText(Messages.IO_PAGE_EVENT_LOG_DESCRIPTION);
 			itemList = LIST.buildWithoutBorder(tabFolder, getTableSettings(state.getChild(LIST_ELEMENT)));
 			MCContextMenuManager itemListMm = MCContextMenuManager
 					.create(itemList.getManager().getViewer().getControl());
@@ -229,13 +237,13 @@ public class FileIOPage extends AbstractDataPage {
 					Messages.FileIOPage_LOG_SELECTION, itemListMm);
 			itemList.getManager().getViewer().addSelectionChangedListener(
 					e -> pageContainer.showSelection(ItemCollectionToolkit.build(itemList.getSelection().get())));
-			t3.setText(Messages.PAGES_EVENT_LOG);
+			t4.setText(Messages.PAGES_EVENT_LOG);
 			itemListFilter = FilterComponent.createFilterComponent(itemList, FileIOPage.this.itemListFilter,
 					getDataSource().getItems().apply(TABLE_ITEMS), pageContainer.getSelectionStore()::getSelections,
 					this::onListFilterChange);
 			itemListMm.add(itemListFilter.getShowFilterAction());
 			itemListMm.add(itemListFilter.getShowSearchAction());
-			t3.setControl(itemListFilter.getComponent());
+			t4.setControl(itemListFilter.getComponent());
 
 			tableFilter.loadState(state.getChild(FILE_IO_TABLE));
 			itemListFilter.loadState(state.getChild(FILE_IO_LIST));
@@ -323,6 +331,7 @@ public class FileIOPage extends AbstractDataPage {
 			String pathCount = pathCount(histogramSelection.getRowCount());
 			List<IXDataRenderer> timelineRows = new ArrayList<>();
 			List<IXDataRenderer> durationRows = new ArrayList<>();
+			List<IXDataRenderer> sizeRows = new ArrayList<>();
 			IItemCollection readItems = selectedItems.apply(JdkFilters.FILE_READ);
 			if (readItems.hasItems()) {
 				timelineRows.add(DataPageToolkit.buildSizeRow(Messages.FileIOPage_ROW_FILE_READ + pathCount,
@@ -331,6 +340,9 @@ public class FileIOPage extends AbstractDataPage {
 				durationRows.add(DataPageToolkit.buildDurationHistogram(Messages.FileIOPage_ROW_FILE_READ + pathCount,
 						JdkAggregators.FILE_READ_COUNT.getDescription(), readItems, JdkAggregators.FILE_READ_COUNT,
 						READ_COLOR));
+				sizeRows.add(DataPageToolkit.buildSizeHistogram(Messages.FileIOPage_ROW_FILE_READ + pathCount,
+						JdkAggregators.FILE_READ_COUNT.getDescription(), readItems, JdkAggregators.FILE_READ_COUNT,
+						READ_COLOR, JdkAttributes.IO_FILE_BYTES_READ));
 			}
 			IItemCollection writeItems = selectedItems.apply(JdkFilters.FILE_WRITE);
 			if (writeItems.hasItems()) {
@@ -340,6 +352,9 @@ public class FileIOPage extends AbstractDataPage {
 				durationRows.add(DataPageToolkit.buildDurationHistogram(Messages.FileIOPage_ROW_FILE_WRITE + pathCount,
 						JdkAggregators.FILE_WRITE_COUNT.getDescription(), writeItems, JdkAggregators.FILE_WRITE_COUNT,
 						WRITE_COLOR));
+				sizeRows.add(DataPageToolkit.buildSizeHistogram(Messages.FileIOPage_ROW_FILE_WRITE + pathCount,
+						JdkAggregators.FILE_WRITE_COUNT.getDescription(), writeItems, JdkAggregators.FILE_WRITE_COUNT,
+						WRITE_COLOR, JdkAttributes.IO_FILE_BYTES_WRITTEN));
 			}
 //			ItemRow[] pathRows = selection.getSelectedRows(FileIOPage::buildPathLane).toArray(ItemRow[]::new);
 
@@ -359,6 +374,19 @@ public class FileIOPage extends AbstractDataPage {
 			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), durationChart,
 					JfrAttributes.DURATION, Messages.FileIOPage_DURATION_SELECTION, durationCanvas.getContextMenu());
 			itemList.show(selectedItems);
+
+			IXDataRenderer sizeRoot = RendererToolkit.uniformRows(sizeRows);
+			IQuantity sizeMax = selectedItems.getAggregate(JdkAggregators.FILE_READ_LARGEST);
+			// FIXME: Workaround to make max value included
+			sizeMax = sizeMax == null ? UnitLookup.BYTE.quantity(64): sizeMax.add(UnitLookup.BYTE.quantity(64));
+			XYChart sizeChart = new XYChart(UnitLookup.BYTE.quantity(0), sizeMax, sizeRoot, 180);
+			DataPageToolkit.setChart(sizeCanvas, sizeChart, JdkAttributes.IO_SIZE,
+					selection -> pageContainer.showSelection(selection));
+			sizeChart.setVisibleRange(sizeRange.getStart(), sizeRange.getEnd());
+			sizeChart.addVisibleRangeListener(range -> sizeRange = range);
+			sizeCanvas.setChart(sizeChart);
+			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), sizeChart,
+					JdkAttributes.IO_SIZE, Messages.FileIOPage_SIZE_SELECTION, sizeCanvas.getContextMenu());
 		}
 	}
 
@@ -389,12 +417,14 @@ public class FileIOPage extends AbstractDataPage {
 	private int tabFolderIndex = 0;
 	private IRange<IQuantity> timelineRange;
 	private IRange<IQuantity> durationRange;
+	private IRange<IQuantity> sizeRange;
 	public FlavorSelectorState flavorSelectorState;
 
 	public FileIOPage(IPageDefinition dpd, StreamModel items, IPageContainer editor) {
 		super(dpd, items, editor);
 		timelineRange = editor.getRecordingRange();
 		durationRange = editor.getRecordingRange();
+		sizeRange = DataPageToolkit.buildSizeRange(items.getItems(), false);
 	}
 
 //	private static ItemRow buildPathLane(Object path, Supplier<Stream<ItemStream>> pathItems) {

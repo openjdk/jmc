@@ -227,7 +227,9 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_INSIDE_TLAB_COUNT),
 			Messages.getString(Messages.AGGR_INSIDE_TLAB_COUNT_DESC), ALLOC_INSIDE_TLAB);
 	public static final IAggregator<IQuantity, ?> FILE_WRITE_LONGEST = Aggregators.max(FILE_WRITE, DURATION);
+	public static final IAggregator<IQuantity, ?> FILE_WRITE_LARGEST = Aggregators.max(FILE_WRITE, IO_FILE_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> FILE_READ_LONGEST = Aggregators.max(FILE_READ, DURATION);
+	public static final IAggregator<IQuantity, ?> FILE_READ_LARGEST = Aggregators.max(FILE_READ, IO_FILE_BYTES_READ);
 	public static final IAggregator<IQuantity, ?> FILE_WRITE_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_FILE_WRITE_SIZE), Messages.getString(Messages.AGGR_FILE_WRITE_SIZE_DESC),
 			FILE_WRITE, IO_FILE_BYTES_WRITTEN);
@@ -253,7 +255,9 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_CODE_CACHE_FULL_COUNT),
 			Messages.getString(Messages.AGGR_CODE_CACHE_FULL_COUNT_DESC), CODE_CACHE_FULL);
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_LONGEST = Aggregators.max(SOCKET_WRITE, DURATION);
+	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_LARGEST = Aggregators.max(SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> SOCKET_READ_LONGEST = Aggregators.max(SOCKET_READ, DURATION);
+	public static final IAggregator<IQuantity, ?> SOCKET_READ_LARGEST = Aggregators.max(SOCKET_READ, IO_SOCKET_BYTES_READ);
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE),
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE_DESC), SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);

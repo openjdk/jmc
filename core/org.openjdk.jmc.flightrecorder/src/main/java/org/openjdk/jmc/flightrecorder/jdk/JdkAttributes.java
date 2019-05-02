@@ -49,6 +49,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESTAMP;
 import static org.openjdk.jmc.common.unit.UnitLookup.UNKNOWN;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openjdk.jmc.common.IDisplayable;
@@ -73,6 +74,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.common.util.MCClassLoader;
+import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.messages.internal.Messages;
 
@@ -470,6 +472,23 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> IO_SOCKET_BYTES_WRITTEN = attr("bytesWritten", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_SOCKET_BYTES_WRITTEN),
 			Messages.getString(Messages.ATTR_IO_SOCKET_BYTES_WRITTEN_DESC), MEMORY);
+	public static final IAttribute<IQuantity> IO_SIZE = Attribute.canonicalize(new Attribute<IQuantity>("size",  //#NON-NLS-1$
+			"Size", null, MEMORY) {
+		@Override
+		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type){
+			List<IMemberAccessor<IQuantity, U>> accessorList = new ArrayList<>();
+			accessorList.add(type.getAccessor(JdkAttributes.IO_SOCKET_BYTES_READ.getKey()));
+			accessorList.add(type.getAccessor(JdkAttributes.IO_SOCKET_BYTES_WRITTEN.getKey()));
+			accessorList.add(type.getAccessor(JdkAttributes.IO_FILE_BYTES_READ.getKey()));
+			accessorList.add(type.getAccessor(JdkAttributes.IO_FILE_BYTES_WRITTEN.getKey()));
+			for (IMemberAccessor<IQuantity, U> accessor : accessorList) {
+				if(accessor != null) {
+					return accessor;
+				}
+			}
+			return MemberAccessorToolkit.constant(UnitLookup.BYTE.quantity(0));
+		}
+	});
 	public static final IAttribute<String> IO_ADDRESS = attr("address", Messages.getString(Messages.ATTR_IO_ADDRESS), //$NON-NLS-1$
 			PLAIN_TEXT);
 	public static final IAttribute<String> IO_HOST = attr("host", Messages.getString(Messages.ATTR_IO_HOST), //$NON-NLS-1$

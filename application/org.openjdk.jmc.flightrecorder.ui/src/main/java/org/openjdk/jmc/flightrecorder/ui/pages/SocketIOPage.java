@@ -69,6 +69,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.common.util.StateToolkit;
@@ -201,6 +202,7 @@ public class SocketIOPage extends AbstractDataPage {
 
 		private final ChartCanvas timelineCanvas;
 		private final ChartCanvas durationCanvas;
+		private final ChartCanvas sizeCanvas;
 		private final ItemList itemList;
 
 		private final SashForm sash;
@@ -218,6 +220,7 @@ public class SocketIOPage extends AbstractDataPage {
 		private IItemCollection selectionItems;
 		private XYChart timelineChart;
 		private XYChart durationChart;
+		private XYChart sizeChart;
 		private CTabFolder tabFolder;
 		private FlavorSelector flavorSelector;
 
@@ -264,8 +267,27 @@ public class SocketIOPage extends AbstractDataPage {
 			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), durationChart,
 					JfrAttributes.DURATION, Messages.SocketIOPage_DURATION_SELECTION, durationCanvas.getContextMenu());
 
+			IQuantity sizeMax = QuantitiesToolkit.maxPresent(socketItems.getAggregate(JdkAggregators.SOCKET_READ_LARGEST),
+					socketItems.getAggregate(JdkAggregators.SOCKET_WRITE_LARGEST));
+			// FIXME: Workaround to make max value included
+			sizeMax = sizeMax == null ? UnitLookup.BYTE.quantity(64): sizeMax.add(UnitLookup.BYTE.quantity(64));
+			sizeChart = new XYChart(UnitLookup.BYTE.quantity(0), sizeMax, RendererToolkit.empty(), 180);
+			sizeChart.setVisibleRange(sizeRange.getStart(), sizeMax);
+			sizeChart.addVisibleRangeListener(range -> sizeRange = range);
+
 			CTabItem t3 = new CTabItem(tabFolder, SWT.NONE);
-			t3.setToolTipText(Messages.IO_PAGE_EVENT_LOG_DESCRIPTION);
+			t3.setToolTipText(Messages.IO_PAGE_SIZE_DESCRIPTION);
+			sizeCanvas = new ChartCanvas(tabFolder);
+			t3.setText(Messages.PAGES_SIZE);
+			t3.setControl(sizeCanvas);
+			DataPageToolkit.createChartTooltip(sizeCanvas);
+			DataPageToolkit.setChart(sizeCanvas, sizeChart, JdkAttributes.IO_SIZE,
+					pageContainer::showSelection);
+			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), sizeChart,
+					JdkAttributes.IO_SIZE, Messages.SocketIOPage_SIZE_SELECTION, sizeCanvas.getContextMenu());
+
+			CTabItem t4 = new CTabItem(tabFolder, SWT.NONE);
+			t4.setToolTipText(Messages.IO_PAGE_EVENT_LOG_DESCRIPTION);
 			itemList = LIST.buildWithoutBorder(tabFolder, getTableSettings(state.getChild(LIST_ELEMENT)));
 			MCContextMenuManager itemListMm = MCContextMenuManager
 					.create(itemList.getManager().getViewer().getControl());
@@ -274,13 +296,13 @@ public class SocketIOPage extends AbstractDataPage {
 					Messages.SocketIOPage_LOG_SELECTION, itemListMm);
 			itemList.getManager().getViewer().addSelectionChangedListener(
 					e -> pageContainer.showSelection(ItemCollectionToolkit.build(itemList.getSelection().get())));
-			t3.setText(Messages.PAGES_EVENT_LOG);
+			t4.setText(Messages.PAGES_EVENT_LOG);
 			eventFilter = FilterComponent.createFilterComponent(itemList, itemListFilter,
 					getDataSource().getItems().apply(TABLE_ITEMS), pageContainer.getSelectionStore()::getSelections,
 					this::onEventFilterChange);
 			itemListMm.add(eventFilter.getShowFilterAction());
 			itemListMm.add(eventFilter.getShowSearchAction());
-			t3.setControl(eventFilter.getComponent());
+			t4.setControl(eventFilter.getComponent());
 			eventFilter.loadState(state.getChild(EVENT_FILTER));
 			onEventFilterChange(itemListFilter);
 			itemList.getManager().setSelectionState(itemListSelection);
@@ -459,6 +481,7 @@ public class SocketIOPage extends AbstractDataPage {
 
 			List<IXDataRenderer> timelineRows = new ArrayList<>();
 			List<IXDataRenderer> durationRows = new ArrayList<>();
+			List<IXDataRenderer> sizeRows = new ArrayList<>();
 			IItemCollection readItems = selectedItems.apply(JdkFilters.SOCKET_READ);
 			if (readItems.hasItems()) {
 				timelineRows.add(DataPageToolkit.buildSizeRow(Messages.SocketIOPage_ROW_SOCKET_READ + hostCount,
@@ -468,6 +491,9 @@ public class SocketIOPage extends AbstractDataPage {
 						.add(DataPageToolkit.buildDurationHistogram(Messages.SocketIOPage_ROW_SOCKET_READ + hostCount,
 								JdkAggregators.SOCKET_READ_COUNT.getDescription(), readItems,
 								JdkAggregators.SOCKET_READ_COUNT, READ_COLOR));
+				sizeRows.add(DataPageToolkit.buildSizeHistogram(Messages.SocketIOPage_ROW_SOCKET_READ + hostCount,
+						JdkAggregators.SOCKET_READ_COUNT.getDescription(), readItems,
+						JdkAggregators.SOCKET_READ_COUNT, READ_COLOR, JdkAttributes.IO_SOCKET_BYTES_READ));
 			}
 			IItemCollection writeItems = selectedItems.apply(JdkFilters.SOCKET_WRITE);
 			if (writeItems.hasItems()) {
@@ -478,10 +504,14 @@ public class SocketIOPage extends AbstractDataPage {
 						.add(DataPageToolkit.buildDurationHistogram(Messages.SocketIOPage_ROW_SOCKET_WRITE + hostCount,
 								JdkAggregators.SOCKET_WRITE_COUNT.getDescription(), writeItems,
 								JdkAggregators.SOCKET_WRITE_COUNT, WRITE_COLOR));
+				sizeRows.add(DataPageToolkit.buildSizeHistogram(Messages.SocketIOPage_ROW_SOCKET_WRITE + hostCount,
+						JdkAggregators.SOCKET_WRITE_COUNT.getDescription(), writeItems,
+						JdkAggregators.SOCKET_WRITE_COUNT, WRITE_COLOR, JdkAttributes.IO_SOCKET_BYTES_WRITTEN));
 			}
 			if (timelineCanvas != null) {
 				timelineCanvas.replaceRenderer(RendererToolkit.uniformRows(timelineRows));
 				durationCanvas.replaceRenderer(RendererToolkit.uniformRows(durationRows));
+				sizeCanvas.replaceRenderer(RendererToolkit.uniformRows(sizeRows));
 
 				itemList.show(selectedItems);
 				pageContainer.showSelection(selectedItems);
@@ -568,6 +598,7 @@ public class SocketIOPage extends AbstractDataPage {
 	private IItemFilter itemListFilter;
 	private IRange<IQuantity> timelineRange;
 	private IRange<IQuantity> durationRange;
+	private IRange<IQuantity> sizeRange;
 	private int tabFolderIndex = 0;
 	public FlavorSelectorState flavorSelectorState;
 
@@ -579,6 +610,7 @@ public class SocketIOPage extends AbstractDataPage {
 		secondaryTableFilter = new HashMap<>();
 		timelineRange = editor.getRecordingRange();
 		durationRange = editor.getRecordingRange();
+		sizeRange = DataPageToolkit.buildSizeRange(items.getItems(), true);
 	}
 
 	@Override

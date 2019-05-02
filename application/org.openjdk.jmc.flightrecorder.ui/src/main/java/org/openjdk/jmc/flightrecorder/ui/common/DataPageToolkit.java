@@ -111,12 +111,14 @@ import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
+import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.common.util.CompositeKey;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
@@ -563,6 +565,29 @@ public class DataPageToolkit {
 				description);
 		renderer.addBarChart(a.getName(), allocationSeries, color);
 		return new ItemRow(title, description, renderer, items);
+	}
+
+	public static ItemRow buildSizeHistogram(
+		String title, String description, IItemCollection items, IAggregator<IQuantity, ?> a, Color color, IAttribute<IQuantity> attribute) {
+		IQuantitySeries<IQuantity[]> allocationSeries = BucketBuilder.aggregatorSeries(items, a,
+				JdkAttributes.IO_SIZE);
+		XYDataRenderer renderer = new XYDataRenderer(getKindOfQuantity(a).getDefaultUnit().quantity(0), title,
+				description);
+		renderer.addBarChart(a.getName(), allocationSeries, color);
+		return new ItemRow(title, description, renderer, items);
+	}
+
+	public static IRange<IQuantity> buildSizeRange(IItemCollection items, boolean isSocket){
+		IQuantity end = null;
+		if(isSocket) {
+			end = QuantitiesToolkit.maxPresent(items.getAggregate(JdkAggregators.SOCKET_READ_LARGEST),
+					items.getAggregate(JdkAggregators.SOCKET_WRITE_LARGEST));
+		} else {
+			end = QuantitiesToolkit.maxPresent(items.getAggregate(JdkAggregators.FILE_READ_LARGEST),
+					items.getAggregate(JdkAggregators.FILE_WRITE_LARGEST));
+		}
+		end = end == null ? UnitLookup.BYTE.quantity(1024) : end;
+		return QuantityRange.createWithEnd(UnitLookup.BYTE.quantity(0), end);
 	}
 
 	// FIXME: Make something that can use something other than time as x-axis?
