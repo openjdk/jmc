@@ -47,6 +47,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
@@ -76,7 +77,9 @@ import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.ItemHistogramBuild
 import org.openjdk.jmc.flightrecorder.ui.common.ItemRow;
 import org.openjdk.jmc.flightrecorder.ui.common.ThreadGraphLanes;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
+import org.openjdk.jmc.ui.charts.QuantitySpanRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.column.TableSettings;
@@ -152,15 +155,23 @@ public class ThreadsPage extends AbstractDataPage {
 
 	private class ThreadsPageUi extends ChartAndTableUI {
 		private static final String THREADS_TABLE_FILTER = "threadsTableFilter"; //$NON-NLS-1$
-		private ThreadGraphLanes lanes;
+		private static final String HIDE_THREAD = "hideThread"; //$NON-NLS-1$
+		private static final String RESET_CHART = "resetChart"; //$NON-NLS-1$
+		private Boolean isChartMenuActionsInit;
+		private Boolean isChartModified;
+		private Boolean reloadThreads;
+		private IAction hideThreadAction;
+		private IAction resetChartAction;
+		private List<IXDataRenderer> threadRows;
 		private MCContextMenuManager mm;
+		private ThreadGraphLanes lanes;
 
 		ThreadsPageUi(Composite parent, FormToolkit toolkit, IPageContainer editor, IState state) {
 			super(pageFilter, getDataSource(), parent, toolkit, editor, state, getName(), pageFilter, getIcon(),
 					flavorSelectorState);
 			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
 			sash.setOrientation(SWT.HORIZONTAL);
-			mm.add(new Separator());
+			addActionsToContextMenu(mm);
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
 			lanes.updateContextMenu(mm, false);
 
@@ -174,6 +185,86 @@ public class ThreadsPage extends AbstractDataPage {
 			tableFilterComponent.loadState(state.getChild(THREADS_TABLE_FILTER));
 			chart.setVisibleRange(visibleRange.getStart(), visibleRange.getEnd());
 			onFilterChange(tableFilter);
+		}
+
+		/**
+		 * Hides a thread from the chart and rebuilds the chart
+		 */
+		private void hideThread(Object thread) {
+			if (this.threadRows != null && this.threadRows.size() > 0 && thread instanceof IMCThread) {
+				int index = indexOfThread(thread);
+				if (index != -1) {
+					this.threadRows.remove(index);
+					this.reloadThreads = false;
+					buildChart();
+					if (!this.isChartModified) {
+						this.isChartModified = true;
+						setResetChartActionEnablement(true);
+					}
+				}
+				if (this.threadRows.size() == 0) {
+					setHideThreadActionEnablement(false);
+				}
+			}
+		}
+
+		/**
+		 * Locates the index of the target Thread in the current selection list
+		 *
+		 * @param thread
+		 *            the thread of interest
+		 * @return the index of the thread in the current selection, or -1 if not found
+		 */
+		private int indexOfThread(Object thread) {
+			for (int i = 0; i < this.threadRows.size() && thread != null; i++) {
+				if (this.threadRows.get(i) instanceof QuantitySpanRenderer) {
+					if (thread.equals(((QuantitySpanRenderer) this.threadRows.get(i)).getData())) {
+						return i;
+					}
+				}
+			}
+			return -1;
+		}
+
+		/**
+		 * Update the context menu to include actions to hide threads and reset the chart
+		 */
+		private void addActionsToContextMenu(MCContextMenuManager mm) {
+			mm.add(new Separator());
+
+			IAction hideThreadAction = ActionToolkit.action(() -> this.hideThread(chartCanvas.getHoveredItemData()),
+					Messages.ThreadsPage_HIDE_THREAD_ACTION,
+					UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_DELETE));
+			hideThreadAction.setId(HIDE_THREAD);
+			this.hideThreadAction = hideThreadAction;
+			mm.add(hideThreadAction);
+
+			IAction resetChartAction = ActionToolkit.action(() -> this.resetChartToSelection(),
+					Messages.ThreadsPage_RESET_CHART_TO_SELECTION_ACTION,
+					UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_REFRESH));
+			resetChartAction.setId(RESET_CHART);
+			resetChartAction.setEnabled(this.isChartModified);
+			this.resetChartAction = resetChartAction;
+			mm.add(resetChartAction);
+
+			this.isChartMenuActionsInit = true;
+		}
+
+		/**
+		 * Redraws the chart, and disables the reset chart menu action
+		 */
+		private void resetChartToSelection() {
+			buildChart();
+			this.isChartModified = false;
+			setResetChartActionEnablement(false);
+			setHideThreadActionEnablement(true);
+		}
+
+		private void setHideThreadActionEnablement(Boolean enabled) {
+			this.hideThreadAction.setEnabled(enabled);
+		}
+		private void setResetChartActionEnablement(Boolean enabled) {
+			this.resetChartAction.setEnabled(enabled);
 		}
 
 		@Override
@@ -198,15 +289,25 @@ public class ThreadsPage extends AbstractDataPage {
 			}
 			boolean useDefaultSelection = rows.size() > 1;
 			if (lanes.getLaneDefinitions().stream().anyMatch(a -> a.isEnabled()) && selection.getRowCount() > 0) {
-				List<IXDataRenderer> threadRows = selection
-						.getSelectedRows((object, items) -> lanes.buildThreadRenderer(object, items))
-						.collect(Collectors.toList());
+				if (this.reloadThreads) {
+					this.threadRows = selection
+							.getSelectedRows((object, items) -> lanes.buildThreadRenderer(object, items))
+							.collect(Collectors.toList());
+					this.isChartModified = false;
+					if (this.isChartMenuActionsInit) {
+						setResetChartActionEnablement(false);
+						setHideThreadActionEnablement(true);
+					}
+				} else {
+					this.reloadThreads = true;
+				}
+
 				double threadsWeight = Math.sqrt(threadRows.size()) * 0.15;
 				double otherRowWeight = Math.max(threadsWeight * 0.1, (1 - threadsWeight) / rows.size());
 				List<Double> weights = Stream
 						.concat(Stream.generate(() -> otherRowWeight).limit(rows.size()), Stream.of(threadsWeight))
 						.collect(Collectors.toList());
-				rows.add(RendererToolkit.uniformRows(threadRows));
+				rows.add(RendererToolkit.uniformRows(this.threadRows));
 				useDefaultSelection = true;
 				rows = Arrays.asList(RendererToolkit.weightedRows(rows, weights));
 			}
@@ -236,6 +337,9 @@ public class ThreadsPage extends AbstractDataPage {
 
 		@Override
 		protected List<IAction> initializeChartConfiguration(IState state) {
+			this.isChartMenuActionsInit = false;
+			this.isChartModified = false;
+			this.reloadThreads = true;
 			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
 			return lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANE)));
 		}

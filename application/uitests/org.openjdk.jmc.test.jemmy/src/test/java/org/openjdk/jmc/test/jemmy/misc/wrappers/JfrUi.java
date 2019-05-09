@@ -56,6 +56,7 @@ public class JfrUi extends MCJemmyBase {
 	 */
 	public static enum Tabs {
 		JAVA_APPLICATION,
+		THREADS,
 		MEMORY,
 		LOCK_INSTANCES,
 		FILE_IO,
@@ -97,6 +98,9 @@ public class JfrUi extends MCJemmyBase {
 				break;
 			case ALLOCATIONS:
 				tabText = new String[] {"JVM Internals", "TLAB Allocations"};
+				break;
+			case THREADS:
+				tabText = new String[] {"Java Application", "Threads"};
 				break;
 			case MEMORY:
 				tabText = new String[] {"Java Application", "Memory"};

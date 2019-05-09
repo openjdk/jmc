@@ -51,9 +51,12 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Widget;
+import org.jemmy.Point;
 import org.jemmy.action.AbstractExecutor;
 import org.jemmy.control.Wrap;
 import org.jemmy.env.Environment;
@@ -71,6 +74,7 @@ import org.jemmy.interfaces.Focusable;
 import org.jemmy.interfaces.Keyboard.KeyboardButton;
 import org.jemmy.interfaces.Keyboard.KeyboardButtons;
 import org.jemmy.interfaces.Keyboard.KeyboardModifiers;
+import org.jemmy.interfaces.Mouse.MouseButtons;
 import org.jemmy.interfaces.Parent;
 import org.jemmy.lookup.AbstractLookup;
 import org.jemmy.lookup.Lookup;
@@ -527,6 +531,45 @@ public class MCJemmyBase {
 		};
 		Display.getDefault().syncExec(fetcher);
 		return fetcher.getOutput();
+	}
+
+	/**
+	 * Opens the context menu by right-clicking at a provided point
+	 *
+	 * @param p
+	 *            origin point of context (right-click)
+	 */
+	private void openContextMenuAtPoint(Point p) {
+		Display.getDefault().syncExec(() -> {
+			control.mouse().click(1, p, MouseButtons.BUTTON3);
+		});
+	}
+
+	/**
+	 * Checks the isEnabled value for a menu item
+	 *
+	 * @param p
+	 *            the point on the screen at which to open the context menu
+	 * @param menuItemText
+	 *            the menu item of interest
+	 * @return the isEnabled value for the menu item of interest
+	 */
+	public boolean isContextMenuItemEnabled(Point p, String menuItemText) {
+		openContextMenuAtPoint(p);
+		Fetcher<Boolean> fetcher = new Fetcher<Boolean>() {
+			@Override
+			public void run() {
+				Menu menu = control.getControl().getMenu();
+				for (MenuItem item : menu.getItems()) {
+					if(menuItemText.equals(item.getText())) {
+						setOutput(item.isEnabled());
+						break;
+					}
+				}
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return (fetcher.getOutput() == null) ? false : fetcher.getOutput();
 	}
 
 	/**

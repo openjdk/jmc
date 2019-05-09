@@ -60,19 +60,25 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 	private final IXDataRenderer content;
 	private final String text;
 	private final String description;
+	private final Object data;
 
 	public QuantitySpanRenderer(IQuantitySeries<?> ranges, IXDataRenderer content, Paint paint, int minOutlineHeight,
-			String text, String description) {
+			String text, String description, Object data) {
 		this.ranges = ranges;
 		this.content = content;
 		this.paint = paint;
 		this.minOutlineHeight = minOutlineHeight;
 		this.text = text;
 		this.description = description;
+		this.data = data;
 	}
 
 	private static int calcMargin(int height) {
 		return Math.min(5, (height + 10) / 20);
+	}
+
+	public Object getData() {
+		return data;
 	}
 
 	@Override
@@ -91,7 +97,7 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 			AWTChartToolkit.drawRanges(context, quantities, innerHeight, false);
 		}
 		context.translate(0, -margin);
-		return new QuantitySpanRendering(margin, quantities, renderedContent, paint, text, description);
+		return new QuantitySpanRendering(margin, quantities, renderedContent, paint, text, description, data);
 	}
 
 	private static class QuantitySpanRendering extends RenderedRowBase {
@@ -100,10 +106,11 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 		private final IRenderedRow content;
 		private final Paint paint;
 		private final int margin;
-		private String description;
+		private final String description;
+		private final Object data;
 
 		public QuantitySpanRendering(int margin, XYQuantities<?> points, IRenderedRow content, Paint paint, String text,
-				String description) {
+				String description, Object data) {
 			super(Arrays.asList(new RenderedRowBase(margin), content, new RenderedRowBase(margin)),
 					content.getHeight() + 2 * margin, text, description, null);
 			this.margin = margin;
@@ -111,10 +118,12 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 			this.content = content;
 			this.paint = paint;
 			this.description = description;
+			this.data = data;
 		}
 
 		@Override
 		public void infoAt(IChartInfoVisitor visitor, int x, int y, Point offset) {
+			visitor.hover(data);
 			offset = new Point(offset.x, offset.y + margin);
 			content.infoAt(visitor, x, y, offset);
 

@@ -164,7 +164,7 @@ public class ThreadGraphLanes {
 			this.resetTooltipTitle();
 		}
 		return new QuantitySpanRenderer(threadRanges(threadName, itemsAndThreadLifespan), renderer, THREAD_BG_COLOR, 10,
-				threadName, this.getTooltipTitle());
+				threadName, this.getTooltipTitle(), thread);
 	}
 
 	private IItemCollection addThreadLifeSpanEvents(Object thread, final IItemCollection items) {

@@ -40,6 +40,7 @@ public class Messages {
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
+	public static final String RendererToolkit_NO_CONTENT = "RendererToolkit_NO_CONTENT"; //$NON-NLS-1$
 	public static final String RendererToolkit_TOO_MUCH_CONTENT = "RendererToolkit_TOO_MUCH_CONTENT"; //$NON-NLS-1$
 
 	private Messages() {

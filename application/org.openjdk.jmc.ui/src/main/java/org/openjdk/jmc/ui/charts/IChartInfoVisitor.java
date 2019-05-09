@@ -40,7 +40,7 @@ import org.openjdk.jmc.common.IDisplayable;
 
 /**
  * Visitor interface to gather information about values displayed in charts, typically in the
- * vicinity of some coordinates. Suitable for tooltips, highlighting or snapping.
+ * vicinity of some coordinates. Suitable for tooltips, highlighting, hovering or snapping.
  */
 public interface IChartInfoVisitor {
 	public abstract class Adapter implements IChartInfoVisitor {
@@ -52,6 +52,10 @@ public interface IChartInfoVisitor {
 
 		@Override
 		public void leaveScope() {
+		}
+
+		@Override
+		public void hover(Object data) {
 		}
 
 		@Override
@@ -172,6 +176,16 @@ public interface IChartInfoVisitor {
 	boolean enterScope(String context, boolean fullyShown);
 
 	void leaveScope();
+
+	/**
+	 * Deliver supplementary information about the hovered rendered item to the Visitor.
+	 * <p>
+	 * To be used in conjunction with an rendered item's {@code infoAt()} to
+	 * deliver supplementary information about the currently hovered object to the Visitor.
+	 *
+	 * @param data
+	 */
+	void hover(Object data);
 
 	/**
 	 * Visit a bucket in a histogram.

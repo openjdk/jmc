@@ -109,6 +109,11 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 		bulletIndent -= 16;
 	}
 
+	@Override
+	public void hover(Object data) {
+		// Auto-generated method stub
+	}
+
 	protected String format(IDisplayable value) {
 		if (value != null) {
 			// FIXME: Add formatter that does AUTO (EXACT) or so.

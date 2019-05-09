@@ -102,7 +102,9 @@ public class RendererToolkit {
 
 	private static class CompositeRenderer implements IXDataRenderer {
 
-		private static final Color TOO_MUCH_CONTENT_BG = new Color(240, 240, 240, 190);
+		private static final Color MISMATCH_CONTENT_BG = new Color(240, 240, 240, 190);
+		private static final String NO_CONTENT_MSG = Messages
+				.getString(Messages.RendererToolkit_NO_CONTENT);
 		private static final String TOO_MUCH_CONTENT_MSG = Messages
 				.getString(Messages.RendererToolkit_TOO_MUCH_CONTENT);
 		private final List<IXDataRenderer> children;
@@ -143,18 +145,19 @@ public class RendererToolkit {
 			}
 			context.setTransform(oldTransform);
 			if (result.size() != children.size()) {
+				String displayMessage = result.size() == 0 ? NO_CONTENT_MSG : TOO_MUCH_CONTENT_MSG;
 				result = Collections.emptyList();
-				context.setPaint(TOO_MUCH_CONTENT_BG);
+				context.setPaint(MISMATCH_CONTENT_BG);
 				context.fillRect(0, 0, xRange.getPixelExtent(), height);
 				// FIXME: Draw something nice.
 				Font orgFont = context.getFont();
 				Font italicFont = orgFont.deriveFont(Font.ITALIC);
 				FontMetrics fm = context.getFontMetrics(italicFont);
-				int msgWidth = fm.stringWidth(TOO_MUCH_CONTENT_MSG);
+				int msgWidth = fm.stringWidth(displayMessage);
 				if (height > fm.getHeight() && xRange.getPixelExtent() > msgWidth) {
 					context.setFont(italicFont);
 					context.setPaint(Color.BLACK);
-					context.drawString(TOO_MUCH_CONTENT_MSG, (xRange.getPixelExtent() - msgWidth) / 2,
+					context.drawString(displayMessage, (xRange.getPixelExtent() - msgWidth) / 2,
 							(height - fm.getHeight()) / 2 + fm.getAscent());
 					context.setFont(orgFont);
 				}

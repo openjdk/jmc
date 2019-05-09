@@ -49,6 +49,7 @@ import org.jemmy.control.Wrap;
 import org.jemmy.input.StringPopupOwner;
 import org.jemmy.input.StringPopupSelectableOwner;
 import org.jemmy.interfaces.Keyboard.KeyboardButtons;
+import org.jemmy.interfaces.Keyboard.KeyboardModifiers;
 import org.jemmy.interfaces.Parent;
 import org.jemmy.interfaces.Selectable;
 import org.jemmy.lookup.Lookup;
@@ -728,6 +729,22 @@ public class MCTable extends MCJemmyBase {
 	 */
 	public boolean select(int index) {
 		return select(index, 0);
+	}
+
+	/**
+	 * Selects the table row at a specified "start" index, and uses SHIFT+DOWN to
+	 * add to the selection up until a specified "end" index
+	 *
+	 * @param from
+	 *            the row index to start from
+	 * @param to
+	 *            the row index to stop selecting
+	 */
+	public void selectItems(int start, int end) {
+		select(start);
+		for (int i = 0; i < end; i++) {
+			getShell().keyboard().pushKey(KeyboardButtons.DOWN, new KeyboardModifiers[] {KeyboardModifiers.SHIFT_DOWN_MASK});
+		}
 	}
 
 	/**
