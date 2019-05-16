@@ -62,5 +62,6 @@ public class JavaVersionSupport {
 	public static final JavaVersion STRING_IS_BYTE_ARRAY = JDK_9;
 	public static final JavaVersion JDK_11_EA = new JavaVersion(true, 11);
 	public static final JavaVersion JFR_NOT_COMMERCIAL = JDK_11_EA;
-
+	public static final JavaVersion JDK_11 = new JavaVersion(11,0);
+	public static final JavaVersion JDK_12 = new JavaVersion(12,0);
 }

@@ -55,6 +55,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInSystemPropertiesRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.RecordingSettingsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.StackDepthSettingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.UnsupportedJdkVersionRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule
