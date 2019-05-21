@@ -297,7 +297,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-%% The following notice is provided with respect to Twitter4J 4.0.6,
+%% The following notice is provided with respect to Twitter4J 4.0.7,
 which may be included with this product.
 
 
