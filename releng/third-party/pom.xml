@@ -97,7 +97,7 @@
 									<id>javax.mail:dsn:1.4</id>
 								</artifact>
 								<artifact>
-									<id>org.owasp.encoder:encoder:1.2.1</id>
+									<id>org.owasp.encoder:encoder:1.2.2</id>
 								</artifact>
 								<artifact>
 									<id>org.openjfx:javafx-base:jar:mac:11.0.1</id>

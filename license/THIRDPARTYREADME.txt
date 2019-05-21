@@ -260,7 +260,7 @@ to a jury trial in any resulting litigation.
 
 
 %% The following notice is provided with respect to OWASP Java 
-Encoder Project 1.2.1 which may be included with this product.
+Encoder Project 1.2.2 which may be included with this product.
 
 Copyright (c) 2015 Jeff Ichnowski
 All rights reserved.

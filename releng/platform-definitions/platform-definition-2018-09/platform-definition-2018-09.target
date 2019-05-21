@@ -37,7 +37,7 @@
             <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
             <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
             <unit id="javax.mail.dsn" version="1.4.0"/>
-            <unit id="org.owasp.encoder" version="1.2.1"/>
+            <unit id="org.owasp.encoder" version="1.2.2"/>
             <unit id="org.twitter4j.core" version="4.0.6"/>
             <unit id="org.openjfx.javafx-base.mac" version="11.0.1"/>
             <unit id="org.openjfx.javafx-base.win" version="11.0.1"/>
