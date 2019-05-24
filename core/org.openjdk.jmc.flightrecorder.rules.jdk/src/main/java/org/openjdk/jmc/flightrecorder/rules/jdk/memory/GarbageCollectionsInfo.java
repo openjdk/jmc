@@ -80,12 +80,13 @@ class GarbageCollectionsInfo implements IItemConsumer<GarbageCollectionsInfo> {
 	@Override
 	public void consume(IItem item) {
 		String cause = causeAccessor.getMember(item);
-		if ("Heap Inspection Initiated GC".equals(cause)) { //$NON-NLS-1$
+		cause = cause != null ? cause.toLowerCase() : ""; //$NON-NLS-1$
+		if ("heap inspection initiated gc".equals(cause)) { //$NON-NLS-1$
 			objectCountGCs++;
-		} else if ("System.gc()".equals(cause)) { //$NON-NLS-1$
+		} else if ("system.gc()".equals(cause)) { //$NON-NLS-1$
 			systemGcCount++;
 		} else {
-			if ("gclocker".equalsIgnoreCase(cause)) { //$NON-NLS-1$
+			if (cause.contains("gclocker")) { //$NON-NLS-1$
 				gcLockers++;
 			}
 			if (!nonRequestedSerialOldGc && CollectorType.SERIAL_OLD.getCollectorName().equals(nameAccessor.getMember(item))) {
