@@ -73,6 +73,7 @@ public class JfrUi extends MCJemmyBase {
 		VM_OPERATIONS,
 		ALLOCATIONS,
 		ENVIRONMENT,
+		NATIVE_LIBRARIES,
 		PROCESSES,
 		ENVIRONMENT_VARIABLES,
 		SYSTEM_PROPS,
@@ -144,6 +145,9 @@ public class JfrUi extends MCJemmyBase {
 			case PROCESSES:
 				tabText = new String[] {"Environment", "Processes"};
 				break;
+			case NATIVE_LIBRARIES:
+				tabText = new String[] {"Environment", "Native Libraries"};
+				break;				
 			case ENVIRONMENT_VARIABLES:
 				tabText = new String[] {"Environment", "Environment Variables"};
 				break;

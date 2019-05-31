@@ -472,17 +472,17 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> IO_SOCKET_BYTES_WRITTEN = attr("bytesWritten", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_SOCKET_BYTES_WRITTEN),
 			Messages.getString(Messages.ATTR_IO_SOCKET_BYTES_WRITTEN_DESC), MEMORY);
-	public static final IAttribute<IQuantity> IO_SIZE = Attribute.canonicalize(new Attribute<IQuantity>("size",  //#NON-NLS-1$
+	public static final IAttribute<IQuantity> IO_SIZE = Attribute.canonicalize(new Attribute<IQuantity>("size", //#NON-NLS-1$
 			"Size", null, MEMORY) {
 		@Override
-		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type){
+		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
 			List<IMemberAccessor<IQuantity, U>> accessorList = new ArrayList<>();
 			accessorList.add(type.getAccessor(JdkAttributes.IO_SOCKET_BYTES_READ.getKey()));
 			accessorList.add(type.getAccessor(JdkAttributes.IO_SOCKET_BYTES_WRITTEN.getKey()));
 			accessorList.add(type.getAccessor(JdkAttributes.IO_FILE_BYTES_READ.getKey()));
 			accessorList.add(type.getAccessor(JdkAttributes.IO_FILE_BYTES_WRITTEN.getKey()));
 			for (IMemberAccessor<IQuantity, U> accessor : accessorList) {
-				if(accessor != null) {
+				if (accessor != null) {
 					return accessor;
 				}
 			}
@@ -721,10 +721,10 @@ public final class JdkAttributes {
 	public static final IAttribute<String> DUMP_REASON_RECORDING_ID = attr("recordingId", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID),
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID_DESC), PLAIN_TEXT);
-	
+
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_SHUTDOWN_REASON),
-			Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC), PLAIN_TEXT);
+			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
+			PLAIN_TEXT);
 
 	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = attr("loadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),
@@ -899,7 +899,7 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> CLASS_COUNT = attr("classCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_COUNT), NUMBER);
 	public static final IAttribute<IQuantity> CLASS_LOADER_DATA = attr("classLoaderData", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_CLASSLOADER_DATA), ADDRESS);	
+			Messages.getString(Messages.ATTR_CLASSLOADER_DATA), ADDRESS);
 
 	public static final IAttribute<IQuantity> COMPILER_COMPILATION_ID = attr("compileId", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMPILER_COMPILATION_ID), NUMBER);
@@ -1212,4 +1212,11 @@ public final class JdkAttributes {
 			CLASS);
 	public static final IAttribute<Boolean> BIASED_REVOCATION_DISABLE_BIASING = attr("disableBiasing", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_DISABLE_BIASING), FLAG);
+
+	public static final IAttribute<String> NATIVE_LIBRARY_NAME = attr("name", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_NATIVE_LIBRARY_NAME), PLAIN_TEXT);
+	public static final IAttribute<IQuantity> BASE_ADDRESS = attr("baseAddress", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_BASE_ADDRESS), ADDRESS);
+	public static final IAttribute<IQuantity> TOP_ADDRESS = attr("topAddress", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TOP_ADDRESS), ADDRESS);
 }

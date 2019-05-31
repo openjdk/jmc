@@ -35,9 +35,11 @@ package org.openjdk.jmc.flightrecorder.rules.util;
 /**
  * A number of constant strings that are used as topics by JMC rules and pages. These are only used
  * as a convenience, you are by no means limited to these strings.
+ * <p>
+ * NOTE: If we want the word TOPIC in these constants, it should be the first word. Let's consider
+ * this for 8.0.0. See JMC-6487.
  */
 public final class JfrRuleTopics {
-
 	public static final String CLASS_LOADING_TOPIC = "classloading"; //$NON-NLS-1$
 	public static final String CODE_CACHE_TOPIC = "code_cache"; //$NON-NLS-1$
 	public static final String COMPILATIONS_TOPIC = "compilations"; //$NON-NLS-1$
@@ -61,5 +63,8 @@ public final class JfrRuleTopics {
 	public static final String THREADS_TOPIC = "threads"; //$NON-NLS-1$
 	public static final String VM_OPERATIONS_TOPIC = "vm_operations"; //$NON-NLS-1$
 	public static final String MEMORY_LEAK_TOPIC = "memoryleak"; //$NON-NLS-1$
+	public static final String BIASED_LOCKING_TOPIC = "biased_locking"; //$NON-NLS-1$
+	public static final String NATIVE_LIBRARY_TOPIC = "native_library"; //$NON-NLS-1$
+	@Deprecated
 	public static final String BIASED_LOCKING = "biased_locking"; //$NON-NLS-1$
 }

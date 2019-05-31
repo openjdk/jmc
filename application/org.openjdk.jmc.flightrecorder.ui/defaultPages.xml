@@ -771,8 +771,8 @@
 		<page factory="org.openjdk.jmc.flightrecorder.ui.environmentvariables"
 			id="org.openjdk.jmc.flightrecorder.ui.environmentvariables">
 			<state>
-				<table>
-					<column id="key:text" width="200">
+				<table sortColumn="key:text">
+					<column id="key:text" width="200" sortAscending="true">
 					</column>
 					<column id="value:text" width="600">
 					</column>
@@ -785,9 +785,21 @@
 		<page factory="org.openjdk.jmc.flightrecorder.ui.systemproperties"
 			id="org.openjdk.jmc.flightrecorder.ui.systemproperties">
 			<state>
-				<table>
-					<column id="key:text" width="230" />
+				<table sortColumn="key:text">
+					<column id="key:text" width="230" sortAscending="true" />
 					<column id="value:text" width="550" />
+				</table>
+				<filter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.nativelibrary"
+			id="org.openjdk.jmc.flightrecorder.ui.nativelibrary">
+			<state>
+				<table sortColumn="name:text">
+					<column id="name:text" sortAscending="true" width="420" />
+					<column id="baseAddress:address" width="100" />
+					<column id="topAddress:address" width="100" />
+					<column id="Count" width="70" hidden="true" />
 				</table>
 				<filter showFilter="false" showSearch="true" />
 			</state>

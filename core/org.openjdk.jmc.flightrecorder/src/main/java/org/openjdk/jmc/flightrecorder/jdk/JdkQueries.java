@@ -53,9 +53,9 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.BLOCKING;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CALLER;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASSLOADER_LOADED_COUNT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASSLOADER_UNLOADED_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_DEFINED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_DEFINING_CLASSLOADER;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_INITIATING_CLASSLOADER;
-import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_DEFINED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_LOADED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CLASS_UNLOADED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.COMMAND_LINE;
@@ -127,6 +127,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_ZOMB
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREAD_DUMP_RESULT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.UNALLOCATED;
 
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemFilters;
 
@@ -145,8 +146,7 @@ public final class JdkQueries {
 			.select(CLASS_LOADED, CLASS_DEFINING_CLASSLOADER, CLASS_INITIATING_CLASSLOADER, EVENT_THREAD, DURATION)
 			.build();
 	public static final IItemQuery CLASS_DEFINE = fromWhere(JdkFilters.CLASS_DEFINE)
-			.select(CLASS_DEFINED, CLASS_DEFINING_CLASSLOADER)
-			.build();
+			.select(CLASS_DEFINED, CLASS_DEFINING_CLASSLOADER).build();
 	public static final IItemQuery CLASS_LOAD_STATISTICS = fromWhere(JdkFilters.CLASS_LOAD_STATISTICS)
 			.select(CLASSLOADER_LOADED_COUNT, CLASSLOADER_UNLOADED_COUNT).build();
 	public static final IItemQuery CLASS_UNLOAD = fromWhere(JdkFilters.CLASS_UNLOAD)
@@ -204,6 +204,9 @@ public final class JdkQueries {
 			.select(HEAP_USED, GC_HEAPSPACE_COMMITTED, GC_HEAPSPACE_RESERVED).build();
 	public static final IItemQuery METASPACE_SUMMARY_AFTER_GC = fromWhere(JdkFilters.METASPACE_SUMMARY_AFTER_GC)
 			.select(GC_ID, END_TIME, GC_METASPACE_USED).build();
+	public static final IItemQuery NATIVE_LIBRARIES = fromWhere(ItemFilters.type(JdkTypeIDs.NATIVE_LIBRARY))
+			.select(JdkAttributes.NATIVE_LIBRARY_NAME, JdkAttributes.BASE_ADDRESS, JdkAttributes.TOP_ADDRESS)
+			.select(Aggregators.count()).build();
 	public static final IItemQuery NO_RMI_SOCKET_READ = fromWhere(JdkFilters.NO_RMI_SOCKET_READ)
 			.select(DURATION, IO_ADDRESS, IO_PORT, IO_TIMEOUT, EVENT_THREAD, IO_SOCKET_BYTES_READ).build();
 	public static final IItemQuery NO_RMI_SOCKET_WRITE = fromWhere(JdkFilters.NO_RMI_SOCKET_WRITE)
@@ -234,4 +237,5 @@ public final class JdkQueries {
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
 	public static final IItemQuery VM_OPERATIONS_BLOCKING = fromWhere(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT)
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
+
 }

@@ -113,16 +113,16 @@ public final class JdkAggregators {
 
 	// VM Info
 	public static final IAggregator<String, ?> JVM_NAME = distinctAsString(VM_INFO, JdkAttributes.JVM_NAME);
-	public static final IAggregator<IQuantity, ?> JVM_PID = min(JdkAttributes.JVM_PID.getName(), null,
-			VM_INFO, JdkAttributes.JVM_PID);
+	public static final IAggregator<IQuantity, ?> JVM_PID = min(JdkAttributes.JVM_PID.getName(), null, VM_INFO,
+			JdkAttributes.JVM_PID);
 	public static final IAggregator<IQuantity, ?> JVM_START_TIME = min(JdkAttributes.JVM_START_TIME.getName(), null,
 			VM_INFO, JdkAttributes.JVM_START_TIME);
 	public static final IAggregator<String, ?> JVM_VERSION = distinctAsString(VM_INFO, JdkAttributes.JVM_VERSION);
 	public static final IAggregator<String, ?> JAVA_ARGUMENTS = distinctAsString(VM_INFO, JdkAttributes.JAVA_ARGUMENTS);
 	public static final IAggregator<String, ?> JVM_ARGUMENTS = distinctAsString(VM_INFO, JdkAttributes.JVM_ARGUMENTS);
-	
-	public static final IAggregator<IQuantity, ?> JVM_SHUTDOWN_TIME = min(Messages.getString(Messages.ATTR_SHUTDOWN_TIME), null,
-			JdkTypeIDs.VM_SHUTDOWN, JfrAttributes.START_TIME);
+
+	public static final IAggregator<IQuantity, ?> JVM_SHUTDOWN_TIME = min(
+			Messages.getString(Messages.ATTR_SHUTDOWN_TIME), null, JdkTypeIDs.VM_SHUTDOWN, JfrAttributes.START_TIME);
 	public static final IAggregator<String, ?> JVM_SHUTDOWN_REASON = distinctAsString(JdkTypeIDs.VM_SHUTDOWN,
 			JdkAttributes.SHUTDOWN_REASON);
 	// CPU info
@@ -227,7 +227,8 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_INSIDE_TLAB_COUNT),
 			Messages.getString(Messages.AGGR_INSIDE_TLAB_COUNT_DESC), ALLOC_INSIDE_TLAB);
 	public static final IAggregator<IQuantity, ?> FILE_WRITE_LONGEST = Aggregators.max(FILE_WRITE, DURATION);
-	public static final IAggregator<IQuantity, ?> FILE_WRITE_LARGEST = Aggregators.max(FILE_WRITE, IO_FILE_BYTES_WRITTEN);
+	public static final IAggregator<IQuantity, ?> FILE_WRITE_LARGEST = Aggregators.max(FILE_WRITE,
+			IO_FILE_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> FILE_READ_LONGEST = Aggregators.max(FILE_READ, DURATION);
 	public static final IAggregator<IQuantity, ?> FILE_READ_LARGEST = Aggregators.max(FILE_READ, IO_FILE_BYTES_READ);
 	public static final IAggregator<IQuantity, ?> FILE_WRITE_SIZE = Aggregators.sum(
@@ -255,9 +256,11 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_CODE_CACHE_FULL_COUNT),
 			Messages.getString(Messages.AGGR_CODE_CACHE_FULL_COUNT_DESC), CODE_CACHE_FULL);
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_LONGEST = Aggregators.max(SOCKET_WRITE, DURATION);
-	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_LARGEST = Aggregators.max(SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);
+	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_LARGEST = Aggregators.max(SOCKET_WRITE,
+			IO_SOCKET_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> SOCKET_READ_LONGEST = Aggregators.max(SOCKET_READ, DURATION);
-	public static final IAggregator<IQuantity, ?> SOCKET_READ_LARGEST = Aggregators.max(SOCKET_READ, IO_SOCKET_BYTES_READ);
+	public static final IAggregator<IQuantity, ?> SOCKET_READ_LARGEST = Aggregators.max(SOCKET_READ,
+			IO_SOCKET_BYTES_READ);
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE),
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE_DESC), SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);
@@ -418,6 +421,11 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> OLD_OBJECT_ADDRESSES_COUNT = Aggregators.countDistinct(
 			Messages.getString(Messages.AGGR_ADDRESSES_COUNT), Messages.getString(Messages.AGGR_ADDRESSES_COUNT_DESC),
 			JdkAttributes.OLD_OBJECT_ADDRESS);
+
+	public static final IAggregator<?, ?> BASE_ADDRESS = Aggregators.min(JdkTypeIDs.NATIVE_LIBRARY,
+			JdkAttributes.BASE_ADDRESS);
+	public static final IAggregator<?, ?> TOP_ADDRESS = Aggregators.min(JdkTypeIDs.NATIVE_LIBRARY,
+			JdkAttributes.TOP_ADDRESS);
 
 	/**
 	 * Aggregator for getting the first value, ie. the value from the event with the first occurring

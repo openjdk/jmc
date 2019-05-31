@@ -514,6 +514,9 @@ public class DataPageToolkit {
 		for (IAttribute<?> attribute : query.getAttributes()) {
 			histogramBuilder.addKeyColumn(attribute);
 		}
+		for (IAggregator<?, ?> aggregator : query.getAggregators()) {
+			histogramBuilder.addColumn(aggregator.getName(), aggregator);
+		}
 		ItemHistogram table = histogramBuilder.buildWithoutBorder(parent, settings);
 		return table;
 	}

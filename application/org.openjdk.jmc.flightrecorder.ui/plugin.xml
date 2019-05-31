@@ -243,6 +243,10 @@
             id="org.openjdk.jmc.flightrecorder.ui.methodprofiling">
       </factory>
       <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.NativeLibraryPage$NativeLibraryPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.nativelibrary">
+      </factory>
+      <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.ExceptionsPage$ExceptionsPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.exceptions">
       </factory>

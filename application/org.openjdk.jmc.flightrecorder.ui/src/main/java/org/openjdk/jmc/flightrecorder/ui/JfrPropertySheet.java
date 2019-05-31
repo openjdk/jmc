@@ -339,6 +339,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 				};
 			}).build();
 
+	@SuppressWarnings("unchecked")
 	private static void updateSelectedTypes(Object value) {
 		if (value instanceof IType<?>) {
 			selectedTypes = new HashSet<IType<?>>();

@@ -159,6 +159,7 @@ public class Messages {
 	public static final String ATTR_ANONYMOUS_BLOCK_SIZE = "ATTR_ANONYMOUS_BLOCK_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_ANONYMOUS_CHUNK_SIZE = "ATTR_ANONYMOUS_CHUNK_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_ANONYMOUS_CLASS_COUNT = "ATTR_ANONYMOUS_CLASS_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_BASE_ADDRESS = "ATTR_BASE_ADDRESS"; //$NON-NLS-1$
 	public static final String ATTR_BLOCK_SIZE = "ATTR_BLOCK_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_BLOCKING = "ATTR_BLOCKING"; //$NON-NLS-1$
 	public static final String ATTR_BLOCKING_DESC = "ATTR_BLOCKING_DESC"; //$NON-NLS-1$
@@ -329,6 +330,7 @@ public class Messages {
 	public static final String ATTR_MONITOR_ADDRESS = "ATTR_MONITOR_ADDRESS"; //$NON-NLS-1$
 	public static final String ATTR_MONITOR_CLASS = "ATTR_MONITOR_CLASS"; //$NON-NLS-1$
 	public static final String ATTR_MONITOR_PREVIOUS_OWNER = "ATTR_MONITOR_PREVIOUS_OWNER"; //$NON-NLS-1$
+	public static final String ATTR_NATIVE_LIBRARY_NAME = "ATTR_NATIVE_LIBRARY_NAME"; //$NON-NLS-1$;
 	public static final String ATTR_NEW_RATIO = "ATTR_NEW_RATIO"; //$NON-NLS-1$
 	public static final String ATTR_NEW_RATIO_DESC = "ATTR_NEW_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_NON_NMETHODS_ADAPTORS = "ATTR_NON_NMETHODS_ADAPTORS"; //$NON-NLS-1$
@@ -435,6 +437,7 @@ public class Messages {
 	public static final String ATTR_TLAB_MIN_SIZE = "ATTR_TLAB_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_TLAB_REFILL_WASTE_LIMIT = "ATTR_TLAB_REFILL_WASTE_LIMIT"; //$NON-NLS-1$
 	public static final String ATTR_TLAB_SIZE = "ATTR_TLAB_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_TOP_ADDRESS = "ATTR_TOP_ADDRESS"; //$NON-NLS-1$
 	public static final String ATTR_UNALLOCATED = "ATTR_UNALLOCATED"; //$NON-NLS-1$
 	public static final String ATTR_USES_TLABS = "ATTR_USES_TLABS"; //$NON-NLS-1$
 	public static final String ATTR_USES_TLABS_DESC = "ATTR_USES_TLABS_DESC"; //$NON-NLS-1$
@@ -446,7 +449,7 @@ public class Messages {
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; //$NON-NLS-1$
-	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$
+	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$	
 
 	private Messages() {
 	}

@@ -319,7 +319,6 @@ public final class BiasedLockingRevocationRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.BIASED_LOCKING;
+		return JfrRuleTopics.BIASED_LOCKING_TOPIC;
 	}
-
 }

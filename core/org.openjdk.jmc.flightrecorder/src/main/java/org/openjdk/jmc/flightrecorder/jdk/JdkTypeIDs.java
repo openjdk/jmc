@@ -196,4 +196,6 @@ public final class JdkTypeIDs {
 
 	public static final String MODULE_EXPORT = PREFIX + "ModuleExport";
 	public static final String MODULE_REQUIRE = PREFIX + "ModuleRequire";
+	
+	public static final String NATIVE_LIBRARY = PREFIX + "NativeLibrary";	
 }
