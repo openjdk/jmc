@@ -641,7 +641,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
-			if (items != null && !items.equals(itemsToShow)) {
+			if(items == null) {
+				setItems(ItemCollectionToolkit.build(Stream.empty()));
+			}
+			else if (!items.equals(itemsToShow)) {
 				setItems(items);
 			}
 		}
