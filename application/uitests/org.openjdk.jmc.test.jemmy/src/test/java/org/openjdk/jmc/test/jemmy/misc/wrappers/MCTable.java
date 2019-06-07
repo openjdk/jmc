@@ -741,6 +741,7 @@ public class MCTable extends MCJemmyBase {
 	 *            the row index to stop selecting
 	 */
 	public void selectItems(int start, int end) {
+		focusMc();
 		select(start);
 		for (int i = 0; i < end; i++) {
 			getShell().keyboard().pushKey(KeyboardButtons.DOWN, new KeyboardModifiers[] {KeyboardModifiers.SHIFT_DOWN_MASK});

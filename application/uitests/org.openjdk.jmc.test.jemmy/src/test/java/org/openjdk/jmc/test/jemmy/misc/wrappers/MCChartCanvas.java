@@ -100,6 +100,7 @@ public class MCChartCanvas extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void clickContextMenuItem(String menuItemText) {
+		focusMc();
 		StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
 		contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
 		contextMenu.push(getRelativeClickPoint(), new String[]{menuItemText});
@@ -125,7 +126,7 @@ public class MCChartCanvas extends MCJemmyBase {
 		Fetcher<Point> fetcher = new Fetcher<Point>() {
 			@Override
 			public void run() {
-				setOutput(new Point(control.getScreenBounds().x, control.getScreenBounds().y));
+				setOutput(new Point(control.getScreenBounds().x / 2, control.getScreenBounds().y / 2));
 			}
 		};
 		Display.getDefault().syncExec(fetcher);

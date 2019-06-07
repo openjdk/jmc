@@ -153,7 +153,9 @@ public class ChartCanvas extends Canvas {
 
 		@Override
 		public void mouseExit(MouseEvent e) {
-			resetHoveredItemData();
+			if (!getClientArea().contains(e.x, e.y)) {
+				resetHoveredItemData();
+			}
 			clearHighlightRects();
 		}
 
