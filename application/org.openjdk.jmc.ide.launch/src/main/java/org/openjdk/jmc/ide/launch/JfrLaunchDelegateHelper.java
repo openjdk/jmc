@@ -249,7 +249,7 @@ public class JfrLaunchDelegateHelper {
 						+ " which is not expected. Should have existed after refresh."; //$NON-NLS-1$
 				LaunchPlugin.getDefault().getLogger().info(info);
 			}
-			WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(recordingFile));
+			WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(recordingFile, false));
 			return;
 		} catch (IOException e) {
 		} finally {

@@ -71,7 +71,7 @@ public class OpenDocumentEventProcessor implements Listener {
 		String[] filePaths = filesToOpen.toArray(new String[filesToOpen.size()]);
 		filesToOpen.clear();
 		for (String path : filePaths) {
-			WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(path)));
+			WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(path), false));
 		}
 	}
 }

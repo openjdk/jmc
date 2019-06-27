@@ -50,7 +50,7 @@ public class OpenFile implements IExecute {
 	public boolean execute(Statement statement, PrintStream out) {
 		String fileName = statement.getString(FILE_NAME_PARAMETER);
 		if (fileName != null) {
-			WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(fileName)));
+			WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(fileName), false));
 		} else {
 			out.println(statement.getCommand().getIdentifier() + " requires a filename"); //$NON-NLS-1$
 		}

@@ -82,7 +82,7 @@ public class TestHelper {
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(fileName)));
+				WorkbenchToolkit.openEditor(new MCPathEditorInput(new File(fileName), false));
 			}
 		});
 	}

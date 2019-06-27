@@ -107,7 +107,7 @@ public final class DumpRecordingJob extends Job {
 				is = flrService.openStream(m_recording.getRecordingDescriptor(), removeDone);
 			}
 			File actualSavePath = IDESupportToolkit.writeToUniqueFile(m_savePath, is, monitor);
-			WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(actualSavePath));
+			WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(actualSavePath, false));
 			m_recording.setIsOpening(false);
 			return StatusFactory.createOk(Messages.DUMP_RECORDING_JOB_SUCCESS_MSG);
 		} catch (ServiceNotAvailableException e) {

@@ -161,7 +161,7 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 			try {
 				File writtenFile = dumpFile(monitor, m_service, m_descriptor, m_path);
 				if (m_open) {
-					WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(writtenFile));
+					WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(writtenFile, false));
 				} else {
 					showAlert(writtenFile, m_event);
 				}

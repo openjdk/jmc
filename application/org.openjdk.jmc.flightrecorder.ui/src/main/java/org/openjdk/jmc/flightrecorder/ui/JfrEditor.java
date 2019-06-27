@@ -357,7 +357,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			} while (IDESupportUIToolkit.checkAlreadyExists(saveAsFile));
 			try {
 				IOToolkit.copyFile(srcFile, saveAsFile);
-				setInput(new MCPathEditorInput(saveAsFile));
+				setInput(new MCPathEditorInput(saveAsFile, false));
 			} catch (IOException e) {
 				DialogToolkit.showException(getSite().getShell(), Messages.SAVE_AS_ERROR_MSG, e);
 			}

@@ -157,7 +157,7 @@ public class OpenFileAction extends Action {
 			for (String name : names) {
 				final File file = new File(filterPath + File.separator + name);
 				if (file.exists()) {
-					WorkbenchToolkit.openEditor(inWindow, new MCPathEditorInput(file));
+					WorkbenchToolkit.openEditor(inWindow, new MCPathEditorInput(file, true));
 				} else {
 					if (++numberOfFilesNotFound > 1) {
 						notFound.append('\n');

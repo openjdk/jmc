@@ -89,7 +89,7 @@ public class MissionControlEditorDropAdapter extends DropTargetAdapter {
 				@Override
 				public void run() {
 					for (String element : data) {
-						WorkbenchToolkit.openEditor(win, new MCPathEditorInput(new File(element)));
+						WorkbenchToolkit.openEditor(win, new MCPathEditorInput(new File(element), false));
 					}
 				}
 			});

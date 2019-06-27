@@ -66,7 +66,7 @@ public class HeapDumpAction implements IActionFactory {
 
 		@Override
 		public void run() {
-			WorkbenchToolkit.openEditor(new MCPathEditorInput(file));
+			WorkbenchToolkit.openEditor(new MCPathEditorInput(file, false));
 		}
 	}
 

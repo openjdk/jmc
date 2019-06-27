@@ -92,7 +92,7 @@ public class WriteAndOpenRecordingJob extends Job {
 			recordingName = descriptor.getName();
 			File writtenFile = writeFile(monitor, descriptor, timerange);
 			if (open) {
-				WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(writtenFile));
+				WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(writtenFile, false));
 			} else {
 				showAlert(writtenFile, event);
 			}

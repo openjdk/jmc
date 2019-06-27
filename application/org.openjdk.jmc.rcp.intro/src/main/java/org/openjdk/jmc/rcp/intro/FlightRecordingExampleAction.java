@@ -69,7 +69,7 @@ public class FlightRecordingExampleAction extends Object implements IIntroAction
 					NLS.bind(Messages.OPEN_SAMPLE_RECORDING_EXCEPTION, filename), e);
 		}
 		if (readable) {
-			WorkbenchToolkit.openEditor(site.getWorkbenchWindow(), new MCPathEditorInput(file));
+			WorkbenchToolkit.openEditor(site.getWorkbenchWindow(), new MCPathEditorInput(file, false));
 			IIntroManager manager = PlatformUI.getWorkbench().getIntroManager();
 			manager.closeIntro(manager.getIntro());
 		} else {
