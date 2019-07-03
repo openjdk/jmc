@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -107,6 +107,7 @@
 		<module>org.openjdk.jmc.updatesite.rcp</module>
 		<module>l10n</module>
 		<module>tests</module>
+		<module>coverage</module>
 	</modules>
 	<profiles>
 		<profile>
@@ -116,11 +117,11 @@
 					<name>java.runtime.name</name>
 					<value>OpenJDK Runtime Environment</value>
 				</property>
-                                <jdk>(,11)</jdk>
+				<jdk>(,11)</jdk>
 			</activation>
 			<properties>
 				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest,org.openjdk.jmc.flightrecorder.uitest.JfrWizardTest,org.openjdk.jmc.flightrecorder.uitest.TemplateManagerTest,org.openjdk.jmc.flightrecorder.uitest.ControlRecordingsTest,org.openjdk.jmc.console.uitest.DiagnosticCommandsTabTest</jfr.tests>
-				<jfr.vmargs></jfr.vmargs>
+				<jfr.vmargs/>
 			</properties>
 		</profile>
 		<profile>
@@ -133,10 +134,9 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<jfr.tests></jfr.tests>
+		<jfr.tests/>
 		<jfr.vmargs>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder</jfr.vmargs>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
@@ -163,8 +163,12 @@
 			<artifactId>flightrecorder.rules.jdk</artifactId>
 			<version>7.1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.3</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

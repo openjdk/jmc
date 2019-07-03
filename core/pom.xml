@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -52,6 +52,7 @@
 		<module>org.openjdk.jmc.flightrecorder.rules</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.jdk</module>
 		<module>tests</module>
+		<module>coverage</module>
 	</modules>
 
 	<distributionManagement>

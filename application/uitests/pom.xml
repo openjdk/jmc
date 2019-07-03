@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -156,13 +156,36 @@
 	<build>
 		<plugins>
 			<plugin>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>jacoco-maven-plugin</artifactId>
+                                <version>0.8.3</version>
+                                <executions>
+					<execution>
+                                                <id>pre-unit-test</id>
+                                                <goals>
+                                                        <goal>prepare-agent</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <propertyName>surefireArgLine</propertyName>
+                                                </configuration>
+                                        </execution>
+                                        <execution>
+                                                <id>post-unit-test</id>
+                                                <phase>verify</phase>
+                                                <goals>
+                                                        <goal>report</goal>
+                                                </goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
 					<product>org.openjdk.jmc.rcp.application.product</product>
 					<application>org.openjdk.jmc.rcp.application.app</application>
-					<argLine>${ui.test.vmargs} ${ui.test.osvmargs}</argLine>
+					<argLine>${ui.test.vmargs} ${ui.test.osvmargs} ${surefireArgLine}</argLine>
 					<appArgLine>-nl en -consoleLog ${ui.test.osappargs}</appArgLine>
 					<useUIHarness>${ui.test.run}</useUIHarness>
 					<useUIThread>false</useUIThread>
