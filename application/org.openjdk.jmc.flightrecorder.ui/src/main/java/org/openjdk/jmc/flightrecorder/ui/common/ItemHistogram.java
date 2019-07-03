@@ -262,7 +262,7 @@ public class ItemHistogram {
 	 * But remember that the context is different and at least affects both getText() and
 	 * getToolTipText(), which should be complementary (thus perhaps abstract).
 	 */
-	private static class KeyLabelProvider extends ColumnLabelProvider {
+	static class KeyLabelProvider extends ColumnLabelProvider {
 
 		private final Image image;
 

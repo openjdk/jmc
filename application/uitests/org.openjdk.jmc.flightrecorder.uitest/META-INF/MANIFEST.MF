@@ -9,16 +9,18 @@ Require-Bundle: org.eclipse.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.openjdk.jmc.flightrecorder.internal,
+Import-Package: org.eclipse.core.resources,
+ org.openjdk.jmc.flightrecorder.internal,
+ org.openjdk.jmc.flightrecorder.jdk,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.flightrecorder.ui.common,
  org.openjdk.jmc.flightrecorder.ui.messages.internal,
  org.openjdk.jmc.test.jemmy,
  org.openjdk.jmc.test.jemmy.misc.base.test,
  org.openjdk.jmc.test.jemmy.misc.base.wrappers,
  org.openjdk.jmc.test.jemmy.misc.fetchers,
  org.openjdk.jmc.test.jemmy.misc.helpers,
- org.openjdk.jmc.test.jemmy.misc.wrappers,
- org.eclipse.core.resources
+ org.openjdk.jmc.test.jemmy.misc.wrappers
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.uitest

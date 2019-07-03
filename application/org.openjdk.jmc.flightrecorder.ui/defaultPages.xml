@@ -498,6 +498,13 @@
 					<column id="eventThread" width="120" />
 					<column id="endOfFile" width="80" />
 				</eventList>
+				<percentileTable sortColumn="DurationPercentileTable.percentile">
+					<column id="DurationPercentileTable.percentile" sortAscending="true" width="80" />
+					<column id="percentileReadTime" width="100" />
+					<column id="percentileReadCount" width="100" />
+					<column id="percentileWriteTime" width="100" />
+					<column id="percentileWriteCount" width="100" />
+				</percentileTable>
 			</state>
 		</page>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.socketio" id="org.openjdk.jmc.flightrecorder.ui.socketio">
@@ -539,6 +546,13 @@
 					<column id="endOfStream" width="80" />
 					<column id="timeout" width="50" />
 				</eventList>
+				<percentileTable sortColumn="DurationPercentileTable.percentile">
+					<column id="DurationPercentileTable.percentile" sortAscending="true" width="80" />
+					<column id="percentileReadTime" width="100" />
+					<column id="percentileReadCount" width="100" />
+					<column id="percentileWriteTime" width="100" />
+					<column id="percentileWriteCount" width="100" />
+				</percentileTable>
 			</state>
 		</page>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.methodprofiling" id="org.openjdk.jmc.flightrecorder.ui.methodprofiling">

@@ -12,7 +12,8 @@ Require-Bundle: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.jdk,
  org.openjdk.jmc.flightrecorder.configuration,
- org.openjdk.jmc.commands
+ org.openjdk.jmc.commands,
+ org.hdrhistogram.HdrHistogram
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI
 Export-Package: org.openjdk.jmc.flightrecorder.ui,

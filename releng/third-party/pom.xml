@@ -339,6 +339,9 @@
 										<_noee>true</_noee>
 									</instructions>
 								</artifact>
+								<artifact>
+									<id>org.hdrhistogram:HdrHistogram:2.1.11</id>
+								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>

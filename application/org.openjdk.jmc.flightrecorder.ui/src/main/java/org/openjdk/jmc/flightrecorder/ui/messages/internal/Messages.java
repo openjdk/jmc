@@ -104,6 +104,7 @@ public class Messages extends NLS {
 	public static String DUMP_RECORDING_TIMESPAN_UNPARSABLE;
 	public static String DUMP_RECORDING_TIMESPAN_VALUE;
 	public static String DUMP_RECORDING_WHOLE;
+	public static String DurationPercentileTable_PERCENTILE_COL_NAME;
 	public static String EVENT_TYPE_FOLDER_NODE_EVENTS_BY_TYPE;
 	public static String EVENT_TYPE_FOLDER_NODE_UNCATEGORIZED;
 	public static String EVENT_TYPE_TREE_NODE_TOOLTIP;
@@ -155,6 +156,7 @@ public class Messages extends NLS {
 	public static String FileIOPage_HISTOGRAM_SELECTION;
 	public static String FileIOPage_LOG_SELECTION;
 	public static String FileIOPage_PAGE_NAME;
+	public static String FileIOPage_PERCENTILE_SELECTION;
 	public static String FileIOPage_ROW_FILE_READ;
 	public static String FileIOPage_ROW_FILE_WRITE;
 	public static String FileIOPage_SELECTED_PATH;
@@ -471,6 +473,7 @@ public class Messages extends NLS {
 	public static String SocketIOPage_HOST_AND_PORT;
 	public static String SocketIOPage_LOG_SELECTION;
 	public static String SocketIOPage_PAGE_NAME;
+	public static String SocketIOPage_PERCENTILE_SELECTION;
 	public static String SocketIOPage_ROW_SOCKET_READ;
 	public static String SocketIOPage_ROW_SOCKET_WRITE;
 	public static String SocketIOPage_SELECTED_HOST;

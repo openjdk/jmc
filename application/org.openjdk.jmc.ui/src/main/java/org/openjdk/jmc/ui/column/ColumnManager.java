@@ -355,7 +355,7 @@ public class ColumnManager {
 		return viewer;
 	}
 
-	void setColumnHidden(String columnId, boolean hidden) {
+	public void setColumnHidden(String columnId, boolean hidden) {
 		updateColumnOrder();
 		ColumnEntry columnEntry = getColumnEntry(columnId);
 		columnEntry.hidden = hidden;

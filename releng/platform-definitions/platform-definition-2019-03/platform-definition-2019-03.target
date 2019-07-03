@@ -61,6 +61,7 @@
             <unit id="org.openjfx.javafx-web.mac" version="11.0.1"/>
             <unit id="org.openjfx.javafx-web.win" version="11.0.1"/>
             <unit id="org.openjfx.javafx-web.linux" version="11.0.1"/>
+            <unit id="org.hdrhistogram.HdrHistogram" version="2.1.11"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
