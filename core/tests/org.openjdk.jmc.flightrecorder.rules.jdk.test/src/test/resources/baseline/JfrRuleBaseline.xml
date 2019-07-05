@@ -3933,7 +3933,7 @@
 <severity>Information</severity>
 <score>62.05152332723372</score>
 <shortDescription>Threads in the application were blocked on locks for a total time of 1 min 26 s.</shortDescription>
-<longDescription>Threads in the application were blocked on locks for a total time of 1 min 26 s. The most common monitor class was 'Logger', which was blocked on 1,612 times.&lt;p&gt;The following regular expression was used to exclude threads from this rule: '(.*weblogic\.socket\.Muxer.*)'</longDescription>
+<longDescription>Threads in the application were blocked on locks for a total time of 1 min 26 s. The most common monitor class was 'Logger', which was blocked on 1,612 times for a total time of 1 min 23 s.&lt;p&gt;The following regular expression was used to exclude threads from this rule: '(.*weblogic\.socket\.Muxer.*)'</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>

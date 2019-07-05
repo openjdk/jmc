@@ -128,21 +128,31 @@ public class JavaBlockingRule implements IRule {
 		// Significant blocking detected - do more calculations
 		String mostBlockingText;
 		if (byThread.compareTo(byInstance) > 0) {
-			List<IntEntry<IMCThread>> groupedByThread = RulesToolkit.calculateGroupingScore(items,
-					JfrAttributes.EVENT_THREAD);
+			List<IntEntry<IMCThread>> groupedByThread = RulesToolkit.calculateGroupingScore(
+					items.apply(ItemFilters.type(JdkTypeIDs.MONITOR_ENTER)),JfrAttributes.EVENT_THREAD);
 			IntEntry<IMCThread> mostBlockedThread = groupedByThread.get(groupedByThread.size() - 1);
+
+			IItemCollection mostBlockedThreadOccurences = items.apply(
+					ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostBlockedThread.getKey()));
+			IQuantity mostBlockingTime = mostBlockedThreadOccurences.getAggregate(JdkAggregators.TOTAL_BLOCKED_TIME);
 
 			mostBlockingText = MessageFormat.format(
 					Messages.getString(Messages.JavaBlockingRule_TEXT_MOST_BLOCKED_THREAD),
-					Encode.forHtml(mostBlockedThread.getKey().getThreadName()), mostBlockedThread.getValue());
+					Encode.forHtml(mostBlockedThread.getKey().getThreadName()), mostBlockedThread.getValue(),
+					Encode.forHtml(mostBlockingTime.displayUsing(IDisplayable.AUTO)));
 		} else {
 			List<IntEntry<IMCType>> groupedByClass = RulesToolkit.calculateGroupingScore(
 					items.apply(ItemFilters.type(JdkTypeIDs.MONITOR_ENTER)), JdkAttributes.MONITOR_CLASS);
 			IntEntry<IMCType> mostBlockingClass = groupedByClass.get(groupedByClass.size() - 1);
 
+			IItemCollection mostBlockedClassOccurences = items.apply(
+					ItemFilters.equals(JdkAttributes.MONITOR_CLASS, mostBlockingClass.getKey()));
+			IQuantity mostBlockingTime = mostBlockedClassOccurences.getAggregate(JdkAggregators.TOTAL_BLOCKED_TIME);
+
 			mostBlockingText = MessageFormat.format(
 					Messages.getString(Messages.JavaBlockingRule_TEXT_MOST_BLOCKED_CLASS),
-					Encode.forHtml(mostBlockingClass.getKey().getTypeName()), mostBlockingClass.getValue());
+					Encode.forHtml(mostBlockingClass.getKey().getTypeName()), mostBlockingClass.getValue(),
+					Encode.forHtml(mostBlockingTime.displayUsing(IDisplayable.AUTO)));
 		}
 		String shortMessage = MessageFormat.format(Messages.getString(Messages.JavaBlockingRule_TEXT_INFO),
 				totalWait.displayUsing(IDisplayable.AUTO));
