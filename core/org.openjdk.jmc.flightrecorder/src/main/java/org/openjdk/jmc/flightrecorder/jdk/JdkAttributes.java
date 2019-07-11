@@ -370,6 +370,26 @@ public final class JdkAttributes {
 			};
 		}
 	});
+	public static final IAttribute<IQuantity> OTHER_CPU_RATIO = Attribute.canonicalize(new Attribute<IQuantity>("otherCpuRatio", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_OTHER_CPU_RATIO), Messages.getString(Messages.ATTR_OTHER_CPU_RATIO_DESC), PERCENTAGE) {
+		@Override
+		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+			final IMemberAccessor<IQuantity, U> otherCpuAccessor = OTHER_CPU.getAccessor(type);
+			// Avoid possible future circularity by asking the type directly.
+			final IMemberAccessor<IQuantity, U> machineTotalAccessor = type.getAccessor(MACHINE_TOTAL.getKey());
+			if ((otherCpuAccessor == null) || (machineTotalAccessor == null)) {
+				return null;
+			}
+			return new IMemberAccessor<IQuantity, U>() {
+				@Override
+				public IQuantity getMember(U i) {
+					IQuantity machineTotal = machineTotalAccessor.getMember(i);
+					IQuantity otherCpu = otherCpuAccessor.getMember(i);
+					return otherCpu != null && machineTotal != null ? otherCpu.multiply(machineTotal.doubleValue()) : null;
+				}
+			};
+		}
+	});
 
 	public static final IAttribute<IQuantity> RECORDING_ID = attr("id", Messages.getString(Messages.ATTR_RECORDING_ID), //$NON-NLS-1$
 			NUMBER);

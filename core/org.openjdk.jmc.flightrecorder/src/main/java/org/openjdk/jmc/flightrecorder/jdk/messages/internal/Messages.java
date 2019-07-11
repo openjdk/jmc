@@ -372,6 +372,8 @@ public class Messages {
 	public static final String ATTR_OS_VERSION = "ATTR_OS_VERSION"; //$NON-NLS-1$
 	public static final String ATTR_OTHER_CPU = "ATTR_OTHER_CPU"; //$NON-NLS-1$
 	public static final String ATTR_OTHER_CPU_DESC = "ATTR_OTHER_CPU_DESC"; //$NON-NLS-1$
+	public static final String ATTR_OTHER_CPU_RATIO = "ATTR_OTHER_CPU_RATIO"; //$NON-NLS-1$
+	public static final String ATTR_OTHER_CPU_RATIO_DESC = "ATTR_OTHER_CPU_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_PARALLEL_GC_THREADS = "ATTR_PARALLEL_GC_THREADS"; //$NON-NLS-1$
 	public static final String ATTR_PARALLEL_GC_THREADS_DESC = "ATTR_PARALLEL_GC_THREADS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_PARENT_CLASSLOADER = "ATTR_PARENT_CLASSLOADER"; //$NON-NLS-1$

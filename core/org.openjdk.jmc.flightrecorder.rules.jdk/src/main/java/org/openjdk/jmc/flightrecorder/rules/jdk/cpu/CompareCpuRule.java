@@ -90,19 +90,21 @@ public class CompareCpuRule extends AbstractRule {
 			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_TOTAL);
 		}
 		// FIXME: Could consider using the infoLimit for the span instead?
-		SpanLimit max = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU, JfrAttributes.END_TIME,
+		SpanLimit maxOtherCpu = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU, JfrAttributes.END_TIME,
+				warningLimit);
+		SpanLimit maxOtherCpuRatio = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU_RATIO, JfrAttributes.END_TIME,
 				warningLimit);
 
-		if (max == null) {
+		if (maxOtherCpu == null || maxOtherCpuRatio == null) {
 			return RulesToolkit.getNotApplicableResult(this,
 					Messages.getString(Messages.CompareCpuRule_TEXT_TOO_FEW_SAMPLES));
 		}
 
-		double score = RulesToolkit.mapExp100(max.value, infoLimit, warningLimit);
+		double score = RulesToolkit.mapExp100(maxOtherCpuRatio.value, infoLimit, warningLimit);
 
-		String startTime = KindOfQuantity.format(max.start, EPOCH_NS);
-		String duration = KindOfQuantity.format(max.end - max.start, UnitLookup.NANOSECOND);
-		String otherCpuMaxValueString = UnitLookup.PERCENT.quantity(Math.round(max.value * 100))
+		String startTime = KindOfQuantity.format(maxOtherCpu.start, EPOCH_NS);
+		String duration = KindOfQuantity.format(maxOtherCpu.end - maxOtherCpu.start, UnitLookup.NANOSECOND);
+		String otherCpuMaxValueString = UnitLookup.PERCENT.quantity(Math.round(maxOtherCpu.value * 100))
 				.displayUsing(IDisplayable.AUTO);
 		String message = MessageFormat.format(Messages.getString(Messages.CompareCpuRule_TEXT_MESSAGE), duration,
 				startTime, otherCpuMaxValueString);

@@ -61,7 +61,7 @@
         <rule>
             <id>CompareCpu</id>
             <severity>OK</severity>
-            <score>1.141997550803353</score>
+            <score>0.05434774741663761</score>
             <shortDescription>An average CPU load of 1 % was caused by other processes during 1.027 s starting at 4/26/18 12:10:33 PM.</shortDescription>
             <longDescription>An average CPU load of 1 % was caused by other processes during 1.027 s starting at 4/26/18 12:10:33 PM.</longDescription>
         </rule>
@@ -463,7 +463,7 @@
         <rule>
             <id>CompareCpu</id>
             <severity>OK</severity>
-            <score>8.569645731768105</score>
+            <score>0.9473864515664224</score>
             <shortDescription>An average CPU load of 7 % was caused by other processes during 1.212 s starting at 4/26/18 12:12:47 PM.</shortDescription>
             <longDescription>An average CPU load of 7 % was caused by other processes during 1.212 s starting at 4/26/18 12:12:47 PM.</longDescription>
         </rule>
@@ -867,7 +867,7 @@
             <severity>Not Applicable</severity>
             <score>-1.0</score>
             <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-            <longDescription>The Competing CPU Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+            <longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -1267,9 +1267,9 @@
         <rule>
             <id>CompareCpu</id>
             <severity>Warning</severity>
-            <score>91.8903586610899</score>
+            <score>77.36067322482806</score>
             <shortDescription>An average CPU load of 60 % was caused by other processes during 8.047 s starting at 4/25/18 11:38:36 AM.</shortDescription>
-            <longDescription>An average CPU load of 60 % was caused by other processes during 8.047 s starting at 4/25/18 11:38:36 AM.&lt;p&gt;The application performance can be affected if there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
+            <longDescription>An average CPU load of 60 % was caused by other processes during 8.047 s starting at 4/25/18 11:38:36 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -1671,7 +1671,7 @@
             <severity>Not Applicable</severity>
             <score>-1.0</score>
             <shortDescription>This rule requires that the following event types are enabled: 'CPU Load'.</shortDescription>
-            <longDescription>The Competing CPU Usage rule requires that the following event types are enabled: 'CPU Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+            <longDescription>The Competing CPU Ratio Usage rule requires that the following event types are enabled: 'CPU Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -2073,7 +2073,7 @@
             <severity>Not Applicable</severity>
             <score>-1.0</score>
             <shortDescription>This rule requires that the following event types are enabled: 'CPU Load'.</shortDescription>
-            <longDescription>The Competing CPU Usage rule requires that the following event types are enabled: 'CPU Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+            <longDescription>The Competing CPU Ratio Usage rule requires that the following event types are enabled: 'CPU Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -3277,7 +3277,7 @@
         <rule>
             <id>CompareCpu</id>
             <severity>OK</severity>
-            <score>18.426045491651166</score>
+            <score>3.3944677554909966</score>
             <shortDescription>An average CPU load of 15 % was caused by other processes during 1.060 s starting at 4/24/18 10:08:54 AM.</shortDescription>
             <longDescription>An average CPU load of 15 % was caused by other processes during 1.060 s starting at 4/24/18 10:08:54 AM.</longDescription>
         </rule>
@@ -3679,9 +3679,9 @@
         <rule>
             <id>CompareCpu</id>
             <severity>Warning</severity>
-            <score>88.51583907913424</score>
+            <score>87.07809686085879</score>
             <shortDescription>An average CPU load of 54 % was caused by other processes during 4.938 s starting at 9/24/15 10:08:17 AM.</shortDescription>
-            <longDescription>An average CPU load of 54 % was caused by other processes during 4.938 s starting at 9/24/15 10:08:17 AM.&lt;p&gt;The application performance can be affected if there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
+            <longDescription>An average CPU load of 54 % was caused by other processes during 4.938 s starting at 9/24/15 10:08:17 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -4085,7 +4085,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
             <severity>Not Applicable</severity>
             <score>-1.0</score>
             <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-            <longDescription>The Competing CPU Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+            <longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
