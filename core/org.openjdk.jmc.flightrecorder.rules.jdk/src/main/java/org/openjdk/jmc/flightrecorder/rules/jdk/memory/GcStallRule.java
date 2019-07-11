@@ -65,7 +65,8 @@ public class GcStallRule implements IRule {
 			public Result call() throws Exception {
 				EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items,
 						JdkTypeIDs.GARBAGE_COLLECTION);
-				if (eventAvailability != EventAvailability.AVAILABLE) {
+				if (eventAvailability != EventAvailability.AVAILABLE
+						&& eventAvailability != EventAvailability.ENABLED) {
 					return RulesToolkit.getEventAvailabilityResult(GcStallRule.this, items, eventAvailability,
 							JdkTypeIDs.GARBAGE_COLLECTION);
 				}
@@ -96,7 +97,8 @@ public class GcStallRule implements IRule {
 
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items,
 				JdkTypeIDs.CONCURRENT_MODE_FAILURE, JdkTypeIDs.GC_CONF, JdkTypeIDs.GARBAGE_COLLECTION);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
+		if (eventAvailability != EventAvailability.AVAILABLE
+				&& eventAvailability != EventAvailability.ENABLED) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
 					JdkTypeIDs.CONCURRENT_MODE_FAILURE, JdkTypeIDs.GC_CONF, JdkTypeIDs.GARBAGE_COLLECTION);
 		}
