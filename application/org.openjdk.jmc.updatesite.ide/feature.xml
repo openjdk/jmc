@@ -79,6 +79,10 @@ copyright or other irrelevant stuff in here.
          version="0.0.0"/>
 
    <includes
+         id="org.openjdk.jmc.feature.flightrecorder.ext.flameview"
+         version="0.0.0"/>
+
+   <includes
          id="org.openjdk.jmc.feature.flightrecorder.ext.g1"
          version="0.0.0"/>
 

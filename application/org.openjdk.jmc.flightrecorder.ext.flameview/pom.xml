@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, Datadog, Inc. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -31,51 +32,14 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<feature
-      id="org.openjdk.jmc.updatesite.rcp"
-      label="JDK Mission Control Supported RCP Site"
-      version="7.1.0.qualifier">
-
-   <description>
-      This is a release engineering internal &quot;feature&quot;. It just happen
-to use the same file format as end user visible features. Its
-sole purpose is to list the features that will be exported into
-a p2 repository (a.k.a. update site), and provide a default name
-for it (rarely seen). No other aspects of it will ever reach
-end users. String externalization is NOT supported. Do NOT insert
-copyright or other irrelevant stuff in here.
-   </description>
-
-   <includes
-         id="org.openjdk.jmc.feature.rcp.update"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.flightrecorder.ext.flameview"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.flightrecorder.ext.jfx"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.flightrecorder.metadata"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.jconsole"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.console.ui.subscriptions"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.twitter"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.joverflow"
-         version="0.0.0"/>
-
-</feature>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openjdk.jmc</groupId>
+		<artifactId>missioncontrol.application</artifactId>
+		<version>7.1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.openjdk.jmc.flightrecorder.ext.flameview</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
+</project>

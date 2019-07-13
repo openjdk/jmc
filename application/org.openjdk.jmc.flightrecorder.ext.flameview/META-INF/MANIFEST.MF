@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: FlameView
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ext.flameview;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Require-Bundle: org.openjdk.jmc.flightrecorder, org.openjdk.jmc.flightrecorder.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: Oracle Corporation
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flameview

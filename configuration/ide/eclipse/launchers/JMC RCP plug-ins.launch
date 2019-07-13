@@ -1,101 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
-
-   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-
-   The contents of this file are subject to the terms of either the Universal Permissive License
-   v 1.0 as shown at http://oss.oracle.com/licenses/upl
-
-   or the following license:
-
-   Redistribution and use in source and binary forms, with or without modification, are permitted
-   provided that the following conditions are met:
-
-   1. Redistributions of source code must retain the above copyright notice, this list of conditions
-   and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright notice, this list of
-   conditions and the following disclaimer in the documentation and/or other materials provided with
-   the distribution.
-
-   3. Neither the name of the copyright holder nor the names of its contributors may be used to
-   endorse or promote products derived from this software without specific prior written permission.
-
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
-   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
-    <setAttribute key="additional_plugins"/>
-    <booleanAttribute key="append.args" value="true"/>
-    <stringAttribute key="application" value="org.openjdk.jmc.rcp.application.app"/>
-    <booleanAttribute key="askclear" value="true"/>
-    <booleanAttribute key="automaticAdd" value="false"/>
-    <booleanAttribute key="automaticValidate" value="false"/>
-    <stringAttribute key="bootstrap" value=""/>
-    <stringAttribute key="checked" value="[NONE]"/>
-    <booleanAttribute key="clearConfig" value="true"/>
-    <booleanAttribute key="clearws" value="true"/>
-    <booleanAttribute key="clearwslog" value="false"/>
-    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/JMC RCP plug-ins"/>
-    <booleanAttribute key="default" value="false"/>
-    <stringAttribute key="featureDefaultLocation" value="workspace"/>
-    <stringAttribute key="featurePluginResolution" value="workspace"/>
-    <booleanAttribute key="generateProfile" value="true"/>
-    <booleanAttribute key="includeOptional" value="false"/>
-    <stringAttribute key="location" value="${workspace_loc}/../jmc_rcp"/>
-    <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
-    <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
-        <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
-        <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
-    </listAttribute>
-    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
-    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED -Dorg.eclipse.swt.internal.carbon.smallFonts"/>
-    <stringAttribute key="pde.version" value="3.3"/>
-    <stringAttribute key="product" value="org.openjdk.jmc.rcp.application.product"/>
-    <setAttribute key="selected_features">
-        <setEntry value="org.eclipse.e4.rcp:default"/>
-        <setEntry value="org.eclipse.ecf.core.feature:default"/>
-        <setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.httpclient4.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.ssl.feature:default"/>
-        <setEntry value="org.eclipse.emf.common:default"/>
-        <setEntry value="org.eclipse.emf.ecore:default"/>
-        <setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
-        <setEntry value="org.eclipse.help:default"/>
-        <setEntry value="org.eclipse.rcp:default"/>
-        <setEntry value="org.openjdk.jmc.feature.console.ui.subscriptions:default"/>
-        <setEntry value="org.openjdk.jmc.feature.console:default"/>
-        <setEntry value="org.openjdk.jmc.feature.core:default"/>
-        <setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.g1:default"/>
-        <setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.jfx:default"/>
-        <setEntry value="org.openjdk.jmc.feature.flightrecorder.metadata:default"/>
-        <setEntry value="org.openjdk.jmc.feature.flightrecorder:default"/>
-        <setEntry value="org.openjdk.jmc.feature.jconsole:default"/>
-        <setEntry value="org.openjdk.jmc.feature.joverflow:default"/>
-        <setEntry value="org.openjdk.jmc.feature.rcp:default"/>
-        <setEntry value="org.openjdk.jmc.feature.twitter:default"/>
-        <setEntry value="org.openjdk.jmc.rcp.product:default"/>
-    </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
-    <stringAttribute key="timestamp" value="1231941027462"/>
-    <booleanAttribute key="tracing" value="false"/>
-    <booleanAttribute key="useCustomFeatures" value="true"/>
-    <booleanAttribute key="useDefaultConfig" value="true"/>
-    <booleanAttribute key="useDefaultConfigArea" value="true"/>
-    <booleanAttribute key="useProduct" value="true"/>
-    <booleanAttribute key="usefeatures" value="false"/>
+<setAttribute key="additional_plugins"/>
+<booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="org.openjdk.jmc.rcp.application.app"/>
+<booleanAttribute key="askclear" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/JMC RCP plug-ins"/>
+<booleanAttribute key="default" value="false"/>
+<stringAttribute key="featureDefaultLocation" value="workspace"/>
+<stringAttribute key="featurePluginResolution" value="workspace"/>
+<booleanAttribute key="generateProfile" value="true"/>
+<booleanAttribute key="includeOptional" value="false"/>
+<stringAttribute key="location" value="${workspace_loc}/../jmc_rcp"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:+UseG1GC -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED -Dorg.eclipse.swt.internal.carbon.smallFonts"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="org.openjdk.jmc.rcp.application.product"/>
+<setAttribute key="selected_features">
+<setEntry value="org.eclipse.e4.rcp:default"/>
+<setEntry value="org.eclipse.ecf.core.feature:default"/>
+<setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.ssl.feature:default"/>
+<setEntry value="org.eclipse.emf.common:default"/>
+<setEntry value="org.eclipse.emf.ecore:default"/>
+<setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
+<setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
+<setEntry value="org.eclipse.help:default"/>
+<setEntry value="org.eclipse.rcp:default"/>
+<setEntry value="org.openjdk.jmc.feature.console.ui.subscriptions:default"/>
+<setEntry value="org.openjdk.jmc.feature.console:default"/>
+<setEntry value="org.openjdk.jmc.feature.core:default"/>
+<setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.flameview:default"/>
+<setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.g1:default"/>
+<setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.jfx:default"/>
+<setEntry value="org.openjdk.jmc.feature.flightrecorder.metadata:default"/>
+<setEntry value="org.openjdk.jmc.feature.flightrecorder:default"/>
+<setEntry value="org.openjdk.jmc.feature.jconsole:default"/>
+<setEntry value="org.openjdk.jmc.feature.rcp:default"/>
+<setEntry value="org.openjdk.jmc.feature.twitter:default"/>
+<setEntry value="org.openjdk.jmc.rcp.product:default"/>
+</setAttribute>
+<booleanAttribute key="show_selected_only" value="false"/>
+<stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
+<stringAttribute key="timestamp" value="1231941027462"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="true"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="true"/>
+<booleanAttribute key="usefeatures" value="false"/>
 </launchConfiguration>

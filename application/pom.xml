@@ -61,6 +61,7 @@
 		<module>org.openjdk.jmc.feature.console.ui.subscriptions</module>
 		<module>org.openjdk.jmc.feature.core</module>
 		<module>org.openjdk.jmc.feature.flightrecorder</module>
+		<module>org.openjdk.jmc.feature.flightrecorder.ext.flameview</module>
 		<module>org.openjdk.jmc.feature.flightrecorder.ext.g1</module>
 		<module>org.openjdk.jmc.feature.flightrecorder.ext.jfx</module>
 		<module>org.openjdk.jmc.feature.flightrecorder.metadata</module>
@@ -76,6 +77,7 @@
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
+		<module>org.openjdk.jmc.flightrecorder.ext.flameview</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.g1</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.jfx</module>
 		<module>org.openjdk.jmc.flightrecorder.metadata</module>

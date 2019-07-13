@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
-   
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
+
    The contents of this file are subject to the terms of either the Universal Permissive License 
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,115 +32,94 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <site>
-	<feature url="features/org.openjdk.jmc.feature.ide_0.0.0.jar"
-		id="org.openjdk.jmc.feature.ide" version="0.0.0">
-		<category name="Base (Required)" />
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.jconsole_0.0.0.jar"
-		id="org.openjdk.jmc.feature.jconsole" version="0.0.0">
-		<category name="Console" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.flightrecorder.metadata_0.0.0.jar"
-		id="org.openjdk.jmc.feature.flightrecorder.metadata" version="0.0.0">
-		<category name="Flight Recorder" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.flightrecorder.ext.jfx_0.0.0.jar"
-		id="org.openjdk.jmc.feature.flightrecorder.ext.jfx" version="0.0.0">
-		<category name="Flight Recorder" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.console.ui.subscriptions_0.0.0.jar"
-		id="org.openjdk.jmc.feature.console.ui.subscriptions" version="0.0.0">
-		<category name="Console (Experimental)" />
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.twitter_0.0.0.jar"
-		id="org.openjdk.jmc.feature.twitter" version="0.0.0">
-		<category name="Console (Experimental)" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.flightrecorder.ext.g1_0.0.0.jar"
-		id="org.openjdk.jmc.feature.flightrecorder.ext.g1" version="0.0.0">
-		<category name="Flight Recorder (Experimental)" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.joverflow_0.0.0.jar"
-		id="org.openjdk.jmc.feature.joverflow" version="0.0.0">
-		<category name="Other (Experimental)" />
-	</feature>
-	<feature
-		url="features/org.openjdk.jmc.feature.ide.launch_0.0.0.jar"
-		id="org.openjdk.jmc.feature.ide.launch" version="0.0.0">
-		<category name="Other (Experimental)" />
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.pde_0.0.0.jar"
-		id="org.openjdk.jmc.feature.pde" version="0.0.0">
-		<category name="Other (Experimental)" />
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.ja_0.0.0.jar"
-		id="org.openjdk.jmc.feature.ja" version="0.0.0">
-		<category name="Mission Control localization"/>
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.zh_CN_0.0.0.jar"
-		id="org.openjdk.jmc.feature.zh_CN" version="0.0.0">
-		<category name="Mission Control localization"/>
-	</feature>
-
-	<!-- Base and "Supported" plug-in categories -->
-	<category-def name="Mission Control" label="Mission Control">
-		<description>
-			Eclipse plug-ins for JDK Mission Control
-		</description>
-	</category-def>
-	<category-def name="Base (Required)" label="Base (Required)">
-		<category name="Mission Control" />
-		<description>
-			Eclipse plug-ins for Mission Control. This is the base set of plug-ins required for running Mission Control inside of Eclipse.
-		</description>
-	</category-def>
-	<category-def name="Console" label="Console">
-		<category name="Mission Control" />
-		<description>
-			Plug-ins for the Mission Control Management Console.
-		</description>
-	</category-def>
-	<category-def name="Flight Recorder" label="Flight Recorder">
-		<category name="Mission Control" />
-		<description>
-			Plug-ins for the Flight Recorder.
-		</description>
-	</category-def>
-
-	<!-- Experimental plug-in categories -->
-	<category-def name="Mission Control (Experimental)" label="Mission Control (Experimental)">
-		<description>
-			Experimental (unsupported) Eclipse plug-ins for Mission Control
-		</description>
-	</category-def>
-	<category-def name="Console (Experimental)" label="Console">
-		<category name="Mission Control (Experimental)" />
-		<description>
-			Experimental (unsupported) plug-ins for the Mission Control Management Console.
-		</description>
-	</category-def>
-	<category-def name="Flight Recorder (Experimental)" label="Flight Recorder">
-		<category name="Mission Control (Experimental)" />
-		<description>
-			Experimental (unsupported) plug-ins for the Flight Recorder.
-		</description>
-	</category-def>
-	<category-def name="Other (Experimental)" label="Other">
-		<category name="Mission Control (Experimental)" />
-		<description>
-			Experimental (unsupported) plug-ins for Mission Control.
-		</description>
-	</category-def>
-
-	<!-- Localization -->
-	<category-def name="Mission Control localization" label="Mission Control localization">
-		<description>
-			Localization for Mission Control.
-		</description>
-	</category-def>
+   <feature url="features/org.openjdk.jmc.feature.ide_0.0.0.jar" id="org.openjdk.jmc.feature.ide" version="0.0.0">
+      <category name="Base (Required)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.jconsole_0.0.0.jar" id="org.openjdk.jmc.feature.jconsole" version="0.0.0">
+      <category name="Console"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.flightrecorder.metadata_0.0.0.jar" id="org.openjdk.jmc.feature.flightrecorder.metadata" version="0.0.0">
+      <category name="Flight Recorder"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.flightrecorder.ext.jfx_0.0.0.jar" id="org.openjdk.jmc.feature.flightrecorder.ext.jfx" version="0.0.0">
+      <category name="Flight Recorder"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.console.ui.subscriptions_0.0.0.jar" id="org.openjdk.jmc.feature.console.ui.subscriptions" version="0.0.0">
+      <category name="Console (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.twitter_0.0.0.jar" id="org.openjdk.jmc.feature.twitter" version="0.0.0">
+      <category name="Console (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.flightrecorder.ext.flameview_0.0.0.jar" id="org.openjdk.jmc.feature.flightrecorder.ext.flameview" version="0.0.0">
+      <category name="Flight Recorder (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.flightrecorder.ext.g1_0.0.0.jar" id="org.openjdk.jmc.feature.flightrecorder.ext.g1" version="0.0.0">
+      <category name="Flight Recorder (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.joverflow_0.0.0.jar" id="org.openjdk.jmc.feature.joverflow" version="0.0.0">
+      <category name="Other (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.ide.launch_0.0.0.jar" id="org.openjdk.jmc.feature.ide.launch" version="0.0.0">
+      <category name="Other (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.pde_0.0.0.jar" id="org.openjdk.jmc.feature.pde" version="0.0.0">
+      <category name="Other (Experimental)"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.ja_0.0.0.jar" id="org.openjdk.jmc.feature.ja" version="0.0.0">
+      <category name="Mission Control localization"/>
+   </feature>
+   <feature url="features/org.openjdk.jmc.feature.zh_CN_0.0.0.jar" id="org.openjdk.jmc.feature.zh_CN" version="0.0.0">
+      <category name="Mission Control localization"/>
+   </feature>
+   <category-def name="Mission Control" label="Mission Control">
+      <description>
+         Eclipse plug-ins for JDK Mission Control
+      </description>
+   </category-def>
+   <category-def name="Base (Required)" label="Base (Required)">
+      <category name="Mission Control"/>
+      <description>
+         Eclipse plug-ins for Mission Control. This is the base set of plug-ins required for running Mission Control inside of Eclipse.
+      </description>
+   </category-def>
+   <category-def name="Console" label="Console">
+      <category name="Mission Control"/>
+      <description>
+         Plug-ins for the Mission Control Management Console.
+      </description>
+   </category-def>
+   <category-def name="Flight Recorder" label="Flight Recorder">
+      <category name="Mission Control"/>
+      <description>
+         Plug-ins for the Flight Recorder.
+      </description>
+   </category-def>
+   <category-def name="Mission Control (Experimental)" label="Mission Control (Experimental)">
+      <description>
+         Experimental (unsupported) Eclipse plug-ins for Mission Control
+      </description>
+   </category-def>
+   <category-def name="Console (Experimental)" label="Console">
+      <category name="Mission Control (Experimental)"/>
+      <description>
+         Experimental (unsupported) plug-ins for the Mission Control Management Console.
+      </description>
+   </category-def>
+   <category-def name="Flight Recorder (Experimental)" label="Flight Recorder">
+      <category name="Mission Control (Experimental)"/>
+      <description>
+         Experimental (unsupported) plug-ins for the Flight Recorder.
+      </description>
+   </category-def>
+   <category-def name="Other (Experimental)" label="Other">
+      <category name="Mission Control (Experimental)"/>
+      <description>
+         Experimental (unsupported) plug-ins for Mission Control.
+      </description>
+   </category-def>
+   <category-def name="Mission Control localization" label="Mission Control localization">
+      <description>
+         Localization for Mission Control.
+      </description>
+   </category-def>
 </site>

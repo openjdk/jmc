@@ -45,14 +45,9 @@ import org.openjdk.jmc.console.ui.preferences.CommunicationPage;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
 import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
 import org.openjdk.jmc.test.jemmy.MCUITestRule;
-import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
-import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
-import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton.Labels;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCDialog;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
-import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
-import org.openjdk.jmc.test.jemmy.misc.wrappers.MCText;
 
 /**
  * Class to test basic functionality of the JMX Console preferences UI.
