@@ -604,6 +604,13 @@
 				<column id="origin:text" width="110" />
 			</jvmFlags>
 			<jvmFlagsFilter showFilter="false" showSearch="true" />
+			<jvmFlagsLog sortColumn="startTime:timestamp" sortAscending="true">
+				<column hidden="false" id="startTime:timestamp" width="180" />
+				<column hidden="false" id="name:text" width="200" />
+				<column hidden="false" id="oldValue" width="90" />
+				<column hidden="false" id="newValue" width="90" />
+				<column hidden="false" id="origin:text" width="110" />
+			</jvmFlagsLog>
 		</state>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.garbagecollections"
 			id="org.openjdk.jmc.flightrecorder.ui.garbagecollections">

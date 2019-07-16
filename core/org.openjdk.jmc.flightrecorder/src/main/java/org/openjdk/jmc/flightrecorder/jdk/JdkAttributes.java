@@ -725,6 +725,18 @@ public final class JdkAttributes {
 
 	public static final IAttribute<String> FLAG_NAME = attr("name", Messages.getString(Messages.ATTR_FLAG_NAME), //$NON-NLS-1$
 			PLAIN_TEXT);
+	public static final IAttribute<Boolean> FLAG_NEW_VALUE_BOOLEAN = attr("newValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_NEW_VALUE_BOOLEAN), FLAG);
+	public static final IAttribute<IQuantity> FLAG_NEW_VALUE_NUMBER = attr("newValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_NEW_VALUE_NUMBER), NUMBER);
+	public static final IAttribute<String> FLAG_NEW_VALUE_TEXT = attr("newValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_NEW_VALUE_TEXT), PLAIN_TEXT);
+	public static final IAttribute<Boolean> FLAG_OLD_VALUE_BOOLEAN = attr("oldValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_OLD_VALUE_BOOLEAN), FLAG);
+	public static final IAttribute<IQuantity> FLAG_OLD_VALUE_NUMBER = attr("oldValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_OLD_VALUE_NUMBER), NUMBER);
+	public static final IAttribute<String> FLAG_OLD_VALUE_TEXT = attr("oldValue", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_OLD_VALUE_TEXT), PLAIN_TEXT);
 	public static final IAttribute<String> FLAG_ORIGIN = attr("origin", Messages.getString(Messages.ATTR_FLAG_ORIGIN), //$NON-NLS-1$
 			PLAIN_TEXT);
 	public static final IAttribute<IQuantity> FLAG_VALUE_NUMBER = attr("value", //$NON-NLS-1$

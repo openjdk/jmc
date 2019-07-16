@@ -272,9 +272,13 @@ public class Messages extends NLS {
 	public static String JFR_PROPERTY_SHEET_FIELD;
 	public static String JFR_PROPERTY_SHEET_VALUE;
 	public static String JFR_PROPERTY_SHEET_VERBOSE_VALUE;
+	public static String JVMInformationPage_COLUMN_NEW_VALUE;
+	public static String JVMInformationPage_COLUMN_OLD_VALUE;
 	public static String JVMInformationPage_COLUMN_VALUE;
+	public static String JVMInformationPage_EMPTY_TABLE;
 	public static String JVMInformationPage_PAGE_NAME;
 	public static String JVMInformationPage_SECTION_JVM_FLAGS;
+	public static String JVMInformationPage_SECTION_JVM_FLAGS_LOG;
 	public static String JVMInformationPage_SECTION_JVM_INFO;
 	public static String JavaApplicationPage_COLUMN_THREAD_DURATION;
 	public static String JavaApplicationPage_COLUMN_THREAD_DURATION_DESC;
