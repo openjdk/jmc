@@ -279,6 +279,7 @@ class ChunkMetadata {
 		private static final String ANNOTATION_PERCENTAGE = "jdk.jfr.Percentage"; //$NON-NLS-1$
 		private static final String ANNOTATION_MEMORY_AMOUNT = "jdk.jfr.MemoryAmount"; //$NON-NLS-1$ //backward compatibility for pre-release JDK 9
 		private static final String ANNOTATION_DATA_AMOUNT = "jdk.jfr.DataAmount"; //$NON-NLS-1$
+		private static final String ANNOTATION_FREQUENCY = "jdk.jfr.Frequency"; //$NON-NLS-1$
 		private static final String ANNOTATION_UNSIGNED = "jdk.jfr.Unsigned"; //$NON-NLS-1$
 		private static final String UNIT_S = "SECONDS"; //$NON-NLS-1$
 		private static final String UNIT_MS = "MILLISECONDS"; //$NON-NLS-1$
@@ -356,6 +357,9 @@ class ChunkMetadata {
 				}
 				return;
 			}
+			case ANNOTATION_FREQUENCY:
+				unit = UnitLookup.HERTZ;
+				return;
 			case ANNOTATION_TIMESTAMP: {
 				String unitId = values.get(VALUE);
 				switch (unitId) {
