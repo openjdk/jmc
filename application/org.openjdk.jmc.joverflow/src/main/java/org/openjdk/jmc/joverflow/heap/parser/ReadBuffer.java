@@ -105,8 +105,9 @@ public abstract class ReadBuffer {
 			RandomAccessFile file = new RandomAccessFile(fileName, "r");
 			try {
 				return CachedReadBuffer.createInstance(file, preferredCacheSize);
-			} finally {
+			} catch (IOException e) {
 				IOToolkit.closeSilently(file);
+				throw e;
 			}
 		}
 	}
