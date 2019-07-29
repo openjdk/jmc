@@ -223,8 +223,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static void render(StringBuilder builder, TraceNode node) {
-		String start = String.format("{%s,%s, \"children\": [ ", toJSonKeyValue("name", node.getName()),
-				toJSonKeyValue("value", String.valueOf(node.getValue())));
+		String start = String.format("{%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
+				toJSonKeyValue("v", String.valueOf(node.getValue())));
 		builder.append(start);
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));
