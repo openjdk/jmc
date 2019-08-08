@@ -73,6 +73,7 @@ import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
@@ -291,8 +292,8 @@ public class CodeCachePage extends AbstractDataPage {
 			chartLegend.addSelectionChangedListener(e -> buildChart());
 			ColumnViewerToolTipSupport.enableFor(chartLegend);
 			List<Object> chartSeries = new ArrayList<>();
-			if (RulesToolkit.getJavaVersion(getDataSource().getItems())
-					.isGreaterOrEqualThan(JavaVersionSupport.JDK_9)) {
+			JavaVersion version = RulesToolkit.getJavaVersion(getDataSource().getItems()); 
+			if (version != null && version.isGreaterOrEqualThan(JavaVersionSupport.JDK_9)) {
 				CODE_CACHE_UNALLOCATED_SEGMENTED.getAttributes().stream().map(IAttribute::getIdentifier)
 						.forEach(chartSeries::add);
 				CODE_CACHE_ENTRIES_SEGMENTED.getAttributes().stream().map(IAttribute::getIdentifier)

@@ -75,7 +75,15 @@ public class FlightRecordingSupportRule implements IRule {
 		Result versionResult = getVersionResult(items);
 		Result timeConversionResult = getTimeConversionResult(items);
 
-		return versionResult.getScore() > timeConversionResult.getScore() ? versionResult : timeConversionResult;
+		double versionScore = versionResult.getScore();
+		double timeConversionScore = timeConversionResult.getScore();
+
+		if (versionScore > 0 || timeConversionScore > 0) {
+			return versionResult.getScore() > timeConversionResult.getScore() ? versionResult : timeConversionResult;			
+		}
+		// If no rule reported a warning or error, return the rule with the lowest score,
+		// meaning it was NotApplicable, Failed or Ignored.
+		return versionScore < timeConversionScore ? versionResult : timeConversionResult;
 	}
 
 	@Override
@@ -111,6 +119,11 @@ public class FlightRecordingSupportRule implements IRule {
 
 	private Result getVersionResult(String versionString) {
 		JavaVersion usedVersion = RulesToolkit.getJavaVersion(versionString);
+
+		if (usedVersion == null) {
+			return RulesToolkit.getNotApplicableResult(this,
+                    Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
+		}
 
 		if (!usedVersion.isGreaterOrEqualThan(JDK_7_U_40)) {
 			return new Result(this, 100,
