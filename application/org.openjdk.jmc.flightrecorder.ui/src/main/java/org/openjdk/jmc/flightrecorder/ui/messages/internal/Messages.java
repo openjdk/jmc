@@ -45,6 +45,8 @@ public class Messages extends NLS {
 	public static String ATTRIBUTE_DESCRIPTION_LABEL;
 	public static String ATTRIBUTE_ID_LABEL;
 	public static String ATTRIBUTE_NOT_SHARED;
+	public static String ATTR_HEAP_USED_POST_GC;
+	public static String ATTR_HEAP_USED_POST_GC_DESC;
 	public static String CHART_ZOOM_TO_SELECTED_RANGE;
 	public static String CONFIGURATION_EDIT_ACTION;
 	public static String COUNT_COLUMN_NAME;
@@ -190,6 +192,8 @@ public class Messages extends NLS {
 	public static String GarbageCollectionsPage_PAUSE_PHASE_SELECTION;
 	public static String GarbageCollectionsPage_ROW_HEAP;
 	public static String GarbageCollectionsPage_ROW_HEAP_DESC;
+	public static String GarbageCollectionsPage_ROW_HEAP_POST_GC;
+	public static String GarbageCollectionsPage_ROW_HEAP_POST_GC_DESC;
 	public static String GarbageCollectionsPage_ROW_METASPACE;
 	public static String GarbageCollectionsPage_ROW_METASPACE_DESC;
 	public static String GarbageCollectionsPage_ROW_PAUSE_PHASES;

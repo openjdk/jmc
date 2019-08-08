@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.pages;
 
+import static org.openjdk.jmc.common.item.Attribute.attr;
+import static org.openjdk.jmc.common.item.ItemQueryBuilder.fromWhere;
+import static org.openjdk.jmc.common.unit.UnitLookup.MEMORY;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAggregators.LONGEST_GC_PAUSE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAggregators.TOTAL_GC_PAUSE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.HEAP_SUMMARY;
@@ -173,6 +176,11 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 	private final static Color LONGEST_PAUSE_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter();
 	private final static Color SUM_OF_PAUSES_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter().brighter();
 
+	public static final IAttribute<IQuantity> HEAP_USED_POST_GC = attr("heapUsed", Messages.ATTR_HEAP_USED_POST_GC, //$NON-NLS-1$
+			Messages.ATTR_HEAP_USED_POST_GC_DESC, MEMORY);
+
+	public static final IItemQuery HEAP_SUMMARY_POST_GC = fromWhere(JdkFilters.HEAP_SUMMARY_AFTER_GC)
+			.select(HEAP_USED_POST_GC).build();
 	private final static IItemQuery METASPACE_SUMMARY = ItemQueryBuilder.fromWhere(JdkFilters.METASPACE_SUMMARY)
 			.select(JdkAttributes.GC_METASPACE_USED, JdkAttributes.GC_METASPACE_CAPACITY,
 					JdkAttributes.GC_METASPACE_COMMITTED, JdkAttributes.GC_METASPACE_RESERVED)
@@ -262,7 +270,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private final IAction sumOfPauses = createAggregatorCheckAction(TOTAL_GC_PAUSE, "sumOfPauses", //$NON-NLS-1$
 				SUM_OF_PAUSES_COLOR, b -> buildChart());
 		private final List<IAction> allChartSeriesActions = Stream.concat(
-				Stream.concat(HEAP_SUMMARY.getAttributes().stream(), METASPACE_SUMMARY.getAttributes().stream())
+				Stream.concat(HEAP_SUMMARY.getAttributes().stream(),
+						Stream.concat(HEAP_SUMMARY_POST_GC.getAttributes().stream(), METASPACE_SUMMARY.getAttributes().stream()))
 						.map(a -> createAttributeCheckAction(a, b -> buildChart())),
 				Stream.of(longestPause, sumOfPauses, enablePhases, GCEventThread)).collect(Collectors.toList());
 		private final Set<String> excludedAttributeIds;
@@ -492,6 +501,9 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			DataPageToolkit.buildLinesRow(Messages.GarbageCollectionsPage_ROW_HEAP,
 					Messages.GarbageCollectionsPage_ROW_HEAP_DESC, allItems, false, HEAP_SUMMARY, legendFilter,
 					UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
+			DataPageToolkit.buildLinesRow(Messages.GarbageCollectionsPage_ROW_HEAP_POST_GC,
+					Messages.GarbageCollectionsPage_ROW_HEAP_POST_GC_DESC, allItems, false, HEAP_SUMMARY_POST_GC, legendFilter,
+					UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
 			DataPageToolkit.buildLinesRow(Messages.GarbageCollectionsPage_ROW_METASPACE,
 					Messages.GarbageCollectionsPage_ROW_METASPACE_DESC, allItems, false, METASPACE_SUMMARY,
 					legendFilter, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
@@ -539,8 +551,9 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 
 		private boolean isAttributeEnabled(IAttribute<IQuantity> attr) {
 			String id = attr.getIdentifier();
+			String name = attr.getName();
 			return includeAttribute(id)
-					&& allChartSeriesActions.stream().filter(a -> id.equals(a.getId())).findAny().get().isChecked();
+					&& allChartSeriesActions.stream().filter(a -> name.equals(a.getText())).findAny().get().isChecked();
 		}
 
 		private boolean includeAttribute(String attrId) {
