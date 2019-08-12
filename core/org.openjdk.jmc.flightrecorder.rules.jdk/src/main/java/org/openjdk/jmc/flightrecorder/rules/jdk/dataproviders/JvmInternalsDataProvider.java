@@ -45,11 +45,18 @@ public class JvmInternalsDataProvider {
 
 	private static final String[] PREFIXES = new String[] {"-Xmx", "-Xms", "-Xmn", "-Xss", "-Xmaxjitcodesize"};
 	/**
-	 * Options that are OK to use multiple times if different values are provided. Check for
+	 * Flags that are OK to use multiple times if different values are provided. Check for
 	 * duplicates using the full argument.
 	 */
 	private static final String[] VERBATIM = new String[] {"-verbose", "--add-exports", "--add-opens"};
+	/**
+	 * Flags that are OK to use multiple times if different values are provided. Check for
+	 * duplicates using flag name without options (i.e. for '-javaagent:c:/myjar.jar=option1',
+	 * comparison is done with 'c:/myjar.jar').
+	 */
+	private static final String[] OPTIONS = new String[] {"-XX", "-javaagent", "-agent"};
 	private static final Map<String, String> EQUIVALENT = new HashMap<>();
+
 
 	static {
 		putBiMap("-Xbatch", "BackgroundCompilation");
@@ -115,37 +122,42 @@ public class JvmInternalsDataProvider {
 					break;
 				}
 			}
-			String argument;
+			String flag;
 			if (verbatim) {
-				argument = fullArgument;
+				flag = fullArgument;
 			} else {
-				String[] split = fullArgument.split("[=:]", 3);
-				argument = split[0];
-				if ("-XX".equals(split[0])) {
-					argument = split[1];
-					if (argument.startsWith("+") || argument.startsWith("-")) {
-						argument = argument.substring(1);
+				String[] split = fullArgument.split("[:=]", 2);
+				flag = split[0];
+
+				for (int i = 0; i < OPTIONS.length; i++) {
+					if (OPTIONS[i].equals(split[0])) {
+						String flagWithOptions = split[1];
+						flag = flagWithOptions.split("[=]")[0];
+						if (flag.startsWith("+") || flag.startsWith("-")) {
+							flag = flag.substring(1);
+						}
+						break;
 					}
 				}
 				for (int i = 0; i < PREFIXES.length; i++) {
-					argument = scrubPrefix(argument, PREFIXES[i]);
+					flag = scrubPrefix(flag, PREFIXES[i]);
 				}
-				String equivalentArgument = EQUIVALENT.get(argument);
-				if (equivalentArgument != null && !seenFlags.containsKey(argument)
+				String equivalentArgument = EQUIVALENT.get(flag);
+				if (equivalentArgument != null && !seenFlags.containsKey(flag)
 						&& seenFlags.containsKey(equivalentArgument)) {
-					argument = equivalentArgument;
+					flag = equivalentArgument;
 				}
 			}
-			if (seenFlags.containsKey(argument)) {
-				if (!dupes.containsKey(argument)) {
-					dupes.put(argument, new ArrayList<String>());
-					dupes.get(argument).add(seenFlags.get(argument));
+			if (seenFlags.containsKey(flag)) {
+				if (!dupes.containsKey(flag)) {
+					dupes.put(flag, new ArrayList<String>());
+					dupes.get(flag).add(seenFlags.get(flag));
 				}
-				dupes.get(argument).add(fullArgument);
+				dupes.get(flag).add(fullArgument);
 
 			}
 			else {
-				seenFlags.put(argument, fullArgument);
+				seenFlags.put(flag, fullArgument);
 			}		
 		}
 		return dupes.values();
