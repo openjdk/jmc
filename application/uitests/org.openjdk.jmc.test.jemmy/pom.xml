@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--   
    Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
    
@@ -41,50 +41,46 @@
 	<artifactId>org.openjdk.jmc.test.jemmy</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>common</artifactId>
+			<version>7.1.0-SNAPSHOT</version>
+		</dependency>
 
-<dependencies>
-      <dependency>
-         <groupId>org.openjdk.jmc</groupId>
-         <artifactId>common</artifactId>
-         <version>7.1.0-SNAPSHOT</version>
-      </dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>common.test</artifactId>
+			<version>7.1.0-SNAPSHOT</version>
+		</dependency>
 
-      <dependency>
-         <groupId>org.openjdk.jmc</groupId>
-         <artifactId>common.test</artifactId>
-         <version>7.1.0-SNAPSHOT</version>
-      </dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder</artifactId>
+			<version>7.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.rules</artifactId>
+			<version>7.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.rules.jdk</artifactId>
+			<version>7.1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
-      <dependency>
-         <groupId>org.openjdk.jmc</groupId>
-         <artifactId>flightrecorder</artifactId>
-         <version>7.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-         <groupId>org.openjdk.jmc</groupId>
-         <artifactId>flightrecorder.rules</artifactId>
-         <version>7.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-         <groupId>org.openjdk.jmc</groupId>
-         <artifactId>flightrecorder.rules.jdk</artifactId>
-         <version>7.1.0-SNAPSHOT</version>
-      </dependency>
-   </dependencies>
-
-
-    <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <pomDependencies>consider</pomDependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<pomDependencies>consider</pomDependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

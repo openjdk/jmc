@@ -342,6 +342,18 @@
 								<artifact>
 									<id>org.hdrhistogram:HdrHistogram:2.1.11</id>
 								</artifact>
+								<artifact>
+									<id>org.adoptopenjdk:jemmy-awt-input:2.0.0</id>
+								</artifact>
+								<artifact>
+									<id>org.adoptopenjdk:jemmy-browser:2.0.0</id>
+								</artifact>
+								<artifact>
+									<id>org.adoptopenjdk:jemmy-core:2.0.0</id>
+								</artifact>
+								<artifact>
+									<id>org.adoptopenjdk:jemmy-swt:2.0.0</id>
+								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>

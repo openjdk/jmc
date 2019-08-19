@@ -233,15 +233,6 @@ mvn verify
 
 To run the UI tests:
 
-> Currently, in order to run UI tests you need to supply the Jemmy UI testing libraries yourself. These can be built from source available at the mercurial repository at http://hg.openjdk.java.net/code-tools/jemmy/v3/.
-
->1. Create a directory on your local drive where you wish to build the Jemmy libraries.
->2. In a terminal, when in the newly created directory, issue `hg clone http://hg.openjdk.java.net/code-tools/jemmy/v3/`. If you don't have a Mercurial client you can download the code from http://hg.openjdk.java.net/code-tools/jemmy/v3/archive/tip.zip (or .gz or .bz2).
->3. Build Jemmy by issuing `mvn clean package`. Adding `-DskipTests` makes sure that UI tests that might fail won't stop the packaging.
->4. Copy the resulting jar files from core/JemmyCore/target, core/JemmyAWTInput/target, core/JemmyBrowser/target and SWT/JemmySWT/target to \[jmc_repo_dir\]/application/uitests/org.openjdk.jmc.test.jemmy/lib/ (create the lib directory first if it does not exist).
-
->(As soon as Jemmy is published on Maven Central, this manual build step will be removed.)
-
 ```bash
 mvn verify -P uitests
 ```

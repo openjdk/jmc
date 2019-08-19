@@ -13,12 +13,11 @@ Require-Bundle: org.junit,
  org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.ui,
  org.eclipse.ui,
- org.openjdk.jmc.flightrecorder
-Bundle-ClassPath: .,
- lib/jemmy-core-1.0.2.jar,
- lib/jemmy-swt-1.0.2.jar,
- lib/jemmy-awt-input-1.0.2.jar,
- lib/jemmy-browser-1.0.2.jar
+ org.openjdk.jmc.flightrecorder,
+ org.adoptopenjdk.jemmy-awt-input,
+ org.adoptopenjdk.jemmy-browser,
+ org.adoptopenjdk.jemmy-core,
+ org.adoptopenjdk.jemmy-swt
 Import-Package: org.openjdk.jmc.alert,
  org.openjdk.jmc.browser.attach,
  org.openjdk.jmc.browser.views,

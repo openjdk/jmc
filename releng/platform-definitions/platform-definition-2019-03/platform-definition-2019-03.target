@@ -62,6 +62,10 @@
             <unit id="org.openjfx.javafx-web.win" version="11.0.1"/>
             <unit id="org.openjfx.javafx-web.linux" version="11.0.1"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.1.11"/>
+            <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
+            <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
+            <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
+            <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
