@@ -116,7 +116,7 @@ class TypeManager {
 	}
 
 	// NOTE: Using constant pool id as identifier.
-	private static final Map<Long, StructContentType<Object[]>> STRUCT_TYPES = new HashMap<>();
+	private final Map<Long, StructContentType<Object[]>> STRUCT_TYPES = new HashMap<>();
 
 	private class TypeEntry {
 		private static final String STRUCT_TYPE_CLASS = "java.lang.Class"; //$NON-NLS-1$
