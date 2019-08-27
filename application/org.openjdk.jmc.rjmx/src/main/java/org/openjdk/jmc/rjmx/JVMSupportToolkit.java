@@ -67,12 +67,12 @@ public final class JVMSupportToolkit {
 			title = Messages.JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
 			message = Messages.JVMSupport_MESSAGE_JROCKIT_NOT_SUPPORTED;
 		} else if (!ConnectionToolkit.isHotSpot(connection)) {
-			title = Messages.JVMSupport_TITLE_NOT_A_KNOWN_JVM;
-			message = Messages.JVMSupport_MESSAGE_NOT_A_KNOWN_JVM;
+			title = Messages.JVMSupport_TITLE_UNKNOWN_JVM;
+			message = Messages.JVMSupport_MESSAGE_UNKNOWN_JVM;
 		} else if (!ConnectionToolkit.isJavaVersionAboveOrEqual(connection,
 				JavaVersionSupport.DIAGNOSTIC_COMMANDS_SUPPORTED)) {
-			title = Messages.JVMSupport_TITLE_TOO_OLD_JVM_CONSOLE;
-			message = Messages.JVMSupport_MESSAGE_TOO_OLD_JVM_CONSOLE;
+			title = Messages.JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
+			message = Messages.JVMSupport_MESSAGE_LEGACY_JVM_CONSOLE;
 		}
 
 		if (title != null) {
@@ -202,7 +202,7 @@ public final class JVMSupportToolkit {
 	}
 
 	private static String getJfrJRockitNotSupported(boolean shortMessage) {
-		return shortMessage ? Messages.JVMSupport_JROCKIT_NOT_LONGER_SUPPORTED_SHORT
-				: Messages.JVMSupport_JROCKIT_NOT_LONGER_SUPPORTED;
+		return shortMessage ? Messages.JVMSupport_JROCKIT_NO_LONGER_SUPPORTED_SHORT
+				: Messages.JVMSupport_JROCKIT_NO_LONGER_SUPPORTED;
 	}
 }

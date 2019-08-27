@@ -56,14 +56,14 @@ public class Messages extends NLS {
 	public static String JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_NOT_HOTSPOT_SHORT;
 	public static String JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT;
 	public static String JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT_SHORT;
-	public static String JVMSupport_JROCKIT_NOT_LONGER_SUPPORTED;
-	public static String JVMSupport_JROCKIT_NOT_LONGER_SUPPORTED_SHORT;
+	public static String JVMSupport_JROCKIT_NO_LONGER_SUPPORTED;
+	public static String JVMSupport_JROCKIT_NO_LONGER_SUPPORTED_SHORT;
 	public static String JVMSupport_MESSAGE_JROCKIT_NOT_SUPPORTED;
-	public static String JVMSupport_MESSAGE_NOT_A_KNOWN_JVM;
-	public static String JVMSupport_MESSAGE_TOO_OLD_JVM_CONSOLE;
+	public static String JVMSupport_MESSAGE_UNKNOWN_JVM;
+	public static String JVMSupport_MESSAGE_LEGACY_JVM_CONSOLE;
 	public static String JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
-	public static String JVMSupport_TITLE_NOT_A_KNOWN_JVM;
-	public static String JVMSupport_TITLE_TOO_OLD_JVM_CONSOLE;
+	public static String JVMSupport_TITLE_UNKNOWN_JVM;
+	public static String JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
 	public static String LABEL_NOT_AVAILABLE;
 
 	static {

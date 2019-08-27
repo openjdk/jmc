@@ -70,7 +70,7 @@ public class JvmBrowser extends MCJemmyBase {
 	private static final String DIALOG_NEW_FOLDER_DEFAULT_VALUE = org.openjdk.jmc.browser.views.Messages.JVMBrowserView_DIALOG_NEW_FOLDER_DEFAULT_VALUE;
 	private static final String DIALOG_NEW_FOLDER_TITLE = org.openjdk.jmc.browser.views.Messages.JVMBrowserView_DIALOG_NEW_FOLDER_TITLE;
 	private static final String DIALOG_REMOVE_TITLE = org.openjdk.jmc.browser.views.Messages.JVMBrowserView_DIALOG_REMOVE_TITLE;
-	private static final String TOO_OLD_JVM_TITLE = org.openjdk.jmc.rjmx.messages.internal.Messages.JVMSupport_TITLE_TOO_OLD_JVM_CONSOLE;
+	private static final String TOO_OLD_JVM_TITLE = org.openjdk.jmc.rjmx.messages.internal.Messages.JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
 	private static final String LOCAL_PROVIDER_NAME = org.openjdk.jmc.browser.attach.Messages.LocalDescriptorProvider_PROVIDER_NAME;
 	private static final String COMMERCIAL_FEATURES_QUESTION_TITLE = org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages.COMMERCIAL_FEATURES_QUESTION_TITLE;
 	private static final String DIALOG_NEW_CONNECTION_TITLE = org.openjdk.jmc.browser.wizards.Messages.ConnectionWizard_TITLE_NEW_CONNECTION;

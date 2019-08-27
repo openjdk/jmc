@@ -71,12 +71,12 @@ public class ConnectionMessageTest extends MCJemmyTestBase {
 				dialogTitle = Messages.JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
 				dialogText = Messages.JVMSupport_MESSAGE_JROCKIT_NOT_SUPPORTED;
 			} else if (jvmType.equals("jdk14")) {
-				dialogTitle = Messages.JVMSupport_TITLE_TOO_OLD_JVM_CONSOLE;
-				dialogText = Messages.JVMSupport_MESSAGE_TOO_OLD_JVM_CONSOLE;
+				dialogTitle = Messages.JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
+				dialogText = Messages.JVMSupport_MESSAGE_LEGACY_JVM_CONSOLE;
 			} else if (jvmType.equals("jdk15") || jvmType.equals("jdk16")
 					|| (jvmType.startsWith("jdk7u") && Integer.parseInt(jvmType.split("jdk7u")[1]) < 40)) {
-				dialogTitle = Messages.JVMSupport_TITLE_TOO_OLD_JVM_CONSOLE;
-				dialogText = Messages.JVMSupport_MESSAGE_TOO_OLD_JVM_CONSOLE;
+				dialogTitle = Messages.JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
+				dialogText = Messages.JVMSupport_MESSAGE_LEGACY_JVM_CONSOLE;
 			} else if (jvmType.startsWith("jdk9") || jvmType.startsWith("jdk8") || jvmType.startsWith("jdk7-latest")
 					|| (jvmType.startsWith("jdk7u") && Integer.parseInt(jvmType.split("jdk7u")[1]) >= 40)) {
 				dialogTitle = "";

@@ -96,7 +96,7 @@ public class JVMSupportToolkitTest {
 						new JVMDescriptor("1.6", JVMType.JROCKIT, JVMArch.UNKNOWN, null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
-		assertEquals(Messages.JVMSupport_JROCKIT_NOT_LONGER_SUPPORTED, errorMessage);
+		assertEquals(Messages.JVMSupport_JROCKIT_NO_LONGER_SUPPORTED, errorMessage);
 	}
 
 	@Test
