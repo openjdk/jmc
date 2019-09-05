@@ -96,6 +96,10 @@
 		<connection>${scmConnection}</connection>
 	</scm>
 	<distributionManagement>
+		<repository>
+			<id>jmc-publish</id>
+			<url>${release.repo}</url>
+		</repository>
 		<snapshotRepository>
 			<id>jmc-publish-snapshot</id>
 			<url>${snapshot.repo}</url>
