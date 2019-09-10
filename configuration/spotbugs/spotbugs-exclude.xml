@@ -101,10 +101,10 @@
 	</Match>
 	<Match>
 		<Class name="org.openjdk.jmc.ui.polling.PollManager" />
-		<OR>
+		<Or>
 			<Method name="stopIfNotStopped" />
 			<Method name="poll" />
-		</OR>
+		</Or>
 		<Bug pattern="NN_NAKED_NOTIFY" />
 	</Match>
 
@@ -132,11 +132,15 @@
 		<Bug pattern="MS_SHOULD_BE_FINAL" />
 	</Match>
 
-	<!-- The exit command which, obviously, works as advertised. The command 
-		is available from JMCs internal command console, and only affects the client. 
-		I.e, it is not a remote command. -->
+	<!-- The exit command which, obviously, works as advertised. The version command
+		displays version info and exits. These commands are available from JMCs
+		internal command console, and only affects the client. I.e, they are not
+		remote commands. -->
 	<Match>
-		<Class name="org.openjdk.jmc.commands.internal.executables.Exit" />
+		<Or>
+			<Class name="org.openjdk.jmc.commands.internal.executables.Exit" />
+			<Class name="org.openjdk.jmc.commands.internal.executables.Version" />
+		</Or>
 		<Method name="execute" />
 		<Bug pattern="DM_EXIT" />
 	</Match>
@@ -282,10 +286,10 @@
 	<!-- These are ok exit calls for the code to run JOverflow in stand-alone 
 		mode -->
 	<Match>
-		<OR>
-			<Class name="org.openjdk.jmc.joverflow.ui.FXMain" />
-			<Class name="org.openjdk.jmc.joverflow.ui.FXMain$1" />
-		</OR>
+		<Or>
+			<Class name="org.openjdk.jmc.joverflow.ui.FxMain" />
+			<Class name="org.openjdk.jmc.joverflow.ui.FxMain$1" />
+		</Or>
 		<Bug pattern="DM_EXIT" />
 	</Match>
 
@@ -295,6 +299,11 @@
 		<Class name="org.openjdk.jmc.joverflow.ui.JOverflowFxUi" />
 		<Method name="&lt;init&gt;" />
 		<Bug pattern="UR_UNINIT_READ" />
+	</Match>
+
+	<Match>
+		<Class name="org.openjdk.jmc.joverflow.Main" />
+		<Bug pattern="DM_EXIT" />
 	</Match>
 
 	<!-- We only sort these instances using compareTo(), and never use them 
@@ -489,6 +498,23 @@
 		<Class name="org.openjdk.jmc.joverflow.heap.model.TestJavaObjectTable" />
 		<Method name="testIteratingUnvisitedObjects" />
 		<Bug pattern="UC_USELESS_OBJECT" />
+	</Match>
+	<!-- JOverflow test code: VM shutdown. -->
+	<Match>
+		<Class name="examples.VariousIssues" />
+		<Method name="&lt;init&gt;" />
+		<Bug pattern="DM_EXIT" />
+	</Match>
+
+	<!-- JDP test code: VM shutdown. -->
+	<Match>
+		<Class name="org.openjdk.jmc.jdp.ServerTester" />
+		<Or>
+			<Method name="main" />
+			<Method name="createName" />
+			<Method name="createAgentUrl" />
+		</Or>
+		<Bug pattern="DM_EXIT" />
 	</Match>
 
 	<!-- === Filtering out test classes right now === -->
