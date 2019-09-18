@@ -35,6 +35,9 @@ package org.openjdk.jmc.flightrecorder.rules.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openjdk.jmc.common.IMCThread;
+import org.openjdk.jmc.common.unit.IQuantity;
+
 /**
  * A simple mutable tree node implementation, with a typed payload.
  *
@@ -44,6 +47,10 @@ import java.util.List;
 public class TreeNode<T> implements ITreeNode<T> {
 	private TreeNode<T> parent;
 	private List<ITreeNode<T>> children = new ArrayList<>();
+	private boolean hasDuration;
+	private IQuantity startTime;
+	private IQuantity endTime;
+	private IMCThread thread;
 	private T item;
 
 	/**
@@ -54,6 +61,14 @@ public class TreeNode<T> implements ITreeNode<T> {
 	 */
 	public TreeNode(T item) {
 		this.item = item;
+	}
+	
+	public TreeNode(T item, boolean hasDuration, IQuantity startTime, IQuantity endTime, IMCThread thread) {
+		this.item = item;
+		this.hasDuration = hasDuration;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.thread = thread;
 	}
 
 	@Override
@@ -70,7 +85,23 @@ public class TreeNode<T> implements ITreeNode<T> {
 	public T getValue() {
 		return item;
 	}
+	
+	public boolean hasDuration() {
+		return hasDuration;
+	}
 
+	public IQuantity getStartTime() {
+		return startTime;
+	}
+	
+	public IQuantity getEndTime() {
+		return endTime;
+	}
+	
+	public IMCThread getThread() {
+		return thread;
+	}
+	
 	@Override
 	public void accept(ITreeVisitor<T> visitor) {
 		visitor.visit(this);
@@ -96,16 +127,6 @@ public class TreeNode<T> implements ITreeNode<T> {
 	void removeChild(TreeNode<T> node) {
 		children.remove(node);
 		node.parent = null;
-	}
-
-	/**
-	 * Set the node payload.
-	 *
-	 * @param item
-	 *            new node payload
-	 */
-	void setItem(T item) {
-		this.item = item;
 	}
 
 	@Override
