@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.openjdk.jmc.flightrecorder.ext.flameview</name>
+	<name>org.openjdk.jmc.flightrecorder.flameview</name>
 	<comment></comment>
 	<projects>
 	</projects>

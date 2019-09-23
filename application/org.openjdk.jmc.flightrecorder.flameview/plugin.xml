@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
    Copyright (c) 2019, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -32,14 +32,17 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application</artifactId>
-		<version>7.1.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>org.openjdk.jmc.feature.flightrecorder.ext.flameview</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>eclipse-feature</packaging>
-</project>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.ui.views">
+		<view
+			allowMultiple="false"
+			category="org.openjdk.jmc.ui.main"
+			class="org.openjdk.jmc.flightrecorder.flameview.views.FlameGraphView"
+			icon="icons/flame.png"
+			id="org.openjdk.jmc.flightrecorder.flameview"
+			name="%FLAME_VIEW_NAME"
+			restorable="true">
+		</view>
+	</extension>
+</plugin>

@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.ext.flameview.views;
+package org.openjdk.jmc.flightrecorder.flameview.views;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
@@ -62,8 +62,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.ext.flameview.tree.TraceNode;
-import org.openjdk.jmc.flightrecorder.ext.flameview.tree.TraceTreeUtils;
+import org.openjdk.jmc.flightrecorder.flameview.tree.TraceNode;
+import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;

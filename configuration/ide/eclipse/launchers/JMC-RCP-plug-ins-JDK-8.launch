@@ -47,7 +47,6 @@
 <setEntry value="org.openjdk.jmc.feature.console.ui.subscriptions:default"/>
 <setEntry value="org.openjdk.jmc.feature.console:default"/>
 <setEntry value="org.openjdk.jmc.feature.core:default"/>
-<setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.flameview:default"/>
 <setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.g1:default"/>
 <setEntry value="org.openjdk.jmc.feature.flightrecorder.ext.jfx:default"/>
 <setEntry value="org.openjdk.jmc.feature.flightrecorder.metadata:default"/>
