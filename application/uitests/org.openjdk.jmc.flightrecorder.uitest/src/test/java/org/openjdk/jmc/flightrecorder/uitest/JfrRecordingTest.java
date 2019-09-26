@@ -44,6 +44,7 @@ import org.openjdk.jmc.test.jemmy.MCUITestRule;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrNavigator;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrUi;
+import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton.Labels;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCDialog;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
@@ -73,11 +74,13 @@ public class JfrRecordingTest extends MCJemmyTestBase {
 		@Override
 		public void before() {
 			initialZipFileMemoryFactor = RecordingLoader.getZippedFileMemoryFactor();
+			MC.setRecordingAnalysis(true);
 		}
 
 		@Override
 		public void after() {
 			RecordingLoader.setZippedFileMemoryFactor(initialZipFileMemoryFactor);
+			MC.setRecordingAnalysis(false);
 		}
 	};
 

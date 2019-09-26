@@ -55,6 +55,7 @@ public class JfrUi extends MCJemmyBase {
 	 * Members ======= List of tabs
 	 */
 	public static enum Tabs {
+		AUTOMATED_ANALYSIS_RESULTS,
 		JAVA_APPLICATION,
 		THREADS,
 		MEMORY,
@@ -82,6 +83,9 @@ public class JfrUi extends MCJemmyBase {
 		public static String[] text(Tabs tab) {
 			String[] tabText = {""};
 			switch (tab) {
+			case AUTOMATED_ANALYSIS_RESULTS:
+				tabText = new String[] {"Automated Analysis Results"};
+				break;
 			case JVM_INTERNALS:
 				tabText = new String[] {"JVM Internals"};
 				break;

@@ -47,6 +47,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -60,9 +63,11 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
+import org.openjdk.jmc.ui.column.ColumnsFilter;
 import org.openjdk.jmc.ui.column.IColumn;
 import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
+import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
 class ResultTableUi {
@@ -144,19 +149,28 @@ class ResultTableUi {
 		this.editor = editor;
 		this.resultMap = resultMap;
 
-		viewer = new TableViewer(parent.getBody(),
-				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+		Composite resultTableComposite = toolkit.createComposite(parent.getBody());
+		resultTableComposite.setLayout(MCLayoutFactory.createMarginFreeFormPageLayout());
+		Composite filterComposite = toolkit.createComposite(resultTableComposite);
+		filterComposite.setLayoutData(MCLayoutFactory.createFormPageLayoutData(SWT.DEFAULT, SWT.DEFAULT, true, false));
+
+		Table table = toolkit.createTable(resultTableComposite,
+				SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL);
+		table.setLayoutData(MCLayoutFactory.createFormPageLayoutData());
+		viewer = new TableViewer(table);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 
 		columnsManager = ColumnManager.build(viewer, createColumns(),
 				TableSettings.forState(state.getChild(TABLE_PREF_ROOT)));
-		MCContextMenuManager mm = MCContextMenuManager.create(viewer.getControl());
-		ColumnMenusFactory.addDefaultMenus(columnsManager, mm);
+		ColumnMenusFactory.addDefaultMenus(columnsManager, MCContextMenuManager.create(table));
 
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.setInput(resultMap.keySet().toArray());
 		listener = navigateListener(editor, resultMap);
 		viewer.addDoubleClickListener(listener);
+
+		filterComposite.setLayout(new GridLayout(2, false));
+		ColumnsFilter.addFilterControl(filterComposite, toolkit, columnsManager);
 	}
 
 	private IDoubleClickListener navigateListener(IPageContainer editor, Map<Result, DataPageDescriptor> resultMap) {

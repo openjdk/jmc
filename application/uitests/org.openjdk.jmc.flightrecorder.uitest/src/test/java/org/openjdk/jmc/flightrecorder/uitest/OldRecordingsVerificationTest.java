@@ -48,6 +48,7 @@ import org.openjdk.jmc.test.jemmy.MCUITestRule;
 import org.openjdk.jmc.test.jemmy.misc.helpers.EventSettingsData;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrNavigator;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrUi;
+import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
 
 /**
@@ -71,10 +72,12 @@ public class OldRecordingsVerificationTest extends MCJemmyTestBase {
 		@Override
 		public void before() {
 			JfrUi.openJfr(materialize("jfr", fileName, OldRecordingsVerificationTest.class));
+			MC.setRecordingAnalysis(true);
 		}
 
 		@Override
 		public void after() {
+			MC.setRecordingAnalysis(false);
 			MCMenu.closeActiveEditor();
 		}
 	};
