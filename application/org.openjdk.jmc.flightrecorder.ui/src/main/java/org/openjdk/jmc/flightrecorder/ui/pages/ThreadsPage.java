@@ -326,6 +326,7 @@ public class ThreadsPage extends AbstractDataPage {
 		public void saveTo(IWritableState state) {
 			super.saveTo(state);
 			tableFilterComponent.saveState(state.createChild(THREADS_TABLE_FILTER));
+			lanes.saveTo(state);
 			saveToLocal();
 		}
 
