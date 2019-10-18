@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--   
-   Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -31,7 +31,8 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<?pde version="3.8"?><target name="jmc-target-2019-06" sequenceNumber="47">
+<?pde version="3.8"?>
+<target name="jmc-target-2019-06" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
@@ -68,15 +69,15 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.400.v20190515-0925"/>
             <unit id="org.eclipse.pde.feature.group" version="3.14.0.v20190605-1800"/>
             <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
             <repository location="http://download.eclipse.org/releases/2019-06/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-						<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.10.0.v20190126060001"/>
-						<unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.10.0.v20190126060001"/>
-						<repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.1/2018-12/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.12.0.v20190713060001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.12.0.v20190713060001"/>
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.17.0/2019-06/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
