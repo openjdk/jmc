@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.openjdk.jmc.flightrecorder.rules.jdk</name>
+	<name>flightrecorder.rules.jdk</name>
 	<comment></comment>
 	<projects>
 	</projects>

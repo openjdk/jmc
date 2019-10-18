@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.openjdk.jmc.flightrecorder.test</name>
+	<name>flightrecorder.test</name>
 	<comment></comment>
 	<projects>
 	</projects>
