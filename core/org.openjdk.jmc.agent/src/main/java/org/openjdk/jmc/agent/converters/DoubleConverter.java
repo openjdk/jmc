@@ -43,5 +43,5 @@ public interface DoubleConverter<T> {
 	 *            the object to convert.
 	 * @return the object converted to a double.
 	 */
-	long convert(T o);
+	double convert(T o);
 }

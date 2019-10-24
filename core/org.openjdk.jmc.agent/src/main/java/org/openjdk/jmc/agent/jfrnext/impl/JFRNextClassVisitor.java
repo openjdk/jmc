@@ -82,12 +82,16 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	private void reflectiveRegister(Class<?> generateEventClass) throws Exception {
 		Class<?> jfr = Class.forName("jdk.jfr.FlightRecorder"); //$NON-NLS-1$
 		Method registerMethod = jfr.getDeclaredMethod("register", Class.class); //$NON-NLS-1$
-		registerMethod.invoke(null,  generateEventClass);		
+		registerMethod.invoke(null, generateEventClass);
 	}
 
 	private Class<?> generateEventClass() throws Exception {
-		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor);
-		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0,
-				eventClass.length, definingClassLoader, protectionDomain);
+		try {
+			return Class.forName(transformDescriptor.getEventClassName().replace('/', '.'));
+		} catch (ClassNotFoundException e) {
+			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor);
+			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
+					definingClassLoader, protectionDomain);
+		}
 	}
 }

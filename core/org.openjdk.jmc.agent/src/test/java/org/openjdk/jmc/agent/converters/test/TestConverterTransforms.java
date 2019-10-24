@@ -30,20 +30,34 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.agent.converters.test;
 
-import org.openjdk.jmc.agent.converters.StringConverter;
+import static org.junit.Assert.assertTrue;
 
-@SuppressWarnings("nls")
-public class GurkConverterString implements StringConverter<Gurka> {
-	private final static StringConverter<Gurka> INSTANCE = new GurkConverterString();
-	
-	@Override
-	public String convert(Gurka o) {
-		return "Converted gurka. ID=" + o.getID();
+import java.io.IOException;
+import java.lang.instrument.IllegalClassFormatException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.Test;
+import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
+import org.openjdk.jmc.agent.test.util.TestToolkit;
+
+public class TestConverterTransforms {
+	private static AtomicInteger runCount = new AtomicInteger(0);
+
+	public static String getTemplate() throws IOException {
+		return TestToolkit.readTemplate(TestConverterTransforms.class, TestToolkit.DEFAULT_TEMPLATE_NAME);
 	}
-	
-	public static StringConverter<Gurka> getInstance() {
-		return INSTANCE;
+
+	@Test
+	public void testRunConverterTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
+		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(),
+				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
+
+		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMeConverter.class)));
 	}
 }

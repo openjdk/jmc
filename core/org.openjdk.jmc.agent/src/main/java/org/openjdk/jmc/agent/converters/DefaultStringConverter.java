@@ -38,13 +38,13 @@ import org.openjdk.jmc.agent.util.TypeUtils;
  * The default converter used if nothing has been specified.
  */
 public final class DefaultStringConverter implements StringConverter<Object> {
-	private final static DefaultStringConverter INSTANCE = new DefaultStringConverter(); 
-	
+	private final static DefaultStringConverter INSTANCE = new DefaultStringConverter();
+
 	@Override
 	public String convert(Object o) {
 		return TypeUtils.toString(o);
 	}
-	
+
 	public static DefaultStringConverter getInstance() {
 		return INSTANCE;
 	}

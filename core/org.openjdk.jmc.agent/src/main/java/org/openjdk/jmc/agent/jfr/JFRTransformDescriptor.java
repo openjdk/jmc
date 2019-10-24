@@ -48,6 +48,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final static String ATTRIBUTE_JFR_EVENT_DESCRIPTION = "description"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_JFR_EVENT_PATH = "path"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_STACK_TRACE = "stacktrace"; //$NON-NLS-1$
+	private final static String ATTRIBUTE_RETHROW = "rethrow"; //$NON-NLS-1$
 
 	private final String classPrefix;
 	private final String eventDescription;
@@ -55,7 +56,9 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final String eventName;
 	private final String eventPath;
 	private final boolean recordStackTrace;
+	private final boolean useRethrow;
 	private final boolean allowToString;
+	private final boolean allowConverter;
 	private final List<Parameter> parameters;
 
 	public JFRTransformDescriptor(String id, String className, Method method,
@@ -67,7 +70,9 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		eventPath = initializeEventPath();
 		eventDescription = initializeEventDescription();
 		recordStackTrace = getBoolean(ATTRIBUTE_STACK_TRACE, true);
-		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, true);
+		useRethrow = getBoolean(ATTRIBUTE_RETHROW, false);
+		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, false);
+		allowConverter = getBoolean(ATTRIBUTE_ALLOW_CONVERTER, false);
 		this.parameters = parameters;
 	}
 
@@ -95,8 +100,16 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return recordStackTrace;
 	}
 
+	public boolean isUseRethrow() {
+		return useRethrow;
+	}
+
 	public boolean isAllowToString() {
 		return allowToString;
+	}
+	
+	public boolean isAllowConverter() {
+		return allowConverter;
 	}
 
 	private String initializeClassPrefix() {

@@ -33,7 +33,9 @@
 package org.openjdk.jmc.agent.converters;
 
 /**
- * This package contains converter interfaces and implementations. A converter will convert an object into one of the types that the recorder can record. Note that 
- * the converter will be called from the event site, so make sure your code performs. If your converter has a static getInstance method, it will be assumed that your
- * converter is thread safe, and no converter field will be generated into the event class - the singleton will be used instead. 
+ * This package contains converter interfaces and implementations. A converter will convert an
+ * object into one of the types that the recorder can record. Note that the converter will be called
+ * from the event site, so make sure your code performs. If your converter has a static getInstance
+ * method, it will be assumed that your converter is thread safe, and no converter field will be
+ * generated into the event class - the singleton will be used instead.
  */

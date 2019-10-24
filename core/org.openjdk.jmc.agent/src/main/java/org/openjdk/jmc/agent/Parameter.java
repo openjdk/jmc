@@ -49,7 +49,8 @@ public final class Parameter {
 	private final String relationKey;
 	private final String converterClassName;
 
-	public Parameter(int index, String name, String description, String contentType, String relationKey, String converterClassName) {
+	public Parameter(int index, String name, String description, String contentType, String relationKey,
+			String converterClassName) {
 		this.index = index;
 		this.name = name;
 		this.description = description;

@@ -60,8 +60,8 @@ public class TestJFRTransformer {
 
 	@Test
 	public void testRunTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
-		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXML("RunTransforms" + runCount.getAndIncrement()));
+		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(
+				TestDefaultTransformRegistry.getTemplate(), "RunTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
 

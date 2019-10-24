@@ -56,9 +56,6 @@ public class Agent {
 	public final static String VERSION = "0.0.2"; //$NON-NLS-1$
 	private final static String DEFAULT_CONFIG = "jfrprobes.xml"; //$NON-NLS-1$
 
-	@SuppressWarnings("unused")
-	private static Instrumentation instrumentationInstance;
-
 	/**
 	 * This method is run when the agent is started from the command line.
 	 *
@@ -100,8 +97,7 @@ public class Agent {
 	public static void initializeAgent(InputStream configuration, Instrumentation instrumentation)
 			throws XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry.from(configuration);
-		instrumentationInstance = instrumentation;
-		instrumentation.addTransformer(new Transformer(registry));
+		instrumentation.addTransformer(new Transformer(registry), true);
 		AgentManagementFactory.createAndRegisterAgentControllerMBean(instrumentation, registry);
 	}
 

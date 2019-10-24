@@ -32,7 +32,9 @@
  */
 package org.openjdk.jmc.agent.jfr.impl;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.openjdk.jmc.agent.Parameter;
@@ -43,12 +45,18 @@ import org.openjdk.jmc.agent.util.TypeUtils;
  * Code emitter for JFR distributed with pre-JDK 9 releases. Probably works with JRockit too. ;)
  */
 public class JFRMethodAdvisor extends AdviceAdapter {
-	private final JFRTransformDescriptor transformDescriptor;
+	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
 
+	private final JFRTransformDescriptor transformDescriptor;
 	private final Type[] argumentTypesRef;
 	private final Type returnTypeRef;
 	private final Type eventType;
 	private int eventLocal = -1;
+
+	private Label tryBegin = new Label();
+	private Label tryEnd = new Label();
+
+	private boolean shouldInstrumentThrow;
 
 	protected JFRMethodAdvisor(JFRTransformDescriptor transformDescriptor, int api, MethodVisitor mv, int access,
 			String name, String desc) {
@@ -58,7 +66,34 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		this.argumentTypesRef = Type.getArgumentTypes(desc);
 		this.returnTypeRef = Type.getReturnType(desc);
 		this.eventType = Type.getObjectType(transformDescriptor.getEventClassName());
+
+		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow(); // don't instrument inner throws if rethrow is enabled
 	}
+
+    @Override
+    public void visitCode() {
+		super.visitCode();
+
+		if (transformDescriptor.isUseRethrow()) {
+			visitLabel(tryBegin);
+		}
+    }
+
+    @Override
+    public void visitEnd() {
+		if (transformDescriptor.isUseRethrow()) {
+			visitLabel(tryEnd);
+			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
+
+			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+
+			// Simply rethrow. Event commits are instrumented by onMethodExit()
+			shouldInstrumentThrow = true;
+			visitInsn(ATHROW);
+		}
+
+		super.visitEnd();
+    }
 
 	@Override
 	protected void onMethodEnter() {
@@ -96,6 +131,10 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	@Override
 	protected void onMethodExit(int opcode) {
+		if (opcode == ATHROW && !shouldInstrumentThrow) {
+			return;
+		}
+
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			Parameter returnParam = TypeUtils.findReturnParam(transformDescriptor.getParameters());
 			if (returnParam != null) {
@@ -125,4 +164,10 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "end", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+    @Override
+    public void visitFrame(int type, int numLocal, Object[] local, int numStack, Object[] stack) {
+        // force to always use expanded frames
+        super.visitFrame(Opcodes.F_NEW, numLocal, local, numStack, stack);
+    }
 }

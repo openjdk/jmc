@@ -43,7 +43,7 @@ import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 public abstract class TransformDescriptor {
 	public static final String ATTRIBUTE_CLASS_PREFIX = "classprefix"; //$NON-NLS-1$
 	public static final String ATTRIBUTE_ALLOW_TO_STRING = "allowtostring"; //$NON-NLS-1$
-	public static final String ATTRIBUTE_LOGGING_TYPE = "loggingtype"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_ALLOW_CONVERTER = "allowconverter"; //$NON-NLS-1$
 
 	public static final String DEFAULT_CLASS_PREFIX = "__JFREvent"; //$NON-NLS-1$
 

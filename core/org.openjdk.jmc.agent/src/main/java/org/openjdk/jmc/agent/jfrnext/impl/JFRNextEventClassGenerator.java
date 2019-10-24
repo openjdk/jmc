@@ -85,8 +85,7 @@ public class JFRNextEventClassGenerator {
 
 		String fieldType = getFieldType(type);
 
-		// Probably make them protected for JFRNext
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, param.getFieldName(), fieldType, null, null);
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, param.getFieldName(), fieldType, null, null);
 
 		// Name
 		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);
@@ -153,7 +152,6 @@ public class JFRNextEventClassGenerator {
 		if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
 			return "Ljava/lang/String;"; //$NON-NLS-1$
 		}
-
 		return type.getDescriptor();
 	}
 
@@ -169,7 +167,6 @@ public class JFRNextEventClassGenerator {
 		mv.visitCode();
 		Label l0 = new Label();
 		mv.visitLabel(l0);
-//		mv.visitLineNumber(15, l0);
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jdk/jfr/Event", "<init>", "()V", false);
 		mv.visitInsn(Opcodes.RETURN);

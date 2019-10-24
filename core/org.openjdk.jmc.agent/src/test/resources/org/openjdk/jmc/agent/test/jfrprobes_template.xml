@@ -41,7 +41,7 @@
 		     method is badly implemented. Use with care. -->
 		<allowtostring>true</allowtostring>
 		<!-- Allows converters to be used. If a converter is badly implemented, you are on your own. -->
-		<allowconverters>true</allowconverters>		
+		<allowconverter>true</allowconverter>		
 	</config>
 	<events>
 		<event id="demo.jfr.test1">
@@ -194,48 +194,51 @@
 				</parameter>
 			</method>
 		</event>
-		<!-- 
-		<event id="demo.jfr.testC1">
-			<name>JFR Hello World Converter Event 1 %TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
-			<path>demo/jfrhelloworldeventC1</path>
-			<kind>DURATION</kind>
+		<event id="demo.jfr.testI7">
+			<name>JFR Hello World Instance Event 7 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. The original method contains a try-catch clause.</description>
+			<path>demo/jfrhelloworldeventI7</path>
 			<stacktrace>true</stacktrace>
-			<thread>true</thread>
 			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
 			<method>
-				<name>printInstanceHelloWorldJFR3</name>						
-				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>	
-					<converter>org.openjdk.jmc.agent.test.GurkConverterString</converter>
-				</parameter>
+				<name>printInstanceHelloWorldJFR7</name>
+				<descriptor>()V</descriptor>
 			</method>
 		</event>
-		<event id="demo.jfr.testR1">
-			<name>JFR Hello World Reflective Access Event 1 %TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should record the parameters.</description>
-			<path>demo/jfrhelloworldeventC1</path>
-			<kind>DURATION</kind>
+		<event id="demo.jfr.testI8">
+			<name>JFR Hello World Instance Event 8 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record even if an exception is raised.</description>
+			<path>demo/jfrhelloworldeventI8</path>
 			<stacktrace>true</stacktrace>
-			<thread>true</thread>
 			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
 			<method>
-				<name>printInstanceHelloWorldJFR3</name>						
-				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka ID Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>	
-					<fieldaccess>
-						<field>gurkID</field>
-						<type>I</type>
-					</fieldaccess>
-					<onlyonexception>false</onlyonexception>
-				</parameter>
+				<name>printInstanceHelloWorldJFR8</name>
+				<descriptor>()V</descriptor>
 			</method>
-		</event> -->
+			<rethrow>true</rethrow>
+		</event>
+		<event id="demo.jfr.testI9">
+			<name>JFR Hello World Instance Event 9 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should not record if an exception is raised.</description>
+			<path>demo/jfrhelloworldeventI9</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR9</name>
+				<descriptor>()V</descriptor>
+			</method>
+		</event>
+		<event id="demo.jfr.testI10">
+			<name>JFR Hello World Instance Event 10 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record even if an exception is raised, but should not overwrite the existing try-catch clause.</description>
+			<path>demo/jfrhelloworldeventI10</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR10</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<rethrow>true</rethrow>
+		</event>
 	</events>
 </jfragent>

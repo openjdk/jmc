@@ -44,7 +44,7 @@ public interface TransformRegistry {
 	 */
 	boolean hasPendingTransforms(String className);
 
-	/**
+	/**O
 	 * Returns the list of {@link TransformDescriptor}s for the named class.
 	 *
 	 * @param className
@@ -54,11 +54,50 @@ public interface TransformRegistry {
 	List<TransformDescriptor> getTransformData(String className);
 
 	/**
-	 * Retransforms classes according to the xml description.
+	 * Modifies class information in the registry according to the xml description.
 	 *
-	 * @param xmlDescription an XML snippet describing the wanted transformations.
-	 * @return a class array
+	 * @param xmlDescription
+	 *           an XML snippet describing the wanted modifications.
+	 *
+	 * @return a list of {@link TransformDescriptor}s corresponding to the wanted transformations.
 	 */
-	// FIXME: We should only update the transformation registry! The actual retransforms should happen elsewhere!
-	Class<?>[] update(String xmlDescription);
+	List<TransformDescriptor> modify(String xmlDescription);
+
+	/**
+	 * Clears all classes and their corresponding transforms in the registry.
+	 *
+	 * @return the set of class names that were cleared.
+	 */
+	List<String> clearAllTransformData();
+
+	/**
+	 * Stores the pre instrumentation byte array of a class.
+	 * @param className
+	 *           the class for which to store the pre instrumentation data.
+	 * @param classPreInstrumentation
+	 *           the pre instrumentation byte array of the class to store.
+	 */
+	void storeClassPreInstrumentation(String className, byte[] classPreInstrumentation);
+
+	/**
+	 * Returns a byte array associated with a class pre instrumentation.
+	 * @param className
+	 *           the name of the class to get pre instrumentation data for.
+	 * @return a byte array of a class pre instrumentation.
+	 */
+	byte[] getClassPreInstrumentation(String className);
+
+	/**
+	 * Signify classes are or are not being reverted to their pre instrumentation versions.
+	 * @param shouldRevert
+	 *           true if class instrumentation should be reverted, false otherwise.
+	 */
+	void setRevertInstrumentation(boolean shouldRevert);
+
+	/**
+	 * Determines if classes should be reverted to their pre instrumentation versions.
+	 * @return true, if classes should be reverted and false otherwise.
+	 */
+	boolean isRevertIntrumentation();
+
 }

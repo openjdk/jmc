@@ -80,8 +80,8 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 
 	private Class<?> generateEventClass() throws Exception {
 		byte[] eventClass = JFREventClassGenerator.generateEventClass(transformDescriptor);
-		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0,
-				eventClass.length, definingClassLoader, protectionDomain);
+		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
+				definingClassLoader, protectionDomain);
 	}
 
 }

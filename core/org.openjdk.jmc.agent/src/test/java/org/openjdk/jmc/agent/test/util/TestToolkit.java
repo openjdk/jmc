@@ -42,17 +42,17 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Random;
 
-import org.openjdk.jmc.agent.test.InstrumentMe;
-
 public final class TestToolkit {
+	public static String DEFAULT_TEMPLATE_NAME = "jfrprobes_template.xml";
+	
 	public static final Random RND = new Random();
 
 	private TestToolkit() {
-		throw new UnsupportedOperationException("Not to be instantiated.");
+		throw new UnsupportedOperationException("Not to be instantiated."); //$NON-NLS-1$
 	}
 
 	public static byte[] getByteCode(Class<?> c) throws IOException {
-		InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class");
+		InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class"); //$NON-NLS-1$
 		return readFully(is, -1, true);
 	}
 
@@ -75,7 +75,7 @@ public final class TestToolkit {
 			int cc = is.read(output, pos, bytesToRead);
 			if (cc < 0) {
 				if (readAll && length != Integer.MAX_VALUE) {
-					throw new EOFException("Detect premature EOF");
+					throw new EOFException("Detect premature EOF"); //$NON-NLS-1$
 				} else {
 					if (output.length != pos) {
 						output = Arrays.copyOf(output, pos);
@@ -100,20 +100,13 @@ public final class TestToolkit {
 		return builder.toString();
 	}
 
-	public static InputStream getProbesXML(String testName) {
-		try {
-			String s = readTemplate();
-			s = s.replaceAll("%TEST_NAME%", testName);
-			return new ByteArrayInputStream(s.getBytes());
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static InputStream getProbesXMLFromTemplate(String template, String testName) {
+		template = template.replaceAll("%TEST_NAME%", testName); //$NON-NLS-1$
+		return new ByteArrayInputStream(template.getBytes());
 	}
 
-	private static String readTemplate() throws IOException {
-		InputStream inputStream = InstrumentMe.class.getResourceAsStream("jfrprobes_template.xml");
+	public static String readTemplate(Class<?> resouceClass, String templateName) throws IOException {
+		InputStream inputStream = resouceClass.getResourceAsStream(templateName); // $NON-NLS-1$
 		String s = readString(inputStream);
 		closeSilently(inputStream);
 		return s;
@@ -132,7 +125,7 @@ public final class TestToolkit {
 		StringBuilder builder = new StringBuilder();
 		try {
 			while ((s = reader.readLine()) != null) {
-				builder.append(s + "\r");
+				builder.append(s + "\r"); //$NON-NLS-1$
 			}
 			s = builder.toString();
 		} finally {

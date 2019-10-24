@@ -121,8 +121,9 @@ public final class TypeUtils {
 		return String.valueOf(o);
 	}
 
-	public static Class<?> defineClass(String eventClassName, byte[] eventClass, int i, int length,
-			ClassLoader definingClassLoader, ProtectionDomain protectionDomain) {
+	public static Class<?> defineClass(
+		String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
+		ProtectionDomain protectionDomain) {
 		try {
 			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD.invoke(UNSAFE, eventClassName, eventClass, i, length,
 					definingClassLoader, protectionDomain);
@@ -133,9 +134,8 @@ public final class TypeUtils {
 	}
 
 	/**
-	 * Ensure that the operand is on the stack before calling. If type is void, this
-	 * is a noop, and depending on your use case you may instead want to push
-	 * Opcodes.ACONST_NULL.
+	 * Ensure that the operand is on the stack before calling. If type is void, this is a noop, and
+	 * depending on your use case you may instead want to push Opcodes.ACONST_NULL.
 	 */
 	public static void visitBox(MethodVisitor mv, Type type) {
 		switch (type.getSort()) {
@@ -236,10 +236,10 @@ public final class TypeUtils {
 	}
 
 	/**
-	 * Transforms a FQN in internal form, so that it can be used in e.g. formal
-	 * descriptors.
+	 * Transforms a FQN in internal form, so that it can be used in e.g. formal descriptors.
 	 *
-	 * @param className the fully qualified class name in internal form.
+	 * @param className
+	 *            the fully qualified class name in internal form.
 	 * @return the transformed class name.
 	 */
 	public static String parameterize(String className) {

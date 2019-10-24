@@ -60,9 +60,12 @@ public class Transformer implements ClassFileTransformer {
 		ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 		byte[] classfileBuffer) throws IllegalClassFormatException {
 		if (!registry.hasPendingTransforms(className)) {
-			return null;
+			return registry.isRevertIntrumentation() ? registry.getClassPreInstrumentation(className) : null;
 		}
-		return doTransforms(registry.getTransformData(className), classfileBuffer, loader, protectionDomain);
+		registry.storeClassPreInstrumentation(className, classfileBuffer);
+		byte[] instrumentedClassfileBuffer = registry.isRevertIntrumentation() ?
+				registry.getClassPreInstrumentation(className) : classfileBuffer;
+		return doTransforms(registry.getTransformData(className), instrumentedClassfileBuffer, loader, protectionDomain);
 	}
 
 	private byte[] doTransforms(
