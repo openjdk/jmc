@@ -81,7 +81,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private SashForm container;
 	private TraceNode currentRoot;
 	private CompletableFuture<TraceNode> currentModelCalculator;
-	private boolean threadRootAtTop;
+	private boolean threadRootAtTop = true;
 	private IItemCollection currentItems;
 	private GroupByAction[] groupByActions;
 
