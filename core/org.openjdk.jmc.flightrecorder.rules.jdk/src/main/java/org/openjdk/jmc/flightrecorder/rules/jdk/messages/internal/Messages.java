@@ -344,6 +344,8 @@ public class Messages {
 	public static final String IncreasingLiveSetRule_TEXT_INFO_NO_CANDIDATES = "IncreasingLiveSetRule_TEXT_INFO_NO_CANDIDATES"; //$NON-NLS-1$
 	public static final String IncreasingLiveSetRule_TEXT_INFO_UNBALANCED = "IncreasingLiveSetRule_TEXT_INFO_UNBALANCED"; //$NON-NLS-1$
 	public static final String IncreasingLiveSetRule_TEXT_OK = "IncreasingLiveSetRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD = "IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD"; //$NON-NLS-1$
+	public static final String IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD_DESC = "IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD_DESC"; //$NON-NLS-1$
 	public static final String IncreasingMetaspaceLiveSetRuleFactory_RULE_NAME = "IncreasingMetaspaceLiveSetRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO = "IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG = "IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$

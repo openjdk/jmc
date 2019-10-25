@@ -94,8 +94,12 @@ public class IncreasingLiveSetRule implements IRule {
 			"memleak.reference.tree.depth", Messages.getString(Messages.IncreasingLiveSetRule_RELEVANCE_THRESHOLD), //$NON-NLS-1$
 			Messages.getString(Messages.IncreasingLiveSetRule_RELEVANCE_THRESHOLD_DESC), NUMBER,
 			NUMBER_UNITY.quantity(0.5d));
+	public static final TypedPreference<IQuantity> YOUNG_COLLECTION_THRESHOLD = new TypedPreference<IQuantity>(
+			"memleak.young.collections", Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD), 
+			Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD_DESC), NUMBER, 
+			NUMBER_UNITY.quantity(4));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
-			.<TypedPreference<?>> asList(CLASSES_LOADED_PERCENT, RELEVANCE_THRESHOLD);
+			.<TypedPreference<?>> asList(CLASSES_LOADED_PERCENT, RELEVANCE_THRESHOLD, YOUNG_COLLECTION_THRESHOLD);
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_SUMMARY);
@@ -129,21 +133,35 @@ public class IncreasingLiveSetRule implements IRule {
 			double relativeIncreasePerSecond = liveSetIncreasePerSecond.ratioTo(postWarmupHeapSize);
 			score = RulesToolkit.mapExp100(relativeIncreasePerSecond, PERCENT_OF_HEAP_INCREASE_PER_SECOND);
 		}
+		
+		IQuantity youngCollections = items.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION)));
+		IQuantity oldCollections = items.getAggregate(Aggregators.count(JdkFilters.OLD_GARBAGE_COLLECTION));
+		if (oldCollections.longValue() == 0) { 
+			// If there are no old collections we cannot accurately determine whether or not there is a leak
+			// but a stable increase in live set over a recording is still interesting, since it could force a full GC eventually.
+			if (youngCollections.longValue() <= valueProvider.getPreferenceValue(YOUNG_COLLECTION_THRESHOLD).longValue()) {
+				// If we have too few collections at all we shouldn't even try to guess at the live set
+				return RulesToolkit.getTooFewEventsResult(this);
+			}
+			score = Math.min(score, 74);
+		}
 		// If we have Old Object Sample events we can attempt to find suitable memory leak class candidates
 		// otherwise we just return the basic increasing live set score
 		EventAvailability ea = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OLD_OBJECT_SAMPLE);
 		// FIXME: Should construct an message using memoryIncrease, not use a hard limit
-		if (score >= 25 && (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN)) {
-			IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START).subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
-			String shortMessage = MessageFormat.format(
-					Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),
-					liveSetIncreasePerSecond.displayUsing(IDisplayable.AUTO));
-			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-					+ MessageFormat.format(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO_LONG),
-							timeAfterJVMStart.displayUsing(IDisplayable.AUTO));
-			return new Result(this, score, shortMessage, longMessage, JdkQueries.HEAP_SUMMARY_AFTER_GC);
-		} else if (score < 25) {
-			return new Result(this, score, Messages.getString(Messages.IncreasingLiveSetRule_TEXT_OK));
+		if (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN) {
+			if (score >= 25) {
+				IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START).subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
+				String shortMessage = MessageFormat.format(
+						Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),
+						liveSetIncreasePerSecond.displayUsing(IDisplayable.AUTO));
+				String longMessage = shortMessage + "<p>" //$NON-NLS-1$
+						+ MessageFormat.format(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO_LONG),
+								timeAfterJVMStart.displayUsing(IDisplayable.AUTO));
+				return new Result(this, score, shortMessage, longMessage, JdkQueries.HEAP_SUMMARY_AFTER_GC);
+			} else {
+				return new Result(this, score, Messages.getString(Messages.IncreasingLiveSetRule_TEXT_OK));
+			}
 		}
 
 		// step 1. extract events from after the estimated warmup period

@@ -3451,10 +3451,10 @@
         </rule>
         <rule>
             <id>IncreasingLiveSet</id>
-            <severity>OK</severity>
-            <score>0.0</score>
-            <shortDescription>No memory leaks were detected.</shortDescription>
-            <longDescription>No memory leaks were detected.</longDescription>
+            <severity>Not Applicable</severity>
+            <score>-1.0</score>
+            <shortDescription>Too few events to calculate the result.</shortDescription>
+            <longDescription>Too few events to calculate the result.</longDescription>
         </rule>
         <rule>
             <id>IncreasingMetaSpaceLiveSet</id>
