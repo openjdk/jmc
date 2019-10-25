@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -41,24 +41,4 @@
 	<artifactId>org.openjdk.jmc.joverflow.ui</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>sun.jdk</groupId>
-							<artifactId>jfxswt</artifactId>
-							<version>1.8.0</version>
-							<scope>system</scope>
-							<systemPath>${java.home}/lib/jfxswt.jar</systemPath>
-						</dependency>
-					</extraClasspathElements>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

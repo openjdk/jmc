@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,198 +32,249 @@
  */
 package org.openjdk.jmc.joverflow.ui.viewers;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 import org.openjdk.jmc.joverflow.support.RefChainElement;
-import org.openjdk.jmc.joverflow.ui.model.ModelListener;
+import org.openjdk.jmc.joverflow.ui.model.MemoryStatisticsItem;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
+import org.openjdk.jmc.joverflow.ui.swt.ArcItem;
+import org.openjdk.jmc.joverflow.ui.swt.FilterList;
+import org.openjdk.jmc.joverflow.ui.util.ColorIndexedArcAttributeProvider;
 
-/**
- * Has a table and pie chart to show all {@code ObjectCluster} in the model grouped by class or qualifier.
- */
-public class ClusterGroupViewer implements ModelListener {
+public class ClusterGroupViewer extends BaseViewer {
 
-	private final ItemPieChart<MemoryStatisticsItem> ui;
-	private String qualifierName;
-	private final Runnable updateCallback;
-	private final Map<Object, MemoryStatisticsItem> items = new HashMap<Object, MemoryStatisticsItem>();
-	private final Set<Filter> objectClusterFilters = new HashSet<Filter>();
+	private final SashForm mContainer;
+	private final Label mTitle;
+	private final PieChartViewer mPieChart;
+	private final FilterList<ObjectCluster> mFilterList;
+	private final MemoryStatisticsTableViewer mTableViewer;
 
-	private abstract class Filter extends Button implements Callback<ObjectCluster, Boolean>, EventHandler<ActionEvent> {
+	private String mQualifierName;
+	private final Map<Object, MemoryStatisticsItem> items = new HashMap<>();
 
-		final boolean exclude;
-		final String qualifierName;
+	private boolean mAllIncluded = false;
 
-		Filter(boolean exclude, String qualifierName) {
-			this.exclude = exclude;
-			this.qualifierName = qualifierName;
-			setOnAction(this);
-		}
+	public ClusterGroupViewer(Composite parent, int style) {
+		mContainer = new SashForm(parent, style);
 
-		@Override
-		public void handle(ActionEvent event) {
-			removeFilter();
-			updateCallback.run();
-		}
+		{
+			Composite leftContainer = new Composite(mContainer, SWT.BORDER);
+			leftContainer.setLayout(new FormLayout());
 
-		public void removeFilter() {
-			ui.getDetailsPane().getChildren().remove(this);
-			objectClusterFilters.remove(this);
-		}
-
-		@Override
-		public Boolean call(ObjectCluster param) {
-			return isQualifierFilter() ? param.getQualifier() == null ? true : check(param.getQualifier()) ^ exclude : check(param.getClassName()) ^ exclude;
-		}
-
-		boolean isQualifierFilter() {
-			return qualifierName != null;
-		}
-
-		abstract boolean check(String str);
-
-	}
-
-	class SetFilter extends Filter {
-		private final Set<String> strings;
-
-		SetFilter(Iterable<MemoryStatisticsItem> item, boolean exclude, String qualifierName) {
-			super(exclude, qualifierName);
-			strings = new HashSet<String>();
-			for (MemoryStatisticsItem i : item) {
-				strings.add(i.getId().toString());
+			mTitle = new Label(leftContainer, SWT.NONE);
+			{
+				FormData data = new FormData();
+				data.top = new FormAttachment(0, 10);
+				data.left = new FormAttachment(0, 10);
+				mTitle.setLayoutData(data);
 			}
-			setText((isQualifierFilter() ? qualifierName : "Class") + (exclude ? " \u2209 {" : " \u2208 {") + strings.size() + "}");
-		}
 
-		@Override
-		boolean check(String str) {
-			return strings.contains(str);
-		}
-	}
-
-	class StringFilter extends Filter {
-		private final String string;
-
-		StringFilter(boolean exclude, String qualifierName, String item) {
-			super(exclude, qualifierName);
-			string = item;
-			setText((isQualifierFilter() ? qualifierName : "Class") + (exclude ? " \u2260 " : " = ") + string);
-		}
-
-		@Override
-		boolean check(String str) {
-			return string.equals(str);
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((qualifierName == null) ? 0 : qualifierName.hashCode());
-			result = prime * result + ((string == null) ? super.hashCode() : string.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			StringFilter other = (StringFilter) obj;
-			if (qualifierName == null) {
-				if (other.qualifierName != null) {
-					return false;
+			{
+				SashForm container = new SashForm(leftContainer, SWT.VERTICAL);
+				{
+					FormData fd_sashForm = new FormData();
+					fd_sashForm.top = new FormAttachment(mTitle, 10);
+					fd_sashForm.right = new FormAttachment(100, -10);
+					fd_sashForm.bottom = new FormAttachment(100, -10);
+					fd_sashForm.left = new FormAttachment(0, 10);
+					container.setLayoutData(fd_sashForm);
 				}
-			} else if (!qualifierName.equals(other.qualifierName)) {
-				return false;
+
+				mPieChart = new PieChartViewer(container, SWT.NONE);
+				mPieChart.setContentProvider(ArrayContentProvider.getInstance());
+				ColorIndexedArcAttributeProvider provider = new ColorIndexedArcAttributeProvider() {
+					@Override
+					public int getWeight(Object element) {
+						return (int) ((MemoryStatisticsItem) element).getMemory();
+					}
+				};
+				provider.setMinimumArcAngle(5);
+				mPieChart.setArcAttributeProvider(provider);
+
+				mPieChart.setMinimumArcAngle(5);
+				mPieChart.getPieChart().setZoomRatio(1.2);
+				mPieChart.setComparator(new ViewerComparator() {
+					@Override
+					public int compare(Viewer viewer, Object e1, Object e2) {
+						return (int) (((MemoryStatisticsItem) e2).getMemory() - ((MemoryStatisticsItem) e1)
+								.getMemory());
+					}
+				});
+
+				mFilterList = new FilterList<>(container, SWT.NONE);
+				mFilterList.addFilterChangedListener(this::notifyFilterChangedListeners);
+
+				container.setWeights(new int[] {3, 2});
 			}
-			if (string == null) {
-				return false;
-			} else if (!string.equals(other.string)) {
-				return false;
-			}
-			return true;
 		}
 
-	}
+		{
+			Composite tableContainer = new Composite(mContainer, SWT.BORDER);
+			tableContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-	public ClusterGroupViewer(Runnable updateCallback) {
-		this.updateCallback = updateCallback;
-		ui = new ItemPieChart<MemoryStatisticsItem>("Class") {
-			@Override
-			public void onItemPrimaryAction(MemoryStatisticsItem item) {
-				addObjectClusterFilter(new StringFilter(false, qualifierName, item.getId().toString()));
-			}
+			mTableViewer = new MemoryStatisticsTableViewer(tableContainer, SWT.NONE);
 
-			@Override
-			public void onItemSecondaryAction(MemoryStatisticsItem item) {
-				addObjectClusterFilter(new StringFilter(true, qualifierName, item.getId().toString()));
-			}
+			BiConsumer<MemoryStatisticsItem, Boolean> addFilter = (item, exclusion) -> {
+				if (item.getId() == null) {
+					return;
+				}
 
-			@Override
-			public void onItemPrimaryAction(Iterable<MemoryStatisticsItem> items) {
-				addObjectClusterFilter(new SetFilter(items, false, qualifierName));
-			}
+				mFilterList.addFilter(new Predicate<ObjectCluster>() {
 
-			@Override
-			public void onItemSecondaryAction(Iterable<MemoryStatisticsItem> items) {
-				addObjectClusterFilter(new SetFilter(items, true, qualifierName));
-			}
-		};
-	}
+					final String qualifierName = mQualifierName;
+					final String itemName = item.getId().toString();
+					final boolean excluded = exclusion;
 
-	public TableView<?> getTable() {
-		// FIXME: Should be removed
-		return ui.getLegend();
-	}
+					@Override
+					public boolean test(ObjectCluster oc) {
+						if (qualifierName == null) {
+							return itemName.equals(oc.getClassName()) ^ excluded;
+						}
 
-	public Node getUi() {
-		return ui;
-	}
+						if (oc.getQualifier() == null) {
+							return true;
+						}
 
-	public void setQualifierName(String qualifierName) {
-		this.qualifierName = qualifierName;
-		ui.setTitle(qualifierName != null ? qualifierName : "Class");
-	}
+						return itemName.equals(oc.getQualifier()) ^ excluded;
+					}
 
-	public void reset() {
-		for (Filter f : objectClusterFilters) {
-			f.removeFilter();
+					@Override
+					public String toString() {
+						return (qualifierName == null ? "Class" : mQualifierName) + (excluded ? " ≠ " : " = ") //$NON-NLS-1$ //$NON-NLS-2$
+								+ item.getId().toString();
+					}
+
+					@Override
+					public int hashCode() {
+						return itemName.hashCode();
+					}
+
+					@Override
+					public boolean equals(Object obj) {
+						if (obj == null) {
+							return false;
+						}
+						if (getClass() != obj.getClass()) {
+							return false;
+						}
+
+						return hashCode() == obj.hashCode();
+					}
+				});
+			};
+
+			mPieChart.getPieChart().addMouseListener(new MouseListener() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseDown(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseUp(MouseEvent e) {
+					ArcItem item = mPieChart.getPieChart().getHighlightedItem();
+					if (item == null) {
+						return;
+					}
+
+					if (item.getData() == null) {
+						return;
+					}
+
+					addFilter.accept((MemoryStatisticsItem) item.getData(), e.button != 1);
+				}
+			});
+
+			mTableViewer.getTable().addMouseListener(new MouseListener() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseDown(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseUp(MouseEvent e) {
+					if (e.button != 1 && e.button != 3) {
+						return;
+					}
+
+					if (mTableViewer.getSelection().isEmpty()) {
+						return;
+					}
+					IStructuredSelection selection = (IStructuredSelection) mTableViewer.getSelection();
+					MemoryStatisticsItem item = (MemoryStatisticsItem) selection.getFirstElement();
+					addFilter.accept(item, e.button != 1);
+				}
+			});
 		}
-		ui.clear();
+
+		mContainer.setWeights(new int[] {1, 2});
+
+		mTableViewer.setPieChartViewer(mPieChart);
+		mPieChart.setTableViewer(mTableViewer);
 	}
 
-	private void addObjectClusterFilter(Filter f) {
-		if (objectClusterFilters.size() < 8 && objectClusterFilters.add(f)) {
-			f.setPrefWidth(200);
-			VBox.setVgrow(f, Priority.ALWAYS);
-			ui.getDetailsPane().getChildren().add(f);
-			updateCallback.run();
-		}
+	@Override
+	public Control getControl() {
+		return mContainer;
+	}
+
+	@Override
+	public ISelection getSelection() {
+		return mTableViewer.getSelection();
+	}
+
+	@Override
+	public void refresh() {
+		mTableViewer.refresh();
+		mPieChart.refresh();
+	}
+
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		mTableViewer.setSelection(selection, reveal);
+		mPieChart.setSelection(selection, reveal);
 	}
 
 	@Override
 	public void include(ObjectCluster oc, RefChainElement ref) {
-		String s = isGroupingOnQualifier() ? oc.getQualifier() : oc.getClassName();
+		if (mAllIncluded) {
+			for (MemoryStatisticsItem item : items.values()) {
+				item.reset();
+			}
+			mAllIncluded = false;
+		}
+
+		String s = mQualifierName != null ? oc.getQualifier() : oc.getClassName();
 		MemoryStatisticsItem item = items.get(s);
 		if (item == null) {
 			item = new MemoryStatisticsItem(s, 0, 0, 0);
@@ -234,19 +285,33 @@ public class ClusterGroupViewer implements ModelListener {
 
 	@Override
 	public void allIncluded() {
-		ui.setContent(items.values());
-		ui.updatePie();
-		for (MemoryStatisticsItem i : items.values()) {
-			i.reset();
-		}
+		Collection<MemoryStatisticsItem> values = items.values();
+
+		((MemoryStatisticsTableViewer.MemoryStatisticsContentProvider) mTableViewer.getContentProvider())
+				.setInput(values);
+		mPieChart.setInput(values);
+
+		mAllIncluded = true;
 	}
 
-	private boolean isGroupingOnQualifier() {
-		return qualifierName != null;
+	public void setQualifierName(String qualifierName) {
+		mQualifierName = qualifierName;
+		String text = qualifierName != null ? qualifierName : "Class";
+		mTitle.setText(text);
+		mTableViewer.setPrimaryColumnText(text);
 	}
 
-	public Iterable<? extends Callback<ObjectCluster, Boolean>> getFilters() {
-		return objectClusterFilters;
+	public void setHeapSize(long size) {
+		mTableViewer.setHeapSize(size);
 	}
 
+	@Override
+	public boolean filter(ObjectCluster oc) {
+		return mFilterList.filter(oc);
+	}
+
+	@Override
+	public void reset() {
+		mFilterList.reset();
+	}
 }

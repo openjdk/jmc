@@ -276,11 +276,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.javafx.osgi</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.jdp</artifactId>
 			<version>${project.version}</version>
 		</dependency>

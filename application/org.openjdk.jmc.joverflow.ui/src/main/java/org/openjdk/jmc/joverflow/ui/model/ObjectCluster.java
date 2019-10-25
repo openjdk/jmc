@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,17 +38,17 @@ package org.openjdk.jmc.joverflow.ui.model;
  */
 public interface ObjectCluster {
 
-	public ClusterType getType();
+	ClusterType getType();
 
-	public String getClassName();
+	String getClassName();
 
-	public String getQualifier();
+	String getQualifier();
 
-	public int getMemory();
+	int getMemory();
 
-	public int getOverhead();
+	int getOverhead();
 
-	public int getObjectCount();
+	int getObjectCount();
 
-	public int getGlobalObjectIndex(int indexInCluster);
+	int getGlobalObjectIndex(int indexInCluster);
 }

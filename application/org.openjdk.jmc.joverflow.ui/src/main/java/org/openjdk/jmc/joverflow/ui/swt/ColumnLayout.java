@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,66 +31,61 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ui;
+package org.openjdk.jmc.joverflow.ui.swt;
 
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.IPage;
-import org.eclipse.ui.part.MessagePage;
-import org.eclipse.ui.part.PageBook;
-import org.eclipse.ui.part.PageBookView;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
 
-public class InstancesPageBookView extends PageBookView {
+public class ColumnLayout extends Layout {
+	// fixed margin and spacing
+	private static final int MARGIN = 4;
+	private static final int SPACING = 2;
 
-	@Override
-	protected IPage createDefaultPage(PageBook book) {
-		MessagePage page = new MessagePage();
-		initPage(page);
-		page.createControl(book);
-		page.setMessage("No JOverflow editor selected");
-		return page;
-	}
+	// cache
+	private Point[] sizes;
+	private int maxWidth, totalHeight;
 
-	@Override
-	protected PageRec doCreatePage(IWorkbenchPart part) {
-		if (part instanceof JOverflowEditor) {
-			final JOverflowEditor editor = ((JOverflowEditor) part);
-
-			JavaThingPage page = new JavaThingPage(editor);
-			editor.addUiLoadedListener((ui) -> ui.addModelListener(page));
-
-			initPage(page);
-			page.createControl(getPageBook());
-			return new PageRec(part, page);
+	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+		Control[] children = composite.getChildren();
+		if (flushCache || sizes == null || sizes.length != children.length) {
+			initialize(children);
 		}
-		return null;
+		int width = wHint, height = hHint;
+		if (wHint == SWT.DEFAULT)
+			width = maxWidth;
+		if (hHint == SWT.DEFAULT)
+			height = totalHeight;
+		return new Point(width + 2 * MARGIN, height + 2 * MARGIN);
 	}
 
-	@Override
-	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
-		if (part instanceof JOverflowEditor) {
-			final JOverflowUi ui = ((JOverflowEditor) part).getJOverflowUi();
-			if (ui != null) {
-				ui.removeModelListener((JavaThingPage) pageRecord.page);
-			}
+	protected void layout(Composite composite, boolean flushCache) {
+		Control[] children = composite.getChildren();
+		if (flushCache || sizes == null || sizes.length != children.length) {
+			initialize(children);
 		}
-
-		pageRecord.page.dispose();
-		pageRecord.dispose();
-	}
-
-	@Override
-	protected IWorkbenchPart getBootstrapPart() {
-		IWorkbenchPage page = getSite().getPage();
-		if (page != null) {
-			return page.getActiveEditor();
+		Rectangle rect = composite.getClientArea();
+		int y = MARGIN;
+		int width = Math.max(rect.width - 2 * MARGIN, maxWidth);
+		for (int i = 0; i < children.length; i++) {
+			int height = sizes[i].y;
+			children[i].setBounds(MARGIN, y, width, height);
+			y += height + SPACING;
 		}
-		return null;
 	}
 
-	@Override
-	protected boolean isImportant(IWorkbenchPart part) {
-		// We only care about JOverflowEditor
-		return (part instanceof JOverflowEditor);
+	private void initialize(Control[] children) {
+		maxWidth = 0;
+		totalHeight = 0;
+		sizes = new Point[children.length];
+		for (int i = 0; i < children.length; i++) {
+			sizes[i] = children[i].computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			maxWidth = Math.max(maxWidth, sizes[i].x);
+			totalHeight += sizes[i].y;
+		}
+		totalHeight += (children.length - 1) * SPACING;
 	}
 }

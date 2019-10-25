@@ -32,25 +32,73 @@
  */
 package org.openjdk.jmc.joverflow.ui.model;
 
+import java.util.List;
+
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 
 /**
- * Used to listed to model updates.
+ * Aggregates a number of referrers with a the same initial referrer chain Holds overhead/memory/size for the
+ * {@code ObjectCluster} referred to by these referrers.
  */
-public interface ModelListener {
-	/**
-	 * For each model update, this method is called with every object included in the model (that is not filtered out)
-	 * 
-	 * @param cluster
-	 *            The object cluster
-	 * @param referenceChain
-	 *            The reference chain for {@code cluster}
-	 */
-	void include(ObjectCluster cluster, RefChainElement referenceChain);
+public class ReferrerItem {
 
-	/**
-	 * Called once for each model update after {@code include} has been called with every {@code ObjectCluster} in the
-	 * model
-	 */
-	void allIncluded();
+	private long ovhd;
+	private long memory;
+	private int size;
+	private final String referrer;
+	private final boolean isBranch;
+	private final List<String> commonReferrers;
+
+	ReferrerItem(List<String> commonReferrers, String referrer, long memory, long overhead, int objectCount, boolean isBranch) {
+		this.isBranch = isBranch;
+		this.referrer = referrer;
+		this.commonReferrers = commonReferrers;
+		ovhd = overhead;
+		this.memory = memory;
+		size = objectCount;
+	}
+
+	ReferrerItem(List<String> parentReferrers, String referrer) {
+		this(parentReferrers, referrer, 0, 0, 0, true);
+	}
+
+	void addObjectCluster(ObjectCluster oc) {
+		ovhd += oc.getOverhead();
+		memory += oc.getMemory();
+		size += oc.getObjectCount();
+	}
+
+	public boolean check(RefChainElement ref) {
+		for (String parentRefName : commonReferrers) {
+			if (ref == null || !parentRefName.equals(ref.toString())) {
+				return false;
+			}
+			ref = ref.getReferer();
+		}
+		return ref != null && referrer.equals(ref.toString());
+	}
+
+	public boolean isBranch() {
+		return isBranch;
+	}
+
+	public int getLevel() {
+		return commonReferrers.size();
+	}
+
+	public long getOvhd() {
+		return ovhd;
+	}
+
+	public long getMemory() {
+		return memory;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public String getName() {
+		return referrer;
+	}
 }

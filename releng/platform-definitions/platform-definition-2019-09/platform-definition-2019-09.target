@@ -40,27 +40,6 @@
             <unit id="javax.mail.dsn" version="1.4.0"/>
             <unit id="org.owasp.encoder" version="1.2.2"/>
             <unit id="org.twitter4j.core" version="4.0.7"/>
-            <unit id="org.openjfx.javafx-base.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-base.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-base.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-fxml.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-fxml.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-fxml.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-media.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-media.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-media.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-controls.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-controls.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-controls.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-graphics.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-graphics.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-graphics.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-swing.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-swing.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-swing.linux" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-web.mac" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-web.win" version="11.0.1"/>
-            <unit id="org.openjfx.javafx-web.linux" version="11.0.1"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.1.11"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>

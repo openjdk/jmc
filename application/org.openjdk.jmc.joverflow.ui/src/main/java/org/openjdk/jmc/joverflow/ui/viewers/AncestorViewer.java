@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,143 +32,296 @@
  */
 package org.openjdk.jmc.joverflow.ui.viewers;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
+import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
-import org.openjdk.jmc.joverflow.ui.model.ModelListener;
+import org.openjdk.jmc.joverflow.ui.model.MemoryStatisticsItem;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
+import org.openjdk.jmc.joverflow.ui.swt.ArcItem;
+import org.openjdk.jmc.joverflow.ui.swt.FilterList;
+import org.openjdk.jmc.joverflow.ui.util.ColorIndexedArcAttributeProvider;
 
-/**
- * Has a table and pie chart to show all {@code ObjectCluster} in the model grouped by the closest ancestor referrer.
- */
-public class AncestorViewer implements ModelListener {
+public class AncestorViewer extends BaseViewer {
+	private final SashForm mContainer;
+	private final PieChartViewer mPieChart;
+	private final FilterList<RefChainElement> mFilterList;
+	private final Text mInput;
+	private final MemoryStatisticsTableViewer mTableViewer;
 
-	private final ItemPieChart<MemoryStatisticsItem> ui;
-	private final TextField text = new TextField();
-	private final Button updateButton = new Button("Update");
-	private final Button clearButton = new Button("Clear");
-	private final Runnable updateCallback;
+	private String mPrefix = ""; //$NON-NLS-1$
 
 	private RefChainElement lastRef;
 	private MemoryStatisticsItem lastItem;
-	private String classNameFilter = "";
+	private final Map<Object, MemoryStatisticsItem> items = new HashMap<>();
 
-	private final Map<Object, MemoryStatisticsItem> items = new HashMap<Object, MemoryStatisticsItem>();
-	private final Set<Filter> filters = new HashSet<Filter>();
+	private boolean mAllIncluded = false;
 
-	public AncestorViewer(Runnable updateCallback) {
-		HBox box = new HBox(5);
-		this.updateCallback = updateCallback;
-		clearButton.setMinWidth(60);
-		updateButton.setMinWidth(60);
-		text.setMinHeight(Region.USE_PREF_SIZE);
-		box.setAlignment(Pos.BOTTOM_RIGHT);
-		box.getChildren().addAll(clearButton, updateButton);
-		updateButton.setOnAction(new EventHandler<ActionEvent>() {
+	public AncestorViewer(Composite parent, int style) {
+		mContainer = new SashForm(parent, style);
 
-			@Override
-			public void handle(ActionEvent event) {
-				updateFilter();
+		{
+			Composite leftContainer = new Composite(mContainer, SWT.BORDER);
+			leftContainer.setLayout(new FormLayout());
+
+			Label title = new Label(leftContainer, SWT.NONE);
+			title.setText("Ancestor Referrer");
+			{
+				FormData data = new FormData();
+				data.top = new FormAttachment(0, 10);
+				data.left = new FormAttachment(0, 10);
+				title.setLayoutData(data);
+
 			}
-		});
-		clearButton.setOnAction(new EventHandler<ActionEvent>() {
 
-			@Override
-			public void handle(ActionEvent event) {
-				text.setText("");
-				updateFilter();
-			}
-		});
-		text.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode().isWhitespaceKey()) {
-					updateFilter();
+			{
+				Button update = new Button(leftContainer, SWT.NONE);
+				update.setText("Update");
+				update.addListener(SWT.Selection, event -> updatePrefixFilter());
+				{
+					FormData data = new FormData();
+					data.bottom = new FormAttachment(100, -10);
+					data.right = new FormAttachment(100, -10);
+					update.setLayoutData(data);
 				}
-			}
-		});
-		ui = new ItemPieChart<MemoryStatisticsItem>("Ancestor referrer") {
-			@Override
-			public void onItemPrimaryAction(MemoryStatisticsItem item) {
-				if (item.getId() != null) {
-					addFilter(new Filter(item.getId().toString(), false));
+
+				mInput = new Text(leftContainer, SWT.BORDER);
+				mInput.setMessage("Ancestor prefix");
+				mInput.addListener(SWT.Traverse, event -> {
+					if (event.detail == SWT.TRAVERSE_RETURN) {
+						updatePrefixFilter();
+					}
+				});
+				{
+
+					FormData fd_text = new FormData();
+					fd_text.right = new FormAttachment(update, -10);
+					fd_text.bottom = new FormAttachment(update, 0, SWT.CENTER);
+					fd_text.left = new FormAttachment(0, 10);
+					mInput.setLayoutData(fd_text);
 				}
-			}
 
-			@Override
-			public void onItemSecondaryAction(MemoryStatisticsItem item) {
-				if (item.getId() != null) {
-					addFilter(new Filter(item.getId().toString(), true));
+				SashForm container = new SashForm(leftContainer, SWT.VERTICAL);
+				{
+					FormData fd_sashForm = new FormData();
+					fd_sashForm.bottom = new FormAttachment(update, -10);
+					fd_sashForm.top = new FormAttachment(title, 10);
+					fd_sashForm.right = new FormAttachment(100, -10);
+					fd_sashForm.left = new FormAttachment(0, 10);
+					container.setLayoutData(fd_sashForm);
 				}
+
+				mPieChart = new PieChartViewer(container, SWT.NONE);
+				mPieChart.setContentProvider(ArrayContentProvider.getInstance());
+				ColorIndexedArcAttributeProvider provider = new ColorIndexedArcAttributeProvider() {
+					@Override
+					public int getWeight(Object element) {
+						return (int) ((MemoryStatisticsItem) element).getMemory();
+					}
+				};
+				provider.setMinimumArcAngle(5);
+				mPieChart.setArcAttributeProvider(provider);
+				mPieChart.setMinimumArcAngle(5);
+				mPieChart.getPieChart().setZoomRatio(1.2);
+				mPieChart.setComparator(new ViewerComparator() {
+					@Override
+					public int compare(Viewer viewer, Object e1, Object e2) {
+						return (int) (((MemoryStatisticsItem) e2).getMemory() - ((MemoryStatisticsItem) e1)
+								.getMemory());
+					}
+				});
+
+				mFilterList = new FilterList<>(container, SWT.NONE);
+				mFilterList.addFilterChangedListener(this::notifyFilterChangedListeners);
+
+				container.setWeights(new int[] {3, 2});
 			}
 
-			@Override
-			public void onItemPrimaryAction(Iterable<MemoryStatisticsItem> items) {
-
-			}
-
-			@Override
-			public void onItemSecondaryAction(Iterable<MemoryStatisticsItem> items) {
-
-			}
-		};
-		ui.getDetailsPane().getChildren().addAll(new Label("Ancestor prefix"), text, box);
-	}
-
-	public TableView<?> getTable() {
-		// FIXME: Should be removed
-		return ui.getLegend();
-	}
-
-	public void reset() {
-		for (Filter f : filters) {
-			f.removeFilter();
 		}
-		text.setText("");
-		classNameFilter = "";
-		ui.clear();
-	}
 
-	private void updateFilter() {
-		classNameFilter = text.getText();
-		ui.clear();
-		updateCallback.run();
-	}
+		{
+			Composite tableContainer = new Composite(mContainer, SWT.BORDER);
+			tableContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-	private void addFilter(Filter f) {
-		if (filters.size() < 8 && filters.add(f)) {
-			f.setPrefWidth(200);
-			VBox.setVgrow(f, Priority.ALWAYS);
-			ui.getDetailsPane().getChildren().add(f);
-			updateCallback.run();
+			mTableViewer = new MemoryStatisticsTableViewer(tableContainer, SWT.NONE);
+
+			BiConsumer<MemoryStatisticsItem, Boolean> addFilter = (item, exclusion) -> {
+				if (item.getId() == null) {
+					return;
+				}
+
+				mFilterList.addFilter(new Predicate<RefChainElement>() {
+					final String ancestor = item.getId().toString();
+					final boolean excluded = exclusion;
+
+					@Override
+					public boolean test(RefChainElement referrer) {
+						while (referrer != null) {
+							String refName = referrer.toString();
+							if (ancestor.equals(refName)) {
+								return !excluded;
+							}
+							referrer = referrer.getReferer();
+						}
+						return excluded;
+					}
+
+					@Override
+					public String toString() {
+						return "Ancestors" + (excluded ? " \u220C " : " \u220B ")
+								+ ancestor; //$NON-NLS-2$ //$NON-NLS-3$
+					}
+
+					@Override
+					public int hashCode() {
+						return ancestor.hashCode();
+					}
+
+					@Override
+					public boolean equals(Object obj) {
+						if (obj == null) {
+							return false;
+						}
+						if (getClass() != obj.getClass()) {
+							return false;
+						}
+
+						return hashCode() == obj.hashCode();
+					}
+				});
+
+			};
+
+			mPieChart.getPieChart().addMouseListener(new MouseListener() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseDown(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseUp(MouseEvent e) {
+					ArcItem item = mPieChart.getPieChart().getHighlightedItem();
+					if (item == null) {
+						return;
+					}
+
+					if (item.getData() == null) {
+						return;
+					}
+
+					addFilter.accept((MemoryStatisticsItem) item.getData(), e.button != 1);
+				}
+			});
+
+			mTableViewer.getTable().addMouseListener(new MouseListener() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseDown(MouseEvent e) {
+					// no op
+				}
+
+				@Override
+				public void mouseUp(MouseEvent e) {
+					if (e.button != 1 && e.button != 3) {
+						return;
+					}
+
+					if (mTableViewer.getSelection().isEmpty()) {
+						return;
+					}
+
+					IStructuredSelection selection = (IStructuredSelection) mTableViewer.getSelection();
+					MemoryStatisticsItem item = (MemoryStatisticsItem) selection.getFirstElement();
+					addFilter.accept(item, e.button != 1);
+				}
+			});
 		}
+
+		mContainer.setWeights(new int[] {1, 2});
+
+		mTableViewer.setPieChartViewer(mPieChart);
+		mPieChart.setTableViewer(mTableViewer);
 	}
 
-	public Node getUi() {
-		return ui;
+	@Override
+	public Control getControl() {
+		return mContainer;
+	}
+
+	@Override
+	public ISelection getSelection() {
+		return mTableViewer.getSelection();
+	}
+
+	@Override
+	public void refresh() {
+		mTableViewer.refresh();
+		mPieChart.refresh();
+	}
+
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		mTableViewer.setSelection(selection, reveal);
+		mPieChart.setSelection(selection, reveal);
+	}
+
+	private String getAncestorReferrer(RefChainElement referrer) {
+		while (referrer != null) {
+			if (referrer.getJavaClass() == null) {
+				if (referrer.getReferer() != null) {
+					FlightRecorderUI.getDefault().getLogger()
+							.warning("JavaClass for " + referrer + " is null but referrer is " + referrer.getReferer());
+				}
+				break; // GC root
+			} else if (referrer.toString().startsWith(mPrefix)) {
+				return referrer.toString();
+			}
+			referrer = referrer.getReferer();
+		}
+		return null;
 	}
 
 	@Override
 	public void include(ObjectCluster oc, RefChainElement ref) {
+		if (mAllIncluded) {
+			for (MemoryStatisticsItem item : items.values()) {
+				item.reset();
+			}
+			mAllIncluded = false;
+		}
+
 		if (ref != lastRef) {
 			lastRef = ref;
 			String s = getAncestorReferrer(ref);
@@ -183,101 +336,43 @@ public class AncestorViewer implements ModelListener {
 
 	@Override
 	public void allIncluded() {
-		ui.setContent(items.values());
-		ui.updatePie();
+		Collection<MemoryStatisticsItem> values = items.values();
+
+		((MemoryStatisticsTableViewer.MemoryStatisticsContentProvider) mTableViewer.getContentProvider())
+				.setInput(values);
+		mPieChart.setInput(values);
+
+		mAllIncluded = true;
 		lastRef = null;
-		for (MemoryStatisticsItem i : items.values()) {
-			i.reset();
+	}
+
+	private void updatePrefixFilter() {
+		mPrefix = mInput.getText();
+
+		if (mTableViewer != null) {
+			notifyFilterChangedListeners();
 		}
 	}
 
-	protected String getAncestorReferrer(RefChainElement referrer) {
-		while (referrer != null) {
-			if (referrer.getJavaClass() == null) {
-				if (referrer.getReferer() != null) {
-					System.err.println("JavaClass for " + referrer + " is null but referrer is " + referrer.getReferer());
-				}
-				break; // GC root
-			} else if (referrer.toString().startsWith(classNameFilter)) {
-				return referrer.toString();
-			}
-			referrer = referrer.getReferer();
-		}
-		return null;
+	@Override
+	public void setHeapSize(long size) {
+		mTableViewer.setHeapSize(size);
 	}
 
-	private class Filter extends Button implements Callback<RefChainElement, Boolean>, EventHandler<ActionEvent> {
-		private final String ancestor;
-		private final boolean exclude;
-
-		Filter(String ancestor, boolean exclude) {
-			this.exclude = exclude;
-			this.ancestor = ancestor;
-			setText("Ancestors" + (exclude ? " \u220C " : " \u220B ") + ancestor);
-			setOnAction(this);
-		}
-
-		@Override
-		public Boolean call(RefChainElement referrer) {
-			while (referrer != null) {
-				String refName = referrer.toString();
-				if (ancestor.equals(refName)) {
-					return !exclude;
-				}
-				referrer = referrer.getReferer();
-			}
-			return exclude;
-		}
-
-		@Override
-		public void handle(ActionEvent event) {
-			removeFilter();
-			updateCallback.run();
-		}
-
-		void removeFilter() {
-			ui.getDetailsPane().getChildren().remove(this);
-			filters.remove(this);
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((ancestor == null) ? 0 : ancestor.hashCode());
-			result = prime * result + (exclude ? 1231 : 1237);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			Filter other = (Filter) obj;
-			if (ancestor == null) {
-				if (other.ancestor != null) {
-					return false;
-				}
-			} else if (!ancestor.equals(other.ancestor)) {
-				return false;
-			}
-			if (exclude != other.exclude) {
-				return false;
-			}
-			return true;
-		}
-
+	@Override
+	public boolean filter(ObjectCluster oc) {
+		return true;
 	}
 
-	public Iterable<? extends Callback<RefChainElement, Boolean>> getFilters() {
-		return filters;
+	@Override
+	public boolean filter(RefChainElement rce) {
+		return mFilterList.filter(rce);
 	}
 
+	@Override
+	public void reset() {
+		mFilterList.reset();
+		mInput.setText(""); //$NON-NLS-1$
+		updatePrefixFilter();
+	}
 }

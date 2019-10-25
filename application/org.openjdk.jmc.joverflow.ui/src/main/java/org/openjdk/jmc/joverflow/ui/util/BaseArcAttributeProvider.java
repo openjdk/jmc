@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +11,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -30,27 +31,53 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ui.model;
+package org.openjdk.jmc.joverflow.ui.util;
 
-import org.openjdk.jmc.joverflow.support.RefChainElement;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
-/**
- * Used to listed to model updates.
- */
-public interface ModelListener {
-	/**
-	 * For each model update, this method is called with every object included in the model (that is not filtered out)
-	 * 
-	 * @param cluster
-	 *            The object cluster
-	 * @param referenceChain
-	 *            The reference chain for {@code cluster}
-	 */
-	void include(ObjectCluster cluster, RefChainElement referenceChain);
+public class BaseArcAttributeProvider implements IArcAttributeProvider {
+	private final ListenerList<IArcAttributeProviderListener> mListenerList = new ListenerList<>();
 
-	/**
-	 * Called once for each model update after {@code include} has been called with every {@code ObjectCluster} in the
-	 * model
-	 */
-	void allIncluded();
+	private final Color[] COLORS = {new Color(Display.getDefault(), 169, 226, 0),
+			new Color(Display.getDefault(), 249, 217, 0),
+			new Color(Display.getDefault(), 34, 186, 217),
+			new Color(Display.getDefault(), 1, 129, 226),
+			new Color(Display.getDefault(), 47, 53, 127),
+			new Color(Display.getDefault(), 134, 0, 97),
+			new Color(Display.getDefault(), 198, 43, 0),
+	};
+
+	private int i = 0;
+
+	public BaseArcAttributeProvider() {
+		addListener((event) -> i = 0);
+	}
+
+	public int getWeight(Object element) {
+		return 1;
+	}
+
+	public Color getColor(Object element) {
+		return COLORS[i++ % COLORS.length];
+	}
+
+	public void addListener(IArcAttributeProviderListener listener) {
+		mListenerList.add(listener);
+	}
+
+	public void dispose() {
+		for (Color c : COLORS) {
+			c.dispose();
+		}
+	}
+
+	public void removeListener(IArcAttributeProviderListener listener) {
+		mListenerList.remove(listener);
+	}
+
+	public ListenerList<IArcAttributeProviderListener> getListenerList() {
+		return mListenerList;
+	}
 }

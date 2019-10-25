@@ -88,7 +88,6 @@
 		<module>org.openjdk.jmc.ide.jdt</module>
 		<module>org.openjdk.jmc.ide.launch</module>
 		<module>org.openjdk.jmc.ide.ui</module>
-		<module>org.openjdk.jmc.javafx.osgi</module>
 		<module>org.openjdk.jmc.jdp</module>
 		<module>org.openjdk.jmc.joverflow</module>
 		<module>org.openjdk.jmc.joverflow.ui</module>

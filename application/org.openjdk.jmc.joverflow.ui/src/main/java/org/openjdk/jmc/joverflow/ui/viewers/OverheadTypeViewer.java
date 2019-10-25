@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,67 +32,118 @@
  */
 package org.openjdk.jmc.joverflow.ui.viewers;
 
-import java.util.Arrays;
-
-import javafx.scene.Node;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 import org.openjdk.jmc.joverflow.ui.model.ClusterType;
-import org.openjdk.jmc.joverflow.ui.model.ModelListener;
+import org.openjdk.jmc.joverflow.ui.model.MemoryStatisticsItem;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
 
-/**
- * Has a table showing all {@code ObjectCluster} in the model grouped by {@code ClusterType}.
- */
-public class OverheadTypeViewer implements ModelListener {
+public class OverheadTypeViewer extends BaseViewer {
 
-	private final HBox ui = new HBox();
-	private final MemoryStatisticsTable<MemoryStatisticsItem> tv;
-	private final MemoryStatisticsItem[] items = new MemoryStatisticsItem[ClusterType.values().length];
+	private final MemoryStatisticsTableViewer mTableViewer;
 
-	public OverheadTypeViewer(Runnable updateCallback) {
-		tv = new MemoryStatisticsTable<MemoryStatisticsItem>(updateCallback);
-		HBox.setHgrow(tv, Priority.ALWAYS);
-		ui.getChildren().addAll(tv);
+	private final MemoryStatisticsItem[] mItems = new MemoryStatisticsItem[ClusterType.values().length];
+	private ClusterType mCurrentType = ClusterType.ALL_OBJECTS;
+
+	private boolean mAllIncluded = false;
+
+	public OverheadTypeViewer(Composite parent, int style) {
 		for (ClusterType t : ClusterType.values()) {
-			items[t.ordinal()] = new MemoryStatisticsItem(t, 0, 0, 0);
+			mItems[t.ordinal()] = new MemoryStatisticsItem(t, 0, 0, 0);
 		}
-		reset();
+
+		mTableViewer = new MemoryStatisticsTableViewer(parent, style | SWT.FULL_SELECTION | SWT.BORDER);
+		mTableViewer.setPrimaryColumnText("Object Selection");
+
+		mTableViewer.addSelectionChangedListener(event -> setCurrentType(getSelectedType()));
 	}
 
-	public void reset() {
-		tv.selectedItem = items[ClusterType.ALL_OBJECTS.ordinal()];
+	@Override
+	public Control getControl() {
+		return mTableViewer.getControl();
 	}
 
-	public TableView<?> getTable() {
-		// FIXME: Should be removed
-		return tv;
+	@Override
+	public void refresh() {
+		mTableViewer.refresh();
+	}
+
+	@Override
+	public ISelection getSelection() {
+		return mTableViewer.getSelection();
+	}
+
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		mTableViewer.setSelection(selection, reveal);
 	}
 
 	@Override
 	public void include(ObjectCluster oc, RefChainElement ref) {
+		if (mAllIncluded) {
+			for (MemoryStatisticsItem item : mItems) {
+				item.reset();
+			}
+			mAllIncluded = false;
+		}
+
 		if (oc.getType() != null) {
-			items[oc.getType().ordinal()].addObjectCluster(oc);
+			mItems[oc.getType().ordinal()].addObjectCluster(oc);
 		}
 	}
 
 	@Override
 	public void allIncluded() {
-		tv.set(Arrays.asList(items));
-		for (MemoryStatisticsItem i : items) {
-			i.reset();
-		}
+		((MemoryStatisticsTableViewer.MemoryStatisticsContentProvider) mTableViewer.getContentProvider())
+				.setInput(mItems);
+		mAllIncluded = true;
 	}
 
-	public Node getUi() {
-		return ui;
+	@Override
+	public void setHeapSize(long size) {
+		mTableViewer.setHeapSize(size);
 	}
 
 	public ClusterType getCurrentType() {
-		return (ClusterType) tv.selectedItem.getId();
+		return mCurrentType;
 	}
 
+	public void setCurrentType(ClusterType type) {
+		ClusterType oldType = mCurrentType;
+		mCurrentType = type;
+
+		if (oldType != mCurrentType) {
+			notifyFilterChangedListeners();
+		}
+	}
+
+	private ClusterType getSelectedType() {
+		ClusterType type = ClusterType.ALL_OBJECTS;
+		if (!getSelection().isEmpty()) {
+			if (getSelection() instanceof IStructuredSelection) {
+				IStructuredSelection selection = (IStructuredSelection) getSelection();
+				MemoryStatisticsItem item = ((MemoryStatisticsItem) selection.getFirstElement());
+				if (item != null && item.getId() != null) {
+					type = (ClusterType) item.getId();
+				}
+			}
+		}
+
+		return type;
+	}
+
+	@Override
+	public boolean filter(ObjectCluster oc) {
+		return getCurrentType() == oc.getType();
+	}
+
+	@Override
+	public void reset() {
+		setCurrentType(ClusterType.ALL_OBJECTS);
+	}
 }

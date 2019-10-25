@@ -32,25 +32,75 @@
  */
 package org.openjdk.jmc.joverflow.ui.model;
 
-import org.openjdk.jmc.joverflow.support.RefChainElement;
+import org.openjdk.jmc.joverflow.heap.model.JavaThing;
 
 /**
- * Used to listed to model updates.
+ * A {@code TreeItem} for a {@code JavaThing}
  */
-public interface ModelListener {
-	/**
-	 * For each model update, this method is called with every object included in the model (that is not filtered out)
-	 * 
-	 * @param cluster
-	 *            The object cluster
-	 * @param referenceChain
-	 *            The reference chain for {@code cluster}
-	 */
-	void include(ObjectCluster cluster, RefChainElement referenceChain);
+public class JavaThingItem implements TreeItem {
 
-	/**
-	 * Called once for each model update after {@code include} has been called with every {@code ObjectCluster} in the
-	 * model
-	 */
-	void allIncluded();
+	private Iterable<JavaThingItem> children;
+	private boolean expanded;
+	private final int level;
+	private final JavaThing content;
+	private final String name;
+	private final String value;
+	private final String size;
+
+	public JavaThingItem(int level, String name, JavaThing content) {
+		this(level, name, content == null ? "null" : content.valueAsString(), content == null ? 0 : content.getSize(), content); //$NON-NLS-1$
+	}
+
+	public JavaThingItem(int level, String name, String value, int size, JavaThing content) {
+		this.level = level;
+		this.content = content;
+		this.name = String.valueOf(name);
+		this.value = String.valueOf(value);
+		this.size = Integer.toString(size);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public Iterable<JavaThingItem> getChildItems() {
+		return children;
+	}
+
+	public void setChildItems(Iterable<JavaThingItem> children) {
+		this.children = children;
+	}
+
+	@Override
+	public void setExpended(boolean expanded) {
+		this.expanded = expanded;
+		if (!expanded && children != null) {
+			// Collapse children with parent
+			for (TreeItem c : children) {
+				c.setExpended(false);
+			}
+		}
+	}
+
+	@Override
+	public boolean isExpanded() {
+		return expanded;
+	}
+
+	@Override
+	public int getLevel() {
+		return level;
+	}
+
+	public JavaThing getContent() {
+		return content;
+	}
 }

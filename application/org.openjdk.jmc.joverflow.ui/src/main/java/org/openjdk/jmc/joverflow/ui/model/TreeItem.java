@@ -32,25 +32,11 @@
  */
 package org.openjdk.jmc.joverflow.ui.model;
 
-import org.openjdk.jmc.joverflow.support.RefChainElement;
+interface TreeItem {
 
-/**
- * Used to listed to model updates.
- */
-public interface ModelListener {
-	/**
-	 * For each model update, this method is called with every object included in the model (that is not filtered out)
-	 * 
-	 * @param cluster
-	 *            The object cluster
-	 * @param referenceChain
-	 *            The reference chain for {@code cluster}
-	 */
-	void include(ObjectCluster cluster, RefChainElement referenceChain);
+	boolean isExpanded();
 
-	/**
-	 * Called once for each model update after {@code include} has been called with every {@code ObjectCluster} in the
-	 * model
-	 */
-	void allIncluded();
+	void setExpended(boolean expanded);
+
+	int getLevel();
 }
