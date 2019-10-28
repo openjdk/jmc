@@ -48,6 +48,10 @@
    </copyright>
 
    <includes
+         id="org.openjdk.jmc.feature.core"
+         version="0.0.0"/>
+
+   <includes
          id="org.openjdk.jmc.feature.console"
          version="0.0.0"/>
 
@@ -56,7 +60,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.openjdk.jmc.feature.core"
+         id="org.openjdk.jmc.feature.joverflow"
          version="0.0.0"/>
 
    <plugin

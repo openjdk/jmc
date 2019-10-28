@@ -60,11 +60,6 @@
 		<category name="Console (Experimental)" />
 	</feature>
 	<feature
-		url="features/org.openjdk.jmc.feature.joverflow_0.0.0.jar"
-		id="org.openjdk.jmc.feature.joverflow" version="0.0.0">
-		<category name="Other (Experimental)" />
-	</feature>
-	<feature
 		url="features/org.openjdk.jmc.feature.flightrecorder.ext.g1_0.0.0.jar"
 		id="org.openjdk.jmc.feature.flightrecorder.ext.g1" version="0.0.0">
 		<category name="Flight Recorder (Experimental)" />

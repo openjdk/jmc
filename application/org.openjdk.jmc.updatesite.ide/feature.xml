@@ -71,10 +71,6 @@ copyright or other irrelevant stuff in here.
          version="0.0.0"/>
 
    <includes
-         id="org.openjdk.jmc.feature.joverflow"
-         version="0.0.0"/>
-
-   <includes
          id="org.openjdk.jmc.feature.ide.launch"
          version="0.0.0"/>
 

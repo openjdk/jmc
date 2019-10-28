@@ -67,6 +67,10 @@
          id="org.openjdk.jmc.feature.flightrecorder"
          version="0.0.0"/>
 
+   <includes
+         id="org.openjdk.jmc.feature.joverflow"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="3.8.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.help" version="1.4.0" match="greaterOrEqual"/>

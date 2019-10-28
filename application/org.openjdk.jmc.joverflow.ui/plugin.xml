@@ -38,7 +38,7 @@
        point="org.openjdk.jmc.rjmx.actionProvider">
        <action
              factory="org.openjdk.jmc.joverflow.ui.HeapDumpAction"
-             icon="icons/joverflow_16.png"
+             icon="icons/joverflow.png"
              label="Dump Heap"
              priority="900">
        </action>
@@ -61,7 +61,7 @@
             class="org.openjdk.jmc.joverflow.ui.JOverflowEditor"
             extensions="hprof"
             id="org.openjdk.jmc.joverflow.ui.JOverflowEditor"
-            icon="icons/joverflow_16.png"
+            icon="icons/joverflow.png"
             name="JOverflow Analysis" />
  </extension>
 </plugin>
