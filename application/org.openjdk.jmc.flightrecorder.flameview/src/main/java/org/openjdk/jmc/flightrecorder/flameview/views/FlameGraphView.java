@@ -34,11 +34,14 @@
 package org.openjdk.jmc.flightrecorder.flameview.views;
 
 import java.io.IOException;
+
+import java.text.MessageFormat;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.action.Action;
@@ -74,7 +77,32 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class FlameGraphView extends ViewPart implements ISelectionListener {
-	private static ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
+	private static final String HTML_PAGE;
+	static {
+		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
+		String cssD3Flamegraph = "jslibs/d3-flamegraph.css";
+		// from: https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js
+		String jsHtml5shiv = "jslibs/html5shiv.min.js";
+		// from: https://oss.maxcdn.com/respond/1.4.2/respond.min.js
+		String jsRespond = "jslibs/respond.min.js";
+		// from: https://d3js.org/d3.v4.min.js
+		String jsD3V4 = "jslibs/d3.v4.min.js";
+		// from: https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js
+		String jsD3Tip = "jslibs/d3-tip.min.js";
+		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
+		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
+
+		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
+		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
+
+		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts
+		HTML_PAGE = String.format(fileContent("page.template"), 
+				fileContent(cssD3Flamegraph),
+				jsIeLibraries,
+				jsD3Libraries);
+	}
+
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
@@ -179,13 +207,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}, MODEL_EXECUTOR);
 	}
 
-	private static Void handleModelBuildException(Throwable ex) {
-		if (!(ex.getCause() instanceof CancellationException)) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
-		}
-		return null;
-	}
-
 	private void setModel(TraceNode root) {
 		if (!browser.isDisposed() && !root.equals(currentRoot)) {
 			currentRoot = root;
@@ -194,19 +215,21 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setViewerInput(TraceNode root) {
-		try {
-			browser.setText(StringToolkit.readString(FlameGraphView.class.getResourceAsStream("page.html")));
-			browser.addProgressListener(new ProgressAdapter() {
-				@Override
-				public void completed(ProgressEvent event) {
-					browser.removeProgressListener(this);
-					browser.execute(String.format("processGraph(%s);", toJSon(root)));
-				}
-			});
-		} catch (IOException e) {
-			browser.setText(e.getMessage());
-			e.printStackTrace();
+		browser.setText(HTML_PAGE);
+		browser.addProgressListener(new ProgressAdapter() {
+			@Override
+			public void completed(ProgressEvent event) {
+				browser.removeProgressListener(this);
+				browser.execute(String.format("processGraph(%s);", toJSon(root)));
+			}
+		});
+	}
+
+	private static Void handleModelBuildException(Throwable ex) {
+		if (!(ex.getCause() instanceof CancellationException)) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
 		}
+		return null;
 	}
 
 	private static String toJSon(TraceNode root) {
@@ -237,5 +260,24 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static String toJSonKeyValue(String key, String value) {
 		return "\"" + key + "\": " + "\"" + value + "\"";
+	}
+
+	private static String loadLibraries(String... libs) {
+		if(libs == null || libs.length == 0) {
+			return "";
+		} else {
+			return Stream.of(libs).map(FlameGraphView::fileContent).collect(Collectors.joining("\n"));
+		}
+	}
+
+	private static String fileContent(String fileName){
+		try {
+			return StringToolkit.readString(FlameGraphView.class.getClassLoader().getResourceAsStream(fileName));
+		} catch (IOException e) {
+			FlightRecorderUI.getDefault().getLogger()
+				.log(Level.WARNING, MessageFormat
+						.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage()));  	//$NON-NLS-1$
+			return "";
+		}
 	}
 }
