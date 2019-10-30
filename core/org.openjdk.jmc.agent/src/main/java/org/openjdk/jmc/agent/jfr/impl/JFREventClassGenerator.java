@@ -42,6 +42,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -81,11 +82,10 @@ public class JFREventClassGenerator {
 	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td) {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
-			if (param.isReturn()) {
-				createField(cw, td, param, Type.getReturnType(td.getMethod().getSignature()));
-			} else {
-				createField(cw, td, param, args[param.getIndex()]);
-			}
+			createField(cw, td, param, args[param.getIndex()]);
+		}
+		if (td.getReturnValue() != null) {
+			createField(cw, td, td.getReturnValue(), Type.getReturnType(td.getMethod().getSignature()));
 		}
 	}
 
@@ -112,6 +112,31 @@ public class JFREventClassGenerator {
 		}
 		if (param.getRelationKey() != null) {
 			av.visit("relationKey", param.getRelationKey()); //$NON-NLS-1$
+		}
+		av.visitEnd();
+		fv.visitEnd();
+	}
+
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, ReturnValue returnValue, Type type) {
+		if (!td.isAllowedFieldType(type)) {
+			Logger.getLogger(JFREventClassGenerator.class.getName())
+					.warning("Skipped generating field in event class for return value " + returnValue + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
+							+ " because of configuration settings!"); //$NON-NLS-1$
+			return;
+		}
+
+		String fieldType = getFieldType(type);
+
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, returnValue.getFieldName(), fieldType, null, null);
+		AnnotationVisitor av = fv.visitAnnotation("Lcom/oracle/jrockit/jfr/ValueDefinition;", true); //$NON-NLS-1$
+		if (returnValue.getName() != null) {
+			av.visit("name", returnValue.getName()); //$NON-NLS-1$
+		}
+		if (returnValue.getDescription() != null) {
+			av.visit("description", returnValue.getDescription()); //$NON-NLS-1$
+		}
+		if (returnValue.getContentType() != null) {
+			av.visitEnum("contentType", "Lcom/oracle/jrockit/jfr/ContentType;", returnValue.getContentType()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		av.visitEnd();
 		fv.visitEnd();

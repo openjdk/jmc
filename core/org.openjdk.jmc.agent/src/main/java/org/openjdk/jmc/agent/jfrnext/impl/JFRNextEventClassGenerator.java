@@ -43,6 +43,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -67,11 +68,10 @@ public class JFRNextEventClassGenerator {
 	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td) {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
-			if (param.isReturn()) {
-				createField(cw, td, param, Type.getReturnType(td.getMethod().getSignature()));
-			} else {
-				createField(cw, td, param, args[param.getIndex()]);
-			}
+			createField(cw, td, param, args[param.getIndex()]);
+		}
+		if (td.getReturnValue() != null) {
+			createField(cw, td, td.getReturnValue(), Type.getReturnType(td.getMethod().getSignature()));
 		}
 	}
 
@@ -101,6 +101,45 @@ public class JFRNextEventClassGenerator {
 		// We support the old JDK 7 style content types transparently.
 		// We also support user defined content types and a single string value annotation parameter to the annotation.
 		String contentTypeAnnotation = getContentTypeAnnotation(param.getContentType());
+		if (contentTypeAnnotation != null) {
+			String[] contentTypeAnnotationInfo = contentTypeAnnotation.split(";");
+			av = fv.visitAnnotation(contentTypeAnnotationInfo[0] + ";", true);
+			if (contentTypeAnnotationInfo.length > 1) {
+				av.visit("value", contentTypeAnnotationInfo[1]);
+			}
+			av.visitEnd();
+		}
+
+		// FIXME: RelKey
+		fv.visitEnd();
+	}
+
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, ReturnValue returnValue, Type type) {
+		if (!td.isAllowedFieldType(type)) {
+			Logger.getLogger(JFRNextEventClassGenerator.class.getName())
+					.warning("Skipped generating field in event class for return value " + returnValue + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
+							+ " because of configuration settings!"); //$NON-NLS-1$
+			return;
+		}
+
+		String fieldType = getFieldType(type);
+
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, returnValue.getFieldName(), fieldType, null, null);
+
+		// Name
+		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);
+		av.visit("value", returnValue.getName());
+		av.visitEnd();
+
+		// Description
+		av = fv.visitAnnotation("Ljdk/jfr/Description;", true);
+		av.visit("value", returnValue.getDescription());
+		av.visitEnd();
+
+		// "ContentType"
+		// We support the old JDK 7 style content types transparently.
+		// We also support user defined content types and a single string value annotation parameter to the annotation.
+		String contentTypeAnnotation = getContentTypeAnnotation(returnValue.getContentType());
 		if (contentTypeAnnotation != null) {
 			String[] contentTypeAnnotationInfo = contentTypeAnnotation.split(";");
 			av = fv.visitAnnotation(contentTypeAnnotationInfo[0] + ";", true);

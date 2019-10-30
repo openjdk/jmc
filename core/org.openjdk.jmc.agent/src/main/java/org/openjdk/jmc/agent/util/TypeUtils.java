@@ -37,7 +37,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +44,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
 /**
@@ -214,25 +212,16 @@ public final class TypeUtils {
 		return fqcn;
 	}
 
-	public static void stringify(MethodVisitor mv, Parameter param, Type argumentType) {
+	public static void stringify(MethodVisitor mv) {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "toString", //$NON-NLS-1$
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
 	}
 
-	public static boolean shouldStringify(Parameter param, Type argumentType) {
+	public static boolean shouldStringify(Type argumentType) {
 		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
 			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
 		}
 		return false;
-	}
-
-	public static Parameter findReturnParam(List<Parameter> parameters) {
-		for (Parameter p : parameters) {
-			if (p.isReturn()) {
-				return p;
-			}
-		}
-		return null;
 	}
 
 	/**

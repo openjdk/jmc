@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -60,9 +61,10 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final boolean allowToString;
 	private final boolean allowConverter;
 	private final List<Parameter> parameters;
+	private final ReturnValue returnValue;
 
 	public JFRTransformDescriptor(String id, String className, Method method,
-			Map<String, String> transformationAttributes, List<Parameter> parameters) {
+			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue) {
 		super(id, className, method, transformationAttributes);
 		classPrefix = initializeClassPrefix();
 		eventName = initializeEventName();
@@ -74,6 +76,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, false);
 		allowConverter = getBoolean(ATTRIBUTE_ALLOW_CONVERTER, false);
 		this.parameters = parameters;
+		this.returnValue = returnValue;
 	}
 
 	public String getEventClassName() {
@@ -173,6 +176,10 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 
 	public List<Parameter> getParameters() {
 		return parameters;
+	}
+
+	public ReturnValue getReturnValue() {
+		return returnValue;
 	}
 
 	public boolean isAllowedFieldType(Type type) {
