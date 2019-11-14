@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Japanese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.rcp.intro.ja
-Bundle-Version: 7.1.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.rcp.intro;bundle-version="7.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
