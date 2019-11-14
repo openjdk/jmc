@@ -5,6 +5,6 @@ Bundle-Name: Japanese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.console.ui.ja
 Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.console.ui;bundle-version="7.1.0"
+Fragment-Host: org.openjdk.jmc.console.ui;bundle-version="8.0.0"
 Bundle-Localization: plugin
 Automatic-Module-Name: org.openjdk.jmc.console.ui.ja
