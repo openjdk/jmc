@@ -83,13 +83,13 @@
                value="icons/mission_control_16.png,icons/mission_control_32.png,icons/mission_control_48.png,icons/mission_control_64.png,icons/mission_control_128.png"/>
          <property
                 name="startupProgressRect"
-                value="40,400,620,25"/>
+                value="27,400,686,15"/>
          <property
                name="startupForegroundColor"
                value="C0C0C0"/>
          <property
                name="startupMessageRect"
-               value="260,385,440,15"/>   
+               value="260,375,440,15"/>   
          <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
