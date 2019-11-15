@@ -38,7 +38,7 @@ project=jmc
 jbs=jmc
 
 [checks]
-error=author,reviewers,merge,message,issues,executable
+error=author,reviewers,merge,message,issues,executable,whitespace
 
 [census]
 version=0
@@ -54,3 +54,6 @@ message=Merge
 ; As soon as we wrap to five figures, add ^([1][0-9]{4})
 [checks "issues"]
 pattern=^([6-9][0-9]{3}): (\S.*)$
+
+[checks "whitespace"]
+files=.*\.java$|.*\.xml$|.*.\txt$
