@@ -258,18 +258,19 @@ public class ReferenceTreeModel {
 
 	/**
 	 * A helper method to calculate number of Referenced Object within specified period.
+	 * 
 	 * @param timerange
 	 *            a range of time that specifies which root objects to retrieve
 	 * @param referenceTreeObject
 	 *            leak candidate
-	 * @return number of leaked object during the specified timerange for a given
-	 * 			  leak candidate
+	 * @return number of leaked object during the specified timerange for a given leak candidate
 	 */
 	public int getLeakCountInRange(IRange<IQuantity> timerange, ReferenceTreeObject referenceTreeObject) {
 		int referencecount = 0;
 		for (ReferenceTreeObject rtObject : leakObjects) {
-			if (rtObject.getRootObject().equals(referenceTreeObject.getRootObject()) &&
-					timerange.getStart().compareTo(rtObject.getTimestamp()) <= 0 && timerange.getEnd().compareTo(rtObject.getTimestamp()) >= 0) {
+			if (rtObject.getRootObject().equals(referenceTreeObject.getRootObject())
+					&& timerange.getStart().compareTo(rtObject.getTimestamp()) <= 0
+					&& timerange.getEnd().compareTo(rtObject.getTimestamp()) >= 0) {
 				++referencecount;
 			}
 		}
@@ -356,8 +357,7 @@ public class ReferenceTreeModel {
 					ReferenceTreeObject parent = node.getParent();
 					if (parent == null) {
 						node.updateOldObjectSamples(map.get(objectAccessor.getMember(item).getAddress()));
-					}
-					else {
+					} else {
 						while (parent.getParent() != null) {
 							parent = parent.getParent();
 						}

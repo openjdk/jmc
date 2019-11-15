@@ -93,7 +93,7 @@ public final class TestToolkit {
 		}
 		return new IOResourceSet(resources);
 	}
-	
+
 	public static IOResource getNamedResource(Class<?> clazz, String directory, String fileName) throws IOException {
 		String resourceName = directory + '/' + fileName;
 		if (clazz.getClassLoader().getResource(resourceName) == null) {
@@ -157,7 +157,7 @@ public final class TestToolkit {
 	private static URL getLocation(Class<?> clazz) {
 		return clazz.getProtectionDomain().getCodeSource().getLocation();
 	}
-	
+
 	private static File createFile(URL url) throws IOException {
 		try {
 			return new File(url.toURI());

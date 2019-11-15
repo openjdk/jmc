@@ -73,47 +73,36 @@ public class FullGcRule implements IRule {
 			public Result call() throws Exception {
 				final CollectorType collectorType = CollectorType.getOldCollectorType(items);
 				if (!(CollectorType.CMS.equals(collectorType) || CollectorType.G1_OLD.equals(collectorType))) {
-					return RulesToolkit.getNotApplicableResult(
-							FullGcRule.this,
-							Messages.getString(Messages.FullGcRule_OTHER_COLLECTOR_IN_USE)
-							);
+					return RulesToolkit.getNotApplicableResult(FullGcRule.this,
+							Messages.getString(Messages.FullGcRule_OTHER_COLLECTOR_IN_USE));
 				}
 
 				final String[] eventTypes;
 				if (CollectorType.CMS.equals(collectorType)) {
-					eventTypes = new String[] { JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION };
+					eventTypes = new String[] {JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION};
 				} else {
 					eventTypes = G1Aggregator.EVENT_TYPES;
 				}
 				if (!hasAvailableEvents(items, eventTypes)) {
-					return RulesToolkit.getEventAvailabilityResult(
-							FullGcRule.this,
-							items,
-							RulesToolkit.getEventAvailability(items, eventTypes),
-							eventTypes
-							);
+					return RulesToolkit.getEventAvailabilityResult(FullGcRule.this, items,
+							RulesToolkit.getEventAvailability(items, eventTypes), eventTypes);
 				}
 
 				final int fullGCs;
 				if (CollectorType.CMS.equals(collectorType)) {
-					final IQuantity c = items.getAggregate(Aggregators.count(null, null, JdkFilters.OLD_GARBAGE_COLLECTION));
+					final IQuantity c = items
+							.getAggregate(Aggregators.count(null, null, JdkFilters.OLD_GARBAGE_COLLECTION));
 					fullGCs = c == null ? 0 : c.clampedIntFloorIn(NUMBER_UNITY);
 				} else {
 					fullGCs = items.getAggregate(new G1Aggregator()).fullGCs;
 				}
 
 				if (fullGCs > 0) {
-					return new Result(
-							FullGcRule.this, 100,
+					return new Result(FullGcRule.this, 100,
 							Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_TITLE),
-							Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC)
-							);
+							Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC));
 				} else {
-					return new Result(
-							FullGcRule.this,
-							0,
-							Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED)
-							);
+					return new Result(FullGcRule.this, 0, Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED));
 				}
 			}
 		});
@@ -144,7 +133,7 @@ public class FullGcRule implements IRule {
 	}
 
 	private static class G1Aggregator extends MergingAggregator<G1FullGCInfo, G1FullGCInfo> {
-		static final String[] EVENT_TYPES = new String[] { JdkTypeIDs.GARBAGE_COLLECTION };
+		static final String[] EVENT_TYPES = new String[] {JdkTypeIDs.GARBAGE_COLLECTION};
 
 		G1Aggregator() {
 			super(null, null, UnitLookup.UNKNOWN);

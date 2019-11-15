@@ -54,12 +54,12 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 public class FatalErrorRule implements IRule {
-	
+
 	private static final String RESULT_ID = "Fatal Errors"; //$NON-NLS-1$
-	
+
 	private static final String ERROR_REASON = "VM Error"; //$NON-NLS-1$
 	private static final String INFO_REASON = "No remaining non-daemon Java threads"; //$NON-NLS-1$
-	
+
 	private FutureTask<Result> evaluationTask;
 
 	@Override
@@ -72,27 +72,28 @@ public class FatalErrorRule implements IRule {
 		});
 		return evaluationTask;
 	}
-	
+
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_SHUTDOWN);
 		if (eventAvailability != EventAvailability.AVAILABLE) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_SHUTDOWN);
 		}
-		
+
 		IItemFilter shutdownFilter = ItemFilters.type(JdkTypeIDs.VM_SHUTDOWN);
 		IItemCollection shutdownItems = items.apply(shutdownFilter);
-		
+
 		if (shutdownItems.hasItems()) {
 			// Check the type of VM Shutdown, if it was a VM Error we should report it.
 			if (shutdownItems.apply(ItemFilters.contains(JdkAttributes.SHUTDOWN_REASON, ERROR_REASON)).hasItems()) {
 				String message = Messages.getString(Messages.FatalErrorRule_TEXT_WARN);
 				return new Result(this, 100, message);
-			} else if (shutdownItems.apply(ItemFilters.contains(JdkAttributes.SHUTDOWN_REASON, INFO_REASON)).hasItems()) {
+			} else if (shutdownItems.apply(ItemFilters.contains(JdkAttributes.SHUTDOWN_REASON, INFO_REASON))
+					.hasItems()) {
 				String message = Messages.getString(Messages.FatalErrorRule_TEXT_INFO);
 				return new Result(this, 25, message);
 			}
 		}
-		
+
 		return new Result(this, 0, Messages.getString(Messages.FatalErrorRule_TEXT_OK));
 	}
 

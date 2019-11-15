@@ -215,7 +215,7 @@ class SettingsTransformer implements IEventSink {
 		LabeledIdentifier type = (LabeledIdentifier) values[typeIndex];
 		if (type != null) {
 			type = new LabeledIdentifier(JdkTypeIDsPreJdk11.translate(type.getInterfaceId()),
-				type.getImplementationId(), type.getName(), type.getDeclaredDescription());
+					type.getImplementationId(), type.getName(), type.getDeclaredDescription());
 			if (endTimeIndex < 0) {
 				values[typeIndex] = type;
 				sink.addEvent(values);
@@ -278,14 +278,12 @@ class SettingsTransformer implements IEventSink {
 			public IEventSink create(
 				String identifier, String label, String[] category, String description,
 				List<ValueField> dataStructure) {
-				if (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) ||
-					JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier)) {
+				if (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier)
+						|| JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier)) {
 					SettingsTransformer st = new SettingsTransformer(subFactory, label, category, description,
 							dataStructure);
-					if ((JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) &&
-					     st.isValid()) ||
-						(JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier) &&
-						 st.isValidV1())) {
+					if ((JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) && st.isValid())
+							|| (JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier) && st.isValidV1())) {
 						return st;
 					} else {
 						// FIXME: Avoid System.err.println

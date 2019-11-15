@@ -43,6 +43,10 @@
 	<name>Code coverage report jmc/core</name>
 	<packaging>pom</packaging>
 
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<dependencies>
 		<!-- First all the modules in core/ -->
 		<dependency>

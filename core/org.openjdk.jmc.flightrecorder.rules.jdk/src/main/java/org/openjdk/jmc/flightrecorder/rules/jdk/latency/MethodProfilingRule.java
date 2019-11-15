@@ -152,7 +152,8 @@ public class MethodProfilingRule implements IRule {
 		IQuantity ratioOfActualSamples;
 		IRange<IQuantity> window;
 
-		public MethodProfilingWindowResult(IMCMethod method, IMCStackTrace path, IQuantity ratio, IQuantity actualRatio, IRange<IQuantity> window) {
+		public MethodProfilingWindowResult(IMCMethod method, IMCStackTrace path, IQuantity ratio, IQuantity actualRatio,
+				IRange<IQuantity> window) {
 			this.method = method;
 			this.path = path;
 			this.ratioOfAllPossibleSamples = ratio;
@@ -179,7 +180,8 @@ public class MethodProfilingRule implements IRule {
 			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES),
 			Messages.getString(Messages.MethodProfilingRule_EXCLUDED_PACKAGES_DESC),
 			UnitLookup.PLAIN_TEXT.getPersister(), "java\\.(lang|util)"); //$NON-NLS-1$
-	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WINDOW_SIZE, EXCLUDED_PACKAGE_REGEXP);
+	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WINDOW_SIZE,
+			EXCLUDED_PACKAGE_REGEXP);
 
 	/**
 	 * Private Callable implementation specifically used to avoid storing the FutureTask as a field.
@@ -269,12 +271,10 @@ public class MethodProfilingRule implements IRule {
 					FormatToolkit.getHumanReadable(mostInterestingResult.path, false, false, true, true, true, false,
 							MAX_STACK_DEPTH, null, "<li>", //$NON-NLS-1$
 							"</li>" //$NON-NLS-1$
-							) + "</ul>"; //$NON-NLS-1$
+					) + "</ul>"; //$NON-NLS-1$
 			String longDescription = MessageFormat.format(
-					Messages.getString(Messages.HotMethodsRuleFactory_TEXT_INFO_LONG),
-					buildResultList(percentByMethod),
-					formattedPath
-					);
+					Messages.getString(Messages.HotMethodsRuleFactory_TEXT_INFO_LONG), buildResultList(percentByMethod),
+					formattedPath);
 			result = new Result(this, mappedScore, shortDescription, shortDescription + "<p>" + longDescription); //$NON-NLS-1$
 		}
 		return result;
@@ -339,16 +339,18 @@ public class MethodProfilingRule implements IRule {
 	 */
 	private IUnorderedWindowVisitor createWindowVisitor(
 		final PeriodRangeMap settings, final IItemFilter settingsFilter, final IQuantity windowSize,
-		final List<MethodProfilingWindowResult> rawScores, final FutureTask<Result> evaluationTask, final Pattern excludes) {
+		final List<MethodProfilingWindowResult> rawScores, final FutureTask<Result> evaluationTask,
+		final Pattern excludes) {
 		return new IUnorderedWindowVisitor() {
 			@Override
 			public void visitWindow(IItemCollection items, IQuantity startTime, IQuantity endTime) {
 				IRange<IQuantity> windowRange = QuantityRange.createWithEnd(startTime, endTime);
 				if (RulesToolkit.getSettingMaxPeriod(items, JdkTypeIDs.EXECUTION_SAMPLE) == null) {
-					Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> resultPair = performCalculation(items, settings.getSetting(startTime));
+					Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> resultPair = performCalculation(items,
+							settings.getSetting(startTime));
 					if (resultPair != null) {
-						rawScores.add(new MethodProfilingWindowResult(resultPair.right.getFrames().get(0).getMethod(), resultPair.right,
-								resultPair.left.left, resultPair.left.right, windowRange));
+						rawScores.add(new MethodProfilingWindowResult(resultPair.right.getFrames().get(0).getMethod(),
+								resultPair.right, resultPair.left.left, resultPair.left.right, windowRange));
 					}
 				} else {
 					Set<IQuantity> settingTimes = items.apply(settingsFilter)
@@ -367,8 +369,9 @@ public class MethodProfilingRule implements IRule {
 							if (scoresByMethod.get(score.right) == null) {
 								scoresByMethod.put(score.right, score.left);
 							} else {
-								scoresByMethod.put(score.right, new Pair<>(score.left.left.add(scoresByMethod.get(score.right).left),
-										score.left.right.add(scoresByMethod.get(score.right).right)));
+								scoresByMethod.put(score.right,
+										new Pair<>(score.left.left.add(scoresByMethod.get(score.right).left),
+												score.left.right.add(scoresByMethod.get(score.right).right)));
 							}
 						}
 					}
@@ -384,7 +387,8 @@ public class MethodProfilingRule implements IRule {
 					}
 					IQuantity averageOfAllPossibleSamples = sumScore.multiply(1d / scores.size());
 					IMCMethod hottestMethod = (hottestPath == null ? null : hottestPath.getFrames().get(0).getMethod());
-					rawScores.add(new MethodProfilingWindowResult(hottestMethod, hottestPath, averageOfAllPossibleSamples, actualScore, windowRange));
+					rawScores.add(new MethodProfilingWindowResult(hottestMethod, hottestPath,
+							averageOfAllPossibleSamples, actualScore, windowRange));
 				}
 			}
 
@@ -403,7 +407,8 @@ public class MethodProfilingRule implements IRule {
 			 * @return a double value in the interval [0,1] with 1 being a system in completely
 			 *         saturated load with only one method called
 			 */
-			private Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> performCalculation(IItemCollection items, IQuantity period) {
+			private Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> performCalculation(
+				IItemCollection items, IQuantity period) {
 				IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);
 				final IMCMethod[] maxMethod = new IMCMethod[1];
 				final IMCStackTrace[] maxPath = new IMCStackTrace[1];
@@ -418,7 +423,8 @@ public class MethodProfilingRule implements IRule {
 							}
 
 							@Override
-							public IQuantity getValue(Iterable<? extends GroupEntry<IMCStackTrace, CountConsumer>> groupEntries) {
+							public IQuantity getValue(
+								Iterable<? extends GroupEntry<IMCStackTrace, CountConsumer>> groupEntries) {
 								HashMap<IMCMethod, IQuantity> map = new HashMap<>();
 								HashMap<IMCMethod, IMCStackTrace> pathMap = new HashMap<>();
 								int total = 0;
@@ -431,25 +437,29 @@ public class MethodProfilingRule implements IRule {
 									if (!trace.getFrames().isEmpty()) {
 										IMCMethod topFrameMethod = trace.getFrames().get(0).getMethod();
 										if (map.get(topFrameMethod) == null) {
-											map.put(topFrameMethod, UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount()));
+											map.put(topFrameMethod,
+													UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount()));
 											pathMap.put(topFrameMethod, trace);
 										} else {
 											IQuantity old = map.get(topFrameMethod);
-											map.put(topFrameMethod, old.add(UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount())));
+											map.put(topFrameMethod, old.add(
+													UnitLookup.NUMBER_UNITY.quantity(group.getConsumer().getCount())));
 										}
 									}
 								}
 								if (!pathMap.isEmpty() && !map.isEmpty()) {
-									Entry<IMCMethod, IQuantity> topEntry = Collections.max(map.entrySet(), new Comparator<Entry<IMCMethod, IQuantity>>() {
-										@Override
-										public int compare(Entry<IMCMethod, IQuantity> arg0,
-												Entry<IMCMethod, IQuantity> arg1) {
-											return arg0.getValue().compareTo(arg1.getValue());
-										}
-									});
+									Entry<IMCMethod, IQuantity> topEntry = Collections.max(map.entrySet(),
+											new Comparator<Entry<IMCMethod, IQuantity>>() {
+												@Override
+												public int compare(
+													Entry<IMCMethod, IQuantity> arg0,
+													Entry<IMCMethod, IQuantity> arg1) {
+													return arg0.getValue().compareTo(arg1.getValue());
+												}
+											});
 									maxPath[0] = pathMap.get(topEntry.getKey());
 									maxMethod[0] = topEntry.getKey();
-									return topEntry.getValue().multiply(1d/total);
+									return topEntry.getValue().multiply(1d / total);
 								}
 								return UnitLookup.NUMBER_UNITY.quantity(0);
 							}
@@ -471,7 +481,7 @@ public class MethodProfilingRule implements IRule {
 								frames.removeAll(framesToDrop);
 								return new MCStackTrace(frames, path.getTruncationState());
 							}
-				});
+						});
 
 				IQuantity maxRatio = filteredItems.getAggregate(aggregator);
 				Pair<Pair<IQuantity, IQuantity>, IMCStackTrace> result = null;

@@ -57,7 +57,6 @@ public class JvmInternalsDataProvider {
 	private static final String[] OPTIONS = new String[] {"-XX", "-javaagent", "-agent"};
 	private static final Map<String, String> EQUIVALENT = new HashMap<>();
 
-
 	static {
 		putBiMap("-Xbatch", "BackgroundCompilation");
 		putBiMap("-Xmaxjitcodesize", "ReservedCodeCacheSize");
@@ -155,10 +154,9 @@ public class JvmInternalsDataProvider {
 				}
 				dupes.get(flag).add(fullArgument);
 
-			}
-			else {
+			} else {
 				seenFlags.put(flag, fullArgument);
-			}		
+			}
 		}
 		return dupes.values();
 	}

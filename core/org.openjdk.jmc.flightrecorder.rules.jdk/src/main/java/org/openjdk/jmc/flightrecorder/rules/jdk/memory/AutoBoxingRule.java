@@ -68,7 +68,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
  */
 // FIXME: Rename class (and message constants) from autoboxing to something more generic?
 public class AutoBoxingRule extends AbstractRule {
-	
+
 	private static final String VALUE_OF_METHOD_NAME = "valueOf";
 	private static final String SHORT = "java.lang.Short";
 	private static final String LONG = "java.lang.Long";
@@ -78,7 +78,7 @@ public class AutoBoxingRule extends AbstractRule {
 	private static final String CHARACTER = "java.lang.Character";
 	private static final String BYTE = "java.lang.Byte";
 	private static final String BOOLEAN = "java.lang.Boolean";
-	
+
 	private static final IPredicate<IMCMethod> IS_AUTOBOXED_PREDICATE = new IPredicate<IMCMethod>() {
 		@Override
 		public boolean evaluate(IMCMethod method) {
@@ -105,7 +105,7 @@ public class AutoBoxingRule extends AbstractRule {
 			return false;
 		}
 	};
-	
+
 	private static final TypedPreference<IQuantity> AUTOBOXING_RATIO_INFO_LIMIT = new TypedPreference<>(
 			"autoboxing.ratio.info.limit", //$NON-NLS-1$
 			Messages.getString(Messages.AutoboxingRule_AUTOBOXING_RATIO_INFO_LIMIT),
@@ -162,7 +162,8 @@ public class AutoBoxingRule extends AbstractRule {
 					} else if (firstBranch.getEndFork().getBranchCount() > 0) {
 						secondFrame = firstBranch.getEndFork().getBranch(0).getFirstFrame();
 					}
-					secondFrameFromMostAllocated = StacktraceFormatToolkit.formatFrame(secondFrame.getFrame(), sep, false, false, true, true, true, false);
+					secondFrameFromMostAllocated = StacktraceFormatToolkit.formatFrame(secondFrame.getFrame(), sep,
+							false, false, true, true, true, false);
 				}
 				allocationSizeByType.put(method.getType(), total);
 			}
@@ -185,7 +186,8 @@ public class AutoBoxingRule extends AbstractRule {
 					.format(Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE), fullName);
 			mostAllocatedTypeInfoLong = "<p>" //$NON-NLS-1$
 					+ MessageFormat.format(Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE_LONG),
-							fullName, largestAllocatedByType.displayUsing(IDisplayable.AUTO), secondFrameFromMostAllocated);
+							fullName, largestAllocatedByType.displayUsing(IDisplayable.AUTO),
+							secondFrameFromMostAllocated);
 		}
 
 		String shortIntro = MessageFormat.format(Messages.getString(Messages.AutoboxingRule_RESULT_AUTOBOXING_RATIO),

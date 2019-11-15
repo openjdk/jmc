@@ -105,7 +105,7 @@ public class TestRulesWithJfr {
 	static final String RECORDINGS_INDEXFILE = "index.txt";
 
 	private TimeZone defaultTimeZone;
-	
+
 	@Before
 	public void before() {
 		// empty the log before each test
@@ -114,7 +114,7 @@ public class TestRulesWithJfr {
 		defaultTimeZone = TimeZone.getDefault();
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
-	
+
 	@After
 	public void after() {
 		// restore previous default time zone
@@ -133,7 +133,8 @@ public class TestRulesWithJfr {
 	}
 
 	private void verifyRuleResults(boolean onlyOneRecording) throws IOException {
-		IOResourceSet jfrs = TestToolkit.getResourcesInDirectory(TestRulesWithJfr.class, RECORDINGS_DIR, RECORDINGS_INDEXFILE);
+		IOResourceSet jfrs = TestToolkit.getResourcesInDirectory(TestRulesWithJfr.class, RECORDINGS_DIR,
+				RECORDINGS_INDEXFILE);
 		String reportName = null;
 		if (onlyOneRecording) {
 			IOResource firstJfr = jfrs.iterator().next();
@@ -241,8 +242,7 @@ public class TestRulesWithJfr {
 
 			for (IRule rule : RuleRegistry.getRules()) {
 				try {
-					RunnableFuture<Result> future = rule.evaluate(events,
-							IPreferenceValueProvider.DEFAULT_VALUES);
+					RunnableFuture<Result> future = rule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
 					future.run();
 					Result result = future.get();
 //					for (Result result : results) {
@@ -530,8 +530,8 @@ public class TestRulesWithJfr {
 			boolean scoreEquals = Objects.equals(score, otherRule.score);
 			if (!scoreEquals) {
 				// determine if this is just a rounding error
-				scoreEquals = (Math.abs(Float.valueOf(score) - Float.valueOf(otherRule.score)) < 0.0000000000001f) ? true
-						: false;
+				scoreEquals = (Math.abs(Float.valueOf(score) - Float.valueOf(otherRule.score)) < 0.0000000000001f)
+						? true : false;
 				if (scoreEquals) {
 					// apparently a rounding issue. Print it out for informational purposes
 					System.out

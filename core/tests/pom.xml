@@ -53,6 +53,7 @@
 		<fail.if.no.tests>true</fail.if.no.tests>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<profiles>
 		<profile>

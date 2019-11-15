@@ -79,7 +79,7 @@ public class FlightRecordingSupportRule implements IRule {
 		double timeConversionScore = timeConversionResult.getScore();
 
 		if (versionScore > 0 || timeConversionScore > 0) {
-			return versionResult.getScore() > timeConversionResult.getScore() ? versionResult : timeConversionResult;			
+			return versionResult.getScore() > timeConversionResult.getScore() ? versionResult : timeConversionResult;
 		}
 		// If no rule reported a warning or error, return the rule with the lowest score,
 		// meaning it was NotApplicable, Failed or Ignored.
@@ -122,7 +122,7 @@ public class FlightRecordingSupportRule implements IRule {
 
 		if (usedVersion == null) {
 			return RulesToolkit.getNotApplicableResult(this,
-                    Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
+					Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
 		}
 
 		if (!usedVersion.isGreaterOrEqualThan(JDK_7_U_40)) {

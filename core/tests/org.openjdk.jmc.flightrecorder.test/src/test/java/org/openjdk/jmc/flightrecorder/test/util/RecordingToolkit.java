@@ -67,14 +67,16 @@ public class RecordingToolkit {
 		return TestToolkit.getResourcesInDirectory(RecordingToolkit.class, RECORDINGS_DIRECTORY, RECORDINGS_INDEXFILE);
 	}
 
-	public static IItemCollection getNamedRecording(String recordingName) throws IOException, CouldNotLoadRecordingException {
-		return getFlightRecording(TestToolkit.getNamedResource(RecordingToolkit.class, RECORDINGS_DIRECTORY, recordingName));
+	public static IItemCollection getNamedRecording(String recordingName)
+			throws IOException, CouldNotLoadRecordingException {
+		return getFlightRecording(
+				TestToolkit.getNamedResource(RecordingToolkit.class, RECORDINGS_DIRECTORY, recordingName));
 	}
-	
+
 	public static InputStream getNamedRecordingResource(String recordingName) throws IOException {
 		return TestToolkit.getNamedResource(RecordingToolkit.class, RECORDINGS_DIRECTORY, recordingName).open();
 	}
-	
+
 	public static IItemCollection getFlightRecording(IOResourceSet resourceSet)
 			throws IOException, CouldNotLoadRecordingException {
 		return getFlightRecording(resourceSet.getResource(0));
@@ -94,7 +96,7 @@ public class RecordingToolkit {
 		IOToolkit.closeSilently(is);
 		return JfrLoaderToolkit.loadEvents(tmpRecording);
 	}
-	
+
 	public static File createResultFile(String prefix, String suffix, boolean deleteTempOnExit) throws IOException {
 		String resultDir = System.getProperty("results.dir");
 		File resultFile;

@@ -66,15 +66,16 @@ public interface JfrAttributes {
 			return MemberAccessorToolkit.constant(type);
 		}
 	});
-	
+
 	IAttribute<String> EVENT_TYPE_ID = Attribute.canonicalize(new Attribute<String>("(eventTypeId)", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_EVENT_TYPE_ID), Messages.getString(Messages.ATTR_EVENT_TYPE_ID_DESC), PLAIN_TEXT) {
+			Messages.getString(Messages.ATTR_EVENT_TYPE_ID), Messages.getString(Messages.ATTR_EVENT_TYPE_ID_DESC),
+			PLAIN_TEXT) {
 		@Override
 		public <U> IMemberAccessor<String, U> customAccessor(final IType<U> type) {
 			return MemberAccessorToolkit.constant(type.getIdentifier());
 		}
 	});
-	
+
 	IAttribute<IQuantity> END_TIME = Attribute.canonicalize(
 			new Attribute<IQuantity>("(endTime)", Messages.getString(Messages.ATTR_END_TIME), null, TIMESTAMP) { //$NON-NLS-1$
 				@Override

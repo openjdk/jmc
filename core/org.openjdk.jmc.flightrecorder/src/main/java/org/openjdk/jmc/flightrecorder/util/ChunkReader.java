@@ -69,7 +69,7 @@ public final class ChunkReader {
 	private ChunkReader() {
 		throw new UnsupportedOperationException("Not to be instantiated"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Chunk iterator for an uncompressed JFR file. Efficiently reads a JFR file, chunk by chunk,
 	 * into memory as byte arrays by memory mapping the JFR file, finding the chunk boundaries with

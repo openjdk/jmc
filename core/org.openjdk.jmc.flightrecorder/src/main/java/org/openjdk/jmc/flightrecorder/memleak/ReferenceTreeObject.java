@@ -305,11 +305,11 @@ public class ReferenceTreeObject implements IMCOldObject {
 	}
 
 	/**
-	 * This method updates the Root object's Map with allocationTime and its oldObjectReference object (leaves). 
-	 *  
+	 * This method updates the Root object's Map with allocationTime and its oldObjectReference
+	 * object (leaves).
+	 * 
 	 * @param oldobjectrefnode
 	 *            oldObjectReference leaf node
-	 *            
 	 */
 	public void updateOldObjectSamples(ReferenceTreeObject oldobjectrefnode) {
 		oldObjectSamples.put(oldobjectrefnode.getTimestamp(), oldobjectrefnode);
