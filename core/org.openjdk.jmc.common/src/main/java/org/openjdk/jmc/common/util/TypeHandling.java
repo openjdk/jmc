@@ -233,10 +233,19 @@ public final class TypeHandling {
 	}
 
 	/**
-	 * Check for missing values, and return the numeric value in string format JMC-6256: JMC doesn't
-	 * respect Long.MIN_VALUE as a missing value As per the bug report, the following values should
-	 * be considered "missing" - Integer.MIN_VALUE - Long.MIN_VALUE - Double.NaN -
-	 * Double.NEGATIVE_INFINITY - Float.NaN - Float.NEGATIVE_INFINITY
+	 * Check for missing values, and return the numeric value in string format.
+	 * <p>
+	 * JMC-6256: JMC doesn't respect Long.MIN_VALUE as a missing value.
+	 * <p>
+	 * As per the bug report, the following values should be considered "missing"
+	 * <ul>
+	 * <li>Integer.MIN_VALUE</li>
+	 * <li>Long.MIN_VALUE</li>
+	 * <li>Double.NaN</li>
+	 * <li>Double.NEGATIVE_INFINITY</li>
+	 * <li>Float.NaN</li>
+	 * <li>Float.NEGATIVE_INFINITY</li>
+	 * </ul>
 	 *
 	 * @param value
 	 *            the numeric value to be converted to a string
