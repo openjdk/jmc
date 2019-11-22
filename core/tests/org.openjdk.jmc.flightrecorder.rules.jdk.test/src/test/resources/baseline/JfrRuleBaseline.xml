@@ -6,22 +6,22 @@
             <id>Allocations.class</id>
             <severity>Information</severity>
             <score>66.39548837411446</score>
-            <shortDescription>The most allocated class is likely 'java.lang.Integer'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'java.lang.Integer'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'java.lang.Integer', most commonly allocated by: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'java.lang.Integer', most commonly allocated by: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>Information</severity>
             <score>66.40149861711905</score>
-            <shortDescription>The thread performing the most allocation is likely 'main'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely 'main'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread 'main' at: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread 'main' at: &lt;ul&gt;&lt;li&gt;Integer.valueOf(int) (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
             <severity>OK</severity>
             <score>0.9591288888888891</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0.192 % during 1 min starting at 4/26/18 12:10:29 PM. 28.068 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 1.162 %. 28.068 % of the total halts were because of other reasons than GCs.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0.192 % for 1 min at 4/26/18 12:10:29 PM. 28.068 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 1.162 %. 28.068 % of the total halts were for reasons other than GC.&lt;/p&gt;</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -34,8 +34,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -62,8 +62,8 @@
             <id>CompareCpu</id>
             <severity>OK</severity>
             <score>0.05434774741663761</score>
-            <shortDescription>An average CPU load of 1 % was caused by other processes during 1.027 s starting at 4/26/18 12:10:33 PM.</shortDescription>
-            <longDescription>An average CPU load of 1 % was caused by other processes during 1.027 s starting at 4/26/18 12:10:33 PM.</longDescription>
+            <shortDescription>An average CPU load of 1 % was caused by other processes for 1.027 s at 4/26/18 12:10:33 PM.</shortDescription>
+            <longDescription>An average CPU load of 1 % was caused by other processes for 1.027 s at 4/26/18 12:10:33 PM.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -125,8 +125,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 1.017 s starting at 4/26/18 12:10:30 PM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 1.017 s starting at 4/26/18 12:10:30 PM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 1.017 s at 4/26/18 12:10:30 PM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 1.017 s at 4/26/18 12:10:30 PM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -175,7 +175,7 @@
             <severity>Information</severity>
             <score>34.4635049904725</score>
             <shortDescription>The ratio between memory freed by garbage collections per second and liveset is 65. This may be excessive.</shortDescription>
-            <longDescription>242 MiB per second was freed by garbage collections during 10 s starting at 4/26/18 12:10:29 PM. This is 65.013 times the average liveset which was 3.72 MiB. This may be excessive.&lt;p&gt;If the garbage collector can free a lot of memory, it may be because the application allocates a lot of short lived objects. To decrease the allocation rate, investigate the allocation stack traces to see which code paths cause the most allocation.&lt;p&gt;This recording is only 9.903 s long, consider creating a recording longer than 20 s for improved rule accuracy.</longDescription>
+            <longDescription>242 MiB per second was freed by garbage collections for 10 s at 4/26/18 12:10:29 PM. This is 65.013 times the average liveset which was 3.72 MiB. This may be excessive.&lt;p&gt;If the garbage collector can free a lot of memory, it may be because the application allocates a lot of short lived objects. Investigate the allocation stack traces to see which code paths cause the most allocations, and see if they can be reduced.&lt;p&gt;This recording is only 9.903 s long, consider creating a recording longer than 20 s for improved rule accuracy.</longDescription>
         </rule>
         <rule>
             <id>GcLocker</id>
@@ -196,7 +196,7 @@
             <severity>OK</severity>
             <score>0.6899182222222222</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0.138 % during 1 min starting at 4/26/18 12:10:29 PM. The garbage collection pause ratio of the entire recording was 0.836 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0.138 % for 1 min at 4/26/18 12:10:29 PM. The garbage collection pause ratio of the entire recording was 0.836 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -223,8 +223,8 @@
             <id>HighGc</id>
             <severity>OK</severity>
             <score>2.5016205991264973</score>
-            <shortDescription>The JVM was paused for 100 % of the time during 11.003 ms starting at 4/26/18 12:10:36 PM.</shortDescription>
-            <longDescription>The JVM was paused for 100 % of the time during 11.003 ms starting at 4/26/18 12:10:36 PM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</longDescription>
+            <shortDescription>The JVM was paused for 100 % of the 11.003 ms at 4/26/18 12:10:36 PM.</shortDescription>
+            <longDescription>The JVM was paused for 100 % of the 11.003 ms at 4/26/18 12:10:36 PM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</longDescription>
         </rule>
         <rule>
             <id>HighJvmCpu</id>
@@ -408,22 +408,22 @@
             <id>Allocations.class</id>
             <severity>OK</severity>
             <score>0.06321740358971492</score>
-            <shortDescription>The most allocated class is likely 'java.util.HashMap$ValueIterator'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'java.util.HashMap$ValueIterator'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'java.util.HashMap$ValueIterator', most commonly allocated by: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'java.util.HashMap$ValueIterator', most commonly allocated by: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>OK</severity>
             <score>0.06321740358971492</score>
-            <shortDescription>The thread performing the most allocation is likely 'main'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely 'main'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread 'main' at: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread 'main' at: &lt;ul&gt;&lt;li&gt;HashMap$Values.iterator() (100 %)&lt;/li&gt;&lt;li&gt;Allocator.go()&lt;/li&gt;&lt;li&gt;Allocator.main(String[])&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
             <severity>OK</severity>
             <score>0.15440711111111113</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0.031 % during 1 min starting at 4/26/18 12:12:46 PM. 100 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0.187 %. 100 % of the total halts were because of other reasons than GCs.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0.031 % for 1 min at 4/26/18 12:12:46 PM. 100 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 0.187 %. 100 % of the total halts were for reasons other than GC.&lt;/p&gt;</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -436,8 +436,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -464,8 +464,8 @@
             <id>CompareCpu</id>
             <severity>OK</severity>
             <score>0.9473864515664224</score>
-            <shortDescription>An average CPU load of 7 % was caused by other processes during 1.212 s starting at 4/26/18 12:12:47 PM.</shortDescription>
-            <longDescription>An average CPU load of 7 % was caused by other processes during 1.212 s starting at 4/26/18 12:12:47 PM.</longDescription>
+            <shortDescription>An average CPU load of 7 % was caused by other processes for 1.212 s at 4/26/18 12:12:47 PM.</shortDescription>
+            <longDescription>An average CPU load of 7 % was caused by other processes for 1.212 s at 4/26/18 12:12:47 PM.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -527,8 +527,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 1.210 s starting at 4/26/18 12:12:47 PM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 1.210 s starting at 4/26/18 12:12:47 PM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 1.210 s at 4/26/18 12:12:47 PM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 1.210 s at 4/26/18 12:12:47 PM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -598,7 +598,7 @@
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % during 1 min starting at 4/26/18 12:12:46 PM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % for 1 min at 4/26/18 12:12:46 PM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -825,7 +825,7 @@
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/24/18 10:16:27 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0 % for 1 min at 4/24/18 10:16:27 AM. 0 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 0 %. 0 % of the total halts were for reasons other than GC.&lt;/p&gt;</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -838,8 +838,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -1000,7 +1000,7 @@
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % during 1 min starting at 4/24/18 10:16:27 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % for 1 min at 4/24/18 10:16:27 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -1070,7 +1070,7 @@
             <severity>Information</severity>
             <score>51.06889156143796</score>
             <shortDescription>The maximum amount of used memory was 88.9 % of the physical memory available.</shortDescription>
-            <longDescription>The maximum amount of used memory was 28.4 GiB. This is 88.9 % of the 31.9 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
+            <longDescription>The maximum amount of memory used was 28.4 GiB. This is 88.9 % of the 31.9 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
         </rule>
         <rule>
             <id>ManagementAgent</id>
@@ -1212,15 +1212,15 @@
             <id>Allocations.class</id>
             <severity>OK</severity>
             <score>0.09287686767432358</score>
-            <shortDescription>The most allocated class is likely 'byte[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;(int) (50 %)&lt;/li&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpPacketWriter.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpJmxPacket.getPacketData()&lt;/li&gt;&lt;li&gt;JdpBroadcaster.sendPacket(JdpPacket)&lt;/li&gt;&lt;li&gt;JdpController$JDPControllerRunner.run()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'byte[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;(int) (50 %)&lt;/li&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpPacketWriter.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpJmxPacket.getPacketData()&lt;/li&gt;&lt;li&gt;JdpBroadcaster.sendPacket(JdpPacket)&lt;/li&gt;&lt;li&gt;JdpController$JDPControllerRunner.run()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'byte[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;(int) (50 %)&lt;/li&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpPacketWriter.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpJmxPacket.getPacketData()&lt;/li&gt;&lt;li&gt;JdpBroadcaster.sendPacket(JdpPacket)&lt;/li&gt;&lt;li&gt;JdpController$JDPControllerRunner.run()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'byte[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;(int) (50 %)&lt;/li&gt;&lt;li&gt;ByteArrayOutputStream.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpPacketWriter.&amp;lt;init&amp;gt;()&lt;/li&gt;&lt;li&gt;JdpJmxPacket.getPacketData()&lt;/li&gt;&lt;li&gt;JdpBroadcaster.sendPacket(JdpPacket)&lt;/li&gt;&lt;li&gt;JdpController$JDPControllerRunner.run()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>OK</severity>
             <score>0.1274345677812541</score>
-            <shortDescription>The thread performing the most allocation is likely 'AWT-EventQueue-0'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;EventQueue.dispatchEvent(AWTEvent) (60 %)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpOneEventForFilters(int)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForFilter(int, Conditional, EventFilter)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForHierarchy(int, Conditional, Component)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(int, Conditional)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(Conditional)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely 'AWT-EventQueue-0'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;EventQueue.dispatchEvent(AWTEvent) (60 %)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpOneEventForFilters(int)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForFilter(int, Conditional, EventFilter)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForHierarchy(int, Conditional, Component)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(int, Conditional)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(Conditional)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread 'AWT-EventQueue-0' at: &lt;ul&gt;&lt;li&gt;EventQueue.dispatchEvent(AWTEvent) (60 %)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpOneEventForFilters(int)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForFilter(int, Conditional, EventFilter)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForHierarchy(int, Conditional, Component)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(int, Conditional)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(Conditional)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread 'AWT-EventQueue-0' at: &lt;ul&gt;&lt;li&gt;EventQueue.dispatchEvent(AWTEvent) (60 %)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpOneEventForFilters(int)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForFilter(int, Conditional, EventFilter)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEventsForHierarchy(int, Conditional, Component)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(int, Conditional)&lt;/li&gt;&lt;li&gt;EventDispatchThread.pumpEvents(Conditional)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
@@ -1240,8 +1240,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -1268,8 +1268,8 @@
             <id>CompareCpu</id>
             <severity>Warning</severity>
             <score>77.36067322482806</score>
-            <shortDescription>An average CPU load of 60 % was caused by other processes during 8.047 s starting at 4/25/18 11:38:36 AM.</shortDescription>
-            <longDescription>An average CPU load of 60 % was caused by other processes during 8.047 s starting at 4/25/18 11:38:36 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
+            <shortDescription>An average CPU load of 60 % was caused by other processes for 8.047 s at 4/25/18 11:38:36 AM.</shortDescription>
+            <longDescription>An average CPU load of 60 % was caused by other processes for 8.047 s at 4/25/18 11:38:36 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -1331,8 +1331,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 1.000 s starting at 4/25/18 11:38:36 AM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 1.000 s starting at 4/25/18 11:38:36 AM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 1.000 s at 4/25/18 11:38:36 AM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 1.000 s at 4/25/18 11:38:36 AM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -1472,7 +1472,7 @@
             <severity>Warning</severity>
             <score>85.24971081406179</score>
             <shortDescription>The maximum amount of used memory was 99.8 % of the physical memory available.</shortDescription>
-            <longDescription>The maximum amount of used memory was 16 GiB. This is 99.8 % of the 16 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
+            <longDescription>The maximum amount of memory used was 16 GiB. This is 99.8 % of the 16 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
         </rule>
         <rule>
             <id>ManagementAgent</id>
@@ -2418,22 +2418,22 @@
             <id>Allocations.class</id>
             <severity>OK</severity>
             <score>0.02670579099297634</score>
-            <shortDescription>The most allocated class is likely 'java.util.ArrayList'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;JFRImpl.getRecordings() (100 %)&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'java.util.ArrayList'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;JFRImpl.getRecordings() (100 %)&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'java.util.ArrayList', most commonly allocated by: &lt;ul&gt;&lt;li&gt;JFRImpl.getRecordings() (100 %)&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'java.util.ArrayList', most commonly allocated by: &lt;ul&gt;&lt;li&gt;JFRImpl.getRecordings() (100 %)&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>OK</severity>
             <score>0.07261458520440227</score>
-            <shortDescription>The thread performing the most allocation is likely 'RMI TCP Connection(1)-127.0.0.1'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;ObjectInputStream$BlockDataInputStream.&amp;lt;init&amp;gt;(ObjectInputStream, InputStream) (50 %)&lt;/li&gt;&lt;li&gt;ObjectInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;MarshalInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;ConnectionInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;StreamRemoteCall.getInputStream()&lt;/li&gt;&lt;li&gt;Transport.serviceCall(RemoteCall)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely 'RMI TCP Connection(1)-127.0.0.1'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;ObjectInputStream$BlockDataInputStream.&amp;lt;init&amp;gt;(ObjectInputStream, InputStream) (50 %)&lt;/li&gt;&lt;li&gt;ObjectInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;MarshalInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;ConnectionInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;StreamRemoteCall.getInputStream()&lt;/li&gt;&lt;li&gt;Transport.serviceCall(RemoteCall)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread 'RMI TCP Connection(1)-127.0.0.1' at: &lt;ul&gt;&lt;li&gt;ObjectInputStream$BlockDataInputStream.&amp;lt;init&amp;gt;(ObjectInputStream, InputStream) (50 %)&lt;/li&gt;&lt;li&gt;ObjectInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;MarshalInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;ConnectionInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;StreamRemoteCall.getInputStream()&lt;/li&gt;&lt;li&gt;Transport.serviceCall(RemoteCall)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread 'RMI TCP Connection(1)-127.0.0.1' at: &lt;ul&gt;&lt;li&gt;ObjectInputStream$BlockDataInputStream.&amp;lt;init&amp;gt;(ObjectInputStream, InputStream) (50 %)&lt;/li&gt;&lt;li&gt;ObjectInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;MarshalInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;ConnectionInputStream.&amp;lt;init&amp;gt;(InputStream)&lt;/li&gt;&lt;li&gt;StreamRemoteCall.getInputStream()&lt;/li&gt;&lt;li&gt;Transport.serviceCall(RemoteCall)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 11:17:05 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0 % for 1 min at 4/4/14 11:17:05 AM. 0 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 0 %. 0 % of the total halts were for reasons other than GC.&lt;/p&gt;&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -2446,8 +2446,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -2474,8 +2474,8 @@
             <id>CompareCpu</id>
             <severity>OK</severity>
             <score>9.313225746154785E-7</score>
-            <shortDescription>An average CPU load of 0 % was caused by other processes during 1.011 s starting at 4/4/14 11:17:07 AM.</shortDescription>
-            <longDescription>An average CPU load of 0 % was caused by other processes during 1.011 s starting at 4/4/14 11:17:07 AM.</longDescription>
+            <shortDescription>An average CPU load of 0 % was caused by other processes for 1.011 s at 4/4/14 11:17:07 AM.</shortDescription>
+            <longDescription>An average CPU load of 0 % was caused by other processes for 1.011 s at 4/4/14 11:17:07 AM.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -2537,8 +2537,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 999.487 ms starting at 4/4/14 11:17:06 AM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 999.487 ms starting at 4/4/14 11:17:06 AM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 999.487 ms at 4/4/14 11:17:06 AM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 999.487 ms at 4/4/14 11:17:06 AM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -2601,14 +2601,14 @@
             <severity>Information</severity>
             <score>50.0</score>
             <shortDescription>The runtime used 2 GC threads on a machine with 1 CPU cores.</shortDescription>
-            <longDescription>The runtime used 2 GC threads on a machine with 1 CPU cores. It is not optimal to use more GC threads than available cores. Removing the '-XX:ParallelGCThreads' flag will allow the JVM to set the number of GC threads automatically.</longDescription>
+            <longDescription>The runtime used 2 GC threads on a machine with 1 CPU cores. It's suboptimal to use more GC threads than available cores. Removing the '-XX:ParallelGCThreads' flag will allow the JVM to set the number of GC threads automatically.</longDescription>
         </rule>
         <rule>
             <id>GcPauseRatio</id>
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % during 1 min starting at 4/4/14 11:17:05 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % for 1 min at 4/4/14 11:17:05 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -2820,22 +2820,22 @@
             <id>Allocations.class</id>
             <severity>OK</severity>
             <score>0.031334794765092246</score>
-            <shortDescription>The most allocated class is likely 'java.lang.Object[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;AbstractCollection.toArray() (100 %)&lt;/li&gt;&lt;li&gt;ArrayList.&amp;lt;init&amp;gt;(Collection)&lt;/li&gt;&lt;li&gt;JFRImpl.getRecordings()&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'java.lang.Object[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;AbstractCollection.toArray() (100 %)&lt;/li&gt;&lt;li&gt;ArrayList.&amp;lt;init&amp;gt;(Collection)&lt;/li&gt;&lt;li&gt;JFRImpl.getRecordings()&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'java.lang.Object[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;AbstractCollection.toArray() (100 %)&lt;/li&gt;&lt;li&gt;ArrayList.&amp;lt;init&amp;gt;(Collection)&lt;/li&gt;&lt;li&gt;JFRImpl.getRecordings()&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'java.lang.Object[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;AbstractCollection.toArray() (100 %)&lt;/li&gt;&lt;li&gt;ArrayList.&amp;lt;init&amp;gt;(Collection)&lt;/li&gt;&lt;li&gt;JFRImpl.getRecordings()&lt;/li&gt;&lt;li&gt;MetaProducer.onNewChunk()&lt;/li&gt;&lt;li&gt;JFRImpl.onNewChunk()&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>OK</severity>
             <score>0.031334794765092246</score>
-            <shortDescription>The thread performing the most allocation is likely 'RMI TCP Connection(1)-127.0.0.1'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Throwable.fillInStackTrace(int) (100 %)&lt;/li&gt;&lt;li&gt;Throwable.fillInStackTrace()&lt;/li&gt;&lt;li&gt;Throwable.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;Exception.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;ReflectiveOperationException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;NoSuchFieldException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely 'RMI TCP Connection(1)-127.0.0.1'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Throwable.fillInStackTrace(int) (100 %)&lt;/li&gt;&lt;li&gt;Throwable.fillInStackTrace()&lt;/li&gt;&lt;li&gt;Throwable.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;Exception.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;ReflectiveOperationException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;NoSuchFieldException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread 'RMI TCP Connection(1)-127.0.0.1' at: &lt;ul&gt;&lt;li&gt;Throwable.fillInStackTrace(int) (100 %)&lt;/li&gt;&lt;li&gt;Throwable.fillInStackTrace()&lt;/li&gt;&lt;li&gt;Throwable.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;Exception.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;ReflectiveOperationException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;NoSuchFieldException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread 'RMI TCP Connection(1)-127.0.0.1' at: &lt;ul&gt;&lt;li&gt;Throwable.fillInStackTrace(int) (100 %)&lt;/li&gt;&lt;li&gt;Throwable.fillInStackTrace()&lt;/li&gt;&lt;li&gt;Throwable.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;Exception.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;ReflectiveOperationException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;li&gt;NoSuchFieldException.&amp;lt;init&amp;gt;(String)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0 % during 1 min starting at 4/4/14 8:54:33 AM. 0 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 0 %. 0 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0 % for 1 min at 4/4/14 8:54:33 AM. 0 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 0 %. 0 % of the total halts were for reasons other than GC.&lt;/p&gt;&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -2848,8 +2848,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -2876,8 +2876,8 @@
             <id>CompareCpu</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>An average CPU load of 0 % was caused by other processes during 1.010 s starting at 4/4/14 8:54:36 AM.</shortDescription>
-            <longDescription>An average CPU load of 0 % was caused by other processes during 1.010 s starting at 4/4/14 8:54:36 AM.</longDescription>
+            <shortDescription>An average CPU load of 0 % was caused by other processes for 1.010 s at 4/4/14 8:54:36 AM.</shortDescription>
+            <longDescription>An average CPU load of 0 % was caused by other processes for 1.010 s at 4/4/14 8:54:36 AM.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -2939,8 +2939,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 1.009 s starting at 4/4/14 8:54:34 AM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 1.009 s starting at 4/4/14 8:54:34 AM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 1.009 s at 4/4/14 8:54:34 AM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 1.009 s at 4/4/14 8:54:34 AM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -3010,7 +3010,7 @@
             <severity>OK</severity>
             <score>0.0</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % during 1 min starting at 4/4/14 8:54:33 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0 % for 1 min at 4/4/14 8:54:33 AM. The garbage collection pause ratio of the entire recording was 0 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -3237,7 +3237,7 @@
             <severity>OK</severity>
             <score>0.4097173333333334</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 0.082 % during 1 min starting at 4/24/18 10:08:52 AM. 51.552 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 1.003 %. 51.552 % of the total halts were because of other reasons than GCs.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 0.082 % for 1 min at 4/24/18 10:08:52 AM. 51.552 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 1.003 %. 51.552 % of the total halts were for reasons other than GC.&lt;/p&gt;</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -3250,8 +3250,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -3278,8 +3278,8 @@
             <id>CompareCpu</id>
             <severity>OK</severity>
             <score>3.3944677554909966</score>
-            <shortDescription>An average CPU load of 15 % was caused by other processes during 1.060 s starting at 4/24/18 10:08:54 AM.</shortDescription>
-            <longDescription>An average CPU load of 15 % was caused by other processes during 1.060 s starting at 4/24/18 10:08:54 AM.</longDescription>
+            <shortDescription>An average CPU load of 15 % was caused by other processes for 1.060 s at 4/24/18 10:08:54 AM.</shortDescription>
+            <longDescription>An average CPU load of 15 % was caused by other processes for 1.060 s at 4/24/18 10:08:54 AM.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -3341,8 +3341,8 @@
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The program generated 0 exceptions per second during 1.054 s starting at 4/24/18 10:08:53 AM.</shortDescription>
-            <longDescription>The program generated 0 exceptions per second during 1.054 s starting at 4/24/18 10:08:53 AM.</longDescription>
+            <shortDescription>The program generated 0 exceptions per second for 1.054 s at 4/24/18 10:08:53 AM.</shortDescription>
+            <longDescription>The program generated 0 exceptions per second for 1.054 s at 4/24/18 10:08:53 AM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -3412,7 +3412,7 @@
             <severity>OK</severity>
             <score>0.1985013333333333</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0.04 % during 1 min starting at 4/24/18 10:08:52 AM. The garbage collection pause ratio of the entire recording was 0.486 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 0.04 % for 1 min at 4/24/18 10:08:52 AM. The garbage collection pause ratio of the entire recording was 0.486 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -3439,8 +3439,8 @@
             <id>HighGc</id>
             <severity>OK</severity>
             <score>2.054924803137792</score>
-            <shortDescription>The JVM was paused for 100 % of the time during 9.017 ms starting at 4/24/18 10:08:53 AM.</shortDescription>
-            <longDescription>The JVM was paused for 100 % of the time during 9.017 ms starting at 4/24/18 10:08:53 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.&lt;p&gt;To improve rule accuracy and/or get more details for further investigation, it is recommended to enable the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</longDescription>
+            <shortDescription>The JVM was paused for 100 % of the 9.017 ms at 4/24/18 10:08:53 AM.</shortDescription>
+            <longDescription>The JVM was paused for 100 % of the 9.017 ms at 4/24/18 10:08:53 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.&lt;p&gt;To improve rule accuracy and/or get more details for further investigation, it is recommended to enable the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</longDescription>
         </rule>
         <rule>
             <id>HighJvmCpu</id>
@@ -3482,7 +3482,7 @@
             <severity>Information</severity>
             <score>64.30361523113581</score>
             <shortDescription>The maximum amount of used memory was 91.8 % of the physical memory available.</shortDescription>
-            <longDescription>The maximum amount of used memory was 29.3 GiB. This is 91.8 % of the 31.9 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
+            <longDescription>The maximum amount of memory used was 29.3 GiB. This is 91.8 % of the 31.9 GiB of physical memory available. Having little free memory may lead to swapping, which is very expensive. To avoid this, either decrease the memory usage or increase the amount of available memory.</longDescription>
         </rule>
         <rule>
             <id>ManagementAgent</id>
@@ -3624,22 +3624,22 @@
             <id>Allocations.class</id>
             <severity>Information</severity>
             <score>46.750432285649964</score>
-            <shortDescription>The most allocated class is likely 'char[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (44.9 %)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The most allocated class is likely 'char[]'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (44.9 %)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated classes are likely good places to start when trying to reduce garbage collections. Look at the aggregated stack traces of the most commonly allocated classes to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
+            <shortDescription>The most allocated type is likely 'char[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (44.9 %)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocated type is likely 'char[]', most commonly allocated by: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (44.9 %)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</longDescription>
         </rule>
         <rule>
             <id>Allocations.thread</id>
             <severity>OK</severity>
             <score>24.595150095883856</score>
-            <shortDescription>The thread performing the most allocation is likely '[ACTIVE] ExecuteThread: &amp;#39;5&amp;#39; for queue: &amp;#39;weblogic.kernel.Default (self-tuning)&amp;#39;'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (53.3 %)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
-            <longDescription>The thread performing the most allocation is likely '[ACTIVE] ExecuteThread: &amp;#39;5&amp;#39; for queue: &amp;#39;weblogic.kernel.Default (self-tuning)&amp;#39;'. This is the most common allocation path for that class: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (53.3 %)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the aggregated stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
+            <shortDescription>The most allocations were likely done by thread '[ACTIVE] ExecuteThread: &amp;#39;5&amp;#39; for queue: &amp;#39;weblogic.kernel.Default (self-tuning)&amp;#39;' at: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (53.3 %)&lt;/li&gt;&lt;/ul&gt;</shortDescription>
+            <longDescription>The most allocations were likely done by thread '[ACTIVE] ExecuteThread: &amp;#39;5&amp;#39; for queue: &amp;#39;weblogic.kernel.Default (self-tuning)&amp;#39;' at: &lt;ul&gt;&lt;li&gt;Arrays.copyOfRange(char[], int, int) (53.3 %)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</longDescription>
         </rule>
         <rule>
             <id>ApplicationHalts</id>
             <severity>OK</severity>
             <score>11.086075208333334</score>
             <shortDescription>Application efficiency was not highly affected by halts.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio between application halts and execution time was 2.217 % during 1 min starting at 9/24/15 10:08:56 AM. 0.027 % of the halts during the timespan were because of other reasons than GCs.&lt;p&gt;The total halts ratio during the entire recording was 1.882 %. 0.021 % of the total halts were because of other reasons than GCs.&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin.</longDescription>
+            <longDescription>Application efficiency was not highly affected by halts.&lt;p&gt;The highest ratio of application halts to execution time was 2.217 % for 1 min at 9/24/15 10:08:56 AM. 0.027 % of the halts were for reasons other than GC.&lt;p&gt;The halts ratio for the entire recording was 1.882 %. 0.021 % of the total halts were for reasons other than GC.&lt;/p&gt;&lt;p&gt;Enabling the following event types would improve the accuracy of this rule: jdk.SafepointBegin</longDescription>
         </rule>
         <rule>
             <id>BufferLost</id>
@@ -3652,8 +3652,8 @@
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>1.0</score>
-            <shortDescription>The application was running WebLogic Server with bytecode verification disabled.</shortDescription>
-            <longDescription>The application was running WebLogic Server with bytecode verification disabled. While not generally recommended, it is considered OK for WLS.</longDescription>
+            <shortDescription>The application ran WebLogic Server with bytecode verification disabled.</shortDescription>
+            <longDescription>The application ran WebLogic Server with bytecode verification disabled. While not generally recommended, it is considered OK for WLS.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -3680,8 +3680,8 @@
             <id>CompareCpu</id>
             <severity>Warning</severity>
             <score>87.07809686085879</score>
-            <shortDescription>An average CPU load of 54 % was caused by other processes during 4.938 s starting at 9/24/15 10:08:17 AM.</shortDescription>
-            <longDescription>An average CPU load of 54 % was caused by other processes during 4.938 s starting at 9/24/15 10:08:17 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
+            <shortDescription>An average CPU load of 54 % was caused by other processes for 4.938 s at 9/24/15 10:08:17 AM.</shortDescription>
+            <longDescription>An average CPU load of 54 % was caused by other processes for 4.938 s at 9/24/15 10:08:17 AM.&lt;p&gt;The application performance can be affected when the machine is under heavy load and there are other processes that use CPU or other resources on the same computer. To profile representatively or get higher throughput, shut down other resource intensive processes running on the machine.</longDescription>
         </rule>
         <rule>
             <id>CompressedOops</id>
@@ -3737,14 +3737,14 @@
             <severity>OK</severity>
             <score>14.166666666666668</score>
             <shortDescription>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14 AM – 10:09:14 AM.</shortDescription>
-            <longDescription>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14 AM – 10:09:14 AM, 17 errors were thrown in total.&lt;p&gt;The most common error was 'java.lang.NoSuchMethodError', which was thrown 13 times.&lt;p&gt;Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: '(com.sun.el.parser.ELParser\$LookaheadSuccess)'.</longDescription>
+            <longDescription>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14 AM – 10:09:14 AM. 17 errors were thrown in total.&lt;p&gt;The most common error was 'java.lang.NoSuchMethodError', which was thrown 13 times.&lt;p&gt;Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: '(com.sun.el.parser.ELParser\$LookaheadSuccess)'.</longDescription>
         </rule>
         <rule>
             <id>Exceptions</id>
             <severity>OK</severity>
             <score>2.573808918421875</score>
-            <shortDescription>The program generated 515 exceptions per second during 28.060 s starting at 9/24/15 10:08:58 AM.</shortDescription>
-            <longDescription>The program generated 515 exceptions per second during 28.060 s starting at 9/24/15 10:08:58 AM.</longDescription>
+            <shortDescription>The program generated 515 exceptions per second for 28.060 s at 9/24/15 10:08:58 AM.</shortDescription>
+            <longDescription>The program generated 515 exceptions per second for 28.060 s at 9/24/15 10:08:58 AM.</longDescription>
         </rule>
         <rule>
             <id>Fatal Errors</id>
@@ -3793,7 +3793,7 @@
             <severity>OK</severity>
             <score>1.4318707405222828</score>
             <shortDescription>The ratio between memory freed by garbage collections per second and liveset is 0.5. This is likely a reasonable amount.</shortDescription>
-            <longDescription>61.4 MiB per second was freed by garbage collections during 10 s starting at 9/24/15 10:09:18 AM. This is 0.474 times the average liveset which was 130 MiB. This is likely a reasonable amount.</longDescription>
+            <longDescription>61.4 MiB per second was freed by garbage collections for 10 s at 9/24/15 10:09:18 AM. This is 0.474 times the average liveset which was 130 MiB. This is likely a reasonable amount.</longDescription>
         </rule>
         <rule>
             <id>GcLocker</id>
@@ -3814,7 +3814,7 @@
             <severity>OK</severity>
             <score>11.083072308333335</score>
             <shortDescription>Application efficiency was not highly affected by GC pauses.</shortDescription>
-            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 2.217 % during 1 min starting at 9/24/15 10:08:56 AM. The garbage collection pause ratio of the entire recording was 1.882 %.</longDescription>
+            <longDescription>Application efficiency was not highly affected by GC pauses.&lt;p&gt;The highest ratio between garbage collection pauses and execution time was 2.217 % for 1 min at 9/24/15 10:08:56 AM. The garbage collection pause ratio of the entire recording was 1.882 %.</longDescription>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -3841,8 +3841,8 @@
             <id>HighGc</id>
             <severity>Information</severity>
             <score>72.91379413109293</score>
-            <shortDescription>The JVM was paused for 100 % of the time during 567.258 ms starting at 9/24/15 10:07:58 AM.</shortDescription>
-            <longDescription>The JVM was paused for 100 % of the time during 567.258 ms starting at 9/24/15 10:07:58 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</longDescription>
+            <shortDescription>The JVM was paused for 100 % of the 567.258 ms at 9/24/15 10:07:58 AM.</shortDescription>
+            <longDescription>The JVM was paused for 100 % of the 567.258 ms at 9/24/15 10:07:58 AM. The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</longDescription>
         </rule>
         <rule>
             <id>HighJvmCpu</id>
@@ -3869,8 +3869,8 @@
             <id>JavaBlocking</id>
             <severity>Information</severity>
             <score>62.05152332723372</score>
-            <shortDescription>Threads in the application were blocked on locks for a total time of 1 min 26 s.</shortDescription>
-            <longDescription>Threads in the application were blocked on locks for a total time of 1 min 26 s. The most common monitor class was 'Logger', which was blocked on 1,612 times for a total time of 1 min 23 s.&lt;p&gt;The following regular expression was used to exclude threads from this rule: '(.*weblogic\.socket\.Muxer.*)'</longDescription>
+            <shortDescription>Threads in the application were blocked on locks for a total of 1 min 26 s.</shortDescription>
+            <longDescription>Threads in the application were blocked on locks for a total of 1 min 26 s. The most blocking monitor class was 'Logger', which was blocked 1,612 times for a total of 1 min 23 s.&lt;p&gt;The following regular expression was used to exclude threads from this rule: '(.*weblogic\.socket\.Muxer.*)'</longDescription>
         </rule>
         <rule>
             <id>LongGcPause</id>
@@ -3975,7 +3975,7 @@
             <severity>Warning</severity>
             <score>99.99654514135385</score>
             <shortDescription>Some stack traces were truncated in this recording.</shortDescription>
-            <longDescription>Some stack traces were truncated in this recording.&lt;p&gt;The Flight Recorder only records traces with a depth up to the maximum stack depth value set to 64. This is the default depth. 35.7 % of all traces were larger than this option, and were therefore truncated. If more detailed traces are required, increase the '-XX:FlightRecorderOptions=stackdepth=&amp;lt;value&amp;gt;' value.&lt;p&gt;Events of the following types have truncated stack traces:&lt;ul&gt;&lt;li&gt;Allocation in new TLAB (42.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Class Load (42.8 % truncated traces)&lt;/li&gt;&lt;li&gt;Allocation outside TLAB (60.7 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Pre Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke Cleanup (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Post Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke (44.4 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Pre Invoke (44.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Execute (26.2 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Request Dispatch (45 % truncated traces)&lt;/li&gt;&lt;li&gt;Method Profiling Sample (24.3 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Start (80 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Start (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Creation (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Prepare (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute Begin (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Close (73 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction End (51.5 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Commit (51 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Release (65 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Commit (65 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction End (65.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Socket Read (41.6 % truncated traces)&lt;/li&gt;&lt;li&gt;File Write (32.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Error (29.1 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Request (45.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Response (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Monitor Blocked (1.09 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB PoolManager Create (32.7 % truncated traces)&lt;/li&gt;&lt;li&gt;Allocation Requiring GC (31.6 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Is Same RM (6.59 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Response Write Headers (0.753 % truncated traces)&lt;/li&gt;&lt;li&gt;Socket Write (20.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Monitor Wait (0.134 % truncated traces)&lt;/li&gt;&lt;li&gt;File Read (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Thread Sleep (33.3 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Thread Park (0.223 % truncated traces)&lt;/li&gt;&lt;/ul&gt;</longDescription>
+            <longDescription>Some stack traces were truncated in this recording.&lt;p&gt;The Flight Recorder is configured with a maximum captured stack depth of 64. This is the default depth. 35.7 % of all traces were larger than this option, and were therefore truncated. If more detailed traces are required, increase the '-XX:FlightRecorderOptions=stackdepth=&amp;lt;value&amp;gt;' value.&lt;p&gt;Events of the following types have truncated stack traces:&lt;ul&gt;&lt;li&gt;Allocation in new TLAB (42.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Class Load (42.8 % truncated traces)&lt;/li&gt;&lt;li&gt;Allocation outside TLAB (60.7 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Pre Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke Cleanup (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Post Invoke (47.1 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke (44.4 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Pre Invoke (44.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Execute (26.2 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Request Dispatch (45 % truncated traces)&lt;/li&gt;&lt;li&gt;Method Profiling Sample (24.3 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Start (80 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Start (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Creation (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Prepare (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute Begin (54.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Close (73 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction End (51.5 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Commit (51 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Release (65 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Commit (65 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction End (65.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Socket Read (41.6 % truncated traces)&lt;/li&gt;&lt;li&gt;File Write (32.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Error (29.1 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Request (45.4 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Response (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Monitor Blocked (1.09 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB PoolManager Create (32.7 % truncated traces)&lt;/li&gt;&lt;li&gt;Allocation Requiring GC (31.6 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Is Same RM (6.59 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Response Write Headers (0.753 % truncated traces)&lt;/li&gt;&lt;li&gt;Socket Write (20.6 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Monitor Wait (0.134 % truncated traces)&lt;/li&gt;&lt;li&gt;File Read (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Thread Sleep (33.3 % truncated traces)&lt;/li&gt;&lt;li&gt;Java Thread Park (0.223 % truncated traces)&lt;/li&gt;&lt;/ul&gt;</longDescription>
         </rule>
         <rule>
             <id>StringDeduplication</id>
@@ -4056,8 +4056,8 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
             <id>BytecodeVerification</id>
             <severity>OK</severity>
             <score>0.0</score>
-            <shortDescription>The application was running with bytecode verification enabled.</shortDescription>
-            <longDescription>The application was running with bytecode verification enabled.</longDescription>
+            <shortDescription>The application ran with bytecode verification enabled.</shortDescription>
+            <longDescription>The application ran with bytecode verification enabled.</longDescription>
         </rule>
         <rule>
             <id>ClassLeak</id>
@@ -4379,7 +4379,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
             <severity>Warning</severity>
             <score>99.35136572520041</score>
             <shortDescription>Some stack traces were truncated in this recording.</shortDescription>
-            <longDescription>Some stack traces were truncated in this recording.&lt;p&gt;The Flight Recorder only records traces with a depth up to the maximum stack depth value set to 64. This is the default depth. 17.5 % of all traces were larger than this option, and were therefore truncated. If more detailed traces are required, increase the '-XX:FlightRecorderOptions=stackdepth=&amp;lt;value&amp;gt;' value.&lt;p&gt;Events of the following types have truncated stack traces:&lt;ul&gt;&lt;li&gt;EJB Pool Manager Pre Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke Cleanup (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Post Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Pre Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Close (96.8 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Creation (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Prepare (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute (96.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute Begin (96.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Start (16.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Start (100 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Create (75 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Release (85.7 % truncated traces)&lt;/li&gt;&lt;li&gt;Debug (1.59 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Commit (45 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction End (45 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction End (6.06 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Commit (36.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Is Same RM (1.79 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXWS Resource (50 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXWS Endpoint (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Response Write Headers (1.87 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Request (50 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Response (100 % truncated traces)&lt;/li&gt;&lt;/ul&gt;</longDescription>
+            <longDescription>Some stack traces were truncated in this recording.&lt;p&gt;The Flight Recorder is configured with a maximum captured stack depth of 64. This is the default depth. 17.5 % of all traces were larger than this option, and were therefore truncated. If more detailed traces are required, increase the '-XX:FlightRecorderOptions=stackdepth=&amp;lt;value&amp;gt;' value.&lt;p&gt;Events of the following types have truncated stack traces:&lt;ul&gt;&lt;li&gt;EJB Pool Manager Pre Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke Cleanup (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Post Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Post Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Business Method Pre Invoke (71.3 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Close (96.8 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Creation (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Prepare (100 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute (96.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Statement Execute Begin (96.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Start (16.7 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Start (100 % truncated traces)&lt;/li&gt;&lt;li&gt;EJB Pool Manager Create (75 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Connection Release (85.7 % truncated traces)&lt;/li&gt;&lt;li&gt;Debug (1.59 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Commit (45 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction End (45 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction End (6.06 % truncated traces)&lt;/li&gt;&lt;li&gt;JTA Transaction Commit (36.4 % truncated traces)&lt;/li&gt;&lt;li&gt;JDBC Transaction Is Same RM (1.79 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXWS Resource (50 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXWS Endpoint (100 % truncated traces)&lt;/li&gt;&lt;li&gt;Servlet Response Write Headers (1.87 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Request (50 % truncated traces)&lt;/li&gt;&lt;li&gt;Webservices JAXRPC Client Response (100 % truncated traces)&lt;/li&gt;&lt;/ul&gt;</longDescription>
         </rule>
         <rule>
             <id>StringDeduplication</id>
