@@ -62,7 +62,7 @@ public class TreeNode<T> implements ITreeNode<T> {
 	public TreeNode(T item) {
 		this.item = item;
 	}
-	
+
 	public TreeNode(T item, boolean hasDuration, IQuantity startTime, IQuantity endTime, IMCThread thread) {
 		this.item = item;
 		this.hasDuration = hasDuration;
@@ -85,7 +85,7 @@ public class TreeNode<T> implements ITreeNode<T> {
 	public T getValue() {
 		return item;
 	}
-	
+
 	public boolean hasDuration() {
 		return hasDuration;
 	}
@@ -93,15 +93,15 @@ public class TreeNode<T> implements ITreeNode<T> {
 	public IQuantity getStartTime() {
 		return startTime;
 	}
-	
+
 	public IQuantity getEndTime() {
 		return endTime;
 	}
-	
+
 	public IMCThread getThread() {
 		return thread;
 	}
-	
+
 	@Override
 	public void accept(ITreeVisitor<T> visitor) {
 		visitor.visit(this);

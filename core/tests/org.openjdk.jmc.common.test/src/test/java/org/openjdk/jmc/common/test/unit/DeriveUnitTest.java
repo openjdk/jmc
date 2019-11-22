@@ -69,7 +69,7 @@ public class DeriveUnitTest extends MCTestCase {
 		d = span.getUnit("d");
 		wk = span.getUnit("wk");
 		y = span.getUnit("a");
-		
+
 		Hz = UnitLookup.HERTZ;
 		LinearKindOfQuantity freq = UnitLookup.FREQUENCY;
 		kHz = freq.getUnit(DecimalPrefix.KILO);
@@ -106,7 +106,7 @@ public class DeriveUnitTest extends MCTestCase {
 
 		assertDerivedUnit(null, B.quantity(0.1));
 	}
-	
+
 	@Test
 	public void testFrequencies() throws Exception {
 		assertDerivedUnit(Hz, Hz.quantity(1));
@@ -114,7 +114,7 @@ public class DeriveUnitTest extends MCTestCase {
 		assertDerivedUnit(kHz, Hz.quantity(1000));
 		assertDerivedUnit(kHz, kHz.quantity(999));
 		assertDerivedUnit(MHz, kHz.quantity(1000));
-		
+
 		assertDerivedUnit(mHz, Hz.quantity(0.5));
 		assertDerivedUnit(uHz, mHz.quantity(0.5));
 	}

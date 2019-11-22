@@ -231,7 +231,7 @@ public class Messages {
 	public static final String ATTR_FLAG_NEW_VALUE_NUMBER = "ATTR_FLAG_NEW_VALUE_NUMBER"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_TEXT = "ATTR_FLAG_NEW_VALUE_TEXT"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_OLD_VALUE_BOOLEAN = "ATTR_FLAG_OLD_VALUE_BOOLEAN"; //$NON-NLS-1$
-	public static final String ATTR_FLAG_OLD_VALUE_NUMBER= "ATTR_FLAG_OLD_VALUE_NUMBER"; //$NON-NLS-1$
+	public static final String ATTR_FLAG_OLD_VALUE_NUMBER = "ATTR_FLAG_OLD_VALUE_NUMBER"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_OLD_VALUE_TEXT = "ATTR_FLAG_OLD_VALUE_TEXT"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_ORIGIN = "ATTR_FLAG_ORIGIN"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_VALUE_BOOLEAN = "ATTR_FLAG_VALUE_BOOLEAN"; //$NON-NLS-1$

@@ -95,8 +95,8 @@ public class IncreasingLiveSetRule implements IRule {
 			Messages.getString(Messages.IncreasingLiveSetRule_RELEVANCE_THRESHOLD_DESC), NUMBER,
 			NUMBER_UNITY.quantity(0.5d));
 	public static final TypedPreference<IQuantity> YOUNG_COLLECTION_THRESHOLD = new TypedPreference<IQuantity>(
-			"memleak.young.collections", Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD), 
-			Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD_DESC), NUMBER, 
+			"memleak.young.collections", Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD),
+			Messages.getString(Messages.IncreasingLiveSetRule_YOUNG_COLLECTION_THRESHOLD_DESC), NUMBER,
 			NUMBER_UNITY.quantity(4));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(CLASSES_LOADED_PERCENT, RELEVANCE_THRESHOLD, YOUNG_COLLECTION_THRESHOLD);
@@ -133,13 +133,15 @@ public class IncreasingLiveSetRule implements IRule {
 			double relativeIncreasePerSecond = liveSetIncreasePerSecond.ratioTo(postWarmupHeapSize);
 			score = RulesToolkit.mapExp100(relativeIncreasePerSecond, PERCENT_OF_HEAP_INCREASE_PER_SECOND);
 		}
-		
-		IQuantity youngCollections = items.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION)));
+
+		IQuantity youngCollections = items
+				.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION)));
 		IQuantity oldCollections = items.getAggregate(Aggregators.count(JdkFilters.OLD_GARBAGE_COLLECTION));
-		if (oldCollections.longValue() == 0) { 
+		if (oldCollections.longValue() == 0) {
 			// If there are no old collections we cannot accurately determine whether or not there is a leak
 			// but a stable increase in live set over a recording is still interesting, since it could force a full GC eventually.
-			if (youngCollections.longValue() <= valueProvider.getPreferenceValue(YOUNG_COLLECTION_THRESHOLD).longValue()) {
+			if (youngCollections.longValue() <= valueProvider.getPreferenceValue(YOUNG_COLLECTION_THRESHOLD)
+					.longValue()) {
 				// If we have too few collections at all we shouldn't even try to guess at the live set
 				return RulesToolkit.getTooFewEventsResult(this);
 			}
@@ -151,7 +153,8 @@ public class IncreasingLiveSetRule implements IRule {
 		// FIXME: Should construct an message using memoryIncrease, not use a hard limit
 		if (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN) {
 			if (score >= 25) {
-				IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START).subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
+				IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START)
+						.subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
 				String shortMessage = MessageFormat.format(
 						Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),
 						liveSetIncreasePerSecond.displayUsing(IDisplayable.AUTO));

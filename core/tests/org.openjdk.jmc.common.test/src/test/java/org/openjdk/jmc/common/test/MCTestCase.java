@@ -79,8 +79,8 @@ public class MCTestCase {
 	 */
 	static public void assertMaskedEquals(String message, long expected, long actual, long mask) {
 		if (((expected ^ actual) & mask) != 0) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "masked with " + hex(mask) + " expected:<" + hex(expected) + "> was not:<" + hex(actual) + ">");
+			Assert.fail(((message != null) ? message + ' ' : "") + "masked with " + hex(mask) + " expected:<"
+					+ hex(expected) + "> was not:<" + hex(actual) + ">");
 		}
 	}
 
@@ -101,8 +101,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertBetween(String message, T min, T max, T actual) {
 		if ((min.compareTo(actual) > 0) || (max.compareTo(actual) < 0)) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "expected in:[" + min + ", " + max + "] was not:<" + actual + ">");
+			Assert.fail(((message != null) ? message + ' ' : "") + "expected in:[" + min + ", " + max + "] was not:<"
+					+ actual + ">");
 		}
 	}
 
@@ -119,8 +119,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertMax(String message, T max, T actual) {
 		if (max.compareTo(actual) < 0) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "expected max:<" + max + "> was not:<" + actual + ">");
+			Assert.fail(
+					((message != null) ? message + ' ' : "") + "expected max:<" + max + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -137,8 +137,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertMin(String message, T min, T actual) {
 		if (min.compareTo(actual) > 0) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "expected min:<" + min + "> was not:<" + actual + ">");
+			Assert.fail(
+					((message != null) ? message + ' ' : "") + "expected min:<" + min + "> was not:<" + actual + ">");
 		}
 	}
 
@@ -155,8 +155,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<T>> void assertLessThan(String message, T greaterVal, T actual) {
 		if (greaterVal.compareTo(actual) <= 0) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "expected less than:<" + greaterVal + "> was not:<" + actual + ">");
+			Assert.fail(((message != null) ? message + ' ' : "") + "expected less than:<" + greaterVal + "> was not:<"
+					+ actual + ">");
 		}
 	}
 
@@ -173,8 +173,8 @@ public class MCTestCase {
 	 */
 	static public <T extends Comparable<? super T>> void assertGreaterThan(String message, T lesserVal, T actual) {
 		if (lesserVal.compareTo(actual) >= 0) {
-			Assert.fail(((message != null) ? message + ' ' : "")
-					+ "expected greater than:<" + lesserVal + "> was not:<" + actual + ">");
+			Assert.fail(((message != null) ? message + ' ' : "") + "expected greater than:<" + lesserVal + "> was not:<"
+					+ actual + ">");
 		}
 	}
 

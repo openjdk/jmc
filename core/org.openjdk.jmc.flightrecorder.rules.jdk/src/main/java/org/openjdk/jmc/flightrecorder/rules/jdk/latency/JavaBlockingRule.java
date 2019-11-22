@@ -129,11 +129,11 @@ public class JavaBlockingRule implements IRule {
 		String mostBlockingText;
 		if (byThread.compareTo(byInstance) > 0) {
 			List<IntEntry<IMCThread>> groupedByThread = RulesToolkit.calculateGroupingScore(
-					items.apply(ItemFilters.type(JdkTypeIDs.MONITOR_ENTER)),JfrAttributes.EVENT_THREAD);
+					items.apply(ItemFilters.type(JdkTypeIDs.MONITOR_ENTER)), JfrAttributes.EVENT_THREAD);
 			IntEntry<IMCThread> mostBlockedThread = groupedByThread.get(groupedByThread.size() - 1);
 
-			IItemCollection mostBlockedThreadOccurences = items.apply(
-					ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostBlockedThread.getKey()));
+			IItemCollection mostBlockedThreadOccurences = items
+					.apply(ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostBlockedThread.getKey()));
 			IQuantity mostBlockingTime = mostBlockedThreadOccurences.getAggregate(JdkAggregators.TOTAL_BLOCKED_TIME);
 
 			mostBlockingText = MessageFormat.format(
@@ -145,8 +145,8 @@ public class JavaBlockingRule implements IRule {
 					items.apply(ItemFilters.type(JdkTypeIDs.MONITOR_ENTER)), JdkAttributes.MONITOR_CLASS);
 			IntEntry<IMCType> mostBlockingClass = groupedByClass.get(groupedByClass.size() - 1);
 
-			IItemCollection mostBlockedClassOccurences = items.apply(
-					ItemFilters.equals(JdkAttributes.MONITOR_CLASS, mostBlockingClass.getKey()));
+			IItemCollection mostBlockedClassOccurences = items
+					.apply(ItemFilters.equals(JdkAttributes.MONITOR_CLASS, mostBlockingClass.getKey()));
 			IQuantity mostBlockingTime = mostBlockedClassOccurences.getAggregate(JdkAggregators.TOTAL_BLOCKED_TIME);
 
 			mostBlockingText = MessageFormat.format(

@@ -79,7 +79,8 @@ public final class JdkFilters {
 			JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 	public static final IItemFilter REFERENCE_STATISTICS = ItemFilters.type(JdkTypeIDs.GC_REFERENCE_STATISTICS);
 	public static final IItemFilter GARBAGE_COLLECTION = ItemFilters.type(JdkTypeIDs.GARBAGE_COLLECTION);
-	public static final IItemFilter OLD_GARBAGE_COLLECTION = ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION);
+	public static final IItemFilter OLD_GARBAGE_COLLECTION = ItemFilters
+			.type(JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION);
 	public static final IItemFilter CONCURRENT_MODE_FAILURE = ItemFilters.type(JdkTypeIDs.CONCURRENT_MODE_FAILURE);
 	public static final IItemFilter ERRORS = ItemFilters.type(JdkTypeIDs.ERRORS_THROWN);
 	public static final IItemFilter EXCEPTIONS = ItemFilters.type(JdkTypeIDs.EXCEPTIONS_THROWN);
@@ -91,7 +92,8 @@ public final class JdkFilters {
 	public static final IItemFilter CLASS_LOAD = ItemFilters.type(JdkTypeIDs.CLASS_LOAD);
 	public static final IItemFilter CLASS_LOAD_OR_UNLOAD = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD);
 	public static final IItemFilter CLASS_DEFINE = ItemFilters.type(JdkTypeIDs.CLASS_DEFINE);
-	public static final IItemFilter CLASS_LOADER_EVENTS = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD, CLASS_DEFINE, CLASS_LOADER_STATISTICS);
+	public static final IItemFilter CLASS_LOADER_EVENTS = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD, CLASS_DEFINE,
+			CLASS_LOADER_STATISTICS);
 	public static final IItemFilter MONITOR_ENTER = ItemFilters.type(JdkTypeIDs.MONITOR_ENTER);
 	public static final IItemFilter FILE_OR_SOCKET_IO = ItemFilters.type(JdkTypeIDs.SOCKET_READ,
 			JdkTypeIDs.SOCKET_WRITE, JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE);

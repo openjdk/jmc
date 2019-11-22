@@ -189,7 +189,7 @@ public class JavaVersionTest {
 
 		assertTrue(version17u0.equals(version17));
 	}
-	
+
 	@Test
 	public void testNullStringArgument() {
 		JavaVersion nullVersion = new JavaVersion((String) null);

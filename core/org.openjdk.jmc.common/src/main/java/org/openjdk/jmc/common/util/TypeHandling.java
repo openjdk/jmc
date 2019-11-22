@@ -233,17 +233,19 @@ public final class TypeHandling {
 	}
 
 	/**
-	 * Check for missing values, and return the numeric value in string format
-	 *
-	 * JMC-6256: JMC doesn't respect Long.MIN_VALUE as a missing value
-	 *
+	 * Check for missing values, and return the numeric value in string format.
+	 * <p>
+	 * JMC-6256: JMC doesn't respect Long.MIN_VALUE as a missing value.
+	 * <p>
 	 * As per the bug report, the following values should be considered "missing"
-	 * - Integer.MIN_VALUE
-	 * - Long.MIN_VALUE
-	 * - Double.NaN
-	 * - Double.NEGATIVE_INFINITY
-	 * - Float.NaN
-	 * - Float.NEGATIVE_INFINITY
+	 * <ul>
+	 * <li>Integer.MIN_VALUE</li>
+	 * <li>Long.MIN_VALUE</li>
+	 * <li>Double.NaN</li>
+	 * <li>Double.NEGATIVE_INFINITY</li>
+	 * <li>Float.NaN</li>
+	 * <li>Float.NEGATIVE_INFINITY</li>
+	 * </ul>
 	 *
 	 * @param value
 	 *            the numeric value to be converted to a string
@@ -261,16 +263,17 @@ public final class TypeHandling {
 			}
 		} else if (value.getClass() == Double.class) {
 			if (value.doubleValue() == Double.NEGATIVE_INFINITY) {
-				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), DOUBLE_NEGATIVE_INFINITY));
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP),
+						DOUBLE_NEGATIVE_INFINITY));
 			} else if (Double.isNaN(value.doubleValue())) {
 				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), DOUBLE_NAN));
 			}
 		} else if (value.getClass() == Float.class) {
 			if (Float.isNaN(value.floatValue())) {
 				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), FLOAT_NAN));
-			}
-			else if (value.floatValue() == Float.NEGATIVE_INFINITY) {
-				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP), FLOAT_NEGATIVE_INFINITY));
+			} else if (value.floatValue() == Float.NEGATIVE_INFINITY) {
+				sb.append(MessageFormat.format(Messages.getString(Messages.MISSING_VALUE_TOOLTIP),
+						FLOAT_NEGATIVE_INFINITY));
 			}
 		}
 		if (sb.length() == 0) {

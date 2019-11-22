@@ -92,8 +92,8 @@ public class CompareCpuRule extends AbstractRule {
 		// FIXME: Could consider using the infoLimit for the span instead?
 		SpanLimit maxOtherCpu = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU, JfrAttributes.END_TIME,
 				warningLimit);
-		SpanLimit maxOtherCpuRatio = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU_RATIO, JfrAttributes.END_TIME,
-				warningLimit);
+		SpanLimit maxOtherCpuRatio = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU_RATIO,
+				JfrAttributes.END_TIME, warningLimit);
 
 		if (maxOtherCpu == null || maxOtherCpuRatio == null) {
 			return RulesToolkit.getNotApplicableResult(this,

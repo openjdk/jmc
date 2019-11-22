@@ -47,21 +47,21 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
  * Helper for building item trees.
  */
 public class ItemTreeBuilder {
-	
+
 	/**
 	 * Interface used to allow interrupting slow builds of encapsulation trees.
 	 */
 	public interface IItemTreeBuilderCallback {
 		boolean shouldContinue();
 	}
-	
+
 	private static IItemTreeBuilderCallback DEFAULT_CALLBACK = new IItemTreeBuilderCallback() {
 		@Override
 		public boolean shouldContinue() {
 			return true;
 		}
 	};
-	
+
 	/**
 	 * Builds a tree where events that wrap other events, time wise, are higher up in the hierarchy.
 	 *
@@ -87,7 +87,8 @@ public class ItemTreeBuilder {
 	 *            level events. It's up to the caller to make sure this is safe to do.
 	 * @return the root node for the resulting tree.
 	 */
-	public static ITreeNode<IItem> buildEncapsulationTree(IItemCollection items, boolean allowInstants, boolean ignoreThread) {
+	public static ITreeNode<IItem> buildEncapsulationTree(
+		IItemCollection items, boolean allowInstants, boolean ignoreThread) {
 		return buildEncapsulationTree(items, allowInstants, ignoreThread, DEFAULT_CALLBACK);
 	}
 
@@ -102,7 +103,8 @@ public class ItemTreeBuilder {
 	 *            {@code true} to make the algorithm not care about event thread, can be used for VM
 	 *            level events. It's up to the caller to make sure this is safe to do.
 	 * @param callback
-	 *            callback used to determine whether or not to continue building the encapsulation tree
+	 *            callback used to determine whether or not to continue building the encapsulation
+	 *            tree
 	 * @return the root node for the resulting tree.
 	 */
 	public static ITreeNode<IItem> buildEncapsulationTree(
@@ -110,10 +112,14 @@ public class ItemTreeBuilder {
 		// FIXME: Consider introducing a maxdepth at which to stop adding nodes
 		TreeNode<IItem> root = new TreeNode<>(null);
 		for (IItemIterable itemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> durationAccessor = JfrAttributes.DURATION.getAccessor(itemIterable.getType());
-			IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME.getAccessor(itemIterable.getType());
-			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME.getAccessor(itemIterable.getType());
-			IMemberAccessor<IMCThread, IItem> threadAccessor = JfrAttributes.EVENT_THREAD.getAccessor(itemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> durationAccessor = JfrAttributes.DURATION
+					.getAccessor(itemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME
+					.getAccessor(itemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
+					.getAccessor(itemIterable.getType());
+			IMemberAccessor<IMCThread, IItem> threadAccessor = JfrAttributes.EVENT_THREAD
+					.getAccessor(itemIterable.getType());
 			for (IItem item : itemIterable) {
 				if (!callback.shouldContinue()) {
 					return root;
@@ -122,19 +128,17 @@ public class ItemTreeBuilder {
 				boolean hasDuration = duration.longValue() != 0;
 				IMCThread thread = threadAccessor == null ? null : threadAccessor.getMember(item);
 				if (hasDuration || allowInstants) {
-					addTimeSplitNode(root, item, hasDuration, startTimeAccessor.getMember(item), endTimeAccessor.getMember(item), thread, callback, ignoreThread);
+					addTimeSplitNode(root, item, hasDuration, startTimeAccessor.getMember(item),
+							endTimeAccessor.getMember(item), thread, callback, ignoreThread);
 				}
 			}
 		}
 		return root;
 	}
 
-	private static void addTimeSplitNode(TreeNode<IItem> node, IItem item,
-			boolean itemHasDuration,
-			IQuantity itemStartTime,
-			IQuantity itemEndTime,
-			IMCThread itemThread, 
-			IItemTreeBuilderCallback callback, boolean ignoreThread) {
+	private static void addTimeSplitNode(
+		TreeNode<IItem> node, IItem item, boolean itemHasDuration, IQuantity itemStartTime, IQuantity itemEndTime,
+		IMCThread itemThread, IItemTreeBuilderCallback callback, boolean ignoreThread) {
 		TreeNode<IItem> addedNode = null;
 		List<ITreeNode<IItem>> children = new ArrayList<>(node.getChildren());
 		for (ITreeNode<IItem> child : children) {
@@ -142,9 +146,11 @@ public class ItemTreeBuilder {
 				return;
 			}
 			if (treeItemEncloses((TreeNode<IItem>) child, itemStartTime, itemEndTime, itemThread, ignoreThread)) {
-				addTimeSplitNode((TreeNode<IItem>) child, item, itemHasDuration, itemStartTime, itemEndTime, itemThread, callback, ignoreThread);
+				addTimeSplitNode((TreeNode<IItem>) child, item, itemHasDuration, itemStartTime, itemEndTime, itemThread,
+						callback, ignoreThread);
 				return;
-			} else if (enclosesTreeItem(itemHasDuration, itemStartTime, itemEndTime, itemThread, (TreeNode<IItem>) child, ignoreThread)) {
+			} else if (enclosesTreeItem(itemHasDuration, itemStartTime, itemEndTime, itemThread,
+					(TreeNode<IItem>) child, ignoreThread)) {
 				((TreeNode<IItem>) child).detach();
 				if (addedNode == null) {
 					addedNode = new TreeNode<>(item, itemHasDuration, itemStartTime, itemEndTime, itemThread);
@@ -157,9 +163,10 @@ public class ItemTreeBuilder {
 			node.addChild(new TreeNode<>(item, itemHasDuration, itemStartTime, itemEndTime, itemThread));
 		}
 	}
-	
-	private static boolean enclosesTreeItem(boolean encloserHasDuration, IQuantity encloserStartTime, IQuantity encloserEndTime,
-			IMCThread encloserThread, TreeNode<IItem> enclosee, boolean ignoreThread) {
+
+	private static boolean enclosesTreeItem(
+		boolean encloserHasDuration, IQuantity encloserStartTime, IQuantity encloserEndTime, IMCThread encloserThread,
+		TreeNode<IItem> enclosee, boolean ignoreThread) {
 		if (encloserHasDuration) {
 			return encloserStartTime.compareTo(enclosee.getStartTime()) <= 0
 					&& encloserEndTime.compareTo(enclosee.getEndTime()) >= 0
@@ -167,8 +174,10 @@ public class ItemTreeBuilder {
 		}
 		return false;
 	}
-	
-	private static boolean treeItemEncloses(TreeNode<IItem> encloser, IQuantity encloseeStartTime, IQuantity encloseeEndTime, IMCThread encloseeThread, boolean ignoreThread) {
+
+	private static boolean treeItemEncloses(
+		TreeNode<IItem> encloser, IQuantity encloseeStartTime, IQuantity encloseeEndTime, IMCThread encloseeThread,
+		boolean ignoreThread) {
 		if (encloser.hasDuration()) {
 			return encloser.getStartTime().compareTo(encloseeStartTime) <= 0
 					&& encloser.getEndTime().compareTo(encloseeEndTime) >= 0

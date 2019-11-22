@@ -448,7 +448,7 @@ final public class UnitLookup {
 
 		return memory;
 	}
-	
+
 	private static LinearKindOfQuantity createFrequency() {
 		LinearKindOfQuantity frequency = new LinearKindOfQuantity("frequency", "Hz", EnumSet.range(NONE, TERA),
 				EnumSet.range(YOCTO, YOTTA));
@@ -481,7 +481,7 @@ final public class UnitLookup {
 		// The Julian year (annum, symbol "a") is defined by UCUM for use with SI, since it is the basis for the light year (so this is exact).
 		LinearUnit year = timeSpan.makeUnit("a", hour.quantity(8766));
 		// A mean Julian month is 1/12 of a Julian year = 365.25*24/12 h = 730.5 h = 43 830 min (exactly).
-//		LinearUnit month = timeSpan.makeUnit("mo", minute.quantity(43830));
+		// LinearUnit month = timeSpan.makeUnit("mo", minute.quantity(43830));
 
 		LinearUnit[] units = {minute, hour, day, week, year};
 		for (LinearUnit unit : units) {

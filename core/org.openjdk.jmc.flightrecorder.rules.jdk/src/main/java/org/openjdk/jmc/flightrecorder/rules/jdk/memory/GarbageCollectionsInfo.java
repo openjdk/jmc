@@ -89,7 +89,8 @@ class GarbageCollectionsInfo implements IItemConsumer<GarbageCollectionsInfo> {
 			if (cause.contains("gclocker")) { //$NON-NLS-1$
 				gcLockers++;
 			}
-			if (!nonRequestedSerialOldGc && CollectorType.SERIAL_OLD.getCollectorName().equals(nameAccessor.getMember(item))) {
+			if (!nonRequestedSerialOldGc
+					&& CollectorType.SERIAL_OLD.getCollectorName().equals(nameAccessor.getMember(item))) {
 				nonRequestedSerialOldGc = true;
 			}
 		}

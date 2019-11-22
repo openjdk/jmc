@@ -74,9 +74,8 @@ public class DuplicateFlagsRule implements IRule {
 		// FIXME: Should we check if there are different jvm args in different chunks?
 		Set<String> args = jvmInfoItems.getAggregate(Aggregators.distinct(JdkAttributes.JVM_ARGUMENTS));
 		if (args != null && !args.isEmpty()) {
-			
-			Collection<ArrayList<String>> dupes = JvmInternalsDataProvider.
-					checkDuplicates(args.iterator().next());
+
+			Collection<ArrayList<String>> dupes = JvmInternalsDataProvider.checkDuplicates(args.iterator().next());
 
 			if (!dupes.isEmpty()) {
 				StringBuilder sb = new StringBuilder();
