@@ -18,6 +18,12 @@ workspace/
 # Useful for local m2 cache when docker building
 .m2
 
+# Ignore dependency reduced pom
+dependency-reduced-pom.xml
+
 # Ignore coverage report
 core/coverage/coverage-report
 application/coverage/coverage-report
+
+# Ignore the fetched JS libraries
+application/org.openjdk.jmc.flightrecorder.flameview/src/main/resources/jslibs/
