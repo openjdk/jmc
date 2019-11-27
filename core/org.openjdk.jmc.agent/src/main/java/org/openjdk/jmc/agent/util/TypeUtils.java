@@ -37,7 +37,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +48,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
+import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
@@ -214,12 +218,12 @@ public final class TypeUtils {
 		return fqcn;
 	}
 
-	public static void stringify(MethodVisitor mv, Parameter param, Type argumentType) {
+	public static void stringify(MethodVisitor mv, IAttribute attribute, Type argumentType) {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "toString", //$NON-NLS-1$
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
 	}
 
-	public static boolean shouldStringify(Parameter param, Type argumentType) {
+	public static boolean shouldStringify(IAttribute attribute, Type argumentType) {
 		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
 			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
 		}
@@ -245,6 +249,86 @@ public final class TypeUtils {
 	public static String parameterize(String className) {
 		return "L" + className + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	public static String getInternalName(String className) {
+		return className.replace('.', '/');
+	}
+
+	public static String getCanonicalName(String binaryName) {
+		return binaryName.replace('/', '.');
+	}
+
+	public static Field getFieldOnHierarchy(Class<?> clazz, String name) throws NoSuchFieldException {
+		Queue<Class<?>> q = new LinkedList<>();
+		q.add(clazz);
+
+		while (!q.isEmpty()) {
+			Class<?> targetClass = q.remove();
+			try {
+				return targetClass.getDeclaredField(name);
+			} catch (NoSuchFieldException e) {
+				// ignore
+			}
+
+			q.addAll(Arrays.asList(targetClass.getInterfaces()));
+			Class<?> superClass = targetClass.getSuperclass();
+			if (superClass != null) {
+				q.add(targetClass.getSuperclass());
+			}
+		}
+
+		throw new NoSuchFieldException(String.format("cannot find field %s in class %s", name, clazz.getName()));
+	}
+
+	public static int getConstZeroOpcode(Type type) {
+		switch (type.getSort()) {
+			case Type.BOOLEAN:
+			case Type.BYTE:
+			case Type.CHAR:
+			case Type.SHORT:
+			case Type.INT:
+				return Opcodes.ICONST_0;
+			case Type.FLOAT:
+				return Opcodes.FCONST_0;
+			case Type.LONG:
+				return Opcodes.LCONST_0;
+			case Type.DOUBLE:
+				return Opcodes.DCONST_0;
+			case Type.ARRAY:
+			case Type.OBJECT:
+				return Opcodes.ACONST_NULL;
+			case Type.METHOD:
+			case Type.VOID:
+				throw new UnsupportedOperationException();
+			default:
+				throw new AssertionError();
+		}
+	}
+
+	public static Object getFrameVerificationType(Type type) {
+		switch (type.getSort()) {
+			case Type.BOOLEAN:
+			case Type.BYTE:
+			case Type.CHAR:
+			case Type.SHORT:
+			case Type.INT:
+				return Opcodes.INTEGER;
+			case Type.FLOAT:
+				return Opcodes.FLOAT;
+			case Type.LONG:
+				return Opcodes.LONG;
+			case Type.DOUBLE:
+				return Opcodes.DOUBLE;
+			case Type.ARRAY:
+			case Type.OBJECT:
+				return type.getInternalName();
+			case Type.METHOD:
+			case Type.VOID:
+				throw new UnsupportedOperationException();
+			default:
+				throw new AssertionError();
+		}
+	} 
 
 	/**
 	 * Type agnostic array toString() which also handles primitive arrays.

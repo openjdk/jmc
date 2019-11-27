@@ -52,12 +52,15 @@ import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class DefaultTransformRegistry implements TransformRegistry {
 	private static final String XML_ATTRIBUTE_NAME_ID = "id"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_NAME_EVENT = "event"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_METHOD_NAME = "method"; //$NON-NLS-1$
+	private static final String XML_ELEMENT_WATCH_NAME = "watch"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_PARAMETER_NAME = "parameter"; //$NON-NLS-1$
 
 	// Global override section
@@ -149,12 +152,17 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		streamReader.next();
 		Map<String, String> values = new HashMap<>();
 		List<Parameter> parameters = new LinkedList<>();
+		List<Watch> watches = new LinkedList<>();
 		Method method = null;
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
 				String name = streamReader.getName().getLocalPart();
 				if (XML_ELEMENT_METHOD_NAME.equals(name)) {
 					method = parseMethod(streamReader, parameters);
+					continue;
+				}
+				if (XML_ELEMENT_WATCH_NAME.equals(name)) {
+					watches.add(parseWatch(streamReader));
 					continue;
 				}
 				streamReader.next();
@@ -174,7 +182,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			streamReader.next();
 		}
 		transfer(globalDefaults, values);
-		return TransformDescriptor.create(id, getInternalName(values.get("class")), method, values, parameters); //$NON-NLS-1$
+		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, watches); //$NON-NLS-1$
 	}
 
 	private static void transfer(HashMap<String, String> globalDefaults, Map<String, String> values) {
@@ -242,7 +250,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 						contentType = value;
 					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
 						relationKey = value;
-					} else if ("converter".equals(key)) {
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
 						converterClassName = value;
 					}
 				}
@@ -256,8 +264,46 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new Parameter(index, name, description, contentType, relationKey, converterClassName);
 	}
 
-	private static String getInternalName(String className) {
-		return className.replace('.', '/');
+	private static Watch parseWatch(XMLStreamReader streamReader) throws XMLStreamException {
+		streamReader.next();
+		String name = null;
+		String expression = null;
+		String description = null;
+		String contentType = null;
+		String relationKey = null;
+		String converterClassName = null;
+
+		while (streamReader.hasNext()) {
+			if (streamReader.isStartElement()) {
+				String key = streamReader.getName().getLocalPart();
+				streamReader.next();
+				if (streamReader.hasText()) {
+					String value = streamReader.getText();
+					if (value != null) {
+						value = value.trim();
+					}
+					if ("name".equals(key)) { //$NON-NLS-1$
+						name = value;
+					} else if ("expression".equals(key)) {
+						expression = value;
+					} else if ("description".equals(key)) { //$NON-NLS-1$
+						description = value;
+					} else if ("contenttype".equals(key)) { //$NON-NLS-1$
+						contentType = value;
+					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
+						relationKey = value;
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
+						converterClassName = value;
+					}
+				}
+			} else if (streamReader.isEndElement()) {
+				if (XML_ELEMENT_WATCH_NAME.equals(streamReader.getName().getLocalPart())) {
+					break;
+				}
+			}
+			streamReader.next();
+		}
+		return new Watch(name, expression, description, contentType, relationKey, converterClassName);
 	}
 
 	private static Method parseMethod(XMLStreamReader streamReader, List<Parameter> parameters)

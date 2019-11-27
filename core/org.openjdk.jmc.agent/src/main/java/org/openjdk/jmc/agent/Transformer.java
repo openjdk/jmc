@@ -47,8 +47,11 @@ import org.openjdk.jmc.agent.jfr.VersionResolver;
 import org.openjdk.jmc.agent.jfr.VersionResolver.JFRVersion;
 import org.openjdk.jmc.agent.jfr.impl.JFRClassVisitor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextClassVisitor;
+import org.openjdk.jmc.agent.util.InspectionClassLoader;
+import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class Transformer implements ClassFileTransformer {
+
 	private TransformRegistry registry;
 
 	public Transformer(TransformRegistry registry) {
@@ -65,16 +68,23 @@ public class Transformer implements ClassFileTransformer {
 		registry.storeClassPreInstrumentation(className, classfileBuffer);
 		byte[] instrumentedClassfileBuffer = registry.isRevertIntrumentation() ?
 				registry.getClassPreInstrumentation(className) : classfileBuffer;
-		return doTransforms(registry.getTransformData(className), instrumentedClassfileBuffer, loader, protectionDomain);
+		try {
+			// Don't reuse this class loader instance. We want the loader and its class to unload after we're done.
+			classBeingRedefined = new InspectionClassLoader(loader, TypeUtils.getCanonicalName(className), classfileBuffer, protectionDomain)
+					.loadClass(TypeUtils.getCanonicalName(className));
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e); // This should not happen
+		}
+		return doTransforms(registry.getTransformData(className), instrumentedClassfileBuffer, loader, classBeingRedefined, protectionDomain);
 	}
 
 	private byte[] doTransforms(
 		List<TransformDescriptor> transformDataList, byte[] classfileBuffer, ClassLoader definingClassLoader,
-		ProtectionDomain protectionDomain) {
+		Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
 		for (TransformDescriptor td : transformDataList) {
 			if (td.isPendingTransforms()) {
 				// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
-				classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, protectionDomain);
+				classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined, protectionDomain);
 				td.setPendingTransforms(false);
 			}
 		}
@@ -82,13 +92,13 @@ public class Transformer implements ClassFileTransformer {
 	}
 
 	private byte[] doTransform(
-		TransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
+		TransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader, Class<?> classBeingRedefined,
 		ProtectionDomain protectionDomain) {
-		return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, protectionDomain);
+		return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, classBeingRedefined, protectionDomain);
 	}
 
 	private byte[] doJFRLogging(
-		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
+		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader, Class<?> classBeingRedefined,
 		ProtectionDomain protectionDomain) {
 		if (VersionResolver.getAvailableJFRVersion() == JFRVersion.NONE) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
@@ -98,8 +108,8 @@ public class Transformer implements ClassFileTransformer {
 		try {
 			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT
-					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, protectionDomain)
-					: new JFRClassVisitor(classWriter, td, definingClassLoader, protectionDomain);
+					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain)
+					: new JFRClassVisitor(classWriter, td, definingClassLoader, protectionDomain); // TODO: support path-syntax evaluation for legacy API 
 			ClassReader reader = new ClassReader(classfileBuffer);
 			reader.accept(visitor, 0);
 			return classWriter.toByteArray();

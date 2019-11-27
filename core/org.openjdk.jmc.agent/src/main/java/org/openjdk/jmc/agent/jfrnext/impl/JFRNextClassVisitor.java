@@ -47,13 +47,15 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 public class JFRNextClassVisitor extends ClassVisitor {
 	private final JFRTransformDescriptor transformDescriptor;
 	private final ClassLoader definingClassLoader;
+	private final Class<?> classBeingRedefined;
 	private final ProtectionDomain protectionDomain;
 
 	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
-			ProtectionDomain protectionDomain) {
+			Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
 		super(Opcodes.ASM5, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
+		this.classBeingRedefined = classBeingRedefined;
 		this.protectionDomain = protectionDomain;
 	}
 
@@ -62,7 +64,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRNextMethodAdvisor(transformDescriptor, Opcodes.ASM5, mv, access, name, desc);
+			return new JFRNextMethodAdvisor(transformDescriptor, classBeingRedefined, Opcodes.ASM5, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -87,9 +89,9 @@ public class JFRNextClassVisitor extends ClassVisitor {
 
 	private Class<?> generateEventClass() throws Exception {
 		try {
-			return Class.forName(transformDescriptor.getEventClassName().replace('/', '.'));
+			return Class.forName(TypeUtils.getCanonicalName(transformDescriptor.getEventClassName()));
 		} catch (ClassNotFoundException e) {
-			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor);
+			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, classBeingRedefined);
 			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
 					definingClassLoader, protectionDomain);
 		}

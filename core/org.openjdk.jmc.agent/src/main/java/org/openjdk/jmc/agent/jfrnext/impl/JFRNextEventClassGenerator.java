@@ -42,14 +42,16 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
+import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFRNextEventClassGenerator {
 	private static final String CLASS_EVENT = "jdk/jfr/Event"; //$NON-NLS-1$
 
-	public static byte[] generateEventClass(JFRTransformDescriptor td) throws Exception {
+	public static byte[] generateEventClass(JFRTransformDescriptor td, Class<?> classBeingRedefined) throws Exception {
 		ClassWriter cw = new ClassWriter(0);
 		// FIXME: Perhaps switch to Opcodes V9 when there is one.
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, td.getEventClassName(), null, CLASS_EVENT, null);
@@ -58,13 +60,13 @@ public class JFRNextEventClassGenerator {
 
 		String parameterizedClassName = TypeUtils.parameterize(td.getEventClassName());
 		generateClassAnnotations(cw, td);
-		generateAttributeFields(cw, td);
+		generateAttributeFields(cw, td, classBeingRedefined);
 		generateInit(cw, td.getEventClassName(), parameterizedClassName);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
 
-	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td) {
+	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined) throws NoSuchFieldException {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
 			if (param.isReturn()) {
@@ -73,34 +75,38 @@ public class JFRNextEventClassGenerator {
 				createField(cw, td, param, args[param.getIndex()]);
 			}
 		}
+
+		for (Watch watch : td.getWatches()) {
+			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined).getType());
+		}
 	}
 
-	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Parameter param, Type type) {
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, IAttribute attribute, Type type) {
 		if (!td.isAllowedFieldType(type)) {
 			Logger.getLogger(JFRNextEventClassGenerator.class.getName())
-					.warning("Skipped generating field in event class for parameter " + param + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
+					.warning("Skipped generating field in event class for attribute " + attribute + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
 							+ " because of configuration settings!"); //$NON-NLS-1$
 			return;
 		}
 
 		String fieldType = getFieldType(type);
 
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, param.getFieldName(), fieldType, null, null);
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, attribute.getFieldName(), fieldType, null, null);
 
 		// Name
 		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);
-		av.visit("value", param.getName());
+		av.visit("value", attribute.getName());
 		av.visitEnd();
 
 		// Description
 		av = fv.visitAnnotation("Ljdk/jfr/Description;", true);
-		av.visit("value", param.getDescription());
+		av.visit("value", attribute.getDescription());
 		av.visitEnd();
 
 		// "ContentType"
 		// We support the old JDK 7 style content types transparently.
 		// We also support user defined content types and a single string value annotation parameter to the annotation.
-		String contentTypeAnnotation = getContentTypeAnnotation(param.getContentType());
+		String contentTypeAnnotation = getContentTypeAnnotation(attribute.getContentType());
 		if (contentTypeAnnotation != null) {
 			String[] contentTypeAnnotationInfo = contentTypeAnnotation.split(";");
 			av = fv.visitAnnotation(contentTypeAnnotationInfo[0] + ";", true);

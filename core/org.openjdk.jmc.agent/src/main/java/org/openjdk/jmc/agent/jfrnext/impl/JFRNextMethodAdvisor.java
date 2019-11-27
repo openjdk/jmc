@@ -37,9 +37,17 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
+import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.FieldReference;
+import org.openjdk.jmc.agent.util.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Code emitter for JFR next, i.e. the version of JFR distributed with JDK 9 and later.
@@ -48,6 +56,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
 
 	private final JFRTransformDescriptor transformDescriptor;
+	private final Class<?> classBeingRedefined;
 	private final Type[] argumentTypesRef;
 	private final Type returnTypeRef;
 	private final Type eventType;
@@ -58,10 +67,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, int api, MethodVisitor mv, int access,
-			String name, String desc) {
+	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> classBeingRedefined, int api, MethodVisitor mv, int access,
+								   String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
+		this.classBeingRedefined = classBeingRedefined;
 		// These are not accessible from the super type (made private), so must save an extra reference. :/
 		this.argumentTypesRef = Type.getArgumentTypes(desc);
 		this.returnTypeRef = Type.getReturnType(desc);
@@ -111,8 +121,22 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 				if (transformDescriptor.isAllowedFieldType(argumentType)) {
 					mv.visitInsn(DUP);
 					loadArg(param.getIndex());
-					writeParameter(param, argumentType);
+					writeAttribute(param, argumentType);
 				}
+			}
+		}
+
+		for (Watch watch : transformDescriptor.getWatches()) {
+			ReferenceChain refChain;
+			try {
+				refChain = watch.resolveReferenceChain(classBeingRedefined).normalize();
+			} catch (NoSuchFieldException e) {
+				throw new RuntimeException(e); // TODO: figure out what to do with this error
+			}
+			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+				mv.visitInsn(DUP);
+				loadWatch(watch, refChain);
+				writeAttribute(watch, refChain.getType());
 			}
 		}
 
@@ -121,7 +145,78 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		mv.visitVarInsn(ASTORE, eventLocal);
 	}
 
-	private void writeParameter(Parameter param, Type type) {
+	private void loadWatch(Watch watch, ReferenceChain refChain) {
+		Type type = refChain.getType();
+		boolean isStatic = Modifier.isStatic(getAccess());
+		Label nullCase = new Label();
+		Label continueCase = new Label();
+		List<Object> localVarVerifications = new ArrayList<>();
+		if (!isStatic) {
+			localVarVerifications.add(Type.getInternalName(classBeingRedefined)); // "this"
+		}
+		for (Type argType : argumentTypesRef) {
+			localVarVerifications.add(TypeUtils.getFrameVerificationType(argType));
+		}
+
+		// Assumes the reference chain is normalized already. See ReferenceChain.normalize()
+		List<FieldReference> refs = refChain.getReferences();
+		for (int i = 0; i < refs.size(); i++) {
+			if (i != 0) {
+				// null check
+				mv.visitInsn(DUP);
+				mv.visitJumpInsn(IFNULL, nullCase);
+			}
+
+			FieldReference ref = refs.get(i);
+			if (ref instanceof FieldReference.ThisReference) {
+				if (isStatic) {
+					throw new IllegalStateException("unexpected \"this\" reference in a static method");
+				}
+				if (i != 0) {
+					throw new IllegalStateException("unexpected position of \"this\" reference");
+				}
+				loadArg(0); // "this"
+				continue;
+			}
+
+			int opcode;
+			if (Modifier.isStatic(ref.getModifiers())) {
+				if (i != 0) {
+					throw new IllegalStateException("unexpected position of a static reference");
+				}
+				opcode = GETSTATIC;
+			} else {
+				if (i == 0 && isStatic) {
+					throw new IllegalStateException("unexpected position of a dynamic reference in a static method");
+				}
+				opcode = GETFIELD;
+			}
+
+			mv.visitFieldInsn(opcode, ref.getMemberingType().getInternalName(), ref.getName(), ref.getType().getDescriptor());
+		}
+		// loaded value, jump to writing attribute
+		mv.visitJumpInsn(GOTO, continueCase);
+
+		// null reference on path, load zero value
+		mv.visitLabel(nullCase);
+		mv.visitFrame(F_NEW,
+				localVarVerifications.size(),
+				localVarVerifications.toArray(),
+				4,
+				new Object[]{eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(), Type.getInternalName(Object.class)});
+		mv.visitInsn(POP);
+		mv.visitInsn(TypeUtils.getConstZeroOpcode(type));
+
+		// must verify frame for jump targets
+		mv.visitLabel(continueCase);
+		mv.visitFrame(F_NEW,
+				localVarVerifications.size(),
+				localVarVerifications.toArray(),
+				4, 
+				new Object[]{eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(), TypeUtils.getFrameVerificationType(type)});
+	}
+
+	private void writeAttribute(IAttribute param, Type type) {
 		if (TypeUtils.shouldStringify(param, type)) {
 			TypeUtils.stringify(mv, param, type);
 			type = TypeUtils.STRING_TYPE;
@@ -155,7 +250,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
-		writeParameter(returnParam, returnTypeRef);
+		writeAttribute(returnParam, returnTypeRef);
 	}
 
 	private void commitEvent() {
