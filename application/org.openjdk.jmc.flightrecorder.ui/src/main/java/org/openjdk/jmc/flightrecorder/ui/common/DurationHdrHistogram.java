@@ -93,7 +93,7 @@ public class DurationHdrHistogram {
 	 * Computes the duration at a given percentile for values stored in the histogram.
 	 * 
 	 * @param percentile
-	 *            - the percentile, as a {@link UnitLookup#NUMBER}
+	 *            the percentile, as a {@link UnitLookup#NUMBER}
 	 * @return the computed duration, as a {@link UnitLookup#TIMESPAN}
 	 */
 	public IQuantity getDurationAtPercentile(IQuantity percentile) {
@@ -107,7 +107,7 @@ public class DurationHdrHistogram {
 	 * values at or above that duration.
 	 * 
 	 * @param percentile
-	 *            - the percentile, as a {@link UnitLookup#NUMBER}
+	 *            the percentile, as a {@link UnitLookup#NUMBER}
 	 * @return a pair with the computed duration as a {@link UnitLookup#TIMESPAN}, and item count as
 	 *         a {@link UnitLookup#NUMBER}, in that order
 	 */
@@ -140,7 +140,7 @@ public class DurationHdrHistogram {
 	 * 
 	 * @see Histogram#lowestEquivalentValue(long)
 	 * @param duration
-	 *            - the specified duration quantity
+	 *            the specified duration quantity
 	 * @return the lowest duration equivalent to the supplied argument
 	 */
 	public IQuantity getLowestEquivalentDuration(IQuantity duration) {
@@ -155,5 +155,4 @@ public class DurationHdrHistogram {
 	public void reset() {
 		histogram.reset();
 	}
-
 }
