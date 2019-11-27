@@ -44,6 +44,7 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
+		<maven.bundle.plugin.version>3.5.1</maven.bundle.plugin.version>
 		<spotless.version>1.26.0</spotless.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
@@ -79,7 +80,7 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.5.1</version>
+					<version>${maven.bundle.plugin.version}</version>
 					<configuration>
 						<manifestLocation>${manifest-location}</manifestLocation>
 					</configuration>
@@ -100,7 +101,7 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-		<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.1</version>
@@ -162,7 +163,6 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.5.1</version>
 			</plugin>
 		</plugins>
 	</build>
