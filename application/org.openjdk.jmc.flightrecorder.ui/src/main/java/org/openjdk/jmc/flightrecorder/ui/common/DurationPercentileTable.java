@@ -126,15 +126,15 @@ public class DurationPercentileTable {
 		 * percentile.
 		 *
 		 * @param durationColId
-		 *            - the ID to be used for the duration column of this series
+		 *            the ID to be used for the duration column of this series
 		 * @param durationColName
-		 *            - the user-visible name to appear for the duration column header
+		 *            the user-visible name to appear for the duration column header
 		 * @param countColId
-		 *            - the ID to be used for the event count column of this series
+		 *            the ID to be used for the event count column of this series
 		 * @param countColName
-		 *            - the user-visible name to appear for the event count column header
+		 *            the user-visible name to appear for the event count column header
 		 * @param typeId
-		 *            - the event type ID used to match events belonging to this series
+		 *            the event type ID used to match events belonging to this series
 		 */
 		public void addSeries(
 			String durationColId, String durationColName, String countColId, String countColName, String typeId) {
@@ -158,9 +158,9 @@ public class DurationPercentileTable {
 		 * this builder will not affect the returned table.
 		 * 
 		 * @param parent
-		 *            - the parent SWT composite that will contain this table
+		 *            the parent SWT composite that will contain this table
 		 * @param ts
-		 *            - settings to adjust various attributes of the created table
+		 *            settings to adjust various attributes of the created table
 		 * @return a fully constructed {@link DurationPercentileTable} with no data
 		 */
 		public DurationPercentileTable build(Composite parent, TableSettings ts) {
@@ -194,7 +194,7 @@ public class DurationPercentileTable {
 	 * various percentiles.
 	 *
 	 * @param itemCol
-	 *            - a collection of events to use as input for this table
+	 *            a collection of events to use as input for this table
 	 */
 	public void update(IItemCollection itemCol) {
 		// Add the value of each aggregate to our data model
@@ -287,11 +287,11 @@ public class DurationPercentileTable {
 		 * Creates a new aggregator.
 		 * 
 		 * @param typeId
-		 *            - type ID used to match events
+		 *            type ID used to match events
 		 * @param durationColId
-		 *            - the column ID for the duration column of this series
+		 *            the column ID for the duration column of this series
 		 * @param countColId
-		 *            - the column ID for the item count column of this series
+		 *            the column ID for the item count column of this series
 		 */
 		public DurationPercentileAggregator(String typeId, String durationColId, String countColId) {
 			super(null, null, UnitLookup.UNKNOWN);
@@ -363,7 +363,7 @@ public class DurationPercentileTable {
 
 		/**
 		 * @param duration
-		 *            - a {@link UnitLookup#TIMESPAN} quantity
+		 *            a {@link UnitLookup#TIMESPAN} quantity
 		 * @return a lower bound on values considered equivalent by this aggregator's underlying
 		 *         histogram
 		 */
@@ -399,7 +399,7 @@ public class DurationPercentileTable {
 		 * Computes the aggregate of this model's items and adds the results to this model.
 		 * 
 		 * @param aggregator
-		 *            - the aggregator to use
+		 *            the aggregator to use
 		 */
 		public void addAggregate(DurationPercentileAggregator aggregator) {
 			aggregator.resetHistogram();
@@ -473,7 +473,7 @@ public class DurationPercentileTable {
 		 * the series.
 		 * 
 		 * @param columnId
-		 *            - the ID of the item count column
+		 *            the ID of the item count column
 		 * @return a fraction quantity between 0 and 1
 		 */
 		public IQuantity getCountFraction(String columnId) {
@@ -491,7 +491,7 @@ public class DurationPercentileTable {
 		 * values in this row.
 		 * 
 		 * @param aggregators
-		 *            - an array of aggregators that produced the content of this row
+		 *            an array of aggregators that produced the content of this row
 		 * @return the matching items
 		 */
 		public IItemCollection getItemsForRow(DurationPercentileAggregator[] aggregators) {
@@ -504,7 +504,5 @@ public class DurationPercentileTable {
 					.reduce(ItemFilters::or).orElse(ItemFilters.none());
 			return items.apply(filter);
 		}
-
 	}
-
 }
