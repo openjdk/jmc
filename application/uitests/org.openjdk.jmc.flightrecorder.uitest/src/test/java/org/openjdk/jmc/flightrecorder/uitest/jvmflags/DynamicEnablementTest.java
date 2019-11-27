@@ -83,7 +83,8 @@ public class DynamicEnablementTest extends MCJemmyTestBase {
 	};
 
 	/**
-	 * Tests that, depending on the VM startup flags, the JFR dynamic enablement is handled correctly by Mission Control
+	 * Tests that, depending on the VM startup flags, the JFR dynamic enablement is handled
+	 * correctly by Mission Control
 	 */
 	@Test
 	public void dynamicEnablement() {

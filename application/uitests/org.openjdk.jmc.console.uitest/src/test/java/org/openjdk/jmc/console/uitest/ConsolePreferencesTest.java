@@ -89,7 +89,8 @@ public class ConsolePreferencesTest extends MCJemmyTestBase {
 		preferences.clickButton(JFaceResources.getString("defaults"));
 
 		// Check that all fields restored to defaults
-		ITypedQuantity<LinearUnit> intervalQty = UnitLookup.TIMESPAN.parseInteractive(preferences.getText(CommunicationPage.UPDATE_INTERVAL_FIELD_NAME));
+		ITypedQuantity<LinearUnit> intervalQty = UnitLookup.TIMESPAN
+				.parseInteractive(preferences.getText(CommunicationPage.UPDATE_INTERVAL_FIELD_NAME));
 		Assert.assertEquals(PreferencesKeys.DEFAULT_UPDATE_INTERVAL, intervalQty.longValueIn(UnitLookup.MILLISECOND));
 		Assert.assertEquals(String.valueOf(PreferencesKeys.DEFAULT_RETAINED_EVENT_VALUES),
 				preferences.getText(CommunicationPage.RETAINED_EVENT_FIELD_NAME));

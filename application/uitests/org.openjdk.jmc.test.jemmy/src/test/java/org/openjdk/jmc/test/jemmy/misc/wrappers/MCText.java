@@ -329,8 +329,8 @@ public class MCText extends MCJemmyBase {
 	 *            the shell from where to start searching for this text widget
 	 * @param index
 	 *            the index of the visible text widget to return
-	 * @return a {@link MCText} that is visible and shows up in the lookup at the index of the
-	 *         given parameter
+	 * @return a {@link MCText} that is visible and shows up in the lookup at the index of the given
+	 *         parameter
 	 */
 	@SuppressWarnings("unchecked")
 	public static MCText getVisible(Wrap<? extends Shell> shell, int index) {
@@ -382,8 +382,8 @@ public class MCText extends MCJemmyBase {
 	 * 
 	 * @param index
 	 *            the index of the visible text widget to return
-	 * @return a {@link MCText} that is visible and shows up in the lookup at the index of the
-	 *         given parameter
+	 * @return a {@link MCText} that is visible and shows up in the lookup at the index of the given
+	 *         parameter
 	 */
 	public static MCText getVisible(int index) {
 		return getVisible(getShell(), index);

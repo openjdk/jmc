@@ -84,7 +84,8 @@ public class MCCCombo extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text provided
+	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text
+	 * provided
 	 *
 	 * @param text
 	 *            the text string of the item to match
@@ -95,7 +96,8 @@ public class MCCCombo extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text provided
+	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text
+	 * provided
 	 *
 	 * @param shell
 	 *            the shell from where to start the search for the CCombo object
@@ -108,7 +110,8 @@ public class MCCCombo extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text provided
+	 * Returns a {@link MCCCombo} object having at least one selectable item that matches the text
+	 * provided
 	 *
 	 * @param shell
 	 *            the shell from where to start the search for the CCombo object

@@ -145,7 +145,7 @@ public class TemplateManagerTest extends MCJemmyTestBase {
 	}
 
 	/**
-	 * Verify that the correct dialog is opened when a template has first been customized 
+	 * Verify that the correct dialog is opened when a template has first been customized
 	 */
 	@Test
 	public void testModifiedTemplateOpensCorrectDialog() {

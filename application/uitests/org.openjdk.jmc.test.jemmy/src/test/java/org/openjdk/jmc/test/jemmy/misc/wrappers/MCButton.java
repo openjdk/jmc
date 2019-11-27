@@ -191,8 +191,7 @@ public class MCButton extends MCJemmyBase {
 	 *            the shell where to find the button
 	 * @param label
 	 *            the label string of the button
-	 * @return a {@link MCButton} in the correct shell matching the label, {@code null} if not
-	 *         found
+	 * @return a {@link MCButton} in the correct shell matching the label, {@code null} if not found
 	 */
 	@SuppressWarnings("unchecked")
 	public static MCButton getAnyByLabel(Wrap<? extends Shell> shell, String label) {

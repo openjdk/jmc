@@ -41,6 +41,10 @@
 	<artifactId>org.openjdk.jmc.test.jemmy</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<properties>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>

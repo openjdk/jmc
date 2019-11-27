@@ -158,8 +158,8 @@ public class JvmBrowser extends MCJemmyBase {
 	 *            it can be a list of strings representing the path of the new connection. If the
 	 *            path is of length 1 and there is no item with that name, the new connection has
 	 *            that string as the name, however, if that item exists then the new connection is
-	 *            created beneath that item using the default name. This is basically the same
-	 *            for strings of length n > 1.
+	 *            created beneath that item using the default name. This is basically the same for
+	 *            strings of length n > 1.
 	 */
 	public void createConnection(
 		String host, String port, String user, String passwd, Boolean storeCredentials, String ... path) {
@@ -223,8 +223,8 @@ public class JvmBrowser extends MCJemmyBase {
 	 *            it can be a list of strings representing the path of the new connection. If the
 	 *            path is of length 1 and there is no item with that name, the new connection has
 	 *            that string as the name, however, if that item exists then the new connection is
-	 *            created beneath that item using the default name. This is basically the same
-	 *            for strings of length n > 1.
+	 *            created beneath that item using the default name. This is basically the same for
+	 *            strings of length n > 1.
 	 */
 	public void createConnection(String host, String port, String ... path) {
 		createConnection(host, port, null, null, null, path);
@@ -596,7 +596,7 @@ public class JvmBrowser extends MCJemmyBase {
 	}
 
 	/**
-	 * Finds out whether or not a connection with the specified path exists 
+	 * Finds out whether or not a connection with the specified path exists
 	 *
 	 * @param path
 	 *            the path to find
@@ -772,8 +772,7 @@ public class JvmBrowser extends MCJemmyBase {
 	 *            the password used as a new master password. Must be longer than five characters.
 	 */
 	public void handleSetMasterPassword(String password) {
-		MCDialog masterPasswordShell = MCDialog.getByAnyDialogTitle(
-				MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE,
+		MCDialog masterPasswordShell = MCDialog.getByAnyDialogTitle(MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE,
 				MasterPasswordWizardPage_VERIFY_MASTER_PASSWORD_TITLE);
 		if (masterPasswordShell.getText().equals(MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE)) {
 			masterPasswordShell.enterText(Constants.PASSWORD1_FIELD_NAME, password);

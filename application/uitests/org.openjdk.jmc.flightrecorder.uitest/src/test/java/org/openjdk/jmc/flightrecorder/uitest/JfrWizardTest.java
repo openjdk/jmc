@@ -106,7 +106,8 @@ public class JfrWizardTest extends MCJemmyTestBase {
 	}
 
 	/**
-	 * Verifies that using one of the default recording templates result in a matching recording (settings wise)
+	 * Verifies that using one of the default recording templates result in a matching recording
+	 * (settings wise)
 	 */
 	@Test
 	public void verifyDefaultRecordingEventSettings() {
@@ -135,7 +136,7 @@ public class JfrWizardTest extends MCJemmyTestBase {
 	}
 
 	/**
-	 * Verifies that a default recording template reflects the last run recording template 
+	 * Verifies that a default recording template reflects the last run recording template
 	 */
 	@Test
 	public void testOneTemplateAddedAfterStartingRecording() {

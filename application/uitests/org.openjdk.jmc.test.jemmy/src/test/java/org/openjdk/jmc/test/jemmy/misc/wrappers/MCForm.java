@@ -132,7 +132,8 @@ public class MCForm extends MCJemmyBase {
 	 *
 	 * @param tabFolder
 	 *            the tab folder for which to compare the selected tab with this form
-	 * @return {@code true} if both the title text and image equals those of the currently selected tab
+	 * @return {@code true} if both the title text and image equals those of the currently selected
+	 *         tab
 	 */
 	public boolean titleRegionMatches(MCTabFolder tabFolder) {
 		return getTitle().equals(tabFolder.getState()) && getImage().equals(tabFolder.getSelectedTabImage());

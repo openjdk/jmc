@@ -827,9 +827,9 @@ public class Testable extends NotificationBroadcasterSupport implements Testable
 				long oldLastTime = lastTime;
 				lastTime = System.currentTimeMillis();
 //				System.out.println("Current time: " + getAliveTime());
-				sendNotification(new AttributeChangeNotification(this, sequenceNumber++, lastTime, "Update",
-						"AliveTime", "long", Long.valueOf(oldLastTime - startTime),
-						Long.valueOf(lastTime - startTime)));
+				sendNotification(
+						new AttributeChangeNotification(this, sequenceNumber++, lastTime, "Update", "AliveTime", "long",
+								Long.valueOf(oldLastTime - startTime), Long.valueOf(lastTime - startTime)));
 				try {
 					wait(Math.max(1, updateTime));
 				} catch (InterruptedException e) {

@@ -405,8 +405,7 @@ public class MCTree extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns a list of the currently selected tree item's fonts, ordered
-	 * by column
+	 * Returns a list of the currently selected tree item's fonts, ordered by column
 	 *
 	 * @return a {@link List} of {@link Font}
 	 */

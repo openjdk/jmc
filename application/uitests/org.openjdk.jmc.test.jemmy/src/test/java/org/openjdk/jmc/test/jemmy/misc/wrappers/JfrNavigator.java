@@ -80,8 +80,8 @@ public class JfrNavigator extends MCJemmyBase {
 	}
 
 	/**
-	 * Initializes the JFR navigation tree. The navigation tree is disposed as soon
-	 * as all recordings have been closed so this needs to be checked every time
+	 * Initializes the JFR navigation tree. The navigation tree is disposed as soon as all
+	 * recordings have been closed so this needs to be checked every time
 	 */
 	private static void initialize() {
 		MCMenu.ensureJfrNavigationVisible();

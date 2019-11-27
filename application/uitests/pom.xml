@@ -40,6 +40,20 @@
 	</parent>
 	<artifactId>missioncontrol.application.uitests</artifactId>
 	<packaging>pom</packaging>
+
+	<properties>
+		<ui.test.vmargs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-modules=java.xml.bind,java.xml.ws.annotation --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED</ui.test.vmargs>
+		<ui.test.osvmargs/>
+		<ui.test.osappargs/>
+		<ui.test.run>false</ui.test.run>
+		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
+		<test.excludes.default>**/*$*</test.excludes.default>
+		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jacoco.plugin.version>0.8.3</jacoco.plugin.version>
+		<jmc.version>8.0.0-SNAPSHOT</jmc.version>
+	</properties>
+	
 	<modules>
 		<module>org.openjdk.jmc.browser.uitest</module>
 		<module>org.openjdk.jmc.console.jconsole.uitest</module>
@@ -53,38 +67,29 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${jmc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${jmc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${jmc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${jmc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${jmc.version}</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<ui.test.vmargs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-modules=java.xml.bind,java.xml.ws.annotation --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED</ui.test.vmargs>
-		<ui.test.osvmargs/>
-		<ui.test.osappargs/>
-		<ui.test.run>false</ui.test.run>
-		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
-		<test.excludes.default>**/*$*</test.excludes.default>
-		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
-	</properties>
 	<profiles>
 		<profile>
 			<id>NoTestIncludesDefined</id>
@@ -156,25 +161,25 @@
 	<build>
 		<plugins>
 			<plugin>
-                                <groupId>org.jacoco</groupId>
-                                <artifactId>jacoco-maven-plugin</artifactId>
-                                <version>0.8.3</version>
-                                <executions>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.plugin.version}</version>
+				<executions>
 					<execution>
-                                                <id>pre-unit-test</id>
-                                                <goals>
-                                                        <goal>prepare-agent</goal>
-                                                </goals>
-                                                <configuration>
-                                                        <propertyName>surefireArgLine</propertyName>
-                                                </configuration>
-                                        </execution>
-                                        <execution>
-                                                <id>post-unit-test</id>
-                                                <phase>verify</phase>
-                                                <goals>
-                                                        <goal>report</goal>
-                                                </goals>
+						<id>pre-unit-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<propertyName>surefireArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
