@@ -85,10 +85,17 @@ public class DurationPercentileTable {
 	public static final String TABLE_NAME = "DurationPercentileTable"; //$NON-NLS-1$
 	private static final String COL_ID_PERCENTILE = TABLE_NAME + ".percentile"; //$NON-NLS-1$
 
-	private static final IQuantity[] PERCENTILES = {UnitLookup.NUMBER_UNITY.quantity(0.0),
-			UnitLookup.NUMBER_UNITY.quantity(90.0), UnitLookup.NUMBER_UNITY.quantity(99.0),
-			UnitLookup.NUMBER_UNITY.quantity(99.9), UnitLookup.NUMBER_UNITY.quantity(99.99),
-			UnitLookup.NUMBER_UNITY.quantity(99.999), UnitLookup.NUMBER_UNITY.quantity(100.0),};
+	// @formatter:off
+	private static final IQuantity[] PERCENTILES = {
+			UnitLookup.NUMBER_UNITY.quantity(0.0),
+			UnitLookup.NUMBER_UNITY.quantity(90.0), 
+			UnitLookup.NUMBER_UNITY.quantity(99.0),
+			UnitLookup.NUMBER_UNITY.quantity(99.9), 
+			UnitLookup.NUMBER_UNITY.quantity(99.99),
+			UnitLookup.NUMBER_UNITY.quantity(99.999), 
+			UnitLookup.NUMBER_UNITY.quantity(100.0)
+	};
+	// @formatter:on
 
 	private final DurationPercentileAggregator[] aggregators; // Correspond to column order
 	private final ColumnManager manager;
