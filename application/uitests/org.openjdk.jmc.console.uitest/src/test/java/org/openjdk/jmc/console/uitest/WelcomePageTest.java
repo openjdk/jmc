@@ -47,7 +47,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTabFolder;
 public class WelcomePageTest extends MCJemmyTestBase {
 
 	/**
-	 * Open and close the Welcome page
+	 * Open and close the Welcome page.
 	 */
 	@Test
 	public void testWelcomePage() {
