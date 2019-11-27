@@ -46,6 +46,7 @@
 		<download.maven.plugin.version>1.4.2</download.maven.plugin.version>
 		<download-maven-plugin.phase>process-resources</download-maven-plugin.phase>
 		<download-maven-plugin.output>${project.basedir}/src/main/resources/jslibs</download-maven-plugin.output>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
 	<build>

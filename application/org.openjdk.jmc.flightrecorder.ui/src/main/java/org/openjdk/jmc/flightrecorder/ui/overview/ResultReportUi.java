@@ -155,14 +155,15 @@ public class ResultReportUi {
 
 	public class OpenWindowFunction extends BrowserFunction {
 
-		public OpenWindowFunction (final Browser browser, final String name) {
-		    super(browser, name);
+		public OpenWindowFunction(final Browser browser, final String name) {
+			super(browser, name);
 		}
-		public Object function (Object[] arguments) {
+
+		public Object function(Object[] arguments) {
 			final String url = String.valueOf(arguments[0]);
-		    final String title = String.valueOf(arguments[1]);
-		    openBrowserByUrl(url, title);
-		    return null;
+			final String title = String.valueOf(arguments[1]);
+			openBrowserByUrl(url, title);
+			return null;
 		}
 	}
 
@@ -261,40 +262,40 @@ public class ResultReportUi {
 	private void initializeBrowser(final Display display, final Browser browser, final Shell shell) {
 		browser.addOpenWindowListener(new OpenWindowListener() {
 			public void open(WindowEvent event) {
-				  initializeBrowser(display, browser, shell);
-				  event.browser = browser;
-			    }
+				initializeBrowser(display, browser, shell);
+				event.browser = browser;
+			}
 		});
 		browser.addCloseWindowListener(new CloseWindowListener() {
-			  public void close(WindowEvent event) {
-				  Browser browser = (Browser)event.widget;
-			      Shell shell = browser.getShell();
-			      shell.close();
-			  }
-	    });
+			public void close(WindowEvent event) {
+				Browser browser = (Browser) event.widget;
+				Shell shell = browser.getShell();
+				shell.close();
+			}
+		});
 	}
 
 	/*
-     * We replace the anchors in the HTML when running in the JMC UI to make
-     * it possible to follow them. See JMC-5419 for more information.
-     */
+	 * We replace the anchors in the HTML when running in the JMC UI to make it possible to follow
+	 * them. See JMC-5419 for more information.
+	 */
 	private static String adjustAnchorFollowAction(String html) {
 		Map<String, String> map = new HashMap<>();
 		Matcher m = HTML_ANCHOR_PATTERN.matcher(html);
 		while (m.find()) {
 			map.put(m.group(1), m.group(2));
 		}
-		for(Map.Entry<String, String> e: map.entrySet()){
+		for (Map.Entry<String, String> e : map.entrySet()) {
 			html = html.replace(e.getKey(), openWindowMethod(e.getKey(), e.getValue()));
 		}
 		return html;
 	}
 
-	private static String openWindowMethod(String url, String name){
-        return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                .append(url).append("\u0027").append(',').append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$
-                .append(name).append("\u0027").append(");return false;").toString();  //$NON-NLS-1$//$NON-NLS-2$
-    }
+	private static String openWindowMethod(String url, String name) {
+		return new StringBuilder().append("#\" onclick=\"").append(OPEN_BROWSER_WINDOW).append("(").append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.append(url).append("\u0027").append(',').append("\u0027") //$NON-NLS-1$ //$NON-NLS-2$
+				.append(name).append("\u0027").append(");return false;").toString(); //$NON-NLS-1$//$NON-NLS-2$
+	}
 
 	public ResultReportUi(boolean isSinglePage) {
 		this.isSinglePage = isSinglePage;
@@ -302,8 +303,8 @@ public class ResultReportUi {
 
 	public List<String> getHtml(IPageContainer editor) {
 		List<String> overviewHtml = new ArrayList<>(1);
-		String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor), descriptors,
-				resultExpandedStates, true));
+		String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.generateStructuredHtml(
+				new PageContainerResultProvider(editor), descriptors, resultExpandedStates, true));
 		overviewHtml.add(adjustedHtml);
 		return overviewHtml;
 	}

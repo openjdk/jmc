@@ -68,16 +68,11 @@ public class BatchProblemRecorder implements ProblemRecorder {
 
 	private static final int HIGH_SIZE = 1;
 
-	private IdentityHashMap<RefChainElement, HighSizeObjCluster> refererToHSCluster = new IdentityHashMap<>(
-			128);
-	private IdentityHashMap<RefChainElement, CollectionCluster> refererToColCluster = new IdentityHashMap<>(
-			128);
-	private IdentityHashMap<RefChainElement, DupStringCluster> refererToDSCluster = new IdentityHashMap<>(
-			256);
-	private IdentityHashMap<RefChainElement, DupArrayCluster> refererToDACluster = new IdentityHashMap<>(
-			32);
-	private IdentityHashMap<RefChainElement, WeakHashMapCluster> refererToWMCluster = new IdentityHashMap<>(
-			4);
+	private IdentityHashMap<RefChainElement, HighSizeObjCluster> refererToHSCluster = new IdentityHashMap<>(128);
+	private IdentityHashMap<RefChainElement, CollectionCluster> refererToColCluster = new IdentityHashMap<>(128);
+	private IdentityHashMap<RefChainElement, DupStringCluster> refererToDSCluster = new IdentityHashMap<>(256);
+	private IdentityHashMap<RefChainElement, DupArrayCluster> refererToDACluster = new IdentityHashMap<>(32);
+	private IdentityHashMap<RefChainElement, WeakHashMapCluster> refererToWMCluster = new IdentityHashMap<>(4);
 
 	private JavaHeapObject lastObj;
 
@@ -234,24 +229,19 @@ public class BatchProblemRecorder implements ProblemRecorder {
 		List<List<? extends ReferencedObjCluster>> clustersWithNearestField = getProblematicDataClustersWithNearestField(
 				minOvhd);
 
-		List<List<ReferencedObjCluster.HighSizeObjects>> highSizeObjClusters = new ArrayList<>(
-				2);
+		List<List<ReferencedObjCluster.HighSizeObjects>> highSizeObjClusters = new ArrayList<>(2);
 		highSizeObjClusters.add((List<ReferencedObjCluster.HighSizeObjects>) clustersWithFullRefChains.get(4));
 		highSizeObjClusters.add((List<ReferencedObjCluster.HighSizeObjects>) clustersWithNearestField.get(4));
-		List<List<ReferencedObjCluster.Collections>> collectionClusters = new ArrayList<>(
-				2);
+		List<List<ReferencedObjCluster.Collections>> collectionClusters = new ArrayList<>(2);
 		collectionClusters.add((List<ReferencedObjCluster.Collections>) clustersWithFullRefChains.get(0));
 		collectionClusters.add((List<ReferencedObjCluster.Collections>) clustersWithNearestField.get(0));
-		List<List<ReferencedObjCluster.DupStrings>> dupStringClusters = new ArrayList<>(
-				2);
+		List<List<ReferencedObjCluster.DupStrings>> dupStringClusters = new ArrayList<>(2);
 		dupStringClusters.add((List<ReferencedObjCluster.DupStrings>) clustersWithFullRefChains.get(1));
 		dupStringClusters.add((List<ReferencedObjCluster.DupStrings>) clustersWithNearestField.get(1));
-		List<List<ReferencedObjCluster.DupArrays>> dupArrayClusters = new ArrayList<>(
-				2);
+		List<List<ReferencedObjCluster.DupArrays>> dupArrayClusters = new ArrayList<>(2);
 		dupArrayClusters.add((List<ReferencedObjCluster.DupArrays>) clustersWithFullRefChains.get(2));
 		dupArrayClusters.add((List<ReferencedObjCluster.DupArrays>) clustersWithNearestField.get(2));
-		List<List<ReferencedObjCluster.WeakHashMaps>> weakHashMapClusters = new ArrayList<>(
-				2);
+		List<List<ReferencedObjCluster.WeakHashMaps>> weakHashMapClusters = new ArrayList<>(2);
 		weakHashMapClusters.add((List<ReferencedObjCluster.WeakHashMaps>) clustersWithFullRefChains.get(3));
 		weakHashMapClusters.add((List<ReferencedObjCluster.WeakHashMaps>) clustersWithNearestField.get(3));
 

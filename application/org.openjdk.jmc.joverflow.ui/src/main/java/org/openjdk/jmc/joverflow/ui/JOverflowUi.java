@@ -143,8 +143,8 @@ public class JOverflowUi extends Composite {
 		ClusterType currentType = mOverheadTypeViewer.getCurrentType();
 
 		mClusterGroupViewer.setQualifierName(
-				currentType == ClusterType.DUPLICATE_STRING || currentType == ClusterType.DUPLICATE_ARRAY ?
-						"Duplicate" : null);
+				currentType == ClusterType.DUPLICATE_STRING || currentType == ClusterType.DUPLICATE_ARRAY ? "Duplicate"
+						: null);
 		// Loop all reference chains
 		for (ReferenceChain chain : mModel) {
 			RefChainElement rce = chain.getReferenceChain();

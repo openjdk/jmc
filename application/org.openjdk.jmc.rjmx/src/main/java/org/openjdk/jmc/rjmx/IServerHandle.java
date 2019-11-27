@@ -50,7 +50,7 @@ public interface IServerHandle {
 	 * if there is not.
 	 */
 	enum State {
-		DISCONNECTED, CONNECTED, DISPOSED, FAILED;
+	DISCONNECTED, CONNECTED, DISPOSED, FAILED;
 	}
 
 	/**

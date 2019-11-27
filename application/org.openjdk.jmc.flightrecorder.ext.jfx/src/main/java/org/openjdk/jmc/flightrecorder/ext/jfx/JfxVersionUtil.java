@@ -45,19 +45,19 @@ final class JfxVersionUtil {
 	enum JavaFxEventAvailability {
 		None, JavaFx8, JavaFx12
 	}
-	
+
 	static JavaFxEventAvailability getAvailability(IItemCollection items) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_12);
+		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items,
+				JfxConstants.TYPE_ID_PULSE_PHASE_12);
 		if (RulesToolkit.isEventsEnabled(eventAvailability)) {
 			return JavaFxEventAvailability.JavaFx12;
-		}		
+		}
 		eventAvailability = RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_8);
 		if (RulesToolkit.isEventsEnabled(eventAvailability)) {
 			return JavaFxEventAvailability.JavaFx8;
 		}
 		return JavaFxEventAvailability.None;
 	}
-	
 
 	static String getPulseTypeId(JavaFxEventAvailability availability) {
 		if (availability == JavaFxEventAvailability.JavaFx8) {
@@ -66,14 +66,12 @@ final class JfxVersionUtil {
 		return JfxConstants.TYPE_ID_PULSE_PHASE_12;
 	}
 
-
 	static IAttribute<IQuantity> getPulseIdAttribute(JavaFxEventAvailability availability) {
 		if (availability == JavaFxEventAvailability.JavaFx8) {
 			return JfxConstants.ATTRIBUTE_PULSE_ID_8;
 		}
 		return JfxConstants.ATTRIBUTE_PULSE_ID_12;
 	}
-
 
 	static IAttribute<String> getPhaseNameAttribute(JavaFxEventAvailability availability) {
 		if (availability == JavaFxEventAvailability.JavaFx8) {

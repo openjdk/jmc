@@ -265,8 +265,8 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		errorTextLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		errorTextLabel.setText(Messages.JFR_EDITOR_INVALID_RECORDING_TEXT);
 
-		ExpandableComposite ec = toolkit
-				.createExpandableComposite(composite, ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
+		ExpandableComposite ec = toolkit.createExpandableComposite(composite,
+				ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
 		ec.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		ec.setText(Messages.STACKTRACE_VIEW_STACK_TRACE);
 

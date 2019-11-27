@@ -51,24 +51,28 @@ final class JfxConstants {
 
 	static final String JFX_RULE_PATH = "javaFx"; //$NON-NLS-1$
 
-	static final IItemFilter JFX_PULSE_FILTER = ItemFilters.or(ItemFilters.type(TYPE_ID_PULSE_PHASE_8), ItemFilters.type(TYPE_ID_PULSE_PHASE_12));
-	static final IItemFilter JFX_INPUT_FILTER = ItemFilters.or(ItemFilters.type(TYPE_ID_INPUT_8), ItemFilters.type(TYPE_ID_INPUT_12));
+	static final IItemFilter JFX_PULSE_FILTER = ItemFilters.or(ItemFilters.type(TYPE_ID_PULSE_PHASE_8),
+			ItemFilters.type(TYPE_ID_PULSE_PHASE_12));
+	static final IItemFilter JFX_INPUT_FILTER = ItemFilters.or(ItemFilters.type(TYPE_ID_INPUT_8),
+			ItemFilters.type(TYPE_ID_INPUT_12));
 
 	static final IItemFilter JFX_FILTER = ItemFilters.or(JFX_INPUT_FILTER, JFX_PULSE_FILTER);
 
-	static final IAttribute<IQuantity> ATTRIBUTE_PULSE_ID_8 = Attribute.attr("pulseNumber", Messages.JfxConstants_PULSE_ID, //$NON-NLS-1$
-			UnitLookup.NUMBER);
+	static final IAttribute<IQuantity> ATTRIBUTE_PULSE_ID_8 = Attribute.attr("pulseNumber", //$NON-NLS-1$
+			Messages.JfxConstants_PULSE_ID, UnitLookup.NUMBER);
 	static final IAttribute<IQuantity> ATTRIBUTE_PULSE_ID_12 = Attribute.attr("pulseId", Messages.JfxConstants_PULSE_ID, //$NON-NLS-1$
 			UnitLookup.NUMBER);
 	static final IAttribute<String> ATTRIBUTE_PHASE_NAME_8 = Attribute.attr("phase", Messages.JfxConstants_PHASE_NAME, //$NON-NLS-1$
 			UnitLookup.PLAIN_TEXT);
-	static final IAttribute<String> ATTRIBUTE_PHASE_NAME_12 = Attribute.attr("phaseName", Messages.JfxConstants_PHASE_NAME, //$NON-NLS-1$
-			UnitLookup.PLAIN_TEXT);
+	static final IAttribute<String> ATTRIBUTE_PHASE_NAME_12 = Attribute.attr("phaseName", //$NON-NLS-1$
+			Messages.JfxConstants_PHASE_NAME, UnitLookup.PLAIN_TEXT);
 	static final IAttribute<String> INPUT_TYPE = Attribute.attr("input", Messages.JfxConstants_INPUT_TYPE, //$NON-NLS-1$
 			UnitLookup.PLAIN_TEXT);
 
-	static final IAggregator<IQuantity, ?> MAX_PULSE_DURATION = Aggregators.max(TYPE_ID_PULSE_PHASE_12, JfrAttributes.DURATION);
+	static final IAggregator<IQuantity, ?> MAX_PULSE_DURATION = Aggregators.max(TYPE_ID_PULSE_PHASE_12,
+			JfrAttributes.DURATION);
 	static final IAggregator<IQuantity, ?> PULSE_START = Aggregators.min(Messages.JfxConstants_PULSE_START,
-			Messages.JfxConstants_PULSE_START_DESCRIPTION, JfxConstants.TYPE_ID_PULSE_PHASE_12, JfrAttributes.START_TIME);
+			Messages.JfxConstants_PULSE_START_DESCRIPTION, JfxConstants.TYPE_ID_PULSE_PHASE_12,
+			JfrAttributes.START_TIME);
 
 }

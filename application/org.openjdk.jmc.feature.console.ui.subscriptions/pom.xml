@@ -41,4 +41,8 @@
 	<artifactId>org.openjdk.jmc.feature.console.ui.subscriptions</artifactId>
 	<version>0.0.3-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 </project>

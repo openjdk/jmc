@@ -80,9 +80,10 @@ public class AwtCanvas {
 			return graphicsAWT;
 		}
 	}
-	
+
 	private void setAntiAliasing(Graphics2D ctx) {
-		Boolean antiAliasing = UIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.P_ANTI_ALIASING);
+		Boolean antiAliasing = UIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.P_ANTI_ALIASING);
 		if (antiAliasing) {
 			ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		} else {

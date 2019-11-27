@@ -57,8 +57,7 @@ public class ConsoleAttributeInfoManagerTest extends RjmxTestCase {
 
 	@Test
 	public void testGetAttributeInfo() {
-		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"AvailableProcessors");
+		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "AvailableProcessors");
 		IMRIMetadata info = m_manager.getMetadata(descriptor);
 		assertNotNull(info);
 
@@ -66,8 +65,8 @@ public class ConsoleAttributeInfoManagerTest extends RjmxTestCase {
 				((IIntervalUpdatePolicy) UpdatePolicyToolkit.getUpdatePolicy(m_connectionHandle, info.getMRI()))
 						.getIntervalTime());
 		assertMin("Description shorter than expected.", 10, info.getDescription().length());
-		assertMin("Display name shorter than expected.", 4, MRIMetadataToolkit.getDisplayName(m_connectionHandle,
-				info.getMRI()).length());
+		assertMin("Display name shorter than expected.", 4,
+				MRIMetadataToolkit.getDisplayName(m_connectionHandle, info.getMRI()).length());
 		assertTrue(info.getMRI().getParentMRIs().length == 0);
 	}
 

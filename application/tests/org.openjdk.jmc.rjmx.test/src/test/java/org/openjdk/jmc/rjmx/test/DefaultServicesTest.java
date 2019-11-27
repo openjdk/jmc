@@ -80,7 +80,7 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 //				+ Math.abs(diff) + " ms");
 
 		// Should at least contain the java.lang mbeans. Just testing for the Threading one.
-		assertTrue("Could not find the Threading MBean!", helper.getMBeanNames().contains(
-				new ObjectName("java.lang:type=Threading")));
+		assertTrue("Could not find the Threading MBean!",
+				helper.getMBeanNames().contains(new ObjectName("java.lang:type=Threading")));
 	}
 }

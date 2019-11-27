@@ -252,8 +252,8 @@ class PieChartViewer extends StructuredViewer {
 				Object input = inputs.get(i);
 				ArcItem item = mPieChart.getItem(i);
 
-				int w = 360 - angleSum + (int) Math
-						.round(360 * (double) mArcAttributeProvider.getWeight(input) / weightSum);
+				int w = 360 - angleSum
+						+ (int) Math.round(360 * (double) mArcAttributeProvider.getWeight(input) / weightSum);
 				if (w < 0) {
 					continue;
 				}

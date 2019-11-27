@@ -613,7 +613,8 @@ public class JavaClass extends JavaHeapObject {
 	}
 
 	/**
-	 * Same as {@link org.openjdk.jmc.joverflow.util.ClassUtils#getShortNameForPopularClass(String)}, but
+	 * Same as
+	 * {@link org.openjdk.jmc.joverflow.util.ClassUtils#getShortNameForPopularClass(String)}, but
 	 * also: - makes names for anonymous classes, like MyFooClass$6, more informative, by adding
 	 * "(SuperClassName)" to them; - For array classes, returns a human-friendly name, such as
 	 * "boolean[]" instead of "[B" or "Object[]" instead of "[Ljava.lang.Object;"

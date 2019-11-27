@@ -178,8 +178,8 @@ public class ConcurrentHashMapDescriptorForJdk8 extends AbstractCollectionDescri
 
 	/**
 	 * Overrides superclass method. Get the capacity of each of the two tables inside the
-	 * ConcurrentHashMap and add them. This might not be revised in the future, according to
-	 * how the ConcurrentHashMap works
+	 * ConcurrentHashMap and add them. This might not be revised in the future, according to how the
+	 * ConcurrentHashMap works
 	 */
 	@Override
 	public int getCapacity() {

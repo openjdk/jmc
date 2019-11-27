@@ -114,10 +114,8 @@ public class AttributeValueTest extends RjmxTestCase {
 		List<MRI> fetchList = new ArrayList<>();
 		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "ProcessCpuLoad"));
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"TotalPhysicalMemorySize"));
-		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"UsedPhysicalMemorySize"));
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "TotalPhysicalMemorySize"));
+		fetchList.add(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "UsedPhysicalMemorySize"));
 		return fetchList;
 	}
 }

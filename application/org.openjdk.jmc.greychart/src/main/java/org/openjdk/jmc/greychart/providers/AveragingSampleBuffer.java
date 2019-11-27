@@ -85,7 +85,7 @@ public final class AveragingSampleBuffer extends AbstractSampler {
 	private void addSegmentToBucket(
 		int bucketIndex, double segmentHeigth, double segmentGradient, double segmentWidth) {
 		double segmentArea = (segmentHeigth + segmentGradient * segmentWidth / 2) * segmentWidth;
-		SamplePoint sp = getSamplePoint(bucketIndex);	
+		SamplePoint sp = getSamplePoint(bucketIndex);
 		sp.y += segmentArea;
 		sp.count++;
 	}

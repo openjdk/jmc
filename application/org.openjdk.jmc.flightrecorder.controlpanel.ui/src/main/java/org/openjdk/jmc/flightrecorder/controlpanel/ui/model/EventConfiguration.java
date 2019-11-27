@@ -543,8 +543,8 @@ public final class EventConfiguration implements IEventConfiguration {
 		 * We're doing this last as it might be expensive. Otherwise, we could just have called
 		 * equals() on the maps.
 		 */
-		return ourOptions.keySet().size() == other.getEventOptions(ourOptions.emptyWithSameConstraints())
-				.keySet().size();
+		return ourOptions.keySet().size() == other.getEventOptions(ourOptions.emptyWithSameConstraints()).keySet()
+				.size();
 	}
 
 	public Set<IEventTypeID> getConfigEventTypes() {

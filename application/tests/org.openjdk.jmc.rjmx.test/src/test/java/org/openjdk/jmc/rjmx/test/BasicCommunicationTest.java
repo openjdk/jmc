@@ -77,8 +77,7 @@ public class BasicCommunicationTest extends ServerHandleTestCase {
 	@Test
 	public void testIConnectionHandle() throws Exception {
 		IConnectionHandle handle = getDefaultServer().connect("Test");
-		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading",
-				"ThreadCount");
+		MRI descriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount");
 		MBeanServerConnection connection = handle.getServiceOrThrow(MBeanServerConnection.class);
 		assertBetween(1L, 1000L,
 				((Number) connection.getAttribute(descriptor.getObjectName(), descriptor.getDataPath())).longValue());
@@ -102,8 +101,7 @@ public class BasicCommunicationTest extends ServerHandleTestCase {
 		IConnectionHandle handle = IServerHandle.create(descriptor).connect("Test");
 
 		ISubscriptionService service = handle.getServiceOrThrow(ISubscriptionService.class);
-		MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading",
-				"ThreadCount");
+		MRI attribute = new MRI(Type.ATTRIBUTE, "java.lang:type=Threading", "ThreadCount");
 		service.addMRIValueListener(attribute, new IMRIValueListener() {
 			@Override
 			public void valueChanged(MRIValueEvent event) {

@@ -91,7 +91,9 @@ public class DurationHdrHistogram {
 
 	/**
 	 * Computes the duration at a given percentile for values stored in the histogram.
-	 * @param percentile - the percentile, as a {@link UnitLookup#NUMBER}
+	 * 
+	 * @param percentile
+	 *            - the percentile, as a {@link UnitLookup#NUMBER}
 	 * @return the computed duration, as a {@link UnitLookup#TIMESPAN}
 	 */
 	public IQuantity getDurationAtPercentile(IQuantity percentile) {
@@ -101,11 +103,13 @@ public class DurationHdrHistogram {
 	}
 
 	/**
-	 * Computes the duration at a given percentile for values stored
-	 * in the histogram, and number of values at or above that duration.
-	 * @param percentile - the percentile, as a {@link UnitLookup#NUMBER}
-	 * @return a pair with the computed duration as a {@link UnitLookup#TIMESPAN},
-	 * 	       and item count as a {@link UnitLookup#NUMBER}, in that order
+	 * Computes the duration at a given percentile for values stored in the histogram, and number of
+	 * values at or above that duration.
+	 * 
+	 * @param percentile
+	 *            - the percentile, as a {@link UnitLookup#NUMBER}
+	 * @return a pair with the computed duration as a {@link UnitLookup#TIMESPAN}, and item count as
+	 *         a {@link UnitLookup#NUMBER}, in that order
 	 */
 	public Pair<IQuantity, IQuantity> getDurationAndCountAtPercentile(IQuantity percentile) {
 		long rawValue = histogram.getValueAtPercentile(percentile.doubleValue());
@@ -130,11 +134,13 @@ public class DurationHdrHistogram {
 	}
 
 	/**
-	 * Gets the lowest value considered equivalent by this histogram,
-	 * subject to its configured precision. This is effectively a lower
-	 * bound for the "bucket" the specified value would fall under.
+	 * Gets the lowest value considered equivalent by this histogram, subject to its configured
+	 * precision. This is effectively a lower bound for the "bucket" the specified value would fall
+	 * under.
+	 * 
 	 * @see Histogram#lowestEquivalentValue(long)
-	 * @param duration - the specified duration quantity
+	 * @param duration
+	 *            - the specified duration quantity
 	 * @return the lowest duration equivalent to the supplied argument
 	 */
 	public IQuantity getLowestEquivalentDuration(IQuantity duration) {

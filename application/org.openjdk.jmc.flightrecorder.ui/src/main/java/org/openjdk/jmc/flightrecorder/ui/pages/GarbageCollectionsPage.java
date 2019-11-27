@@ -271,7 +271,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				SUM_OF_PAUSES_COLOR, b -> buildChart());
 		private final List<IAction> allChartSeriesActions = Stream.concat(
 				Stream.concat(HEAP_SUMMARY.getAttributes().stream(),
-						Stream.concat(HEAP_SUMMARY_POST_GC.getAttributes().stream(), METASPACE_SUMMARY.getAttributes().stream()))
+						Stream.concat(HEAP_SUMMARY_POST_GC.getAttributes().stream(),
+								METASPACE_SUMMARY.getAttributes().stream()))
 						.map(a -> createAttributeCheckAction(a, b -> buildChart())),
 				Stream.of(longestPause, sumOfPauses, enablePhases, GCEventThread)).collect(Collectors.toList());
 		private final Set<String> excludedAttributeIds;
@@ -345,8 +346,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			gcInfoFolder = new CTabFolder(tableSash, SWT.NONE);
 			phasesList = PHASES.buildWithoutBorder(gcInfoFolder, TableSettings.forState(state.getChild(PHASE_LIST)));
 			phasesList.getManager().getViewer().addSelectionChangedListener(e -> {
-					buildChart();	
-					pageContainer.showSelection(ItemCollectionToolkit.build(phasesList.getSelection().get()));
+				buildChart();
+				pageContainer.showSelection(ItemCollectionToolkit.build(phasesList.getSelection().get()));
 			});
 			phasesFilter = FilterComponent.createFilterComponent(phasesList, phasesFilterState,
 					getDataSource().getItems().apply(JdkFilters.GC_PAUSE_PHASE),
@@ -391,9 +392,10 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
 			lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANES)));
 			IAction editLanesAction = ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false),
-					Messages.ThreadsPage_EDIT_LANES, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
+					Messages.ThreadsPage_EDIT_LANES,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
 			form.getToolBarManager().add(editLanesAction);
-			
+
 			DataPageToolkit.createChartTimestampTooltip(chartCanvas);
 			gcChart = new XYChart(pageContainer.getRecordingRange(), renderRoot, 180);
 			gcChart.setVisibleRange(timelineRange.getStart(), timelineRange.getEnd());
@@ -417,11 +419,12 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
 			lanes.updateContextMenu(mm, false);
 			lanes.updateContextMenu(MCContextMenuManager.create(chartLegend.getControl()), true);
-			
+
 			// Older recordings may not have thread information in pause events.
 			// In those cases there is no need for the thread activity actions.
-			if (!getDataSource().getItems().apply(ItemFilters.and(ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD),
-					JdkFilters.GC_PAUSE)).hasItems()) {
+			if (!getDataSource().getItems()
+					.apply(ItemFilters.and(ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD), JdkFilters.GC_PAUSE))
+					.hasItems()) {
 				editLanesAction.setEnabled(false);
 				editLanesAction.setToolTipText(Messages.GarbageCollectionsPage_DISABLED_TOOLTIP);
 				GCEventThread.setEnabled(false);
@@ -502,8 +505,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 					Messages.GarbageCollectionsPage_ROW_HEAP_DESC, allItems, false, HEAP_SUMMARY, legendFilter,
 					UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
 			DataPageToolkit.buildLinesRow(Messages.GarbageCollectionsPage_ROW_HEAP_POST_GC,
-					Messages.GarbageCollectionsPage_ROW_HEAP_POST_GC_DESC, allItems, false, HEAP_SUMMARY_POST_GC, legendFilter,
-					UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
+					Messages.GarbageCollectionsPage_ROW_HEAP_POST_GC_DESC, allItems, false, HEAP_SUMMARY_POST_GC,
+					legendFilter, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
 			DataPageToolkit.buildLinesRow(Messages.GarbageCollectionsPage_ROW_METASPACE,
 					Messages.GarbageCollectionsPage_ROW_METASPACE_DESC, allItems, false, METASPACE_SUMMARY,
 					legendFilter, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
@@ -531,16 +534,20 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				ItemRow l4 = buildSpanRow(allItems, JdkTypeIDs.GC_PAUSE_L4);
 				rows.add(RendererToolkit.uniformRows(Arrays.asList(pauses, l1, l2, l3, l4), enablePhases.getText()));
 			}
-			IItemFilter pauseThreadsFilter = ItemFilters.and(JdkFilters.GC_PAUSE, ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD));
+			IItemFilter pauseThreadsFilter = ItemFilters.and(JdkFilters.GC_PAUSE,
+					ItemFilters.hasAttribute(JfrAttributes.EVENT_THREAD));
 			// Thread information may not be available in earlier recordings, ensure we actually have items before proceeding
-			if (GCEventThread.isChecked() && phasesList.getSelection().get().count() > 0 
+			if (GCEventThread.isChecked() && phasesList.getSelection().get().count() > 0
 					&& allItems.apply(pauseThreadsFilter).hasItems()) {
 				// Get the event threads from the selected events
-				IAggregator<Set<IMCThread>, ?> distinctThreadsAggregator = Aggregators.distinct(JfrAttributes.EVENT_THREAD);
+				IAggregator<Set<IMCThread>, ?> distinctThreadsAggregator = Aggregators
+						.distinct(JfrAttributes.EVENT_THREAD);
 				IItemCollection items = ItemCollectionToolkit.build(phasesList.getSelection().get());
 				Set<IMCThread> threads = items.getAggregate(distinctThreadsAggregator);
-				List<IXDataRenderer> renderers = threads.stream().map((thread) ->lanes.buildThreadRenderer(thread,
-						getDataSource().getItems().apply(ItemFilters.equals(JfrAttributes.EVENT_THREAD, thread))))
+				List<IXDataRenderer> renderers = threads.stream()
+						.map((thread) -> lanes.buildThreadRenderer(thread,
+								getDataSource().getItems()
+										.apply(ItemFilters.equals(JfrAttributes.EVENT_THREAD, thread))))
 						.collect(Collectors.toList());
 				rows.add(RendererToolkit.uniformRows(renderers));
 			}

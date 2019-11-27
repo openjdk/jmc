@@ -150,8 +150,11 @@ public class ThreadGraphLanes {
 			if (laneItems.iterator().hasNext()) {
 				ISpanSeries<IItem> laneSeries = QuantitySeries.max(laneItems, JfrAttributes.START_TIME,
 						JfrAttributes.END_TIME);
-				this.setTooltipTitle(MessageFormat.format(Messages.ThreadsPage_LANE_TOOLTIP_TITLE, threadName, lane.getName()));
-				lanes.add(new ItemRow(SpanRenderer.withBoundaries(laneSeries, DataPageToolkit.ITEM_COLOR, this.getTooltipTitle()), laneItems));
+				this.setTooltipTitle(
+						MessageFormat.format(Messages.ThreadsPage_LANE_TOOLTIP_TITLE, threadName, lane.getName()));
+				lanes.add(new ItemRow(
+						SpanRenderer.withBoundaries(laneSeries, DataPageToolkit.ITEM_COLOR, this.getTooltipTitle()),
+						laneItems));
 			}
 		});
 		IXDataRenderer renderer = !lanes.isEmpty() ? RendererToolkit.uniformRows(lanes)
@@ -235,19 +238,19 @@ public class ThreadGraphLanes {
 		naLanes = lanesByApplicability.get(false);
 		return Collections.emptyList();
 	}
-	
+
 	//create two action identifiers to handle the chart context menu and the legend context menu
 	private List<String> chartActionIdentifiers = new ArrayList<>();
 	private List<String> legendActionIdentifiers = new ArrayList<>();
 
 	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
-		
-		if(isLegendMenu) {
+
+		if (isLegendMenu) {
 			for (String id : legendActionIdentifiers) {
 				mm.remove(id);
 			}
 			legendActionIdentifiers.clear();
-		} else { 	
+		} else {
 			for (String id : chartActionIdentifiers) {
 				mm.remove(id);
 			}
@@ -276,7 +279,7 @@ public class ThreadGraphLanes {
 			};
 			String identifier = ld.getName() + checkAction.hashCode();
 			checkAction.setId(identifier);
-			if(isLegendMenu) {
+			if (isLegendMenu) {
 				legendActionIdentifiers.add(identifier);
 			} else {
 				chartActionIdentifiers.add(identifier);
@@ -287,7 +290,7 @@ public class ThreadGraphLanes {
 			actions.add(checkAction);
 		});
 	}
-	
+
 	public List<IAction> getContextMenuActions() {
 		return actions;
 	}

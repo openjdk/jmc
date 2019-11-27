@@ -47,23 +47,23 @@ public interface IRecordingDescriptor {
 	 * {@link RecordingState#RUNNING} {@link RecordingState#STOPPED}
 	 */
 	public enum RecordingState {
-		/**
-		 * The Recording has been created but not yet started.
-		 */
-		CREATED,
-		/**
-		 * The recording is running, i.e. it has been started, but not yet stopped.
-		 */
-		RUNNING,
-		/**
-		 * The recording has been started, and is stopping, but has not fully completed.
-		 */
-		STOPPING,
-		/**
-		 * The recording has been started, and then stopped. Either because the recording duration
-		 * timed out, or because it was forced to stop.
-		 */
-		STOPPED
+	/**
+	 * The Recording has been created but not yet started.
+	 */
+	CREATED,
+	/**
+	 * The recording is running, i.e. it has been started, but not yet stopped.
+	 */
+	RUNNING,
+	/**
+	 * The recording has been started, and is stopping, but has not fully completed.
+	 */
+	STOPPING,
+	/**
+	 * The recording has been started, and then stopped. Either because the recording duration timed
+	 * out, or because it was forced to stop.
+	 */
+	STOPPED
 	}
 
 	/**

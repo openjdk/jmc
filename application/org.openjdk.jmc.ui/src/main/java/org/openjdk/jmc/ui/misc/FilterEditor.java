@@ -836,6 +836,7 @@ public class FilterEditor {
 		protected String getTypeName(String typeID) {
 			return typeID;
 		}
+
 		@Override
 		public Font getFont(Object element) {
 			if (element instanceof LeafNode && ((LeafNode) element).filter instanceof AttributeValue) {

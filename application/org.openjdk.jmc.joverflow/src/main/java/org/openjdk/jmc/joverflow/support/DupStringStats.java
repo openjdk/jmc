@@ -41,14 +41,14 @@ import org.openjdk.jmc.joverflow.util.ValueWithIntId;
  * {@link org.openjdk.jmc.joverflow.stats.StringStatsCollector}.
  * <p>
  * In particular, getDupStrings() returns the list of duplicate strings sorted by overhead. The
- * overhead is defined as specified in {@link org.openjdk.jmc.joverflow.stats.StringStatsCollector}, but
- * in reality we perform a bit more crude estimate, since duplicate strings may reference sub-ranges
- * of backing char[] arrays, and we don't keep length of each backing char array. The estimate is
- * conservative, i.e. the returned overhead should not be greater than the real one. We also take
- * care of the fact that some shallowly duplicate Strings with different values may point to the
- * same backing arrays. For example, a pair of objects with values "a", "b" both point to 'abc'
- * array, and another pair "a", "b" points to 'abd'. In this case, the size of both 'abc' and 'abd'
- * will count towards overhead, but only once for each (i.e. 3 + 3 chars, not 3 + 3 + 3 + 3).
+ * overhead is defined as specified in {@link org.openjdk.jmc.joverflow.stats.StringStatsCollector},
+ * but in reality we perform a bit more crude estimate, since duplicate strings may reference
+ * sub-ranges of backing char[] arrays, and we don't keep length of each backing char array. The
+ * estimate is conservative, i.e. the returned overhead should not be greater than the real one. We
+ * also take care of the fact that some shallowly duplicate Strings with different values may point
+ * to the same backing arrays. For example, a pair of objects with values "a", "b" both point to
+ * 'abc' array, and another pair "a", "b" points to 'abd'. In this case, the size of both 'abc' and
+ * 'abd' will count towards overhead, but only once for each (i.e. 3 + 3 chars, not 3 + 3 + 3 + 3).
  */
 public class DupStringStats {
 	/** Shallow size of java.lang.String instance in the analyzed heap */

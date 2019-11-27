@@ -49,7 +49,8 @@ public final class ConfigurationFactory {
 			tmp = InetAddress.getByName(Configuration.DEFAULT_MULTICAST_ADDRESS);
 		} catch (UnknownHostException e) {
 			// Multicast address by IP, should never happen!
-			Logger.getLogger("org.openjdk.jmc.jdp.common").log(Level.SEVERE, "Could not create default mulitcast address!", //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.getLogger("org.openjdk.jmc.jdp.common").log(Level.SEVERE, //$NON-NLS-1$
+					"Could not create default mulitcast address!", //$NON-NLS-1$
 					e);
 		}
 		DEFAULT_MULTICAST_ADDRESS = tmp;

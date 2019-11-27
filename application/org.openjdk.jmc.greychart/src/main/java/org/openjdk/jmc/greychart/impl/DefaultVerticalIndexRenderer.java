@@ -181,7 +181,7 @@ public class DefaultVerticalIndexRenderer extends AbstractSeriesRenderer impleme
 			fm = ctx.getFontMetrics();
 		}
 
-		String[] names = new String[0]; 
+		String[] names = new String[0];
 		// FIXME: Get series names
 //		String[] names = getTruncatedSeriesNames(m_maxStringLength);
 //		if (names == null) {

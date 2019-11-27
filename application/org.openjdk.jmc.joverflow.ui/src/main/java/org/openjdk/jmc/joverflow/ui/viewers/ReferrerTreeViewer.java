@@ -176,8 +176,8 @@ class ReferrerTreeViewer extends TableViewer {
 	}
 
 	private TableViewerColumn createTreeViewerColumn(
-			String label, Function<ReferrerItem, String> labelProvider, Function<ReferrerItem, String> toolTipProvider,
-			Comparator<ReferrerItem> comparator, boolean intent) {
+		String label, Function<ReferrerItem, String> labelProvider, Function<ReferrerItem, String> toolTipProvider,
+		Comparator<ReferrerItem> comparator, boolean intent) {
 		TableViewerColumn column = new TableViewerColumn(this, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText(label);
@@ -204,8 +204,7 @@ class ReferrerTreeViewer extends TableViewer {
 
 					Color fg = event.gc.getForeground();
 					event.gc.setForeground(referrerIconColor);
-					event.gc.drawPolygon(new int[] {
-							3 + dx, dy, //
+					event.gc.drawPolygon(new int[] {3 + dx, dy, //
 							6 + dx, 7 + dy, //
 							4 + dx, 7 + dy, //
 							4 + dx, 9 + dy, //
@@ -213,8 +212,7 @@ class ReferrerTreeViewer extends TableViewer {
 							8 + dx, 11 + dy, //
 							2 + dx, 11 + dy, //
 							2 + dx, 7 + dy, //
-							dx, 7 + dy
-					});
+							dx, 7 + dy});
 					event.gc.setForeground(fg);
 					dx += 11 + margin;
 				}

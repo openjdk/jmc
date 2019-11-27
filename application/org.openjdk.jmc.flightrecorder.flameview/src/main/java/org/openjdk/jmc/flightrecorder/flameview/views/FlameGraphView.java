@@ -96,9 +96,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 
 		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts
-		HTML_PAGE = String.format(fileContent("page.template"), 
-				fileContent(cssD3Flamegraph),
-				jsIeLibraries,
+		HTML_PAGE = String.format(fileContent("page.template"), fileContent(cssD3Flamegraph), jsIeLibraries,
 				jsD3Libraries);
 	}
 
@@ -262,21 +260,20 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return "\"" + key + "\": " + "\"" + value + "\"";
 	}
 
-	private static String loadLibraries(String... libs) {
-		if(libs == null || libs.length == 0) {
+	private static String loadLibraries(String ... libs) {
+		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
 			return Stream.of(libs).map(FlameGraphView::fileContent).collect(Collectors.joining("\n"));
 		}
 	}
 
-	private static String fileContent(String fileName){
+	private static String fileContent(String fileName) {
 		try {
 			return StringToolkit.readString(FlameGraphView.class.getClassLoader().getResourceAsStream(fileName));
 		} catch (IOException e) {
-			FlightRecorderUI.getDefault().getLogger()
-				.log(Level.WARNING, MessageFormat
-						.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage()));  	//$NON-NLS-1$
+			FlightRecorderUI.getDefault().getLogger().log(Level.WARNING,
+					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
 			return "";
 		}
 	}

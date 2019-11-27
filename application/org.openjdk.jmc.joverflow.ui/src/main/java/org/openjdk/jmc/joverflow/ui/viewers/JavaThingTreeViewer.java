@@ -112,8 +112,7 @@ public class JavaThingTreeViewer<T extends JavaThingItem> extends TreeViewer {
 					JavaObjectArray o = (JavaObjectArray) thing;
 					int i = 0;
 					for (JavaThing th : o.getElements()) {
-						items.add(new JavaThingItem(item.getLevel() + 1, "[" + (i++) + "]",
-								th)); //$NON-NLS-1$ //$NON-NLS-2$
+						items.add(new JavaThingItem(item.getLevel() + 1, "[" + (i++) + "]", th)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				} else if (thing instanceof JavaValueArray) {
 					JavaValueArray o = (JavaValueArray) thing;

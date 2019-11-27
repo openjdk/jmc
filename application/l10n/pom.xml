@@ -40,6 +40,11 @@
 	</parent>
 	<artifactId>missioncontrol.application.l10n</artifactId>
 	<packaging>pom</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<modules>
 		<module>org.openjdk.jmc.alert.ja</module>
 		<module>org.openjdk.jmc.alert.zh_CN</module>

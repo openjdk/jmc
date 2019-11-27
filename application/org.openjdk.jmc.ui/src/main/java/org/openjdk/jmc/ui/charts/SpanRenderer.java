@@ -52,7 +52,8 @@ public class SpanRenderer<T> implements IXDataRenderer {
 		return new SpanRenderer<>(series, colorProvider, true, null);
 	}
 
-	public static <T> IXDataRenderer withBoundaries(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, String description) {
+	public static <T> IXDataRenderer withBoundaries(
+		ISpanSeries<T> series, IColorProvider<? super T> colorProvider, String description) {
 		return new SpanRenderer<>(series, colorProvider, true, description);
 	}
 
@@ -60,7 +61,8 @@ public class SpanRenderer<T> implements IXDataRenderer {
 		return new SpanRenderer<>(series, colorProvider, false, null);
 	}
 
-	private SpanRenderer(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, boolean markBoundaries, String description) {
+	private SpanRenderer(ISpanSeries<T> series, IColorProvider<? super T> colorProvider, boolean markBoundaries,
+			String description) {
 		this.series = series;
 		this.colorProvider = colorProvider;
 		this.markBoundaries = markBoundaries;

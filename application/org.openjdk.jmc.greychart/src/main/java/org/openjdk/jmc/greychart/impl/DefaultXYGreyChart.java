@@ -168,7 +168,7 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		if (m_oldResolution == 0) {
 			m_oldResolution = (int) (Math.round(where.getWidth()));
 		}
-		if (hasDataProvider() && m_optimizingProvider != null) { 
+		if (hasDataProvider() && m_optimizingProvider != null) {
 			// FIXME: we shouldn't have to check the optimizing provider, it should go away if data provider is null
 			// FIXME: Resolution should account for y axis width
 			m_optimizingProvider.setResolution(m_oldResolution);
@@ -202,7 +202,7 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		total_right = sum(dataArray, YAxis.Position.RIGHT);
 		plot_w = Math.max(where.width - index_w - total_left - total_right, 0);
 
-		if (hasDataProvider() && m_optimizingProvider != null && m_oldResolution != plot_w) { 
+		if (hasDataProvider() && m_optimizingProvider != null && m_oldResolution != plot_w) {
 			// FIXME: we shouldn't have to check the optimizing provider, it should go away if data provider is null
 			m_optimizingProvider.setResolution(plot_w);
 			m_oldResolution = plot_w;

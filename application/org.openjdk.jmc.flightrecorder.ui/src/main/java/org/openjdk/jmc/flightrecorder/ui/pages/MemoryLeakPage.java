@@ -144,8 +144,10 @@ public class MemoryLeakPage extends AbstractDataPage {
 				if (rto.getTimestamp().compareTo(timeRange.getStart()) >= 0
 						&& rto.getTimestamp().compareTo(timeRange.getEnd()) <= 0) {
 					return true;
-				} else if (rto.getRootObject().getOldObjectSamples() != null && rto.getRootObject().getOldObjectSamples().size() > 1) {
-					for (Map.Entry<IQuantity, ReferenceTreeObject> rt : rto.getRootObject().getOldObjectSamples().entrySet()) {
+				} else if (rto.getRootObject().getOldObjectSamples() != null
+						&& rto.getRootObject().getOldObjectSamples().size() > 1) {
+					for (Map.Entry<IQuantity, ReferenceTreeObject> rt : rto.getRootObject().getOldObjectSamples()
+							.entrySet()) {
 						if (rt.getKey().compareTo(timeRange.getStart()) >= 0
 								&& rt.getKey().compareTo(timeRange.getEnd()) <= 0) {
 							return true;
@@ -276,7 +278,8 @@ public class MemoryLeakPage extends AbstractDataPage {
 						if (selectionRange == null) {
 							return object == null ? "" : Integer.toString(object.getObjectsKeptAliveCount()); //$NON-NLS-1$
 						} else {
-							return (object == null || selectionRange == null) ? "" : Integer.toString(model.getLeakCountInRange(selectionRange, object)); //$NON-NLS-1$
+							return (object == null || selectionRange == null) ? "" //$NON-NLS-1$
+									: Integer.toString(model.getLeakCountInRange(selectionRange, object));
 						}
 					};
 				}).style(SWT.RIGHT).comparator((o1, o2) -> {

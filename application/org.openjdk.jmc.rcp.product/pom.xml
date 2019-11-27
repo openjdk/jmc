@@ -40,9 +40,12 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.rcp.product</artifactId>
 	<packaging>eclipse-repository</packaging>
+
 	<properties>
 		<productName>JDK Mission Control</productName>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
+
 	<build>
 		<plugins>
 			<plugin>

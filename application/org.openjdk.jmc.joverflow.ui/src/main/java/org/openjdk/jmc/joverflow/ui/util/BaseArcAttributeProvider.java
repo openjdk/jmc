@@ -41,13 +41,9 @@ public class BaseArcAttributeProvider implements IArcAttributeProvider {
 	private final ListenerList<IArcAttributeProviderListener> mListenerList = new ListenerList<>();
 
 	private final Color[] COLORS = {new Color(Display.getDefault(), 169, 226, 0),
-			new Color(Display.getDefault(), 249, 217, 0),
-			new Color(Display.getDefault(), 34, 186, 217),
-			new Color(Display.getDefault(), 1, 129, 226),
-			new Color(Display.getDefault(), 47, 53, 127),
-			new Color(Display.getDefault(), 134, 0, 97),
-			new Color(Display.getDefault(), 198, 43, 0),
-	};
+			new Color(Display.getDefault(), 249, 217, 0), new Color(Display.getDefault(), 34, 186, 217),
+			new Color(Display.getDefault(), 1, 129, 226), new Color(Display.getDefault(), 47, 53, 127),
+			new Color(Display.getDefault(), 134, 0, 97), new Color(Display.getDefault(), 198, 43, 0),};
 
 	private int i = 0;
 

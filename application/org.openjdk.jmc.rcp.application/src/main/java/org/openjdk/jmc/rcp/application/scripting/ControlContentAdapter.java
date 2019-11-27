@@ -39,7 +39,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 
-
 // FIXME: clean up, we need to investigate further how this is supposed to work.
 public final class ControlContentAdapter implements IControlContentAdapter, IControlContentAdapter2 {
 	@Override

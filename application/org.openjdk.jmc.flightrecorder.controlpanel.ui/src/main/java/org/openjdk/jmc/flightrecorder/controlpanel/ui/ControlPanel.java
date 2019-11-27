@@ -123,9 +123,8 @@ public final class ControlPanel extends MCAbstractUIPlugin {
 				? suffixPart.substring(0, MAX_FILENAME_SUFFIX_LENGTH) : suffixPart;
 
 		String lastPathStr = getDefault().getPreferenceStore().getString(LAST_PATH);
-		IPath lastFolder = lastPathStr.isEmpty() ?
-				IDESupportToolkit.getDefaultRecordingFolder() :
-				Path.fromOSString(lastPathStr).removeLastSegments(1);
+		IPath lastFolder = lastPathStr.isEmpty() ? IDESupportToolkit.getDefaultRecordingFolder()
+				: Path.fromOSString(lastPathStr).removeLastSegments(1);
 
 		MCFile f = getDefaultRecordingFile(lastFolder, suffixPart);
 		int i = 1;

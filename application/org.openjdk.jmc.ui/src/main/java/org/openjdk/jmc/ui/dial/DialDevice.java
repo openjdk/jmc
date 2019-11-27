@@ -111,7 +111,7 @@ class DialDevice {
 				return new DialDevice(preferredUnit, bg, positive);
 			}
 		}
-		
+
 		/*
 		 * FIXME: Could not find a suitable unit, this shouldn't happen.
 		 * 

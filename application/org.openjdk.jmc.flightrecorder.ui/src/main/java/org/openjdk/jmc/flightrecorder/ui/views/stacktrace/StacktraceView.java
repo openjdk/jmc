@@ -641,10 +641,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
-			if(items == null) {
+			if (items == null) {
 				setItems(ItemCollectionToolkit.build(Stream.empty()));
-			}
-			else if (!items.equals(itemsToShow)) {
+			} else if (!items.equals(itemsToShow)) {
 				setItems(items);
 			}
 		}
@@ -785,7 +784,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				return plugin.getImage(
 						threadRootAtTop ? ImageConstants.ICON_ARROW_FORK3_DOWN : ImageConstants.ICON_ARROW_FORK3_UP);
 			} else if (isLastFrame(frame)) {
-				return plugin.getImage(threadRootAtTop ? ImageConstants.ICON_ARROW_DOWN_END : ImageConstants.ICON_ARROW_UP_END);
+				return plugin.getImage(
+						threadRootAtTop ? ImageConstants.ICON_ARROW_DOWN_END : ImageConstants.ICON_ARROW_UP_END);
 			} else {
 				return plugin.getImage(threadRootAtTop ? ImageConstants.ICON_ARROW_DOWN : ImageConstants.ICON_ARROW_UP);
 			}
@@ -818,7 +818,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private static boolean isFirstInBranchWithSiblings(StacktraceFrame frame) {
 		return frame.getBranch().getFirstFrame() == frame && frame.getBranch().getParentFork().getBranchCount() > 1;
 	}
-	
+
 	private static boolean isLastFrame(StacktraceFrame frame) {
 		return frame.getBranch().getLastFrame() == frame && frame.getBranch().getEndFork().getBranchCount() == 0;
 	}

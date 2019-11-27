@@ -35,7 +35,7 @@ package org.openjdk.jmc.rjmx.services.internal;
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
 
 public class Jdk11CommercialFeaturesService implements ICommercialFeaturesService {
-	
+
 	@Override
 	public boolean isCommercialFeaturesEnabled() {
 		return true;
