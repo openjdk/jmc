@@ -5,6 +5,7 @@ mvn p2:site
 start /B cmd /C "mvn jetty:run"
 echo "======== Entering core ======================"
 cd ..\..\core
+call mvn install
 echo "======== Running spotless for core =========="
 mvn spotless:check
 echo "======== Running spotless for application ==="
