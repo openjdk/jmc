@@ -137,8 +137,8 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 		for (MBeanNotificationInfo notificationInfo : info.getNotifications()) {
 			if (notificationInfo.getName().equals("java.management.memory.collection.threshold.exceeded")) {
 				assertTrue("Failed to shadow description", notificationInfo.getDescription().contains("shadow"));
-				assertTrue("Got the wrong type:" + notificationInfo.getNotifTypes()[0], "int".equals(notificationInfo
-						.getNotifTypes()[0]));
+				assertTrue("Got the wrong type:" + notificationInfo.getNotifTypes()[0],
+						"int".equals(notificationInfo.getNotifTypes()[0]));
 			} else {
 				assertTrue("Should NOT contain shadow!", !notificationInfo.getDescription().contains("shadow"));
 				assertTrue("Should not be int!", !"int".equals(notificationInfo.getNotifTypes()[0]));

@@ -75,7 +75,7 @@ public class MCVersion {
 		CHANGE_ID = getVersionProperty(versionProperties, PROPERTY_CHANGE_ID, DEFAULT_CHANGE_ID);
 		DATE = getVersionProperty(versionProperties, PROPERTY_DATE, DEFAULT_DATE);
 	}
-	
+
 	private static String getVersionProperty(Properties versionProperties, String propertyName, String defaultValue) {
 		if (versionProperties != null) {
 			String propertyValue = versionProperties.getProperty(propertyName);

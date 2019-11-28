@@ -183,7 +183,7 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 		MCTree resultTree = MCTree.getByName(RESULT_TREE_NAME);
 		resultTree.select("threadName");
 	}
-	
+
 	/**
 	 * Verify that the Mbean Browser page Notifications works as expected
 	 */
@@ -407,7 +407,8 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 		DisplayToolkit.safeSyncExec(() -> {
 			textFontHolder[0] = JFaceResources.getFontRegistry().getItalic(JFaceResources.TEXT_FONT);
 		});
-		FontData[] expectedFontData = FontDescriptor.createFrom(textFontHolder[0]).setHeight(DEFAULT_FONT_HEIGHT).getFontData();
+		FontData[] expectedFontData = FontDescriptor.createFrom(textFontHolder[0]).setHeight(DEFAULT_FONT_HEIGHT)
+				.getFontData();
 		Assert.assertArrayEquals(expectedFontData, valueFont.getFontData());
 	}
 

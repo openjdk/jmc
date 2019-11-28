@@ -231,7 +231,8 @@ public class JavaApplicationPage extends AbstractDataPage {
 			addResultActions(form);
 			tableFilterComponent.loadState(state.getChild(METHOD_PROFILING_TABLE_FILTER));
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false), Messages.ThreadsPage_EDIT_LANES,
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false),
+							Messages.ThreadsPage_EDIT_LANES,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager().add(new Separator());
 			OrientationAction.installActions(form, sash);

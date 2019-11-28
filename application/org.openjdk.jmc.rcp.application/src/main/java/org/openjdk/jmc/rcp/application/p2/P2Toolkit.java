@@ -48,7 +48,6 @@ import org.openjdk.jmc.rcp.application.Messages;
 
 /**
  * Toolkit for managing P2 repositories.
- * 
  */
 @SuppressWarnings("restriction")
 public final class P2Toolkit {
@@ -74,7 +73,9 @@ public final class P2Toolkit {
 		IMetadataRepositoryManager metadataManager = ProvUI.getMetadataRepositoryManager(ui.getSession());
 		metadataManager.addRepository(repoUri);
 
-		metadataManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME, Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
-		artifactManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME, Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
+		metadataManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME,
+				Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
+		artifactManager.setRepositoryProperty(repoUri, IRepository.PROP_NICKNAME,
+				Messages.JMC_RCP_P2_UPDATESITE_NICK_NAME);
 	}
 }

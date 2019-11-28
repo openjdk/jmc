@@ -100,7 +100,7 @@ public class JfxPulseDurationRule implements IRule {
 					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING,
 							UnitLookup.PERCENT_UNITY.quantity(ratioOfLongPhases).displayUsing(IDisplayable.AUTO),
 							targetPhaseTime.displayUsing(IDisplayable.AUTO)),
-					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING_LONG, 
+					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING_LONG,
 							targetFramerate.displayUsing(IDisplayable.AUTO)));
 		}
 		return new Result(this, 0, Messages.JfxPulseDurationRule_OK);

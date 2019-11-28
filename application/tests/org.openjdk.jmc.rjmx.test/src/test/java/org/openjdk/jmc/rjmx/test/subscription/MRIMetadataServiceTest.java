@@ -67,8 +67,8 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 		@SuppressWarnings("nls")
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"SystemCpuLoad"));
+		IMRIMetadata info = service
+				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		assertNotNull(info);
 		assertNotNull(info.getMRI());
 		assertNotNull(info.getValueType());
@@ -80,8 +80,8 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 	public void testGetMetadata() throws Exception {
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"SystemCpuLoad"));
+		IMRIMetadata info = service
+				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		assertNotNull(info);
 
 		String description = info.getDescription();
@@ -125,10 +125,10 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 				MemoryUsage.class);
 		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed"),
 				Long.TYPE);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "JMImplementation:type=MBeanServerDelegate",
-				"ImplementationVendor"), String.class);
-		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "InputArguments"),
-				List.class);
+		evaluateAttributeType(service,
+				new MRI(Type.ATTRIBUTE, "JMImplementation:type=MBeanServerDelegate", "ImplementationVendor"),
+				String.class);
+		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "InputArguments"), List.class);
 		evaluateAttributeType(service, new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "SystemProperties"),
 				Map.class);
 		handle.close();
@@ -162,8 +162,8 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 	public void testSetMetadata() throws Exception {
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem",
-				"SystemCpuLoad"));
+		IMRIMetadata info = service
+				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=OperatingSystem", "SystemCpuLoad"));
 		assertNotNull(info);
 		service.setMetadata(info.getMRI(), "testgegga", "Oh, testgegga!");
 		String testGegga = (String) service.getMetadata(info.getMRI(), "testgegga");
@@ -194,8 +194,7 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 	public void testOverrideDefultMetadata() throws Exception {
 		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
 		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory",
-				"HeapMemoryUsage/committed");
+		MRI mri = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/committed");
 		IMRIMetadata info = service.getMetadata(mri);
 		String description = info.getDescription();
 		String newDescription = "[ja]" + description;

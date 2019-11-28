@@ -40,7 +40,8 @@ import java.util.Map;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 
 /**
- * Builder used to construct a list of {@code ReferrerItem} that represents a tree with only a single branching level
+ * Builder used to construct a list of {@code ReferrerItem} that represents a tree with only a
+ * single branching level
  */
 public class ReferrerItemBuilder {
 
@@ -72,7 +73,8 @@ public class ReferrerItemBuilder {
 					// Create a new branch item with the currently common aggregate values
 					commonChain = commonChain.subList(0, commonDepth);
 					itemsAtBranchingLevel.clear();
-					itemsAtBranchingLevel.put(referrerName, new ReferrerItem(commonChain, referrerName, commonMemory, commonOverhead, commonCount, true));
+					itemsAtBranchingLevel.put(referrerName, new ReferrerItem(commonChain, referrerName, commonMemory,
+							commonOverhead, commonCount, true));
 					break;
 				}
 				ref = ref.getReferer();
@@ -106,7 +108,8 @@ public class ReferrerItemBuilder {
 		List<ReferrerItem> items = new ArrayList<>();
 		int commonDepth = 0;
 		for (String r : commonChain) {
-			items.add(new ReferrerItem(commonChain.subList(0, commonDepth), r, commonMemory, commonOverhead, commonCount, false));
+			items.add(new ReferrerItem(commonChain.subList(0, commonDepth), r, commonMemory, commonOverhead,
+					commonCount, false));
 			commonDepth++;
 		}
 		items.addAll(itemsAtBranchingLevel.values());

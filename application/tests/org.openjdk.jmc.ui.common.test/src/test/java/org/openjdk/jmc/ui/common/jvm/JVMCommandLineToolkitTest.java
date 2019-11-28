@@ -58,8 +58,8 @@ public class JVMCommandLineToolkitTest {
 
 	@Test
 	public void testJarAndMoreFlags() {
-		assertEquals("/path1/path2/mc.jar", JVMCommandLineToolkit
-				.getMainClassOrJar("/path1/path2/mc.jar -consoleLog -data /work/path3"));
+		assertEquals("/path1/path2/mc.jar",
+				JVMCommandLineToolkit.getMainClassOrJar("/path1/path2/mc.jar -consoleLog -data /work/path3"));
 	}
 
 	@Test
@@ -105,17 +105,15 @@ public class JVMCommandLineToolkitTest {
 
 	@Test
 	public void testJarFlag() {
-		assertEquals("C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4",
-				JVMCommandLineToolkit.getJavaCommandLine(
-						"-jar C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4"));
+		assertEquals("C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4", JVMCommandLineToolkit
+				.getJavaCommandLine("-jar C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4"));
 	}
 
 	@Test
 	public void testClassPathJarAndFlags() {
 		// not really a valid cmdline
-		assertEquals("C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4",
-				JVMCommandLineToolkit.getJavaCommandLine(
-						"-classpath application.jar -jar C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4"));
+		assertEquals("C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4", JVMCommandLineToolkit.getJavaCommandLine(
+				"-classpath application.jar -jar C:/path1/path2/mc.jar -consoleLog -data C:/path3/path4"));
 	}
 
 	@Test

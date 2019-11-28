@@ -574,18 +574,18 @@ public class DataPageToolkit {
 	}
 
 	public static ItemRow buildSizeHistogram(
-		String title, String description, IItemCollection items, IAggregator<IQuantity, ?> a, Color color, IAttribute<IQuantity> attribute) {
-		IQuantitySeries<IQuantity[]> allocationSeries = BucketBuilder.aggregatorSeries(items, a,
-				JdkAttributes.IO_SIZE);
+		String title, String description, IItemCollection items, IAggregator<IQuantity, ?> a, Color color,
+		IAttribute<IQuantity> attribute) {
+		IQuantitySeries<IQuantity[]> allocationSeries = BucketBuilder.aggregatorSeries(items, a, JdkAttributes.IO_SIZE);
 		XYDataRenderer renderer = new XYDataRenderer(getKindOfQuantity(a).getDefaultUnit().quantity(0), title,
 				description);
 		renderer.addBarChart(a.getName(), allocationSeries, color);
 		return new ItemRow(title, description, renderer, items);
 	}
 
-	public static IRange<IQuantity> buildSizeRange(IItemCollection items, boolean isSocket){
+	public static IRange<IQuantity> buildSizeRange(IItemCollection items, boolean isSocket) {
 		IQuantity end = null;
-		if(isSocket) {
+		if (isSocket) {
 			end = QuantitiesToolkit.maxPresent(items.getAggregate(JdkAggregators.SOCKET_READ_LARGEST),
 					items.getAggregate(JdkAggregators.SOCKET_WRITE_LARGEST));
 		} else {
@@ -861,15 +861,15 @@ public class DataPageToolkit {
 						manager.remove(Messages.FILTER_NO_ATTRIBUTE_AVAILABLE);
 					}
 					attributes.stream().distinct().sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
-						.forEach(attr -> {
-							addAttributeValuePredicate.add(new Action(attr.getName()) {
-								@Override
-								public void run() {
-									IItemFilter filter = createDefaultFilter(items, attr);
-									editor.addRoot(filter);
-								}
+							.forEach(attr -> {
+								addAttributeValuePredicate.add(new Action(attr.getName()) {
+									@Override
+									public void run() {
+										IItemFilter filter = createDefaultFilter(items, attr);
+										editor.addRoot(filter);
+									}
+								});
 							});
-						});
 				} else {
 					manager.add(disabledAction(Messages.FILTER_NO_ATTRIBUTE_AVAILABLE));
 				}
@@ -908,10 +908,8 @@ public class DataPageToolkit {
 						? JdkAttributes.CLASS_DEFINING_CLASSLOADER_STRING : a)
 				.map(a -> a.equals(JdkAttributes.CLASS_INITIATING_CLASSLOADER)
 						? JdkAttributes.CLASS_INITIATING_CLASSLOADER_STRING : a)
-				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER)
-						? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
-				.map(a -> a.equals(JdkAttributes.CLASSLOADER)
-						? JdkAttributes.CLASSLOADER_STRING : a)
+				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER) ? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
+				.map(a -> a.equals(JdkAttributes.CLASSLOADER) ? JdkAttributes.CLASSLOADER_STRING : a)
 				.filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
 						|| (a.getContentType().getPersister() != null))
 				.distinct();

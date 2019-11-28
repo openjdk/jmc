@@ -95,7 +95,8 @@ public class MCTabFolder extends MCJemmyBase {
 	}
 
 	/**
-	 * Attempts to find a CTabFolder of the given name and returns a {@link @McTabFolder} representing it.
+	 * Attempts to find a CTabFolder of the given name and returns a {@link @McTabFolder}
+	 * representing it.
 	 *
 	 * @param shell
 	 *            the shell wrap to find the folder in
@@ -125,8 +126,8 @@ public class MCTabFolder extends MCJemmyBase {
 	}
 
 	/**
-	 * Attempts to find a CTabFolder with the given child tab folder name and returns a {@link @McTabFolder}
-	 * representing it.
+	 * Attempts to find a CTabFolder with the given child tab folder name and returns a
+	 * {@link @McTabFolder} representing it.
 	 *
 	 * @param shell
 	 *            the shell wrap to find the folder in

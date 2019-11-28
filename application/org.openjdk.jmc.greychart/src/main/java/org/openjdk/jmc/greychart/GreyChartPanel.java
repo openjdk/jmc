@@ -58,8 +58,8 @@ public class GreyChartPanel extends JComponent implements ChartChangeListener {
 	private static final String PROPERTY_KEY_SHOWRENDERINGTIME = "org.openjdk.jmc.greychart.showrenderingtime"; //$NON-NLS-1$
 	static final long serialVersionUID = 0x0001;
 	/**
-	 * DEBUG flag initialized from the system property org.openjdk.jmc.greychart.debug on startup. Will
-	 * cause rendering to take place directly on screen.
+	 * DEBUG flag initialized from the system property org.openjdk.jmc.greychart.debug on startup.
+	 * Will cause rendering to take place directly on screen.
 	 */
 	public final static boolean DEBUG;
 	private final static boolean SHOW_RENDERING_TIME;
@@ -154,7 +154,7 @@ public class GreyChartPanel extends JComponent implements ChartChangeListener {
 				 * properties of the graphics context when exiting its rendering function. We might
 				 * want to do Graphics2D g2d = (Graphics2D) g.create(); and finally dispose of the
 				 * graphics.
-				 */ 
+				 */
 				m_lastTargetArea.width = getWidth();
 				m_lastTargetArea.height = getHeight();
 				m_chart.render((Graphics2D) g, m_lastTargetArea);

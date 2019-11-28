@@ -380,7 +380,7 @@ public class MCDialog extends MCJemmyBase {
 	public MCTable getTable(int index) {
 		return MCTable.getAll(this).get(index);
 	}
-	
+
 	/**
 	 * Returns the first {@link MCTree} in the SWT hierarchy for this {@link MCDialog}
 	 *
@@ -398,7 +398,7 @@ public class MCDialog extends MCJemmyBase {
 	public List<MCTable> getAllTables() {
 		return MCTable.getAll(getDialogShell());
 	}
-	
+
 	private static boolean waitForClose(String dialogTitle, boolean waitForIdle, long maxWaitMs) {
 		long lookupEndTime = System.currentTimeMillis() + maxWaitMs;
 		do {

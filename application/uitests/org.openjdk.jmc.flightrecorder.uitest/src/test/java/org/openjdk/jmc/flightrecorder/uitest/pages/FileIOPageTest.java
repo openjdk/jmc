@@ -53,15 +53,17 @@ public class FileIOPageTest extends IOPageTestBase {
 	private static final String WRITE_COUNT_COL = JdkAggregators.FILE_WRITE_COUNT.getName();
 	private static final String RECORDING = "io_test.jfr";
 
+	// @formatter:off
 	private static final long[][] TABLE_VALUES = {
-		{  14560, 9212, 11848, 4653 },
-		{  14567, 9212, 41055, 3533 },
-		{ 251007,  223, 41055, 3533 },
-		{ 251007,  223, 43519,    6 },
-		{ 251007,  223, 43519,    6 },
-		{ 251007,  223, 43519,    6 },
-		{ 251007,  223, 43519,    6 },
+			{14560, 9212, 11848, 4653}, 
+			{14567, 9212, 41055, 3533},
+			{251007, 223, 41055, 3533}, 
+			{251007, 223, 43519, 6}, 
+			{251007, 223, 43519, 6}, 
+			{251007, 223, 43519, 6},
+			{251007, 223, 43519, 6}
 	};
+	// @formatter:on
 
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {

@@ -43,7 +43,6 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxPersisted;
 
 /**
  * Class for testing JMX Data Persistence functionality
- *
  */
 public class PersistenceTest extends MCJemmyTestBase {
 	private static final String DEFAULT_ATTR = "JVM CPU Usage";

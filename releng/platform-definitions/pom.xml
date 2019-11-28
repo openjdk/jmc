@@ -40,6 +40,11 @@
 	</parent>
 	<artifactId>platform-definitions</artifactId>
 	<packaging>pom</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<modules>
 		<!-- Photon will be deprecated eventually - don't use it! -->
 		<module>platform-definition-photon</module>

@@ -40,6 +40,11 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.controlpanel.ui.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>

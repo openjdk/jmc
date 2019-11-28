@@ -53,16 +53,18 @@ public class SocketIOPageTest extends IOPageTestBase {
 	private static final String WRITE_COUNT_COL = JdkAggregators.SOCKET_WRITE_COUNT.getName();
 	private static final String RECORDING = "io_test.jfr";
 
+	// @formatter:off
 	private static final long[][] TABLE_VALUES = {
-		{      3218, 209,    4624, 373 },
-		{ 998768639,  22,  611327,  38 },
-		{ 999292927,   7, 1814527,   4 },
-		{ 999817215,   1, 4288511,   1 },
-		{ 999817215,   1, 4288511,   1 },
-		{ 999817215,   1, 4288511,   1 },
-		{ 999817215,   1, 4288511,   1 },
+			{3218, 209, 4624, 373},
+			{998768639, 22, 611327, 38},
+			{999292927, 7, 1814527, 4},
+			{999817215, 1, 4288511, 1},
+			{999817215, 1, 4288511, 1},
+			{999817215, 1, 4288511, 1},
+			{999817215, 1, 4288511, 1}
 	};
-
+	// @formatter:on
+	
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {
 		@Override

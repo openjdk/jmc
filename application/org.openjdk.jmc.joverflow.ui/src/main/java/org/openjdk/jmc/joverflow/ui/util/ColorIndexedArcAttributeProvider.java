@@ -81,7 +81,7 @@ public class ColorIndexedArcAttributeProvider extends BaseArcAttributeProvider {
 		if ((double) getWeight(element) / (double) totalWeight * 360f < minimumAngle) {
 			color = COLOR_GRAY;
 		} else {
-			color =  super.getColor(element);
+			color = super.getColor(element);
 		}
 
 		colors.put(element, color);

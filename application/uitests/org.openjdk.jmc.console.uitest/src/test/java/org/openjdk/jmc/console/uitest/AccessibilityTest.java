@@ -48,8 +48,8 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable.TableRow;
 
 /**
- * Basic class for testing that accessibility for the JMX Console can be turned on and that graphs are
- * presented as accessible tables
+ * Basic class for testing that accessibility for the JMX Console can be turned on and that graphs
+ * are presented as accessible tables
  */
 public class AccessibilityTest extends MCJemmyTestBase {
 	private final static String CELL_REGEXP = "NaN|[0-9]*[\\.]*[0-9]+.*[%|B]?";

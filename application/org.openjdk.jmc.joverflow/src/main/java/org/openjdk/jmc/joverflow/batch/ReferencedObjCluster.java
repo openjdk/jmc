@@ -52,8 +52,8 @@ import org.openjdk.jmc.joverflow.util.SmallSet;
  * duplicated strings). One can mentally visualize a cluster of, say, 100 empty HashMaps, reachable
  * from a GC root via a chain of references as something like:
  * <p>
- * GC root1 -&gt; A.b -&gt; {ArrayList} -&gt; C.d -&gt; 100 empty HashMaps, 1000 bytes overhead, 2 non-empty
- * HashMaps
+ * GC root1 -&gt; A.b -&gt; {ArrayList} -&gt; C.d -&gt; 100 empty HashMaps, 1000 bytes overhead, 2
+ * non-empty HashMaps
  * <p>
  * Note that the reference chain may be full, as above, or, for convenience, the tool may provide
  * another "view" for problematic objects, where clusters are aggregated by the nearest data field.

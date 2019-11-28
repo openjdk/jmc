@@ -203,7 +203,7 @@ public class AlertDialog extends TitleAreaDialog {
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		m_text = createMessage(sash);
 		m_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		sash.setWeights(new int[] {75,25});
+		sash.setWeights(new int[] {75, 25});
 		sash.setLayout(new GridLayout());
 		return dialogArea;
 	}

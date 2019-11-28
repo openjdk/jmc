@@ -167,7 +167,7 @@ public class JfxPage extends AbstractDataPage {
 			Form form = DataPageToolkit.createForm(parent, toolkit, name, icon);
 
 			JavaFxEventAvailability availability = JfxVersionUtil.getAvailability(getItems());
-			
+
 			mainSash = new SashForm(form.getBody(), SWT.VERTICAL | SWT.SMOOTH);
 			toolkit.adapt(mainSash);
 			tableSash = new SashForm(mainSash, SWT.HORIZONTAL | SWT.SMOOTH);
@@ -176,7 +176,8 @@ public class JfxPage extends AbstractDataPage {
 			Section phases = CompositeToolkit.createSection(tableSash, toolkit, Messages.JfxPage_PHASES);
 			phasesSash = new SashForm(phases, SWT.HORIZONTAL | SWT.SMOOTH);
 			phases.setClient(phasesSash);
-			pulsesTable = BY_PULSE_HISTOGRAM.buildWithoutBorder(phasesSash, JfxVersionUtil.getPulseIdAttribute(availability),
+			pulsesTable = BY_PULSE_HISTOGRAM.buildWithoutBorder(phasesSash,
+					JfxVersionUtil.getPulseIdAttribute(availability),
 					getPulseTableSettings(state.getChild(PULSES_TABLE)));
 			pulsesFilter = FilterComponent.createFilterComponent(pulsesTable, pulsesTableFilter,
 					getItems().apply(JfxConstants.JFX_PULSE_FILTER), pageContainer.getSelectionStore()::getSelections,
@@ -191,7 +192,7 @@ public class JfxPage extends AbstractDataPage {
 			phaseList.addColumn(JfxVersionUtil.getPhaseNameAttribute(availability));
 			phaseList.addColumn(JfrAttributes.EVENT_THREAD);
 			phaseList.addColumn(JfxVersionUtil.getPulseIdAttribute(availability));
-			
+
 			phasesTable = phaseList.buildWithoutBorder(phasesSash, getPhaseListSettings(state.getChild(PHASES_TABLE)));
 			phasesFilter = FilterComponent.createFilterComponent(phasesTable, phasesTableFilter,
 					getItems().apply(JfxConstants.JFX_PULSE_FILTER), pageContainer.getSelectionStore()::getSelections,
@@ -376,7 +377,8 @@ public class JfxPage extends AbstractDataPage {
 		// Attribute only used for looking up color and name information here
 		IXDataRenderer phaseRenderer = DataPageToolkit.buildSpanRenderer(items,
 				DataPageToolkit.getAttributeValueColor(JfxConstants.ATTRIBUTE_PHASE_NAME_12));
-		return new ItemRow(String.valueOf(threadName), JfxConstants.ATTRIBUTE_PHASE_NAME_12.getDescription(), phaseRenderer, items);
+		return new ItemRow(String.valueOf(threadName), JfxConstants.ATTRIBUTE_PHASE_NAME_12.getDescription(),
+				phaseRenderer, items);
 	}
 
 	private static TableSettings getPulseTableSettings(IState state) {

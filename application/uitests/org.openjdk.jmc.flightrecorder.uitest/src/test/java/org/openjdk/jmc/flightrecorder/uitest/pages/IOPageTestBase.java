@@ -51,9 +51,10 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable.TableRow;
 public abstract class IOPageTestBase extends MCJemmyTestBase {
 
 	private static final String PERCENTILE_COL = Messages.DurationPercentileTable_PERCENTILE_COL_NAME;
-	private static final double[] PERCENTILES = { 0.0, 90.0, 99.0, 99.9, 99.99, 99.999, 100.0 };
+	private static final double[] PERCENTILES = {0.0, 90.0, 99.0, 99.9, 99.99, 99.999, 100.0};
 
-	protected void checkPercentileTable(String readCol, String readCountCol, String writeCol, String writeCountCol, long[][] tableValues) {
+	protected void checkPercentileTable(
+		String readCol, String readCountCol, String writeCol, String writeCountCol, long[][] tableValues) {
 		MCTable table = MCTable.getByName(DurationPercentileTable.TABLE_NAME);
 		List<TableRow> rows = table.getRows();
 		assertEquals(PERCENTILES.length, rows.size());

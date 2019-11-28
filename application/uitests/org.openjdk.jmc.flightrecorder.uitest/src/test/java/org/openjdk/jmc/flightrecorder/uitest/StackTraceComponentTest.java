@@ -286,7 +286,7 @@ public class StackTraceComponentTest extends MCJemmyTestBase {
 				frame++;
 			}
 		}
-		
+
 		Assert.assertTrue("Could not find suitable frame to analyze. Recording not suitable for this test", found);
 
 		// All hidden

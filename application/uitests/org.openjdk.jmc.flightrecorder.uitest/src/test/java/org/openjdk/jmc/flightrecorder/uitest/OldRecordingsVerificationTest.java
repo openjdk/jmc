@@ -83,7 +83,8 @@ public class OldRecordingsVerificationTest extends MCJemmyTestBase {
 	};
 
 	/**
-	 * Opens the recording and verifies the number of unique events (verifying the parsing of jfr metadata)
+	 * Opens the recording and verifies the number of unique events (verifying the parsing of jfr
+	 * metadata)
 	 */
 	@Test
 	public void verifyRecording() {

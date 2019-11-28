@@ -59,6 +59,7 @@
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<profiles>
 		<profile>

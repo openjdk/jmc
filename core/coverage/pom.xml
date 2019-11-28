@@ -110,8 +110,8 @@
 							<goal>report-aggregate</goal>
 						</goals>
 						<configuration>
-                                                        <outputDirectory>${basedir}/coverage-report</outputDirectory>
-                                                </configuration>
+							<outputDirectory>${basedir}/coverage-report</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

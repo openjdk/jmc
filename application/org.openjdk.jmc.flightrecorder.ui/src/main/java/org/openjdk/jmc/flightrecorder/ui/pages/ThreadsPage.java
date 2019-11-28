@@ -176,7 +176,8 @@ public class ThreadsPage extends AbstractDataPage {
 			lanes.updateContextMenu(mm, false);
 
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false), Messages.ThreadsPage_EDIT_LANES,
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mm, false),
+							Messages.ThreadsPage_EDIT_LANES,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
@@ -263,6 +264,7 @@ public class ThreadsPage extends AbstractDataPage {
 		private void setHideThreadActionEnablement(Boolean enabled) {
 			this.hideThreadAction.setEnabled(enabled);
 		}
+
 		private void setResetChartActionEnablement(Boolean enabled) {
 			this.resetChartAction.setEnabled(enabled);
 		}

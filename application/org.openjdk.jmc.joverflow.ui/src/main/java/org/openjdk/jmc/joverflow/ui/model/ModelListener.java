@@ -39,7 +39,8 @@ import org.openjdk.jmc.joverflow.support.RefChainElement;
  */
 public interface ModelListener {
 	/**
-	 * For each model update, this method is called with every object included in the model (that is not filtered out)
+	 * For each model update, this method is called with every object included in the model (that is
+	 * not filtered out)
 	 * 
 	 * @param cluster
 	 *            The object cluster
@@ -49,8 +50,8 @@ public interface ModelListener {
 	void include(ObjectCluster cluster, RefChainElement referenceChain);
 
 	/**
-	 * Called once for each model update after {@code include} has been called with every {@code ObjectCluster} in the
-	 * model
+	 * Called once for each model update after {@code include} has been called with every
+	 * {@code ObjectCluster} in the model
 	 */
 	void allIncluded();
 }

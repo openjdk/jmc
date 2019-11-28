@@ -149,7 +149,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 	}
 
 	@Override
-	public void recordDuplicateString(JavaObject obj, String val, int implInclusiveSize, int ovhd, boolean hasDupCharArray, RefChainElement referer) {
+	public void recordDuplicateString(
+		JavaObject obj, String val, int implInclusiveSize, int ovhd, boolean hasDupCharArray, RefChainElement referer) {
 		String cn = obj.getClazz().getHumanFriendlyName();
 		ObjectClusterImpl p = getObjectCluster(referer, ClusterType.DUPLICATE_STRING, cn, obj.valueAsString());
 		p.addObject(obj.getGlobalObjectIndex(), implInclusiveSize, ovhd);
@@ -159,7 +160,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 	}
 
 	@Override
-	public void recordGoodCollection(JavaLazyReadObject obj, CollectionInstanceDescriptor colDesc, RefChainElement referer) {
+	public void recordGoodCollection(
+		JavaLazyReadObject obj, CollectionInstanceDescriptor colDesc, RefChainElement referer) {
 		String cn = obj.getClazz().getHumanFriendlyName();
 		ObjectClusterImpl p = getObjectCluster(referer, ClusterType.ALL_OBJECTS, cn, null);
 		p.addObject(obj.getGlobalObjectIndex(), colDesc.getImplSize(), 0);
@@ -188,7 +190,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 
 	@Override
 	public void recordProblematicCollection(
-		JavaLazyReadObject obj, CollectionInstanceDescriptor colDesc, Constants.ProblemKind ovhdKind, int ovhd, RefChainElement referer) {
+		JavaLazyReadObject obj, CollectionInstanceDescriptor colDesc, Constants.ProblemKind ovhdKind, int ovhd,
+		RefChainElement referer) {
 		String cn = obj.getClazz().getHumanFriendlyName();
 		ObjectClusterImpl p = getObjectCluster(referer, ClusterType.fromProblemKind(ovhdKind), cn, null);
 		p.addObject(obj.getGlobalObjectIndex(), colDesc.getImplSize(), ovhd);
@@ -199,7 +202,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 
 	@Override
 	public void recordWeakHashMapWithBackRefs(
-		JavaObject obj, CollectionInstanceDescriptor colDesc, int ovhd, String valueTypeAndFieldSample, RefChainElement referer) {
+		JavaObject obj, CollectionInstanceDescriptor colDesc, int ovhd, String valueTypeAndFieldSample,
+		RefChainElement referer) {
 		String cn = obj.getClazz().getHumanFriendlyName();
 		ObjectClusterImpl p = getObjectCluster(referer, ClusterType.WEAK_MAP_WITH_BACK_REFS, cn, null);
 		p.addObject(obj.getGlobalObjectIndex(), obj.getSize(), ovhd);
@@ -210,7 +214,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 
 	private Collection<ReferenceChain> buildModel() {
 		ArrayList<ReferenceChain> sums = new ArrayList<>();
-		Iterator<Entry<RefChainElement, Map<ClusterType, Map<String, ObjectClusterImpl>>>> clusterIterator = clusterMap.entrySet().iterator();
+		Iterator<Entry<RefChainElement, Map<ClusterType, Map<String, ObjectClusterImpl>>>> clusterIterator = clusterMap
+				.entrySet().iterator();
 		while (clusterIterator.hasNext()) {
 			Entry<RefChainElement, Map<ClusterType, Map<String, ObjectClusterImpl>>> e = clusterIterator.next();
 			ReferenceChain summary = new ReferenceChain(e.getKey());
@@ -229,8 +234,10 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 		return sums;
 	}
 
-	private ObjectClusterImpl getObjectCluster(RefChainElement referrer, ClusterType type, String className, String qualifier) {
-		Map<ClusterType, Map<String, ObjectClusterImpl>> m1 = clusterMap.computeIfAbsent(referrer, k -> new HashMap<>());
+	private ObjectClusterImpl getObjectCluster(
+		RefChainElement referrer, ClusterType type, String className, String qualifier) {
+		Map<ClusterType, Map<String, ObjectClusterImpl>> m1 = clusterMap.computeIfAbsent(referrer,
+				k -> new HashMap<>());
 		Map<String, ObjectClusterImpl> m2 = m1.computeIfAbsent(type, k -> new HashMap<>());
 		String id = StringInterner.internString(className + "|" + qualifier);
 		ObjectClusterImpl p = m2.get(id);
@@ -249,7 +256,8 @@ public class ModelLoader implements ProblemRecorder, Runnable {
 	}
 
 	private synchronized double getProgress() {
-		return (reader == null ? 0 : reader.getProgressPercentage() / 200.0) + (calculator == null ? 0 : calculator.getProgressPercentage() / 200.0);
+		return (reader == null ? 0 : reader.getProgressPercentage() / 200.0)
+				+ (calculator == null ? 0 : calculator.getProgressPercentage() / 200.0);
 	}
 
 	private synchronized void setCalculator(StandardStatsCalculator dsc) {

@@ -116,7 +116,7 @@ public class LocalJVMToolkit {
 	static final String JVM_ARGS_PROP = "sun.jvm.args"; //$NON-NLS-1$
 	static final String JVM_FLAGS_PROP = "sun.jvm.flags"; //$NON-NLS-1$
 	static final String JAVA_COMMAND_PROP = "sun.java.command"; //$NON-NLS-1$
-	
+
 	private static final int TIMEOUT_THRESHOLD = 5;
 
 	private LocalJVMToolkit() {
@@ -260,13 +260,15 @@ public class LocalJVMToolkit {
 					} catch (Exception x) {
 						// ignore
 					}
-					connDesc = createDescriptor(name, jvmArgs, vmid, connectable, type, jvmArch, address, version, isDebug);
+					connDesc = createDescriptor(name, jvmArgs, vmid, connectable, type, jvmArch, address, version,
+							isDebug);
 					return connDesc;
 				}
 			});
 			return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
 		} catch (Exception e) {
-			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, "Failed to create descriptor for jvm with PID " + vmid, e); //$NON-NLS-1$
+			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING,
+					"Failed to create descriptor for jvm with PID " + vmid, e); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -334,7 +336,7 @@ public class LocalJVMToolkit {
 
 					if (connDesc != null && !connDesc.getServerDescriptor().getJvmInfo().isUnconnectable()) {
 						map.put(vmid, connDesc);
-					} 
+					}
 				}
 			} catch (NumberFormatException e) {
 				// do not support vmid different than pid
@@ -345,10 +347,10 @@ public class LocalJVMToolkit {
 	private static DiscoveryEntry createAttachableJvmDescriptor(VirtualMachineDescriptor vmd) {
 		try {
 			// Enforce a timeout here to ensure we don't block forever if the JVM is busy or suspended. See JMC-5398.
-			 ExecutorService service = Executors.newSingleThreadExecutor();
-			 Future<DiscoveryEntry> future = service.submit(new Callable<DiscoveryEntry>() {
-				 @Override
-				 public DiscoveryEntry call() throws Exception {
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			Future<DiscoveryEntry> future = service.submit(new Callable<DiscoveryEntry>() {
+				@Override
+				public DiscoveryEntry call() throws Exception {
 					DiscoveryEntry connDesc = null;
 					Connectable connectable;
 					boolean isDebug = false;
@@ -396,14 +398,14 @@ public class LocalJVMToolkit {
 						}
 					}
 					if (connectable.isAttachable()) {
-						connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType, jvmArch,
-								address, version, isDebug);
+						connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType,
+								jvmArch, address, version, isDebug);
 					}
 					BrowserAttachPlugin.getPluginLogger().info("Done resolving PID " + vmd); //$NON-NLS-1$
 					return connDesc;
-				 }
-			 });
-			 return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
+				}
+			});
+			return future.get(TIMEOUT_THRESHOLD, TimeUnit.SECONDS);
 		} catch (Throwable t) {
 			// Serious problem for this JVM, let's skip this one.
 			if (!isErrorMessageSent) {

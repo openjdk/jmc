@@ -109,8 +109,7 @@ public class JavaThingPage extends Page implements ModelListener {
 	public void allIncluded() {
 		if (mCurrentTask != null) {
 			mTaskCancelled = true;
-			mCurrentTask
-					.cancel(false);// Don't stop the thread directly. Interruption breaks the atomicity inside getObjectAtGlobalIndex
+			mCurrentTask.cancel(false);// Don't stop the thread directly. Interruption breaks the atomicity inside getObjectAtGlobalIndex
 		}
 
 		if (mBackground != null && !mBackground.isDone()) {

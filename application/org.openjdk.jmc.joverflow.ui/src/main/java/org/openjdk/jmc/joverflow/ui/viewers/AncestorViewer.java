@@ -149,8 +149,8 @@ public class AncestorViewer extends BaseViewer {
 				mPieChart.setComparator(new ViewerComparator() {
 					@Override
 					public int compare(Viewer viewer, Object e1, Object e2) {
-						return (int) (((MemoryStatisticsItem) e2).getMemory() - ((MemoryStatisticsItem) e1)
-								.getMemory());
+						return (int) (((MemoryStatisticsItem) e2).getMemory()
+								- ((MemoryStatisticsItem) e1).getMemory());
 					}
 				});
 
@@ -191,8 +191,7 @@ public class AncestorViewer extends BaseViewer {
 
 					@Override
 					public String toString() {
-						return "Ancestors" + (excluded ? " \u220C " : " \u220B ")
-								+ ancestor; //$NON-NLS-2$ //$NON-NLS-3$
+						return "Ancestors" + (excluded ? " \u220C " : " \u220B ") + ancestor; //$NON-NLS-2$ //$NON-NLS-3$
 					}
 
 					@Override

@@ -40,4 +40,8 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.ui.ja</artifactId>
 	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 </project>

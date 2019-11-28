@@ -52,8 +52,7 @@ public class ConsoleMemoryLeakTest extends MemoryLeakTestBase {
 	public static MCUITestRule classTestRule = new MCUITestRule(verboseRuleOutput) {
 		@Override
 		public void before() {
-			loadTimeSpanProperties("mc.memusage.console.minsecondsreload",
-					"mc.memusage.console.minsecondsnavigation");
+			loadTimeSpanProperties("mc.memusage.console.minsecondsreload", "mc.memusage.console.minsecondsnavigation");
 		}
 	};
 

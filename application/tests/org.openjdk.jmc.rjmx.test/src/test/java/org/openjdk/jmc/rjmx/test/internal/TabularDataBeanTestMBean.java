@@ -61,8 +61,7 @@ public class TabularDataBeanTestMBean implements ITabularDataBeanTestMBean {
 		CompositeType simpleCompositeType;
 		try {
 			simpleCompositeType = new CompositeType("simpleCompositeType", "compdescription",
-					new String[] {"djur", "bil", "apa", "båt"},
-					new String[] {"ett djur", "en bil", "en apa", "en båt"},
+					new String[] {"djur", "bil", "apa", "båt"}, new String[] {"ett djur", "en bil", "en apa", "en båt"},
 					new OpenType[] {SimpleType.STRING, SimpleType.STRING, SimpleType.STRING, SimpleType.STRING,});
 
 			TabularType simpleTabularType = new TabularType("simpleTabularTypeName", "tabdescription",
@@ -91,8 +90,7 @@ public class TabularDataBeanTestMBean implements ITabularDataBeanTestMBean {
 					complexCompositeType, compositeKeys);
 
 			CompositeData simpleCompositeData = new CompositeDataSupport(simpleCompositeType,
-					new String[] {"djur", "bil", "apa", "båt"},
-					new String[] {"häst", "corvette", "lemur", "nautilus"});
+					new String[] {"djur", "bil", "apa", "båt"}, new String[] {"häst", "corvette", "lemur", "nautilus"});
 			TabularDataSupport simpleTabularData = new TabularDataSupport(simpleTabularType);
 			simpleTabularData.put(simpleCompositeData);
 			/*

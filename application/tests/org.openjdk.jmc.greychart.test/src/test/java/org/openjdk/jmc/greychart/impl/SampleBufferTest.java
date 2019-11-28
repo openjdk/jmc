@@ -86,7 +86,7 @@ public class SampleBufferTest {
 		Assert.assertEquals(2, countValids(buffer));
 		Assert.assertEquals(42.5, buffer.getSamples()[0].y, 0);
 		double dy = buffer.getSamples()[2].y - buffer.getSamples()[0].y;
-		int dx =  buffer.getSamples()[2].x - buffer.getSamples()[0].x;
+		int dx = buffer.getSamples()[2].x - buffer.getSamples()[0].x;
 		double midY = ((dy / dx) * (dx / 2)) + buffer.getSamples()[0].y;
 		Assert.assertEquals(60, Math.round(midY), 0);
 		Assert.assertEquals(77.5, buffer.getSamples()[2].y, 0);

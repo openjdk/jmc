@@ -125,6 +125,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 	private static final Object TOO_MANY_VALUES = new Object();
 	private static final PropertySheetRow CALCULATING = new PropertySheetRow(null, null);
 	private static Set<IType<?>> selectedTypes = Collections.emptySet();
+
 	private static class PropertySheetRowSelection extends FlavoredSelectionBase {
 
 		private final PropertySheetRow row;
@@ -322,8 +323,8 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 					} else if (value instanceof Object[]) {
 						return limitedDeepToString((Object[]) value, this::getValueString);
 					} else if (value instanceof Collection<?>) {
-						selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value)
-							.stream().collect(Collectors.toSet());
+						selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value).stream()
+								.collect(Collectors.toSet());
 						return limitedDeepToString(((Collection<?>) value).toArray(), this::getValueString);
 					}
 					return TypeHandling.getValueString(value);
@@ -344,10 +345,8 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 		if (value instanceof IType<?>) {
 			selectedTypes = new HashSet<IType<?>>();
 			selectedTypes.add((IType<?>) value);
-		}
-		else if (value instanceof Collection<?>) {
-			selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value)
-					.stream().collect(Collectors.toSet());
+		} else if (value instanceof Collection<?>) {
+			selectedTypes = new HashSet<IType<?>>((Collection<IType<?>>) value).stream().collect(Collectors.toSet());
 		}
 	}
 

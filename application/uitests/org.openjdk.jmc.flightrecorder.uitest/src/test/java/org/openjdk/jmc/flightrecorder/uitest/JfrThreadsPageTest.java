@@ -116,4 +116,3 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 	}
 }
-

@@ -258,8 +258,8 @@ public class MCTable extends MCJemmyBase {
 	 *            the shell to search
 	 * @param index
 	 *            the index in the list of tables
-	 * @return the {@link MCTable} representing the table at the specified index, or {@code null}
-	 *         if index is out of range
+	 * @return the {@link MCTable} representing the table at the specified index, or {@code null} if
+	 *         index is out of range
 	 */
 	@SuppressWarnings("unchecked")
 	static MCTable getByIndex(Wrap<? extends Shell> shell, int index) {
@@ -732,8 +732,8 @@ public class MCTable extends MCJemmyBase {
 	}
 
 	/**
-	 * Selects the table row at a specified "start" index, and uses SHIFT+DOWN to
-	 * add to the selection up until a specified "end" index
+	 * Selects the table row at a specified "start" index, and uses SHIFT+DOWN to add to the
+	 * selection up until a specified "end" index
 	 *
 	 * @param from
 	 *            the row index to start from
@@ -744,7 +744,8 @@ public class MCTable extends MCJemmyBase {
 		focusMc();
 		select(start);
 		for (int i = 0; i < end; i++) {
-			getShell().keyboard().pushKey(KeyboardButtons.DOWN, new KeyboardModifiers[] {KeyboardModifiers.SHIFT_DOWN_MASK});
+			getShell().keyboard().pushKey(KeyboardButtons.DOWN,
+					new KeyboardModifiers[] {KeyboardModifiers.SHIFT_DOWN_MASK});
 		}
 	}
 

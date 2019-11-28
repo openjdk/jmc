@@ -18,6 +18,9 @@ workspace/
 # Useful for local m2 cache when docker building
 .m2
 
+# Ignore UltraEdit .bak files
+*.bak
+
 # Ignore dependency reduced pom
 dependency-reduced-pom.xml
 

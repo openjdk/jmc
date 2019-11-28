@@ -37,8 +37,8 @@ import java.util.List;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 
 /**
- * Aggregates a number of referrers with a the same initial referrer chain Holds overhead/memory/size for the
- * {@code ObjectCluster} referred to by these referrers.
+ * Aggregates a number of referrers with a the same initial referrer chain Holds
+ * overhead/memory/size for the {@code ObjectCluster} referred to by these referrers.
  */
 public class ReferrerItem {
 
@@ -49,7 +49,8 @@ public class ReferrerItem {
 	private final boolean isBranch;
 	private final List<String> commonReferrers;
 
-	ReferrerItem(List<String> commonReferrers, String referrer, long memory, long overhead, int objectCount, boolean isBranch) {
+	ReferrerItem(List<String> commonReferrers, String referrer, long memory, long overhead, int objectCount,
+			boolean isBranch) {
 		this.isBranch = isBranch;
 		this.referrer = referrer;
 		this.commonReferrers = commonReferrers;
