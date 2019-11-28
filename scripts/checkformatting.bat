@@ -1,3 +1,4 @@
+@echo off
 echo "======== Building p2 repo ==================="
 cd releng\third-party
 mvn p2:site
