@@ -1,0 +1,2 @@
+cd core
+mvn verify

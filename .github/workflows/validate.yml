@@ -1,0 +1,40 @@
+name: Check formatting and run tests
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check formatting
+      run: ./scripts/checkformatting.sh
+    - name: Run core tests
+      run: ./scripts/runcoretests.sh
+    - name: Run application tests
+      run: ./scripts/runapptests.sh
+
+  mac:
+    runs-on: 'macOS-latest'
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check formatting
+      run: ./scripts/checkformatting.sh
+    - name: Run core tests
+      run: ./scripts/runcoretests.sh
+    - name: Run application tests
+      run: ./scripts/runapptests.sh
+
+  win:
+    runs-on: 'windows-latest'
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check formatting
+      run: .\scripts\checkformatting.bat
+      shell: cmd
+    - name: Run core tests
+      run: .\scripts\runcoretests.bat
+      shell: cmd
+    - name: Run application tests          
+      run: .\scripts\runapptests.bat
+      shell: cmd
