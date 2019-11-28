@@ -64,7 +64,7 @@ public class SocketIOPageTest extends IOPageTestBase {
 			{999817215, 1, 4288511, 1}
 	};
 	// @formatter:on
-	
+
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {
 		@Override
