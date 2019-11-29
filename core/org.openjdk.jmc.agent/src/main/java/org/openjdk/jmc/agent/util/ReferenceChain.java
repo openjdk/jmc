@@ -28,8 +28,10 @@ public class ReferenceChain {
 
                 ref = new FieldReference.ThisReference(memberingClass);
             } else {
-                ref = new FieldReference(memberingClass, TypeUtils.getFieldOnHierarchy(memberingClass, name));
-                // TODO: access check
+                ref = new FieldReference(memberingClass, AccessUtils.getFieldOnHierarchy(memberingClass, name));
+                if (!AccessUtils.isAccessible(ref.getMemberingClass(), ref.getField(), callerClass)) {
+                    throw new IllegalArgumentException(String.format("%s cannot be accessed from %s", ref, callerClass));
+                }
                 // TODO: handle nested access
                 memberingClass = ref.getField().getType();
             }

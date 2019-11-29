@@ -258,28 +258,6 @@ public final class TypeUtils {
 		return binaryName.replace('/', '.');
 	}
 
-	public static Field getFieldOnHierarchy(Class<?> clazz, String name) throws NoSuchFieldException {
-		Queue<Class<?>> q = new LinkedList<>();
-		q.add(clazz);
-
-		while (!q.isEmpty()) {
-			Class<?> targetClass = q.remove();
-			try {
-				return targetClass.getDeclaredField(name);
-			} catch (NoSuchFieldException e) {
-				// ignore
-			}
-
-			q.addAll(Arrays.asList(targetClass.getInterfaces()));
-			Class<?> superClass = targetClass.getSuperclass();
-			if (superClass != null) {
-				q.add(targetClass.getSuperclass());
-			}
-		}
-
-		throw new NoSuchFieldException(String.format("cannot find field %s in class %s", name, clazz.getName()));
-	}
-
 	public static int getConstZeroOpcode(Type type) {
 		switch (type.getSort()) {
 			case Type.BOOLEAN:

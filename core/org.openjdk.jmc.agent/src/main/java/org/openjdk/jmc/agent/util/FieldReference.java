@@ -37,6 +37,11 @@ public class FieldReference {
         return getField().getModifiers();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s.%s", getMemberingClass().getName(), getName());
+    }
+
     public static class ThisReference extends FieldReference {
         public ThisReference(Class<?> memberingClass) {
             super(memberingClass, null);
@@ -55,6 +60,11 @@ public class FieldReference {
         @Override
         public int getModifiers() {
             return 0;
+        }
+
+        @Override
+        public String toString() {
+            return "\"this\"";
         }
     }
 }
