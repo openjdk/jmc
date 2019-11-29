@@ -1,10 +1,8 @@
 #!/bin/sh -l
 
 set -e
-echo "======== Installing core ===================="
-cd core
-sh -c "mvn install"
-cd ..
+# Note that core must have been installed, and the p2 repo started 
+# before running this.
 echo "======== Running application tests =========="
 sh -c "mvn verify"
 echo "======== Finished ==========================="
