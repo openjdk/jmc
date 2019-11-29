@@ -175,7 +175,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 				if (i != 0) {
 					throw new IllegalStateException("unexpected position of \"this\" reference");
 				}
-				loadArg(0); // "this"
+				mv.visitVarInsn(ALOAD, 0); // load "this"
 				continue;
 			}
 
