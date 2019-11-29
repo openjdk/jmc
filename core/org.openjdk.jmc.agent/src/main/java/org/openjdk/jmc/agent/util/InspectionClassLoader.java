@@ -1,28 +1,32 @@
 package org.openjdk.jmc.agent.util;
 
-import java.security.ProtectionDomain;
+import org.openjdk.jmc.agent.TransformRegistry;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 // One-time use loader for reflective class inspection. An InspectionClassLoader only loads one class.
 public class InspectionClassLoader extends ClassLoader {
     private final ClassLoader parent;
-    private final String name;
-    private final byte[] classfileBuffer;
-    private final ProtectionDomain protectionDomain;
+    private final TransformRegistry registry;
 
-    public InspectionClassLoader(ClassLoader parent, String name, byte[] classfileBuffer, ProtectionDomain protectionDomain) {
+    public InspectionClassLoader(ClassLoader parent, TransformRegistry registry) {
         this.parent = parent;
-        this.name = name;
-        this.classfileBuffer = classfileBuffer;
-        this.protectionDomain = protectionDomain;
+        this.registry = registry;
     }
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (!this.name.equals(name)) {
+        if (!registry.hasPendingTransforms(TypeUtils.getInternalName(name))) {
             return parent.loadClass(name);
         }
 
-        return loadClass(name, false);
+        try {
+            return loadClass(name, false);
+        } catch (ClassNotFoundException e) {
+            return parent.loadClass(name);
+        }
     }
 
     @Override
@@ -37,10 +41,24 @@ public class InspectionClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        if (!name.equals(this.name)) {
+        InputStream is = parent.getResourceAsStream(TypeUtils.getInternalName(name) + ".class");
+        if (is == null) {
             throw new ClassNotFoundException(name);
         }
 
-        return defineClass(name, classfileBuffer, 0, classfileBuffer.length, protectionDomain);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+        try {
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+                buffer.flush();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        byte[] bytes = buffer.toByteArray();
+        return defineClass(name, bytes, 0, bytes.length);
     }
 }

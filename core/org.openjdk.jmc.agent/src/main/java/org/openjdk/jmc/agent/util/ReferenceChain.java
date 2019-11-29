@@ -30,6 +30,7 @@ public class ReferenceChain {
             } else {
                 ref = new FieldReference(memberingClass, TypeUtils.getFieldOnHierarchy(memberingClass, name));
                 // TODO: access check
+                // TODO: handle nested access
                 memberingClass = ref.getField().getType();
             }
             
@@ -61,11 +62,11 @@ public class ReferenceChain {
             }
             newRefs.add(ref);
         }
-        
-        // Reduce static final reference to constant
-        // TODO: investigate possibility for different static initializer behaviour if loaded by different loaders
-        for (FieldReference ref : newRefs) {
-            // TODO
+        // Don't reduce static final reference to constant. The value could be different if loaded via different class loaders.
+
+        // prepend "this" 
+        if (!newRefs.isEmpty() && !Modifier.isStatic(newRefs.get(0).getModifiers()) && !(newRefs.get(0) instanceof FieldReference.ThisReference)) {
+            newRefs.add(0, new FieldReference.ThisReference(callerClass));
         }
         
         return new ReferenceChain(callerClass, newRefs);
