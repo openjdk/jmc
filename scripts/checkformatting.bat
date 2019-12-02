@@ -1,7 +1,7 @@
 @echo off
 echo "======== Building p2 repo ==================="
 cd releng\third-party
-mvn p2:site
+call mvn p2:site
 echo "======== Starting p2 repo ==================="
 start /B cmd /C "mvn jetty:run"
 cd ..\..\core
