@@ -1,7 +1,5 @@
 package org.openjdk.jmc.agent.util;
 
-import org.openjdk.jmc.agent.TransformRegistry;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,16 +7,14 @@ import java.io.InputStream;
 // One-time use loader for reflective class inspection. An InspectionClassLoader only loads one class.
 public class InspectionClassLoader extends ClassLoader {
     private final ClassLoader parent;
-    private final TransformRegistry registry;
 
-    public InspectionClassLoader(ClassLoader parent, TransformRegistry registry) {
+    public InspectionClassLoader(ClassLoader parent) {
         this.parent = parent;
-        this.registry = registry;
     }
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (!registry.hasPendingTransforms(TypeUtils.getInternalName(name))) {
+        if (name.startsWith("java.lang.")) {
             return parent.loadClass(name);
         }
 
@@ -36,7 +32,13 @@ public class InspectionClassLoader extends ClassLoader {
             return clazz;
         }
 
-        return findClass(name);
+        clazz = findClass(name);
+
+        if (resolve) {
+            resolveClass(clazz);
+        }
+
+        return clazz;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class InspectionClassLoader extends ClassLoader {
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
-        byte[] data = new byte[1024];
+        byte[] data = new byte[1024]; // 1024 is chosen arbitrarily
         try {
             while ((nRead = is.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, nRead);

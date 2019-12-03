@@ -4,11 +4,26 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class AccessUtils {
+    public static Field getFieldInOuterClasses(Class<?> clazz, String name) throws NoSuchFieldException {
+        Class<?> c = clazz;
+        while (c != null) {
+            try {
+                return c.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {
+                c = c.getEnclosingClass();
+            }    
+        }
+
+        throw new NoSuchFieldException(String.format("cannot find field %s in outer classes of %s", name, clazz.getName()));
+    }
+
     public static Field getFieldOnHierarchy(Class<?> clazz, String name) throws NoSuchFieldException {
         Queue<Class<?>> q = new LinkedList<>();
         q.add(clazz);
@@ -175,20 +190,6 @@ public class AccessUtils {
         return getPackageName(lhs).equals(getPackageName(rhs));
     }
 
-    // TODO: verify same behaviour as Class.isNestmateOf (since java 11)
-    public static boolean areNestMates(Class<?> lhs, Class<?> rhs) {
-        String lhsBaseName = lhs.getName();
-        if (lhsBaseName.indexOf("$") > 0) {
-            lhsBaseName = lhsBaseName.substring(0, lhsBaseName.indexOf("$"));
-        }
-        String rhsBaseName = rhs.getName();
-        if (rhsBaseName.indexOf("$") > 0) {
-            rhsBaseName = rhsBaseName.substring(0, rhsBaseName.indexOf("$"));
-        }
-
-        return lhsBaseName.equals(rhsBaseName);
-    }
-
     public static boolean isSubclassOf(Class<?> queryClass, Class<?> ofClass) {
         while (queryClass != null) {
             if (queryClass == ofClass) {
@@ -198,4 +199,52 @@ public class AccessUtils {
         }
         return false;
     }
+
+    // Polyfill Class.getNestMembers() for pre-11 runtime.
+    // This function does not fully respect the definition of nesting from JVM's perspective. It's only used for 
+    // validating access. 
+    public static Class<?>[] getNestMembers(Class<?> clazz) {
+        List<Class<?>> classes = new ArrayList<>();
+        classes.add(getNestHost(clazz));
+        int i = 0;
+        while (i < classes.size()) {
+            classes.addAll(Arrays.asList(classes.get(i).getDeclaredClasses()));
+            i++;
+        }
+
+        return classes.toArray(new Class[0]);
+    }
+
+    // Polyfill Class.isNestMateOf() for pre-11 runtime
+    // This function does not fully respect the definition of nesting from JVM's perspective. It's only used for 
+    // validating access.
+    public static boolean areNestMates(Class<?> lhs, Class<?> rhs) {
+        return getNestHost(lhs).equals(getNestHost(rhs));
+    }
+
+    // Polyfill Class.getNestHost() for pre-11 runtime
+    // This function does not fully respect the definition of nesting from JVM's perspective. It's only used for 
+    // validating access.
+    public static Class<?> getNestHost(Class<?> clazz) {
+        // array types, primitive types, and void belong to the nests consisting only of theme, and are the nest hosts.
+        if (clazz.isArray()) {
+            return clazz;
+        }
+
+        if (clazz.isPrimitive()) {
+            return clazz;
+        }
+
+        if (Void.class.equals(clazz)) {
+            return clazz;
+        }
+        
+        while (true) {
+            if (clazz.getEnclosingClass() == null) {
+                return clazz;
+            }
+
+            clazz = clazz.getEnclosingClass();
+        }
+    } 
 }

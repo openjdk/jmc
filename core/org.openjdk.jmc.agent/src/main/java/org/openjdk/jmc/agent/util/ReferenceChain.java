@@ -2,6 +2,7 @@ package org.openjdk.jmc.agent.util;
 
 import org.objectweb.asm.Type;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,24 +19,54 @@ public class ReferenceChain {
             throw new IllegalArgumentException("Expect a non-null and non-empty path expression");
         }
 
+        // TODO: refactor by converting to a state machine
         Class<?> memberingClass = callerClass;
-        for (String name : pathExpression.split("\\.")) {
-            FieldReference ref;
-            if ("this".equals(name)) {
-                if (!references.isEmpty()) {
-                    throw new IllegalArgumentException("Unexpected \"this\"");
-                }
+        String[] names = pathExpression.split("\\.");
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
 
-                ref = new FieldReference.ThisReference(memberingClass);
-            } else {
-                ref = new FieldReference(memberingClass, AccessUtils.getFieldOnHierarchy(memberingClass, name));
-                if (!AccessUtils.isAccessible(ref.getMemberingClass(), ref.getField(), callerClass)) {
-                    throw new IllegalArgumentException(String.format("%s cannot be accessed from %s", ref, callerClass));
+            if (i == 0) {
+                if ("this".equals(name)) {
+                    references.add(new FieldReference.ThisReference(memberingClass));
+                    continue;
                 }
-                // TODO: handle nested access
-                memberingClass = ref.getField().getType();
             }
-            
+
+            Field field;
+            try {
+                 field = AccessUtils.getFieldOnHierarchy(memberingClass, name);
+            } catch (NoSuchFieldException e) {
+                if (i == 0) { // implicit reference to nest member's field can only be the first element on the chain
+                    try {
+                        field = AccessUtils.getFieldInOuterClasses(memberingClass, name);
+                    } catch (NoSuchFieldException e1) {
+                        throw new NoSuchFieldException(String.format("cannot find field %s in %s or its outer classes", name, memberingClass));
+                    }
+                    
+                    if (Modifier.isPrivate(field.getModifiers())) {
+                        throw new UnsupportedOperationException("bridge methods not yet supported");
+                    }
+                    
+                    if (Modifier.isStatic(field.getModifiers())) {
+                        memberingClass = field.getDeclaringClass();
+                    } else {
+                        references.add(new FieldReference.ThisReference(memberingClass));
+                        while (memberingClass != field.getDeclaringClass()) {
+                            references.add(new FieldReference.OutwardsCastingReference(memberingClass, memberingClass.getEnclosingClass()));
+                            memberingClass = memberingClass.getEnclosingClass();
+                        }
+                    }
+
+                } else {
+                    throw e;
+                }
+            }
+
+            FieldReference ref = new FieldReference(memberingClass, field);
+            if (!AccessUtils.isAccessible(memberingClass, field, callerClass)) {
+                throw new IllegalArgumentException(String.format("%s cannot be accessed from %s", ref, callerClass));
+            }
+            memberingClass = ref.getField().getType();
             references.add(ref);
         }
     }
