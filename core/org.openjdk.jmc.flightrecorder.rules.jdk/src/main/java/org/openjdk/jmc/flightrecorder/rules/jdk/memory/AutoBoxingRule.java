@@ -69,15 +69,15 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 // FIXME: Rename class (and message constants) from autoboxing to something more generic?
 public class AutoBoxingRule extends AbstractRule {
 
-	private static final String VALUE_OF_METHOD_NAME = "valueOf";
-	private static final String SHORT = "java.lang.Short";
-	private static final String LONG = "java.lang.Long";
-	private static final String INTEGER = "java.lang.Integer";
-	private static final String FLOAT = "java.lang.Float";
-	private static final String DOUBLE = "java.lang.Double";
-	private static final String CHARACTER = "java.lang.Character";
-	private static final String BYTE = "java.lang.Byte";
-	private static final String BOOLEAN = "java.lang.Boolean";
+	private static final String VALUE_OF_METHOD_NAME = "valueOf"; //$NON-NLS-1$
+	private static final String SHORT = "java.lang.Short"; //$NON-NLS-1$
+	private static final String LONG = "java.lang.Long"; //$NON-NLS-1$
+	private static final String INTEGER = "java.lang.Integer"; //$NON-NLS-1$
+	private static final String FLOAT = "java.lang.Float"; //$NON-NLS-1$
+	private static final String DOUBLE = "java.lang.Double"; //$NON-NLS-1$
+	private static final String CHARACTER = "java.lang.Character"; //$NON-NLS-1$
+	private static final String BYTE = "java.lang.Byte"; //$NON-NLS-1$
+	private static final String BOOLEAN = "java.lang.Boolean"; //$NON-NLS-1$
 
 	private static final IPredicate<IMCMethod> IS_AUTOBOXED_PREDICATE = new IPredicate<IMCMethod>() {
 		@Override
@@ -142,14 +142,14 @@ public class AutoBoxingRule extends AbstractRule {
 		IQuantity sizeOfAllBoxedAllocations = UnitLookup.BYTE.quantity(0);
 		IQuantity largestAllocatedByType = UnitLookup.BYTE.quantity(0);
 		IMCType largestAllocatedType = null;
-		String secondFrameFromMostAllocated = "";
+		String secondFrameFromMostAllocated = ""; //$NON-NLS-1$
 		for (StacktraceFrame stacktraceFrame : model.getRootFork().getFirstFrames()) {
 			IMCMethod method = stacktraceFrame.getFrame().getMethod();
 			if (IS_AUTOBOXED_PREDICATE.evaluate(method)) {
 				SimpleArray<IItem> itemArray = stacktraceFrame.getItems();
 				IQuantity total = UnitLookup.BYTE.quantity(0);
 				for (IItem item : itemArray) {
-					total = total.add(RulesToolkit.getValue(item, JdkAttributes.TLAB_SIZE));
+					total = total.add(RulesToolkit.getValue(item, JdkAttributes.TOTAL_ALLOCATION_SIZE));
 				}
 				sizeOfAllBoxedAllocations = sizeOfAllBoxedAllocations.add(total);
 				if (total.compareTo(largestAllocatedByType) > 0) {

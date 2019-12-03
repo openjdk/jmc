@@ -575,6 +575,17 @@ public final class JdkAttributes {
 			MEMORY);
 	public static final IAttribute<IQuantity> ALLOCATION_SIZE = attr("allocationSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_ALLOCATION_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> TOTAL_ALLOCATION_SIZE = Attribute.canonicalize(new Attribute<IQuantity>("(totalAllocationSize)", Messages.getString(Messages.ATTR_ALLOCATION_TOTAL_SIZE), Messages.getString(Messages.ATTR_ALLOCATION_TOTAL_SIZE_DESC), MEMORY) { //$NON-NLS-1$
+		@Override
+		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+			if (type.getIdentifier().equals(JdkTypeIDs.ALLOC_INSIDE_TLAB)) {
+				return JdkAttributes.TLAB_SIZE.getAccessor(type);
+			} else if (type.getIdentifier().equals(JdkTypeIDs.ALLOC_OUTSIDE_TLAB)) {
+				return JdkAttributes.ALLOCATION_SIZE.getAccessor(type);
+			}
+			return null;
+		}
+	});
 	public static final IAttribute<IMCType> ALLOCATION_CLASS = attr("objectClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_ALLOCATION_CLASS), Messages.getString(Messages.ATTR_ALLOCATION_CLASS_DESC),
 			CLASS);
