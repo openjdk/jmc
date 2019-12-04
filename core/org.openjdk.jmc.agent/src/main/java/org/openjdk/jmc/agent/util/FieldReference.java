@@ -69,6 +69,7 @@ public class FieldReference {
         }
     }
 
+    // implicit qualified "this"
     public static class OutwardsCastingReference extends FieldReference {
         private Class<?> targetClass;
         

@@ -14,7 +14,7 @@ public class InspectionClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (name.startsWith("java.lang.")) {
+        if (name.startsWith("java.")) {
             return parent.loadClass(name);
         }
 
