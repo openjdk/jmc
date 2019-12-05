@@ -38,7 +38,7 @@ project=jmc
 jbs=jmc
 
 [checks]
-error=author,reviewers,merge,message,issues,executable
+error=author,reviewers,merge,message,issues
 
 [census]
 version=0

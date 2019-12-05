@@ -3,6 +3,9 @@ build/
 target/
 bin/
 
+# Ignore settings changes by the IDE
+.settings/
+
 # Ignore test recording
 application/tests/org.openjdk.jmc.rjmx.services.jfr.test/recording.jfr
 
@@ -21,6 +24,11 @@ workspace/
 # Ignore UltraEdit .bak files
 *.bak
 
+# Normally minor updates to the project files by the IDE
+# can be ignored - some minor options are added sometimes
+# and the default are usually fine
+.project
+
 # Ignore dependency reduced pom
 dependency-reduced-pom.xml
 
@@ -30,3 +38,6 @@ application/coverage/coverage-report
 
 # Ignore the fetched JS libraries
 application/org.openjdk.jmc.flightrecorder.flameview/src/main/resources/jslibs/
+
+# Ignore the output from running the p2 server from the scripts
+releng/third-party/nohup.out
