@@ -85,7 +85,7 @@ public class JFREventClassGenerator {
 			createField(cw, td, param, args[param.getIndex()]);
 		}
 		if (td.getReturnValue() != null) {
-			createField(cw, td, td.getReturnValue(), Type.getReturnType(td.getMethod().getSignature()));
+			createField(cw, td, Type.getReturnType(td.getMethod().getSignature()));
 		}
 	}
 
@@ -117,7 +117,8 @@ public class JFREventClassGenerator {
 		fv.visitEnd();
 	}
 
-	private static void createField(ClassWriter cw, JFRTransformDescriptor td, ReturnValue returnValue, Type type) {
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Type type) {
+		ReturnValue returnValue = td.getReturnValue();
 		if (!td.isAllowedFieldType(type)) {
 			Logger.getLogger(JFREventClassGenerator.class.getName())
 					.warning("Skipped generating field in event class for return value " + returnValue + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
