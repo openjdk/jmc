@@ -105,8 +105,8 @@ public abstract class TransformDescriptor {
 	 * @return the instantiated {@link TransformDescriptor}.
 	 */
 	public static TransformDescriptor create(
-		String id, String internalName, Method method, Map<String, String> values, List<Parameter> parameters) {
-		return new JFRTransformDescriptor(id, internalName, method, values, parameters);
+		String id, String internalName, Method method, Map<String, String> values, List<Parameter> parameters, ReturnValue returnValue) {
+		return new JFRTransformDescriptor(id, internalName, method, values, parameters, returnValue);
 	}
 
 	@Override

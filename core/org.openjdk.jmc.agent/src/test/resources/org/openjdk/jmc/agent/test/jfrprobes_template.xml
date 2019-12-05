@@ -78,11 +78,10 @@
 					<description>The second parameter</description>
 					<contenttype>Bytes</contenttype>	
 				</parameter>
-				<parameter index="-1">
-					<name>Return Value</name>
+				<returnvalue>
 					<description>The return value</description>
 					<contenttype>None</contenttype>	
-				</parameter>				
+				</returnvalue>
 			</method>
 			<!-- location {ENTRY, EXIT, WRAP}-->
 			<location>WRAP</location>
@@ -119,11 +118,10 @@
 					<description>The second parameter</description>
 					<contenttype>Bytes</contenttype>	
 				</parameter>
-				<parameter index="-1">
-					<name>Return Value</name>
+				<returnvalue>
 					<description>The return value</description>
 					<contenttype>None</contenttype>	
-				</parameter>				
+				</returnvalue>
 			</method>
 		</event>
 		<event id="demo.jfr.testI3">
@@ -187,11 +185,10 @@
 				<name>printInstanceHelloWorldJFR6</name>						
 				<descriptor>()D</descriptor>
 				<!-- Note that this will only work if we allow toString -->
-				<parameter index="-1">
-					<name>Return Value</name>
+				<returnvalue>
 					<description>A value between 0 and 100 (double)</description>
 					<contenttype>Percentage</contenttype>	
-				</parameter>
+				</returnvalue>
 			</method>
 		</event>
 		<event id="demo.jfr.testI7">

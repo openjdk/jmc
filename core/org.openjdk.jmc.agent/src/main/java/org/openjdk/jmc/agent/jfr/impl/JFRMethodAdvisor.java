@@ -38,6 +38,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.openjdk.jmc.agent.Parameter;
+import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -106,13 +107,11 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(INVOKESPECIAL, transformDescriptor.getEventClassName(), "<init>", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Parameter param : transformDescriptor.getParameters()) {
-			if (!param.isReturn()) {
-				Type argumentType = argumentTypesRef[param.getIndex()];
-				if (transformDescriptor.isAllowedFieldType(argumentType)) {
-					mv.visitInsn(DUP);
-					loadArg(param.getIndex());
-					writeParameter(param, argumentType);
-				}
+			Type argumentType = argumentTypesRef[param.getIndex()];
+			if (transformDescriptor.isAllowedFieldType(argumentType)) {
+				mv.visitInsn(DUP);
+				loadArg(param.getIndex());
+				writeParameter(param, argumentType);
 			}
 		}
 
@@ -122,11 +121,19 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 	}
 
 	private void writeParameter(Parameter param, Type type) {
-		if (TypeUtils.shouldStringify(param, type)) {
-			TypeUtils.stringify(mv, param, type);
+		if (TypeUtils.shouldStringify(type)) {
+			TypeUtils.stringify(mv);
 			type = TypeUtils.STRING_TYPE;
 		}
 		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
+	}
+
+	private void writeReturnValue(ReturnValue returnValue, Type type) {
+		if (TypeUtils.shouldStringify(type)) {
+			TypeUtils.stringify(mv);
+			type = TypeUtils.STRING_TYPE;
+		}
+		putField(Type.getObjectType(transformDescriptor.getEventClassName()), returnValue.getFieldName(), type);
 	}
 
 	@Override
@@ -136,15 +143,15 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		}
 
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
-			Parameter returnParam = TypeUtils.findReturnParam(transformDescriptor.getParameters());
-			if (returnParam != null) {
-				emitSettingReturnParam(opcode, returnParam);
+			ReturnValue returnValue = transformDescriptor.getReturnValue();
+			if (returnValue != null) {
+				emitSettingReturnParam(opcode, returnValue);
 			}
 		}
 		commitEvent();
 	}
 
-	private void emitSettingReturnParam(int opcode, Parameter returnParam) {
+	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) {
 		if (returnTypeRef.getSize() == 1) {
 			dup();
 			mv.visitVarInsn(ALOAD, eventLocal);
@@ -155,7 +162,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
-		writeParameter(returnParam, returnTypeRef);
+		writeReturnValue(returnValue, returnTypeRef);
 	}
 
 	private void commitEvent() {
