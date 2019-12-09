@@ -357,6 +357,10 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> ALLOCATION_TOTAL = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOCATION_TOTAL), Messages.getString(Messages.AGGR_ALLOCATION_TOTAL_DESC),
 			UnitLookup.MEMORY, JdkAttributes.TOTAL_ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOCATION_TOTAL_PERCENTAGE = Aggregators.sum(
+			Messages.getString(Messages.AGGR_ALLOCATION_TOTAL_PERCENTAGE),
+			Messages.getString(Messages.AGGR_ALLOCATION_TOTAL_PERCENTAGE_DESC), UnitLookup.MEMORY,
+			JdkAttributes.TOTAL_ALLOCATION_SIZE);
 	public static final IAggregator<IQuantity, ?> TOTAL_IO_TIME = Aggregators.filter(
 			Aggregators.sum(Messages.getString(Messages.AGGR_TOTAL_IO_TIME),
 					Messages.getString(Messages.AGGR_TOTAL_IO_TIME_DESC), JfrAttributes.DURATION),

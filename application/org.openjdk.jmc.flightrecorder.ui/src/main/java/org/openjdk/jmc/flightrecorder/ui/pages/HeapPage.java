@@ -125,6 +125,7 @@ public class HeapPage extends AbstractDataPage {
 	private static final String SIZE_COL = "size"; //$NON-NLS-1$
 	private static final String INCREASE_COL = "increase"; //$NON-NLS-1$
 	private static final String ALLOCATION_COL = "allocation"; //$NON-NLS-1$
+	private static final String ALLOCATION_PERCENT_COL = "allocationPercent"; //$NON-NLS-1$
 	private static final String INSIDE_TLAB_COL = "insideTlabSize"; //$NON-NLS-1$
 	private static final String OUTSIDE_TLAB_COL = "outsideTlabSize"; //$NON-NLS-1$
 	private static final String GC_PAUSE_ID = "gcPause"; //$NON-NLS-1$
@@ -136,6 +137,7 @@ public class HeapPage extends AbstractDataPage {
 		HISTOGRAM.addColumn(SIZE_COL, JdkAggregators.OBJECT_COUNT_MAX_SIZE);
 		HISTOGRAM.addColumn(INCREASE_COL, ObjectStatisticsDataProvider.getIncreaseAggregator());
 		HISTOGRAM.addColumn(ALLOCATION_COL, JdkAggregators.ALLOCATION_TOTAL);
+		HISTOGRAM.addPercentageColumn(ALLOCATION_PERCENT_COL, JdkAggregators.ALLOCATION_TOTAL_PERCENTAGE);
 		HISTOGRAM.addColumn(INSIDE_TLAB_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
 		HISTOGRAM.addColumn(OUTSIDE_TLAB_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
 	}
@@ -260,7 +262,8 @@ public class HeapPage extends AbstractDataPage {
 							new ColumnSettings(INSTANCES_COL, false, 120, false),
 							new ColumnSettings(SIZE_COL, false, 120, false),
 							new ColumnSettings(INCREASE_COL, false, 120, false),
-							new ColumnSettings(ALLOCATION_COL, false, 120, false)));
+							new ColumnSettings(ALLOCATION_COL, false, 120, false),
+							new ColumnSettings(ALLOCATION_PERCENT_COL, false, 120, false)));
 		} else {
 			return new TableSettings(state);
 		}

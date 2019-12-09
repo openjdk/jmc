@@ -69,8 +69,8 @@ public class AggregationGrid {
 			aggregateItems = new AggregateRow[rowCount];
 		}
 
-		void addRow(Object key, List<IItem[]> items, int rowIndex) {
-			AggregateRow ai = new AggregateRow(this, key, items, rowIndex);
+		void addRow(Object key, List<IItem[]> items, int rowIndex, IItemCollection allItems) {
+			AggregateRow ai = new AggregateRow(this, key, items, rowIndex, allItems);
 			aggregateItems[rowIndex] = ai;
 			itemsCount += ai.count.longValue();
 		}
@@ -78,17 +78,21 @@ public class AggregationGrid {
 
 	public static class AggregateRow {
 		final int index;
-		final IItemCollection items;
+		final IItemCollection rowItems;
+		final IItemCollection allItems;
 		final Object key;
 		final IQuantity count;
 		final AggregationModel model;
 
-		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex) {
+		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex,
+				IItemCollection allItems) {
 			this.model = model;
 			this.key = key;
-			items = buildItemCollection(itemsByType);
-			count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
-			index = rowIndex;
+
+			this.rowItems = buildItemCollection(itemsByType);
+			this.allItems = allItems;
+			this.count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
+			this.index = rowIndex;
 		}
 
 		@Override
@@ -127,7 +131,35 @@ public class AggregationGrid {
 		}
 
 		private Object calculateValue(AggregateRow row) {
-			return valueFunction.apply(row.items);
+			return valueFunction.apply(row.rowItems);
+		}
+	}
+
+	private static class PercentageColumn implements IMemberAccessor<Object, Object> {
+
+		private final BiFunction<IItemCollection, IItemCollection, ?> valueFunction;
+		private final int columnIndex;
+
+		PercentageColumn(BiFunction<IItemCollection, IItemCollection, ?> valueFunction, int columnIndex) {
+			this.valueFunction = valueFunction;
+			this.columnIndex = columnIndex;
+		}
+
+		@Override
+		public Object getMember(Object inObject) {
+			if (inObject instanceof AggregateRow) {
+				AggregateRow ai = ((AggregateRow) inObject);
+				if (ai.model.cellData[columnIndex] == null) {
+					ai.model.cellData[columnIndex] = Arrays.stream(ai.model.aggregateItems).parallel()
+							.map(this::calculateValue).toArray();
+				}
+				return ai.model.cellData[columnIndex][((AggregateRow) inObject).index];
+			}
+			return null;
+		}
+
+		private Object calculateValue(AggregateRow row) {
+			return valueFunction.apply(row.rowItems, row.allItems);
 		}
 	}
 
@@ -142,7 +174,7 @@ public class AggregationGrid {
 	}
 
 	public static IItemCollection getItems(Object row) {
-		return ((AggregateRow) row).items;
+		return ((AggregateRow) row).rowItems;
 	}
 
 	public static double getCountFraction(Object row) {
@@ -158,6 +190,12 @@ public class AggregationGrid {
 	// All rows built before the column was added will not have the extra column
 	public IMemberAccessor<?, Object> addColumn(Function<IItemCollection, ?> valueFunction) {
 		return new AggregateColumn(valueFunction, createdColumns++);
+	}
+
+	// All rows built before the column was added will not have the extra column
+	public IMemberAccessor<?, Object> addPercentageColumn(
+		BiFunction<IItemCollection, IItemCollection, ?> valueFunction) {
+		return new PercentageColumn(valueFunction, createdColumns++);
 	}
 
 	private static <T> void addStream(HashMap<T, List<IItem[]>> map, KeyedStream<T, IItem> ks) {
@@ -203,12 +241,12 @@ public class AggregationGrid {
 				.build(items.stream().map(ITEMS_BY_TYPE_CONSTRUCTOR).collect(Collectors.toList())::stream);
 	}
 
-	public <T> Object[] buildRows(Stream<IItemIterable> items, IAccessorFactory<T> classifier) {
-		Map<T, List<IItem[]>> itemsMap = mapItems(items, classifier);
+	public <T> Object[] buildRows(IItemCollection items, IAccessorFactory<T> classifier) {
+		Map<T, List<IItem[]>> itemsMap = mapItems(ItemCollectionToolkit.stream(items), classifier);
 		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size());
 		int index = 0;
 		for (Entry<T, List<IItem[]>> e : itemsMap.entrySet()) {
-			model.addRow(e.getKey(), e.getValue(), index++);
+			model.addRow(e.getKey(), e.getValue(), index++, items);
 		}
 		return model.aggregateItems;
 	}

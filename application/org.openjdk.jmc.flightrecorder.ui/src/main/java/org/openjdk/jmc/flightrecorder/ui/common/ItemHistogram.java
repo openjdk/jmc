@@ -60,7 +60,9 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.CompositeKey;
 import org.openjdk.jmc.common.util.TypeHandling;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
@@ -127,6 +129,20 @@ public class ItemHistogram {
 			addColumn(colId, ic -> ic.getAggregate(a), a.getName(), a.getDescription(), style);
 		}
 
+		public void addPercentageColumn(String colId, IAggregator<?, ?> a) {
+			int style = a.getValueType() instanceof LinearKindOfQuantity ? SWT.RIGHT : SWT.NONE;
+			addPercentageColumn(colId, (rowItems, allItems) -> {
+				if (a.getValueType() instanceof LinearKindOfQuantity) {
+					IQuantity rowResult = (IQuantity) rowItems.getAggregate(a);
+					IQuantity allResult = (IQuantity) allItems.getAggregate(a);
+					if (rowResult != null && allResult != null) {
+						return UnitLookup.PERCENT.quantity(rowResult.ratioTo(allResult) * 100);
+					}
+				}
+				return rowItems.getAggregate(a);
+			}, a.getName(), a.getDescription(), style);
+		}
+
 		public void addColumn(
 			String colId, Function<IItemCollection, ?> valueFunction, String name, String description) {
 			addColumn(colId, valueFunction, name, description, SWT.NONE);
@@ -135,6 +151,13 @@ public class ItemHistogram {
 		public void addColumn(
 			String colId, Function<IItemCollection, ?> valueFunction, String name, String description, int style) {
 			columns.add(new ColumnBuilder(name, colId, grid.addColumn(valueFunction)).description(description)
+					.style(style).build());
+		}
+
+		public void addPercentageColumn(
+			String colId, BiFunction<IItemCollection, IItemCollection, ?> valueFunction, String name,
+			String description, int style) {
+			columns.add(new ColumnBuilder(name, colId, grid.addPercentageColumn(valueFunction)).description(description)
 					.style(style).build());
 		}
 
@@ -253,7 +276,9 @@ public class ItemHistogram {
 	}
 
 	public void show(IItemCollection items) {
-		columnManager.getViewer().setInput(grid.buildRows(ItemCollectionToolkit.stream(items), classifier));
+		System.err.println("ItemHistogram.show");
+		new Throwable().printStackTrace();
+		columnManager.getViewer().setInput(grid.buildRows(items, classifier));
 	}
 
 	/*
