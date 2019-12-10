@@ -62,8 +62,15 @@ import java.util.zip.ZipInputStream;
  * Common functionality you might want when you're working with I/O.
  */
 public final class IOToolkit {
-	private static final int ZIP_MAGIC[] = new int[] {80, 75, 3, 4};
-	private static final int GZ_MAGIC[] = new int[] {31, 139};
+	/**
+	 * Magic bytes for recognizing Zip.
+	 */
+	public static final int MAGIC_ZIP[] = new int[] {80, 75, 3, 4};
+	
+	/**
+	 * Magic bytes for recognizing GZip.
+	 */
+	public static final int MAGIC_GZ[] = new int[] {31, 139};
 
 	private IOToolkit() {
 		throw new Error("Don't"); //$NON-NLS-1$
@@ -100,9 +107,9 @@ public final class IOToolkit {
 		FileInputStream fin = new FileInputStream(file);
 		try {
 			InputStream in = new BufferedInputStream(fin);
-			if (hasMagic(file, GZ_MAGIC)) {
+			if (hasMagic(file, MAGIC_GZ)) {
 				return new GZIPInputStream(in);
-			} else if (hasMagic(file, ZIP_MAGIC)) {
+			} else if (hasMagic(file, MAGIC_ZIP)) {
 				ZipInputStream zin = new ZipInputStream(in);
 				zin.getNextEntry();
 				return zin;
@@ -135,14 +142,14 @@ public final class IOToolkit {
 		if (!in.markSupported()) {
 			in = new BufferedInputStream(stream);
 		}
-		in.mark(GZ_MAGIC.length + 1);
-		if (hasMagic(in, GZ_MAGIC)) {
+		in.mark(MAGIC_GZ.length + 1);
+		if (hasMagic(in, MAGIC_GZ)) {
 			in.reset();
 			return new GZIPInputStream(in);
 		}
 		in.reset();
-		in.mark(ZIP_MAGIC.length + 1);
-		if (hasMagic(in, ZIP_MAGIC)) {
+		in.mark(MAGIC_ZIP.length + 1);
+		if (hasMagic(in, MAGIC_ZIP)) {
 			in.reset();
 			ZipInputStream zin = new ZipInputStream(in);
 			zin.getNextEntry();
@@ -205,7 +212,7 @@ public final class IOToolkit {
 	 *             if an error occurred when trying to read from the file
 	 */
 	public static boolean isGZipFile(File file) throws IOException {
-		return hasMagic(file, GZ_MAGIC);
+		return hasMagic(file, MAGIC_GZ);
 	}
 
 	/**
@@ -218,7 +225,7 @@ public final class IOToolkit {
 	 *             if an error occurred when trying to read from the file
 	 */
 	public static boolean isZipFile(File file) throws IOException {
-		return hasMagic(file, ZIP_MAGIC);
+		return hasMagic(file, MAGIC_ZIP);
 	}
 
 	/**
@@ -235,13 +242,13 @@ public final class IOToolkit {
 	public static boolean isCompressedFile(File file) throws IOException {
 		BufferedInputStream is = null;
 		try {
-			is = new BufferedInputStream(new FileInputStream(file), ZIP_MAGIC.length + 1);
-			is.mark(ZIP_MAGIC.length + 1);
-			if (hasMagic(is, GZ_MAGIC)) {
+			is = new BufferedInputStream(new FileInputStream(file), MAGIC_ZIP.length + 1);
+			is.mark(MAGIC_ZIP.length + 1);
+			if (hasMagic(is, MAGIC_GZ)) {
 				return true;
 			}
 			is.reset();
-			return hasMagic(is, ZIP_MAGIC);
+			return hasMagic(is, MAGIC_ZIP);
 		} finally {
 			closeSilently(is);
 		}
