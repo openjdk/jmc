@@ -66,7 +66,7 @@ public final class IOToolkit {
 	 * Magic bytes for recognizing Zip.
 	 */
 	public static final int MAGIC_ZIP[] = new int[] {80, 75, 3, 4};
-	
+
 	/**
 	 * Magic bytes for recognizing GZip.
 	 */
