@@ -18,7 +18,7 @@ public class AccessUtils {
                 return getFieldOnHierarchy(c, name);
             } catch (NoSuchFieldException e) {
                 c = c.getEnclosingClass();
-            }    
+            }
         }
 
         throw new NoSuchFieldException(String.format("cannot find field %s in outer classes of %s", name, clazz.getName()));
@@ -120,8 +120,7 @@ public class AccessUtils {
         // Additional test for protected instance members
         // and protected constructors: JLS 6.6.2
         if (targetClass != null && Modifier.isProtected(modifiers) &&
-                targetClass != currentClass)
-        {
+                targetClass != currentClass) {
             if (!gotIsSameClassPackage) {
                 isSameClassPackage = isSameClassPackage(currentClass, memberClass);
                 gotIsSameClassPackage = true;

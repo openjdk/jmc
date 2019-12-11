@@ -160,7 +160,7 @@ public class ReferenceChain {
 
         private void enterStartState() throws IllegalSyntaxException {
             if (!iterator.hasNext()) {
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects 'this', 'super', a field name, a class name, a package name, or a package name fragment");
             }
 
             String token = iterator.next(); // first identifier
@@ -176,12 +176,12 @@ public class ReferenceChain {
             }
 
             // local/inherited field reference
-            if (tryEnterFieldReferenceState(caller, token)) {
+            if (tryEnterFieldReferenceState(caller, token, Modifier.isStatic(method.getModifiers()))) {
                 return;
             }
 
             // nested field reference
-            if (tryEntryNestedFieldReferenceState(token)) {
+            if (tryEntryNestedFieldReferenceState(token)) { // static class? 
                 return;
             }
 
@@ -215,12 +215,12 @@ public class ReferenceChain {
                 return;
             }
 
-            // eg. Object => java.lang.Object
+            // eg. Object => java.lang.Object, Integer => java.lang.Integer
             if (tryEnterPackageState(Package.getPackage("java.lang"), expression)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterThisState(Class<?> targetClass, String thisLiteral) throws IllegalSyntaxException {
@@ -234,6 +234,10 @@ public class ReferenceChain {
 
         // "^this" or qualified . "this" expression (outwards casting)   
         private void enterThisState(Class<?> targetClass) throws IllegalSyntaxException {
+            if (Modifier.isStatic(method.getModifiers())) {
+                enterIllegalState(String.format("'%s.this' cannot be referenced from a static context", targetClass.getName()));
+            }
+            
             doOutwardsCasting(targetClass);
 
             if (!iterator.hasNext()) { // accepted state
@@ -242,11 +246,11 @@ public class ReferenceChain {
             String token = iterator.next();
 
             // this.prop
-            if (tryEnterFieldReferenceState(targetClass, token)) {
+            if (tryEnterFieldReferenceState(targetClass, token, false)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterSuperState(Class<?> targetClass, String superLiteral) throws IllegalSyntaxException {
@@ -260,6 +264,10 @@ public class ReferenceChain {
 
         // "^super" or qualified . "super" expression (outwards casting)
         private void enterSuperState(Class<?> targetClass) throws IllegalSyntaxException {
+            if (Modifier.isStatic(method.getModifiers())) {
+                enterIllegalState(String.format("'%s.super' cannot be referenced from a static context", targetClass.getName()));
+            }
+
             doOutwardsCasting(targetClass);
 
             Class<?> superClass = targetClass.getSuperclass();
@@ -272,37 +280,41 @@ public class ReferenceChain {
             String token = iterator.next();
 
             // this.prop
-            if (tryEnterFieldReferenceState(targetClass, token)) {
+            if (tryEnterFieldReferenceState(targetClass, token, false)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
-        private boolean tryEnterFieldReferenceState(Class<?> memberingClass, String fieldName) throws IllegalSyntaxException {
+        private boolean tryEnterFieldReferenceState(Class<?> memberingClass, String fieldName, boolean fromStaticContext) throws IllegalSyntaxException {
             try {
                 Field field = AccessUtils.getFieldOnHierarchy(memberingClass, fieldName);
-                enterFieldReferenceState(memberingClass, field);
+                enterFieldReferenceState(memberingClass, field, fromStaticContext);
                 return true;
             } catch (NoSuchFieldException e) {
                 return false;
             }
         }
 
-        private boolean tryEnterFieldReferenceStateFromStaticContext(Class<?> memberingClass, String fieldName) throws IllegalSyntaxException {
-            try {
-                Field field = AccessUtils.getFieldOnHierarchy(memberingClass, fieldName);
-                if (!Modifier.isStatic(field.getModifiers())) {
-                    enterIllegalState("illegal reference to a dynamic field from a static context");
+        private void enterFieldReferenceState(Class<?> memberingClass, Field field, boolean fromStaticContext) throws IllegalSyntaxException {
+            if (fromStaticContext && !Modifier.isStatic(field.getModifiers())) {
+                enterIllegalState(String.format("Non-static field '%s' cannot be referenced from a static context", field.getName()));
+            }
+
+            if (!AccessUtils.isAccessible(memberingClass, field, caller)) {
+                String access;
+                if (Modifier.isPrivate(field.getModifiers())) {
+                    access = "private";
+                } else if (Modifier.isProtected(field.getModifiers())) {
+                    access = "protected";
+                } else {
+                    access = "package-private";
                 }
-                enterFieldReferenceState(memberingClass, field);
-                return true;
-            } catch (NoSuchFieldException e) {
-                return false;
-            }
-        }
 
-        private void enterFieldReferenceState(Class<?> memberingClass, Field field) throws IllegalSyntaxException {
+                enterIllegalState(String.format("'%s' has %s access in '%s'", field.getName(), access, field.getDeclaringClass().getName()));
+            }
+
             // TODO: add field reference 
             System.out.printf("field reference %s.%s:%s\n", memberingClass.getName(), field.getName(), field.getType().getName());
 
@@ -312,11 +324,11 @@ public class ReferenceChain {
             String token = iterator.next();
 
             // prop.prop2
-            if (tryEnterFieldReferenceState(field.getType(), token)) {
+            if (tryEnterFieldReferenceState(field.getType(), token, false)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEntryNestedFieldReferenceState(String fieldName) throws IllegalSyntaxException {
@@ -335,6 +347,23 @@ public class ReferenceChain {
         }
 
         private void enterNestedFieldReferenceState(Class<?> enclosingClass, Field field) throws IllegalSyntaxException {
+            if (!Modifier.isStatic(field.getModifiers())) {
+                Class<?> c = caller;
+                // check there is no static class in between before reaching this enclosed class
+                while (c != null && !c.equals(enclosingClass)) {
+                    if (Modifier.isStatic(c.getModifiers())) {
+                        enterIllegalState(String.format("Non-static field '%s' cannot be referenced from a static context", field.getName()));
+                    }
+                    
+                    c = caller.getEnclosingClass();
+                }
+            }
+
+            // this is syntactically allowed, but we don't support it for now
+            if (Modifier.isPrivate(field.getModifiers())) {
+                enterIllegalState(new UnsupportedOperationException("Private member access between nestmates is not supported"));
+            }
+
             doOutwardsCasting(enclosingClass);
 
             // TODO: add field reference
@@ -346,11 +375,11 @@ public class ReferenceChain {
             String token = iterator.next();
 
             // nestedProp.prop
-            if (tryEnterFieldReferenceState(field.getType(), token)) {
+            if (tryEnterFieldReferenceState(field.getType(), token, false)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterOuterClassState(String simpleClassName) throws IllegalSyntaxException {
@@ -412,7 +441,7 @@ public class ReferenceChain {
         private void enterOuterClassState(Class<?> targetClass) throws IllegalSyntaxException {
             // static context
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects 'this', 'super', a static field name, or an inner class name");
             }
             String token = iterator.next();
 
@@ -427,7 +456,7 @@ public class ReferenceChain {
             }
 
             // OuterClass.STATIC_PROP
-            if (tryEnterFieldReferenceStateFromStaticContext(targetClass, token)) {
+            if (tryEnterFieldReferenceState(targetClass, token, true)) {
                 return;
             }
 
@@ -446,7 +475,7 @@ public class ReferenceChain {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterInnerClassState(Class<?> currentClass, String simpleClassName) throws IllegalSyntaxException {
@@ -463,21 +492,21 @@ public class ReferenceChain {
         private void enterInnerClassState(Class<?> targetClass) throws IllegalSyntaxException {
             // static context
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects a static field name or an inner class name");
             }
             String token = iterator.next();
 
             // InnerClass.STATIC_PROP
-            if (tryEnterFieldReferenceStateFromStaticContext(targetClass, token)) {
+            if (tryEnterFieldReferenceState(targetClass, token, true)) {
                 return;
             }
 
-            // InnerClass.InnerMostClass
+            // InnerClass.InnerMoreClass
             if (tryEnterInnerClassState(targetClass, token)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         // target class is not a inner or outer class of the caller class, but is a classmate
@@ -523,12 +552,12 @@ public class ReferenceChain {
         private void enterNestMateClass(Class<?> targetClass) throws IllegalSyntaxException {
             // static context
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects a static field name or an inner class name");
             }
             String token = iterator.next();
 
             // NestMateClass.STATIC_PROP
-            if (tryEnterFieldReferenceStateFromStaticContext(targetClass, token)) {
+            if (tryEnterFieldReferenceState(targetClass, token, false)) {
                 return;
             }
 
@@ -537,7 +566,7 @@ public class ReferenceChain {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterSameClassState(String simpleClassName) throws IllegalSyntaxException {
@@ -579,7 +608,7 @@ public class ReferenceChain {
         private void enterSameClassState() throws IllegalSyntaxException {
             // static context
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects a static field name or an inner class name");
             }
             String token = iterator.next();
 
@@ -594,7 +623,7 @@ public class ReferenceChain {
             }
 
             // CallerClass.STATIC_PROP
-            if (tryEnterFieldReferenceStateFromStaticContext(caller, token)) {
+            if (tryEnterFieldReferenceState(caller, token, true)) {
                 return;
             }
 
@@ -602,7 +631,7 @@ public class ReferenceChain {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private boolean tryEnterClassState(String simpleClassName) throws IllegalSyntaxException {
@@ -635,19 +664,21 @@ public class ReferenceChain {
         private void enterClassState(Class<?> targetClass) throws IllegalSyntaxException {
             // static context
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects a static field name or an inner class name");
             }
             String token = iterator.next();
 
-            if (tryEnterFieldReferenceStateFromStaticContext(targetClass, token)) {
+            // ClassName.STATIC_PROP
+            if (tryEnterFieldReferenceState(targetClass, token, true)) {
                 return;
             }
 
+            // ClassName.InnerClass
             if (tryEnterClassState(targetClass, token)) {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         // Full qualified package named prefixed expression
@@ -695,7 +726,7 @@ public class ReferenceChain {
 
         private void enterPackageState(Package pkg) throws IllegalSyntaxException {
             if (!iterator.hasNext()) { // rejected state
-                enterIllegalState("unexpected end of input");
+                enterIllegalState("Unexpected end of input: expects a class name");
             }
             String token = iterator.next();
 
@@ -711,11 +742,15 @@ public class ReferenceChain {
                 return;
             }
 
-            enterIllegalState(String.format("unrecognized token: %s", token));
+            enterIllegalState(String.format("Unrecognized symbol '%s'", token));
         }
 
         private void enterIllegalState(String msg) throws IllegalSyntaxException {
             throw new IllegalSyntaxException(msg);
+        }
+
+        private void enterIllegalState(Throwable throwable) throws IllegalSyntaxException {
+            throw new IllegalSyntaxException(throwable);
         }
 
         private void doOutwardsCasting(Class<?> targetClass) throws IllegalSyntaxException {
