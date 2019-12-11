@@ -65,12 +65,12 @@ public final class IOToolkit {
 	/**
 	 * Magic bytes for recognizing Zip.
 	 */
-	public static final int MAGIC_ZIP[] = new int[] {80, 75, 3, 4};
+	private static final int MAGIC_ZIP[] = new int[] {80, 75, 3, 4};
 
 	/**
 	 * Magic bytes for recognizing GZip.
 	 */
-	public static final int MAGIC_GZ[] = new int[] {31, 139};
+	private static final int MAGIC_GZ[] = new int[] {31, 139};
 
 	private IOToolkit() {
 		throw new Error("Don't"); //$NON-NLS-1$
@@ -226,6 +226,26 @@ public final class IOToolkit {
 	 */
 	public static boolean isZipFile(File file) throws IOException {
 		return hasMagic(file, MAGIC_ZIP);
+	}
+
+	/**
+	 * Returns the magic bytes for identifying Gzip. This is a defensive copy. It's up to the user
+	 * to cache this to avoid excessive allocations.
+	 * 
+	 * @return a copy of the magic bytes for Gzip.
+	 */
+	public static int[] getGzipMagic() {
+		return MAGIC_GZ.clone();
+	}
+
+	/**
+	 * Returns the magic bytes for identifying Zip. This is a defensive copy. It's up to the user to
+	 * cache this to avoid excessive allocations.
+	 * 
+	 * @return a copy of the magic bytes for Zip.
+	 */
+	public static int[] getZipMagic() {
+		return MAGIC_ZIP.clone();
 	}
 
 	/**
