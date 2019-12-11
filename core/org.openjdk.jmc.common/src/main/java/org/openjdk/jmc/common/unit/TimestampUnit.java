@@ -225,7 +225,8 @@ public class TimestampUnit extends TypedUnit<TimestampUnit> {
 	public String getLocalizedDescription() {
 		if (unitDescription == null) {
 			String multiplier = timeOffsetUnit.asWellKnownQuantity().displayUsing(IDisplayable.EXACT);
-			unitDescription = MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG), multiplier);
+			unitDescription = MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG),
+					multiplier);
 		}
 		return unitDescription;
 	}
