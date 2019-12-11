@@ -1,6 +1,6 @@
 package org.openjdk.jmc.agent;
 
-import org.openjdk.jmc.agent.util.ReferenceChain;
+import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class Watch implements IAttribute {

@@ -15,7 +15,7 @@ public class AccessUtils {
         Class<?> c = clazz;
         while (c != null) {
             try {
-                return c.getDeclaredField(name);
+                return getFieldOnHierarchy(c, name);
             } catch (NoSuchFieldException e) {
                 c = c.getEnclosingClass();
             }    

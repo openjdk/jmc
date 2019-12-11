@@ -1,9 +1,10 @@
-package org.openjdk.jmc.agent.util;
+package org.openjdk.jmc.agent.util.expression;
 
 import java.lang.reflect.Field;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class FieldReference {
     private final Class<?> memberingClass;

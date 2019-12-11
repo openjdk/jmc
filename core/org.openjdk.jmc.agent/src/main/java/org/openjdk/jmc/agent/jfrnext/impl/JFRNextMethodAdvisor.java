@@ -41,8 +41,8 @@ import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.util.FieldReference;
-import org.openjdk.jmc.agent.util.ReferenceChain;
+import org.openjdk.jmc.agent.util.expression.FieldReference;
+import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 import java.lang.reflect.Modifier;

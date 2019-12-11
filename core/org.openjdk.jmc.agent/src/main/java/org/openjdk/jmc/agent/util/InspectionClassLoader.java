@@ -6,22 +6,21 @@ import java.io.InputStream;
 
 // One-time use loader for reflective class inspection. An InspectionClassLoader only loads one class.
 public class InspectionClassLoader extends ClassLoader {
-    private final ClassLoader parent;
 
     public InspectionClassLoader(ClassLoader parent) {
-        this.parent = parent;
+        super(parent);
     }
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         if (name.startsWith("java.")) {
-            return parent.loadClass(name);
+            return getParent().loadClass(name);
         }
 
         try {
-            return loadClass(name, false);
+            return loadClass(name, true);
         } catch (ClassNotFoundException e) {
-            return parent.loadClass(name);
+            return getParent().loadClass(name);
         }
     }
 
@@ -43,7 +42,7 @@ public class InspectionClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        InputStream is = parent.getResourceAsStream(TypeUtils.getInternalName(name) + ".class");
+        InputStream is = getParent().getResourceAsStream(TypeUtils.getInternalName(name) + ".class");
         if (is == null) {
             throw new ClassNotFoundException(name);
         }
