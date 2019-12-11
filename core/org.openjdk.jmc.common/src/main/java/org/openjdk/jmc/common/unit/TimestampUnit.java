@@ -47,13 +47,12 @@ import org.openjdk.jmc.common.messages.internal.Messages;
 public class TimestampUnit extends TypedUnit<TimestampUnit> {
 	private final LinearUnit timeOffsetUnit;
 	private final String unitId;
-	private final String unitDescription;
+	private String unitDescription;
 
 	TimestampUnit(LinearUnit timeOffsetUnit) {
 		this.timeOffsetUnit = timeOffsetUnit;
 		unitId = "epoch" + timeOffsetUnit.getIdentifier(); //$NON-NLS-1$
-		String multiplier = timeOffsetUnit.asWellKnownQuantity().displayUsing(IDisplayable.EXACT);
-		unitDescription = MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG), multiplier);
+		unitDescription = null;
 	}
 
 	@Override
@@ -224,6 +223,10 @@ public class TimestampUnit extends TypedUnit<TimestampUnit> {
 
 	@Override
 	public String getLocalizedDescription() {
+		if (unitDescription == null) {
+			String multiplier = timeOffsetUnit.asWellKnownQuantity().displayUsing(IDisplayable.EXACT);
+			unitDescription = MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG), multiplier);
+		}
 		return unitDescription;
 	}
 
