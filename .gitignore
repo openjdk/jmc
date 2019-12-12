@@ -6,8 +6,9 @@ bin/
 # Ignore settings changes by the IDE
 .settings/
 
-# Ignore test recording
+# Ignore test recordings
 application/tests/org.openjdk.jmc.rjmx.services.jfr.test/recording.jfr
+application/uitests/org.openjdk.jmc.flightrecorder.uitest/recording.jfr
 
 # Ignore build workspace
 workspace/
