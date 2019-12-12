@@ -41,10 +41,10 @@ import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.TypeUtils;
 import org.openjdk.jmc.agent.util.expression.FieldReference;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
-import org.openjdk.jmc.agent.util.TypeUtils;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -162,20 +162,20 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		// Assumes the reference chain is normalized already. See ReferenceChain.normalize()
 		List<FieldReference> refs = refChain.getReferences();
 		for (int i = 0; i < refs.size(); i++) {
-			if (i != 0) {
-				// null check
+			FieldReference ref = refs.get(i);
+			if (ref instanceof FieldReference.ThisReference) {
+				mv.visitVarInsn(ALOAD, 0); // load "this"
+			} else {
+				mv.visitFieldInsn(Modifier.isStatic(ref.getModifiers()) ? GETSTATIC : GETFIELD,
+						ref.getMemberingType().getInternalName(),
+						ref.getName(), ref.getType().getDescriptor());
+			}
+
+			// null check for field references
+			if (!(ref instanceof FieldReference.ThisReference) && !(ref instanceof FieldReference.QualifiedThisReference) && i != refs.size() - 1) {
 				mv.visitInsn(DUP);
 				mv.visitJumpInsn(IFNULL, nullCase);
 			}
-
-			FieldReference ref = refs.get(i);
-			if (ref instanceof FieldReference.ThisReference) {
-                mv.visitVarInsn(ALOAD, 0); // load "this"
-                continue;
-			}
-
-			int opcode = Modifier.isStatic(ref.getModifiers()) ? GETSTATIC : GETFIELD;
-			mv.visitFieldInsn(opcode, ref.getMemberingType().getInternalName(), ref.getName(), ref.getType().getDescriptor());
 		}
 		// loaded value, jump to writing attribute
 		mv.visitJumpInsn(GOTO, continueCase);
