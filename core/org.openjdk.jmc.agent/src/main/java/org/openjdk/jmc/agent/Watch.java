@@ -1,5 +1,7 @@
 package org.openjdk.jmc.agent;
 
+import org.openjdk.jmc.agent.util.expression.ExpressionResolver;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -55,7 +57,7 @@ public class Watch implements IAttribute {
         return this.converterClassName;
     }
     
-    public ReferenceChain resolveReferenceChain(Class<?> callerClass) throws NoSuchFieldException {
-        return new ReferenceChain(callerClass, expression); 
+    public ReferenceChain resolveReferenceChain(Class<?> callerClass, boolean fromStaticContext) throws IllegalSyntaxException {
+        return new ExpressionResolver(callerClass, expression, fromStaticContext).solve();
     }
 }

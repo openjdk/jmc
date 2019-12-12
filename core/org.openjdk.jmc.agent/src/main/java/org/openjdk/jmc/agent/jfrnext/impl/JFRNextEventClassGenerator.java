@@ -47,6 +47,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 
 public class JFRNextEventClassGenerator {
 	private static final String CLASS_EVENT = "jdk/jfr/Event"; //$NON-NLS-1$
@@ -66,7 +67,7 @@ public class JFRNextEventClassGenerator {
 		return cw.toByteArray();
 	}
 
-	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined) throws NoSuchFieldException {
+	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined) throws IllegalSyntaxException {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
 			if (param.isReturn()) {
@@ -77,7 +78,7 @@ public class JFRNextEventClassGenerator {
 		}
 
 		for (Watch watch : td.getWatches()) {
-			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined).getType());
+			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined, false).getType());
 		}
 	}
 

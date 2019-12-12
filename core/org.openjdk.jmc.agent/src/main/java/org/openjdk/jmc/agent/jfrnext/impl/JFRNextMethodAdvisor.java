@@ -42,6 +42,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.expression.FieldReference;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -129,11 +130,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		for (Watch watch : transformDescriptor.getWatches()) {
 			ReferenceChain refChain;
 			try {
-				refChain = watch.resolveReferenceChain(classBeingRedefined).normalize();
-			} catch (NoSuchFieldException e) {
-				throw new RuntimeException(e); // TODO: figure out what to do with this error
-			}
-			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+				refChain = watch.resolveReferenceChain(classBeingRedefined, Modifier.isStatic(getAccess())).normalize();
+			} catch (IllegalSyntaxException e) {
+                throw new RuntimeException(e); // TODO: figure out what to do with this error
+            }
+            if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
 				mv.visitInsn(DUP);
 				loadWatch(watch, refChain);
 				writeAttribute(watch, refChain.getType());
@@ -169,29 +170,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 			FieldReference ref = refs.get(i);
 			if (ref instanceof FieldReference.ThisReference) {
-				if (isStatic) {
-					throw new IllegalStateException("unexpected \"this\" reference in a static method");
-				}
-				if (i != 0) {
-					throw new IllegalStateException("unexpected position of \"this\" reference");
-				}
-				mv.visitVarInsn(ALOAD, 0); // load "this"
-				continue;
+                mv.visitVarInsn(ALOAD, 0); // load "this"
+                continue;
 			}
 
-			int opcode;
-			if (Modifier.isStatic(ref.getModifiers())) {
-				if (i != 0) {
-					throw new IllegalStateException("unexpected position of a static reference");
-				}
-				opcode = GETSTATIC;
-			} else {
-				if (i == 0 && isStatic) {
-					throw new IllegalStateException("unexpected position of a dynamic reference in a static method");
-				}
-				opcode = GETFIELD;
-			}
-
+			int opcode = Modifier.isStatic(ref.getModifiers()) ? GETSTATIC : GETFIELD;
 			mv.visitFieldInsn(opcode, ref.getMemberingType().getInternalName(), ref.getName(), ref.getType().getDescriptor());
 		}
 		// loaded value, jump to writing attribute

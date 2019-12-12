@@ -9,16 +9,16 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 public class FieldReference {
     private final Class<?> memberingClass;
     private final Field field;
-    
-    public FieldReference(Class<?> memberingClass, Field type) {
+
+    public FieldReference(Class<?> memberingClass, Field field) {
         this.memberingClass = memberingClass;
-        this.field = type;
+        this.field = field;
     }
 
     public Class<?> getMemberingClass() {
         return memberingClass;
     }
-    
+
     public Type getMemberingType() {
         return Type.getType(getMemberingClass());
     }
@@ -26,13 +26,17 @@ public class FieldReference {
     public Field getField() {
         return field;
     }
-    
+
     public String getName() {
         return getField().getName();
     }
-    
+
     public Type getType() {
-        return Type.getType(getField().getType());
+        return Type.getType(getReferencedClass());
+    }
+
+    public Class<?> getReferencedClass() {
+        return getField().getType();
     }
     
     public int getModifiers() {
@@ -41,22 +45,29 @@ public class FieldReference {
 
     @Override
     public String toString() {
-        return String.format("%s.%s : %s", TypeUtils.getInternalName(getMemberingClass().getName()), getName(), getType().getClassName());
+        return String.format("FieldRef %s.%s:%s", TypeUtils.getInternalName(getMemberingClass().getName()), getName(), getType().getClassName());
     }
 
+    // for "this" expression and "Qualified.this" expression
     public static class ThisReference extends FieldReference {
-        public ThisReference(Class<?> memberingClass) {
-            super(memberingClass, null);
+
+        public ThisReference(Class<?> enclosingClass) { // the caller class is technically an enclosing class of itself
+            super(enclosingClass, null);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "this";
         }
 
         @Override
         public Type getType() {
             return getMemberingType();
+        }
+
+        @Override
+        public Class<?> getReferencedClass() {
+            return getMemberingClass();
         }
 
         @Override
@@ -66,36 +77,39 @@ public class FieldReference {
 
         @Override
         public String toString() {
-            return "\"this\"";
+            return getName();
         }
     }
 
-    // implicit qualified "this"
-    public static class OutwardsCastingReference extends FieldReference {
-        private Class<?> targetClass;
-        
-        public OutwardsCastingReference(Class<?> thisClass, Class<?> targetClass) {
-            super(thisClass, null);
-            this.targetClass = targetClass;
-            
-            if (thisClass.getEnclosingClass() != targetClass) {
-                throw new IllegalArgumentException(String.format("%s is not the direct outer class of %s", targetClass.getName(), thisClass.getName()));
-            }
+    // "Qualified.this"
+    public static class QualifiedThisReference extends FieldReference {
+        private Class<?> enclosingClass;
+        private int index;
+
+        public QualifiedThisReference(Class<?> innerClass, Class<?> enclosingClass, int index) {
+            super(innerClass, null);
+            this.enclosingClass = enclosingClass;
+            this.index = index;
         }
 
         @Override
         public String getName() {
-            return "this$0";
+            return "this$" + index;
         }
 
         @Override
         public Type getType() {
-            return Type.getType(targetClass);
+            return Type.getType(enclosingClass);
         }
 
         @Override
         public int getModifiers() {
             return Opcodes.ACC_PRIVATE | Opcodes.ACC_SYNTHETIC; 
+        }
+
+        @Override
+        public String toString() {
+            return getName();
         }
     }
 }
