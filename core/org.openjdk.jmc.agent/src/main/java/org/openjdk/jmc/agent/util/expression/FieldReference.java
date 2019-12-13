@@ -83,8 +83,8 @@ public class FieldReference {
 
     // "Qualified.this"
     public static class QualifiedThisReference extends FieldReference {
-        private Class<?> enclosingClass;
-        private int index;
+        private final Class<?> enclosingClass;
+        private final int index;
 
         public QualifiedThisReference(Class<?> innerClass, Class<?> enclosingClass, int index) {
             super(innerClass, null);

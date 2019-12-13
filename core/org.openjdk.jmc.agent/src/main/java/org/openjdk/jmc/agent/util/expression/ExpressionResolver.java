@@ -17,7 +17,7 @@ import java.util.List;
 
     TypeName
         -> TypeIdentifier
-         | PackageOrTypeName Dot TypeIdentifier
+         | PackageOrTypeName . TypeIdentifier
 
     PackageOrTypeName
         -> identifier
