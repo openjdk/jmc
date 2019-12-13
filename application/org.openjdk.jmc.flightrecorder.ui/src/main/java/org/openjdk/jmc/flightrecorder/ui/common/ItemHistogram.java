@@ -276,8 +276,6 @@ public class ItemHistogram {
 	}
 
 	public void show(IItemCollection items) {
-		System.err.println("ItemHistogram.show");
-		new Throwable().printStackTrace();
 		columnManager.getViewer().setInput(grid.buildRows(items, classifier));
 	}
 

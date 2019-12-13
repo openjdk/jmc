@@ -62,15 +62,17 @@ public class AggregationGrid {
 	private static class AggregationModel {
 		final Object[][] cellData;
 		AggregateRow[] aggregateItems;
+		IItemCollection modelItems;
 		int itemsCount;
 
-		AggregationModel(int columnCount, int rowCount) {
-			cellData = new Object[columnCount][];
-			aggregateItems = new AggregateRow[rowCount];
+		AggregationModel(int columnCount, int rowCount, IItemCollection modelItems) {
+			this.cellData = new Object[columnCount][];
+			this.aggregateItems = new AggregateRow[rowCount];
+			this.modelItems = modelItems;
 		}
 
-		void addRow(Object key, List<IItem[]> items, int rowIndex, IItemCollection allItems) {
-			AggregateRow ai = new AggregateRow(this, key, items, rowIndex, allItems);
+		void addRow(Object key, List<IItem[]> items, int rowIndex) {
+			AggregateRow ai = new AggregateRow(this, key, items, rowIndex);
 			aggregateItems[rowIndex] = ai;
 			itemsCount += ai.count.longValue();
 		}
@@ -79,18 +81,15 @@ public class AggregationGrid {
 	public static class AggregateRow {
 		final int index;
 		final IItemCollection rowItems;
-		final IItemCollection allItems;
 		final Object key;
 		final IQuantity count;
 		final AggregationModel model;
 
-		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex,
-				IItemCollection allItems) {
+		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex) {
 			this.model = model;
 			this.key = key;
 
 			this.rowItems = buildItemCollection(itemsByType);
-			this.allItems = allItems;
 			this.count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
 			this.index = rowIndex;
 		}
@@ -159,7 +158,7 @@ public class AggregationGrid {
 		}
 
 		private Object calculateValue(AggregateRow row) {
-			return valueFunction.apply(row.rowItems, row.allItems);
+			return valueFunction.apply(row.rowItems, row.model.modelItems);
 		}
 	}
 
@@ -243,10 +242,10 @@ public class AggregationGrid {
 
 	public <T> Object[] buildRows(IItemCollection items, IAccessorFactory<T> classifier) {
 		Map<T, List<IItem[]>> itemsMap = mapItems(ItemCollectionToolkit.stream(items), classifier);
-		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size());
+		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size(), items);
 		int index = 0;
 		for (Entry<T, List<IItem[]>> e : itemsMap.entrySet()) {
-			model.addRow(e.getKey(), e.getValue(), index++, items);
+			model.addRow(e.getKey(), e.getValue(), index++);
 		}
 		return model.aggregateItems;
 	}
