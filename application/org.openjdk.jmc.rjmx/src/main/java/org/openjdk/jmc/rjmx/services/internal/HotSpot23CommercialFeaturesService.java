@@ -66,7 +66,8 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 	@Override
 	public boolean isCommercialFeaturesEnabled() {
 		try {
-			return ((String) HotspotManagementToolkit.getVMOption(server, UNLOCK_COMMERCIAL_FEATURES_FLAG)).contains("true"); //$NON-NLS-1$
+			return ((String) HotspotManagementToolkit.getVMOption(server, UNLOCK_COMMERCIAL_FEATURES_FLAG))
+					.contains("true"); //$NON-NLS-1$
 		} catch (Exception e) {
 			return false;
 		}
