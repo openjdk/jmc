@@ -56,6 +56,7 @@ import javax.management.remote.JMXServiceURL;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.rjmx.internal.RJMXConnection;
+import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 /**
  * Toolkit providing utility methods to retrieve MBean proxy objects, invoke JMX operations and
@@ -370,7 +371,25 @@ public final class ConnectionToolkit {
 	 * connected.
 	 */
 	public static boolean isOracle(IConnectionHandle handle) {
-		String vendor = handle.getServerDescriptor().getJvmInfo().getJvmVendor();
+		JVMDescriptor descriptor = handle.getServerDescriptor().getJvmInfo();
+		// This should normally not happen for discovered JVMs, but users can create custom connections
+		String vendor = null;
+		if (descriptor != null) {
+			vendor = descriptor.getJvmVendor();
+		} else {
+			// We try checking if connected
+			if (handle.isConnected()) {
+				MBeanServerConnection connection = handle.getServiceOrNull(MBeanServerConnection.class);
+				if (connection != null) {
+					try {
+						vendor = getRuntimeBean(connection).getVmVendor();
+					} catch (IOException e) {
+						// Worst case we classify JVM vendor wrong
+						RJMXPlugin.getDefault().getLogger().log(Level.WARNING, "Could not check if Oracle JVM", e);
+					}
+				}
+			}
+		}
 		return vendor != null && vendor.contains("Oracle");
 	}
 

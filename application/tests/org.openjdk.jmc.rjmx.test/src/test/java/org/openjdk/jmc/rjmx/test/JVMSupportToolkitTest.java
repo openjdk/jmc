@@ -63,8 +63,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfr17U40HotSpotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0_40", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7.0_40", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(SUPPORTED_MESSAGE, errorMessage);
@@ -73,8 +73,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfr17U4HotSpotNotFullySupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0_04", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7.0_04", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_FULLY_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -83,8 +83,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfr17HotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -93,8 +93,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfrJRockitNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.6", JVMType.JROCKIT, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.6", JVMType.JROCKIT, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_JROCKIT_NO_LONGER_SUPPORTED, errorMessage);
@@ -103,8 +103,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfrOldHotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.6", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.6", JVMType.HOTSPOT, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -113,8 +113,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfrNonHotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7", JVMType.OTHER, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7", JVMType.OTHER, JVMArch.UNKNOWN, ORACLE, null,
+						null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_NOT_HOTSPOT, errorMessage);
@@ -123,8 +123,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfrUnknownNoWarning() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7", JVMType.UNKNOWN, JVMArch.UNKNOWN, ORACLE, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7", JVMType.UNKNOWN, JVMArch.UNKNOWN, ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(SUPPORTED_MESSAGE, errorMessage);
@@ -133,18 +133,18 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfr8HotSpotOpenJDKSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.8.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, "OpenJDK", null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.8.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, "OpenJDK",
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(SUPPORTED_MESSAGE, errorMessage);
 	}
-	
+
 	@Test
 	public void testJdk7HotSpotOpenJDKNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, "OpenJDK", null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, "OpenJDK",
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertNotNull(errorMessage);
