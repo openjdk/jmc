@@ -52,4 +52,9 @@ public interface ICommercialFeaturesService {
 	 */
 	void enableCommercialFeatures() throws Exception;
 
+	/**
+	 * @return true if there are commercial features available, or false if this JVM doesn't have
+	 *         commercial features.
+	 */
+	boolean hasCommercialFeatures();
 }

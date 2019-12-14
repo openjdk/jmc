@@ -34,7 +34,10 @@ package org.openjdk.jmc.rjmx.services.internal;
 
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
 
-public class Jdk11CommercialFeaturesService implements ICommercialFeaturesService {
+/**
+ * Used by JVMs with no commercial features, e.g. OpenJDK 8 and JDK 11+ JVMs.
+ */
+public class NoCommercialFeaturesService implements ICommercialFeaturesService {
 
 	@Override
 	public boolean isCommercialFeaturesEnabled() {
@@ -44,5 +47,10 @@ public class Jdk11CommercialFeaturesService implements ICommercialFeaturesServic
 	@Override
 	public void enableCommercialFeatures() throws Exception {
 		// Noop
+	}
+
+	@Override
+	public boolean hasCommercialFeatures() {
+		return false;
 	}
 }

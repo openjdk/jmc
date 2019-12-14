@@ -346,7 +346,6 @@ public final class ConnectionToolkit {
 	 *         otherwise.
 	 */
 	public static boolean isJRockit(IConnectionHandle connectionHandle) {
-
 		String vmName = getVMName(connectionHandle);
 		return JavaVMVersionToolkit.isJRockitJVMName(vmName);
 	}
@@ -363,6 +362,16 @@ public final class ConnectionToolkit {
 	public static boolean isHotSpot(IConnectionHandle connectionHandle) {
 		String vmName = getVMName(connectionHandle);
 		return vmName != null && JavaVMVersionToolkit.isHotspotJVMName(vmName);
+	}
+
+	/**
+	 * Returns {@code true} if the connection handle is associated with an Oracle built JVM,
+	 * {@code false} otherwise. This method <b>does not</b> require the connection handle to be
+	 * connected.
+	 */
+	public static boolean isOracle(IConnectionHandle handle) {
+		String vendor = handle.getServerDescriptor().getJvmInfo().getJvmVendor();
+		return vendor != null && vendor.contains("Oracle");
 	}
 
 	/**
@@ -411,5 +420,4 @@ public final class ConnectionToolkit {
 		}
 		return null;
 	}
-
 }
