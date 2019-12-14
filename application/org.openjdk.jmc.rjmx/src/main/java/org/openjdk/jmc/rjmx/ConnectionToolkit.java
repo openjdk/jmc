@@ -367,8 +367,12 @@ public final class ConnectionToolkit {
 
 	/**
 	 * Returns {@code true} if the connection handle is associated with an Oracle built JVM,
-	 * {@code false} otherwise. This method <b>does not</b> require the connection handle to be
-	 * connected.
+	 * {@code false} otherwise. If the information is already present in the {@link JVMDescriptor},
+	 * this method will not cause any JMXRMI calls. If the information is lacking, an attempt will
+	 * be made to look it up in the connected JVM. If the attempt fails, false will be returned.
+	 *
+	 * @return {@code true} if the connection handle describes an Oracle JVM, or {@code false}
+	 *         otherwise or if it could not be determined.
 	 */
 	public static boolean isOracle(IConnectionHandle handle) {
 		JVMDescriptor descriptor = handle.getServerDescriptor().getJvmInfo();
