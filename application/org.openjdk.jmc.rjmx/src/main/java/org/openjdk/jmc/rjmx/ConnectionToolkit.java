@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -56,6 +56,7 @@ import javax.management.remote.JMXServiceURL;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.rjmx.internal.RJMXConnection;
+import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 /**
  * Toolkit providing utility methods to retrieve MBean proxy objects, invoke JMX operations and
@@ -346,7 +347,6 @@ public final class ConnectionToolkit {
 	 *         otherwise.
 	 */
 	public static boolean isJRockit(IConnectionHandle connectionHandle) {
-
 		String vmName = getVMName(connectionHandle);
 		return JavaVMVersionToolkit.isJRockitJVMName(vmName);
 	}
@@ -363,6 +363,38 @@ public final class ConnectionToolkit {
 	public static boolean isHotSpot(IConnectionHandle connectionHandle) {
 		String vmName = getVMName(connectionHandle);
 		return vmName != null && JavaVMVersionToolkit.isHotspotJVMName(vmName);
+	}
+
+	/**
+	 * Returns {@code true} if the connection handle is associated with an Oracle built JVM,
+	 * {@code false} otherwise. If the information is already present in the {@link JVMDescriptor},
+	 * this method will not cause any JMXRMI calls. If the information is lacking, an attempt will
+	 * be made to look it up in the connected JVM. If the attempt fails, false will be returned.
+	 *
+	 * @return {@code true} if the connection handle describes an Oracle JVM, or {@code false}
+	 *         otherwise or if it could not be determined.
+	 */
+	public static boolean isOracle(IConnectionHandle handle) {
+		JVMDescriptor descriptor = handle.getServerDescriptor().getJvmInfo();
+		// This should normally not happen for discovered JVMs, but users can create custom connections
+		String vendor = null;
+		if (descriptor != null) {
+			vendor = descriptor.getJvmVendor();
+		} else {
+			// We try checking if connected
+			if (handle.isConnected()) {
+				MBeanServerConnection connection = handle.getServiceOrNull(MBeanServerConnection.class);
+				if (connection != null) {
+					try {
+						vendor = getRuntimeBean(connection).getVmVendor();
+					} catch (IOException e) {
+						// Worst case we classify JVM vendor wrong
+						RJMXPlugin.getDefault().getLogger().log(Level.WARNING, "Could not check if Oracle JVM", e);
+					}
+				}
+			}
+		}
+		return vendor != null && vendor.contains("Oracle");
 	}
 
 	/**
@@ -411,5 +443,4 @@ public final class ConnectionToolkit {
 		}
 		return null;
 	}
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -199,6 +199,8 @@ public class LocalJVMToolkit {
 					String address = null;
 					String version = null;
 					String jvmArgs = null;
+					String jvmVendor = null;
+
 					try {
 						// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
 						MonitoredVm mvm = host.getMonitoredVm(new VmIdentifier(name));
@@ -235,6 +237,12 @@ public class LocalJVMToolkit {
 							if (sm != null) {
 								isDebug = isDebug(sm.stringValue());
 							}
+
+							sm = (StringMonitor) mvm.findByName("java.property.java.vm.vendor"); //$NON-NLS-1$
+							if (sm != null) {
+								jvmVendor = sm.stringValue();
+							}
+
 							// NOTE: isAttachable seems to return true even if a real attach is not possible.
 							// attachable = MonitoredVmUtil.isAttachable(mvm);
 
@@ -260,8 +268,8 @@ public class LocalJVMToolkit {
 					} catch (Exception x) {
 						// ignore
 					}
-					connDesc = createDescriptor(name, jvmArgs, vmid, connectable, type, jvmArch, address, version,
-							isDebug);
+					connDesc = createDescriptor(name, jvmArgs, jvmVendor, vmid, connectable, type, jvmArch, address,
+							version, isDebug);
 					return connDesc;
 				}
 			});
@@ -361,6 +369,7 @@ public class LocalJVMToolkit {
 					String javaArgs = null;
 					String jvmArgs = null;
 					String jvmVersion = null;
+					String jvmVendor = null;
 					VirtualMachine vm = null;
 					try {
 						// Attach creates one process handle on Windows.
@@ -381,6 +390,7 @@ public class LocalJVMToolkit {
 							jvmType = getJVMType(vmName);
 							version = props.getProperty("java.version"); //$NON-NLS-1$
 							jvmVersion = props.getProperty("java.vm.version"); //$NON-NLS-1$
+							jvmVendor = props.getProperty("java.vm.vendor");
 							isDebug = isDebug(jvmVersion);
 							jvmArch = JVMArch.getJVMArch(props);
 						}
@@ -398,8 +408,8 @@ public class LocalJVMToolkit {
 						}
 					}
 					if (connectable.isAttachable()) {
-						connDesc = createDescriptor(javaArgs, jvmArgs, Integer.parseInt(vmd.id()), connectable, jvmType,
-								jvmArch, address, version, isDebug);
+						connDesc = createDescriptor(javaArgs, jvmArgs, jvmVendor, Integer.parseInt(vmd.id()),
+								connectable, jvmType, jvmArch, address, version, isDebug);
 					}
 					BrowserAttachPlugin.getPluginLogger().info("Done resolving PID " + vmd); //$NON-NLS-1$
 					return connDesc;
@@ -463,9 +473,10 @@ public class LocalJVMToolkit {
 	}
 
 	private static DiscoveryEntry createDescriptor(
-		String javaCommand, String jvmArgs, int pid, Connectable connectable, JVMType type, JVMArch arch,
-		String address, String version, boolean isDebug) {
-		JVMDescriptor jvmInfo = new JVMDescriptor(version, type, arch, javaCommand, jvmArgs, pid, isDebug, connectable);
+		String javaCommand, String jvmArgs, String jvmVendor, int pid, Connectable connectable, JVMType type,
+		JVMArch arch, String address, String version, boolean isDebug) {
+		JVMDescriptor jvmInfo = new JVMDescriptor(version, type, arch, javaCommand, jvmArgs, jvmVendor, pid, isDebug,
+				connectable);
 		LocalConnectionDescriptor lcd = new LocalConnectionDescriptor(pid, address, connectable == ATTACHABLE);
 		String guid = "Local-[PID:" + pid + ", seq:" + (SEQ_NUMBER++) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		IServerDescriptor sd = IServerDescriptor.create(guid, null, jvmInfo);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ package org.openjdk.jmc.ui.common.jvm;
 public class JVMDescriptor {
 	private final String javaVersion;
 	private final JVMType jvmType;
+	private final String jvmVendor;
 	private final JVMArch jvmArch;
 	private final String javaCommand;
 	private final String jvmArguments;
@@ -46,13 +47,14 @@ public class JVMDescriptor {
 	private final Connectable connectable;
 
 	public JVMDescriptor(String javaVersion, JVMType jvmType, JVMArch jvmArch, String javaCommand, String jvmArguments,
-			Integer pid, boolean debug, Connectable attachable) {
+			String jvmVendor, Integer pid, boolean debug, Connectable attachable) {
 		super();
 		this.javaVersion = javaVersion;
 		this.jvmType = jvmType;
 		this.jvmArch = jvmArch;
 		this.javaCommand = javaCommand;
 		this.jvmArguments = jvmArguments;
+		this.jvmVendor = jvmVendor;
 		this.pid = pid;
 		this.debug = debug;
 		connectable = attachable;
@@ -76,6 +78,10 @@ public class JVMDescriptor {
 
 	public String getJVMArguments() {
 		return jvmArguments;
+	}
+
+	public String getJvmVendor() {
+		return jvmVendor;
 	}
 
 	public Integer getPid() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.rjmx.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
@@ -46,7 +47,8 @@ import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 @SuppressWarnings("nls")
 public class JVMSupportToolkitTest {
-
+	private static final String VENDOR_OPEN_JDK = "OpenJDK";
+	private static final String VENDOR_ORACLE = "Oracle";
 	// FIXME: Add tests for the methods that take IConnectionHandle as a parameter.
 
 	private static final String SUPPORTED_MESSAGE = null;
@@ -63,7 +65,8 @@ public class JVMSupportToolkitTest {
 	public void testJfr17U40HotSpotSupported() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0_40", JVMType.HOTSPOT, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.7.0_40", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(SUPPORTED_MESSAGE, errorMessage);
@@ -73,7 +76,8 @@ public class JVMSupportToolkitTest {
 	public void testJfr17U4HotSpotNotFullySupported() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0_04", JVMType.HOTSPOT, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.7.0_04", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_FULLY_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -83,7 +87,8 @@ public class JVMSupportToolkitTest {
 	public void testJfr17HotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -93,7 +98,8 @@ public class JVMSupportToolkitTest {
 	public void testJfrJRockitNotSupported() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.6", JVMType.JROCKIT, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.6", JVMType.JROCKIT, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_JROCKIT_NO_LONGER_SUPPORTED, errorMessage);
@@ -103,7 +109,8 @@ public class JVMSupportToolkitTest {
 	public void testJfrOldHotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.6", JVMType.HOTSPOT, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.6", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_OLD_HOTSPOT, errorMessage);
@@ -112,8 +119,8 @@ public class JVMSupportToolkitTest {
 	@Test
 	public void testJfrNonHotSpotNotSupported() {
 		ServerHandle server = new ServerHandle(
-				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7", JVMType.OTHER, JVMArch.UNKNOWN, null, null, null, false, null)),
+				new ServerDescriptor(null, null, new JVMDescriptor("1.7", JVMType.OTHER, JVMArch.UNKNOWN, VENDOR_ORACLE,
+						null, null, null, false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(Messages.JVMSupport_FLIGHT_RECORDER_NOT_SUPPORTED_NOT_HOTSPOT, errorMessage);
@@ -123,10 +130,32 @@ public class JVMSupportToolkitTest {
 	public void testJfrUnknownNoWarning() {
 		ServerHandle server = new ServerHandle(
 				new ServerDescriptor(null, null,
-						new JVMDescriptor("1.7", JVMType.UNKNOWN, JVMArch.UNKNOWN, null, null, null, false, null)),
+						new JVMDescriptor("1.7", JVMType.UNKNOWN, JVMArch.UNKNOWN, VENDOR_ORACLE, null, null, null,
+								false, null)),
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertEquals(SUPPORTED_MESSAGE, errorMessage);
 	}
 
+	@Test
+	public void testJfr8HotSpotOpenJDKSupported() {
+		ServerHandle server = new ServerHandle(
+				new ServerDescriptor(null, null,
+						new JVMDescriptor("1.8.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_OPEN_JDK, null, null, null,
+								false, null)),
+				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
+		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
+		assertEquals(SUPPORTED_MESSAGE, errorMessage);
+	}
+
+	@Test
+	public void testJdk7HotSpotOpenJDKNotSupported() {
+		ServerHandle server = new ServerHandle(
+				new ServerDescriptor(null, null,
+						new JVMDescriptor("1.7.0", JVMType.HOTSPOT, JVMArch.UNKNOWN, VENDOR_OPEN_JDK, null, null, null,
+								false, null)),
+				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
+		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
+		assertNotNull(errorMessage);
+	}
 }

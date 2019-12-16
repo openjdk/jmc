@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -137,7 +137,7 @@ public final class JVMSupportToolkit {
 	}
 
 	/**
-	 * Returns information about whether to server denoted by the handle supports Flight Recorder
+	 * Returns information about whether the server supports Flight Recorder.
 	 *
 	 * @param handle
 	 *            the server to check
