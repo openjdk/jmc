@@ -61,7 +61,7 @@ public class ReferenceChain {
     public void append(IReferenceChainElement ref) {
         references.add(ref);
     }
-    
+
     public boolean isStatic() {
         if (references.isEmpty()) {
             return false;

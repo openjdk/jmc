@@ -14,7 +14,10 @@ public class Watch implements IAttribute {
     private final String contentType;
     private final String relationKey;
     private final String converterClassName;
-    
+
+    private Class<?> resolvingCaller;
+    private ReferenceChain referenceChain;
+
     public Watch(String name, String expression, String description, String contentType, String relationKey, String converterClassName) {
         this.name = name;
         this.expression = expression;
@@ -28,6 +31,10 @@ public class Watch implements IAttribute {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public String getExpression() {
+        return expression;
     }
 
     @Override
@@ -55,7 +62,12 @@ public class Watch implements IAttribute {
         return this.converterClassName;
     }
 
-    public ReferenceChain resolveReferenceChain(Class<?> callerClass, boolean fromStaticContext) throws IllegalSyntaxException {
-        return ExpressionResolver.solve(callerClass, expression, fromStaticContext);
+    public ReferenceChain resolveReferenceChain(Class<?> callerClass) throws IllegalSyntaxException {
+        if (!callerClass.equals(resolvingCaller)) {
+            resolvingCaller = callerClass;
+            referenceChain = ExpressionResolver.solve(callerClass, expression);
+        }
+        
+        return referenceChain;
     }
 }

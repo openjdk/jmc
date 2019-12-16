@@ -41,20 +41,18 @@ import java.util.List;
 public class ExpressionResolver {
     private final Class<?> caller;
     private final String expression;
-    private final boolean fromStaticContext;
 
     private List<String> tokens = null;
     private Iterator<String> iterator = null;
     private ReferenceChain referenceChain = null;
 
-    private ExpressionResolver(Class<?> caller, String expression, boolean fromStaticContext) {
+    private ExpressionResolver(Class<?> caller, String expression) {
         this.caller = caller;
         this.expression = expression;
-        this.fromStaticContext = fromStaticContext;
     }
 
-    public static ReferenceChain solve(Class<?> caller, String expression, boolean fromStaticContext) throws IllegalSyntaxException {
-        ExpressionResolver resolver = new ExpressionResolver(caller, expression, fromStaticContext);
+    public static ReferenceChain solve(Class<?> caller, String expression) throws IllegalSyntaxException {
+        ExpressionResolver resolver = new ExpressionResolver(caller, expression);
         resolver.tokens = new LinkedList<>(Arrays.asList(expression.split("\\.")));
         resolver.iterator = resolver.tokens.iterator();
         resolver.referenceChain = new ReferenceChain(caller);
@@ -82,7 +80,7 @@ public class ExpressionResolver {
         }
 
         // local/inherited field reference
-        if (tryEnterFieldReferenceState(caller, token, fromStaticContext)) {
+        if (tryEnterFieldReferenceState(caller, token, false)) { // assuming accessing from a non-static context 
             return;
         }
 
@@ -140,10 +138,6 @@ public class ExpressionResolver {
 
     // "^this" or "Qualified.this" expression (casting to an enclosing class)
     private void enterThisState(Class<?> enclosingClass) throws IllegalSyntaxException {
-        if (fromStaticContext) {
-            enterIllegalState(String.format("'%s.this' cannot be referenced from a static context", enclosingClass.getName()));
-        }
-
         // cast to outer class instance only when accessing non-static fields
         referenceChain.append(new IReferenceChainElement.ThisReference(caller));
         if (!caller.equals(enclosingClass)) {
@@ -178,10 +172,6 @@ public class ExpressionResolver {
 
     // "^super" or "Qualified.super" expression
     private void enterSuperState(Class<?> enclosingClass) throws IllegalSyntaxException {
-        if (fromStaticContext) {
-            enterIllegalState(String.format("'%s.super' cannot be referenced from a static context", enclosingClass.getName()));
-        }
-
         referenceChain.append(new IReferenceChainElement.ThisReference(caller));
         if (!caller.equals(enclosingClass)) {
             try {

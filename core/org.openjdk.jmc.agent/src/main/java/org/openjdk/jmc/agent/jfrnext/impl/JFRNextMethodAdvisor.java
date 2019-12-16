@@ -108,10 +108,14 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	@Override
 	protected void onMethodEnter() {
-		createEvent();
+		try {
+			createEvent();
+		} catch (IllegalSyntaxException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	private void createEvent() {
+	private void createEvent() throws IllegalSyntaxException {
 		mv.visitTypeInsn(NEW, transformDescriptor.getEventClassName());
 		mv.visitInsn(DUP);
 		mv.visitInsn(DUP);
@@ -128,13 +132,13 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		}
 
 		for (Watch watch : transformDescriptor.getWatches()) {
-			ReferenceChain refChain;
-			try {
-				refChain = watch.resolveReferenceChain(classBeingRedefined, Modifier.isStatic(getAccess())).normalize();
-			} catch (IllegalSyntaxException e) {
-                throw new RuntimeException(e); // TODO: figure out what to do with this error
-            }
-            if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+			ReferenceChain refChain = watch.resolveReferenceChain(classBeingRedefined).normalize();
+
+			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
+				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + watch.getExpression());
+			}
+
+			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
 				mv.visitInsn(DUP);
 				loadWatch(refChain);
 				writeAttribute(watch, refChain.getType());

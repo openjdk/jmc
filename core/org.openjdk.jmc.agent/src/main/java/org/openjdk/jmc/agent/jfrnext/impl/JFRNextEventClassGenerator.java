@@ -78,7 +78,7 @@ public class JFRNextEventClassGenerator {
 		}
 
 		for (Watch watch : td.getWatches()) {
-			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined, false).getType());
+			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined).getType());
 		}
 	}
 
