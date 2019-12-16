@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /*
-    Expression
+    Expression // a subset of Java primary expression (without array accesses)
         -> this
          | TypeName . this
          | FieldAccess
@@ -45,7 +45,7 @@ public class ExpressionResolver {
 
     private List<String> tokens = null;
     private Iterator<String> iterator = null;
-    private List<FieldReference> referenceChain = null;
+    private ReferenceChain referenceChain = null;
 
     public ExpressionResolver(Class<?> caller, String expression, boolean fromStaticContext) {
         this.caller = caller;
@@ -53,14 +53,15 @@ public class ExpressionResolver {
         this.fromStaticContext = fromStaticContext;
     }
 
-    public ReferenceChain solve() throws IllegalSyntaxException {
-        tokens = new LinkedList<>(Arrays.asList(expression.split("\\.")));
-        iterator = tokens.iterator();
-        referenceChain = new LinkedList<>();
+    public static ReferenceChain solve(Class<?> caller, String expression, boolean fromStaticContext) throws IllegalSyntaxException {
+        ExpressionResolver resolver = new ExpressionResolver(caller, expression, fromStaticContext);
+        resolver.tokens = new LinkedList<>(Arrays.asList(expression.split("\\.")));
+        resolver.iterator = resolver.tokens.iterator();
+        resolver.referenceChain = new ReferenceChain(caller);
 
-        enterStartState();
-        
-        return new ReferenceChain(caller, referenceChain, false);
+        resolver.enterStartState();
+
+        return resolver.referenceChain;
     }
 
     private void enterStartState() throws IllegalSyntaxException {
@@ -128,22 +129,28 @@ public class ExpressionResolver {
         enterIllegalState(String.format("Unrecognized symbol '%s'", token));
     }
 
-    private boolean tryEnterThisState(Class<?> targetClass, String thisLiteral) throws IllegalSyntaxException {
+    private boolean tryEnterThisState(Class<?> enclosingClass, String thisLiteral) throws IllegalSyntaxException {
         if (!"this".equals(thisLiteral)) {
             return false;
         }
 
-        enterThisState(targetClass);
+        enterThisState(enclosingClass);
         return true;
     }
 
     // "^this" or "Qualified.this" expression (casting to an enclosing class)
-    private void enterThisState(Class<?> targetClass) throws IllegalSyntaxException {
+    private void enterThisState(Class<?> enclosingClass) throws IllegalSyntaxException {
         if (fromStaticContext) {
-            enterIllegalState(String.format("'%s.this' cannot be referenced from a static context", targetClass.getName()));
+            enterIllegalState(String.format("'%s.this' cannot be referenced from a static context", enclosingClass.getName()));
         }
 
-        doOutwardsCasting(targetClass);
+        // cast to outer class instance only when accessing non-static fields
+        referenceChain.append(new IReferenceChainElement.ThisReference(caller));
+        try {
+            referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
+        } catch (IllegalArgumentException e) {
+            enterIllegalState(e);
+        }
 
         if (!iterator.hasNext()) { // accepted state
             return;
@@ -151,7 +158,7 @@ public class ExpressionResolver {
         String token = iterator.next();
 
         // this.prop
-        if (tryEnterFieldReferenceState(targetClass, token, false)) {
+        if (tryEnterFieldReferenceState(enclosingClass, token, false)) {
             return;
         }
 
@@ -168,16 +175,22 @@ public class ExpressionResolver {
     }
 
     // "^super" or "Qualified.super" expression
-    private void enterSuperState(Class<?> targetClass) throws IllegalSyntaxException {
+    private void enterSuperState(Class<?> enclosingClass) throws IllegalSyntaxException {
         if (fromStaticContext) {
-            enterIllegalState(String.format("'%s.super' cannot be referenced from a static context", targetClass.getName()));
+            enterIllegalState(String.format("'%s.super' cannot be referenced from a static context", enclosingClass.getName()));
         }
 
-        doOutwardsCasting(targetClass);
+        // cast to outer class instance only when accessing non-static fields
+        referenceChain.append(new IReferenceChainElement.ThisReference(caller));
+        try {
+            referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
+        } catch (IllegalArgumentException e) {
+            enterIllegalState(e);
+        }
 
-        Class<?> superClass = targetClass.getSuperclass();
+        Class<?> superClass = enclosingClass.getSuperclass();
         if (superClass == null) { // almost would never happen, java.lang classes are not transformable
-            enterIllegalState(String.format("'%s' has no super class", targetClass.getName()));
+            enterIllegalState(String.format("'%s' has no super class", enclosingClass.getName()));
         }
 
         if (!iterator.hasNext()) { // rejected state
@@ -221,7 +234,7 @@ public class ExpressionResolver {
             enterIllegalState(String.format("'%s' has %s access in '%s'", field.getName(), access, field.getDeclaringClass().getName()));
         }
 
-        referenceChain.add(new FieldReference(memberingClass, field));
+        referenceChain.append(new IReferenceChainElement.FieldReference(memberingClass, field));
 
         if (!iterator.hasNext()) { // accepted state
             return;
@@ -269,10 +282,16 @@ public class ExpressionResolver {
         }
 
         if (!Modifier.isStatic(field.getModifiers())) {
-            doOutwardsCasting(enclosingClass); // cast to outer class instance only when accessing non-static fields
+            // cast to outer class instance only when accessing non-static fields
+            referenceChain.append(new IReferenceChainElement.ThisReference(caller));
+            try {
+                referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
+            } catch (IllegalArgumentException e) {
+                enterIllegalState(e);
+            }
         }
 
-        referenceChain.add(new FieldReference(enclosingClass, field));
+        referenceChain.append(new IReferenceChainElement.FieldReference(enclosingClass, field));
 
         if (!iterator.hasNext()) { // accepted state
             return;
@@ -657,37 +676,5 @@ public class ExpressionResolver {
 
     private void enterIllegalState(Throwable throwable) throws IllegalSyntaxException {
         throw new IllegalSyntaxException(throwable);
-    }
-
-    private void doOutwardsCasting(Class<?> targetClass) throws IllegalSyntaxException {
-        referenceChain.add(new FieldReference.ThisReference(caller));
-
-        // need to do outwards casting first
-        if (!targetClass.equals(caller)) {
-            Class<?> c = caller;
-            int i = 0; // depth of inner class nesting, used for this$i reference to enclosing classes
-            while (!targetClass.equals(c.getEnclosingClass())) {
-                Class<?> enclosing = c.getEnclosingClass();
-                if (enclosing == null) {
-                    enterIllegalState(String.format("%s is not an enclosing class of %s", targetClass.getName(), caller.getName()));
-                }
-
-                i++;
-                c = enclosing;
-            }
-            
-            
-            c = caller;
-            while (!targetClass.equals(c.getEnclosingClass())) {
-                Class<?> enclosing = c.getEnclosingClass();
-                if (enclosing == null) {
-                    enterIllegalState(String.format("%s is not an enclosing class of %s", targetClass.getName(), caller.getName()));
-                }
-                referenceChain.add(new FieldReference.QualifiedThisReference(c, enclosing, i--));
-                c = enclosing;
-            }
-
-            referenceChain.add(new FieldReference.QualifiedThisReference(c, c.getEnclosingClass(), i--));
-        }
     }
 }

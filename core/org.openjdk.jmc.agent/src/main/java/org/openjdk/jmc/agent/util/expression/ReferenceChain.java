@@ -8,56 +8,65 @@ import java.util.List;
 
 public class ReferenceChain {
     private final Class<?> callerClass;
-    private final List<FieldReference> references;
-    private final boolean normalized;
+    private final List<IReferenceChainElement> references;
 
-    public ReferenceChain(Class<?> callerClass, List<FieldReference> references, boolean normalized) {
+    public ReferenceChain(Class<?> callerClass) {
         this.callerClass = callerClass;
-        this.references = references;
-        this.normalized = normalized;
+        this.references = new LinkedList<>();
     }
 
     public Class<?> getCallerClass() {
         return callerClass;
     }
 
-    public List<FieldReference> getReferences() {
+    public List<IReferenceChainElement> getReferences() {
         return references;
     }
 
-    public boolean isNormalized() {
-        return normalized;
-    }
-
     public ReferenceChain normalize() {
-        List<FieldReference> oldRefs = getReferences();
-        List<FieldReference> newRefs = new LinkedList<>();
+        List<IReferenceChainElement> oldRefs = getReferences();
+        List<IReferenceChainElement> newRefs = new LinkedList<>();
 
-        // Take shortcut on static reference
-        for (FieldReference ref : oldRefs) {
-            if (Modifier.isStatic(ref.getModifiers())) {
+        // Take shortcuts on static references
+        for (IReferenceChainElement ref : oldRefs) {
+            if (ref.isStatic()) {
                 newRefs.clear();
             }
 
             newRefs.add(ref);
         }
 
-        // Don't reduce static final reference to constant. The value could be different if loaded via different class loaders.
+        // Don't reduce static final references to constants. The value could be different, or even stochastic, if 
+        // loaded via different class loaders. (eg. logic in static initializers)
 
-        // prepend "this" if starts with non-static field reference 
-        if (!newRefs.isEmpty()
-                && !Modifier.isStatic(newRefs.get(0).getModifiers())
-                && !(newRefs.get(0) instanceof FieldReference.ThisReference)) {
-            newRefs.add(0, new FieldReference.ThisReference(callerClass));
+        // prepend "this" if starts with non-static field reference
+        if (newRefs.isEmpty()) {
+             newRefs.add(0, new IReferenceChainElement.ThisReference(callerClass)); // implicit "this"
+        } else if (newRefs.get(0) instanceof IReferenceChainElement.FieldReference && !newRefs.get(0).isStatic()) {
+            newRefs.add(0, new IReferenceChainElement.ThisReference(callerClass)); // prop => this.prop
         }
 
-        return new ReferenceChain(callerClass, newRefs, true);
+        ReferenceChain ret = new ReferenceChain(callerClass);
+        ret.references.addAll(newRefs);
+        return ret;
     }
 
     public Type getType() {
         if (references.isEmpty()) {
             return Type.getType(callerClass);
         }
-        return references.get(references.size() - 1).getType();
+        return references.get(references.size() - 1).getReferencedType();
+    }
+
+    public void append(IReferenceChainElement ref) {
+        references.add(ref);
+    }
+    
+    public boolean isStatic() {
+        if (references.isEmpty()) {
+            return false;
+        }
+        
+        return references.get(0).isStatic();
     }
 }

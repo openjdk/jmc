@@ -42,7 +42,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
-import org.openjdk.jmc.agent.util.expression.FieldReference;
+import org.openjdk.jmc.agent.util.expression.IReferenceChainElement;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 
@@ -136,7 +136,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
             }
             if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
 				mv.visitInsn(DUP);
-				loadWatch(watch, refChain);
+				loadWatch(refChain);
 				writeAttribute(watch, refChain.getType());
 			}
 		}
@@ -146,7 +146,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		mv.visitVarInsn(ASTORE, eventLocal);
 	}
 
-	private void loadWatch(Watch watch, ReferenceChain refChain) {
+	private void loadWatch(ReferenceChain refChain) {
 		Type type = refChain.getType();
 		boolean isStatic = Modifier.isStatic(getAccess());
 		Label nullCase = new Label();
@@ -160,24 +160,47 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		}
 
 		// Assumes the reference chain is normalized already. See ReferenceChain.normalize()
-		List<FieldReference> refs = refChain.getReferences();
+		List<IReferenceChainElement> refs = refChain.getReferences();
 		for (int i = 0; i < refs.size(); i++) {
-			FieldReference ref = refs.get(i);
-			if (ref instanceof FieldReference.ThisReference) {
+			IReferenceChainElement ref = refs.get(i);
+
+			if (ref instanceof IReferenceChainElement.ThisReference) {
 				mv.visitVarInsn(ALOAD, 0); // load "this"
-			} else {
-				mv.visitFieldInsn(Modifier.isStatic(ref.getModifiers()) ? GETSTATIC : GETFIELD,
-						ref.getMemberingType().getInternalName(),
-						ref.getName(), ref.getType().getDescriptor());
+				continue;
 			}
 
-			// null check for field references
-			if (!(ref instanceof FieldReference.ThisReference) && !(ref instanceof FieldReference.QualifiedThisReference) && i != refs.size() - 1) {
-				mv.visitInsn(DUP);
-				mv.visitJumpInsn(IFNULL, nullCase);
+			if (ref instanceof IReferenceChainElement.FieldReference) {
+				mv.visitFieldInsn(ref.isStatic() ? GETSTATIC : GETFIELD,
+						ref.getMemberingType().getInternalName(),
+						((IReferenceChainElement.FieldReference) ref).getName(), ref.getReferencedType().getDescriptor());
+
+				// null check for field references
+				if (i < refs.size() - 1) { // Skip null check for final reference. Null is acceptable here
+					mv.visitInsn(DUP);
+					mv.visitJumpInsn(IFNULL, nullCase);
+				}
+
+				continue;
 			}
+
+			if (ref instanceof IReferenceChainElement.QualifiedThisReference) {
+				int suffix = ((IReferenceChainElement.QualifiedThisReference) ref).getDepth();
+				Class<?> c = ref.getMemberingClass();
+				while (!ref.getReferencedClass().equals(c)) {
+					mv.visitFieldInsn(GETFIELD,
+							Type.getType(c).getInternalName(),
+							"this$" + (suffix--),
+							Type.getType(c.getEnclosingClass()).getDescriptor());
+					c = c.getEnclosingClass();
+				}
+
+				continue;
+			}
+
+			throw new UnsupportedOperationException("Unsupported reference chain element type");
 		}
-		// loaded value, jump to writing attribute
+
+		// loaded a value, jump to writing attribute
 		mv.visitJumpInsn(GOTO, continueCase);
 
 		// null reference on path, load zero value
