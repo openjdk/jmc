@@ -110,10 +110,12 @@ public class TlabPage extends AbstractDataPage {
 
 	private static final String INSIDE_COUNT_COL = "insideCount"; //$NON-NLS-1$
 	private static final String OUTSIDE_COUNT_COL = "outsideCount"; //$NON-NLS-1$
-	private static final String AVERAGE_INSIDE_SIZE_COL = "averageInsideSize"; //$NON-NLS-1$
+	private static final String AVERAGE_INSIDE_SIZE_COL = "o"; //$NON-NLS-1$
 	private static final String AVERAGE_OUTSIDE_SIZE_COL = "averageOutsideSize"; //$NON-NLS-1$
 	private static final String TOTAL_INSIDE_SIZE_COL = "totalInsideSize"; //$NON-NLS-1$
+	private static final String TOTAL_INSIDE_SIZE_PERCENT_COL = "totalInsideSizePercent"; //$NON-NLS-1$
 	private static final String TOTAL_OUTSIDE_SIZE_COL = "totalOutsideSize"; //$NON-NLS-1$
+	private static final String TOTAL_OUTSIDE_SIZE_PERCENT_COL = "totalOutsideSizePercent"; //$NON-NLS-1$
 
 	private static final ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
 
@@ -124,7 +126,9 @@ public class TlabPage extends AbstractDataPage {
 		HISTOGRAM.addColumn(AVERAGE_INSIDE_SIZE_COL, JdkAggregators.ALLOC_INSIDE_TLAB_AVG);
 		HISTOGRAM.addColumn(AVERAGE_OUTSIDE_SIZE_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_AVG);
 		HISTOGRAM.addColumn(TOTAL_INSIDE_SIZE_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
+		HISTOGRAM.addPercentageColumn(TOTAL_INSIDE_SIZE_PERCENT_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
 		HISTOGRAM.addColumn(TOTAL_OUTSIDE_SIZE_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
+		HISTOGRAM.addPercentageColumn(TOTAL_OUTSIDE_SIZE_PERCENT_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
 	}
 
 	private class TlabUI extends ChartAndTableUI {

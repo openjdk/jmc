@@ -768,7 +768,9 @@
 					<column id="averageInsideSize" sortAscending="false" width="120" />
 					<column id="averageOutsideSize" sortAscending="false" width="120" />
 					<column id="totalInsideSize" sortAscending="false" width="120" />
+					<column id="totalInsideSizePercent" sortAscending="false" width="120" />
 					<column id="totalOutsideSize" sortAscending="false" width="120" />
+					<column id="totalOutsideSizePercent" sortAscending="false" width="120" />
 				</table>
 				<chart>
 					<checkedAction id="insideSize" />
