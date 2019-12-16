@@ -6,7 +6,7 @@ import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class Watch implements IAttribute {
-    
+
     private final String name;
     private final String expression;
     private final String fieldName;
@@ -23,10 +23,8 @@ public class Watch implements IAttribute {
         this.relationKey = relationKey;
         this.converterClassName = converterClassName;
         this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name);
-        
-        // TODO: validate expression
     }
-    
+
     @Override
     public String getName() {
         return this.name;
@@ -56,8 +54,8 @@ public class Watch implements IAttribute {
     public String getConverterClassName() {
         return this.converterClassName;
     }
-    
+
     public ReferenceChain resolveReferenceChain(Class<?> callerClass, boolean fromStaticContext) throws IllegalSyntaxException {
-        return new ExpressionResolver(callerClass, expression, fromStaticContext).solve();
+        return ExpressionResolver.solve(callerClass, expression, fromStaticContext);
     }
 }

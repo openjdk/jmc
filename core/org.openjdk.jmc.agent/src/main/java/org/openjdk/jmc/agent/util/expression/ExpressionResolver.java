@@ -47,7 +47,7 @@ public class ExpressionResolver {
     private Iterator<String> iterator = null;
     private ReferenceChain referenceChain = null;
 
-    public ExpressionResolver(Class<?> caller, String expression, boolean fromStaticContext) {
+    private ExpressionResolver(Class<?> caller, String expression, boolean fromStaticContext) {
         this.caller = caller;
         this.expression = expression;
         this.fromStaticContext = fromStaticContext;
@@ -146,10 +146,12 @@ public class ExpressionResolver {
 
         // cast to outer class instance only when accessing non-static fields
         referenceChain.append(new IReferenceChainElement.ThisReference(caller));
-        try {
-            referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
-        } catch (IllegalArgumentException e) {
-            enterIllegalState(e);
+        if (!caller.equals(enclosingClass)) {
+            try {
+                referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
+            } catch (IllegalArgumentException e) {
+                enterIllegalState(e);
+            }
         }
 
         if (!iterator.hasNext()) { // accepted state
@@ -180,12 +182,13 @@ public class ExpressionResolver {
             enterIllegalState(String.format("'%s.super' cannot be referenced from a static context", enclosingClass.getName()));
         }
 
-        // cast to outer class instance only when accessing non-static fields
         referenceChain.append(new IReferenceChainElement.ThisReference(caller));
-        try {
-            referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
-        } catch (IllegalArgumentException e) {
-            enterIllegalState(e);
+        if (!caller.equals(enclosingClass)) {
+            try {
+                referenceChain.append(new IReferenceChainElement.QualifiedThisReference(caller, enclosingClass));
+            } catch (IllegalArgumentException e) {
+                enterIllegalState(e);
+            }
         }
 
         Class<?> superClass = enclosingClass.getSuperclass();
