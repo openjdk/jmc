@@ -37,9 +37,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
-import org.openjdk.jmc.agent.Watch;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 import org.openjdk.jmc.agent.util.expression.IReferenceChainElement;
@@ -131,17 +131,17 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			}
 		}
 
-		for (Watch watch : transformDescriptor.getWatches()) {
-			ReferenceChain refChain = watch.resolveReferenceChain(classBeingRedefined).normalize();
+		for (Field field : transformDescriptor.getFields()) {
+			ReferenceChain refChain = field.resolveReferenceChain(classBeingRedefined).normalize();
 
 			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
-				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + watch.getExpression());
+				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
 			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
 				mv.visitInsn(DUP);
-				loadWatch(refChain);
-				writeAttribute(watch, refChain.getType());
+				loadField(refChain);
+				writeAttribute(field, refChain.getType());
 			}
 		}
 
@@ -150,7 +150,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		mv.visitVarInsn(ASTORE, eventLocal);
 	}
 
-	private void loadWatch(ReferenceChain refChain) {
+	private void loadField(ReferenceChain refChain) {
 		Type type = refChain.getType();
 		boolean isStatic = Modifier.isStatic(getAccess());
 		Label nullCase = new Label();

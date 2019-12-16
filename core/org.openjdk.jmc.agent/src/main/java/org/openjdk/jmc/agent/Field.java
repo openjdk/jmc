@@ -5,7 +5,7 @@ import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-public class Watch implements IAttribute {
+public class Field implements IAttribute {
 
     private final String name;
     private final String expression;
@@ -18,7 +18,7 @@ public class Watch implements IAttribute {
     private Class<?> resolvingCaller;
     private ReferenceChain referenceChain;
 
-    public Watch(String name, String expression, String description, String contentType, String relationKey, String converterClassName) {
+    public Field(String name, String expression, String description, String contentType, String relationKey, String converterClassName) {
         this.name = name;
         this.expression = expression;
         this.description = description;
@@ -67,7 +67,7 @@ public class Watch implements IAttribute {
             resolvingCaller = callerClass;
             referenceChain = ExpressionResolver.solve(callerClass, expression);
         }
-        
+
         return referenceChain;
     }
 }

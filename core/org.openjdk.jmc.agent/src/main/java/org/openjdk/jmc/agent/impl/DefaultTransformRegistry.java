@@ -52,7 +52,7 @@ import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
-import org.openjdk.jmc.agent.Watch;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -60,7 +60,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	private static final String XML_ATTRIBUTE_NAME_ID = "id"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_NAME_EVENT = "event"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_METHOD_NAME = "method"; //$NON-NLS-1$
-	private static final String XML_ELEMENT_WATCH_NAME = "watch"; //$NON-NLS-1$
+	private static final String XML_ELEMENT_FIELD_NAME = "field"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_PARAMETER_NAME = "parameter"; //$NON-NLS-1$
 
 	// Global override section
@@ -152,7 +152,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		streamReader.next();
 		Map<String, String> values = new HashMap<>();
 		List<Parameter> parameters = new LinkedList<>();
-		List<Watch> watches = new LinkedList<>();
+		List<Field> fields = new LinkedList<>();
 		Method method = null;
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
@@ -161,8 +161,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 					method = parseMethod(streamReader, parameters);
 					continue;
 				}
-				if (XML_ELEMENT_WATCH_NAME.equals(name)) {
-					watches.add(parseWatch(streamReader));
+				if (XML_ELEMENT_FIELD_NAME.equals(name)) {
+					fields.add(parseField(streamReader));
 					continue;
 				}
 				streamReader.next();
@@ -182,7 +182,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			streamReader.next();
 		}
 		transfer(globalDefaults, values);
-		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, watches); //$NON-NLS-1$
+		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, fields); //$NON-NLS-1$
 	}
 
 	private static void transfer(HashMap<String, String> globalDefaults, Map<String, String> values) {
@@ -264,7 +264,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new Parameter(index, name, description, contentType, relationKey, converterClassName);
 	}
 
-	private static Watch parseWatch(XMLStreamReader streamReader) throws XMLStreamException {
+	private static Field parseField(XMLStreamReader streamReader) throws XMLStreamException {
 		streamReader.next();
 		String name = null;
 		String expression = null;
@@ -297,13 +297,13 @@ public class DefaultTransformRegistry implements TransformRegistry {
 					}
 				}
 			} else if (streamReader.isEndElement()) {
-				if (XML_ELEMENT_WATCH_NAME.equals(streamReader.getName().getLocalPart())) {
+				if (XML_ELEMENT_FIELD_NAME.equals(streamReader.getName().getLocalPart())) {
 					break;
 				}
 			}
 			streamReader.next();
 		}
-		return new Watch(name, expression, description, contentType, relationKey, converterClassName);
+		return new Field(name, expression, description, contentType, relationKey, converterClassName);
 	}
 
 	private static Method parseMethod(XMLStreamReader streamReader, List<Parameter> parameters)

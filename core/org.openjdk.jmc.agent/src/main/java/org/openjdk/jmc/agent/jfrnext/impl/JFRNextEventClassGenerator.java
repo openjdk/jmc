@@ -44,7 +44,7 @@ import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.IAttribute;
 import org.openjdk.jmc.agent.Parameter;
-import org.openjdk.jmc.agent.Watch;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
@@ -77,8 +77,8 @@ public class JFRNextEventClassGenerator {
 			}
 		}
 
-		for (Watch watch : td.getWatches()) {
-			createField(cw, td, watch, watch.resolveReferenceChain(classBeingRedefined).getType());
+		for (Field field : td.getFields()) {
+			createField(cw, td, field, field.resolveReferenceChain(classBeingRedefined).getType());
 		}
 	}
 
