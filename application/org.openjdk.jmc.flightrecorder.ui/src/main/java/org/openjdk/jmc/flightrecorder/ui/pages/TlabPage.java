@@ -39,11 +39,14 @@ import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -51,6 +54,7 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
@@ -131,17 +135,50 @@ public class TlabPage extends AbstractDataPage {
 		HISTOGRAM.addPercentageColumn(TOTAL_OUTSIDE_SIZE_PERCENT_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
 	}
 
-	private class TlabUI extends ChartAndTableUI {
+	private class TlabUI implements IPageUI {
+
+		private CTabFolder tabFolder;
+		private TlabChartTable threadsCT;
+		private TlabChartTable methodsCT;
+
+		private int tabFolderIndex = 0;
+
+		public TlabUI(Composite parent, FormToolkit toolkit, IPageContainer editor, IState state) {
+			tabFolder = new CTabFolder(parent, SWT.BOTTOM);
+
+			threadsCT = new TlabChartTable(tabFolder, toolkit, editor, state, JfrAttributes.EVENT_THREAD);
+			DataPageToolkit.addTabItem(tabFolder, threadsCT.getComponent(), Messages.TlabPage_THREADS_TAB_NAME);
+
+			methodsCT = new TlabChartTable(tabFolder, toolkit, editor, state, JdkAttributes.STACK_TRACE_TOP_METHOD);
+			DataPageToolkit.addTabItem(tabFolder, methodsCT.getComponent(), Messages.TlabPage_METHODS_TAB_NAME);
+
+			tabFolder.setSelection(tabFolderIndex);
+		}
+
+		@Override
+		public void saveTo(IWritableState state) {
+			threadsCT.saveTo(state);
+			methodsCT.saveTo(state);
+
+			this.saveToLocal();
+		}
+
+		private void saveToLocal() {
+			tabFolderIndex = tabFolder.getSelectionIndex();
+		}
+	}
+
+	private class TlabChartTable extends ChartAndTableUI {
 		private static final String TLAB_TABLE_FILTER = "tlabTableFilter"; //$NON-NLS-1$
 
 		private IAction insideSizeAction;
 		private IAction outsideSizeAction;
 
-		TlabUI(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+		TlabChartTable(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state,
+				IAttribute<?> classifier) {
 			// FIXME: This page could probably use a horizontal legend instead.
 			super(TLAB_EVENTS, getDataSource(), parent, toolkit, pageContainer, state, getName(), tableFilter,
-					getIcon(), flavorSelectorState);
-
+					getIcon(), flavorSelectorState, classifier);
 			addResultActions(form);
 
 			tableFilterComponent.loadState(state.getChild(TLAB_TABLE_FILTER));
@@ -164,14 +201,14 @@ public class TlabPage extends AbstractDataPage {
 		}
 
 		@Override
-		protected ItemHistogram buildHistogram(Composite parent, IState state) {
-			return HISTOGRAM.buildWithoutBorder(parent, JfrAttributes.EVENT_THREAD, TableSettings.forState(state));
+		protected ItemHistogram buildHistogram(Composite parent, IState state, IAttribute<?> classifier) {
+			return HISTOGRAM.buildWithoutBorder(parent, classifier, TableSettings.forState(state));
 		}
 
 		@Override
 		protected IXDataRenderer getChartRenderer(IItemCollection itemsInTable, HistogramSelection selection) {
 			IItemCollection selectedItems = selection.getRowCount() == 0 ? itemsInTable : selection.getItems();
-			String threadCount = threadCount(selection.getRowCount());
+			String selectionCount = selectionCount(selection.getRowCount());
 			IItemCollection filter = selectedItems.apply(JdkFilters.ALLOC_ALL);
 			XYDataRenderer renderer = new XYDataRenderer(UnitLookup.MEMORY.getDefaultUnit().quantity(0),
 					Messages.TlabPage_ROW_TLAB_ALLOCATIONS, Messages.TlabPage_ROW_TLAB_ALLOCATIONS_DESC);
@@ -187,7 +224,7 @@ public class TlabPage extends AbstractDataPage {
 								JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM, JfrAttributes.END_TIME),
 						AWTChartToolkit.staticColor(OUTSIDE_COLOR));
 			}
-			return new ItemRow(Messages.TlabPage_ROW_TLAB_ALLOCATIONS + threadCount, null, renderer, filter);
+			return new ItemRow(Messages.TlabPage_ROW_TLAB_ALLOCATIONS + selectionCount, null, renderer, filter);
 		}
 
 		@Override
@@ -207,14 +244,14 @@ public class TlabPage extends AbstractDataPage {
 		}
 	}
 
-	private static String threadCount(int count) {
+	private static String selectionCount(int count) {
 		switch (count) {
 		case 0:
 			return ""; //$NON-NLS-1$
 		case 1:
-			return " (" + Messages.TlabPage_SELECTED_THREAD + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			return " (" + Messages.TlabPage_SELECTED_ONE + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		default:
-			return " (" + NLS.bind(Messages.TlabPage_SELECTED_THREADS, count) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			return " (" + NLS.bind(Messages.TlabPage_SELECTED_MANY, count) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

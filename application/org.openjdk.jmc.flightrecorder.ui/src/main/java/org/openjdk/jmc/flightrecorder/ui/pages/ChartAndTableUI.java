@@ -102,7 +102,7 @@ abstract class ChartAndTableUI implements IPageUI {
 
 	ChartAndTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
 			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-			FlavorSelectorState flavorSelectorState) {
+			FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
 		this.pageFilter = pageFilter;
 		this.model = model;
 		this.pageContainer = pageContainer;
@@ -110,7 +110,7 @@ abstract class ChartAndTableUI implements IPageUI {
 		sash = new SashForm(form.getBody(), SWT.VERTICAL);
 		toolkit.adapt(sash);
 
-		table = buildHistogram(sash, state.getChild(TABLE));
+		table = buildHistogram(sash, state.getChild(TABLE), classifier);
 		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
 		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
 		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
@@ -182,6 +182,10 @@ abstract class ChartAndTableUI implements IPageUI {
 		}
 	}
 
+	public Form getComponent() {
+		return this.form;
+	}
+
 	private void onSetRange(Boolean useRange) {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
@@ -218,7 +222,7 @@ abstract class ChartAndTableUI implements IPageUI {
 		return action.isPresent() && action.get().isChecked();
 	}
 
-	protected abstract ItemHistogram buildHistogram(Composite parent, IState state);
+	protected abstract ItemHistogram buildHistogram(Composite parent, IState state, IAttribute<?> classifier);
 
 	protected abstract IXDataRenderer getChartRenderer(IItemCollection itemsInTable, HistogramSelection selection);
 

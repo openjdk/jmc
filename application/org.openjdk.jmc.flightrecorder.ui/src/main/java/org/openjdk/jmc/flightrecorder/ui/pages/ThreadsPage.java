@@ -52,6 +52,7 @@ import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -168,7 +169,7 @@ public class ThreadsPage extends AbstractDataPage {
 
 		ThreadsPageUi(Composite parent, FormToolkit toolkit, IPageContainer editor, IState state) {
 			super(pageFilter, getDataSource(), parent, toolkit, editor, state, getName(), pageFilter, getIcon(),
-					flavorSelectorState);
+					flavorSelectorState, JfrAttributes.EVENT_THREAD);
 			mm = (MCContextMenuManager) chartCanvas.getContextMenu();
 			sash.setOrientation(SWT.HORIZONTAL);
 			addActionsToContextMenu(mm);
@@ -270,9 +271,8 @@ public class ThreadsPage extends AbstractDataPage {
 		}
 
 		@Override
-		protected ItemHistogram buildHistogram(Composite parent, IState state) {
-			ItemHistogram build = HISTOGRAM.buildWithoutBorder(parent, JfrAttributes.EVENT_THREAD,
-					TableSettings.forState(state));
+		protected ItemHistogram buildHistogram(Composite parent, IState state, IAttribute<?> classifier) {
+			ItemHistogram build = HISTOGRAM.buildWithoutBorder(parent, classifier, TableSettings.forState(state));
 			return build;
 		}
 

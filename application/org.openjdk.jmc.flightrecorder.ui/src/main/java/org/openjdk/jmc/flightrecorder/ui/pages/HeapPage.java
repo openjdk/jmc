@@ -152,7 +152,7 @@ public class HeapPage extends AbstractDataPage {
 
 		ObjectStatisticsUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 			super(TABLE_ITEMS, getDataSource(), parent, toolkit, pageContainer, state, getName(), tableFilter,
-					getIcon(), flavorSelectorState);
+					getIcon(), flavorSelectorState, JdkAttributes.OBJECT_CLASS);
 			tableFilterComponent.loadState(state.getChild(HEAP_FILTER));
 			addResultActions(form);
 			chart.setVisibleRange(visibleRange.getStart(), visibleRange.getEnd());
@@ -174,8 +174,8 @@ public class HeapPage extends AbstractDataPage {
 		}
 
 		@Override
-		protected ItemHistogram buildHistogram(Composite parent, IState state) {
-			return HISTOGRAM.buildWithoutBorder(parent, JdkAttributes.OBJECT_CLASS, getTableSettings(state));
+		protected ItemHistogram buildHistogram(Composite parent, IState state, IAttribute<?> classifier) {
+			return HISTOGRAM.buildWithoutBorder(parent, classifier, getTableSettings(state));
 		}
 
 		@Override
