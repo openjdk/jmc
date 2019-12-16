@@ -42,7 +42,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.IAttribute;
+import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
@@ -82,7 +82,7 @@ public class JFRNextEventClassGenerator {
 		}
 	}
 
-	private static void createField(ClassWriter cw, JFRTransformDescriptor td, IAttribute attribute, Type type) {
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Attribute attribute, Type type) {
 		if (!td.isAllowedFieldType(type)) {
 			Logger.getLogger(JFRNextEventClassGenerator.class.getName())
 					.warning("Skipped generating field in event class for attribute " + attribute + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$

@@ -38,11 +38,11 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.openjdk.jmc.agent.Field;
-import org.openjdk.jmc.agent.IAttribute;
+import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
-import org.openjdk.jmc.agent.util.expression.IReferenceChainElement;
+import org.openjdk.jmc.agent.util.expression.ReferenceChainElement;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 
@@ -164,19 +164,19 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		}
 
 		// Assumes the reference chain is normalized already. See ReferenceChain.normalize()
-		List<IReferenceChainElement> refs = refChain.getReferences();
+		List<ReferenceChainElement> refs = refChain.getReferences();
 		for (int i = 0; i < refs.size(); i++) {
-			IReferenceChainElement ref = refs.get(i);
+			ReferenceChainElement ref = refs.get(i);
 
-			if (ref instanceof IReferenceChainElement.ThisReference) {
+			if (ref instanceof ReferenceChainElement.ThisReference) {
 				mv.visitVarInsn(ALOAD, 0); // load "this"
 				continue;
 			}
 
-			if (ref instanceof IReferenceChainElement.FieldReference) {
-				mv.visitFieldInsn(ref.isStatic() ? GETSTATIC : GETFIELD,
-						ref.getMemberingType().getInternalName(),
-						((IReferenceChainElement.FieldReference) ref).getName(), ref.getReferencedType().getDescriptor());
+			if (ref instanceof ReferenceChainElement.FieldReference) {
+				mv.visitFieldInsn(ref.isStatic() ? GETSTATIC : GETFIELD, ref.getMemberingType().getInternalName(),
+						((ReferenceChainElement.FieldReference) ref).getName(),
+						ref.getReferencedType().getDescriptor());
 
 				// null check for field references
 				if (i < refs.size() - 1) { // Skip null check for final reference. Null is acceptable here
@@ -187,13 +187,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 				continue;
 			}
 
-			if (ref instanceof IReferenceChainElement.QualifiedThisReference) {
-				int suffix = ((IReferenceChainElement.QualifiedThisReference) ref).getDepth();
+			if (ref instanceof ReferenceChainElement.QualifiedThisReference) {
+				int suffix = ((ReferenceChainElement.QualifiedThisReference) ref).getDepth();
 				Class<?> c = ref.getMemberingClass();
 				while (!ref.getReferencedClass().equals(c)) {
-					mv.visitFieldInsn(GETFIELD,
-							Type.getType(c).getInternalName(),
-							"this$" + (suffix--),
+					mv.visitFieldInsn(GETFIELD, Type.getType(c).getInternalName(), "this$" + (suffix--),
 							Type.getType(c.getEnclosingClass()).getDescriptor());
 					c = c.getEnclosingClass();
 				}
@@ -209,24 +207,20 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 		// null reference on path, load zero value
 		mv.visitLabel(nullCase);
-		mv.visitFrame(F_NEW,
-				localVarVerifications.size(),
-				localVarVerifications.toArray(),
-				4,
-				new Object[]{eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(), Type.getInternalName(Object.class)});
+		mv.visitFrame(F_NEW, localVarVerifications.size(), localVarVerifications.toArray(), 4,
+				new Object[] {eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(),
+						Type.getInternalName(Object.class)});
 		mv.visitInsn(POP);
 		mv.visitInsn(TypeUtils.getConstZeroOpcode(type));
 
 		// must verify frame for jump targets
 		mv.visitLabel(continueCase);
-		mv.visitFrame(F_NEW,
-				localVarVerifications.size(),
-				localVarVerifications.toArray(),
-				4, 
-				new Object[]{eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(), TypeUtils.getFrameVerificationType(type)});
+		mv.visitFrame(F_NEW, localVarVerifications.size(), localVarVerifications.toArray(), 4,
+				new Object[] {eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(),
+						TypeUtils.getFrameVerificationType(type)});
 	}
 
-	private void writeAttribute(IAttribute param, Type type) {
+	private void writeAttribute(Attribute param, Type type) {
 		if (TypeUtils.shouldStringify(param, type)) {
 			TypeUtils.stringify(mv, param, type);
 			type = TypeUtils.STRING_TYPE;

@@ -37,7 +37,7 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 /**
  * Metadata for a parameter to be logged by the agent.
  */
-public final class Parameter implements IAttribute {
+public final class Parameter implements Attribute {
 	public static final int INDEX_INVALID = -2;
 	public static final int INDEX_RETURN = -1;
 
