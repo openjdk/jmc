@@ -65,6 +65,7 @@ import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnManager.ColumnComparator;
+import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.column.IColumn;
 import org.openjdk.jmc.ui.column.TableSettings;
 
@@ -105,6 +106,7 @@ public class ItemList {
 	private final SimpleArray<IItem> tail = new SimpleArray<>(new IItem[1000]);
 
 	private ExtraRowTableViewer tableViewer;
+	private MCContextMenuManager menuManager;
 
 	private ItemList(Composite container, List<IColumn> columns, TableSettings tableSettings, int style) {
 		tableViewer = new ExtraRowTableViewer(container,
@@ -136,6 +138,14 @@ public class ItemList {
 
 	public ColumnManager getManager() {
 		return columnManager;
+	}
+
+	public void setMenuManager(MCContextMenuManager mm) {
+		menuManager = mm;
+	}
+
+	public MCContextMenuManager getMenuManager() {
+		return menuManager;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -82,6 +82,7 @@ import org.openjdk.jmc.flightrecorder.ui.RuleManager;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
+import org.openjdk.jmc.flightrecorder.ui.common.FilterComponent;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
@@ -146,6 +147,7 @@ public class EventBrowserPage extends AbstractDataPage {
 	private ISelection treeSelection;
 	public TreePath[] treeExpansion;
 	public FlavorSelectorState flavorSelectorState;
+	private IItemFilter flagsFilter;
 //	public int topIndex;
 
 	public EventBrowserPage(IPageDefinition definition, StreamModel items, IPageContainer editor) {
@@ -162,6 +164,7 @@ public class EventBrowserPage extends AbstractDataPage {
 		private static final String TREE_SASH = "treeSash"; //$NON-NLS-1$
 		private static final String ITEM_LIST = "itemList"; //$NON-NLS-1$
 		private static final String SHOW_TYPES_WITHOUT_EVENTS = "showTypesWithoutEvents"; //$NON-NLS-1$
+		private static final String LIST_FILTER = "listFilter"; //$NON-NLS-1$
 		private ItemList list;
 		private final SashForm treeSash;
 		private final IPageContainer container;
@@ -171,6 +174,7 @@ public class EventBrowserPage extends AbstractDataPage {
 		private final TypeFilterBuilder typeFilterTree;
 		private IItemCollection selectionItems;
 		private FlavorSelector flavorSelector;
+		private FilterComponent listFilter;
 		private Boolean showTypesWithoutEvents;
 
 		EventBrowserUI(Composite parent, FormToolkit toolkit, IState state, IPageContainer container) {
@@ -225,6 +229,11 @@ public class EventBrowserPage extends AbstractDataPage {
 //				typeFilterTree.getViewer().getTree().setTopItem(typeFilterTree.getViewer().getTree().getItem(topIndex));
 //			}
 			list.getManager().setSelectionState(tableSelection);
+		}
+
+		private void onFilterChange(IItemFilter filter) {
+			listFilter.filterChangeHelper(filter, list, getFilteredItems());
+			flagsFilter = filter;
 		}
 
 		private void setTypesWithoutEvents(boolean checked) {
@@ -324,11 +333,22 @@ public class EventBrowserPage extends AbstractDataPage {
 			listColumns.addAll(0, newColumns);
 
 			Control oldListControl = list.getManager().getViewer().getControl();
-			Composite parent = oldListControl.getParent();
-			oldListControl.dispose();
+			Composite parent = listFilter != null ? listFilter.getComponent().getParent() : oldListControl.getParent();
+			for (Control c : parent.getChildren()) {
+				c.dispose();
+			}
 			list = DataPageToolkit.createSimpleItemList(parent, itemListBuilder, container,
 					DataPageToolkit.createTableSettingsByOrderByAndColumnsWithDefaultOrdering(orderBy, listColumns),
 					Messages.EventBrowserPage_EVENT_BROWSER_SELECTION);
+			listFilter = FilterComponent.createFilterComponent(list, flagsFilter, filteredItems,
+					container.getSelectionStore()::getSelections, this::onFilterChange);
+			listFilter.loadState(getState().getChild(LIST_FILTER));
+			onFilterChange(flagsFilter);
+
+			MCContextMenuManager mm = list.getMenuManager();
+			mm.add(listFilter.getShowFilterAction());
+			mm.add(listFilter.getShowSearchAction());
+
 			parent.layout();
 			list.show(filteredItems);
 		}
@@ -358,6 +378,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			mergeListSettings();
 			new TableSettings(listOrderBy, listColumns).saveState(state.createChild(ITEM_LIST));
 			StateToolkit.writeBoolean(state, SHOW_TYPES_WITHOUT_EVENTS, showTypesWithoutEvents);
+			listFilter.saveState(state.createChild(LIST_FILTER));
 			saveToLocal();
 		}
 
