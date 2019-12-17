@@ -126,7 +126,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			if (transformDescriptor.isAllowedFieldType(argumentType)) {
 				mv.visitInsn(DUP);
 				loadArg(param.getIndex());
-				writeParameter(param, argumentType);
+				writeAttribute(param, argumentType);
 			}
 		}
 
@@ -220,27 +220,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	}
 	
 	private void writeAttribute(Attribute param, Type type) {
-		if (TypeUtils.shouldStringify(param, type)) {
-			TypeUtils.stringify(mv, param, type);
-			type = TypeUtils.STRING_TYPE;
-		}
-		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
-	}
-
-	private void writeParameter(Parameter param, Type type) {
 		if (TypeUtils.shouldStringify(type)) {
 			TypeUtils.stringify(mv);
 			type = TypeUtils.STRING_TYPE;
 		}
 		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
-	}
-
-	private void writeReturnValue(ReturnValue returnValue, Type type) {
-		if (TypeUtils.shouldStringify(type)) {
-			TypeUtils.stringify(mv);
-			type = TypeUtils.STRING_TYPE;
-		}
-		putField(Type.getObjectType(transformDescriptor.getEventClassName()), returnValue.getFieldName(), type);
 	}
 
 	@Override
@@ -269,7 +253,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
-		writeReturnValue(returnValue, returnTypeRef);
+		writeAttribute(returnValue, returnTypeRef);
 	}
 
 	private void commitEvent() {

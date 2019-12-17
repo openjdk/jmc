@@ -246,7 +246,7 @@ public class InstrumentMe {
 		try {
 			(new ArrayList<>()).get(1);
 		} catch (RuntimeException e) {
-			System.out.println("#IJFR10. Caught a RuntimeException: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("#SJFR10. Caught a RuntimeException: " + e.getMessage()); //$NON-NLS-1$
 			throw e;
 		}
 	}

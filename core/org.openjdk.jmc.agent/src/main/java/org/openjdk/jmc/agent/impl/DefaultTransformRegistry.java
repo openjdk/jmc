@@ -185,7 +185,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			streamReader.next();
 		}
 		transfer(globalDefaults, values);
-		return TransformDescriptor.create(id, getInternalName(values.get("class")), method, values, parameters, returnValue[0], fields); //$NON-NLS-1$
+		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, returnValue[0], fields); //$NON-NLS-1$
 	}
 
 	private static void transfer(HashMap<String, String> globalDefaults, Map<String, String> values) {
@@ -314,6 +314,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		String name = null;
 		String description = null;
 		String contentType = null;
+		String relationKey = null;
+		String converterClassName = null;
 
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
@@ -330,6 +332,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 						description = value;
 					} else if ("contenttype".equals(key)) { //$NON-NLS-1$
 						contentType = value;
+					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
+						relationKey = value;
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
+						converterClassName = value;
 					}
 				}
 			} else if (streamReader.isEndElement()) {
@@ -339,7 +345,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			}
 			streamReader.next();
 		}
-		return new ReturnValue(name, description, contentType);
+		return new ReturnValue(name, description, contentType, relationKey, converterClassName);
 	}
 
 	private static Method parseMethod(XMLStreamReader streamReader, List<Parameter> parameters, ReturnValue[] returnValue)
