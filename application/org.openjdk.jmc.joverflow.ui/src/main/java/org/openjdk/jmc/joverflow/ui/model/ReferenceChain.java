@@ -38,7 +38,8 @@ import java.util.Iterator;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 
 /**
- * Collection of a number of {@code ObjectCluster} sharing the same reference chain held by {@code RefChainElement}
+ * Collection of a number of {@code ObjectCluster} sharing the same reference chain held by
+ * {@code RefChainElement}
  */
 public class ReferenceChain implements Iterable<ObjectCluster> {
 

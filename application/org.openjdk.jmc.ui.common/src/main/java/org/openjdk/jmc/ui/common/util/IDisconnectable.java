@@ -33,7 +33,7 @@
 package org.openjdk.jmc.ui.common.util;
 
 /**
- * Interface for objects that can be disconnected. 
+ * Interface for objects that can be disconnected.
  */
 public interface IDisconnectable {
 

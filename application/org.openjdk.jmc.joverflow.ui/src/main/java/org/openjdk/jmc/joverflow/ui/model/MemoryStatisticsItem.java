@@ -33,8 +33,8 @@
 package org.openjdk.jmc.joverflow.ui.model;
 
 /**
- * Class holding an aggregate of mOverhead/mMemory/mSize for a number of {@code ObjectCluster}. The group is identified by
- * {@code id}
+ * Class holding an aggregate of mOverhead/mMemory/mSize for a number of {@code ObjectCluster}. The
+ * group is identified by {@code id}
  */
 public class MemoryStatisticsItem {
 	private final Object id;

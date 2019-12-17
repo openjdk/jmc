@@ -40,6 +40,11 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.rjmx.services.jfr.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -49,7 +54,7 @@
 				<configuration>
 					<argLine>-Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Djmc.test.rjmx.serviceURL=service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi ${jfr.vmargs}</argLine>
 					<failIfNoTests>false</failIfNoTests>
-                                </configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

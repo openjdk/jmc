@@ -50,8 +50,7 @@ import org.openjdk.jmc.rjmx.test.triggers.NotificationTestSuite;
 @RunWith(Suite.class)
 @SuiteClasses({RJMXTestSuite.class, InternalTestSuite.class, ServicesTestSuite.class, SubscriptionTestSuite.class,
 		SubscriptionInternalTestSuite.class, SyntheticTestSuite.class, NotificationTestSuite.class,
-		JVMSupportToolkitTest.class
-})
+		JVMSupportToolkitTest.class})
 public class AllRJMXTests {
 
 }

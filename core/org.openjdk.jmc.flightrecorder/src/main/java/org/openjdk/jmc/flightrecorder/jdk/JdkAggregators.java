@@ -95,11 +95,8 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.VM_INFO;
 import java.text.MessageFormat;
 
 import org.openjdk.jmc.common.item.Aggregators;
-import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -360,18 +357,7 @@ public final class JdkAggregators {
 
 	public static final IAggregator<IQuantity, ?> ALLOCATION_TOTAL = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOCATION_TOTAL), Messages.getString(Messages.AGGR_ALLOCATION_TOTAL_DESC),
-			UnitLookup.MEMORY, new IAccessorFactory<IQuantity>() {
-
-				@Override
-				public <T> IMemberAccessor<? extends IQuantity, T> getAccessor(IType<T> type) {
-					if (type.getIdentifier().equals(JdkTypeIDs.ALLOC_INSIDE_TLAB)) {
-						return JdkAttributes.TLAB_SIZE.getAccessor(type);
-					} else if (type.getIdentifier().equals(JdkTypeIDs.ALLOC_OUTSIDE_TLAB)) {
-						return JdkAttributes.ALLOCATION_SIZE.getAccessor(type);
-					}
-					return null;
-				}
-			});
+			UnitLookup.MEMORY, JdkAttributes.TOTAL_ALLOCATION_SIZE);
 	public static final IAggregator<IQuantity, ?> TOTAL_IO_TIME = Aggregators.filter(
 			Aggregators.sum(Messages.getString(Messages.AGGR_TOTAL_IO_TIME),
 					Messages.getString(Messages.AGGR_TOTAL_IO_TIME_DESC), JfrAttributes.DURATION),

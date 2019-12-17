@@ -40,8 +40,8 @@ import org.openjdk.jmc.common.unit.IMutableConstrainedMap;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IConfigurationStorageDelegate;
 
 /**
- * Interface for JDK Flight Recorder configurations. Note that this interface is (and should
- * remain) agnostic as to how the configuration is represented.
+ * Interface for JDK Flight Recorder configurations. Note that this interface is (and should remain)
+ * agnostic as to how the configuration is represented.
  */
 public interface IEventConfiguration {
 	String JFC_FILE_EXTENSION = ".jfc"; //$NON-NLS-1$

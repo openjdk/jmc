@@ -105,8 +105,7 @@ public class JfrRecordingTest extends MCJemmyTestBase {
 	@Test
 	public void verifySmallCompressedRecording() {
 		openCompressedRecording(RECORDING, LOW_ZIPFILE_MEMORY_FACTOR, false);
-		Assert.assertTrue("Unable to find an opened recording in JMC",
-				MCJemmyBase.waitForEditor(30000, RECORDING));
+		Assert.assertTrue("Unable to find an opened recording in JMC", MCJemmyBase.waitForEditor(30000, RECORDING));
 	}
 
 	/**
@@ -119,8 +118,7 @@ public class JfrRecordingTest extends MCJemmyTestBase {
 		openCompressedRecording(RECORDING, EXTREME_ZIPFILE_MEMORY_FACTOR, false);
 		// removing all of the target file stuff from the dialog text
 		String dialogText = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.FILE_OPENER_ZIPPED_FILE_TEXT;
-		String truncatedDialogText = dialogText.replace("{0}", RECORDING).substring(0,
-				dialogText.indexOf("{1}"));
+		String truncatedDialogText = dialogText.replace("{0}", RECORDING).substring(0, dialogText.indexOf("{1}"));
 		MCDialog decompressDialog = MCDialog.getByDialogTitleAndText(
 				org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.FILE_OPENER_ZIPPED_FILE_TITLE,
 				truncatedDialogText);
@@ -128,8 +126,7 @@ public class JfrRecordingTest extends MCJemmyTestBase {
 				+ org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.FILE_OPENER_ZIPPED_FILE_TITLE
 				+ "' and the text '" + truncatedDialogText + "'", decompressDialog);
 		decompressDialog.clickButton(Labels.YES);
-		Assert.assertTrue("Unable to find an opened recording in JMC",
-				MCJemmyBase.waitForEditor(30000, RECORDING));
+		Assert.assertTrue("Unable to find an opened recording in JMC", MCJemmyBase.waitForEditor(30000, RECORDING));
 	}
 
 	/**

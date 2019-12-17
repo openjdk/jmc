@@ -91,8 +91,9 @@ public class Mbean2Runner extends TestRunner {
 
 					@Override
 					public MBeanInfo getMBeanInfo() {
-						return new MBeanInfo(Testable.class.getName(), "This is even uglier.", new MBeanAttributeInfo[0],
-								new MBeanConstructorInfo[0], new MBeanOperationInfo[0], new MBeanNotificationInfo[0]);
+						return new MBeanInfo(Testable.class.getName(), "This is even uglier.",
+								new MBeanAttributeInfo[0], new MBeanConstructorInfo[0], new MBeanOperationInfo[0],
+								new MBeanNotificationInfo[0]);
 					}
 				};
 				mbs.registerMBean(mbean, testName2);
@@ -134,8 +135,9 @@ public class Mbean2Runner extends TestRunner {
 
 					@Override
 					public MBeanInfo getMBeanInfo() {
-						return new MBeanInfo(Testable.class.getName(), "This is even uglier.", new MBeanAttributeInfo[0], 
-								new MBeanConstructorInfo[0], new MBeanOperationInfo[0], new MBeanNotificationInfo[0]);
+						return new MBeanInfo(Testable.class.getName(), "This is even uglier.",
+								new MBeanAttributeInfo[0], new MBeanConstructorInfo[0], new MBeanOperationInfo[0],
+								new MBeanNotificationInfo[0]);
 					}
 				};
 				mbs.registerMBean(mbean3, testName3);

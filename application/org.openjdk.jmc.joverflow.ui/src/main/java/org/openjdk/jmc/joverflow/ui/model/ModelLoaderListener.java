@@ -45,8 +45,8 @@ public interface ModelLoaderListener {
 	void onModelLoadFailed(Throwable failure);
 
 	/**
-	 * Called when loading is completed successfully. The model is represented by a collection of {@code ReferenceChain}
-	 * Additional info can be loaded from {@code snapshot}
+	 * Called when loading is completed successfully. The model is represented by a collection of
+	 * {@code ReferenceChain} Additional info can be loaded from {@code snapshot}
 	 * 
 	 * @param snapshot
 	 * @param model

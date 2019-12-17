@@ -40,6 +40,15 @@
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jfr.tests/>
+		<jfr.vmargs>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder</jfr.vmargs>
+	</properties>
+
 	<modules>
 		<module>org.openjdk.jmc.alert</module>
 		<module>org.openjdk.jmc.attach</module>
@@ -131,12 +140,6 @@
 			</modules>
 		</profile>
 	</profiles>
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<jfr.tests/>
-		<jfr.vmargs>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder</jfr.vmargs>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>

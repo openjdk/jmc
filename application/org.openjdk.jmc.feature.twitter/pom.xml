@@ -41,4 +41,8 @@
 	<artifactId>org.openjdk.jmc.feature.twitter</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.rjmx.services.internal;
 
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.rjmx.ConnectionException;
+import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
@@ -52,10 +53,16 @@ public class CommercialFeaturesServiceFactory implements IServiceFactory<ICommer
 		if (descriptor != null) {
 			JavaVersion version = new JavaVersion(descriptor.getJavaVersion());
 			if (version.getMajorVersion() >= 11) {
-				return new Jdk11CommercialFeaturesService();
+				return new NoCommercialFeaturesService();
 			}
 		}
-		return new HotSpot23CommercialFeaturesService(handle);
+
+		// Funnily enough, OpenJDK built JVMs for unknown reasons also have the unlock commercial features flag,
+		// so we'll just check if Oracle is the JVM vendor. Any other vendor will not have JFR protected by commercial flags.
+		if (ConnectionToolkit.isOracle(handle)) {
+			return new HotSpot23CommercialFeaturesService(handle);
+		}
+		return new NoCommercialFeaturesService();
 	}
 
 	@Override

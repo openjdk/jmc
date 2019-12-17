@@ -79,15 +79,14 @@ class AttributeComponentConfiguration {
 
 	private void forEachType(IItemCollection items) {
 		if (items != null) {
-			ItemCollectionToolkit.stream(items).map(IItemIterable::getType)
-					.forEach(type -> {
-						allTypes.put(type.getIdentifier(), type);
-						for (IAttribute<?> a : type.getAttributes()) {
-							if (!a.equals(JfrAttributes.EVENT_STACKTRACE)) {
-								allAttributes.put(ItemList.getColumnId(a), a);
-							}
-						}
-					});
+			ItemCollectionToolkit.stream(items).map(IItemIterable::getType).forEach(type -> {
+				allTypes.put(type.getIdentifier(), type);
+				for (IAttribute<?> a : type.getAttributes()) {
+					if (!a.equals(JfrAttributes.EVENT_STACKTRACE)) {
+						allAttributes.put(ItemList.getColumnId(a), a);
+					}
+				}
+			});
 		}
 	}
 

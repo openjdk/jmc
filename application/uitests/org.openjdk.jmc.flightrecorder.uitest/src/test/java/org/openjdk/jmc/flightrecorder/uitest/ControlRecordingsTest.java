@@ -333,8 +333,7 @@ public class ControlRecordingsTest extends MCJemmyTestBase {
 	@Test
 	public void modifyEventPeriod() {
 		// FIXME: JMC-5207 - Remove the assume call once the GTK3 related bug has been fixed
-		Assume.assumeFalse("Skipping on Linux due to GTK3 related bug",
-				MCJemmyBase.OS_NAME.contains("linux"));
+		Assume.assumeFalse("Skipping on Linux due to GTK3 related bug", MCJemmyBase.OS_NAME.contains("linux"));
 		// Dump the test recording to get the current event settings (combined from, possibly multiple recordings)
 		MC.jvmBrowser.dumpLastPartOfRecording(TEST_RECORDING_NAME);
 		EventSettingsData currentSettings = JfrUi.parseEventSettingsTable();

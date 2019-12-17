@@ -36,8 +36,8 @@ package org.openjdk.jmc.ui.common.security;
  * This is the global security manager factory for Mission Control. You can only have one
  * SecurityManager, and it is initialized at start. It can not be changed once initialized. The only
  * way to change security manager is to set the system property
- * org.openjdk.jmc.rjmx.security.manager=&lt;class&gt; before this factory class is instantiated. The
- * class must implement ISecurityManager, and it must have a default constructor.
+ * org.openjdk.jmc.rjmx.security.manager=&lt;class&gt; before this factory class is instantiated.
+ * The class must implement ISecurityManager, and it must have a default constructor.
  */
 public final class SecurityManagerFactory {
 

@@ -577,7 +577,8 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	 */
 	public Collection<IOperation> getOperations(ObjectName mbean) throws Exception {
 		MBeanServerConnection connection = ensureConnected();
-		return MBeanOperationWrapper.createOperations(connection, mbean, connection.getMBeanInfo(mbean).getOperations());
+		return MBeanOperationWrapper.createOperations(connection, mbean,
+				connection.getMBeanInfo(mbean).getOperations());
 	}
 
 	IMRIService getMRIService() {

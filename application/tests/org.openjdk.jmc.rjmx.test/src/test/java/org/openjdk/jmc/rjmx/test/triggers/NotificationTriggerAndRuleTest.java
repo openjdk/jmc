@@ -174,8 +174,7 @@ public class NotificationTriggerAndRuleTest extends RjmxTestCase
 	 * @throws IOException
 	 */
 	protected TriggerRule createRule() throws Exception {
-		MRI uptimeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime",
-				"Uptime");
+		MRI uptimeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Runtime", "Uptime");
 		long uptime = ConnectionToolkit.getRuntimeBean(getMBeanServerConnection()).getUptime();
 		IMRIMetadata metadata = getMRIMetadataService().getMetadata(uptimeDescriptor);
 		IUnit unit = UnitLookup.getUnitOrDefault(metadata.getUnitString());

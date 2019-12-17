@@ -269,10 +269,10 @@ public class MCMenu extends MCJemmyBase {
 	}
 
 	/**
-	 * Enumeration for the "short keys" to access various Mission Control menu items. Primarily to be used with
-	 * Mac OS X where the menu bar is rendered with native code and inaccessible to Jemmy. Other
-	 * platforms should still use the "menu.push()" mechanism to ensure that the menu actually holds
-	 * the items. Note: Each mapping first needs to be configured in plugin.xml.
+	 * Enumeration for the "short keys" to access various Mission Control menu items. Primarily to
+	 * be used with Mac OS X where the menu bar is rendered with native code and inaccessible to
+	 * Jemmy. Other platforms should still use the "menu.push()" mechanism to ensure that the menu
+	 * actually holds the items. Note: Each mapping first needs to be configured in plugin.xml.
 	 */
 
 	private static enum MenuKeys {

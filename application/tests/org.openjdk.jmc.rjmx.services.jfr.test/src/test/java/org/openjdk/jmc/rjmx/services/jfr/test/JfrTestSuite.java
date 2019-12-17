@@ -41,6 +41,6 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({EventMetadataTest.class, EventTemplateTest.class, JfrControlTest.class, RecordingOptionsTest.class,
-		OnlineEventOptionsTest.class })
+		OnlineEventOptionsTest.class})
 public class JfrTestSuite {
 }

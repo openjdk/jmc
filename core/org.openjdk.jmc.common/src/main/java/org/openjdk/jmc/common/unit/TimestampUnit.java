@@ -40,6 +40,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.messages.internal.Messages;
@@ -47,13 +48,12 @@ import org.openjdk.jmc.common.messages.internal.Messages;
 public class TimestampUnit extends TypedUnit<TimestampUnit> {
 	private final LinearUnit timeOffsetUnit;
 	private final String unitId;
-	private final String unitDescription;
+	private final AtomicReference<String> unitDescriptionRef;
 
 	TimestampUnit(LinearUnit timeOffsetUnit) {
 		this.timeOffsetUnit = timeOffsetUnit;
 		unitId = "epoch" + timeOffsetUnit.getIdentifier(); //$NON-NLS-1$
-		String multiplier = timeOffsetUnit.asWellKnownQuantity().displayUsing(IDisplayable.EXACT);
-		unitDescription = MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG), multiplier);
+		unitDescriptionRef = new AtomicReference<>();
 	}
 
 	@Override
@@ -224,7 +224,10 @@ public class TimestampUnit extends TypedUnit<TimestampUnit> {
 
 	@Override
 	public String getLocalizedDescription() {
-		return unitDescription;
+		unitDescriptionRef.compareAndSet(null,
+				MessageFormat.format(Messages.getString(Messages.TimestampKind_SINCE_1970_MSG),
+						timeOffsetUnit.asWellKnownQuantity().displayUsing(IDisplayable.EXACT)));
+		return unitDescriptionRef.get();
 	}
 
 	@Override

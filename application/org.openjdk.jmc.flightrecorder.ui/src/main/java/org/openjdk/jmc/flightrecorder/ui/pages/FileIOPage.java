@@ -168,10 +168,10 @@ public class FileIOPage extends AbstractDataPage {
 		LIST.addColumn(JfrAttributes.EVENT_THREAD);
 		LIST.addColumn(JdkAttributes.IO_FILE_READ_EOF);
 
-		PERCENTILES.addSeries(PERCENTILE_READ_TIME, Messages.FileIOPage_ROW_FILE_READ,
-				PERCENTILE_READ_COUNT, JdkAggregators.FILE_READ_COUNT.getName(), JdkTypeIDs.FILE_READ);
-		PERCENTILES.addSeries(PERCENTILE_WRITE_TIME, Messages.FileIOPage_ROW_FILE_WRITE,
-				PERCENTILE_WRITE_COUNT, JdkAggregators.FILE_WRITE_COUNT.getName(), JdkTypeIDs.FILE_WRITE);
+		PERCENTILES.addSeries(PERCENTILE_READ_TIME, Messages.FileIOPage_ROW_FILE_READ, PERCENTILE_READ_COUNT,
+				JdkAggregators.FILE_READ_COUNT.getName(), JdkTypeIDs.FILE_READ);
+		PERCENTILES.addSeries(PERCENTILE_WRITE_TIME, Messages.FileIOPage_ROW_FILE_WRITE, PERCENTILE_WRITE_COUNT,
+				JdkAggregators.FILE_WRITE_COUNT.getName(), JdkTypeIDs.FILE_WRITE);
 	}
 
 	private class IOPageUi implements IPageUI {
@@ -412,7 +412,7 @@ public class FileIOPage extends AbstractDataPage {
 			IXDataRenderer sizeRoot = RendererToolkit.uniformRows(sizeRows);
 			IQuantity sizeMax = selectedItems.getAggregate(JdkAggregators.FILE_READ_LARGEST);
 			// FIXME: Workaround to make max value included
-			sizeMax = sizeMax == null ? UnitLookup.BYTE.quantity(64): sizeMax.add(UnitLookup.BYTE.quantity(64));
+			sizeMax = sizeMax == null ? UnitLookup.BYTE.quantity(64) : sizeMax.add(UnitLookup.BYTE.quantity(64));
 			XYChart sizeChart = new XYChart(UnitLookup.BYTE.quantity(0), sizeMax, sizeRoot, 180);
 			DataPageToolkit.setChart(sizeCanvas, sizeChart, JdkAttributes.IO_SIZE,
 					selection -> pageContainer.showSelection(selection));

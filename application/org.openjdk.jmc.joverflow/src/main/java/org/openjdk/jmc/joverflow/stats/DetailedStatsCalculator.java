@@ -60,8 +60,8 @@ import org.openjdk.jmc.joverflow.support.ProblemRecorder;
  * created in its constructor). The HeapScaner scans the heap from GC roots, keeping the reference
  * chain from a GC root to the current object at all times. This class analyzes each scanned object
  * for various kinds of problems, and records problem type/overhead if anything found via the
- * supplied instance of {@link org.openjdk.jmc.joverflow.support.ProblemRecorder}. See the latter for
- * more information on problems and object kinds that they can occur on.
+ * supplied instance of {@link org.openjdk.jmc.joverflow.support.ProblemRecorder}. See the latter
+ * for more information on problems and object kinds that they can occur on.
  */
 class DetailedStatsCalculator implements ProblemChecker, Constants {
 	private final Snapshot snapshot;

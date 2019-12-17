@@ -175,8 +175,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	 * @throws IOException
 	 * @throws AttachNotSupportedException
 	 */
-	private void tryJCMDStyleStartingOfTheAgent(String name)
-			throws IOException, AgentLoadException {
+	private void tryJCMDStyleStartingOfTheAgent(String name) throws IOException, AgentLoadException {
 		try {
 			// Enforce a timeout here to ensure we don't block forever if the JVM is busy/suspended. See JMC-5398
 			ExecutorService service = Executors.newSingleThreadExecutor();
@@ -191,7 +190,8 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 						// Get in memory Service URL...
 						JMXServiceURL inMemURL = LocalJVMToolkit.getInMemoryURLFromPID(Integer.parseInt(name));
 						if (inMemURL == null) {
-							BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE, COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
+							BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE,
+									COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
 							throw new LazyServiceURLResolveException(COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE);
 						}
 						url = inMemURL;

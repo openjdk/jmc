@@ -48,7 +48,8 @@ public class JavaThingItem implements TreeItem {
 	private final String size;
 
 	public JavaThingItem(int level, String name, JavaThing content) {
-		this(level, name, content == null ? "null" : content.valueAsString(), content == null ? 0 : content.getSize(), content); //$NON-NLS-1$
+		this(level, name, content == null ? "null" : content.valueAsString(), content == null ? 0 : content.getSize(), //$NON-NLS-1$
+				content);
 	}
 
 	public JavaThingItem(int level, String name, String value, int size, JavaThing content) {

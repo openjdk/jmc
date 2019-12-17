@@ -54,8 +54,8 @@ public class MCToolBar extends MCJemmyBase {
 	}
 
 	/**
-	 * Finds and returns a {@link MCToolBar} (in the main Mission Control Window) by means of one of the
-	 * toolitem tooltips
+	 * Finds and returns a {@link MCToolBar} (in the main Mission Control Window) by means of one of
+	 * the toolitem tooltips
 	 *
 	 * @param toolTip
 	 *            the tooltip of any of the toolitems

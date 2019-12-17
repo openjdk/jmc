@@ -33,8 +33,8 @@
 package org.openjdk.jmc.joverflow.ui.model;
 
 /**
- * A collection of objects of a specific class and qualifier marked with a ClusterType. Qualifier may be null. Each
- * cluster holds aggregated data for the objects.
+ * A collection of objects of a specific class and qualifier marked with a ClusterType. Qualifier
+ * may be null. Each cluster holds aggregated data for the objects.
  */
 public interface ObjectCluster {
 

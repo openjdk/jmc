@@ -251,7 +251,6 @@ public final class MCMBeanServerConnection implements MBeanServerConnection {
 		return filteredAttributes;
 	}
 
-	
 	@Override
 	public Object invoke(ObjectName name, String operationName, Object[] params, String[] signature)
 			throws InstanceNotFoundException, MBeanException, ReflectionException, IOException {

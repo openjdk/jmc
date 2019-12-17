@@ -66,8 +66,7 @@ public class CompositeDataSubscriptionTest extends RjmxTestCase implements IMRIV
 	public void testCompositeDataSubscription() {
 		try {
 			// Starting up a subscription on a one shot attribute.
-			MRI attributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory",
-					"HeapMemoryUsage/used");
+			MRI attributeDescriptor = new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used");
 			getAttributeSubscriptionService().addMRIValueListener(attributeDescriptor, this);
 			IMRISubscription subscription = getAttributeSubscriptionService().getMRISubscription(attributeDescriptor);
 

@@ -55,9 +55,9 @@ import org.openjdk.jmc.rjmx.IConnectionHandle;
  */
 public interface IFlightRecorderService extends IRecorderConfigurationService {
 	/**
-	 * Returns the available JDK Flight Recorder recordings. The immutable descriptor represents
-	 * the state at the time the method was called. To get an updated representation the method must
-	 * be called again.
+	 * Returns the available JDK Flight Recorder recordings. The immutable descriptor represents the
+	 * state at the time the method was called. To get an updated representation the method must be
+	 * called again.
 	 *
 	 * @return the available Flight Recording recordings.
 	 * @throws FlightRecorderException
@@ -153,8 +153,8 @@ public interface IFlightRecorderService extends IRecorderConfigurationService {
 	Map<? extends IEventTypeID, ? extends IEventTypeInfo> getEventTypeInfoMapByID() throws FlightRecorderException;
 
 	/**
-	 * Returns the currently active settings for all event types, if the JDK Flight Recorder
-	 * version supports this notion. Otherwise, empty settings will be returned.
+	 * Returns the currently active settings for all event types, if the JDK Flight Recorder version
+	 * supports this notion. Otherwise, empty settings will be returned.
 	 *
 	 * @return the current settings for the event types.
 	 * @throws FlightRecorderException

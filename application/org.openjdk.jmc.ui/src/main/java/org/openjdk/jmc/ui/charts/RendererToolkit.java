@@ -103,8 +103,7 @@ public class RendererToolkit {
 	private static class CompositeRenderer implements IXDataRenderer {
 
 		private static final Color MISMATCH_CONTENT_BG = new Color(240, 240, 240, 190);
-		private static final String NO_CONTENT_MSG = Messages
-				.getString(Messages.RendererToolkit_NO_CONTENT);
+		private static final String NO_CONTENT_MSG = Messages.getString(Messages.RendererToolkit_NO_CONTENT);
 		private static final String TOO_MUCH_CONTENT_MSG = Messages
 				.getString(Messages.RendererToolkit_TOO_MUCH_CONTENT);
 		private final List<IXDataRenderer> children;

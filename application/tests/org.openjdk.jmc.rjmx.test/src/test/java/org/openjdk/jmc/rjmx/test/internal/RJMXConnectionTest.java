@@ -67,9 +67,8 @@ import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 public class RJMXConnectionTest extends RjmxTestCase {
 	// The MBEANS vital to console functionality.
 	public final static String[] MBEAN_NAMES = {"java.lang:type=OperatingSystem", "java.lang:type=ClassLoading",
-			"java.lang:type=Threading", "java.lang:type=Compilation", "java.lang:type=Memory",
-			"java.lang:type=Runtime", "java.lang:type=MemoryPool,*", "java.lang:type=GarbageCollector,*",
-			"java.lang:type=MemoryManager,*"};
+			"java.lang:type=Threading", "java.lang:type=Compilation", "java.lang:type=Memory", "java.lang:type=Runtime",
+			"java.lang:type=MemoryPool,*", "java.lang:type=GarbageCollector,*", "java.lang:type=MemoryManager,*"};
 
 	public final static String[] MBEAN_CLASS_NAMES = {"sun.management.RuntimeImpl"};
 
@@ -182,8 +181,7 @@ public class RJMXConnectionTest extends RjmxTestCase {
 		}
 		// No longer check all the class names
 		for (String element : MBEAN_CLASS_NAMES) {
-			assertTrue("Returned infos did not contain MBean class name: " + element, infos
-					.containsKey(element));
+			assertTrue("Returned infos did not contain MBean class name: " + element, infos.containsKey(element));
 		}
 
 		MBeanInfo loggingInfo = infos.get(MBEAN_CLASS_NAMES[0]);

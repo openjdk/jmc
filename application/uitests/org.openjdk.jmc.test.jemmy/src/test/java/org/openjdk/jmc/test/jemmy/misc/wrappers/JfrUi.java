@@ -151,7 +151,7 @@ public class JfrUi extends MCJemmyBase {
 				break;
 			case NATIVE_LIBRARIES:
 				tabText = new String[] {"Environment", "Native Libraries"};
-				break;				
+				break;
 			case ENVIRONMENT_VARIABLES:
 				tabText = new String[] {"Environment", "Environment Variables"};
 				break;
@@ -164,8 +164,8 @@ public class JfrUi extends MCJemmyBase {
 	}
 
 	/**
-	 * Opens the file in Mission Control, waits for the editor to show up and the system to become idle (all
-	 * rendering and rule calculation done)
+	 * Opens the file in Mission Control, waits for the editor to show up and the system to become
+	 * idle (all rendering and rule calculation done)
 	 *
 	 * @param file
 	 *            a file representing a flight recording
@@ -175,31 +175,31 @@ public class JfrUi extends MCJemmyBase {
 	}
 
 	/**
-	 * Opens the file in Mission Control, optionally waits for the editor to show up and the system to become
-	 * idle (all rendering and rule calculation done)
+	 * Opens the file in Mission Control, optionally waits for the editor to show up and the system
+	 * to become idle (all rendering and rule calculation done)
 	 *
 	 * @param file
 	 *            a file representing a flight recording
 	 * @param waitForEditor
-	 *            {@code true} if supposed to wait for the editor before returning. Otherwise
-	 *            will return immediately
+	 *            {@code true} if supposed to wait for the editor before returning. Otherwise will
+	 *            return immediately
 	 */
 	public static void openJfr(File file, boolean waitForEditor) {
 		openJfr(file, true, waitForEditor);
 	}
 
 	/**
-	 * Opens the file in Mission Control, waits for the editor to show up and the system to become idle (all
-	 * rendering and rule calculation done)
+	 * Opens the file in Mission Control, waits for the editor to show up and the system to become
+	 * idle (all rendering and rule calculation done)
 	 *
 	 * @param file
 	 *            a file representing a flight recording
 	 * @param handlePotentialDecompressionDialog
-	 *            {@code true} if a (potential) decompression dialog should be handled by
-	 *            clicking the Yes button. Otherwise won't check for the dialog
+	 *            {@code true} if a (potential) decompression dialog should be handled by clicking
+	 *            the Yes button. Otherwise won't check for the dialog
 	 * @param waitForEditor
-	 *            {@code true} if supposed to wait for the editor before returning. Otherwise
-	 *            will return immediately
+	 *            {@code true} if supposed to wait for the editor before returning. Otherwise will
+	 *            return immediately
 	 */
 	public static void openJfr(File file, boolean handlePotentialDecompressionDialog, boolean waitForEditor) {
 		TestHelper.openJfr(file.getAbsolutePath());

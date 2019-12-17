@@ -180,8 +180,8 @@ public interface IChartInfoVisitor {
 	/**
 	 * Deliver supplementary information about the hovered rendered item to the Visitor.
 	 * <p>
-	 * To be used in conjunction with an rendered item's {@code infoAt()} to
-	 * deliver supplementary information about the currently hovered object to the Visitor.
+	 * To be used in conjunction with an rendered item's {@code infoAt()} to deliver supplementary
+	 * information about the currently hovered object to the Visitor.
 	 *
 	 * @param data
 	 */

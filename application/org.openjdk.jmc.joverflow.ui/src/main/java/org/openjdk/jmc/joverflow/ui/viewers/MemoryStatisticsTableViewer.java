@@ -218,10 +218,10 @@ class MemoryStatisticsTableViewer extends TableViewer {
 		}
 	}
 
-	private TableViewerColumn createTableColumnViewer(String label,
-			Function<MemoryStatisticsItem, String> labelProvider,
-			Function<MemoryStatisticsItem, String> toolTipProvider, Function<MemoryStatisticsItem, Color> colorProvider,
-			Comparator<MemoryStatisticsItem> comparator) {
+	private TableViewerColumn createTableColumnViewer(
+		String label, Function<MemoryStatisticsItem, String> labelProvider,
+		Function<MemoryStatisticsItem, String> toolTipProvider, Function<MemoryStatisticsItem, Color> colorProvider,
+		Comparator<MemoryStatisticsItem> comparator) {
 		TableViewerColumn column = new TableViewerColumn(this, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText(label);

@@ -67,9 +67,9 @@ public abstract class JavaHeapObject extends JavaThing {
 	 * Returns the object's global index. This index is not equal to the object id returned by
 	 * {@link #readId()}. Each JavaLazyReadObject (representing a Java instance, object array or
 	 * primitive array) has a unique index that is &gt; 0. Each JavaClass (that represents a Java
-	 * class) has a unique index that's &lt;= 0. The value returned for JavaClass is an index into the
-	 * internal class list, and thus increments by one. The value returned for a JavaHeapObject is a
-	 * position in the internal compact table, and increments by 3 or 4. In contrast, the long
+	 * class) has a unique index that's &lt;= 0. The value returned for JavaClass is an index into
+	 * the internal class list, and thus increments by one. The value returned for a JavaHeapObject
+	 * is a position in the internal compact table, and increments by 3 or 4. In contrast, the long
 	 * object id normally increments by comparatively large numbers.
 	 */
 	public abstract int getGlobalObjectIndex();

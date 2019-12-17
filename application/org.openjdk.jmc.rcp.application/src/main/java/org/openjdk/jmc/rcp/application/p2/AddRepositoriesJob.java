@@ -41,8 +41,8 @@ import org.openjdk.jmc.rcp.application.ApplicationPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * We're doing repository initialization as a separate job to avoid blocking the start of Mission Control.
- * 
+ * We're doing repository initialization as a separate job to avoid blocking the start of Mission
+ * Control.
  */
 public final class AddRepositoriesJob extends Job {
 	private final BundleContext context;

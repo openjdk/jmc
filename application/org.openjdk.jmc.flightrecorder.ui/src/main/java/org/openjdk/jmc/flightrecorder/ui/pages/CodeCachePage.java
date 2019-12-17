@@ -292,7 +292,7 @@ public class CodeCachePage extends AbstractDataPage {
 			chartLegend.addSelectionChangedListener(e -> buildChart());
 			ColumnViewerToolTipSupport.enableFor(chartLegend);
 			List<Object> chartSeries = new ArrayList<>();
-			JavaVersion version = RulesToolkit.getJavaVersion(getDataSource().getItems()); 
+			JavaVersion version = RulesToolkit.getJavaVersion(getDataSource().getItems());
 			if (version != null && version.isGreaterOrEqualThan(JavaVersionSupport.JDK_9)) {
 				CODE_CACHE_UNALLOCATED_SEGMENTED.getAttributes().stream().map(IAttribute::getIdentifier)
 						.forEach(chartSeries::add);

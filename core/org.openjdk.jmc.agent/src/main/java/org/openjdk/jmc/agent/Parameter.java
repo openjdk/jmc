@@ -38,8 +38,7 @@ import org.openjdk.jmc.agent.util.TypeUtils;
  * Metadata for a parameter to be logged by the agent.
  */
 public final class Parameter implements Attribute {
-	public static final int INDEX_INVALID = -2;
-	public static final int INDEX_RETURN = -1;
+	public static final int INDEX_INVALID = -1;
 
 	private final int index;
 	private final String name;
@@ -82,10 +81,6 @@ public final class Parameter implements Attribute {
 
 	public String getFieldName() {
 		return fieldName;
-	}
-
-	public boolean isReturn() {
-		return index == INDEX_RETURN;
 	}
 
 	public boolean isInvalid() {

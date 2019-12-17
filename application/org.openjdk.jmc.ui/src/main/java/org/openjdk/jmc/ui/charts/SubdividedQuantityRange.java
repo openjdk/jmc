@@ -224,8 +224,8 @@ public class SubdividedQuantityRange implements IRange<IQuantity> {
 	}
 
 	/**
-	 * Get the closest lower subdivider index corresponding to the pixel position
-	 * {@code pixel}. Typically used to get a bucket index.
+	 * Get the closest lower subdivider index corresponding to the pixel position {@code pixel}.
+	 * Typically used to get a bucket index.
 	 *
 	 * @param pixel
 	 * @return
@@ -236,8 +236,8 @@ public class SubdividedQuantityRange implements IRange<IQuantity> {
 	}
 
 	/**
-	 * Get the closest subdivider index corresponding to the pixel position {@code pixel}.
-	 * Typically used for snapping to ticks or bucket boundaries.
+	 * Get the closest subdivider index corresponding to the pixel position {@code pixel}. Typically
+	 * used for snapping to ticks or bucket boundaries.
 	 *
 	 * @param pixel
 	 * @return
@@ -249,8 +249,8 @@ public class SubdividedQuantityRange implements IRange<IQuantity> {
 	}
 
 	/**
-	 * Get the pixel position corresponding to {@code value}. Note that if you need to perform
-	 * this on many values, all expressed in the same unit, it is more efficient to use
+	 * Get the pixel position corresponding to {@code value}. Note that if you need to perform this
+	 * on many values, all expressed in the same unit, it is more efficient to use
 	 * {@link #toPixelTransform(IUnit)} once and use that to transform all numerical values using
 	 * {@link IScalarAffineTransform#targetValue(double)} or so.
 	 *

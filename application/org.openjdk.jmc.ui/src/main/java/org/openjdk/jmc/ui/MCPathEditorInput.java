@@ -54,7 +54,7 @@ public class MCPathEditorInput implements IPathEditorInput, IPersistableElement 
 
 	/**
 	 * @deprecated All users of this constructor should switch to the version with a boolean
-	 *    parameter for whether or not it should be persistable.
+	 *             parameter for whether or not it should be persistable.
 	 */
 	@Deprecated
 	public MCPathEditorInput(File file) {

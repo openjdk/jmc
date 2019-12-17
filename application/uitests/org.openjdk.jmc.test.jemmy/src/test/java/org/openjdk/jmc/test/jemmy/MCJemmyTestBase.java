@@ -123,7 +123,8 @@ public abstract class MCJemmyTestBase {
 			if (!MC.mcHasFocus()) {
 				MCJemmyBase.focusMc();
 			}
-			Assert.assertTrue("Mission Control did not have focus when the test suite was initialized.", MC.mcHasFocus());
+			Assert.assertTrue("Mission Control did not have focus when the test suite was initialized.",
+					MC.mcHasFocus());
 			IS_JFR_NEXT = ConnectionHelper.is9u0EAorLater(TEST_CONNECTION);
 		}
 

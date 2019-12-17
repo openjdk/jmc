@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,7 +43,7 @@ import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
 import javax.management.ObjectName;
 
 public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesService {
-	private final static String VM_FLAG = "UnlockCommercialFeatures"; //$NON-NLS-1$
+	private final static String UNLOCK_COMMERCIAL_FEATURES_FLAG = "UnlockCommercialFeatures"; //$NON-NLS-1$
 	private final static String UNLOCK_COMMAND = "VM.unlock_commercial_features"; //$NON-NLS-1$
 	private final MBeanServerConnection server;
 	private final IDiagnosticCommandService dcs;
@@ -54,7 +54,7 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 		server = handle.getServiceOrThrow(MBeanServerConnection.class);
 		dcs = handle.getServiceOrNull(IDiagnosticCommandService.class);
 		try {
-			HotspotManagementToolkit.getVMOption(server, VM_FLAG); // Will fail if option is not available
+			HotspotManagementToolkit.getVMOption(server, UNLOCK_COMMERCIAL_FEATURES_FLAG); // Will fail if option is not available
 		} catch (Exception e) {
 			// Commercial Feature option is not available but Flight Recorder is.
 			if (!isJfrMBeanAvailable()) {
@@ -66,7 +66,8 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 	@Override
 	public boolean isCommercialFeaturesEnabled() {
 		try {
-			return ((String) HotspotManagementToolkit.getVMOption(server, VM_FLAG)).contains("true"); //$NON-NLS-1$
+			return ((String) HotspotManagementToolkit.getVMOption(server, UNLOCK_COMMERCIAL_FEATURES_FLAG))
+					.contains("true"); //$NON-NLS-1$
 		} catch (Exception e) {
 			return false;
 		}
@@ -78,7 +79,7 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 			dcs.runCtrlBreakHandlerWithResult(UNLOCK_COMMAND);
 		}
 		if (!isCommercialFeaturesEnabled()) {
-			HotspotManagementToolkit.setVMOption(server, VM_FLAG, "true"); //$NON-NLS-1$
+			HotspotManagementToolkit.setVMOption(server, UNLOCK_COMMERCIAL_FEATURES_FLAG, "true"); //$NON-NLS-1$
 		}
 	}
 
@@ -95,5 +96,10 @@ public class HotSpot23CommercialFeaturesService implements ICommercialFeaturesSe
 		ObjectName candidateObjectName = ConnectionToolkit.createObjectName(JDK_MANAGEMENT_JFR_MBEAN_NAME);
 		server.getMBeanInfo(candidateObjectName);
 		return candidateObjectName;
+	}
+
+	@Override
+	public boolean hasCommercialFeatures() {
+		return true;
 	}
 }

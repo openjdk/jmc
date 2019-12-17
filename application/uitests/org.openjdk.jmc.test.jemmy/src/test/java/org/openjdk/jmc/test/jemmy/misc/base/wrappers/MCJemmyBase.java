@@ -561,7 +561,7 @@ public class MCJemmyBase {
 			public void run() {
 				Menu menu = control.getControl().getMenu();
 				for (MenuItem item : menu.getItems()) {
-					if(menuItemText.equals(item.getText())) {
+					if (menuItemText.equals(item.getText())) {
 						setOutput(item.isEnabled());
 						break;
 					}
@@ -901,8 +901,8 @@ public class MCJemmyBase {
 	}
 
 	/**
-	 * @return a {@link List} of {@link MCTable} either in the currently focused section or
-	 *         globally in the shell
+	 * @return a {@link List} of {@link MCTable} either in the currently focused section or globally
+	 *         in the shell
 	 */
 	public static List<MCTable> getTables() {
 		if (focusedSection != null) {
@@ -917,8 +917,8 @@ public class MCJemmyBase {
 	 * 
 	 * @param waitForIdle
 	 *            {@code true} if "UI-update queue" should be empty before looking for controls
-	 * @return a {@link List} of {@link MCTable} either in the currently focused section or
-	 *         globally in the shell
+	 * @return a {@link List} of {@link MCTable} either in the currently focused section or globally
+	 *         in the shell
 	 */
 	public static List<MCTable> getTables(boolean waitForIdle) {
 		if (focusedSection != null) {

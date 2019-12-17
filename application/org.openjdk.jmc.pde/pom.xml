@@ -41,4 +41,8 @@
 	<artifactId>org.openjdk.jmc.pde</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 </project>

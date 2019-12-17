@@ -65,7 +65,8 @@ public class MCChartCanvas extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<MCChartCanvas> getAll(Wrap<? extends Shell> shell) {
-		List<Wrap<? extends ChartCanvas>> list = getVisible(shell.as(Parent.class, ChartCanvas.class).lookup(ChartCanvas.class));
+		List<Wrap<? extends ChartCanvas>> list = getVisible(
+				shell.as(Parent.class, ChartCanvas.class).lookup(ChartCanvas.class));
 		List<MCChartCanvas> canvases = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			canvases.add(new MCChartCanvas(list.get(i)));
@@ -85,7 +86,8 @@ public class MCChartCanvas extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns the first visible {@link MCChartCanvas} object underneath the Mission Control main shell
+	 * Returns the first visible {@link MCChartCanvas} object underneath the Mission Control main
+	 * shell
 	 *
 	 * @return a {@link MCChartCanvas} object
 	 */
@@ -95,6 +97,7 @@ public class MCChartCanvas extends MCJemmyBase {
 
 	/**
 	 * Clicks a specific menu item in the context menu
+	 * 
 	 * @param menuItemText
 	 *            the menu item of interest
 	 */
@@ -103,7 +106,7 @@ public class MCChartCanvas extends MCJemmyBase {
 		focusMc();
 		StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
 		contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
-		contextMenu.push(getRelativeClickPoint(), new String[]{menuItemText});
+		contextMenu.push(getRelativeClickPoint(), new String[] {menuItemText});
 	}
 
 	/**

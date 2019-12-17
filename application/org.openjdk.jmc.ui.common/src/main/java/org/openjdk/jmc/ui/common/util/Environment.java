@@ -44,7 +44,7 @@ public class Environment {
 	 * Known OS types.
 	 */
 	public enum OSType {
-		WINDOWS, MAC, SOLARIS, LINUX, UNKNOWN_UNIX, UNKNOWN;
+	WINDOWS, MAC, SOLARIS, LINUX, UNKNOWN_UNIX, UNKNOWN;
 
 		@Override
 		public String toString() {

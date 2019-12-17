@@ -54,7 +54,7 @@ import org.openjdk.jmc.flightrecorder.ext.jfx.Messages;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 
 public class JfxPulseDurationRuleTest {
-	
+
 	private static final String RECORDINGS_DIR = "jfr";
 	private static final String JFR_FILENAME = "pulseduration.jfr";
 	private static final IQuantity TARGET_HZ = UnitLookup.HERTZ.quantity(60);
@@ -70,11 +70,11 @@ public class JfxPulseDurationRuleTest {
 		// Load a saved recording containing javafx.PulsePhase events
 		IOResource jfr = TestToolkit.getNamedResource(JfxPulseDurationRuleTest.class, RECORDINGS_DIR, JFR_FILENAME);
 		IItemCollection events = JfrLoaderToolkit.loadEvents(jfr.open());
-		
+
 		// Execute the rule on our test recording
 		JfxPulseDurationRule rule = new JfxPulseDurationRule();
 		RunnableFuture<Result> future = rule.evaluate(events, new IPreferenceValueProvider() {
-			
+
 			@Override
 			@SuppressWarnings("unchecked")
 			public <T> T getPreferenceValue(TypedPreference<T> preference) {
@@ -87,12 +87,13 @@ public class JfxPulseDurationRuleTest {
 		});
 		future.run();
 		Result result = future.get();
-		
+
 		// Check that score and warnings match expected values
 		assertEquals(SCORE, result.getScore(), DELTA);
 		assertEquals(MessageFormat.format(WARNING_SHORT, LONG_PHASES_PERCENT.displayUsing(IDisplayable.AUTO),
 				TARGET_PHASE_TIME.displayUsing(IDisplayable.AUTO)), result.getShortDescription());
-		assertEquals(MessageFormat.format(WARNING_LONG, TARGET_HZ.displayUsing(IDisplayable.AUTO)), result.getLongDescription());
+		assertEquals(MessageFormat.format(WARNING_LONG, TARGET_HZ.displayUsing(IDisplayable.AUTO)),
+				result.getLongDescription());
 	}
 
 }

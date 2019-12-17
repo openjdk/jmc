@@ -44,7 +44,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCLink;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
 
 /**
- * Class for testing some JVM Browser tree connection manipulation functionality 
+ * Class for testing some JVM Browser tree connection manipulation functionality
  */
 public class CustomConnectionsTest extends MCJemmyTestBase {
 

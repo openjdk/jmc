@@ -88,8 +88,8 @@ public interface IIDESupport {
 	MCFile createDefaultFileResource(String resourcePath);
 
 	/**
-	 * Returns the default recording folder, e.g. file system directory for RCP version
-	 * or Eclipse project for IDE version.
+	 * Returns the default recording folder, e.g. file system directory for RCP version or Eclipse
+	 * project for IDE version.
 	 *
 	 * @return the default recording folder
 	 */

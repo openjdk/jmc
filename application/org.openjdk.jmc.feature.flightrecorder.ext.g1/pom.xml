@@ -41,4 +41,8 @@
 	<artifactId>org.openjdk.jmc.feature.flightrecorder.ext.g1</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 </project>

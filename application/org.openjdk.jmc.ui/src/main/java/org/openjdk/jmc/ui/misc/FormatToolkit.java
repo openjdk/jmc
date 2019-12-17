@@ -45,8 +45,7 @@ import org.eclipse.jface.viewers.TreePath;
 
 /**
  * A general formatting toolkit.<br>
- * Should be merged with org.openjdk.jmc.common.FormatToolkit when we can use java 8 in
- * common.
+ * Should be merged with org.openjdk.jmc.common.FormatToolkit when we can use java 8 in common.
  */
 public class FormatToolkit {
 
