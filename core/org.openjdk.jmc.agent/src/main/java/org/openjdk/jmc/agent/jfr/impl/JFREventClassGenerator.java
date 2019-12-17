@@ -41,9 +41,12 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.Attribute;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 
 public class JFREventClassGenerator {
 	private static final String CLASS_NAME_INSTANT_EVENT = "com/oracle/jrockit/jfr/InstantEvent"; //$NON-NLS-1$
@@ -59,7 +62,7 @@ public class JFREventClassGenerator {
 	 * @throws Exception
 	 *             if the event class could not be generated.
 	 */
-	public static byte[] generateEventClass(JFRTransformDescriptor td) throws Exception {
+	public static byte[] generateEventClass(JFRTransformDescriptor td, Class<?> classBeingRedefined) throws Exception {
 		ClassWriter cw = new ClassWriter(0);
 		// TODO: Add support for different locations
 		cw.visit(Opcodes.V1_7, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, td.getEventClassName(), null,
@@ -70,7 +73,7 @@ public class JFREventClassGenerator {
 		String parameterizedClassName = TypeUtils.parameterize(td.getEventClassName());
 		generateClassAnnotations(cw, td);
 		generateTokenField(cw);
-		generateAttributeFields(cw, td);
+		generateAttributeFields(cw, td, classBeingRedefined);
 		generateClinit(cw, td.getEventClassName(), parameterizedClassName);
 		generateInit(cw, td.getEventClassName(), parameterizedClassName);
 		cw.visitEnd();
@@ -78,7 +81,7 @@ public class JFREventClassGenerator {
 		return cw.toByteArray();
 	}
 
-	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td) {
+	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined) throws IllegalSyntaxException {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
 			if (param.isReturn()) {
@@ -87,31 +90,35 @@ public class JFREventClassGenerator {
 				createField(cw, td, param, args[param.getIndex()]);
 			}
 		}
+
+		for (Field field : td.getFields()) {
+			createField(cw, td, field, field.resolveReferenceChain(classBeingRedefined).getType());
+		}
 	}
 
-	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Parameter param, Type type) {
+	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Attribute attribute, Type type) {
 		if (!td.isAllowedFieldType(type)) {
 			Logger.getLogger(JFREventClassGenerator.class.getName())
-					.warning("Skipped generating field in event class for parameter " + param + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
+					.warning("Skipped generating field in event class for parameter " + attribute + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
 							+ " because of configuration settings!"); //$NON-NLS-1$
 			return;
 		}
 
 		String fieldType = getFieldType(type);
 
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, param.getFieldName(), fieldType, null, null);
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, attribute.getFieldName(), fieldType, null, null);
 		AnnotationVisitor av = fv.visitAnnotation("Lcom/oracle/jrockit/jfr/ValueDefinition;", true); //$NON-NLS-1$
-		if (param.getName() != null) {
-			av.visit("name", param.getName()); //$NON-NLS-1$
+		if (attribute.getName() != null) {
+			av.visit("name", attribute.getName()); //$NON-NLS-1$
 		}
-		if (param.getDescription() != null) {
-			av.visit("description", param.getDescription()); //$NON-NLS-1$
+		if (attribute.getDescription() != null) {
+			av.visit("description", attribute.getDescription()); //$NON-NLS-1$
 		}
-		if (param.getContentType() != null) {
-			av.visitEnum("contentType", "Lcom/oracle/jrockit/jfr/ContentType;", param.getContentType()); //$NON-NLS-1$ //$NON-NLS-2$
+		if (attribute.getContentType() != null) {
+			av.visitEnum("contentType", "Lcom/oracle/jrockit/jfr/ContentType;", attribute.getContentType()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		if (param.getRelationKey() != null) {
-			av.visit("relationKey", param.getRelationKey()); //$NON-NLS-1$
+		if (attribute.getRelationKey() != null) {
+			av.visit("relationKey", attribute.getRelationKey()); //$NON-NLS-1$
 		}
 		av.visitEnd();
 		fv.visitEnd();

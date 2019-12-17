@@ -46,13 +46,15 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 	private final JFRTransformDescriptor transformDescriptor;
 	private final ClassLoader definingClassLoader;
+	private final Class<?> classBeingRedefined;
 	private final ProtectionDomain protectionDomain;
 
-	public JFRClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
-			ProtectionDomain protectionDomain) {
+	public JFRClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader, 
+			Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
 		super(Opcodes.ASM5, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
+		this.classBeingRedefined = classBeingRedefined;
 		this.protectionDomain = protectionDomain;
 	}
 
@@ -61,7 +63,7 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRMethodAdvisor(transformDescriptor, Opcodes.ASM5, mv, access, name, desc);
+			return new JFRMethodAdvisor(transformDescriptor, classBeingRedefined, Opcodes.ASM5, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -79,7 +81,7 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 	}
 
 	private Class<?> generateEventClass() throws Exception {
-		byte[] eventClass = JFREventClassGenerator.generateEventClass(transformDescriptor);
+		byte[] eventClass = JFREventClassGenerator.generateEventClass(transformDescriptor, classBeingRedefined);
 		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
 				definingClassLoader, protectionDomain);
 	}

@@ -108,7 +108,7 @@ public class Transformer implements ClassFileTransformer {
 			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT
 					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain)
-					: new JFRClassVisitor(classWriter, td, definingClassLoader, protectionDomain); // TODO: support path-syntax evaluation for legacy API 
+					: new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain); 
 			ClassReader reader = new ClassReader(classfileBuffer);
 			reader.accept(visitor, 0);
 			return classWriter.toByteArray();

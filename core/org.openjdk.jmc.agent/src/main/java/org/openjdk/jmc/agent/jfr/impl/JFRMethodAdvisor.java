@@ -37,9 +37,18 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
+import org.openjdk.jmc.agent.Attribute;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
+import org.openjdk.jmc.agent.util.expression.ReferenceChain;
+import org.openjdk.jmc.agent.util.expression.ReferenceChainElement;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Code emitter for JFR distributed with pre-JDK 9 releases. Probably works with JRockit too. ;)
@@ -48,6 +57,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
 
 	private final JFRTransformDescriptor transformDescriptor;
+	private final Class<?> classBeingRedefined;
 	private final Type[] argumentTypesRef;
 	private final Type returnTypeRef;
 	private final Type eventType;
@@ -58,10 +68,11 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRMethodAdvisor(JFRTransformDescriptor transformDescriptor, int api, MethodVisitor mv, int access,
+	protected JFRMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> classBeingRedefined, int api, MethodVisitor mv, int access,
 			String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
+		this.classBeingRedefined = classBeingRedefined;
 		// These are not accessible from the super type (made private), so must save an extra reference. :/
 		this.argumentTypesRef = Type.getArgumentTypes(desc);
 		this.returnTypeRef = Type.getReturnType(desc);
@@ -97,10 +108,14 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	@Override
 	protected void onMethodEnter() {
-		createEvent();
+		try {
+			createEvent();
+		} catch (IllegalSyntaxException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	private void createEvent() {
+	private void createEvent() throws IllegalSyntaxException {
 		mv.visitTypeInsn(NEW, transformDescriptor.getEventClassName());
 		mv.visitInsn(DUP);
 		mv.visitInsn(DUP);
@@ -111,8 +126,22 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 				if (transformDescriptor.isAllowedFieldType(argumentType)) {
 					mv.visitInsn(DUP);
 					loadArg(param.getIndex());
-					writeParameter(param, argumentType);
+					writeAttribute(param, argumentType);
 				}
+			}
+		}
+
+		for (Field field : transformDescriptor.getFields()) {
+			ReferenceChain refChain = field.resolveReferenceChain(classBeingRedefined).normalize();
+
+			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
+				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + field.getExpression());
+			}
+
+			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+				mv.visitInsn(DUP);
+				loadField(refChain);
+				writeAttribute(field, refChain.getType());
 			}
 		}
 
@@ -121,7 +150,77 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		mv.visitVarInsn(ASTORE, eventLocal);
 	}
 
-	private void writeParameter(Parameter param, Type type) {
+	private void loadField(ReferenceChain refChain) {
+		Type type = refChain.getType();
+		boolean isStatic = Modifier.isStatic(getAccess());
+		Label nullCase = new Label();
+		Label continueCase = new Label();
+		List<Object> localVarVerifications = new ArrayList<>();
+		if (!isStatic) {
+			localVarVerifications.add(Type.getInternalName(classBeingRedefined)); // "this"
+		}
+		for (Type argType : argumentTypesRef) {
+			localVarVerifications.add(TypeUtils.getFrameVerificationType(argType));
+		}
+
+		// Assumes the reference chain is normalized already. See ReferenceChain.normalize()
+		List<ReferenceChainElement> refs = refChain.getReferences();
+		for (int i = 0; i < refs.size(); i++) {
+			ReferenceChainElement ref = refs.get(i);
+
+			if (ref instanceof ReferenceChainElement.ThisReference) {
+				mv.visitVarInsn(ALOAD, 0); // load "this"
+				continue;
+			}
+
+			if (ref instanceof ReferenceChainElement.FieldReference) {
+				mv.visitFieldInsn(ref.isStatic() ? GETSTATIC : GETFIELD, ref.getMemberingType().getInternalName(),
+						((ReferenceChainElement.FieldReference) ref).getName(),
+						ref.getReferencedType().getDescriptor());
+
+				// null check for field references
+				if (i < refs.size() - 1) { // Skip null check for final reference. Null is acceptable here
+					mv.visitInsn(DUP);
+					mv.visitJumpInsn(IFNULL, nullCase);
+				}
+
+				continue;
+			}
+
+			if (ref instanceof ReferenceChainElement.QualifiedThisReference) {
+				int suffix = ((ReferenceChainElement.QualifiedThisReference) ref).getDepth();
+				Class<?> c = ref.getMemberingClass();
+				while (!ref.getReferencedClass().equals(c)) {
+					mv.visitFieldInsn(GETFIELD, Type.getType(c).getInternalName(), "this$" + (suffix--),
+							Type.getType(c.getEnclosingClass()).getDescriptor());
+					c = c.getEnclosingClass();
+				}
+
+				continue;
+			}
+
+			throw new UnsupportedOperationException("Unsupported reference chain element type");
+		}
+
+		// loaded a value, jump to writing attribute
+		mv.visitJumpInsn(GOTO, continueCase);
+
+		// null reference on path, load zero value
+		mv.visitLabel(nullCase);
+		mv.visitFrame(F_NEW, localVarVerifications.size(), localVarVerifications.toArray(), 4,
+				new Object[] {eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(),
+						Type.getInternalName(Object.class)});
+		mv.visitInsn(POP);
+		mv.visitInsn(TypeUtils.getConstZeroOpcode(type));
+
+		// must verify frame for jump targets
+		mv.visitLabel(continueCase);
+		mv.visitFrame(F_NEW, localVarVerifications.size(), localVarVerifications.toArray(), 4,
+				new Object[] {eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(),
+						TypeUtils.getFrameVerificationType(type)});
+	}
+
+	private void writeAttribute(Attribute param, Type type) {
 		if (TypeUtils.shouldStringify(param, type)) {
 			TypeUtils.stringify(mv, param, type);
 			type = TypeUtils.STRING_TYPE;
@@ -155,7 +254,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
-		writeParameter(returnParam, returnTypeRef);
+		writeAttribute(returnParam, returnTypeRef);
 	}
 
 	private void commitEvent() {
