@@ -263,6 +263,12 @@ public class ExpressionResolver {
 					field.getDeclaringClass().getName()));
 		}
 
+		if (!caller.equals(memberingClass) && Modifier.isPrivate(field.getModifiers()) && AccessUtils
+				.areNestMates(caller, memberingClass)) {
+			enterIllegalState(
+					new UnsupportedOperationException("Private member access between nestmates is not supported"));
+		}
+
 		referenceChain.append(new ReferenceChainElement.FieldReference(memberingClass, field));
 
 		if (!iterator.hasNext()) { // accepted state
