@@ -114,7 +114,7 @@ public class TlabPage extends AbstractDataPage {
 
 	private static final String INSIDE_COUNT_COL = "insideCount"; //$NON-NLS-1$
 	private static final String OUTSIDE_COUNT_COL = "outsideCount"; //$NON-NLS-1$
-	private static final String AVERAGE_INSIDE_SIZE_COL = "o"; //$NON-NLS-1$
+	private static final String AVERAGE_INSIDE_SIZE_COL = "averageInsideSize"; //$NON-NLS-1$
 	private static final String AVERAGE_OUTSIDE_SIZE_COL = "averageOutsideSize"; //$NON-NLS-1$
 	private static final String TOTAL_INSIDE_SIZE_COL = "totalInsideSize"; //$NON-NLS-1$
 	private static final String TOTAL_INSIDE_SIZE_PERCENT_COL = "totalInsideSizePercent"; //$NON-NLS-1$
