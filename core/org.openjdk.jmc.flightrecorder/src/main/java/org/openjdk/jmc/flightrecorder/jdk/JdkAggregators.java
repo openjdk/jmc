@@ -331,9 +331,17 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkAttributes.TLAB_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_SUM_PERCENTAGE = Aggregators.sum(
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM_PERCENTAGE),
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM_PERCENTAGE_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
+			JdkAttributes.TLAB_SIZE);
 	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
+			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_SUM_PERCENTAGE = Aggregators.sum(
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_PERCENTAGE),
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_PERCENTAGE_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
 	public static final IAggregator<IQuantity, ?> SWEEP_METHOD_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM), Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM_DESC),
