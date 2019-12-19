@@ -36,7 +36,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-// One-time use loader for reflective class inspection. Don't keep static reference to one of these.
+/**
+ * One-time use loader for reflective class inspection. Don't keep static reference to one of these.
+ */
 public class InspectionClassLoader extends ClassLoader {
 
 	public InspectionClassLoader(ClassLoader parent) {

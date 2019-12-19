@@ -37,23 +37,45 @@ import org.objectweb.asm.Type;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReferenceChain {
+/**
+ * A ReferenceChain instance presents a field reference expression.
+ * 
+ * eg. <code>OuterClass.this.field.STATIC_FIELD</code> is a reference chain consisting elements: a qualified-this 
+ * reference and two field reference (<code>field</code> and <code>STATIC_FIELD</code>).
+ * 
+ */
+public final class ReferenceChain {
 	private final Class<?> callerClass;
 	private final List<ReferenceChainElement> references;
 
+	/**
+	 * @param callerClass the caller class making this reference
+	 */
 	public ReferenceChain(Class<?> callerClass) {
 		this.callerClass = callerClass;
 		this.references = new LinkedList<>();
 	}
 
+	/**
+	 * @return the caller class making this reference
+	 */
 	public Class<?> getCallerClass() {
 		return callerClass;
 	}
 
+	/**
+	 * @return all elements on the reference chain
+	 */
 	public List<ReferenceChainElement> getReferences() {
 		return references;
 	}
 
+	/**
+	 * Reduces the reference chain to prepend "this" or qualified-this references if necessary, and short-circuits on
+	 * static references
+	 * 
+	 * @return the normalized reference chain
+	 */
 	public ReferenceChain normalize() {
 		List<ReferenceChainElement> oldRefs = getReferences();
 		List<ReferenceChainElement> newRefs = new LinkedList<>();
@@ -82,6 +104,9 @@ public class ReferenceChain {
 		return ret;
 	}
 
+	/**
+	 * @return the type of the last reference element
+	 */
 	public Type getType() {
 		if (references.isEmpty()) {
 			return Type.getType(callerClass);
@@ -89,10 +114,17 @@ public class ReferenceChain {
 		return references.get(references.size() - 1).getReferencedType();
 	}
 
+	/**
+	 * Appends a ReferenceChainElement to the chain
+	 * @param ref ReferenceChainElement to be appended
+	 */
 	public void append(ReferenceChainElement ref) {
 		references.add(ref);
 	}
 
+	/**
+	 * @return whether the reference is valid from a static context
+	 */
 	public boolean isStatic() {
 		if (references.isEmpty()) {
 			return false;
