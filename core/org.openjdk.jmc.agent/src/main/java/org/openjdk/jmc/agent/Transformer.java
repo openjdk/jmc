@@ -68,11 +68,14 @@ public class Transformer implements ClassFileTransformer {
 		registry.storeClassPreInstrumentation(className, classfileBuffer);
 		byte[] instrumentedClassfileBuffer = registry.isRevertIntrumentation() ?
 				registry.getClassPreInstrumentation(className) : classfileBuffer;
-		try {
-			// Don't reuse this class loader instance. We want the loader and its class to unload after we're done.
-			classBeingRedefined = new InspectionClassLoader(loader).loadClass(TypeUtils.getCanonicalName(className));
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException(e); // This should not happen
+		if (classBeingRedefined == null) {
+			try {
+				// Don't reuse this class loader instance. We want the loader and its class to unload after we're done.
+				classBeingRedefined = new InspectionClassLoader(loader)
+						.loadClass(TypeUtils.getCanonicalName(className));
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException(e); // This should not happen
+			}
 		}
 		return doTransforms(registry.getTransformData(className), instrumentedClassfileBuffer, loader, classBeingRedefined, protectionDomain);
 	}
