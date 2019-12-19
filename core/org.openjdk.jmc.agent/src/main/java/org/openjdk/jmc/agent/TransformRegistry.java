@@ -71,23 +71,6 @@ public interface TransformRegistry {
 	List<String> clearAllTransformData();
 
 	/**
-	 * Stores the pre instrumentation byte array of a class.
-	 * @param className
-	 *           the class for which to store the pre instrumentation data.
-	 * @param classPreInstrumentation
-	 *           the pre instrumentation byte array of the class to store.
-	 */
-	void storeClassPreInstrumentation(String className, byte[] classPreInstrumentation);
-
-	/**
-	 * Returns a byte array associated with a class pre instrumentation.
-	 * @param className
-	 *           the name of the class to get pre instrumentation data for.
-	 * @return a byte array of a class pre instrumentation.
-	 */
-	byte[] getClassPreInstrumentation(String className);
-
-	/**
 	 * Signify classes are or are not being reverted to their pre instrumentation versions.
 	 * @param shouldRevert
 	 *           true if class instrumentation should be reverted, false otherwise.
