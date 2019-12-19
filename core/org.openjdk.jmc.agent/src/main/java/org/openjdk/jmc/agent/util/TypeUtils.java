@@ -44,8 +44,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.Attribute;
-import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
 /**
