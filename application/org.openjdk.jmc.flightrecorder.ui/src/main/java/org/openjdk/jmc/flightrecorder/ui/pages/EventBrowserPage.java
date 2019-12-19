@@ -176,6 +176,8 @@ public class EventBrowserPage extends AbstractDataPage {
 		private FlavorSelector flavorSelector;
 		private FilterComponent listFilter;
 		private Boolean showTypesWithoutEvents;
+		private Boolean showFilterAction;
+		private Boolean showSearchAction;
 
 		EventBrowserUI(Composite parent, FormToolkit toolkit, IState state, IPageContainer container) {
 			this.container = container;
@@ -332,6 +334,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			});
 			listColumns.addAll(0, newColumns);
 
+			saveFilterActionStates();
 			Control oldListControl = list.getManager().getViewer().getControl();
 			Composite parent = listFilter != null ? listFilter.getComponent().getParent() : oldListControl.getParent();
 			for (Control c : parent.getChildren()) {
@@ -342,7 +345,11 @@ public class EventBrowserPage extends AbstractDataPage {
 					Messages.EventBrowserPage_EVENT_BROWSER_SELECTION);
 			listFilter = FilterComponent.createFilterComponent(list, flagsFilter, filteredItems,
 					container.getSelectionStore()::getSelections, this::onFilterChange);
-			listFilter.loadState(getState().getChild(LIST_FILTER));
+			if (showFilterAction == null) {
+				listFilter.loadState(getState().getChild(LIST_FILTER));
+			} else {
+				loadFilterActionStates();
+			}
 			onFilterChange(flagsFilter);
 
 			MCContextMenuManager mm = list.getMenuManager();
@@ -370,6 +377,20 @@ public class EventBrowserPage extends AbstractDataPage {
 			if (settings.getOrderBy() != null) {
 				listOrderBy = settings.getOrderBy();
 			}
+		}
+
+		private void saveFilterActionStates() {
+			if (listFilter != null) {
+				showFilterAction = listFilter.getShowFilterAction().isChecked();
+				showSearchAction = listFilter.getShowSearchAction().isChecked();
+			}
+		}
+
+		private void loadFilterActionStates() {
+			listFilter.getShowFilterAction().setChecked(showFilterAction);
+			listFilter.getShowSearchAction().setChecked(showSearchAction);
+			listFilter.getShowFilterAction().run();
+			listFilter.getShowSearchAction().run();
 		}
 
 		@Override
