@@ -80,7 +80,7 @@ public class AggregationGrid {
 
 	public static class AggregateRow {
 		final int index;
-		final IItemCollection rowItems;
+		final IItemCollection items;
 		final Object key;
 		final IQuantity count;
 		final AggregationModel model;
@@ -88,8 +88,7 @@ public class AggregationGrid {
 		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex) {
 			this.model = model;
 			this.key = key;
-
-			this.rowItems = buildItemCollection(itemsByType);
+			this.items = buildItemCollection(itemsByType);
 			this.count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
 			this.index = rowIndex;
 		}
@@ -130,7 +129,7 @@ public class AggregationGrid {
 		}
 
 		private Object calculateValue(AggregateRow row) {
-			return valueFunction.apply(row.rowItems);
+			return valueFunction.apply(row.items);
 		}
 	}
 
@@ -158,7 +157,7 @@ public class AggregationGrid {
 		}
 
 		private Object calculateValue(AggregateRow row) {
-			return valueFunction.apply(row.rowItems, row.model.modelItems);
+			return valueFunction.apply(row.items, row.model.modelItems);
 		}
 	}
 
@@ -173,7 +172,7 @@ public class AggregationGrid {
 	}
 
 	public static IItemCollection getItems(Object row) {
-		return ((AggregateRow) row).rowItems;
+		return ((AggregateRow) row).items;
 	}
 
 	public static double getCountFraction(Object row) {
