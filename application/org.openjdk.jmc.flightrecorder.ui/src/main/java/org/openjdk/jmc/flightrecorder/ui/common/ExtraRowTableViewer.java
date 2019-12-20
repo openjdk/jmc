@@ -93,6 +93,10 @@ public class ExtraRowTableViewer extends TableViewer {
 	}
 
 	private void createExtraRow() {
+		long maxNumRows = FlightRecorderUI.getDefault().getItemListSize().longValue();
+		if (getFilteredChildren(getInput()).length < maxNumRows) {
+			return;
+		}
 		extraRow = new TableItem(getTable(), SWT.NO_BACKGROUND | SWT.NO_FOCUS);
 		extraRow.setText(message);
 	}
