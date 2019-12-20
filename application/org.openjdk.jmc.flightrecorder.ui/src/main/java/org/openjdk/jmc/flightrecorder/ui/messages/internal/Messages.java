@@ -212,6 +212,8 @@ public class Messages extends NLS {
 	public static String HeapPage_ROW_MEMORY_USAGE_DESC;
 	public static String HeapPage_SELECTED_CLASS;
 	public static String HeapPage_SELECTED_CLASSES;
+	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE;
+	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC;
 	public static String INFORMATION_COMPONENT_NOT_AVAILABLE;
 	public static String IO_PAGE_DURATIONS_DESCRIPTION;
 	public static String IO_PAGE_EVENT_LOG_DESCRIPTION;
@@ -517,6 +519,10 @@ public class Messages extends NLS {
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS_DESC;
 	public static String TlabPage_SELECTED_ONE;
 	public static String TlabPage_SELECTED_MANY;
+	public static String TlabPage_INSIDE_TLAB_SUM_PERCENTAGE;
+	public static String TlabPage_INSIDE_TLAB_SUM_PERCENTAGE_DESC;
+	public static String TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE;
+	public static String TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE_DESC;
 	public static String VMOPERATION_PAGE_DURATIONS_DESCRIPTION;
 	public static String VMOPERATION_PAGE_EVENT_LOG_DESCRIPTION;
 	public static String VMOPERATION_PAGE_TIMELINE_DESCRIPTION;

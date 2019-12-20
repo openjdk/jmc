@@ -130,6 +130,10 @@ public class ItemHistogram {
 		}
 
 		public void addPercentageColumn(String colId, IAggregator<?, ?> a) {
+			addPercentageColumn(colId, a, a.getName(), a.getDescription());
+		}
+
+		public void addPercentageColumn(String colId, IAggregator<?, ?> a, String name, String description) {
 			int style = a.getValueType() instanceof LinearKindOfQuantity ? SWT.RIGHT : SWT.NONE;
 			addPercentageColumn(colId, (rowItems, allItems) -> {
 				if (a.getValueType() instanceof LinearKindOfQuantity) {
@@ -140,7 +144,7 @@ public class ItemHistogram {
 					}
 				}
 				return rowItems.getAggregate(a);
-			}, a.getName(), a.getDescription(), style);
+			}, name, description, style);
 		}
 
 		public void addColumn(

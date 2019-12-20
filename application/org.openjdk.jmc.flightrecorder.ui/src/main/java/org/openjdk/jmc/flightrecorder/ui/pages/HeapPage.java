@@ -137,7 +137,8 @@ public class HeapPage extends AbstractDataPage {
 		HISTOGRAM.addColumn(SIZE_COL, JdkAggregators.OBJECT_COUNT_MAX_SIZE);
 		HISTOGRAM.addColumn(INCREASE_COL, ObjectStatisticsDataProvider.getIncreaseAggregator());
 		HISTOGRAM.addColumn(ALLOCATION_COL, JdkAggregators.ALLOCATION_TOTAL);
-		HISTOGRAM.addPercentageColumn(ALLOCATION_PERCENT_COL, JdkAggregators.ALLOCATION_TOTAL_PERCENTAGE);
+		HISTOGRAM.addPercentageColumn(ALLOCATION_PERCENT_COL, JdkAggregators.ALLOCATION_TOTAL,
+				Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE, Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC);
 		HISTOGRAM.addColumn(INSIDE_TLAB_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
 		HISTOGRAM.addColumn(OUTSIDE_TLAB_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
 	}
