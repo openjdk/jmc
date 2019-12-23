@@ -108,7 +108,7 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<profiles>
-	<profile>
+		<profile>
 			<id>2019-12</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
