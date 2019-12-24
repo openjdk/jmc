@@ -1113,6 +1113,7 @@ public class DataPageToolkit {
 		ItemList list = listBuilder.build(parent, tableSettings);
 		ColumnViewer viewer = list.getManager().getViewer();
 		MCContextMenuManager mm = MCContextMenuManager.create(viewer.getControl());
+		list.setMenuManager(mm);
 		ColumnMenusFactory.addDefaultMenus(list.getManager(), mm);
 		viewer.addSelectionChangedListener(
 				e -> pageContainer.showSelection(ItemCollectionToolkit.build(list.getSelection().get())));
