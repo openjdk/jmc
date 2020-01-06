@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,7 +65,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.Form;
 
 import org.openjdk.jmc.common.IDisplayable;
@@ -301,7 +303,6 @@ public class FlavorSelector implements SelectionStoreListener {
 		sameThreadsButton.addSelectionListener(new SameThreadsSelectionListener());
 
 		// FIXME: Persist state for above checkboxes?
-
 		onShow.ifPresent(on -> {
 			Label rangeLabel = new Label(selectorRow, SWT.NONE);
 			rangeLabel.setLayoutData(GridDataFactory.swtDefaults().create());
@@ -314,6 +315,12 @@ public class FlavorSelector implements SelectionStoreListener {
 			resetButton.setText(Messages.FlavorSelector_BUTTON_TIMERANGE_CLEAR);
 			resetButton.setToolTipText(Messages.FlavorSelector_BUTTON_TIMERANGE_CLEAR_TOOLTIP);
 			resetButton.addListener(SWT.Selection, e -> on.accept(false));
+			resetButton.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					on.accept(false);
+				}
+			});
 			resetButton.setLayoutData(GridDataFactory.swtDefaults().create());
 			showButton.addListener(SWT.Selection, e -> on.accept(true));
 		});

@@ -433,6 +433,10 @@ public class LaneEditor {
 			return isRestLane;
 		}
 
+		public boolean isEnabledAndNotRestLane() {
+			return enabled && !isRestLane;
+		}
+
 		@Override
 		public void saveTo(IWritableState writableState) {
 			writableState.putString(NAME, name);

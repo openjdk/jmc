@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -139,6 +139,7 @@ import org.openjdk.jmc.flightrecorder.ui.selection.IFilterFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore.SelectionStoreEntry;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.charts.AWTChartToolkit.IColorProvider;
+import org.openjdk.jmc.ui.charts.ChartFilterControlBar;
 import org.openjdk.jmc.ui.charts.IQuantitySeries;
 import org.openjdk.jmc.ui.charts.ISpanSeries;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
@@ -155,6 +156,7 @@ import org.openjdk.jmc.ui.column.TableSettings.ColumnSettings;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
+import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.misc.FilterEditor;
@@ -312,6 +314,10 @@ public class DataPageToolkit {
 		setChart(canvas, chart, selectionListener, null);
 	}
 
+	public static void setChart(ChartTextCanvas canvas, XYChart chart, Consumer<IItemCollection> selectionListener) {
+		setChart(canvas, chart, selectionListener, null);
+	}
+
 	public static void setChart(
 		ChartCanvas canvas, XYChart chart, Consumer<IItemCollection> selectionListener,
 		Consumer<IRange<IQuantity>> selectRangeConsumer) {
@@ -328,6 +334,37 @@ public class DataPageToolkit {
 					chart.setVisibleRange(selectionStart, selectionEnd);
 				}
 				canvas.redrawChart();
+			}
+		});
+
+		canvas.setSelectionListener(() -> {
+			selectionListener.accept(ItemRow.getRangeSelection(chart, JfrAttributes.LIFETIME));
+			IQuantity start = chart.getSelectionStart();
+			IQuantity end = chart.getSelectionEnd();
+			if (selectRangeConsumer != null) {
+				selectRangeConsumer
+						.accept(start != null && end != null ? QuantityRange.createWithEnd(start, end) : null);
+			}
+		});
+		canvas.setChart(chart);
+	}
+
+	public static void setChart(
+		ChartTextCanvas canvas, XYChart chart, Consumer<IItemCollection> selectionListener,
+		Consumer<IRange<IQuantity>> selectRangeConsumer) {
+		IMenuManager contextMenu = canvas.getContextMenu();
+		contextMenu.removeAll();
+		canvas.getContextMenu().add(new Action(Messages.CHART_ZOOM_TO_SELECTED_RANGE) {
+			@Override
+			public void run() {
+				IQuantity selectionStart = chart.getSelectionStart();
+				IQuantity selectionEnd = chart.getSelectionEnd();
+				if (selectionStart == null || selectionEnd == null) {
+					chart.clearVisibleRange();
+				} else {
+					chart.setVisibleRange(selectionStart, selectionEnd);
+				}
+				canvas.redrawChartText();
 			}
 		});
 

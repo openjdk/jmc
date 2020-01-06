@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -61,6 +62,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.ItemFilters.Types;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -94,21 +96,41 @@ public class ThreadGraphLanes {
 	private Runnable buildChart;
 	private List<IAction> actions;
 	private String tooltipTitle;
+	private EventTypeFolderNode typeTree;
+	private boolean quickFilterExist;
 
 	public ThreadGraphLanes(Supplier<StreamModel> dataSourceSupplier, Runnable buildChart) {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
 		this.actions = new ArrayList<>();
+		this.quickFilterExist = false;
+		this.typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+	}
+
+	protected EventTypeFolderNode getTypeTree() {
+        return typeTree;
 	}
 
 	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		EventTypeFolderNode typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
 				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
 		updateContextMenu(mm, isLegendMenu);
+		buildChart.run();
+	}
+
+	public void openEditLanesDialog(MCContextMenuManager[] mms, boolean isLegendMenu) {
+		// FIXME: Might there be other interesting events that don't really have duration?
+		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
+				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
+				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
+		updateContextMenus(mms, isLegendMenu);
 		buildChart.run();
 	}
 
@@ -127,6 +149,19 @@ public class ThreadGraphLanes {
 		return ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]));
 	}
 
+	/**
+	 * Retrieves the set of lane names that are currently enabled.<br>
+	 * Note: The "Rest lane" is of type ItemFilters$Composite, and cannot be cast to Types,
+	 *     so it gets filtered out of the end result.
+	 * @return the enabled lanes independent from the rest lane
+	 */
+	public Set<String> getEnabledLanes() {
+		List<IItemFilter> laneFilters = laneDefs.stream()
+				.filter((Predicate<? super LaneDefinition>) LaneDefinition::isEnabledAndNotRestLane).map(ld -> ld.getFilter())
+				.collect(Collectors.toList());
+		return ((Types) ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]))).getTypes();
+	}
+
 	private void setTooltipTitle(String description) {
 		this.tooltipTitle = description;
 	}
@@ -137,6 +172,37 @@ public class ThreadGraphLanes {
 
 	private void resetTooltipTitle() {
 		this.tooltipTitle = null;
+	}
+
+	/**
+	 * Introduces a "Quick Filter" to the lane definitions which is controlled by the
+	 * dropdown lane filter. Initially, the enabled activity lanes will be a copy of
+	 * the currently enabled lanes. When initially used, the "Quick Filter" will be
+	 * the only active lane definition in an attempt to preserve the lane activity of
+	 * the existing lane definitions. The "Quick Filter" is meant for easy viewing of
+	 * activities, and will not be persisted.
+	 */
+	public void useDropdownFilter(LaneDefinition quickFilterDef) {
+		if (quickFilterExist) {
+			for (int i = 0; i < laneDefs.size(); i++) {
+				if (quickFilterDef.getName().equals(laneDefs.get(i).getName())) {
+					laneDefs.remove(laneDefs.get(i));
+					laneDefs.add(i, quickFilterDef);
+				}
+			}
+		} else {
+			for (int i = 0; i < laneDefs.size(); i++) {
+				setLaneDefinitionEnablement(laneDefs.get(i), i, false);
+			}
+			laneDefs.add(0, quickFilterDef);
+			quickFilterExist = true;
+		}
+		buildChart.run();
+	}
+
+	private void setLaneDefinitionEnablement(LaneDefinition oldLd, int laneIndex, boolean isEnabled) {
+		LaneDefinition newLd = new LaneDefinition(oldLd.getName(), isEnabled, oldLd.getFilter(), oldLd.isRestLane());
+		laneDefs.set(laneIndex, newLd);
 	}
 
 	public IXDataRenderer buildThreadRenderer(Object thread, IItemCollection items) {
@@ -243,8 +309,60 @@ public class ThreadGraphLanes {
 	private List<String> chartActionIdentifiers = new ArrayList<>();
 	private List<String> legendActionIdentifiers = new ArrayList<>();
 
-	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
+	public void updateContextMenus(MCContextMenuManager[] mms, boolean isLegendMenu) {
+		if (isLegendMenu) {
+			for (String id : legendActionIdentifiers) {
+				for (MCContextMenuManager mm : mms ) {
+					mm.remove(id);
+				}
+			}
+			legendActionIdentifiers.clear();
+		} else {
+			for (String id : chartActionIdentifiers) {
+				for (MCContextMenuManager mm : mms ) {
+					mm.remove(id);
+				}
+			}
+			chartActionIdentifiers.clear();
+		}
+		if (mms[0].indexOf(EDIT_LANES) == -1) {
+			IAction action = ActionToolkit.action(() -> this.openEditLanesDialog(mms, isLegendMenu),
+					Messages.JavaApplicationPage_EDIT_THREAD_LANES_ACTION,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
+			action.setId(EDIT_LANES);
+			for (MCContextMenuManager mm : mms) {
+				mm.add(action);
+				mm.add(new Separator());
+			}
+			actions.add(action);
+		}
+		laneDefs.stream().forEach(ld -> {
+			Action checkAction = new Action(ld.getName(), IAction.AS_CHECK_BOX) {
+				int laneIndex = laneDefs.indexOf(ld);
 
+				@Override
+				public void run() {
+					setLaneDefinitionEnablement(ld, laneIndex, isChecked());
+					buildChart.run();
+				}
+			};
+			String identifier = ld.getName() + checkAction.hashCode();
+			checkAction.setId(identifier);
+			if(isLegendMenu) {
+				legendActionIdentifiers.add(identifier);
+			} else {
+				chartActionIdentifiers.add(identifier);
+			}
+			checkAction.setChecked(ld.isEnabled());
+			// FIXME: Add a tooltip here
+			for (MCContextMenuManager mm : mms ) {
+				mm.add(checkAction);
+			}
+			actions.add(checkAction);
+		});
+	}
+
+	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
 		if (isLegendMenu) {
 			for (String id : legendActionIdentifiers) {
 				mm.remove(id);
@@ -271,9 +389,7 @@ public class ThreadGraphLanes {
 
 				@Override
 				public void run() {
-					LaneDefinition newLd = new LaneDefinition(ld.getName(), isChecked(), ld.getFilter(),
-							ld.isRestLane());
-					laneDefs.set(laneIndex, newLd);
+					setLaneDefinitionEnablement(ld, laneIndex, isChecked());
 					buildChart.run();
 				}
 			};

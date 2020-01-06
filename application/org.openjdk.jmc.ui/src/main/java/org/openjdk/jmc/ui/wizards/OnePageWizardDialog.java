@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -146,6 +146,14 @@ public class OnePageWizardDialog extends SizeConstrainedWizardDialog {
 
 	public static int open(IWizardPage wp, int width, int height) {
 		OnePageWizardDialog d = new OnePageWizardDialog(Display.getCurrent().getActiveShell(), wp);
+		d.setWidthConstraint(width, width);
+		d.setHeightConstraint(height, height);
+		return d.open();
+	}
+
+	public static int openAndHideCancelButton(IWizardPage wp, int width, int height) {
+		OnePageWizardDialog d = new OnePageWizardDialog(Display.getCurrent().getActiveShell(), wp);
+		d.setHideCancelButton(true);
 		d.setWidthConstraint(width, width);
 		d.setHeightConstraint(height, height);
 		return d.open();

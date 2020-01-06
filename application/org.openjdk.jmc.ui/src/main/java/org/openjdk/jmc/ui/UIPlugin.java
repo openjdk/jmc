@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -125,6 +125,15 @@ public class UIPlugin extends MCAbstractUIPlugin {
 
 	// module
 	public static final String ICON_MODULE = "jigsaw-32.png"; //$NON-NLS-1$
+
+	// font awesome
+	public static final String ICON_FA_SCALE_TO_FIT = "fa-scale-to-fit-16.png";
+	public static final String ICON_FA_SELECTION = "fa-selection-16.png";
+	public static final String ICON_FA_ZOOM_IN = "fa-zoom-in-16.png";
+	public static final String ICON_FA_ZOOM_OUT = "fa-zoom-out-16.png";
+	public static final String ICON_FA_ZOOM_PAN = "fa-zoom-pan-16.png";
+	public static final String ICON_FA_PLUS = "fa-plus-16.png";
+	public static final String ICON_FA_MINUS = "fa-minus-16.png";
 
 	// thread
 	public final static String ICON_THREAD_RUNNING = "thread_obj.gif"; //$NON-NLS-1$
@@ -271,6 +280,15 @@ public class UIPlugin extends MCAbstractUIPlugin {
 
 		registerImage(registry, ICON_EXPAND_ALL, ICON_EXPAND_ALL);
 		registerImage(registry, ICON_COLLAPSE_ALL, ICON_COLLAPSE_ALL);
+
+		// font awesome
+		registerImage(registry, ICON_FA_SCALE_TO_FIT, ICON_FA_SCALE_TO_FIT);
+		registerImage(registry, ICON_FA_SELECTION, ICON_FA_SELECTION);
+		registerImage(registry, ICON_FA_ZOOM_IN, ICON_FA_ZOOM_IN);
+		registerImage(registry, ICON_FA_ZOOM_OUT, ICON_FA_ZOOM_OUT);
+		registerImage(registry, ICON_FA_ZOOM_PAN, ICON_FA_ZOOM_PAN);
+		registerImage(registry, ICON_FA_PLUS, ICON_FA_PLUS);
+		registerImage(registry, ICON_FA_MINUS, ICON_FA_MINUS);
 
 		// Threads
 		registerImage(registry, ICON_THREAD_RUNNING, ICON_THREAD_RUNNING);

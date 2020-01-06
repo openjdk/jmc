@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,15 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.ui.misc.messages"; //$NON-NLS-1$
 
 	public static String AbstractWarningItem_WARNING;
+	public static String ChartDisplayControlBar_SCALE_TO_FIT_TOOLTIP;
+	public static String ChartDisplayControlBar_SELECTION_TOOL_TOOLTIP;
+	public static String ChartDisplayControlBar_ZOOM_IN_CLICK_TOOLTIP;
+	public static String ChartDisplayControlBar_ZOOM_IN_HOLD_TOOLTIP;
+	public static String ChartDisplayControlBar_ZOOM_PAN_TOOLTIP;
+	public static String ChartDisplayControlBar_ZOOM_OUT_CLICK_TOOLTIP;
+	public static String ChartDisplayControlBar_ZOOM_OUT_HOLD_TOOLTIP;
+	public static String ChartLaneHeightControls_LANE_HEIGHT_DECREASE_TOOLTIP;
+	public static String ChartLaneHeightControls_LANE_HEIGHT_INCREASE_TOOLTIP;
 	public static String DIALOG_FILE_EXISTS_TITLE;
 	public static String DIALOG_OVERWRITE_QUESTION_TEXT;
 	public static String EXPORT_AS_IMAGE_ACTION_TEXT;
@@ -94,6 +103,16 @@ public class Messages extends NLS {
 	public static String NumberFieldEditor_ERROR_MESSAGE_NO_SMALLER;
 	public static String ProgressComposite_PLEASE_WAIT;
 	public static String QuestionLinkDialog_FAILED_OPEN_BROWSER;
+	public static String TimeFilter_END_TIME_EXCEEDS_ERROR;
+	public static String TimeFilter_ERROR;
+	public static String TimeFilter_FILTER;
+	public static String TimeFilter_FILTER_EVENTS;
+	public static String TimeFilter_FROM;
+	public static String TimeFilter_INVALID_FORMAT_ERROR;
+	public static String TimeFilter_RESET;
+	public static String TimeFilter_START_TIME_LONGER_THAN_END_ERROR;
+	public static String TimeFilter_START_TIME_PRECEEDS_ERROR;
+	public static String TimeFilter_TO;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
