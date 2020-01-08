@@ -88,32 +88,32 @@ public class TestSetTransforms {
 
 	@Test
 	public void testSetTransforms() throws Exception {
-		boolean excpetionThrown = false;
+		boolean exceptionThrown = false;
 		try {
 			InstrumentMe.printHelloWorldJFR6();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
-			excpetionThrown = true;
+			exceptionThrown = true;
 		}
-		assertFalse(excpetionThrown);
+		assertFalse(exceptionThrown);
 
 		injectFailingEvent();
-		doSetTransfroms(XML_DESCRIPTION);
+		doSetTransforms(XML_DESCRIPTION);
 		try {
 			InstrumentMe.printHelloWorldJFR6();
 		} catch (RuntimeException e) {
-			excpetionThrown = true;
+			exceptionThrown = true;
 		}
-		assertTrue(excpetionThrown);
+		assertTrue(exceptionThrown);
 
-		doSetTransfroms("");
+		doSetTransforms("");
 		try {
 			InstrumentMe.printHelloWorldJFR6();
-			excpetionThrown = false;
+			exceptionThrown = false;
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
-		assertFalse(excpetionThrown);
+		assertFalse(exceptionThrown);
 	}
 
 	private void injectFailingEvent() throws Exception {
@@ -159,7 +159,7 @@ public class TestSetTransforms {
 				ClassLoader.getSystemClassLoader(), null);
 	}
 
-	private void doSetTransfroms(String xmlDescription) throws Exception  {
+	private void doSetTransforms(String xmlDescription) throws Exception  {
 		ObjectName name = new ObjectName(AGENT_OBJECT_NAME);
 		Object[] parameters = {xmlDescription};
 		String[] signature = {String.class.getName()};
