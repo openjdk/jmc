@@ -122,10 +122,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testZoom() {
-		MCButton zoomInBtn = MCButton.getByImage(
-				UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_IN));
-		MCButton zoomOutBtn = MCButton.getByImage(
-				UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_OUT));
+		MCButton zoomInBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_IN));
+		MCButton zoomOutBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_OUT));
 		MCText zoomDisplay = MCText.getByText(DEFAULT_ZOOM);
 
 		//zoom with display bar
@@ -152,8 +150,7 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		MCText StartTimeField = MCText.getByText(START_TIME);
 		MCText zoomDisplay = MCText.getByText(DEFAULT_ZOOM);
 		MCButton resetBtn = MCButton.getByLabel(RESET_BUTTON);
-		MCButton scaleToFitBtn = MCButton.getByImage(
-				UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_SCALE_TO_FIT));
+		MCButton scaleToFitBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_SCALE_TO_FIT));
 
 		StartTimeField.setText(NEW_START_TIME);
 		Assert.assertNotEquals(START_TIME, StartTimeField.getText());

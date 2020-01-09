@@ -64,7 +64,8 @@ public class MCTextCanvas extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<MCTextCanvas> getAll(Wrap<? extends Shell> shell) {
-		List<Wrap<? extends ChartTextCanvas>> list = getVisible(shell.as(Parent.class, ChartTextCanvas.class).lookup(ChartTextCanvas.class));
+		List<Wrap<? extends ChartTextCanvas>> list = getVisible(
+				shell.as(Parent.class, ChartTextCanvas.class).lookup(ChartTextCanvas.class));
 		List<MCTextCanvas> canvases = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			canvases.add(new MCTextCanvas(list.get(i)));
@@ -84,7 +85,8 @@ public class MCTextCanvas extends MCJemmyBase {
 	}
 
 	/**
-	 * Returns the first visible {@link MCTextCanvas} object underneath the Mission Control main shell
+	 * Returns the first visible {@link MCTextCanvas} object underneath the Mission Control main
+	 * shell
 	 *
 	 * @return a {@link MCTextCanvas} object
 	 */
@@ -96,7 +98,7 @@ public class MCTextCanvas extends MCJemmyBase {
 	 * Sets a selection listener for the Text Canvas
 	 *
 	 * @param listener
-	 *             the selection listener to be set
+	 *            the selection listener to be set
 	 */
 	public void setSelectionListener(Runnable listener) {
 		ChartTextCanvas.class.cast(control.getControl()).setSelectionListener(listener);

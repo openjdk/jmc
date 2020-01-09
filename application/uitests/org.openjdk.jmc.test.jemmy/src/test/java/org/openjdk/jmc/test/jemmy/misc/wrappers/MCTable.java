@@ -287,7 +287,7 @@ public class MCTable extends MCJemmyBase {
 	 *            the name of the column header
 	 * @return a {@link MCTable}
 	 */
-	public static MCTable getByColumnHeader(String shellText , String headerName) {
+	public static MCTable getByColumnHeader(String shellText, String headerName) {
 		return getByColumnHeader(getShellByText(shellText), headerName);
 	}
 
