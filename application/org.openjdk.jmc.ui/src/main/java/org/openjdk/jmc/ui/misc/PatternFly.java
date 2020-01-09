@@ -42,15 +42,12 @@ public class PatternFly {
 	private static final String SWT = "SWT";
 
 	/**
-	 * The following color Palette is based on the PatternFly palette for reinforcing
-	 * application content and workflows.
-	 *
-	 * https://www.patternfly.org/v3/styles/color-palette/
+	 * The following color Palette is based on the PatternFly palette for reinforcing application
+	 * content and workflows. https://www.patternfly.org/v3/styles/color-palette/
 	 */
 	public enum Palette {
 		/**
-		 * Primary Colors:
-		 * Black & Blue
+		 * Primary Colors: Black & Blue
 		 */
 		PF_BLACK("#030303"),
 		PF_BLACK_100("#fafafa"),
@@ -75,8 +72,7 @@ public class PatternFly {
 		PF_BLUE_700("#002235"),
 
 		/**
-		 * Secondary Colors:
-		 * Red, Orange, Gold, Light Green, Green, Light Blue, Purple
+		 * Secondary Colors: Red, Orange, Gold, Light Green, Green, Light Blue, Purple
 		 */
 		PF_RED("#8b0000"),
 		PF_RED_100("#cc0000"),
@@ -156,29 +152,30 @@ public class PatternFly {
 
 		/**
 		 * Return a color object of the type corresponding to the constant passed into the method.
+		 * This function first converts the PatternFly color hex value to an AWT Color object. Next,
+		 * it either returns the AWT Color object if the constant type is AWT, or uses the RGB
+		 * values to generate an SWT Color object.
 		 *
-		 * This function first converts the PatternFly color hex value to an AWT Color object.
-		 *
-		 * Next, it either returns the AWT Color object if the constant type is AWT, or uses the RGB values
-		 * to generate an SWT Color object.
-		 *
-		 * @param type String constant: AWT or SWT
+		 * @param type
+		 *            String constant: AWT or SWT
 		 * @return a RGB color (as a regular Object to be casted later)
 		 */
 		private Object parseRGB(String type) {
-			java.awt.Color awtColor =  new java.awt.Color(java.awt.Color.decode(this.color).getRGB());
-			switch(type) {
-				case(AWT):
-					return awtColor;
-				case(SWT):
-					return new org.eclipse.swt.graphics.Color(Display.getCurrent(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
-				default:
-					return null;
+			java.awt.Color awtColor = new java.awt.Color(java.awt.Color.decode(this.color).getRGB());
+			switch (type) {
+			case (AWT):
+				return awtColor;
+			case (SWT):
+				return new org.eclipse.swt.graphics.Color(Display.getCurrent(), awtColor.getRed(), awtColor.getGreen(),
+						awtColor.getBlue());
+			default:
+				return null;
 			}
 		}
 
 		/**
 		 * Converts the PatternFly hex color value to an AWT Color object
+		 * 
 		 * @return AWT Color of the selected PatternFly color
 		 */
 		public java.awt.Color getAWTColor() {
@@ -187,6 +184,7 @@ public class PatternFly {
 
 		/**
 		 * Converts the PatternFly hex color value to an SWT Color object
+		 * 
 		 * @return SWT Color of the selected PatternFly color
 		 */
 		public org.eclipse.swt.graphics.Color getSWTColor() {

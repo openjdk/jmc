@@ -128,7 +128,7 @@ public class ChartDisplayControlBar extends Composite {
 		sb.append(System.getProperty("line.separator"));
 		sb.append(Messages.ChartDisplayControlBar_ZOOM_IN_HOLD_TOOLTIP);
 		zoomInBtn.setToolTipText(sb.toString());
-		zoomInBtn.addListener(SWT.Selection,  new Listener() {
+		zoomInBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				if (scale.getSelection() > 0) {
@@ -170,7 +170,7 @@ public class ChartDisplayControlBar extends Composite {
 		sb.append(System.getProperty("line.separator"));
 		sb.append(Messages.ChartDisplayControlBar_ZOOM_OUT_HOLD_TOOLTIP);
 		zoomOutBtn.setToolTipText(sb.toString());
-		zoomOutBtn.addListener(SWT.Selection,  new Listener() {
+		zoomOutBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				if (scale.getSelection() < scale.getMaximum()) {
@@ -231,7 +231,7 @@ public class ChartDisplayControlBar extends Composite {
 	}
 
 	public void zoomOnClick(Boolean mouseDown) {
-		boolean shouldZoom = zoomInBtn.getSelection() || zoomOutBtn.getSelection() ;
+		boolean shouldZoom = zoomInBtn.getSelection() || zoomOutBtn.getSelection();
 		if (shouldZoom) {
 			if (mouseDown) {
 				chart.clearSelection();
@@ -296,7 +296,7 @@ public class ChartDisplayControlBar extends Composite {
 			if ((button.getStyle() & SWT.TOGGLE) != 0) {
 				if (button.equals(buttonSelected)) {
 					button.setSelection(true);
-				} else if (dependentButton != null ) {
+				} else if (dependentButton != null) {
 					if (button.equals(dependentButton)) {
 						button.setSelection(true);
 					} else {
@@ -322,7 +322,7 @@ public class ChartDisplayControlBar extends Composite {
 
 		@Override
 		public void mouseDown(MouseEvent e) {
-			if(e.button == 1) {
+			if (e.button == 1) {
 				timer = new Timer();
 				timer.schedule(new LongPress(), LONG_PRESS_TIME, (long) (LONG_PRESS_TIME * 1.5));
 			}
@@ -342,7 +342,7 @@ public class ChartDisplayControlBar extends Composite {
 		}
 
 		private void doZoomInOut(int zoomAmount) {
-			DisplayToolkit.inDisplayThread().execute( () -> zoom(zoomAmount));
+			DisplayToolkit.inDisplayThread().execute(() -> zoom(zoomAmount));
 		}
 	}
 
@@ -361,7 +361,7 @@ public class ChartDisplayControlBar extends Composite {
 	}
 
 	private void showZoomPanDisplay(boolean show) {
-		if(show) {
+		if (show) {
 			zoomPan.getParent().setVisible(true);
 			zoomPan.redrawZoomPan();
 		} else {
@@ -369,7 +369,7 @@ public class ChartDisplayControlBar extends Composite {
 		}
 	}
 
-	private class ZoomPan extends Canvas  {
+	private class ZoomPan extends Canvas {
 		private static final int BORDER_PADDING = 2;
 		private static final double MIN_HEIGHT_PERCENT = 0.15;
 		private static final double MIN_WIDTH_PERCENT = 0.08;
@@ -407,8 +407,8 @@ public class ChartDisplayControlBar extends Composite {
 
 			private boolean inBounds(MouseEvent e) {
 				Point zoomCanvasBounds = getParent().getSize();
-				if (zoomRect.height < MIN_HEIGHT_PERCENT * zoomCanvasBounds.y ||
-						zoomRect.width < MIN_WIDTH_PERCENT * zoomCanvasBounds.x) {
+				if (zoomRect.height < MIN_HEIGHT_PERCENT * zoomCanvasBounds.y
+						|| zoomRect.width < MIN_WIDTH_PERCENT * zoomCanvasBounds.x) {
 					return zoomCanvasBounds.x >= e.x && zoomCanvasBounds.y >= e.y;
 				} else {
 					return zoomRect.contains(e.x, e.y);
@@ -424,7 +424,7 @@ public class ChartDisplayControlBar extends Composite {
 			@Override
 			public void mouseMove(MouseEvent e) {
 				zoomPan.setCursor(cursors.get(HAND_CURSOR));
-				if (isPan && getParent().getSize().x >= e.x && getParent().getSize().y >= e.y ) {
+				if (isPan && getParent().getSize().x >= e.x && getParent().getSize().y >= e.y) {
 					lastSelection = currentSelection;
 					currentSelection = chartCanvas.translateDisplayToImageCoordinates(e.x, e.y);
 					int xdiff = currentSelection.x - lastSelection.x;
@@ -446,18 +446,18 @@ public class ChartDisplayControlBar extends Composite {
 
 			int xOld = zoomRect.x;
 			zoomRect.x += xdiff;
-			if (zoomRect.x > (bounds.x - zoomRect.width - BORDER_PADDING - 1))  {
+			if (zoomRect.x > (bounds.x - zoomRect.width - BORDER_PADDING - 1)) {
 				zoomRect.x = bounds.x - zoomRect.width - BORDER_PADDING - 1;
-			} else if (zoomRect.x < BORDER_PADDING ) {
+			} else if (zoomRect.x < BORDER_PADDING) {
 				zoomRect.x = BORDER_PADDING;
 			}
 			xModified = xOld != zoomRect.x;
 
 			int yOld = zoomRect.y;
 			zoomRect.y += ydiff;
-			if (zoomRect.y < BORDER_PADDING ) {
+			if (zoomRect.y < BORDER_PADDING) {
 				zoomRect.y = BORDER_PADDING;
-			} else if (zoomRect.y > (bounds.y - zoomRect.height- BORDER_PADDING - 1))  {
+			} else if (zoomRect.y > (bounds.y - zoomRect.height - BORDER_PADDING - 1)) {
 				zoomRect.y = bounds.y - zoomRect.height - BORDER_PADDING - 1;
 			}
 			yModified = yOld != zoomRect.y;
@@ -473,16 +473,16 @@ public class ChartDisplayControlBar extends Composite {
 			Rectangle totalBounds = chartCanvas.getBounds();
 
 			if (updateXRange) {
-				double ratio = getVisibilityRatio(zoomRect.x - BORDER_PADDING,
-						zoomCanvasBounds.x, zoomCanvasBounds.width - BORDER_PADDING);
+				double ratio = getVisibilityRatio(zoomRect.x - BORDER_PADDING, zoomCanvasBounds.x,
+						zoomCanvasBounds.width - BORDER_PADDING);
 				int start = getPixelLocation(ratio, totalBounds.width, 0);
 
-				ratio = getVisibilityRatio(zoomRect.x + zoomRect.width + BORDER_PADDING + 1,
-						zoomCanvasBounds.width, zoomCanvasBounds.width - BORDER_PADDING);
+				ratio = getVisibilityRatio(zoomRect.x + zoomRect.width + BORDER_PADDING + 1, zoomCanvasBounds.width,
+						zoomCanvasBounds.width - BORDER_PADDING);
 				int end = getPixelLocation(ratio, totalBounds.width, totalBounds.width);
 
-				SubdividedQuantityRange xAxis = new SubdividedQuantityRange(chartRange.getStart(),
-						chartRange.getEnd(), totalBounds.width, 1);
+				SubdividedQuantityRange xAxis = new SubdividedQuantityRange(chartRange.getStart(), chartRange.getEnd(),
+						totalBounds.width, 1);
 				chart.setVisibleRange(xAxis.getQuantityAtPixel(start), xAxis.getQuantityAtPixel(end));
 				lastChartZoomedRange = chart.getVisibleRange();
 			}
@@ -511,7 +511,7 @@ public class ChartDisplayControlBar extends Composite {
 				gc.setBackground(Palette.PF_BLACK_400.getSWTColor());
 				gc.fillRectangle(backgroundRect);
 				gc.setForeground(Palette.PF_BLACK_900.getSWTColor());
-				gc.drawRectangle(0, 0, backgroundRect.width - 1 , backgroundRect.height - 1);
+				gc.drawRectangle(0, 0, backgroundRect.width - 1, backgroundRect.height - 1);
 
 				updateZoomRectFromChart();
 
@@ -526,10 +526,10 @@ public class ChartDisplayControlBar extends Composite {
 			Rectangle zoomCanvasBounds = new Rectangle(0, 0, getParent().getSize().x, getParent().getSize().y);
 			IRange<IQuantity> zoomedRange = chart.getVisibleRange();
 			IQuantity visibleWidth = chartRange.getExtent();
-			double visibleHeight =  chartCanvas.getParent().getBounds().height;
+			double visibleHeight = chartCanvas.getParent().getBounds().height;
 			Rectangle totalBounds = chartCanvas.getBounds();
 
-			if (zoomRect == null ) {
+			if (zoomRect == null) {
 				zoomRect = new Rectangle(0, 0, 0, 0);
 			}
 			if (!chart.getVisibleRange().equals(lastChartZoomedRange)) {
@@ -549,14 +549,14 @@ public class ChartDisplayControlBar extends Composite {
 			ratio = getVisibilityRatio(visibleHeight, totalBounds.height + totalBounds.y, totalBounds.height);
 			int bottom = getPixelLocation(ratio, zoomCanvasBounds.height, zoomCanvasBounds.height);
 
-			zoomRect.y  = top + BORDER_PADDING;
+			zoomRect.y = top + BORDER_PADDING;
 			zoomRect.height = bottom - top - 2 * BORDER_PADDING - 1;
 
 		}
 
 		private double getVisibilityRatio(double visibleBound, double borderBound, double totalLength) {
 			double diff = visibleBound - borderBound;
-			return diff/totalLength;
+			return diff / totalLength;
 		}
 
 		private double getVisibilityRatio(IQuantity visibleBound, IQuantity borderBound, IQuantity totalLength) {

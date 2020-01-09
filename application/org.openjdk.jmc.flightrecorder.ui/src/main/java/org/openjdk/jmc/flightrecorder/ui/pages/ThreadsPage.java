@@ -195,10 +195,12 @@ public class ThreadsPage extends AbstractDataPage {
 			MCContextMenuManager[] mms = {mmChart, mmText};
 			lanes.updateContextMenus(mms, false);
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mms, false), Messages.ThreadsPage_EDIT_LANES,
+					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mms, false),
+							Messages.ThreadsPage_EDIT_LANES,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> openViewThreadDetailsDialog(state), Messages.ThreadsPage_VIEW_THREAD_DETAILS,
+					.add(ActionToolkit.action(() -> openViewThreadDetailsDialog(state),
+							Messages.ThreadsPage_VIEW_THREAD_DETAILS,
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE)));
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
@@ -260,8 +262,8 @@ public class ThreadsPage extends AbstractDataPage {
 		 */
 		private void addActionsToContextMenu() {
 			mmChart.add(new Separator());
-			IAction hideThreadActionChart = ActionToolkit.action(() -> this.hideThread(chartCanvas.getHoveredItemData()),
-					Messages.ThreadsPage_HIDE_THREAD_ACTION,
+			IAction hideThreadActionChart = ActionToolkit.action(
+					() -> this.hideThread(chartCanvas.getHoveredItemData()), Messages.ThreadsPage_HIDE_THREAD_ACTION,
 					UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_DELETE));
 
 			hideThreadActionChart.setId(HIDE_THREAD);
@@ -390,6 +392,7 @@ public class ThreadsPage extends AbstractDataPage {
 		}
 
 		private TablePopup tablePopup;
+
 		public void openViewThreadDetailsDialog(IState state) {
 			tablePopup = new TablePopup(state);
 			OnePageWizardDialog.openAndHideCancelButton(tablePopup, 500, 600);
@@ -416,9 +419,10 @@ public class ThreadsPage extends AbstractDataPage {
 						.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
 				SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
 						NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, getName()), mm);
-				tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
-						table.getManager(), tableFilter, model.getItems().apply(pageFilter),
-						pageContainer.getSelectionStore()::getSelections, this::onFilterChangeHelper);
+				tableFilterComponent = FilterComponent.createFilterComponent(
+						table.getManager().getViewer().getControl(), table.getManager(), tableFilter,
+						model.getItems().apply(pageFilter), pageContainer.getSelectionStore()::getSelections,
+						this::onFilterChangeHelper);
 				mm.add(tableFilterComponent.getShowFilterAction());
 				mm.add(tableFilterComponent.getShowSearchAction());
 				table.getManager().setSelectionState(histogramSelectionState);

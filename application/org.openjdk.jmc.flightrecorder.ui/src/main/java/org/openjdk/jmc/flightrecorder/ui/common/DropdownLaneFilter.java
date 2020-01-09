@@ -89,12 +89,11 @@ public class DropdownLaneFilter extends Composite {
 	}
 
 	/**
-	 * Creates a new shell which is positioned below the dropdown button.
-	 * This new shell creates the appearance of a dropdown component, and it's
-	 * contents will be the TypeFilterBuilder as found in the Edit Thread Lanes
-	 * dialog.
+	 * Creates a new shell which is positioned below the dropdown button. This new shell creates the
+	 * appearance of a dropdown component, and it's contents will be the TypeFilterBuilder as found
+	 * in the Edit Thread Lanes dialog.
 	 */
-	private synchronized void displayDropdown() {
+	private void displayDropdown() {
 		Point p = dropdownButton.getParent().toDisplay(dropdownButton.getLocation());
 		Point size = dropdownButton.getSize();
 		Rectangle shellRect = new Rectangle(p.x, p.y + size.y, size.x, 0);
@@ -123,37 +122,36 @@ public class DropdownLaneFilter extends Composite {
 		shell.open();
 	}
 
-	private synchronized void disposeDropdown() {
+	private void disposeDropdown() {
 		if (shell != null && !shell.isDisposed()) {
 			shell.close();
 		}
 	}
 
 	/**
-	 * Determine whether or not the mouse cursor is overlapping the dropdown button.
-	 *
-	 * An open dropdown shell should close when the user clicks the button. In Linux, the MouseListener
-	 * on the button will fire. In Windows, the shell has priority and the MouseListener doesn't get activated.
-	 *
-	 * This function is to be used in the ShellAdapter to determine if the user closed the shell by
-	 * trying to click the button, or by clicking away from the dropdown shell.
+	 * Determine whether or not the mouse cursor is overlapping the dropdown button. An open
+	 * dropdown shell should close when the user clicks the button. In Linux, the MouseListener on
+	 * the button will fire. In Windows, the shell has priority and the MouseListener doesn't get
+	 * activated. This function is to be used in the ShellAdapter to determine if the user closed
+	 * the shell by trying to click the button, or by clicking away from the dropdown shell.
 	 *
 	 * @return true if the mouse cursor is on top of the button
 	 */
 	private boolean isCursorOnTopOfButton() {
 		Point cursor = Display.getCurrent().getCursorLocation();
 		Point buttonLoc = dropdownButton.toDisplay(1, 1);
-		Rectangle buttonRect = new Rectangle(buttonLoc.x, buttonLoc.y, dropdownButton.getSize().x, dropdownButton.getSize().y);
+		Rectangle buttonRect = new Rectangle(buttonLoc.x, buttonLoc.y, dropdownButton.getSize().x,
+				dropdownButton.getSize().y);
 		return buttonRect.contains(cursor);
 	}
 
 	/**
-	 * Creates a new filter, Quick Filter, to be used by the dropdown lane filter.
-	 * Sets the quick filter to be active, and update the context menu.
+	 * Creates a new filter, Quick Filter, to be used by the dropdown lane filter. Sets the quick
+	 * filter to be active, and update the context menu.
 	 */
 	private void onTypeFilterChange() {
 		LaneDefinition quickLaneDef = new LaneDefinition(Messages.DropdownLaneFilter_QUICK_FILTER, true,
-					ItemFilters.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet())), false);
+				ItemFilters.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet())), false);
 		lanes.useDropdownFilter(quickLaneDef);
 		lanes.updateContextMenus(mms, false);
 	}

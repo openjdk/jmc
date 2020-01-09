@@ -87,7 +87,8 @@ public class TimelineCanvas extends Canvas {
 	}
 
 	private int calculateXOffset() {
-		int offset = sashForm.getChildren()[0].getSize().x + sashForm.getSashWidth() - getParent().getChildren()[0].getSize().x;
+		int offset = sashForm.getChildren()[0].getSize().x + sashForm.getSashWidth()
+				- getParent().getChildren()[0].getSize().x;
 		return Math.max(offset, 0);
 	}
 
@@ -127,18 +128,19 @@ public class TimelineCanvas extends Canvas {
 			}
 
 			// Draw the range indicator
-			indicatorRect = dragRect != null ? dragRect : new Rectangle(
-					x1 + xOffset, chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorYOffset),
-					x2 - x1, chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorHeight));
+			indicatorRect = dragRect != null ? dragRect
+					: new Rectangle(x1 + xOffset,
+							chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorYOffset), x2 - x1,
+							chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorHeight));
 			dragRect = null;
 			g2d.setPaint(Palette.PF_ORANGE_400.getAWTColor());
 			g2d.fillRect(indicatorRect.x, indicatorRect.y, indicatorRect.width, indicatorRect.height);
 
 			Point totalSize = sashForm.getChildren()[1].getSize();
 			adjusted = chartCanvas.translateDisplayToImageCoordinates(totalSize.x, totalSize.y);
-			timelineRect = new Rectangle(
-					xOffset, chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorYOffset),
-					adjusted.x, chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorHeight));
+			timelineRect = new Rectangle(xOffset,
+					chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorYOffset), adjusted.x,
+					chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorHeight));
 			g2d.setPaint(Palette.PF_BLACK_600.getAWTColor());
 			g2d.drawRect(timelineRect.x, timelineRect.y, timelineRect.width, timelineRect.height);
 
@@ -187,11 +189,11 @@ public class TimelineCanvas extends Canvas {
 		}
 
 		private void updateTimelineIndicatorFromDrag(int xdiff) {
-			if (xdiff != 0 &&
-					(indicatorRect.x + xdiff) >= timelineRect.x &&
-					(indicatorRect.x + xdiff + indicatorRect.width) <= timelineRect.x + timelineRect.width) {
+			if (xdiff != 0 && (indicatorRect.x + xdiff) >= timelineRect.x
+					&& (indicatorRect.x + xdiff + indicatorRect.width) <= timelineRect.x + timelineRect.width) {
 				indicatorRect.x = indicatorRect.x + xdiff;
-				SubdividedQuantityRange xAxis = new SubdividedQuantityRange(chartRange.getStart(), chartRange.getEnd(), timelineRect.width, 1);
+				SubdividedQuantityRange xAxis = new SubdividedQuantityRange(chartRange.getStart(), chartRange.getEnd(),
+						timelineRect.width, 1);
 				chart.setVisibleRange(xAxis.getQuantityAtPixel(indicatorRect.x - xOffset),
 						xAxis.getQuantityAtPixel(indicatorRect.x - xOffset + indicatorRect.width));
 				dragRect = indicatorRect;

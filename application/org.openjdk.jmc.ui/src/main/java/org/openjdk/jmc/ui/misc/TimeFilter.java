@@ -59,9 +59,9 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 public class TimeFilter extends Composite {
 
 	private enum FilterType {
-		START,
-		END
+		START, END
 	};
+
 	private static final String dateFormat = "yyyy-MM-dd ";
 	private static final String timeFormat = "HH:mm:ss:SSS";
 	private boolean isMultiDayRecording = false;
@@ -106,6 +106,7 @@ public class TimeFilter extends Composite {
 	/**
 	 * Determines whether or not the time range of the recording spans multiple days, and if not,
 	 * sets up a Calendar object to hold the date of the recording.
+	 * 
 	 * @param recordingRange
 	 */
 	private void inspectRecordingRange(IRange<IQuantity> recordingRange) {
@@ -177,12 +178,10 @@ public class TimeFilter extends Composite {
 					}
 
 					/**
-					 * If the user edits a Text by highlighting a character and
-					 * overwrites it with a new one, the ModifyListener will fire twice.
-					 *
-					 * To prevent validation (and potential error dialogs) from occurring
-					 * twice, compare the time of the current ModifyEvent to the last
-					 * seen ModifyEvent.
+					 * If the user edits a Text by highlighting a character and overwrites it with a
+					 * new one, the ModifyListener will fire twice. To prevent validation (and
+					 * potential error dialogs) from occurring twice, compare the time of the
+					 * current ModifyEvent to the last seen ModifyEvent.
 					 */
 					if (e.time == lastEventTime) {
 						return;
@@ -211,7 +210,9 @@ public class TimeFilter extends Composite {
 
 		/**
 		 * Converts the IQuantity time to a string and displays it in the Text
-		 * @param time IQuantity
+		 * 
+		 * @param time
+		 *            IQuantity
 		 */
 		public void setTime(IQuantity time) {
 			setBypassModifyListener(true);
@@ -223,13 +224,12 @@ public class TimeFilter extends Composite {
 		}
 
 		/**
-		 * Converts a formatted time string into an IQuantity.
+		 * Converts a formatted time string into an IQuantity. If the recording range is within a
+		 * single day, the SimpleDateFormat format will be HH:mm:ss:SSS and need to be added to the
+		 * base date (calendar) in order to calculate the epoch milliseconds.
 		 *
-		 * If the recording range is within a single day, the SimpleDateFormat format will
-		 * be HH:mm:ss:SSS and need to be added to the base date (calendar) in order to
-		 * calculate the epoch milliseconds.
-		 *
-		 * @param timestring String
+		 * @param timestring
+		 *            String
 		 * @return IQuantity
 		 */
 		private IQuantity convertStringToIQuantity(String timestring) {
@@ -246,29 +246,37 @@ public class TimeFilter extends Composite {
 
 		/**
 		 * Verify that the passed time is within the recording range
-		 * @param time IQuantity
+		 * 
+		 * @param time
+		 *            IQuantity
 		 * @return true if the specified time is within the time range of the recording
 		 */
 		private boolean isWithinRange(IQuantity time) {
-			if (time == null) { return false; }
+			if (time == null) {
+				return false;
+			}
 			long timeMillis = time.in(UnitLookup.EPOCH_MS).longValue();
 			if (type == FilterType.START) {
 				if (timeMillis < defaultTime.in(UnitLookup.EPOCH_MS).longValue()) {
-					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR, Messages.TimeFilter_START_TIME_PRECEEDS_ERROR);
+					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR,
+							Messages.TimeFilter_START_TIME_PRECEEDS_ERROR);
 					return false;
-				} else if (timeMillis > endDisplay.getDefaultTime().in(UnitLookup.EPOCH_MS).longValue() ||
-						timeMillis > endDisplay.getCurrentTime().in(UnitLookup.EPOCH_MS).longValue()) {
-					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR, Messages.TimeFilter_START_TIME_LONGER_THAN_END_ERROR);
+				} else if (timeMillis > endDisplay.getDefaultTime().in(UnitLookup.EPOCH_MS).longValue()
+						|| timeMillis > endDisplay.getCurrentTime().in(UnitLookup.EPOCH_MS).longValue()) {
+					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR,
+							Messages.TimeFilter_START_TIME_LONGER_THAN_END_ERROR);
 					endDisplay.getDefaultTime().in(UnitLookup.EPOCH_MS).longValue();
 					return false;
 				}
 			} else {
 				if (timeMillis > defaultTime.in(UnitLookup.EPOCH_MS).longValue()) {
-					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR, Messages.TimeFilter_END_TIME_EXCEEDS_ERROR);
+					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR,
+							Messages.TimeFilter_END_TIME_EXCEEDS_ERROR);
 					return false;
-				} else if (timeMillis < startDisplay.getDefaultTime().in(UnitLookup.EPOCH_MS).longValue() ||
-						timeMillis < startDisplay.getCurrentTime().in(UnitLookup.EPOCH_MS).longValue()) {
-					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR, Messages.TimeFilter_START_TIME_LONGER_THAN_END_ERROR);
+				} else if (timeMillis < startDisplay.getDefaultTime().in(UnitLookup.EPOCH_MS).longValue()
+						|| timeMillis < startDisplay.getCurrentTime().in(UnitLookup.EPOCH_MS).longValue()) {
+					DialogToolkit.showWarning(getDisplay().getActiveShell(), Messages.TimeFilter_ERROR,
+							Messages.TimeFilter_START_TIME_LONGER_THAN_END_ERROR);
 					return false;
 				}
 			}
@@ -277,11 +285,15 @@ public class TimeFilter extends Composite {
 
 		/**
 		 * Verify that the passed time string matches the expected time format
-		 * @param formattedTimestring String
+		 * 
+		 * @param formattedTimestring
+		 *            String
 		 * @return true if the text corresponds to the current SimpleDateFormat format
 		 */
 		private boolean isValidSyntax(String formattedTimestring) {
-			if (formattedTimestring.length() != timeText.getTextLimit()) { return false; }
+			if (formattedTimestring.length() != timeText.getTextLimit()) {
+				return false;
+			}
 			try {
 				sdf.parse(formattedTimestring);
 			} catch (ParseException e) {

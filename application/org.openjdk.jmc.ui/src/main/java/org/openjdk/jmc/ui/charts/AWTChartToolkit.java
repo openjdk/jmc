@@ -291,8 +291,8 @@ public class AWTChartToolkit {
 	}
 
 	public static void drawAxis(
-			Graphics2D ctx, SubdividedQuantityRange range, int axisPos, boolean labelAhead, int labelLimit,
-			boolean vertical) {
+		Graphics2D ctx, SubdividedQuantityRange range, int axisPos, boolean labelAhead, int labelLimit,
+		boolean vertical) {
 		drawAxis(ctx, range, axisPos, labelAhead, labelLimit, vertical, 0);
 	}
 

@@ -106,12 +106,14 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	ChartAndPopupTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
 			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
 			FlavorSelectorState flavorSelectorState) {
-		super(pageFilter, model, parent, toolkit, pageContainer, state, sectionTitle, tableFilter, icon, flavorSelectorState);
+		super(pageFilter, model, parent, toolkit, pageContainer, state, sectionTitle, tableFilter, icon,
+				flavorSelectorState);
 	}
 
-	protected void init(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
-			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-			FlavorSelectorState flavorSelectorState) {
+	protected void init(
+		IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit, IPageContainer pageContainer,
+		IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
+		FlavorSelectorState flavorSelectorState) {
 		this.pageFilter = pageFilter;
 		this.model = model;
 		this.pageContainer = pageContainer;
@@ -129,15 +131,16 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 				pageContainer.getSelectionStore()::getSelections, this::onFilterChange);
 
 		/**
-		 * Scrolled Composite Page Container - Contains all page functionality
-		 * Chart Container (1 column gridlayout) - Contains filter bar & graph container
-		 * Graph Container (2 column gridlayout) - Contains chart and timeline container & display bar
-		 * Chart and Timeline Container (1 column gridlayout) Contains chart and text container and timeline canvas
-		 * Timeline and Height Buttons Container (2 column gridlayout) Contains timeline and lane height button controls
-		 * Zoom-pan and Chart Container (formlayout) - Contains chart and text container contents and zoom-pan overlay
-		 * Zoom-pan Container (filllayout) - Contains zoom-pan chart overlay
-		 * Full screen Chart Container (1 column gridlayout) - Contains chart container
-		 * Chart and Text Container (2 column gridlayout) - Contains scText and textCanvas) & scChart (and chart canvas)
+		 * Scrolled Composite Page Container - Contains all page functionality Chart Container (1
+		 * column gridlayout) - Contains filter bar & graph container Graph Container (2 column
+		 * gridlayout) - Contains chart and timeline container & display bar Chart and Timeline
+		 * Container (1 column gridlayout) Contains chart and text container and timeline canvas
+		 * Timeline and Height Buttons Container (2 column gridlayout) Contains timeline and lane
+		 * height button controls Zoom-pan and Chart Container (formlayout) - Contains chart and
+		 * text container contents and zoom-pan overlay Zoom-pan Container (filllayout) - Contains
+		 * zoom-pan chart overlay Full screen Chart Container (1 column gridlayout) - Contains chart
+		 * container Chart and Text Container (2 column gridlayout) - Contains scText and
+		 * textCanvas) & scChart (and chart canvas)
 		 */
 
 		// Scrolled Composite containing all page functionality
@@ -155,11 +158,11 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 			@Override
 			public void handleEvent(Event event) {
 				int width = filterBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-				int height = filterBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y +
-						displayBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+				int height = filterBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
+						+ displayBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 				if (width > 0 && height > 0) {
-					 scPageContainer.setMinSize(scPageContainer.computeSize(width, height));
-					 scPageContainer.removeListener(SWT.Resize, this);
+					scPageContainer.setMinSize(scPageContainer.computeSize(width, height));
+					scPageContainer.removeListener(SWT.Resize, this);
 				}
 			}
 		});
@@ -280,7 +283,8 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		PersistableSashForm.loadState(sash, state.getChild(SASH));
 		DataPageToolkit.createChartTimestampTooltip(chartCanvas);
 
-		chart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), X_OFFSET, Y_OFFSET, timelineCanvas, filterBar, displayBar);
+		chart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), X_OFFSET, Y_OFFSET,
+				timelineCanvas, filterBar, displayBar);
 		DataPageToolkit.setChart(chartCanvas, chart, pageContainer::showSelection);
 		DataPageToolkit.setChart(textCanvas, chart, pageContainer::showSelection);
 		SelectionStoreActionToolkit.addSelectionStoreRangeActions(pageContainer.getSelectionStore(), chart,

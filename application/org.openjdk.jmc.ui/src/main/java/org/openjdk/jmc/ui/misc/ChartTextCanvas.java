@@ -85,7 +85,6 @@ public class ChartTextCanvas extends Canvas {
 		boolean selectionIsClick = false;
 		Set<Point> highlightPoints;
 
-
 		@Override
 		public void mouseDown(MouseEvent e) {
 			/*
@@ -104,7 +103,8 @@ public class ChartTextCanvas extends Canvas {
 			 * suffices. Except for an additional platform check, this approach is also used in
 			 * org.eclipse.swt.custom.StyledText.handleMouseDown(Event).
 			 */
-			if ((e.button == 1) && ((e.stateMask & SWT.MOD4) == 0) && ((e.stateMask & SWT.CTRL) == 0 ) && ((e.stateMask & SWT.SHIFT) == 0 )) {
+			if ((e.button == 1) && ((e.stateMask & SWT.MOD4) == 0) && ((e.stateMask & SWT.CTRL) == 0)
+					&& ((e.stateMask & SWT.SHIFT) == 0)) {
 				highlightPoints = new HashSet<>();
 				highlightPoints.add(new Point(e.x, e.y));
 				selectionStartX = e.x;
@@ -120,7 +120,7 @@ public class ChartTextCanvas extends Canvas {
 					selectionListener.run();
 				}
 			} else if (((e.stateMask & SWT.SHIFT) != 0) && (e.button == 1)) {
-				 if (highlightSelectionEnd.y == -1) {
+				if (highlightSelectionEnd.y == -1) {
 					highlightSelectionEnd = new Point(e.x, e.y);
 					lastSelection = highlightSelectionEnd;
 					if (highlightSelectionStart.y > highlightSelectionEnd.y) {
@@ -143,7 +143,8 @@ public class ChartTextCanvas extends Canvas {
 						lastSelection = highlightSelectionEnd;
 					}
 				}
-				select(highlightSelectionStart.x, highlightSelectionStart.x, highlightSelectionStart.y, highlightSelectionEnd.y, true);
+				select(highlightSelectionStart.x, highlightSelectionStart.x, highlightSelectionStart.y,
+						highlightSelectionEnd.y, true);
 				if (selectionListener != null) {
 					selectionListener.run();
 				}
@@ -169,8 +170,8 @@ public class ChartTextCanvas extends Canvas {
 				selectionIsClick = false;
 			}
 			if (!selectionIsClick) {
-				select((int) (selectionStartX / xScale), (int) (selectionStartX / xScale), (int) (selectionStartY / yScale),
-						(int) (y / yScale), true);
+				select((int) (selectionStartX / xScale), (int) (selectionStartX / xScale),
+						(int) (selectionStartY / yScale), (int) (y / yScale), true);
 			}
 		}
 
@@ -338,6 +339,7 @@ public class ChartTextCanvas extends Canvas {
 			awtChart.renderTextCanvasText(context, width, height);
 		}
 	}
+
 	public Object getHoveredItemData() {
 		return this.hoveredItemData;
 	}
@@ -350,7 +352,7 @@ public class ChartTextCanvas extends Canvas {
 		this.hoveredItemData = null;
 	}
 
-	public void syncHighlightedRectangles (List<Rectangle2D> newRects) {
+	public void syncHighlightedRectangles(List<Rectangle2D> newRects) {
 		highlightRects = newRects;
 		redraw();
 	}

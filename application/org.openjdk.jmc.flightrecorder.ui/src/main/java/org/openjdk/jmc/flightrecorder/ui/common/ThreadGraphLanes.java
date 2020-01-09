@@ -109,7 +109,7 @@ public class ThreadGraphLanes {
 	}
 
 	protected EventTypeFolderNode getTypeTree() {
-        return typeTree;
+		return typeTree;
 	}
 
 	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
@@ -151,14 +151,15 @@ public class ThreadGraphLanes {
 
 	/**
 	 * Retrieves the set of lane names that are currently enabled.<br>
-	 * Note: The "Rest lane" is of type ItemFilters$Composite, and cannot be cast to Types,
-	 *     so it gets filtered out of the end result.
+	 * Note: The "Rest lane" is of type ItemFilters$Composite, and cannot be cast to Types, so it
+	 * gets filtered out of the end result.
+	 * 
 	 * @return the enabled lanes independent from the rest lane
 	 */
 	public Set<String> getEnabledLanes() {
 		List<IItemFilter> laneFilters = laneDefs.stream()
-				.filter((Predicate<? super LaneDefinition>) LaneDefinition::isEnabledAndNotRestLane).map(ld -> ld.getFilter())
-				.collect(Collectors.toList());
+				.filter((Predicate<? super LaneDefinition>) LaneDefinition::isEnabledAndNotRestLane)
+				.map(ld -> ld.getFilter()).collect(Collectors.toList());
 		return ((Types) ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]))).getTypes();
 	}
 
@@ -175,12 +176,11 @@ public class ThreadGraphLanes {
 	}
 
 	/**
-	 * Introduces a "Quick Filter" to the lane definitions which is controlled by the
-	 * dropdown lane filter. Initially, the enabled activity lanes will be a copy of
-	 * the currently enabled lanes. When initially used, the "Quick Filter" will be
-	 * the only active lane definition in an attempt to preserve the lane activity of
-	 * the existing lane definitions. The "Quick Filter" is meant for easy viewing of
-	 * activities, and will not be persisted.
+	 * Introduces a "Quick Filter" to the lane definitions which is controlled by the dropdown lane
+	 * filter. Initially, the enabled activity lanes will be a copy of the currently enabled lanes.
+	 * When initially used, the "Quick Filter" will be the only active lane definition in an attempt
+	 * to preserve the lane activity of the existing lane definitions. The "Quick Filter" is meant
+	 * for easy viewing of activities, and will not be persisted.
 	 */
 	public void useDropdownFilter(LaneDefinition quickFilterDef) {
 		if (quickFilterExist) {
@@ -312,14 +312,14 @@ public class ThreadGraphLanes {
 	public void updateContextMenus(MCContextMenuManager[] mms, boolean isLegendMenu) {
 		if (isLegendMenu) {
 			for (String id : legendActionIdentifiers) {
-				for (MCContextMenuManager mm : mms ) {
+				for (MCContextMenuManager mm : mms) {
 					mm.remove(id);
 				}
 			}
 			legendActionIdentifiers.clear();
 		} else {
 			for (String id : chartActionIdentifiers) {
-				for (MCContextMenuManager mm : mms ) {
+				for (MCContextMenuManager mm : mms) {
 					mm.remove(id);
 				}
 			}
@@ -348,14 +348,14 @@ public class ThreadGraphLanes {
 			};
 			String identifier = ld.getName() + checkAction.hashCode();
 			checkAction.setId(identifier);
-			if(isLegendMenu) {
+			if (isLegendMenu) {
 				legendActionIdentifiers.add(identifier);
 			} else {
 				chartActionIdentifiers.add(identifier);
 			}
 			checkAction.setChecked(ld.isEnabled());
 			// FIXME: Add a tooltip here
-			for (MCContextMenuManager mm : mms ) {
+			for (MCContextMenuManager mm : mms) {
 				mm.add(checkAction);
 			}
 			actions.add(checkAction);

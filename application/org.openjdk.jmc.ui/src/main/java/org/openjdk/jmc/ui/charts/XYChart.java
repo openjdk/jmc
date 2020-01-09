@@ -104,7 +104,8 @@ public class XYChart {
 	}
 
 	// JFR Threads Page
-	public XYChart(IRange<IQuantity> range, IXDataRenderer rendererRoot, int xOffset, Integer yOffset, TimelineCanvas timelineCanvas, ChartFilterControlBar filterBar, ChartDisplayControlBar displayBar) {
+	public XYChart(IRange<IQuantity> range, IXDataRenderer rendererRoot, int xOffset, Integer yOffset,
+			TimelineCanvas timelineCanvas, ChartFilterControlBar filterBar, ChartDisplayControlBar displayBar) {
 		this(range.getStart(), range.getEnd(), rendererRoot, xOffset);
 		this.yOffset = yOffset;
 		this.timelineCanvas = timelineCanvas;
@@ -178,7 +179,7 @@ public class XYChart {
 			doRenderChart(context, height - yOffset);
 			context.setTransform(oldTransform);
 		}
-    }
+	}
 
 	public void renderTextCanvasText(Graphics2D context, int width, int height) {
 		axisWidth = width;
@@ -339,7 +340,7 @@ public class XYChart {
 			if (text != null) {
 				paintRowBackground(context, row.getHeight());
 				context.setColor(Color.BLACK);
-				context.drawLine(0, height - 1, axisWidth -15, height - 1);
+				context.drawLine(0, height - 1, axisWidth - 15, height - 1);
 				int y = ((height - context.getFontMetrics().getHeight()) / 2) + context.getFontMetrics().getAscent();
 				int charsWidth = context.getFontMetrics().charsWidth(text.toCharArray(), 0, text.length());
 				if (charsWidth > longestCharWidth) {
@@ -366,6 +367,7 @@ public class XYChart {
 
 	/**
 	 * Get the longest character width of a thread name to be rendered
+	 * 
 	 * @return the character width of longest thread name
 	 */
 	public int getLongestCharWidth() {
@@ -404,13 +406,14 @@ public class XYChart {
 
 	/**
 	 * Pan the view at a rate relative the current zoom level.
-	 * @param panDirection -1 to pan left, 1 to pan right
+	 * 
+	 * @param panDirection
+	 *            -1 to pan left, 1 to pan right
 	 * @return true if the chart needs to be redrawn
 	 */
 	public boolean panRange(int panDirection) {
-        if (zoomSteps == 0 || panDirection == 0 ||
-                (currentStart.compareTo(start) == 0 && panDirection == -1) ||
-                (currentEnd.compareTo(end) == 0 && panDirection == 1)) {
+		if (zoomSteps == 0 || panDirection == 0 || (currentStart.compareTo(start) == 0 && panDirection == -1)
+				|| (currentEnd.compareTo(end) == 0 && panDirection == 1)) {
 			return false;
 		}
 
@@ -483,7 +486,9 @@ public class XYChart {
 
 	/**
 	 * Zoom to a specific step count
-	 * @param zoomToStep the desired end zoom step amount
+	 * 
+	 * @param zoomToStep
+	 *            the desired end zoom step amount
 	 * @return true if a redraw is required as a result of a successful zoom
 	 */
 	public boolean zoomToStep(int zoomToStep) {
@@ -497,7 +502,9 @@ public class XYChart {
 
 	/**
 	 * Zoom based on a percentage of the recording range
-	 * @param zoomInSteps the amount of desired steps to take
+	 * 
+	 * @param zoomInSteps
+	 *            the amount of desired steps to take
 	 * @return true if a redraw is required as a result of a successful zoom
 	 */
 	private boolean zoomRange(int steps) {
@@ -514,13 +521,12 @@ public class XYChart {
 	}
 
 	/**
-	 * Zoom into the chart at a rate of 5% of the overall recording range at each step.
-	 * If the chart is zoomed in far enough such that one more step at 5% is not possible,
-	 * the zoom power is halved and the zoom will proceed.
-	 * <br>
+	 * Zoom into the chart at a rate of 5% of the overall recording range at each step. If the chart
+	 * is zoomed in far enough such that one more step at 5% is not possible, the zoom power is
+	 * halved and the zoom will proceed. <br>
 	 * Every time the zoom power is halved, the instigating step value is pushed onto the
-	 * modifiedSteps stack. This stack is consulted on zoom out events in order to ensure
-	 * the chart zooms out the same way it was zoomed in.
+	 * modifiedSteps stack. This stack is consulted on zoom out events in order to ensure the chart
+	 * zooms out the same way it was zoomed in.
 	 */
 	private void zoomIn(int steps) {
 		do {
@@ -591,7 +597,7 @@ public class XYChart {
 	}
 
 	/**
-	 *  Reset the visible range to be the recording range, and reset the zoom-related objects
+	 * Reset the visible range to be the recording range, and reset the zoom-related objects
 	 */
 	public void resetTimeline() {
 		resetZoomFactor();
@@ -607,8 +613,8 @@ public class XYChart {
 	}
 
 	/**
-	 *  When a drag-select zoom occurs, use the new range value to determine how many steps have been taken,
-	 *  and adjust zoomSteps and zoomPower accordingly
+	 * When a drag-select zoom occurs, use the new range value to determine how many steps have been
+	 * taken, and adjust zoomSteps and zoomPower accordingly
 	 */
 	private double calculateZoom(IQuantity newStart, IQuantity newEnd) {
 		// calculate the new visible range, and it's percentage of the total range
@@ -702,8 +708,8 @@ public class XYChart {
 		int xEnd = Math.max(x1, x2);
 
 		if (xBucketRange != null && (xEnd != xStart) && xEnd - xOffset >= 0) {
-			return select(xBucketRange.getQuantityAtPixel(Math.max(0, xStart - xOffset)), xBucketRange.getQuantityAtPixel(xEnd - xOffset),
-					y1, y2, clear);
+			return select(xBucketRange.getQuantityAtPixel(Math.max(0, xStart - xOffset)),
+					xBucketRange.getQuantityAtPixel(xEnd - xOffset), y1, y2, clear);
 		} else {
 			return select(null, null, y1, y2, clear);
 		}
@@ -802,7 +808,7 @@ public class XYChart {
 
 	private static void dimRect(Graphics2D context, int from, int width, int height) {
 		context.setColor(SELECTION_COLOR);
-		context.fillRect(from , 0, width, height);
+		context.fillRect(from, 0, width, height);
 	}
 
 	/**

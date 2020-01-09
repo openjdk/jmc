@@ -112,7 +112,8 @@ public class ChartCanvas extends Canvas {
 			 * suffices. Except for an additional platform check, this approach is also used in
 			 * org.eclipse.swt.custom.StyledText.handleMouseDown(Event).
 			 */
-			if ((e.button == 1) && ((e.stateMask & SWT.MOD4) == 0) && ((e.stateMask & SWT.CTRL) == 0 ) && ((e.stateMask & SWT.SHIFT) == 0 )) {
+			if ((e.button == 1) && ((e.stateMask & SWT.MOD4) == 0) && ((e.stateMask & SWT.CTRL) == 0)
+					&& ((e.stateMask & SWT.SHIFT) == 0)) {
 				selectionStartX = e.x;
 				selectionStartY = e.y;
 				highlightSelectionEnd = new Point(-1, -1);
@@ -125,7 +126,7 @@ public class ChartCanvas extends Canvas {
 					selectionListener.run();
 				}
 			} else if (((e.stateMask & SWT.SHIFT) != 0) && (e.button == 1)) {
-				 if (highlightSelectionEnd.y == -1) {
+				if (highlightSelectionEnd.y == -1) {
 					highlightSelectionEnd = new Point(e.x, e.y);
 					lastSelection = highlightSelectionEnd;
 					if (highlightSelectionStart.y > highlightSelectionEnd.y) {
@@ -148,7 +149,8 @@ public class ChartCanvas extends Canvas {
 						lastSelection = highlightSelectionEnd;
 					}
 				}
-				select(highlightSelectionStart.x, highlightSelectionEnd.x, highlightSelectionStart.y, highlightSelectionEnd.y, true);
+				select(highlightSelectionStart.x, highlightSelectionEnd.x, highlightSelectionStart.y,
+						highlightSelectionEnd.y, true);
 				if (selectionListener != null) {
 					selectionListener.run();
 				}
@@ -216,6 +218,7 @@ public class ChartCanvas extends Canvas {
 	}
 
 	private int numItems = 0;
+
 	public void setNumItems(int numItems) {
 		this.numItems = numItems;
 	}
@@ -443,8 +446,7 @@ public class ChartCanvas extends Canvas {
 			addMouseTrackListener(new WheelStealingZoomer());
 		}
 		if (getParent() instanceof ScrolledComposite) { // JFR Threads Page
-			((ScrolledComposite) getParent()).getVerticalBar()
-				.addListener(SWT.Selection, e -> vBarScroll());
+			((ScrolledComposite) getParent()).getVerticalBar().addListener(SWT.Selection, e -> vBarScroll());
 		} else {
 			addMouseTrackListener(selector);
 			addListener(SWT.MouseVerticalWheel, new Zoomer());
@@ -526,7 +528,7 @@ public class ChartCanvas extends Canvas {
 		this.hoveredItemData = null;
 	}
 
-	public void syncHighlightedRectangles (List<Rectangle2D> newRects) {
+	public void syncHighlightedRectangles(List<Rectangle2D> newRects) {
 		highlightRects = newRects;
 		redraw();
 	}
