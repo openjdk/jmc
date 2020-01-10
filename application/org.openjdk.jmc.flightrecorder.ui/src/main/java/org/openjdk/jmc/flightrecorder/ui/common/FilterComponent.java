@@ -90,8 +90,8 @@ public class FilterComponent {
 	public static FilterComponent createFilterComponent(
 		ItemList list, IItemFilter filter, IItemCollection items, Supplier<Stream<SelectionStoreEntry>> selections,
 		Consumer<IItemFilter> onSelect) {
-		FilterComponent fc = createFilterComponent(list.getManager().getViewer().getControl(), list.getManager(), filter, items,
-				selections, onSelect);
+		FilterComponent fc = createFilterComponent(list.getManager().getViewer().getControl(), list.getManager(),
+				filter, items, selections, onSelect);
 		fc.addItemListSearchListener(list);
 		return fc;
 	}
