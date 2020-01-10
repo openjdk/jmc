@@ -51,6 +51,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
@@ -118,13 +119,13 @@ public class TestSetTransforms {
 
 	private void injectFailingEvent() throws Exception {
 		Method method = new Method(METHOD_NAME, METHOD_DESCRIPTOR);
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		attributes.put("path", EVENT_PATH);
 		attributes.put("name", EVENT_NAME);
 		attributes.put("description", EVENT_DESCRIPTION);
-		ReturnValue retVal = new ReturnValue(null, "", null);
-		JFRTransformDescriptor eventTd = new JFRTransformDescriptor(EVENT_ID,
-				EVENT_CLASS_NAME.replace(".", "/"), method, attributes, new ArrayList<Parameter>(), retVal);
+		ReturnValue retVal = new ReturnValue(null, "", null, null, null);
+		JFRTransformDescriptor eventTd = new JFRTransformDescriptor(EVENT_ID, TypeUtils.getInternalName(EVENT_CLASS_NAME),
+				method, attributes, new ArrayList<Parameter>(), retVal, new ArrayList<Field>());
 
 		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
@@ -150,7 +151,7 @@ public class TestSetTransforms {
 			}
 		};
 
-		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(eventTd);
+		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(eventTd, InstrumentMe.class);
 		ClassReader reader = new ClassReader(eventClass);
 		reader.accept(classVisitor, 0);
 		byte[] modifiedEvent = classWriter.toByteArray();
