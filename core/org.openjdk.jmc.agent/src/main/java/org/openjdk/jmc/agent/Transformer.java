@@ -51,7 +51,6 @@ import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class Transformer implements ClassFileTransformer {
-
 	private TransformRegistry registry;
 
 	public Transformer(TransformRegistry registry) {
@@ -63,11 +62,10 @@ public class Transformer implements ClassFileTransformer {
 		ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 		byte[] classfileBuffer) throws IllegalClassFormatException {
 		if (!registry.hasPendingTransforms(className)) {
-			return registry.isRevertIntrumentation() ? registry.getClassPreInstrumentation(className) : null;
+			return registry.isRevertIntrumentation() ? classfileBuffer : null;
 		}
-		registry.storeClassPreInstrumentation(className, classfileBuffer);
-		byte[] instrumentedClassfileBuffer = registry.isRevertIntrumentation() ?
-				registry.getClassPreInstrumentation(className) : classfileBuffer;
+
+		// load the class for reflective inspection if not loaded already
 		if (classBeingRedefined == null) {
 			try {
 				// Don't reuse this class loader instance. We want the loader and its class to unload after we're done.
@@ -77,7 +75,8 @@ public class Transformer implements ClassFileTransformer {
 				throw new IllegalStateException(e); // This should not happen
 			}
 		}
-		return doTransforms(registry.getTransformData(className), instrumentedClassfileBuffer, loader, classBeingRedefined, protectionDomain);
+
+		return doTransforms(registry.getTransformData(className), classfileBuffer, loader, classBeingRedefined, protectionDomain);
 	}
 
 	private byte[] doTransforms(

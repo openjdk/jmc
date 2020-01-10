@@ -75,8 +75,6 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	// First step in update should be to check if we even have transformations for the given class
 	private final HashMap<String, List<TransformDescriptor>> transformData = new HashMap<>();
 
-	// Maps class name -> pre instrumentation version of a class
-	private final HashMap<String, byte[]> preInstrumentedClasses = new HashMap<>();
 	private volatile boolean revertInstrumentation = false;
 
 	@Override
@@ -456,16 +454,6 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		List<String> classNames = new ArrayList<>(transformData.keySet());
 		transformData.clear();
 		return classNames;
-	}
-
-	public void storeClassPreInstrumentation(String className, byte[] classPreInstrumentation) {
-		if(!preInstrumentedClasses.containsKey(className)) {
-			preInstrumentedClasses.put(className, classPreInstrumentation.clone());
-		}
-	}
-
-	public byte[] getClassPreInstrumentation(String className) {
-		return preInstrumentedClasses.get(className);
 	}
 
 	public void setRevertInstrumentation(boolean shouldRevert) {
