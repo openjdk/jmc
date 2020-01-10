@@ -60,6 +60,10 @@ public class ExtraRowTableViewer extends TableViewer {
 		this.message = message;
 	}
 
+	public long getNumRowsDisplayed() {
+		return getFilteredChildren(getInput()).length;
+	}
+
 	@Override
 	public void refresh(Object element) {
 		if (message == null) {
@@ -93,10 +97,6 @@ public class ExtraRowTableViewer extends TableViewer {
 	}
 
 	private void createExtraRow() {
-		long maxNumRows = FlightRecorderUI.getDefault().getItemListSize().longValue();
-		if (getFilteredChildren(getInput()).length < maxNumRows) {
-			return;
-		}
 		extraRow = new TableItem(getTable(), SWT.NO_BACKGROUND | SWT.NO_FOCUS);
 		extraRow.setText(message);
 	}

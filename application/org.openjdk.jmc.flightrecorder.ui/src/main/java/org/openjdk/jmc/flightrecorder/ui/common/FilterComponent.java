@@ -39,6 +39,8 @@ import java.util.stream.Stream;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -88,8 +90,10 @@ public class FilterComponent {
 	public static FilterComponent createFilterComponent(
 		ItemList list, IItemFilter filter, IItemCollection items, Supplier<Stream<SelectionStoreEntry>> selections,
 		Consumer<IItemFilter> onSelect) {
-		return createFilterComponent(list.getManager().getViewer().getControl(), list.getManager(), filter, items,
+		FilterComponent fc = createFilterComponent(list.getManager().getViewer().getControl(), list.getManager(), filter, items,
 				selections, onSelect);
+		fc.addItemListSearchListener(list);
+		return fc;
 	}
 
 	public static FilterComponent createFilterComponent(
@@ -178,6 +182,15 @@ public class FilterComponent {
 
 	public SashForm getComponent() {
 		return mainSash;
+	}
+
+	private void addItemListSearchListener(ItemList itemList) {
+		searchText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				itemList.onSearchFilterChange();
+			}
+		});
 	}
 
 	private IAction createShowSearchAction() {
