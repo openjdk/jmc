@@ -39,11 +39,13 @@ import java.util.List;
 public class TraceNode {
 	private final int value;
 	private final String name;
+	private final String packageName;
 	private final List<TraceNode> children = new ArrayList<>();
 
-	public TraceNode(String name, int value) {
+	public TraceNode(String name, int value, String packageName) {
 		this.name = name;
 		this.value = value;
+		this.packageName = packageName;
 	}
 
 	public int getValue() {
@@ -52,6 +54,10 @@ public class TraceNode {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getPackageName() {
+		return packageName;
 	}
 
 	public List<TraceNode> getChildren() {
@@ -68,6 +74,7 @@ public class TraceNode {
 		int result = 1;
 		result = prime * result + ((children == null) ? 0 : children.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
 		result = prime * result + value;
 		return result;
 	}
@@ -91,12 +98,18 @@ public class TraceNode {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (packageName == null) {
+			if(other.packageName != null) {
+				return false;
+			}
+		} else if (!packageName.equals(other.packageName))
+			return false;
 		if (value != other.value)
 			return false;
 		return true;
 	}
 
 	public String toString() {
-		return "TraceNode [name: " + name + ", value: " + value + ", children: " + children.size() + "]";
+		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", children: " + children.size() + "]";
 	}
 }
