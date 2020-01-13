@@ -84,8 +84,7 @@ public class TraceTreeUtils {
 				formatPackageName(firstFrame));
 		root.addChild(currentNode);
 		for (StacktraceFrame frame : branch.getTailFrames()) {
-			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount(),
-					formatPackageName(frame));
+			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount(), formatPackageName(frame));
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 		}
@@ -103,7 +102,7 @@ public class TraceTreeUtils {
 		IMCMethod method = frame.getMethod();
 		return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
 	}
-	
+
 	private static String formatPackageName(StacktraceFrame sFrame) {
 		IMCFrame frame = sFrame.getFrame();
 		IMCMethod method = frame.getMethod();

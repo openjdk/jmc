@@ -55,7 +55,7 @@ public class TraceNode {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getPackageName() {
 		return packageName;
 	}
@@ -99,7 +99,7 @@ public class TraceNode {
 		} else if (!name.equals(other.name))
 			return false;
 		if (packageName == null) {
-			if(other.packageName != null) {
+			if (other.packageName != null) {
 				return false;
 			}
 		} else if (!packageName.equals(other.packageName))
@@ -110,6 +110,7 @@ public class TraceNode {
 	}
 
 	public String toString() {
-		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", children: " + children.size() + "]";
+		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", children: "
+				+ children.size() + "]";
 	}
 }

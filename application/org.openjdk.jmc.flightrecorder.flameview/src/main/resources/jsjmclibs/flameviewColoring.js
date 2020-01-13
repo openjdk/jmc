@@ -74,31 +74,10 @@ const stripPackageName = function (p) {
     return splitString.slice(0, number).join("\u002E");
 };
 
-const modulo = function(a, b){
-    if (b === 0 || isNaN(a) || isNaN(b)) {
-        return NaN;
-    }
-
-    a = Math.abs(a);
-    b = Math.abs(b);
-
-    while (a >= b) {
-        a = a - b;
-    }
-
-    return a;
-};
-
 const adjustHslPropertyByHash = function (hash, min, max) {
-	const moduloValue = modulo(hash, (max - min));
-	if(isNaN(moduloValue)){
-		return min;
-	} else {
-		const proposedValue = moduloValue + min;
-		return Math.min(proposedValue, max);
-	}
+	const proposedValue = hash % (max - min) + min;
+	return Math.min(proposedValue, max);
 };
-
 
 const createHslColorString = function(h,s,l){
     return "hsl\u0028" + h + "\u002c " + s + "\u0025\u002c " + l + "\u0025\u0029";
