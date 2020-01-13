@@ -11,25 +11,19 @@ String.prototype.hashCode = function () {
 
 const rootPackageColor = "darkred";
 const invalidPackageColor = "snow";
-const packageJavaValueLMax = 80;
-const packageJavaValueL = 65;
-const packageJavaHslHSValues = [184, 10];
-const packageSunValueLMax = 54;
-const packageSunValueL = 31;
-const packageSunHSValues = [211, 21];
-const packageComSunValueLMax = 55;
-const packageComSunValueL = 45;
-const packageComSunHSValues = [204, 5];
+const packageJavaColorLightGray = "lightgray";
+const packageComSunAndJdkColorDarkGray = "darkgray";
+const packageSunDarkColorGray = "gray";
 const packageRestValueHMax = 360;
 const packageRestValueH = 0;
 const packageRestSLValues = [42, 53];
 const packageConsideredDepth = 3;
 const packageMarkerJava = "java";
 const packageMarkerSun = "sun";
-const packageMarkerComSun = "comSun";
+const packageMarkerComSunAndJdk = "comSunAndJdk";
 const packageMarkerRest = "rest";
 const packagesIdentifierMap = new Map().set("java.", packageMarkerJava).set("sun.", packageMarkerSun)
-    .set("com.sun.", packageMarkerComSun);
+    .set("com.sun.", packageMarkerComSunAndJdk).set("jdk.", packageMarkerComSunAndJdk);
 const packageColorMap = new Map().set("", rootPackageColor);
 
 const colorByPackage = function (p) {
@@ -43,16 +37,13 @@ const colorByPackage = function (p) {
             const packageNameStripHash = packageNameStrip.hashCode();
             switch (packageMarkerSelected) {
                 case packageMarkerJava:
-                    const packageJavaSelectedColor = createHslColorString(packageJavaHslHSValues[0], packageJavaHslHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageJavaValueL, packageJavaValueLMax));
-                    packageColorMap.set(packageNameStrip, packageJavaSelectedColor);
+                    packageColorMap.set(packageNameStrip, packageJavaColorLightGray);
                     break;
-                case packageMarkerComSun:
-                    const packageComSunSelectedColor = createHslColorString(packageComSunHSValues[0], packageComSunHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageComSunValueL, packageComSunValueLMax));
-                    packageColorMap.set(packageNameStrip, packageComSunSelectedColor);
+                case packageMarkerComSunAndJdk:
+                    packageColorMap.set(packageNameStrip, packageComSunAndJdkColorDarkGray);
                     break;
                 case packageMarkerSun:
-                    const packageSunSelectedColor = createHslColorString(packageSunHSValues[0], packageSunHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageSunValueL, packageSunValueLMax));
-                    packageColorMap.set(packageNameStrip, packageSunSelectedColor);
+                    packageColorMap.set(packageNameStrip, packageSunDarkColorGray);
                     break;
                 case packageMarkerRest:
                     const packageRestSelectedColor = createHslColorString(adjustHslPropertyByHash(packageNameStripHash, packageRestValueH, packageRestValueHMax), packageRestSLValues[0], packageRestSLValues[1]);
