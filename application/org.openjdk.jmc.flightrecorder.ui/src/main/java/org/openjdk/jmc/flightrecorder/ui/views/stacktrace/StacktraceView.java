@@ -181,7 +181,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private static final Color COUNT_COLOR = SWTColorToolkit.getColor(new RGB(100, 200, 100));
 	private static final String SIBLINGS_IMG_KEY = "siblingsColor"; //$NON-NLS-1$
 	private static final Color SIBLINGS_COUNT_COLOR = SWTColorToolkit.getColor(new RGB(170, 250, 170));
-	private static final int[] DEFAULT_COLUMN_WIDTHS = {700, 150};
+	private static final int[] DEFAULT_COLUMN_WIDTHS = {650, 80, 120};
 	private static final String THREAD_ROOT_KEY = "threadRootAtTop"; //$NON-NLS-1$
 	private static final String FRAME_OPTIMIZATION_KEY = "distinguishFramesByOptimization"; //$NON-NLS-1$
 	private static final String FRAME_CATEGORIZATION_KEY = "distinguishFramesCategorization"; //$NON-NLS-1$
@@ -491,7 +491,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		new StacktraceViewToolTipSupport(viewer);
 		MCContextMenuManager mm = MCContextMenuManager.create(viewer.getControl());
 		CopySelectionAction copyAction = new CopySelectionAction(viewer,
-				FormatToolkit.selectionFormatter(stackTraceLabelProvider, countLabelProvider));
+				FormatToolkit.selectionFormatter(stackTraceLabelProvider, countLabelProvider, percentageLabelProvider));
 		InFocusHandlerActivator.install(viewer.getControl(), copyAction);
 		mm.appendToGroup(MCContextMenuManager.GROUP_EDIT, copyAction);
 		mm.appendToGroup(MCContextMenuManager.GROUP_EDIT, CopySettings.getInstance().createContributionItem());
@@ -508,13 +508,15 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			Stream.of(viewerActions).forEach(a -> a.setViewer(null));
 		}
 
-		viewer.getControl().addListener(SWT.EraseItem, COUNT_BACKGROUND_DRAWER);
+		viewer.getControl().addListener(SWT.EraseItem, PERCENTAGE_BACKGROUND_DRAWER);
 		viewer.getControl().addDisposeListener(e -> columnWidths = getColumnWidths());
 
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_STACK_TRACE, SWT.NONE, columnWidths[0])
 				.setLabelProvider(stackTraceLabelProvider);
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, SWT.RIGHT, columnWidths[1])
 				.setLabelProvider(countLabelProvider);
+		buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
+				.setLabelProvider(percentageLabelProvider);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), HELP_CONTEXT_ID);
 
@@ -701,13 +703,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		return reducedTree ? new StacktraceReducedTreeContentProvider() : new StacktraceTreeContentProvider();
 	}
 
-	private static final Listener COUNT_BACKGROUND_DRAWER = new Listener() {
+	private static final Listener PERCENTAGE_BACKGROUND_DRAWER = new Listener() {
 		@Override
 		public void handleEvent(Event event) {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 1 && (total = rootFork.getItemsInFork()) > 0) { // index == 1 => count column
+			if (event.index == 2 && (total = rootFork.getItemsInFork()) > 0) { // index == 2 => percentage column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
 				int forkOffset = parentFork.getItemOffset();
@@ -727,10 +729,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 	};
 
-	private final ColumnLabelProvider countLabelProvider = new ColumnLabelProvider() {
+	private final ColumnLabelProvider percentageLabelProvider = new ColumnLabelProvider() {
 		@Override
 		public String getText(Object element) {
-			return Integer.toString(((StacktraceFrame) element).getItemCount());
+			StacktraceFrame frame = (StacktraceFrame) element;
+			int itemCount = frame.getItemCount();
+			int totalCount = getRootFork(frame.getBranch().getParentFork()).getItemsInFork();
+			return UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount).displayUsing(IDisplayable.AUTO);
 		}
 
 		@Override
@@ -752,6 +757,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			sb.append("</li>"); //$NON-NLS-1$
 			sb.append("</form>"); //$NON-NLS-1$
 			return sb.toString();
+		}
+	};
+
+	private final ColumnLabelProvider countLabelProvider = new ColumnLabelProvider() {
+		@Override
+		public String getText(Object element) {
+			return Integer.toString(((StacktraceFrame) element).getItemCount());
 		}
 	};
 
