@@ -52,8 +52,6 @@ public interface ReferenceChainElement {
 	// the type of the class/interface which the reference is to
 	Type getReferencedType();
 
-	// if the reference is allow from a caller
-	boolean isAccessibleFrom(Class<?> caller);
 
 	// if this reference is static
 	boolean isStatic();
@@ -92,11 +90,6 @@ public interface ReferenceChainElement {
 		@Override
 		public Type getReferencedType() {
 			return Type.getType(getReferencedClass());
-		}
-
-		@Override
-		public boolean isAccessibleFrom(Class<?> caller) {
-			return AccessUtils.isAccessible(memberingClass, field, caller);
 		}
 
 		@Override
@@ -145,11 +138,6 @@ public interface ReferenceChainElement {
 		@Override
 		public Type getReferencedType() {
 			return Type.getType(getReferencedClass());
-		}
-
-		@Override
-		public boolean isAccessibleFrom(Class<?> caller) {
-			return clazz.equals(caller);
 		}
 
 		@Override
@@ -207,18 +195,6 @@ public interface ReferenceChainElement {
 		@Override
 		public Type getReferencedType() {
 			return Type.getType(getReferencedClass());
-		}
-
-		@Override
-		public boolean isAccessibleFrom(Class<?> caller) {
-			Class<?> c = caller;
-			while (c != null) {
-				if (c.equals(innerClass)) {
-					return true;
-				}
-				c = c.getEnclosingClass();
-			}
-			return false;
 		}
 
 		@Override
