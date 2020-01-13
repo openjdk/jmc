@@ -114,7 +114,7 @@ public class DisjointBuilder<T> {
 
 	public void add(T e) {
 		IQuantity start = startAccessor.getMember(e);
-		IQuantity end = endAccessor.getMember(e);
+		IQuantity end = endAccessor.getMember(e).in(start.getUnit());
 		if (noLanes == 0) {
 			addToNewLane(e, start, end);
 		} else if (!lanes[0].accept(e, start, end)) {
