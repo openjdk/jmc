@@ -36,20 +36,20 @@ const colorByPackage = function (p) {
     if (p === undefined) {
         return invalidPackageColor;
     } else {
-    	const packageNameStrip = stripPackageName(p);
-    	const packageSelectedColor = packageColorMap.get(packageNameStrip);
+        const packageNameStrip = stripPackageName(p);
+        const packageSelectedColor = packageColorMap.get(packageNameStrip);
         if (packageSelectedColor === undefined) {
-        	const packageMarkerSelected = getPackageMarker(packageNameStrip);
-        	const packageNameStripHash = packageNameStrip.hashCode();
+            const packageMarkerSelected = getPackageMarker(packageNameStrip);
+            const packageNameStripHash = packageNameStrip.hashCode();
             switch (packageMarkerSelected) {
                 case packageMarkerJava:
                     const packageJavaSelectedColor = createHslColorString(packageJavaHslHSValues[0], packageJavaHslHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageJavaValueL, packageJavaValueLMax));
                     packageColorMap.set(packageNameStrip, packageJavaSelectedColor);
                     break;
                 case packageMarkerComSun:
-                	const packageComSunSelectedColor = createHslColorString(packageComSunHSValues[0], packageComSunHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageComSunValueL, packageComSunValueLMax));
-                	packageColorMap.set(packageNameStrip, packageComSunSelectedColor);
-                	break;
+                    const packageComSunSelectedColor = createHslColorString(packageComSunHSValues[0], packageComSunHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageComSunValueL, packageComSunValueLMax));
+                    packageColorMap.set(packageNameStrip, packageComSunSelectedColor);
+                    break;
                 case packageMarkerSun:
                     const packageSunSelectedColor = createHslColorString(packageSunHSValues[0], packageSunHSValues[1], adjustHslPropertyByHash(packageNameStripHash, packageSunValueL, packageSunValueLMax));
                     packageColorMap.set(packageNameStrip, packageSunSelectedColor);
