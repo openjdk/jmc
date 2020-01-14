@@ -1366,18 +1366,20 @@ public class RulesToolkit {
 		}
 		return sortedMap;
 	}
-	
+
 	/**
-	 * Returns the earliest start time in the provided item collection.
-	 * This method is based on the assumption that item collection lanes are sorted by timestamps.
+	 * Returns the earliest start time in the provided item collection. This method is based on the
+	 * assumption that item collection lanes are sorted by timestamps.
 	 * 
-	 * @param items the item collection to find the earliest start time in
+	 * @param items
+	 *            the item collection to find the earliest start time in
 	 * @return the earliest start time in the provided collection
 	 */
 	public static IQuantity getEarliestStartTime(IItemCollection items) {
 		IQuantity earliestStartTime = null;
 		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME.getAccessor(iItemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME
+					.getAccessor(iItemIterable.getType());
 			if (iItemIterable.iterator().hasNext()) {
 				IItem next = iItemIterable.iterator().next();
 				if (next != null && startTimeAccessor != null) {
@@ -1396,16 +1398,18 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Returns the earliest start time in the provided item collection.
-	 * This method is based on the assumption that item collection lanes are sorted by timestamps.
+	 * Returns the earliest start time in the provided item collection. This method is based on the
+	 * assumption that item collection lanes are sorted by timestamps.
 	 * 
-	 * @param items the item collection to find the earliest start time in
+	 * @param items
+	 *            the item collection to find the earliest start time in
 	 * @return the earliest start time in the provided collection
 	 */
 	public static IQuantity getEarliestEndTime(IItemCollection items) {
 		IQuantity earliestEndTime = null;
 		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME.getAccessor(iItemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
+					.getAccessor(iItemIterable.getType());
 			if (iItemIterable.iterator().hasNext()) {
 				IItem next = iItemIterable.iterator().next();
 				if (next != null && endTimeAccessor != null) {
@@ -1422,18 +1426,20 @@ public class RulesToolkit {
 		}
 		return earliestEndTime;
 	}
-	
+
 	/**
-	 * Returns the latest end time in the provided item collection.
-	 * This method is based on the assumption that item collection lanes are sorted by timestamps.
+	 * Returns the latest end time in the provided item collection. This method is based on the
+	 * assumption that item collection lanes are sorted by timestamps.
 	 * 
-	 * @param items the item collection to find the latest end time in
+	 * @param items
+	 *            the item collection to find the latest end time in
 	 * @return the latest end time in the provided collection
 	 */
 	public static IQuantity getLatestEndTime(IItemCollection items) {
 		IQuantity latestEndTime = null;
 		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME.getAccessor(iItemIterable.getType());
+			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
+					.getAccessor(iItemIterable.getType());
 			Iterator<IItem> iterator = iItemIterable.iterator();
 			IItem next = null;
 			while (iterator.hasNext()) {
