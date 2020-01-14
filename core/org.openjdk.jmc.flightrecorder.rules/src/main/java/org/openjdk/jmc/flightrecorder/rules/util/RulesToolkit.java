@@ -1369,7 +1369,7 @@ public class RulesToolkit {
 
 	/**
 	 * Returns the earliest start time in the provided item collection. This method is based on the
-	 * assumption that item collection lanes are sorted by timestamps.
+	 * assumption that item collection lanes are sorted by timestamp.
 	 * 
 	 * @param items
 	 *            the item collection to find the earliest start time in
@@ -1398,12 +1398,12 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Returns the earliest start time in the provided item collection. This method is based on the
-	 * assumption that item collection lanes are sorted by timestamps.
+	 * Returns the earliest end time in the provided item collection. This method is based on the
+	 * assumption that item collection lanes are sorted by timestamp.
 	 * 
 	 * @param items
-	 *            the item collection to find the earliest start time in
-	 * @return the earliest start time in the provided collection
+	 *            the item collection to find the earliest end time in
+	 * @return the earliest end time in the provided collection
 	 */
 	public static IQuantity getEarliestEndTime(IItemCollection items) {
 		IQuantity earliestEndTime = null;
@@ -1429,7 +1429,7 @@ public class RulesToolkit {
 
 	/**
 	 * Returns the latest end time in the provided item collection. This method is based on the
-	 * assumption that item collection lanes are sorted by timestamps.
+	 * assumption that item collection lanes are sorted by timestamp.
 	 * 
 	 * @param items
 	 *            the item collection to find the latest end time in
