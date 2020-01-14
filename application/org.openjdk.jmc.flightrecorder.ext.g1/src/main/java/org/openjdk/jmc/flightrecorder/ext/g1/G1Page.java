@@ -82,7 +82,6 @@ import org.openjdk.jmc.flightrecorder.ext.g1.visualizer.HeapLayout.CurveType;
 import org.openjdk.jmc.flightrecorder.ext.g1.visualizer.HeapRegionSelectionEvent;
 import org.openjdk.jmc.flightrecorder.ext.g1.visualizer.HeapRegionView;
 import org.openjdk.jmc.flightrecorder.ext.g1.visualizer.region.HeapRegion;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
@@ -261,18 +260,15 @@ public class G1Page extends AbstractDataPage {
 						.showGC(getDataSource().getItems().apply(ItemFilters.hasAttribute(JdkAttributes.GC_ID)));
 				if (heapDumps != null) {
 					gcTable.getManager().getViewer().addSelectionChangedListener(e -> {
-						IQuantity newTime = gcTable.getSelection().getItems()
-								.getAggregate(JdkAggregators.FIRST_ITEM_START);
+						IAggregator<IQuantity, ?> min = Aggregators.min(JfrAttributes.START_TIME);
+						IQuantity newTime = gcTable.getSelection().getItems().getAggregate(min);
 						if (newTime == null) {
-							regionVisualizer.showGC(
-									getDataSource().getItems().apply(ItemFilters.hasAttribute(JdkAttributes.GC_ID)));
-							time = getDataSource().getItems().apply(G1Constants.HEAP_REGION_DUMPS)
-									.getAggregate(JdkAggregators.FIRST_ITEM_START);
+							regionVisualizer.showGC(getDataSource().getItems().apply(ItemFilters.hasAttribute(JdkAttributes.GC_ID)));
+							time = getDataSource().getItems().apply(G1Constants.HEAP_REGION_DUMPS).getAggregate(min);
 						} else {
 							IAggregator<Set<IQuantity>, ?> distinct = Aggregators.distinct(JdkAttributes.GC_ID);
 							Set<IQuantity> gcIds = gcTable.getSelection().getItems().getAggregate(distinct);
-							regionVisualizer.showGC(
-									getDataSource().getItems().apply(ItemFilters.memberOf(JdkAttributes.GC_ID, gcIds)));
+							regionVisualizer.showGC(getDataSource().getItems().apply(ItemFilters.memberOf(JdkAttributes.GC_ID, gcIds)));
 							time = newTime;
 						}
 						heapVisualizer.show(seekTo(time));

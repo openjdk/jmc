@@ -153,7 +153,7 @@ public class IncreasingLiveSetRule implements IRule {
 		// FIXME: Should construct an message using memoryIncrease, not use a hard limit
 		if (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN) {
 			if (score >= 25) {
-				IQuantity timeAfterJVMStart = items.getAggregate(JdkAggregators.FIRST_ITEM_START)
+				IQuantity timeAfterJVMStart = RulesToolkit.getEarliestStartTime(items)
 						.subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
 				String shortMessage = MessageFormat.format(
 						Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO),

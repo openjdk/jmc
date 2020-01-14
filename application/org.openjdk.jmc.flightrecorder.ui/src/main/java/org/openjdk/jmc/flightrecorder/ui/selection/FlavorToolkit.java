@@ -51,8 +51,8 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 
 // FIXME: Move to flightrecorder bundle, and move back to Java 7
 public class FlavorToolkit {
@@ -122,8 +122,8 @@ public class FlavorToolkit {
 	private static Optional<IRange<IQuantity>> calculateTimestampRange(IItemStreamFlavor fromFlavor) {
 		if (fromFlavor != null) {
 			IItemCollection items = fromFlavor.evaluate();
-			IQuantity startTime = items.getAggregate(JdkAggregators.FIRST_ITEM_START);
-			IQuantity endTime = items.getAggregate(JdkAggregators.LAST_ITEM_END);
+			IQuantity startTime = RulesToolkit.getEarliestStartTime(items);
+			IQuantity endTime = RulesToolkit.getLatestEndTime(items);
 			if (startTime != null) {
 				if (endTime != null && startTime.compareTo(endTime) < 0) {
 					return Optional.of(QuantityRange.createWithEnd(startTime, endTime));
