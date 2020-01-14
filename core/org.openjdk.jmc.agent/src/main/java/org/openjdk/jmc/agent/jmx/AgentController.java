@@ -53,7 +53,7 @@ public class AgentController implements AgentControllerMBean {
 		this.registry = registry;
 	}
 
-	public Class<?>[] setTransforms(String xmlDescription) throws Exception{
+	public void defineEventProbes(String xmlDescription) throws Exception{
 		HashSet<Class<?>> classesToRetransform = new HashSet<Class<?>>();
 		boolean revertAll = xmlDescription == null ? true : xmlDescription.isEmpty();
 		if (revertAll) {
@@ -71,7 +71,7 @@ public class AgentController implements AgentControllerMBean {
 			boolean noDescriptors = descriptors == null ? true : descriptors.isEmpty();
 			if (noDescriptors) {
 				logger.log(Level.SEVERE, "Failed to identify transformations: " + xmlDescription);
-				return null;
+				return;
 			}
 			for (TransformDescriptor descriptor : descriptors) {
 				try {
@@ -88,7 +88,5 @@ public class AgentController implements AgentControllerMBean {
 		registry.setRevertInstrumentation(true);
 		instrumentation.retransformClasses(classesToRetransformArray);
 		registry.setRevertInstrumentation(false);
-
-		return classesToRetransformArray;
 	}
 }
