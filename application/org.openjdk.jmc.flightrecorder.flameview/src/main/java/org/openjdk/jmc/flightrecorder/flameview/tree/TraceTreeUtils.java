@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_NAME = "__root";
+	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
 	/**
@@ -57,7 +58,8 @@ public class TraceTreeUtils {
 	 */
 	public static TraceNode createTree(StacktraceModel model, String rootName) {
 		Fork rootFork = model.getRootFork();
-		TraceNode root = new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork());
+		TraceNode root = new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
+				DEFAULT_ROOT_PACKAGE_NAME);
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
 		}
@@ -78,10 +80,11 @@ public class TraceTreeUtils {
 
 	private static void addBranch(TraceNode root, Branch branch) {
 		StacktraceFrame firstFrame = branch.getFirstFrame();
-		TraceNode currentNode = new TraceNode(format(firstFrame), firstFrame.getItemCount());
+		TraceNode currentNode = new TraceNode(format(firstFrame), firstFrame.getItemCount(),
+				formatPackageName(firstFrame));
 		root.addChild(currentNode);
 		for (StacktraceFrame frame : branch.getTailFrames()) {
-			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount());
+			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount(), formatPackageName(frame));
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 		}
@@ -98,6 +101,12 @@ public class TraceTreeUtils {
 		IMCFrame frame = sFrame.getFrame();
 		IMCMethod method = frame.getMethod();
 		return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+	}
+
+	private static String formatPackageName(StacktraceFrame sFrame) {
+		IMCFrame frame = sFrame.getFrame();
+		IMCMethod method = frame.getMethod();
+		return FormatToolkit.getPackage(method.getType().getPackage());
 	}
 
 	public static String printTree(TraceNode node) {
