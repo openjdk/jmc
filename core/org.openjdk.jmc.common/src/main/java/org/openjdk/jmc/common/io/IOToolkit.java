@@ -322,7 +322,8 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static List<String> loadFromStream(InputStream is) throws IOException {
-		try (BufferedInputStream bis = new BufferedInputStream(is); BufferedReader r = new BufferedReader(new InputStreamReader(bis))) {
+		try (BufferedInputStream bis = new BufferedInputStream(is);
+				BufferedReader r = new BufferedReader(new InputStreamReader(bis))) {
 			List<String> lines = new ArrayList<>();
 			while (r.ready()) {
 				lines.add(r.readLine());
@@ -347,7 +348,8 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static void write(InputStream in, File toOutput, boolean append) throws IOException {
-		try (FileOutputStream fos = new FileOutputStream(toOutput, append); BufferedOutputStream os = new BufferedOutputStream(fos)) {
+		try (FileOutputStream fos = new FileOutputStream(toOutput, append);
+				BufferedOutputStream os = new BufferedOutputStream(fos)) {
 			copy(in, os);
 		}
 	}
