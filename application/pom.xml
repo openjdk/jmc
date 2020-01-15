@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--   
    Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
    
@@ -45,7 +45,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jfr.tests/>
+		<jfr.tests />
 		<jfr.vmargs>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder</jfr.vmargs>
 	</properties>
 
@@ -129,7 +129,7 @@
 			</activation>
 			<properties>
 				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest,org.openjdk.jmc.flightrecorder.uitest.JfrWizardTest,org.openjdk.jmc.flightrecorder.uitest.TemplateManagerTest,org.openjdk.jmc.flightrecorder.uitest.ControlRecordingsTest,org.openjdk.jmc.console.uitest.DiagnosticCommandsTabTest</jfr.tests>
-				<jfr.vmargs/>
+				<jfr.vmargs />
 			</properties>
 		</profile>
 		<profile>
@@ -163,6 +163,11 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>jdp</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
