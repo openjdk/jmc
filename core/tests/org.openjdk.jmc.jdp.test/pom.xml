@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--   
    Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
    
@@ -35,32 +35,35 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application</artifactId>
+		<artifactId>missioncontrol.core.tests</artifactId>
 		<version>8.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.openjdk.jmc.jdp</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<artifactId>jdp.test</artifactId>
 
 	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>jdp</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>sun.jdk</groupId>
-							<artifactId>tools</artifactId>
-							<version>1.8.0</version>
-							<scope>system</scope>
-							<systemPath>${java.home}/../lib/tools.jar</systemPath>
-						</dependency>
-					</extraClasspathElements>
+					<argLine>-Djava.net.preferIPv4Stack=true</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

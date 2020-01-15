@@ -48,7 +48,6 @@
 		<module>org.openjdk.jmc.flightrecorder.ui.test</module>
 		<module>org.openjdk.jmc.greychart.test</module>
 		<module>org.openjdk.jmc.ide.launch.test</module>
-		<module>org.openjdk.jmc.jdp.test</module>
 		<module>org.openjdk.jmc.joverflow.test</module>
 		<module>org.openjdk.jmc.rjmx.services.jfr.test</module>
 		<module>org.openjdk.jmc.rjmx.test</module>

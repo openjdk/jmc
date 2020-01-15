@@ -35,26 +35,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application.tests</artifactId>
+		<artifactId>missioncontrol.core</artifactId>
 		<version>8.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.openjdk.jmc.jdp.test</artifactId>
-	<packaging>eclipse-test-plugin</packaging>
+	<artifactId>jdp</artifactId>
 
 	<properties>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<argLine>-Djava.net.preferIPv4Stack=true</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

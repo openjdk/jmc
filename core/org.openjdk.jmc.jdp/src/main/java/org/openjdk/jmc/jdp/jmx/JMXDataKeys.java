@@ -33,7 +33,7 @@
 package org.openjdk.jmc.jdp.jmx;
 
 /**
- * The keys for data exposed by the {@link JMXJDPServer}.
+ * The keys for data exposed by the JMXJDPServer
  */
 public final class JMXDataKeys {
 	public static final String KEY_JMX_SERVICE_URL = "JMX_SERVICE_URL"; //$NON-NLS-1$

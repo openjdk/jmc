@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
    Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
    Copyright (c) 2019, Red Hat Inc. All rights reserved.
@@ -69,6 +69,11 @@
 			<artifactId>flightrecorder.rules.jdk</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>jdp</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Second all the modules in core/tests/ -->
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
@@ -93,6 +98,11 @@
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk.test</artifactId>
 			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>jdp.test</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
