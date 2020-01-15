@@ -112,18 +112,15 @@ public final class EventConfiguration implements IEventConfiguration {
 
 	public static void validate(InputStream xmlStream, String streamName, SchemaVersion version)
 			throws ParseException, IOException {
-		InputStream schemaStream = version.createSchemaStream();
-		if (schemaStream != null) {
-			try {
+		try (InputStream schemaStream = version.createSchemaStream()) {
+			if (schemaStream != null) {
 				SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$
 				XMLModel.validate(xmlStream, streamName, schemaFactory.newSchema(new StreamSource(schemaStream)));
-			} catch (SAXException e) {
-				throw new IOException("Trouble parsing schema for version " + version, e); //$NON-NLS-1$
-			} finally {
-				IOToolkit.closeSilently(schemaStream);
+	 		} else {
+				throw new IOException("Could not locate schema for version " + version); //$NON-NLS-1$
 			}
-		} else {
-			throw new IOException("Could not locate schema for version " + version); //$NON-NLS-1$
+		} catch (SAXException e) {
+			throw new IOException("Trouble parsing schema for version " + version, e); //$NON-NLS-1$
 		}
 	}
 
@@ -141,7 +138,9 @@ public final class EventConfiguration implements IEventConfiguration {
 	}
 
 	public static XMLModel createModel(File file) throws FileNotFoundException, IOException, ParseException {
-		return createModel(new FileInputStream(file));
+		try (FileInputStream fis = new FileInputStream(file)) {
+			return createModel(fis);
+		}
 	}
 
 	public static XMLModel createModel(InputStream inStream) throws IOException, ParseException {

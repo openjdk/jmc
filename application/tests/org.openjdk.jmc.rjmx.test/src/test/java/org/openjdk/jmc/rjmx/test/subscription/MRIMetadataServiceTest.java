@@ -92,13 +92,14 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testGetExtendedProperties() throws Exception {
-		IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test");
-		IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
-		IMRIMetadata info = service
-				.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used"));
-		assertNotNull(info);
-		assertTrue("Should be numerical", MRIMetadataToolkit.isNumerical(info));
-		assertNotNull(info.getMetadata("color"));
+		try (IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test")) {
+			IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
+			IMRIMetadata info = service
+					.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used"));
+			assertNotNull(info);
+			assertTrue("Should be numerical", MRIMetadataToolkit.isNumerical(info));
+			assertNotNull(info.getMetadata("color"));
+		}
 	}
 
 	@Test

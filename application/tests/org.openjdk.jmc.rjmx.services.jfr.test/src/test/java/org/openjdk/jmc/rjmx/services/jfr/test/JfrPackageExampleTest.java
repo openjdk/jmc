@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.unit.IConstrainedMap;
 import org.openjdk.jmc.common.unit.IDescribedMap;
 import org.openjdk.jmc.flightrecorder.configuration.events.EventOptionID;
@@ -65,14 +64,11 @@ public class JfrPackageExampleTest extends RjmxTestCase {
 	public void testPackageExample1FunctionalityVerbatim() throws Exception {
 		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle serverHandle = IServerHandle.create(descriptor);
-		IConnectionHandle handle = serverHandle.connect("Get JFR recording info");
-		try {
+		try (IConnectionHandle handle = serverHandle.connect("Get JFR recording info")) {
 			IFlightRecorderService jfr = handle.getServiceOrThrow(IFlightRecorderService.class);
 			for (IRecordingDescriptor desc : jfr.getAvailableRecordings()) {
 				System.out.println(desc.getName());
 			}
-		} finally {
-			IOToolkit.closeSilently(handle);
 		}
 	}
 
@@ -80,8 +76,7 @@ public class JfrPackageExampleTest extends RjmxTestCase {
 	public void testPackageExample2FunctionalityVerbatim() throws Exception {
 		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle serverHandle = IServerHandle.create(descriptor);
-		IConnectionHandle handle = serverHandle.connect("Start time bound flight recording");
-		try {
+		try (IConnectionHandle handle = serverHandle.connect("Start time bound flight recording")) {
 			IFlightRecorderService jfr = handle.getServiceOrThrow(IFlightRecorderService.class);
 
 			long duration = 5000;
@@ -94,10 +89,9 @@ public class JfrPackageExampleTest extends RjmxTestCase {
 				Thread.sleep(1000);
 				recording = jfr.getUpdatedRecordingDescription(recording);
 			}
-			InputStream is = jfr.openStream(recording, true);
-			writeStreamToFile(is);
-		} finally {
-			IOToolkit.closeSilently(handle);
+			try (InputStream is = jfr.openStream(recording, true)) {
+				writeStreamToFile(is);
+			}
 		}
 	}
 

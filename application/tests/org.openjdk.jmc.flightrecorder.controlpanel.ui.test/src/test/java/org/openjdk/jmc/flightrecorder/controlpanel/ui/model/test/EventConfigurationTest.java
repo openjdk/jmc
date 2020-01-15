@@ -48,14 +48,16 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 public class EventConfigurationTest {
 
 	private IEventConfiguration loadConfig(String jfcName) throws Exception {
-		InputStream in = EventConfigurationTest.class.getResourceAsStream(jfcName);
-		XMLModel model = EventConfiguration.createModel(in);
-		return new EventConfiguration(model);
+		try (InputStream in = EventConfigurationTest.class.getResourceAsStream(jfcName)) {
+			XMLModel model = EventConfiguration.createModel(in);
+			return new EventConfiguration(model);
+		}
 	}
 
 	private void validateConfig(String jfcName, SchemaVersion version) throws Exception {
-		InputStream in = EventConfigurationTest.class.getResourceAsStream(jfcName);
-		EventConfiguration.validate(in, jfcName, version);
+		try (InputStream in = EventConfigurationTest.class.getResourceAsStream(jfcName)) {
+			EventConfiguration.validate(in, jfcName, version);
+		}
 	}
 
 	@Test

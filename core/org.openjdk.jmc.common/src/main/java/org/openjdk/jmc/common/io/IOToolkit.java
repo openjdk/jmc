@@ -171,12 +171,8 @@ public final class IOToolkit {
 	 *             if an error occurred when trying to read from the file
 	 */
 	public static boolean hasMagic(File file, int[] magic) throws IOException {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
+		try (FileInputStream fis = new FileInputStream(file)) {
 			return hasMagic(fis, magic);
-		} finally {
-			closeSilently(fis);
 		}
 	}
 
@@ -260,17 +256,13 @@ public final class IOToolkit {
 	 *             if an error occurred when trying to read from the file
 	 */
 	public static boolean isCompressedFile(File file) throws IOException {
-		BufferedInputStream is = null;
-		try {
-			is = new BufferedInputStream(new FileInputStream(file), MAGIC_ZIP.length + 1);
+		try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(file), MAGIC_ZIP.length + 1)) {
 			is.mark(MAGIC_ZIP.length + 1);
 			if (hasMagic(is, MAGIC_GZ)) {
 				return true;
 			}
 			is.reset();
 			return hasMagic(is, MAGIC_ZIP);
-		} finally {
-			closeSilently(is);
 		}
 	}
 
@@ -285,23 +277,19 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static List<String> loadFromFile(File file) throws IOException {
-		FileReader fr = new FileReader(file);
-		try {
+		try (FileReader fr = new FileReader(file)) {
 			return loadFromReader(fr);
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			closeSilently(fr);
 		}
 	}
 
 	private static List<String> loadFromReader(Reader reader) throws IOException {
 		List<String> lines = new ArrayList<>();
-		BufferedReader br = new BufferedReader(reader);
-		while (br.ready()) {
-			lines.add(br.readLine());
+		try (BufferedReader br = new BufferedReader(reader)) {
+			while (br.ready()) {
+				lines.add(br.readLine());
+			}
+			return lines;
 		}
-		return lines;
 	}
 
 	/**
@@ -316,14 +304,10 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static void saveToFile(File file, List<String> lines) throws IOException {
-		PrintWriter pr = null;
-		try {
-			pr = new PrintWriter(new FileWriter(file));
+		try (PrintWriter pr = new PrintWriter(new FileWriter(file))) {
 			for (String line : lines) {
 				pr.println(line);
 			}
-		} finally {
-			closeSilently(pr);
 		}
 	}
 
@@ -338,10 +322,8 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static List<String> loadFromStream(InputStream is) throws IOException {
-		try {
+		try (BufferedInputStream bis = new BufferedInputStream(is); BufferedReader r = new BufferedReader(new InputStreamReader(bis))) {
 			List<String> lines = new ArrayList<>();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			BufferedReader r = new BufferedReader(new InputStreamReader(bis));
 			while (r.ready()) {
 				lines.add(r.readLine());
 			}
@@ -365,14 +347,8 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static void write(InputStream in, File toOutput, boolean append) throws IOException {
-		FileOutputStream fos = new FileOutputStream(toOutput, append);
-		BufferedOutputStream os = null;
-		try {
-			os = new BufferedOutputStream(fos);
+		try (FileOutputStream fos = new FileOutputStream(toOutput, append); BufferedOutputStream os = new BufferedOutputStream(fos)) {
 			copy(in, os);
-		} finally {
-			closeSilently(os);
-			closeSilently(fos);
 		}
 	}
 
@@ -437,8 +413,7 @@ public final class IOToolkit {
 	 *             if something goes wrong when reading file data
 	 */
 	public static String calculateFileHash(File file) throws IOException {
-		RandomAccessFile raf = new RandomAccessFile(file, "r"); //$NON-NLS-1$
-		try {
+		try (RandomAccessFile raf = new RandomAccessFile(file, "r")) { //$NON-NLS-1$
 			long seek = raf.length() / 10;
 			byte[] buffer = new byte[1024];
 			MessageDigest hash = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
@@ -450,8 +425,6 @@ public final class IOToolkit {
 			return new BigInteger(1, hash.digest()).toString();
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
-		} finally {
-			closeSilently(raf);
 		}
 	}
 }

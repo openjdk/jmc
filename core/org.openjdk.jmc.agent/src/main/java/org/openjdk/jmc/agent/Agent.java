@@ -35,6 +35,7 @@ package org.openjdk.jmc.agent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.util.logging.Level;
@@ -122,10 +123,9 @@ public class Agent {
 			agentArguments = DEFAULT_CONFIG;
 		}
 		File file = new File(agentArguments);
-		try {
-			InputStream stream = new FileInputStream(file);
+		try (InputStream stream = new FileInputStream(file)) {
 			initializeAgent(stream, instrumentation);
-		} catch (FileNotFoundException | XMLStreamException e) {
+		} catch (XMLStreamException | IOException e) {
 			getLogger().log(Level.SEVERE, "Failed to read jfr probe definitions from " + file.getPath(), e); //$NON-NLS-1$
 		}
 	}

@@ -52,8 +52,9 @@ public final class TestToolkit {
 	}
 
 	public static byte[] getByteCode(Class<?> c) throws IOException {
-		InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class"); //$NON-NLS-1$
-		return readFully(is, -1, true);
+		try (InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class")) { //$NON-NLS-1$
+			return readFully(is, -1, true);
+		}
 	}
 
 	public static byte[] readFully(InputStream is, int length, boolean readAll) throws IOException {
@@ -106,10 +107,9 @@ public final class TestToolkit {
 	}
 
 	public static String readTemplate(Class<?> resouceClass, String templateName) throws IOException {
-		InputStream inputStream = resouceClass.getResourceAsStream(templateName); // $NON-NLS-1$
-		String s = readString(inputStream);
-		closeSilently(inputStream);
-		return s;
+		try (InputStream inputStream = resouceClass.getResourceAsStream(templateName)) {
+			return readString(inputStream);
+		}
 	}
 
 	public static String readString(InputStream in) throws IOException {

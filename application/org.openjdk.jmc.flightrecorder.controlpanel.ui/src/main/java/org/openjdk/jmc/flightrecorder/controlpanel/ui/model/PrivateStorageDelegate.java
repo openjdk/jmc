@@ -90,12 +90,9 @@ public class PrivateStorageDelegate implements IConfigurationStorageDelegate {
 		try {
 			// Ensure charset exists before opening file for writing.
 			Charset charset = Charset.forName(CHARSET_UTF8);
-			Writer out = new OutputStreamWriter(new FileOutputStream(file), charset);
-			try {
+			try (Writer out = new OutputStreamWriter(new FileOutputStream(file), charset)) {
 				out.write(fileContent);
 				out.flush();
-			} finally {
-				IOToolkit.closeSilently(out);
 			}
 			return true;
 		} catch (IllegalCharsetNameException e) {
