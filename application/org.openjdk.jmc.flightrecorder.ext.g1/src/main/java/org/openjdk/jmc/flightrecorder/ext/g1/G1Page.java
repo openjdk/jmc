@@ -263,12 +263,14 @@ public class G1Page extends AbstractDataPage {
 						IAggregator<IQuantity, ?> min = Aggregators.min(JfrAttributes.START_TIME);
 						IQuantity newTime = gcTable.getSelection().getItems().getAggregate(min);
 						if (newTime == null) {
-							regionVisualizer.showGC(getDataSource().getItems().apply(ItemFilters.hasAttribute(JdkAttributes.GC_ID)));
+							regionVisualizer.showGC(
+									getDataSource().getItems().apply(ItemFilters.hasAttribute(JdkAttributes.GC_ID)));
 							time = getDataSource().getItems().apply(G1Constants.HEAP_REGION_DUMPS).getAggregate(min);
 						} else {
 							IAggregator<Set<IQuantity>, ?> distinct = Aggregators.distinct(JdkAttributes.GC_ID);
 							Set<IQuantity> gcIds = gcTable.getSelection().getItems().getAggregate(distinct);
-							regionVisualizer.showGC(getDataSource().getItems().apply(ItemFilters.memberOf(JdkAttributes.GC_ID, gcIds)));
+							regionVisualizer.showGC(
+									getDataSource().getItems().apply(ItemFilters.memberOf(JdkAttributes.GC_ID, gcIds)));
 							time = newTime;
 						}
 						heapVisualizer.show(seekTo(time));
