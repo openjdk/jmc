@@ -53,7 +53,7 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 	public void testMBeanServerConnection() throws Exception {
 		try (IConnectionHandle handle = getDefaultServer().connect("Test")) {
 			MBeanServerConnection connection = handle.getServiceOrThrow(MBeanServerConnection.class);
-	
+
 			String[] domains = connection.getDomains();
 			assertNotNull(connection.getDomains());
 			// At least java.lang, no matter what, or we're breaking J2SE compliance...
@@ -70,7 +70,7 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 	public void xtestMBeanHelperService() throws Exception {
 		try (IConnectionHandle handle = getDefaultServer().connect("Test")) {
 			IMBeanHelperService helper = handle.getServiceOrThrow(IMBeanHelperService.class);
-	
+
 			// FIXME: JMC-4270 - Server time approximation is not reliable. Disabling until a solution is found.
 //			long time = System.currentTimeMillis();
 //	
@@ -79,7 +79,7 @@ public class DefaultServicesTest extends ServerHandleTestCase {
 //			assertLessThan("Server time approximation off by more than five seconds", 5000L, Math.abs(diff));
 //			System.out.println("DefaultServicesTest.testMBeanHelperService(): Server time approximation difference = "
 //					+ Math.abs(diff) + " ms");
-	
+
 			// Should at least contain the java.lang mbeans. Just testing for the Threading one.
 			assertTrue("Could not find the Threading MBean!",
 					helper.getMBeanNames().contains(new ObjectName("java.lang:type=Threading")));

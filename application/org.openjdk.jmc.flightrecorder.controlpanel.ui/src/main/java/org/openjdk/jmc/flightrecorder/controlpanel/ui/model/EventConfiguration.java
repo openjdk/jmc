@@ -116,7 +116,7 @@ public final class EventConfiguration implements IEventConfiguration {
 			if (schemaStream != null) {
 				SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$
 				XMLModel.validate(xmlStream, streamName, schemaFactory.newSchema(new StreamSource(schemaStream)));
-	 		} else {
+			} else {
 				throw new IOException("Could not locate schema for version " + version); //$NON-NLS-1$
 			}
 		} catch (SAXException e) {

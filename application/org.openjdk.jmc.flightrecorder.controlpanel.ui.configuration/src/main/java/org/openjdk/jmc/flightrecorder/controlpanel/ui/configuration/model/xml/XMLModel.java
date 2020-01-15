@@ -260,9 +260,9 @@ public final class XMLModel extends Observable {
 		// Ensure charset exists before opening file for writing.
 		Charset charset = Charset.forName("UTF-8"); //$NON-NLS-1$
 		try (Writer osw = new OutputStreamWriter(new FileOutputStream(file), charset)) {
-		if (writeTo(osw)) {
-			setDirty(false);
-		}
+			if (writeTo(osw)) {
+				setDirty(false);
+			}
 		}
 	}
 

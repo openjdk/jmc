@@ -92,7 +92,8 @@ public class MRIMetadataServiceTest extends RjmxTestCase {
 
 	@Test
 	public void testGetExtendedProperties() throws Exception {
-		try (IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor()).connect("Test")) {
+		try (IConnectionHandle handle = IServerHandle.create(LocalRJMXTestToolkit.createDefaultDescriptor())
+				.connect("Test")) {
 			IMRIMetadataService service = LocalRJMXTestToolkit.getInfoService(handle);
 			IMRIMetadata info = service
 					.getMetadata(new MRI(Type.ATTRIBUTE, "java.lang:type=Memory", "HeapMemoryUsage/used"));

@@ -100,7 +100,7 @@ public class MCVersion {
 			return null;
 		}
 		return versionProperties;
-	
+
 	}
 
 	public static String getFullVersion() {

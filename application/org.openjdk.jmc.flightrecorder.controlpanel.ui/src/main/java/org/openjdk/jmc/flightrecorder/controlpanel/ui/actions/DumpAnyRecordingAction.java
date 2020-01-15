@@ -62,7 +62,8 @@ public class DumpAnyRecordingAction extends AbstractWizardUserAction {
 
 	@Override
 	public IWizard doCreateWizard() throws Exception {
-		try (IConnectionHandle handle = flightRecorder.getServerHandle().connect(Messages.ACTION_DUMP_ANY_RECORDING_LABEL)) {
+		try (IConnectionHandle handle = flightRecorder.getServerHandle()
+				.connect(Messages.ACTION_DUMP_ANY_RECORDING_LABEL)) {
 			RecordingProvider recording = flightRecorder.getSnapshotRecording(handle);
 			if (recording != null) {
 				flightRecorder.resetWarning();

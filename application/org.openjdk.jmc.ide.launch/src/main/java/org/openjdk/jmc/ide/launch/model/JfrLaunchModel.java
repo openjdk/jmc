@@ -330,8 +330,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 			rtJar = new File(theJreRoot, "lib/rt.jar"); //$NON-NLS-1$
 		}
 		if (rtJar.exists()) {
-			try (FileInputStream fis = new FileInputStream(rtJar);
-		JarInputStream jis = new JarInputStream(fis)) {
+			try (FileInputStream fis = new FileInputStream(rtJar); JarInputStream jis = new JarInputStream(fis)) {
 				Manifest mf = jis.getManifest();
 				Attributes as = mf.getMainAttributes();
 				String impVer = as.getValue("Implementation-Version"); //$NON-NLS-1$
