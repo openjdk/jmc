@@ -34,20 +34,17 @@ package org.openjdk.jmc.agent.util;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.generated_events.Dummy;
-import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
 /**
  * Helper methods for doing transforms.
@@ -63,9 +60,6 @@ public final class TypeUtils {
 	public static final Type STRING_TYPE = Type.getType("Ljava/lang/String;"); //$NON-NLS-1$
 
 	public static final Object STRING_INTERNAL_NAME = "java/lang/String"; //$NON-NLS-1$
-
-	private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
-	private final static String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
 
 	/**
 	 * The file extension for java source files (.java).
@@ -281,50 +275,5 @@ public final class TypeUtils {
 
 	private static void emitBox(MethodVisitor mv, String desc) {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "box", desc, false); //$NON-NLS-1$
-	}
-
-	private static Object getUnsafe() {
-		// Lovely, but this seems to be the only way
-		Class<?> unsafeClass = getUnsafeClass();
-		try {
-			Field f = unsafeClass.getDeclaredField("theUnsafe"); //$NON-NLS-1$
-			f.setAccessible(true);
-			return f.get(null);
-		} catch (Exception e) {
-			Logger.getLogger(JFRUtils.class.getName()).log(Level.SEVERE, "Could not access Unsafe!", e); //$NON-NLS-1$
-		}
-		return null;
-	}
-
-	private static Method getUnsafeDefineClassMethod(Object unsafe) {
-		try {
-			return unsafe.getClass().getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class,
-					ClassLoader.class, ProtectionDomain.class);
-		} catch (NoSuchMethodException | SecurityException e) {
-			System.out.println(
-					"Could not find, or access, any defineClass method. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
-			e.printStackTrace();
-			System.out.flush();
-			System.exit(3);
-		}
-		return null;
-	}
-
-	private static Class<?> getUnsafeClass() {
-		Class<?> clazz = null;
-		try {
-			clazz = Class.forName(UNSAFE_JDK_11_CLASS);
-		} catch (ClassNotFoundException e) {
-			try {
-				clazz = Class.forName(UNSAFE_JDK_7_CLASS);
-			} catch (ClassNotFoundException e1) {
-				System.out.println(
-						"Could not find, or access, any Unsafe class. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
-				e1.printStackTrace();
-				System.out.flush();
-				System.exit(2);
-			}
-		}
-		return clazz;
 	}
 }
