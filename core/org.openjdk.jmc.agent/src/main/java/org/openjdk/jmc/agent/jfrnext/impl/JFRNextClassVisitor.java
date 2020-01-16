@@ -87,7 +87,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 
 	private Class<?> generateEventClass() throws Exception {
 		try {
-			return Class.forName(transformDescriptor.getEventClassName().replace('/', '.'));
+			return Class.forName(transformDescriptor.getEventClassName().replace('/', '.'), false, definingClassLoader);
 		} catch (ClassNotFoundException e) {
 			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor);
 			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,

@@ -42,6 +42,7 @@ import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
+import org.openjdk.jmc.agent.generated_events.Dummy;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFRTransformDescriptor extends TransformDescriptor {
@@ -143,7 +144,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	}
 
 	private String initializeEventClassName() {
-		return TypeUtils.getPathPart(getClassName()) + getClassPrefix()
+		return TypeUtils.getPathPart(Dummy.class.getName().replace('.', '/')) + getClassPrefix()
 				+ TypeUtils.deriveIdentifierPart(getEventName());
 	}
 

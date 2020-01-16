@@ -85,7 +85,7 @@ public class JFRNextEventClassGenerator {
 
 		String fieldType = getFieldType(type);
 
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, param.getFieldName(), fieldType, null, null);
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, param.getFieldName(), fieldType, null, null);
 
 		// Name
 		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);
@@ -125,7 +125,7 @@ public class JFRNextEventClassGenerator {
 
 		String fieldType = getFieldType(type);
 
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, returnValue.getFieldName(), fieldType, null, null);
+		FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC, returnValue.getFieldName(), fieldType, null, null);
 
 		// Name
 		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);

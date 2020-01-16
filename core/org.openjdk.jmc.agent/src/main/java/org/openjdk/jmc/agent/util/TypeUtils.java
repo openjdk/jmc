@@ -32,11 +32,13 @@
  */
 package org.openjdk.jmc.agent.util;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +46,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
+import org.openjdk.jmc.agent.generated_events.Dummy;
 import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
 
 /**
@@ -63,14 +66,6 @@ public final class TypeUtils {
 
 	private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
 	private final static String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
-
-	private static final Object UNSAFE;
-	private static final Method UNSAFE_DEFINE_CLASS_METHOD;
-
-	static {
-		UNSAFE = getUnsafe();
-		UNSAFE_DEFINE_CLASS_METHOD = getUnsafeDefineClassMethod(UNSAFE);
-	}
 
 	/**
 	 * The file extension for java source files (.java).
@@ -122,12 +117,41 @@ public final class TypeUtils {
 	public static Class<?> defineClass(
 		String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
 		ProtectionDomain protectionDomain) {
+		String version = System.getProperty("java.version");
+		if (Integer.parseInt(version.substring(0, version.indexOf("."))) < 9) {
+			return defineClassWithReflection(eventClassName, eventClass, i, length, definingClassLoader, protectionDomain);
+		}
+
+		return defineClassWithLookup(eventClassName, eventClass, i, length, definingClassLoader, protectionDomain);
+	}
+
+	private static Class<?> defineClassWithLookup(
+			String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
+			ProtectionDomain protectionDomain) {
 		try {
-			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD.invoke(UNSAFE, eventClassName, eventClass, i, length,
-					definingClassLoader, protectionDomain);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Method privateLookupIn = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
+			MethodHandles.Lookup lookup = (MethodHandles.Lookup) privateLookupIn.invoke(null, Dummy.class, MethodHandles.lookup());
+			byte[] bytes = Arrays.copyOfRange(eventClass, i, i + length);
+			Method defineClass = MethodHandles.Lookup.class.getDeclaredMethod("defineClass", byte[].class);
+			return (Class<?>) defineClass.invoke(lookup, (Object) bytes);
+		} catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			Agent.getLogger().log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
 		}
+
+		return null;
+	}
+
+	private static Class<?> defineClassWithReflection(
+			String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
+			ProtectionDomain protectionDomain) {
+		try {
+			Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
+			defineClass.setAccessible(true);
+			return (Class<?>) defineClass.invoke(definingClassLoader, eventClassName, eventClass, i, length, protectionDomain);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			Agent.getLogger().log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
+		}
+
 		return null;
 	}
 
