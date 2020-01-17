@@ -99,7 +99,10 @@
 				<configuration>
 					<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
 						-XX:+FlightRecorder</argLine>
-					<excludes>TestDefineEventProbes.java</excludes>
+					<excludes>
+						<exclude>TestDefineEventProbes.java</exclude>
+						<exclude>TestPermissionChecks.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -107,19 +110,33 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>3.0.0-M3</version>
 				<executions>
+					<execution>
+					<id>test-permissions</id>
+					<goals>
+						<goal>integration-test</goal>
+						<goal>verify</goal>
+					</goals>
+						<configuration>
+							<argLine> -Djava.security.manager -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestPermissionChecks.java</includes>
+						</configuration>
+					</execution>
           			<execution>
+						<id>test-retransform</id>
             			<goals>
               				<goal>integration-test</goal>
               				<goal>verify</goal>
             			</goals>
-          			</execution>
+						<configuration>
+							<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestDefineEventProbes.java</includes>
+						</configuration>
+					</execution>
         		</executions>
-				<configuration>
-					<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
-						-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
-						 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
-					<includes>TestDefineEventProbes.java</includes>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

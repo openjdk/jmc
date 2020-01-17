@@ -33,6 +33,7 @@
 package org.openjdk.jmc.agent.jmx;
 
 import java.lang.instrument.Instrumentation;
+import java.lang.management.ManagementPermission;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -54,6 +55,7 @@ public class AgentController implements AgentControllerMBean {
 	}
 
 	public void defineEventProbes(String xmlDescription) throws Exception{
+		checkSecurity();
 		HashSet<Class<?>> classesToRetransform = new HashSet<Class<?>>();
 		boolean revertAll = xmlDescription == null ? true : xmlDescription.isEmpty();
 		if (revertAll) {
@@ -89,4 +91,12 @@ public class AgentController implements AgentControllerMBean {
 		instrumentation.retransformClasses(classesToRetransformArray);
 		registry.setRevertInstrumentation(false);
 	}
+
+	private void checkSecurity() {
+		  SecurityManager secMan = System.getSecurityManager();
+		  if (secMan != null) {
+		    secMan.checkPermission(new ManagementPermission("control"));
+		  }
+	}
+
 }
