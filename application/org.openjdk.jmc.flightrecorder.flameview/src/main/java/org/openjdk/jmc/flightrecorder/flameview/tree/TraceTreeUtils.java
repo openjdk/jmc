@@ -34,9 +34,11 @@
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
 import org.openjdk.jmc.common.IMCFrame;
+
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.flightrecorder.flameview.messages.internal.FlameViewMessages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
@@ -99,14 +101,22 @@ public class TraceTreeUtils {
 
 	private static String format(StacktraceFrame sFrame) {
 		IMCFrame frame = sFrame.getFrame();
-		IMCMethod method = frame.getMethod();
-		return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+		if (frame == StacktraceModel.UNKNOWN_FRAME) {
+			return FlameViewMessages.getString(FlameViewMessages.FLAMEVIEW_UNCLASSIFIABLE_FRAME);
+		} else {
+			IMCMethod method = frame.getMethod();
+			return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+		}
 	}
 
 	private static String formatPackageName(StacktraceFrame sFrame) {
 		IMCFrame frame = sFrame.getFrame();
-		IMCMethod method = frame.getMethod();
-		return FormatToolkit.getPackage(method.getType().getPackage());
+		if (frame == StacktraceModel.UNKNOWN_FRAME) {
+			return FlameViewMessages.getString(FlameViewMessages.FLAMEVIEW_UNCLASSIFIABLE_FRAME_PACKAGE);
+		} else {
+			IMCMethod method = frame.getMethod();
+			return FormatToolkit.getPackage(method.getType().getPackage());
+		}
 	}
 
 	public static String printTree(TraceNode node) {

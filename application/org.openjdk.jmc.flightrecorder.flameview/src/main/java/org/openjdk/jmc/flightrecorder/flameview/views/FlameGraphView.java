@@ -226,7 +226,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
 			public void completed(ProgressEvent event) {
-				browser.removeProgressListener(this);
+				browser.removeProgressListener(this);	
 				browser.execute(String.format("processGraph(%s);", toJSon(root)));
 			}
 		});
