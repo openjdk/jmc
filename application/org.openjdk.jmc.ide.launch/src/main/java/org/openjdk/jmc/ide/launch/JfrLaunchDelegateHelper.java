@@ -240,9 +240,7 @@ public class JfrLaunchDelegateHelper {
 	}
 
 	protected void scheduleOpenJfrJob() {
-		FileInputStream stream = null;
-		try {
-			stream = new FileInputStream(recordingFile);
+		try (FileInputStream stream = new FileInputStream(recordingFile)) {
 			boolean wrote = jfrPathToOpen.tryWriteStream(stream, null);
 			if (wrote) {
 				String info = recordingFile.getAbsolutePath() + " was written to " + jfrPathToOpen.getPath() //$NON-NLS-1$
@@ -252,8 +250,6 @@ public class JfrLaunchDelegateHelper {
 			WorkbenchToolkit.asyncOpenEditor(new MCPathEditorInput(recordingFile, false));
 			return;
 		} catch (IOException e) {
-		} finally {
-			IOToolkit.closeSilently(stream);
 		}
 		displayErrorMessage(NLS.bind(Messages.JfrLaunch_JFR_FILE_DID_NOT_EXIST, jfrPathToOpen));
 	}

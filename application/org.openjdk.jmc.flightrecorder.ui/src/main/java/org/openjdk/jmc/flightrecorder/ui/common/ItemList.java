@@ -207,6 +207,16 @@ public class ItemList {
 		tableViewer.setExtraMessage(null);
 	}
 
+	public void onSearchFilterChange() {
+		long numRows = tableViewer.getNumRowsDisplayed();
+		if (numRows < maxSize) {
+			clearEllipsisMessage();
+		} else {
+			setEllipsisMessage();
+		}
+		tableViewer.refresh();
+	}
+
 	/**
 	 * Construct an identifier that can be used when persisting column state.
 	 *

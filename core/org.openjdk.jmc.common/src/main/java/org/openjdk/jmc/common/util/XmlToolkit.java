@@ -397,14 +397,8 @@ public final class XmlToolkit {
 	 *             if the stream could not be read
 	 */
 	public static Document loadDocumentFromFile(File file) throws SAXException, IOException {
-		FileInputStream is = null;
-		try {
-			is = new FileInputStream(file);
+		try (FileInputStream is = new FileInputStream(file)) {
 			return XmlToolkit.loadDocumentFromStream(new BufferedInputStream(is));
-		} finally {
-			if (is != null) {
-				IOToolkit.closeSilently(is);
-			}
 		}
 	}
 
@@ -457,14 +451,8 @@ public final class XmlToolkit {
 	 *             if the file could not written
 	 */
 	public static void storeDocumentToFile(Document doc, File file) throws IOException {
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(file, "UTF-8"); //$NON-NLS-1$
+		try (PrintWriter pw = new PrintWriter(file, "UTF-8")) { //$NON-NLS-1$
 			prettyPrint(doc.getDocumentElement(), pw);
-		} finally {
-			if (pw != null) {
-				IOToolkit.closeSilently(pw);
-			}
 		}
 	}
 

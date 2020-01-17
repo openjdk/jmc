@@ -259,9 +259,10 @@ public final class XMLModel extends Observable {
 		// NOTE: The pretty printer writes that the encoding is UTF-8, so we must make sure it is.
 		// Ensure charset exists before opening file for writing.
 		Charset charset = Charset.forName("UTF-8"); //$NON-NLS-1$
-		Writer osw = new OutputStreamWriter(new FileOutputStream(file), charset);
-		if (writeTo(osw)) {
-			setDirty(false);
+		try (Writer osw = new OutputStreamWriter(new FileOutputStream(file), charset)) {
+			if (writeTo(osw)) {
+				setDirty(false);
+			}
 		}
 	}
 
@@ -275,15 +276,12 @@ public final class XMLModel extends Observable {
 	 * @return true iff the model was successfully written to the {@link Writer}.
 	 */
 	public boolean writeTo(Writer writer) {
-		PrintWriter pw = new PrintWriter(writer);
-		try {
+		try (PrintWriter pw = new PrintWriter(writer)) {
 			PrettyPrinter pp = new PrettyPrinter(pw, m_validator.getElementsTooKeepOnOneLine());
 			pp.print(this);
 			pw.flush();
 			// PrintWriter never throws any exceptions, so this is how we find out if something went wrong.
 			return !pw.checkError();
-		} finally {
-			IOToolkit.closeSilently(pw);
 		}
 	}
 

@@ -48,9 +48,7 @@ public class JfrMetadataToolkit {
 
 	protected static SortedMap<String, SortedMap<String, String>> parseRecordingFile(File recordingFile) {
 		SortedMap<String, SortedMap<String, String>> eventTypeMap = new TreeMap<>();
-		InputStream stream = null;
-		try {
-			stream = IOToolkit.openUncompressedStream(recordingFile);
+		try (InputStream stream = IOToolkit.openUncompressedStream(recordingFile)) {
 			EventArray[] eventArrays = FlightRecordingLoader.loadStream(stream, false, false);
 			for (EventArray entry : eventArrays) {
 				SortedMap<String, String> attrs = new TreeMap<>();
@@ -61,7 +59,6 @@ public class JfrMetadataToolkit {
 				eventTypeMap.put(eventTypeId, attrs);
 			}
 		} catch (Exception e) {
-			IOToolkit.closeSilently(stream);
 			throw new RuntimeException(e);
 		}
 		return eventTypeMap;

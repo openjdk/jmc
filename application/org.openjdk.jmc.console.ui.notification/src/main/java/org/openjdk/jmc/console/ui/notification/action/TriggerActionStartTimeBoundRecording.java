@@ -181,11 +181,8 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 	private File dumpFile(
 		IProgressMonitor monitor, IFlightRecorderService service, IRecordingDescriptor descriptor, MCFile path)
 			throws IOException, FlightRecorderException {
-		InputStream stream = service.openStream(descriptor, false);
-		try {
+		try (InputStream stream = service.openStream(descriptor, false)) {
 			return IDESupportToolkit.writeToUniqueFile(path, stream, monitor);
-		} finally {
-			IOToolkit.closeSilently(stream);
 		}
 	}
 

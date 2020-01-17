@@ -103,11 +103,10 @@ public class TriggerToolkit {
 	 *         successfully
 	 */
 	public static IStatus resetTriggers(NotificationRegistry model) {
-		InputStream stream = null;
-		try {
-			// Load DOM for default triggers
-			stream = NotificationPlugin.class.getResourceAsStream(NotificationPlugin.DEFAULT_TRIGGER_FILE);
-			Document doc = XmlToolkit.loadDocumentFromStream(new BufferedInputStream(stream));
+		// Load DOM for default triggers
+		try (InputStream stream = NotificationPlugin.class.getResourceAsStream(NotificationPlugin.DEFAULT_TRIGGER_FILE);
+				BufferedInputStream bis = new BufferedInputStream(stream)) {
+			Document doc = XmlToolkit.loadDocumentFromStream(bis);
 			Collection<TriggerRule> c = model.getAvailableRules();
 
 			// Remove all rules
@@ -124,8 +123,6 @@ public class TriggerToolkit {
 		} catch (Exception exc) {
 			return StatusFactory.createErr(NLS.bind(Messages.TriggerToolkit_ERROR_COULD_NOT_READ_DEFAULT_TEMPLATE_FILE,
 					NotificationPlugin.DEFAULT_TRIGGER_FILE), exc, false);
-		} finally {
-			IOToolkit.closeSilently(stream);
 		}
 		return StatusFactory.createOk(Messages.TriggerToolkit_MESSAGE_DEFAULT_TRIGGERS_LOADED);
 	}

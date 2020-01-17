@@ -60,6 +60,10 @@ public class ExtraRowTableViewer extends TableViewer {
 		this.message = message;
 	}
 
+	public long getNumRowsDisplayed() {
+		return getFilteredChildren(getInput()).length;
+	}
+
 	@Override
 	public void refresh(Object element) {
 		if (message == null) {

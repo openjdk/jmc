@@ -166,9 +166,9 @@ public class TestRulesWithJfr {
 				+ (onlyOneRecording ? "Generated_One_" : "Generated_") + fileName;
 		File resultFile = new File(filePath);
 		prepareFile(resultFile);
-		try {
-			writeDomToStream(doc, new FileOutputStream(resultFile));
-		} catch (FileNotFoundException e) {
+		try (FileOutputStream resultFos = new FileOutputStream(resultFile)) {
+			writeDomToStream(doc, resultFos);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -56,8 +56,7 @@ public class ServicesPackageExampleTest extends RjmxTestCase {
 	public void packageExampleFunctionalityVerbatim() throws Exception {
 		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle handle = IServerHandle.create(descriptor);
-		try {
-			IConnectionHandle connection = handle.connect("Run Diagnostic commands");
+		try (IConnectionHandle connection = handle.connect("Run Diagnostic commands")) {
 			assumeHasDiagnosticCommandsService(connection);
 			IDiagnosticCommandService dcmd = connection.getServiceOrThrow(IDiagnosticCommandService.class);
 			for (IOperation operation : dcmd.getOperations()) {
@@ -72,8 +71,7 @@ public class ServicesPackageExampleTest extends RjmxTestCase {
 	public void testPackageExampleFunctionality() throws Exception {
 		IConnectionDescriptor descriptor = new ConnectionDescriptorBuilder().hostName("localhost").port(0).build();
 		IServerHandle handle = IServerHandle.create(descriptor);
-		try {
-			IConnectionHandle connection = handle.connect("Run Diagnostic commands");
+		try (IConnectionHandle connection = handle.connect("Run Diagnostic commands")) {
 			assumeHasDiagnosticCommandsService(connection);
 			IDiagnosticCommandService dcmd = connection.getServiceOrThrow(IDiagnosticCommandService.class);
 			for (IOperation operation : dcmd.getOperations()) {

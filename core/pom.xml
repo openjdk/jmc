@@ -54,6 +54,7 @@
 		<module>org.openjdk.jmc.flightrecorder</module>
 		<module>org.openjdk.jmc.flightrecorder.rules</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.jdk</module>
+		<module>org.openjdk.jmc.jdp</module>
 		<module>tests</module>
 		<module>coverage</module>
 	</modules>

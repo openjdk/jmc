@@ -168,9 +168,7 @@ public abstract class ReadBuffer {
 			} finally {
 				IOToolkit.closeSilently(ch);
 				IOToolkit.closeSilently(file);
-
 			}
-
 			return new FileReadBuffer(file);
 		}
 	}
