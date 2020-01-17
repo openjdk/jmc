@@ -29,7 +29,7 @@
 			flameGraph = d3.flamegraph()
 				.width(windowSize() * 0.9)
 				.cellHeight(18)
-				.transitionDuration(500)
+				.transitionDuration(320)
 				.minFrameSize(5)
 				.transitionEase(d3.easeCubic)
 				.sort(true)
