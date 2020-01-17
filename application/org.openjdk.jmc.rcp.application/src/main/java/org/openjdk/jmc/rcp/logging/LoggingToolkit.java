@@ -104,8 +104,10 @@ public final class LoggingToolkit {
 		} else {
 			try {
 				if (new File(file).exists()) {
-					readConfiguration(new FileInputStream(file));
-					getLogger().log(Level.INFO, "Loaded user specified logging settings from " + file + "."); //$NON-NLS-1$ //$NON-NLS-2$
+					try (FileInputStream fis = new FileInputStream(file)) {
+						readConfiguration(fis);
+						getLogger().log(Level.INFO, "Loaded user specified logging settings from " + file + "."); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 				} else {
 					getLogger().log(Level.WARNING, "Could not find user specified logging settings at " + file + "."); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -145,13 +147,10 @@ public final class LoggingToolkit {
 	}
 
 	private static InputStream getAsInputStream(Properties props) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			props.store(baos, ""); //$NON-NLS-1$
 			String newProps = baos.toString();
 			return new ByteArrayInputStream(newProps.getBytes("UTF-8")); //$NON-NLS-1$
-		} finally {
-			IOToolkit.closeSilently(baos);
 		}
 	}
 

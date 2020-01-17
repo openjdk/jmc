@@ -41,8 +41,9 @@ import org.openjdk.jmc.rjmx.services.jfr.test.JfrTestCase;
 
 public class JfrControlTestCase extends JfrTestCase {
 	protected static IEventConfiguration loadConfig(String jfcName) throws Exception {
-		InputStream in = JfrControlTestCase.class.getResourceAsStream(jfcName);
-		XMLModel model = EventConfiguration.createModel(in);
-		return new EventConfiguration(model);
+		try (InputStream in = JfrControlTestCase.class.getResourceAsStream(jfcName)) {
+			XMLModel model = EventConfiguration.createModel(in);
+			return new EventConfiguration(model);
+		}
 	}
 }

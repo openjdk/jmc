@@ -66,11 +66,8 @@ public class JfrLoaderToolkit {
 		for (File file : files) {
 			streams.add(IOToolkit.openUncompressedStream(file));
 		}
-		InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-		try {
+		try (InputStream stream = new SequenceInputStream(Collections.enumeration(streams))) {
 			return FlightRecordingLoader.loadStream(stream, extensions, false, true);
-		} finally {
-			IOToolkit.closeSilently(stream);
 		}
 	}
 
@@ -97,9 +94,10 @@ public class JfrLoaderToolkit {
 	 * @return the events in the recording
 	 */
 	public static IItemCollection loadEvents(InputStream stream, List<? extends IParserExtension> extensions)
-			throws IOException, CouldNotLoadRecordingException {
-		InputStream in = IOToolkit.openUncompressedStream(stream);
-		return EventCollection.build(FlightRecordingLoader.loadStream(in, extensions, false, true));
+			throws CouldNotLoadRecordingException, IOException {
+		try (InputStream in = IOToolkit.openUncompressedStream(stream)) {
+			return EventCollection.build(FlightRecordingLoader.loadStream(in, extensions, false, true));
+		}
 	}
 
 	/**

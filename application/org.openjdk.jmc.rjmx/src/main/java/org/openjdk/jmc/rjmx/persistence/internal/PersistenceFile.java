@@ -77,8 +77,7 @@ class PersistenceFile {
 
 	PersistenceFile(File file) throws IOException {
 		this.file = file;
-		RandomAccessFile raf = new RandomAccessFile(file, "r"); //$NON-NLS-1$
-		try {
+		try (RandomAccessFile raf = new RandomAccessFile(file, "r")) { //$NON-NLS-1$
 			mri = MRI.createFromQualifiedName(raf.readUTF());
 			fileLen = raf.length();
 			eventsStart = raf.getFilePointer();
@@ -91,8 +90,6 @@ class PersistenceFile {
 				start = Long.MAX_VALUE;
 				end = Long.MAX_VALUE;
 			}
-		} finally {
-			IOToolkit.closeSilently(raf);
 		}
 	}
 
@@ -104,11 +101,8 @@ class PersistenceFile {
 		if (events == null) {
 			// TODO: For now read all data
 			events = new ITimestampedData[eventCount];
-			RandomAccessFile raf = new RandomAccessFile(file, "r"); //$NON-NLS-1$
-			try {
+			try (RandomAccessFile raf = new RandomAccessFile(file, "r")) { //$NON-NLS-1$
 				readEvents(raf, 0, eventCount);
-			} finally {
-				IOToolkit.closeSilently(raf);
 			}
 		}
 		return events;

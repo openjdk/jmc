@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.rjmx.triggers.internal;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,11 +71,12 @@ class NotificationRuleBag {
 	}
 
 	void deactivate() {
-		IConnectionHandle handle = handleRef.get();
-		for (Entry<TriggerRule, IMRIValueListener> rule : rules.entrySet()) {
-			deactivateRule(rule.getKey(), rule.getValue(), handle);
+		try (IConnectionHandle handle = handleRef.get()) {
+			for (Entry<TriggerRule, IMRIValueListener> rule : rules.entrySet()) {
+				deactivateRule(rule.getKey(), rule.getValue(), handle);
+			}
+		} catch (IOException e) {
 		}
-
 	}
 
 	Collection<TriggerRule> getAllRegisteredRules() {

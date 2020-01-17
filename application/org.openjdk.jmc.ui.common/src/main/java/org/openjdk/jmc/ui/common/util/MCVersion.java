@@ -89,20 +89,18 @@ public class MCVersion {
 	private static Properties getVersionProperties() {
 		// Just one thread executing this when it gets executed.
 		Properties versionProperties = new Properties();
-		InputStream is = MCVersion.class.getResourceAsStream("/version.properties"); //$NON-NLS-1$
-		if (is == null) {
-			LOGGER.log(Level.SEVERE, "Could not open version.properties file."); //$NON-NLS-1$
-			return null;
-		}
-		try {
+		try (InputStream is = MCVersion.class.getResourceAsStream("/version.properties")) { //$NON-NLS-1$
+			if (is == null) {
+				LOGGER.log(Level.SEVERE, "Could not open version.properties file."); //$NON-NLS-1$
+				return null;
+			}
 			versionProperties.load(is);
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Error loading version.properties file.", e); //$NON-NLS-1$
 			return null;
-		} finally {
-			IOToolkit.closeSilently(is);
 		}
 		return versionProperties;
+
 	}
 
 	public static String getFullVersion() {

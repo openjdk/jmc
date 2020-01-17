@@ -60,7 +60,6 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
@@ -326,28 +325,20 @@ public class JfrLaunchModel extends RecordingWizardModel {
 	}
 
 	private static String parseJavaVersionFromJre(File theJreRoot) {
-		FileInputStream fis = null;
-		JarInputStream jis = null;
-		try {
-			File rtJar = new File(theJreRoot, "jre/lib/rt.jar"); //$NON-NLS-1$
-			if (!rtJar.exists()) {
-				rtJar = new File(theJreRoot, "lib/rt.jar"); //$NON-NLS-1$
-			}
-			if (rtJar.exists()) {
-				fis = new FileInputStream(rtJar);
-				jis = new JarInputStream(fis);
+		File rtJar = new File(theJreRoot, "jre/lib/rt.jar"); //$NON-NLS-1$
+		if (!rtJar.exists()) {
+			rtJar = new File(theJreRoot, "lib/rt.jar"); //$NON-NLS-1$
+		}
+		if (rtJar.exists()) {
+			try (FileInputStream fis = new FileInputStream(rtJar); JarInputStream jis = new JarInputStream(fis)) {
 				Manifest mf = jis.getManifest();
-				jis.close();
 				Attributes as = mf.getMainAttributes();
 				String impVer = as.getValue("Implementation-Version"); //$NON-NLS-1$
 				if (impVer != null) {
 					return new JavaVersion(impVer).toString();
 				}
+			} catch (IOException e) {
 			}
-		} catch (IOException e) {
-		} finally {
-			IOToolkit.closeSilently(jis);
-			IOToolkit.closeSilently(fis);
 		}
 		return null;
 	}
