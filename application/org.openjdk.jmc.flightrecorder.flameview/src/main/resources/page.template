@@ -13,18 +13,30 @@
 <body onresize="resizeFlameGraph()">
 	<div id="chart"></div>
 	<script type="text/javascript">%3$s</script>
+	<script type="text/javascript">%4$s</script>
 	<script type="text/javascript">
-
+	
 		var flameGraph;
 		var currentJson;
+		
+		const tip = d3.tip()
+        	.direction("s")
+        	.offset([8, 0])
+        	.attr('class', 'd3-flame-graph-tip')
+        	.html(adjustTip);
 
 		function processGraph(jsonObj) {
 			flameGraph = d3.flamegraph()
 				.width(windowSize() * 0.9)
+				.cellHeight(18)
 				.transitionDuration(500)
+				.minFrameSize(5)
 				.transitionEase(d3.easeCubic)
 				.sort(true)
-				.title("");
+				.title("")
+				.differential(false)
+				.tooltip(tip)
+				.color(colorCell);
 			currentJson = jsonObj;
 			d3.select("#chart")
 				.datum(currentJson)

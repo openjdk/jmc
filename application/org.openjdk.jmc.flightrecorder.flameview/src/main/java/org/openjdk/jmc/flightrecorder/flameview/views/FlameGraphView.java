@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,7 +34,6 @@
 package org.openjdk.jmc.flightrecorder.flameview.views;
 
 import java.io.IOException;
-
 import java.text.MessageFormat;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -56,6 +55,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
@@ -91,13 +92,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Tip = "jslibs/d3-tip.min.js";
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
+		// jmc flameview coloring functions
+		String jsFlameviewColoring = "jsjmclibs/flameviewColoring.js";
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 
-		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts
+		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts %4 - 4th Flameview Coloring
 		HTML_PAGE = String.format(fileContent("page.template"), fileContent(cssD3Flamegraph), jsIeLibraries,
-				jsD3Libraries);
+				jsD3Libraries, fileContent(jsFlameviewColoring));
 	}
 
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
@@ -162,6 +165,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		container = new SashForm(parent, SWT.HORIZONTAL);
 		browser = new Browser(container, SWT.NONE);
 		container.setMaximizedControl(browser);
+		browser.addMenuDetectListener(new MenuDetectListener() {
+			@Override
+			public void menuDetected(MenuDetectEvent e) {
+				e.doit = false;
+			}
+		});
 	}
 
 	@Override
@@ -244,8 +253,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static void render(StringBuilder builder, TraceNode node) {
-		String start = String.format("{%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("v", String.valueOf(node.getValue())));
+		String start = String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("v", String.valueOf(node.getValue())));
 		builder.append(start);
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));

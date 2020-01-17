@@ -446,6 +446,7 @@ public class Messages extends NLS {
 	public static String SELECT_RANGE_WIZARD_TITLE;
 	public static String SELECT_RANGE_WIZARD_TO_MUCH_SELECTED_WARNING;
 	public static String STACKTRACE_VIEW_COUNT_COLUMN_NAME;
+	public static String STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_DISTINGUISH_FRAMES_BY;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_CHOOSE;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_NEXT;

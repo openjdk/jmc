@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -97,7 +97,6 @@
 		<module>org.openjdk.jmc.ide.jdt</module>
 		<module>org.openjdk.jmc.ide.launch</module>
 		<module>org.openjdk.jmc.ide.ui</module>
-		<module>org.openjdk.jmc.jdp</module>
 		<module>org.openjdk.jmc.joverflow</module>
 		<module>org.openjdk.jmc.joverflow.ui</module>
 		<module>org.openjdk.jmc.osgi.extension</module>
@@ -164,6 +163,11 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>jdp</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
