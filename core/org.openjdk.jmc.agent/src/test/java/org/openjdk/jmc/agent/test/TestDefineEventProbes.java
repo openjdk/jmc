@@ -58,7 +58,7 @@ import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-public class TestSetTransforms {
+public class TestDefineEventProbes {
 
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 	private static final String EVENT_ID = "demo.jfr.test6";
@@ -87,7 +87,7 @@ public class TestSetTransforms {
 			+ "</jfragent>";
 
 	@Test
-	public void testSetTransforms() throws Exception {
+	public void testDefineEventProbes() throws Exception {
 		boolean exceptionThrown = false;
 		try {
 			InstrumentMe.printHelloWorldJFR6();
@@ -98,7 +98,7 @@ public class TestSetTransforms {
 		assertFalse(exceptionThrown);
 
 		injectFailingEvent();
-		doSetTransforms(XML_DESCRIPTION);
+		doDefineEventProbes(XML_DESCRIPTION);
 		try {
 			InstrumentMe.printHelloWorldJFR6();
 		} catch (RuntimeException e) {
@@ -106,7 +106,7 @@ public class TestSetTransforms {
 		}
 		assertTrue(exceptionThrown);
 
-		doSetTransforms("");
+		doDefineEventProbes("");
 		try {
 			InstrumentMe.printHelloWorldJFR6();
 			exceptionThrown = false;
@@ -159,13 +159,13 @@ public class TestSetTransforms {
 				ClassLoader.getSystemClassLoader(), null);
 	}
 
-	private void doSetTransforms(String xmlDescription) throws Exception  {
+	private void doDefineEventProbes(String xmlDescription) throws Exception  {
 		ObjectName name = new ObjectName(AGENT_OBJECT_NAME);
 		Object[] parameters = {xmlDescription};
 		String[] signature = {String.class.getName()};
 
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		mbs.invoke(name, "setTransforms", parameters, signature);
+		mbs.invoke(name, "defineEventProbes", parameters, signature);
 	}
 
 	public void test() {

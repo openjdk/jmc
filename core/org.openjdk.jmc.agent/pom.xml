@@ -99,7 +99,7 @@
 				<configuration>
 					<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
 						-XX:+FlightRecorder</argLine>
-					<excludes>TestSetTransforms.java</excludes>
+					<excludes>TestDefineEventProbes.java</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -118,7 +118,7 @@
 					<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
 						-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
 						 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
-					<includes>TestSetTransforms.java</includes>
+					<includes>TestDefineEventProbes.java</includes>
 				</configuration>
 			</plugin>
 			<plugin>
