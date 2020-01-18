@@ -38,18 +38,40 @@ import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.flightrecorder.flameview.messages.internal.FlameViewMessages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
+import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_NAME = "__root";
 	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
+	public final static String DEFAULT_TRACE_NODE_DESC = "";
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
+	
+	private static class TraceNodeFactory {
+		
+		private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
+			return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
+					DEFAULT_ROOT_PACKAGE_NAME, DEFAULT_TRACE_NODE_DESC);
+		}
+		
+		private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {
+			IMCFrame frame = sFrame.getFrame();
+			IMCMethod method = frame.getMethod();
+			String packageName = FormatToolkit.getPackage(method.getType().getPackage());
+			if (frame == StacktraceModel.UNKNOWN_FRAME) {
+				return new TraceNode(Messages.Flameview_UNCLASSIFIABLE_FRAME, sFrame.getItemCount(), 
+						packageName, Messages.Flameview_UNCLASSIFIABLE_FRAME_DESC);
+			} else {
+				String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+				return new TraceNode(name, sFrame.getItemCount(), packageName, DEFAULT_TRACE_NODE_DESC);
+			}
+		}
+	}
 
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
@@ -60,8 +82,7 @@ public class TraceTreeUtils {
 	 */
 	public static TraceNode createTree(StacktraceModel model, String rootName) {
 		Fork rootFork = model.getRootFork();
-		TraceNode root = new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
-				DEFAULT_ROOT_PACKAGE_NAME);
+		TraceNode root = TraceNodeFactory.getRootTraceNode(rootName, rootFork);
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
 		}
@@ -82,11 +103,10 @@ public class TraceTreeUtils {
 
 	private static void addBranch(TraceNode root, Branch branch) {
 		StacktraceFrame firstFrame = branch.getFirstFrame();
-		TraceNode currentNode = new TraceNode(format(firstFrame), firstFrame.getItemCount(),
-				formatPackageName(firstFrame));
+		TraceNode currentNode = TraceNodeFactory.getTraceNodeByStacktraceFrame(firstFrame);
 		root.addChild(currentNode);
 		for (StacktraceFrame frame : branch.getTailFrames()) {
-			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount(), formatPackageName(frame));
+			TraceNode newNode = TraceNodeFactory.getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 		}
@@ -96,26 +116,6 @@ public class TraceTreeUtils {
 	private static void addFork(TraceNode node, Fork fork) {
 		for (Branch branch : fork.getBranches()) {
 			addBranch(node, branch);
-		}
-	}
-
-	private static String format(StacktraceFrame sFrame) {
-		IMCFrame frame = sFrame.getFrame();
-		if (frame == StacktraceModel.UNKNOWN_FRAME) {
-			return FlameViewMessages.getString(FlameViewMessages.FLAMEVIEW_UNCLASSIFIABLE_FRAME);
-		} else {
-			IMCMethod method = frame.getMethod();
-			return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
-		}
-	}
-
-	private static String formatPackageName(StacktraceFrame sFrame) {
-		IMCFrame frame = sFrame.getFrame();
-		if (frame == StacktraceModel.UNKNOWN_FRAME) {
-			return FlameViewMessages.getString(FlameViewMessages.FLAMEVIEW_UNCLASSIFIABLE_FRAME_PACKAGE);
-		} else {
-			IMCMethod method = frame.getMethod();
-			return FormatToolkit.getPackage(method.getType().getPackage());
 		}
 	}
 
