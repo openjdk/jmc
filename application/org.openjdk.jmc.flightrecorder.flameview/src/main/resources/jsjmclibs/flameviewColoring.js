@@ -43,7 +43,6 @@ String.prototype.hashCode = function () {
     return hash;
 };
 
-const emptyString = "";
 const htmlTagBr = "\u003Cbr\u002F\u003E";
 const rootPackageColor = "darkred";
 const invalidPackageColor = "snow";
@@ -60,7 +59,7 @@ const packageMarkerComSunAndJdk = "comSunAndJdk";
 const packageMarkerRest = "rest";
 const packagesIdentifierMap = new Map().set("java.", packageMarkerJava).set("sun.", packageMarkerSun)
     .set("com.sun.", packageMarkerComSunAndJdk).set("jdk.", packageMarkerComSunAndJdk);
-const packageColorMap = new Map().set(emptyString, rootPackageColor);
+const packageColorMap = new Map().set("", rootPackageColor);
 
 const colorByPackage = function (p) {
     if (p === undefined) {
@@ -123,7 +122,7 @@ const colorCell = function (d) {
 
 const adjustTip = function (d) {
 	var tipMessage = d.data.n + htmlTagBr;
-	if( d.data.d !== emptyString) {
+	if( d.data.d !== undefined) {
 		tipMessage += "description: " + d.data.d + htmlTagBr;
 	} else {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;

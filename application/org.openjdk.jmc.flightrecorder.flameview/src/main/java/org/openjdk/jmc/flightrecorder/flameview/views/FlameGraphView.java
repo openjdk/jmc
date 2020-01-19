@@ -253,9 +253,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static void render(StringBuilder builder, TraceNode node) {
-		String start = String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", node.getDesc()), 
-				toJSonKeyValue("v", String.valueOf(node.getValue())));
+		String start = node.getDesc().isEmpty() ? createJsonTraceNode(node) : createJsonDescTraceNode(node);
 		builder.append(start);
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));
@@ -264,6 +262,17 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 		builder.append("]}");
+	}
+	
+	private static String createJsonTraceNode(TraceNode node) {
+		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("v", String.valueOf(node.getValue())));
+	}
+	
+	private static String createJsonDescTraceNode(TraceNode node) {
+		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", node.getDesc()), 
+				toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
 
 	private static String toJSonKeyValue(String key, String value) {
