@@ -61,7 +61,7 @@ public class TraceNode {
 	public String getPackageName() {
 		return packageName;
 	}
-	
+
 	public String getDesc() {
 		return desc;
 	}
@@ -123,7 +123,7 @@ public class TraceNode {
 	}
 
 	public String toString() {
-		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", desc: "+ desc + ", children: "
-				+ children.size() + "]";
+		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", desc: " + desc
+				+ ", children: " + children.size() + "]";
 	}
 }

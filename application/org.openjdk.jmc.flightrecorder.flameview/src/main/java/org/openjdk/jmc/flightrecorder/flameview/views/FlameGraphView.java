@@ -226,7 +226,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
 			public void completed(ProgressEvent event) {
-				browser.removeProgressListener(this);	
+				browser.removeProgressListener(this);
 				browser.execute(String.format("processGraph(%s);", toJSon(root)));
 			}
 		});
@@ -263,15 +263,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 		builder.append("]}");
 	}
-	
+
 	private static String createJsonTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
 				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
-	
+
 	private static String createJsonDescTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", node.getDesc()), 
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", node.getDesc()),
 				toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
 
