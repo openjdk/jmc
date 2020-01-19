@@ -92,8 +92,9 @@ public class JConsolePluginLoader {
 	private static void initPluginService(File file) throws IOException {
 		String[] files = file.list();
 		if (files != null && files.length > 0) {
-			pluginService = ServiceLoader.load(JConsolePlugin.class,
-					new URLClassLoader(getURLs(file), Activator.class.getClassLoader()));
+			try (URLClassLoader loader = new URLClassLoader(getURLs(file), Activator.class.getClassLoader())) {
+				pluginService = ServiceLoader.load(JConsolePlugin.class, loader);
+			}
 		}
 	}
 

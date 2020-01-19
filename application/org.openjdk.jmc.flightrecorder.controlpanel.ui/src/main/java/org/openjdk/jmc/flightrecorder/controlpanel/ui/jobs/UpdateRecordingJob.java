@@ -69,9 +69,7 @@ public class UpdateRecordingJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		IConnectionHandle connection = null;
-		try {
-			connection = m_server.connect(getName());
+		try (IConnectionHandle connection = m_server.connect(getName())) {
 			IFlightRecorderService flightRecorderService = connection.getServiceOrThrow(IFlightRecorderService.class);
 			flightRecorderService.updateRecordingOptions(m_recordingDescriptor, m_recordingOptions);
 			flightRecorderService.updateEventOptions(m_recordingDescriptor, m_recordingSettings);
@@ -80,8 +78,6 @@ public class UpdateRecordingJob extends Job {
 			ControlPanel.getDefault().getLogger().log(Level.WARNING, "Could not update recording", e); //$NON-NLS-1$
 			return StatusFactory.createErr(
 					NLS.bind(Messages.UPDATE_RECORDING_JOB_SERVICE_ERROR_MSG, m_recordingDescriptor.getName()));
-		} finally {
-			IOToolkit.closeSilently(connection);
 		}
 	}
 }

@@ -34,7 +34,6 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.actions;
 
 import org.eclipse.jface.wizard.IWizard;
 
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.RecordingProvider;
@@ -60,14 +59,10 @@ public class EditRecordingAction extends AbstractWizardUserAction {
 
 	@Override
 	public IWizard doCreateWizard() throws Exception {
-		IConnectionHandle connection = null;
-		try {
-			connection = recording.getServerHandle().connect(Messages.ACTION_EDIT_RECORDING_LABEL);
+		try (IConnectionHandle connection = recording.getServerHandle().connect(Messages.ACTION_EDIT_RECORDING_LABEL)) {
 			return new EditRecordingWizard(recording,
 					new RecordingWizardModel(connection.getServiceOrThrow(IFlightRecorderService.class),
 							recording.getRecordingDescriptor(), recording.getDumpToFile()));
-		} finally {
-			IOToolkit.closeSilently(connection);
 		}
 	}
 

@@ -121,11 +121,8 @@ public class WriteAndOpenRecordingJob extends Job {
 
 	private File writeFile(IProgressMonitor monitor, IRecordingDescriptor descriptor, IQuantity duration)
 			throws FlightRecorderException, IOException {
-		InputStream stream = service.openStream(descriptor, duration, false);
-		try {
+		try (InputStream stream = service.openStream(descriptor, duration, false)) {
 			return IDESupportToolkit.writeToUniqueFile(path, stream, monitor);
-		} finally {
-			IOToolkit.closeSilently(stream);
 		}
 	}
 }

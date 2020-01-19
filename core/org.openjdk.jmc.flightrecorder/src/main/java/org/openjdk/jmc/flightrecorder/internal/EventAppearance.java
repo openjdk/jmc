@@ -78,18 +78,15 @@ public class EventAppearance {
 		// Might change to ResourceBundle, or do as FieldToolkit (or NLS),
 		// if localization is needed. (Which I doubt, since it would be confusing.)
 		Properties properties = new Properties();
-		InputStream in = EventAppearance.class.getResourceAsStream(fileName);
-		if (in != null) {
-			try {
+		try (InputStream in = EventAppearance.class.getResourceAsStream(fileName)) {
+			if (in != null) {
 				properties.load(in);
-			} catch (IOException e) {
-				System.err.println("Problem loading file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
-				e.printStackTrace();
-			} finally {
-				IOToolkit.closeSilently(in);
+			} else {
+				System.err.println("Couldn't find file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else {
-			System.err.println("Couldn't find file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (IOException e) {
+			System.err.println("Problem loading file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+			e.printStackTrace();
 		}
 		return properties;
 	}

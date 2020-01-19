@@ -72,9 +72,10 @@ public class EventConfigurationModelTest extends RjmxTestCase {
 	}
 
 	protected static IEventConfiguration loadConfig(String jfcName) throws Exception {
-		InputStream in = EventConfigurationModelTest.class.getResourceAsStream(jfcName);
-		XMLModel model = EventConfiguration.createModel(in);
-		return new EventConfiguration(model);
+		try (InputStream in = EventConfigurationModelTest.class.getResourceAsStream(jfcName)) {
+			XMLModel model = EventConfiguration.createModel(in);
+			return new EventConfiguration(model);
+		}
 	}
 
 	@Before

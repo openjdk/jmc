@@ -166,17 +166,12 @@ public class RecordingLoader extends Job {
 		Runtime runtime = Runtime.getRuntime();
 		long availableMemory = runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
 		if (availableMemory > (zippedFileMemoryFactor * file.length())) { // Try load from stream
-			InputStream stream = IOToolkit.openUncompressedStream(file);
-			try {
+			try (InputStream stream = IOToolkit.openUncompressedStream(file)) {
 				boolean hideExperimentals = !FlightRecorderUI.getDefault().includeExperimentalEventsAndFields();
 				boolean ignoreTruncatedChunk = FlightRecorderUI.getDefault().allowIncompleteRecordingFile();
 				return FlightRecordingLoader.loadStream(stream, hideExperimentals, ignoreTruncatedChunk);
-			} catch (NotEnoughMemoryException e) {
+			} catch (NotEnoughMemoryException | OutOfMemoryError e) {
 				// Try to load part of the file
-			} catch (OutOfMemoryError e) {
-				// Try to load part of the file
-			} finally {
-				IOToolkit.closeSilently(stream);
 			}
 		}
 		String fileName = file.getName();
@@ -257,12 +252,9 @@ public class RecordingLoader extends Job {
 		boolean acceptUnzip = DialogToolkit.openQuestionOnUiThread(Messages.FILE_OPENER_ZIPPED_FILE_TITLE, MessageFormat
 				.format(Messages.FILE_OPENER_ZIPPED_FILE_TEXT, file.getName(), unzippedFile.getAbsolutePath()));
 		if (acceptUnzip) {
-			InputStream is = IOToolkit.openUncompressedStream(file);
-			try {
+			try (InputStream is = IOToolkit.openUncompressedStream(file)) {
 				IOToolkit.write(is, unzippedFile, false);
 				return unzippedFile;
-			} finally {
-				IOToolkit.closeSilently(is);
 			}
 		} else {
 			throw new OperationCanceledException();
