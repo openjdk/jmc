@@ -523,7 +523,6 @@ public class Messages extends NLS {
 	public static String VMOperationPage_PAGE_NAME;
 	public static String VMOperationPage_ROW_VM_OPERATIONS;
 	public static String VMOperationPage_TIMELINE_SELECTION;
-	public static String Flameview_UNCLASSIFIABLE_FRAME_DESC;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
