@@ -34,7 +34,6 @@
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
 import org.openjdk.jmc.common.IMCFrame;
-
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.FormatToolkit;
