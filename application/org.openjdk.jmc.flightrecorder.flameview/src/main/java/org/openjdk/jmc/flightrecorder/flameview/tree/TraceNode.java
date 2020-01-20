@@ -40,14 +40,12 @@ public class TraceNode {
 	private final int value;
 	private final String name;
 	private final String packageName;
-	private final String desc;
 	private final List<TraceNode> children = new ArrayList<>();
 
-	public TraceNode(String name, int value, String packageName, String desc) {
+	public TraceNode(String name, int value, String packageName) {
 		this.name = name;
 		this.value = value;
 		this.packageName = packageName;
-		this.desc = desc;
 	}
 
 	public int getValue() {
@@ -60,10 +58,6 @@ public class TraceNode {
 
 	public String getPackageName() {
 		return packageName;
-	}
-
-	public String getDesc() {
-		return desc;
 	}
 
 	public List<TraceNode> getChildren() {
@@ -81,7 +75,6 @@ public class TraceNode {
 		result = prime * result + ((children == null) ? 0 : children.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
-		result = prime * result + ((desc == null) ? 0 : desc.hashCode());
 		result = prime * result + value;
 		return result;
 	}
@@ -111,19 +104,13 @@ public class TraceNode {
 			}
 		} else if (!packageName.equals(other.packageName))
 			return false;
-		if (desc == null) {
-			if (other.desc != null) {
-				return false;
-			}
-		} else if (!desc.equals(other.desc))
-			return false;
 		if (value != other.value)
 			return false;
 		return true;
 	}
 
 	public String toString() {
-		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", desc: " + desc
-				+ ", children: " + children.size() + "]";
+		return "TraceNode [name: " + name + ", value: " + value + ", packageName: " + packageName + ", children: "
+				+ children.size() + "]";
 	}
 }

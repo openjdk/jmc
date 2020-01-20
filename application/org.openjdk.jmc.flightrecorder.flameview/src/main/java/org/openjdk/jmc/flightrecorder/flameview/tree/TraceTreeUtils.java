@@ -46,20 +46,16 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages;
 
-import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
-import static org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.Flameview_UNCLASSIFIABLE_FRAME_DESC;
-
 public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_NAME = "__root";
 	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
-	public final static String DEFAULT_TRACE_NODE_DESC = "";
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
 	private static class TraceNodeFactory {
 
 		private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
 			return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
-					DEFAULT_ROOT_PACKAGE_NAME, DEFAULT_TRACE_NODE_DESC);
+					DEFAULT_ROOT_PACKAGE_NAME);
 		}
 
 		private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {
@@ -67,11 +63,11 @@ public class TraceTreeUtils {
 			IMCMethod method = frame.getMethod();
 			String packageName = FormatToolkit.getPackage(method.getType().getPackage());
 			if (frame == StacktraceModel.UNKNOWN_FRAME) {
-				return new TraceNode(Messages.getString(STACKTRACE_UNCLASSIFIABLE_FRAME), sFrame.getItemCount(),
-						packageName, Flameview_UNCLASSIFIABLE_FRAME_DESC);
+				return new TraceNode(Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME),
+						sFrame.getItemCount(), packageName);
 			} else {
 				String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
-				return new TraceNode(name, sFrame.getItemCount(), packageName, DEFAULT_TRACE_NODE_DESC);
+				return new TraceNode(name, sFrame.getItemCount(), packageName);
 			}
 		}
 	}
