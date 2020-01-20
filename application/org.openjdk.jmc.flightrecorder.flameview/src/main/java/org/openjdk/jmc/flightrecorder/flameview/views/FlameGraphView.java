@@ -96,7 +96,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
 		// jmc flameview coloring functions
-		String jsFlameviewColoring = "jsjmclibs/flameviewColoring.js";
+		String jsFlameviewColoring = "flameviewColoring.js";
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
