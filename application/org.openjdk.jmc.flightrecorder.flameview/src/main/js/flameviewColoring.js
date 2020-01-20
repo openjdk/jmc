@@ -122,10 +122,10 @@ const colorCell = function (d) {
 
 const adjustTip = function (d) {
 	var tipMessage = d.data.n + htmlTagBr;
-	if( d.data.d !== undefined) {
-		tipMessage += "description: " + d.data.d + htmlTagBr;
-	} else {
+	if( d.data.d === undefined) {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;
+	} else {
+		tipMessage += "description: " + d.data.d + htmlTagBr;
 	}
 	tipMessage += "samples: " + d.data.v;
 	return tipMessage;
