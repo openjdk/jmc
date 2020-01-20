@@ -81,6 +81,9 @@ import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messag
 import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
 public class FlameGraphView extends ViewPart implements ISelectionListener {
+	private static final String UNCLASSIFIABLE_FRAME = getStacktraceInternalMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
+	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceInternalMessage(
+			STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private static final String HTML_PAGE;
 	static {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
@@ -256,8 +259,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static void render(StringBuilder builder, TraceNode node) {
-		String start = STACKTRACE_UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonTraceNode(node)
-				: createJsonDescTraceNode(node);
+		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
+				: createJsonTraceNode(node);
 		builder.append(start);
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));
@@ -275,7 +278,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static String createJsonDescTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", STACKTRACE_UNCLASSIFIABLE_FRAME_DESC),
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", UNCLASSIFIABLE_FRAME_DESC),
 				toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
 
@@ -299,5 +302,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
 			return "";
 		}
+	}
+
+	private static String getStacktraceInternalMessage(String key) {
+		return org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.getString(key);
 	}
 }
