@@ -51,27 +51,6 @@ public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
-	private static class TraceNodeFactory {
-
-		private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
-			return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
-					DEFAULT_ROOT_PACKAGE_NAME);
-		}
-
-		private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {
-			IMCFrame frame = sFrame.getFrame();
-			IMCMethod method = frame.getMethod();
-			String packageName = FormatToolkit.getPackage(method.getType().getPackage());
-			if (frame == StacktraceModel.UNKNOWN_FRAME) {
-				return new TraceNode(Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME),
-						sFrame.getItemCount(), packageName);
-			} else {
-				String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
-				return new TraceNode(name, sFrame.getItemCount(), packageName);
-			}
-		}
-	}
-
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 *
@@ -81,7 +60,7 @@ public class TraceTreeUtils {
 	 */
 	public static TraceNode createTree(StacktraceModel model, String rootName) {
 		Fork rootFork = model.getRootFork();
-		TraceNode root = TraceNodeFactory.getRootTraceNode(rootName, rootFork);
+		TraceNode root = getRootTraceNode(rootName, rootFork);
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
 		}
@@ -102,10 +81,10 @@ public class TraceTreeUtils {
 
 	private static void addBranch(TraceNode root, Branch branch) {
 		StacktraceFrame firstFrame = branch.getFirstFrame();
-		TraceNode currentNode = TraceNodeFactory.getTraceNodeByStacktraceFrame(firstFrame);
+		TraceNode currentNode = getTraceNodeByStacktraceFrame(firstFrame);
 		root.addChild(currentNode);
 		for (StacktraceFrame frame : branch.getTailFrames()) {
-			TraceNode newNode = TraceNodeFactory.getTraceNodeByStacktraceFrame(frame);
+			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 		}
@@ -139,5 +118,23 @@ public class TraceTreeUtils {
 			builder.append("   ");
 		}
 		return builder.toString();
+	}
+
+	private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
+		return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
+				DEFAULT_ROOT_PACKAGE_NAME);
+	}
+
+	private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {
+		IMCFrame frame = sFrame.getFrame();
+		IMCMethod method = frame.getMethod();
+		String packageName = FormatToolkit.getPackage(method.getType().getPackage());
+		if (frame == StacktraceModel.UNKNOWN_FRAME) {
+			return new TraceNode(Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME), sFrame.getItemCount(),
+					packageName);
+		} else {
+			String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+			return new TraceNode(name, sFrame.getItemCount(), packageName);
+		}
 	}
 }

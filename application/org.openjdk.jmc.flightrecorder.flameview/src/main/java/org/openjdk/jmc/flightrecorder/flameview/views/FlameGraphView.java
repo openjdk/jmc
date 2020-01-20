@@ -77,8 +77,8 @@ import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-import static org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.Flameview_UNCLASSIFIABLE_FRAME_DESC;
 import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
 public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
@@ -275,7 +275,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static String createJsonDescTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", Flameview_UNCLASSIFIABLE_FRAME_DESC),
+				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", STACKTRACE_UNCLASSIFIABLE_FRAME_DESC),
 				toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
 

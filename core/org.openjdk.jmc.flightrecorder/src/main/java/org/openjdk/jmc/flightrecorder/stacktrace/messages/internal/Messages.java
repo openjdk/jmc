@@ -46,6 +46,7 @@ public class Messages {
 	public static final String STACKTRACE_METHOD = "STACKTRACE_METHOD"; //$NON-NLS-1$
 	public static final String STACKTRACE_PACKAGE = "STACKTRACE_PACKAGE"; //$NON-NLS-1$
 	public static final String STACKTRACE_UNCLASSIFIABLE_FRAME = "STACKTRACE_UNCLASSIFIABLE_FRAME"; //$NON-NLS-1$
+	public static final String STACKTRACE_UNCLASSIFIABLE_FRAME_DESC = "STACKTRACE_UNCLASSIFIABLE_FRAME_DESC"; //$NON-NLS-1$
 
 	private Messages() {
 	}
