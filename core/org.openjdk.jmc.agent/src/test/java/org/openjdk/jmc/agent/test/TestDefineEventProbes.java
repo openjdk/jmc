@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.MBeanServer;
+import javax.management.JMX;
 import javax.management.ObjectName;
 
 import org.junit.Test;
@@ -56,6 +56,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
+import org.openjdk.jmc.agent.jmx.AgentControllerMBean;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class TestDefineEventProbes {
@@ -160,12 +161,9 @@ public class TestDefineEventProbes {
 	}
 
 	private void doDefineEventProbes(String xmlDescription) throws Exception  {
-		ObjectName name = new ObjectName(AGENT_OBJECT_NAME);
-		Object[] parameters = {xmlDescription};
-		String[] signature = {String.class.getName()};
-
-		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		mbs.invoke(name, "defineEventProbes", parameters, signature);
+		AgentControllerMBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
+				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMBean.class, false);
+		mbean.defineEventProbes(xmlDescription);
 	}
 
 	public void test() {
