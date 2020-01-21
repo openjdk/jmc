@@ -29,7 +29,7 @@ java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -ja
 At runtime the agent can be used to modify the transformed state of a class. To specify a desired state, supply the defineEventProbes function with a XML description of event probes to add, keep or modify, and leave out all those that should be reverted to their preinstrumentation versions.
 
 ### Using a security manager
-To make MBean calls more secure, the agent can be run with a security manager. A manager can be enabled by adding the VM option `-Djava.security.manager` and by supplying a policy file of permissions to grant as such: `-Djava.security.policy=permissions.policy`. The 'control' Management Permission must be granted in order for MBean function calls to succeed.
+When running with a security manager, the 'control' Management Permission must be granted to control the agent through the MBean. To set fine grained permissions for authenticated remote users, see [here](https://docs.oracle.com/javadb/10.10.1.2/adminguide/radminjmxenablepolicy.html#radminjmxenablepolicy) and [here](https://docs.oracle.com/javase/7/docs/technotes/guides/management/agent.html#gdeup).
 
 ## Known Issues
 * The full converter support is still to be merged into the open source repo
