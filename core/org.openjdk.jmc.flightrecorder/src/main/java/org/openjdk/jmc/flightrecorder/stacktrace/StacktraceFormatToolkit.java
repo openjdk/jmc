@@ -34,7 +34,7 @@ package org.openjdk.jmc.flightrecorder.stacktrace;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages;
+import org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages;
 
 /**
  * Toolkit for presenting stack traces and stack frames in textual form.

@@ -33,6 +33,9 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.views;
 
+import static org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.concurrent.CancellationException;
@@ -77,12 +80,9 @@ import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
-import static org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
-
 public class FlameGraphView extends ViewPart implements ISelectionListener {
-	private static final String UNCLASSIFIABLE_FRAME = getStacktraceInternalMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
-	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceInternalMessage(
+	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
+	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(
 			STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private static final String HTML_PAGE;
 	static {
@@ -304,7 +304,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private static String getStacktraceInternalMessage(String key) {
-		return org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages.getString(key);
+	private static String getStacktraceMessage(String key) {
+		return org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.getString(key);
 	}
 }

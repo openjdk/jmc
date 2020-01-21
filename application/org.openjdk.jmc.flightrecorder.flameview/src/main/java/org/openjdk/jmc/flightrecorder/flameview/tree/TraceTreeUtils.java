@@ -41,9 +41,9 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
+import org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
-import org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.Messages;
 
 public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_NAME = "__root";
