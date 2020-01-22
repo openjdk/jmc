@@ -760,13 +760,14 @@
 				<sash weights="2,1" />
 				<table sortColumn="totalOutsideSize">
 					<column id="itemhistogram.key" width="500" />
-					<column id="itemhistogram.count" sortAscending="false" width="120" />
 					<column id="insideCount" sortAscending="false" width="120"
 						hidden="true" />
 					<column id="outsideCount" sortAscending="false" width="120"
 						hidden="true" />
-					<column id="averageInsideSize" sortAscending="false" width="120" />
-					<column id="averageOutsideSize" sortAscending="false" width="120" />
+					<column id="averageInsideSize" sortAscending="false" width="120"
+						hidden="true" />
+					<column id="averageOutsideSize" sortAscending="false" width="120"
+						hidden="true" />
 					<column id="totalInsideSize" sortAscending="false" width="120" />
 					<column id="totalInsideSizePercent" sortAscending="false" width="120" />
 					<column id="totalOutsideSize" sortAscending="false" width="120" />

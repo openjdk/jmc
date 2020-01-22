@@ -124,7 +124,6 @@ public class TlabPage extends AbstractDataPage {
 	private static final ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
 
 	static {
-		HISTOGRAM.addCountColumn();
 		HISTOGRAM.addColumn(INSIDE_COUNT_COL, JdkAggregators.INSIDE_TLAB_COUNT);
 		HISTOGRAM.addColumn(OUTSIDE_COUNT_COL, JdkAggregators.OUTSIDE_TLAB_COUNT);
 		HISTOGRAM.addColumn(AVERAGE_INSIDE_SIZE_COL, JdkAggregators.ALLOC_INSIDE_TLAB_AVG);
