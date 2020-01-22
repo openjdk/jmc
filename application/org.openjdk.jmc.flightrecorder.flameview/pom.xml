@@ -129,8 +129,8 @@
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
-                    </execution>
-                    <execution>
+					</execution>
+					<execution>
 						<id>d3-flamegraph-js-ie</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
