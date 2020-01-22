@@ -31,13 +31,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.stacktrace.messages.common;
+package org.openjdk.jmc.flightrecorder.stacktrace;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.stacktrace.messages.common.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.stacktrace.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

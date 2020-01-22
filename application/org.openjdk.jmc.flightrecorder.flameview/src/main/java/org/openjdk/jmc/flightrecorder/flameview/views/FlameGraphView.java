@@ -33,8 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.views;
 
-import static org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
-import static org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -304,6 +304,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static String getStacktraceMessage(String key) {
-		return org.openjdk.jmc.flightrecorder.stacktrace.messages.common.Messages.getString(key);
+		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
 	}
 }
