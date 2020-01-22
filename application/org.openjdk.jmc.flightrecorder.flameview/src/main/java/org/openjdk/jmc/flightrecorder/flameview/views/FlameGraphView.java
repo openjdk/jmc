@@ -82,8 +82,7 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
-	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(
-			STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
+	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private static final String HTML_PAGE;
 	static {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
