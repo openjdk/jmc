@@ -28,6 +28,9 @@ java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -ja
 ## Interacting with the agent
 At runtime the agent can be used to modify the transformed state of a class. To specify a desired state, supply the defineEventProbes function with a XML description of event probes to add, keep or modify, and leave out all those that should be reverted to their preinstrumentation versions.
 
+### Using a security manager
+When running with a security manager, the 'control' Management Permission must be granted to control the agent through the MBean. To set fine grained permissions for authenticated remote users, see [here](https://docs.oracle.com/javadb/10.10.1.2/adminguide/radminjmxenablepolicy.html#radminjmxenablepolicy) and [here](https://docs.oracle.com/javase/7/docs/technotes/guides/management/agent.html#gdeup).
+
 ## Known Issues
 * The full converter support is still to be merged into the open source repo
 * Support for emitting an event only on exception has yet to be implemented
