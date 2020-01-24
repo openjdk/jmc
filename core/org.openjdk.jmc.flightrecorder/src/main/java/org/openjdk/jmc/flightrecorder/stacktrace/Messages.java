@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,21 +31,18 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.stacktrace.messages.internal;
+package org.openjdk.jmc.flightrecorder.stacktrace;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.stacktrace.messages.internal.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.stacktrace.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	public static final String STACKTRACE_BYTE_CODE_INDEX = "STACKTRACE_BYTE_CODE_INDEX"; //$NON-NLS-1$
-	public static final String STACKTRACE_CLASS = "STACKTRACE_CLASS"; //$NON-NLS-1$
-	public static final String STACKTRACE_LINE_NUMBER = "STACKTRACE_LINE_NUMBER"; //$NON-NLS-1$
-	public static final String STACKTRACE_METHOD = "STACKTRACE_METHOD"; //$NON-NLS-1$
-	public static final String STACKTRACE_PACKAGE = "STACKTRACE_PACKAGE"; //$NON-NLS-1$
+	public static final String STACKTRACE_UNCLASSIFIABLE_FRAME = "STACKTRACE_UNCLASSIFIABLE_FRAME"; //$NON-NLS-1$
+	public static final String STACKTRACE_UNCLASSIFIABLE_FRAME_DESC = "STACKTRACE_UNCLASSIFIABLE_FRAME_DESC"; //$NON-NLS-1$
 
 	private Messages() {
 	}

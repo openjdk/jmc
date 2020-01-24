@@ -38,6 +38,7 @@ import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.Messages;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
@@ -58,8 +59,7 @@ public class TraceTreeUtils {
 	 */
 	public static TraceNode createTree(StacktraceModel model, String rootName) {
 		Fork rootFork = model.getRootFork();
-		TraceNode root = new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
-				DEFAULT_ROOT_PACKAGE_NAME);
+		TraceNode root = getRootTraceNode(rootName, rootFork);
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
 		}
@@ -80,11 +80,10 @@ public class TraceTreeUtils {
 
 	private static void addBranch(TraceNode root, Branch branch) {
 		StacktraceFrame firstFrame = branch.getFirstFrame();
-		TraceNode currentNode = new TraceNode(format(firstFrame), firstFrame.getItemCount(),
-				formatPackageName(firstFrame));
+		TraceNode currentNode = getTraceNodeByStacktraceFrame(firstFrame);
 		root.addChild(currentNode);
 		for (StacktraceFrame frame : branch.getTailFrames()) {
-			TraceNode newNode = new TraceNode(format(frame), frame.getItemCount(), formatPackageName(frame));
+			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 		}
@@ -95,18 +94,6 @@ public class TraceTreeUtils {
 		for (Branch branch : fork.getBranches()) {
 			addBranch(node, branch);
 		}
-	}
-
-	private static String format(StacktraceFrame sFrame) {
-		IMCFrame frame = sFrame.getFrame();
-		IMCMethod method = frame.getMethod();
-		return FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
-	}
-
-	private static String formatPackageName(StacktraceFrame sFrame) {
-		IMCFrame frame = sFrame.getFrame();
-		IMCMethod method = frame.getMethod();
-		return FormatToolkit.getPackage(method.getType().getPackage());
 	}
 
 	public static String printTree(TraceNode node) {
@@ -130,5 +117,23 @@ public class TraceTreeUtils {
 			builder.append("   ");
 		}
 		return builder.toString();
+	}
+
+	private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
+		return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
+				DEFAULT_ROOT_PACKAGE_NAME);
+	}
+
+	private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {
+		IMCFrame frame = sFrame.getFrame();
+		IMCMethod method = frame.getMethod();
+		String packageName = FormatToolkit.getPackage(method.getType().getPackage());
+		if (frame == StacktraceModel.UNKNOWN_FRAME) {
+			return new TraceNode(Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME), sFrame.getItemCount(),
+					packageName);
+		} else {
+			String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
+			return new TraceNode(name, sFrame.getItemCount(), packageName);
+		}
 	}
 }

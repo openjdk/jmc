@@ -43,6 +43,7 @@ String.prototype.hashCode = function () {
 	return hash;
 };
 
+const htmlTagBr = "\u003Cbr\u002F\u003E";
 const rootPackageColor = "darkred";
 const invalidPackageColor = "snow";
 const packageJavaColorLightGray = "lightgray";
@@ -120,5 +121,12 @@ const colorCell = function (d) {
 };
 
 const adjustTip = function (d) {
-	return d.data.n + "\u003Cbr\u002F\u003Epackage: " + d.data.p + "\u003Cbr\u002F\u003Esamples: " + d.data.v;
+	var tipMessage = d.data.n + htmlTagBr;
+	if( d.data.d === undefined) {
+		tipMessage +=  "package: " + d.data.p + htmlTagBr;
+	} else {
+		tipMessage += "description: " + d.data.d + htmlTagBr;
+	}
+	tipMessage += "samples: " + d.data.v;
+	return tipMessage;
 };
