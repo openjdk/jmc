@@ -1399,7 +1399,7 @@ public class RulesToolkit {
 
 	/**
 	 * Returns the earliest end time in the provided item collection. This method is based on the
-	 * assumption that item collection lanes are sorted by timestamp.
+	 * assumption that item collection lanes are sorted by timestamp and are not overlapping.
 	 * 
 	 * @param items
 	 *            the item collection to find the earliest end time in
@@ -1429,7 +1429,7 @@ public class RulesToolkit {
 
 	/**
 	 * Returns the latest end time in the provided item collection. This method is based on the
-	 * assumption that item collection lanes are sorted by timestamp.
+	 * assumption that item collection lanes are sorted by timestamp and are not overlapping.
 	 * 
 	 * @param items
 	 *            the item collection to find the latest end time in
