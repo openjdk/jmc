@@ -117,7 +117,11 @@ const createHslColorString = function(h,s,l){
 };
 
 const colorCell = function (d) {
-	return colorByPackage(d.data.p);
+	if (searchPackageName !== "" && d.data.p !== undefined && d.data.p.startsWith(searchPackageName)){
+		return "lightgoldenrodyellow";
+	} else {
+		return colorByPackage(d.data.p);
+	}
 };
 
 const adjustTip = function (d) {

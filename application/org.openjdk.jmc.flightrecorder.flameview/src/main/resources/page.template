@@ -11,13 +11,25 @@
 </head>
 
 <body onresize="resizeFlameGraph()">
+	<div id="search" align="right">
+		<input type="text"id="packageNameInput" onfocusout="higlightPackageName()" value="">
+	</div>
 	<div id="chart"></div>
 	<script type="text/javascript">%3$s</script>
 	<script type="text/javascript">%4$s</script>
 	<script type="text/javascript">
 	
+		var searchPackageName = "";
 		var flameGraph;
 		var currentJson;
+		
+		const packageInputField = document.getElementById("packageNameInput");
+		packageInputField.addEventListener("keyup", function(event) {
+				if(event.keyCode === 13){
+					higlightPackageName();	
+				}
+			}
+		);
 		
 		const tip = d3.tip()
         	.direction("s")
@@ -41,6 +53,14 @@
 			d3.select("#chart")
 				.datum(currentJson)
 				.call(flameGraph);
+		}
+
+		function higlightPackageName(){
+			const inputPackageName = packageInputField.value;
+			if(searchPackageName !== inputPackageName){
+				searchPackageName = inputPackageName;
+				flameGraph.search(searchPackageName);
+			}		
 		}
 
 		function windowSize() {
