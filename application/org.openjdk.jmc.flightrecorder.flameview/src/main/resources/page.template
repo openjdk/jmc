@@ -8,9 +8,14 @@
 	<!--[if lt IE 9]>
 		<script>%2$s</script>
 	<![endif]-->
+	<style type=text/css>
+		#search {
+			margin-right: 30px;
+		}
+	</style>
 </head>
 
-<body onresize="resizeFlameGraph()">
+<body>
 	<div id="search" align="right">
 		<input type="text"id="packageNameInput" onfocusout="higlightPackageName()" value="">
 	</div>
@@ -38,8 +43,9 @@
         	.html(adjustTip);
 
 		function processGraph(jsonObj) {
+			adjustSearchField();
 			flameGraph = d3.flamegraph()
-				.width(windowSize() * 0.9)
+				.width(windowAdjustedSize())
 				.cellHeight(18)
 				.transitionDuration(320)
 				.minFrameSize(5)
@@ -69,11 +75,20 @@
 
 		function resizeFlameGraph() {
 			if (flameGraph) {
-				flameGraph.width(windowSize() * 0.9);
+				adjustSearchField();
+				flameGraph.width(windowAdjustedSize());
 				d3.select("#chart")
 					.datum(currentJson)
 					.call(flameGraph);
 			}
+		}
+		
+		function adjustSearchField(){
+			document.getElementById("search").style.width = windowAdjustedSize();
+		}
+		
+		function windowAdjustedSize(){
+			return windowSize() * 0.95;
 		}
 
 	</script>

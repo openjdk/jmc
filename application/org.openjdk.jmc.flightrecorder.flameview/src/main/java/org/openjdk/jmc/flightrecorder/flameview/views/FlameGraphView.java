@@ -228,6 +228,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(TraceNode root) {
 		browser.setText(HTML_PAGE);
+		browser.addListener(SWT.Resize , event -> {
+			browser.execute("resizeFlameGraph();");
+		});
+		
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
 			public void completed(ProgressEvent event) {
