@@ -20,7 +20,8 @@ public class OverlappingEventsTest {
 
 	@Test
 	public void testStartTime() throws IOException, CouldNotLoadRecordingException {
-		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr").apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
+		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr")
+				.apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
 		IAggregator<IQuantity, ?> first = Aggregators.min(JfrAttributes.START_TIME);
 		IQuantity expected = overlap.getAggregate(first);
 		IQuantity actual = RulesToolkit.getEarliestStartTime(overlap).in(expected.getUnit());
@@ -30,7 +31,8 @@ public class OverlappingEventsTest {
 
 	@Test
 	public void testFirstEndTime() throws IOException, CouldNotLoadRecordingException {
-		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr").apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
+		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr")
+				.apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
 		IAggregator<IQuantity, ?> min = Aggregators.min(JfrAttributes.END_TIME);
 		IQuantity expected = overlap.getAggregate(min);
 		IQuantity actual = RulesToolkit.getEarliestEndTime(overlap).in(expected.getUnit());
@@ -40,7 +42,8 @@ public class OverlappingEventsTest {
 
 	@Test
 	public void testLastEndTime() throws IOException, CouldNotLoadRecordingException {
-		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr").apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
+		IItemCollection overlap = RecordingToolkit.getNamedRecording("overlap.jfr")
+				.apply(ItemFilters.type("org.openjdk.jmc.test.OverlappingEvent"));
 		IAggregator<IQuantity, ?> last = Aggregators.max(JfrAttributes.END_TIME);
 		IQuantity aggregatedLast = overlap.getAggregate(last).in(UnitLookup.EPOCH_NS);
 		IQuantity actual = RulesToolkit.getLatestEndTime(overlap).in(UnitLookup.EPOCH_NS);
