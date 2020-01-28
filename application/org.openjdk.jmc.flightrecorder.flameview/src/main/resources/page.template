@@ -9,15 +9,19 @@
 		<script>%2$s</script>
 	<![endif]-->
 	<style type=text/css>
-		#search {
-			margin-right: 30px;
+		label, input {
+			font-family: Helvetica, Arial, Verdana, sans-serif;
+			font-size: 12px;	
+		}
+		input {
+			margin-right: 2px;
 		}
 	</style>
 </head>
 
 <body>
 	<div id="search" align="right">
-		<label for="packageNameInput" style="font-family: Helvetica, Arial, Verdana, sans-serif;; font-size: 12px;">package:</label>
+		<label for="packageNameInput">package:</label>
 		<input type="text" id="packageNameInput" size="22" onfocusout="higlightPackageName()" value="">
 	</div>
 	<div id="chart"></div>
