@@ -144,8 +144,8 @@ public class HaltsProvider {
 	}
 
 	private static IRange<IQuantity> createRange(IItemCollection items) {
-		IQuantity start = items.getAggregate(JdkAggregators.FIRST_ITEM_START);
-		IQuantity end = items.getAggregate(JdkAggregators.LAST_ITEM_END);
+		IQuantity start = RulesToolkit.getEarliestStartTime(items);
+		IQuantity end = RulesToolkit.getLatestEndTime(items);
 		return start != null && end != null ? QuantityRange.createWithEnd(start, end) : null;
 	}
 

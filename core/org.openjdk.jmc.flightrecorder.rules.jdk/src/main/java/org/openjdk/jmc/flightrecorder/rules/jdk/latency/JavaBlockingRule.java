@@ -97,8 +97,8 @@ public class JavaBlockingRule implements IRule {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.MONITOR_ENTER);
 		}
 
-		IQuantity startTime = items.getAggregate(JdkAggregators.FIRST_ITEM_START);
-		IQuantity endTime = items.getAggregate(JdkAggregators.LAST_ITEM_END);
+		IQuantity startTime = RulesToolkit.getEarliestStartTime(items);
+		IQuantity endTime = RulesToolkit.getLatestEndTime(items);
 		IQuantity recordingTime = endTime.subtract(startTime);
 
 		IQuantity byInstance = items.getAggregate(MONITOR_BALANCE_BY_INSTANCE);

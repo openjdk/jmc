@@ -48,7 +48,6 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
@@ -87,8 +86,8 @@ public class ClassLoadingRule implements IRule {
 
 		IItemCollection events = items.apply(JdkFilters.CLASS_LOAD);
 
-		IQuantity startTime = events.getAggregate(JdkAggregators.FIRST_ITEM_START);
-		IQuantity endTime = events.getAggregate(JdkAggregators.LAST_ITEM_END);
+		IQuantity startTime = RulesToolkit.getEarliestStartTime(events);
+		IQuantity endTime = RulesToolkit.getLatestEndTime(events);
 		if (startTime != null && endTime != null) {
 			IQuantity totalTime = endTime.subtract(startTime);
 			IQuantity max = events.getAggregate(Aggregators.max(JfrAttributes.DURATION));

@@ -348,9 +348,6 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_SWEEP_RECLAIMED_SUM),
 			Messages.getString(Messages.AGGR_SWEEP_RECLAIMED_SUM_DESC), JdkTypeIDs.SWEEP_CODE_CACHE,
 			JdkAttributes.SWEEP_METHOD_RECLAIMED);
-	public static final IAggregator<IQuantity, ?> FIRST_ITEM_START = Aggregators.min(JfrAttributes.START_TIME);
-	public static final IAggregator<IQuantity, ?> FIRST_ITEM_END = Aggregators.min(JfrAttributes.END_TIME);
-	public static final IAggregator<IQuantity, ?> LAST_ITEM_END = Aggregators.max(JfrAttributes.END_TIME);
 	public static final IAggregator<IQuantity, ?> LONGEST_EVENT = Aggregators.max(DURATION);
 	public static final IAggregator<IQuantity, ?> ITEM_COUNT = Aggregators
 			.count(Messages.getString(Messages.AGGR_ITEM_COUNT), Messages.getString(Messages.AGGR_ITEM_COUNT_DESC));

@@ -225,7 +225,7 @@ public class GcFreedRatioRule extends AbstractRule {
 				// If the beginning of the window is between a 'before' and an 'after' event.
 				if (lowestGcIdAfterWindowItems.hasItems() && !lowestGcIdBeforeWindowItems.hasItems()) {
 					if (lowestGcIdBeforeAllItems.hasItems()) {
-						newStartTime = lowestGcIdBeforeAllItems.getAggregate(JdkAggregators.FIRST_ITEM_END);
+						newStartTime = RulesToolkit.getEarliestEndTime(lowestGcIdBeforeAllItems);
 					}
 				}
 				IQuantity highestGcId = heapSummaryWindowItems.getAggregate(Aggregators.max(JdkAttributes.GC_ID));
@@ -240,7 +240,7 @@ public class GcFreedRatioRule extends AbstractRule {
 				IItemCollection highestGcIdAfterAllItems = highestGcIdAllItems.apply(JdkFilters.HEAP_SUMMARY_BEFORE_GC);
 				if (highestGcIdBeforeWindowItems.hasItems() && !highestGcIdAfterWindowItems.hasItems()) {
 					if (highestGcIdAfterAllItems.hasItems()) {
-						newEndTime = highestGcIdAfterAllItems.getAggregate(JdkAggregators.FIRST_ITEM_START);
+						newEndTime = RulesToolkit.getEarliestStartTime(highestGcIdAfterAllItems);
 					}
 				}
 

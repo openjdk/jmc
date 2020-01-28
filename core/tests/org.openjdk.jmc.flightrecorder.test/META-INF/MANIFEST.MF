@@ -8,5 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.common.test,
- org.openjdk.jmc.flightrecorder
+ org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.rules
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.test

@@ -179,9 +179,9 @@ public class SlidingWindowToolkit {
 	public static void slidingWindowUnordered(
 		IUnorderedWindowVisitor callback, IItemCollection items, IQuantity windowSize, IQuantity slideSize,
 		boolean includeIntersecting) {
-		IQuantity first = includeIntersecting ? items.getAggregate(JdkAggregators.FIRST_ITEM_START)
-				: items.getAggregate(JdkAggregators.FIRST_ITEM_END);
-		IQuantity last = items.getAggregate(JdkAggregators.LAST_ITEM_END);
+		IQuantity first = includeIntersecting ? RulesToolkit.getEarliestStartTime(items)
+				: RulesToolkit.getEarliestEndTime(items);
+		IQuantity last = RulesToolkit.getLatestEndTime(items);
 
 		if (first == null) {
 			return;
