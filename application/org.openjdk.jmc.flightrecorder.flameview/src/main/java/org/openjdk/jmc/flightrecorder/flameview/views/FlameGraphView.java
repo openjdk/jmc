@@ -36,8 +36,10 @@ package org.openjdk.jmc.flightrecorder.flameview.views;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -60,6 +62,9 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
@@ -74,6 +79,7 @@ import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
@@ -102,10 +108,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
+		
+		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_FLAMEVIEW_SEARCH);
+		String imageBase64 = getBase64Image(image);
 
-		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts %4 - 4th Flameview Coloring
+		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - Search Icon Base64, 
+		// %4 - 3rd party scripts, %5 - Flameview Coloring,
 		HTML_PAGE = String.format(fileContent("page.template"), fileContent(cssD3Flamegraph), jsIeLibraries,
-				jsD3Libraries, fileContent(jsFlameviewColoring));
+				imageBase64, jsD3Libraries, fileContent(jsFlameviewColoring));
 	}
 
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
@@ -282,7 +292,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static String createJsonDescTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
 				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", UNCLASSIFIABLE_FRAME_DESC),
-				toJSonKeyValue("v", String.valueOf(node.getValue())));
+				toJSonKeyValue("v", String.valueOf(node.getValue()))
+				);
 	}
 
 	private static String toJSonKeyValue(String key, String value) {
@@ -309,5 +320,17 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static String getStacktraceMessage(String key) {
 		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
+	}
+	
+	private static String getBase64Image(Image image) {
+		if(image == null ) {
+			return "";
+		} else {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageLoader loader = new ImageLoader();
+			loader.data = new ImageData[] { image.getImageData() };
+			loader.save(baos, SWT.IMAGE_PNG);
+			return Base64.getEncoder().encodeToString(baos.toByteArray());
+		}
 	}
 }

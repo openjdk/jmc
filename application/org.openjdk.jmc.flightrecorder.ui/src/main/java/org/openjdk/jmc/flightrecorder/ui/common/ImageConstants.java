@@ -109,6 +109,8 @@ public class ImageConstants {
 	public static final String ICON_IO_BY_HOST = "io_by_host.png"; //$NON-NLS-1$
 	public static final String ICON_IO_BY_PORT = "io_by_port.png"; //$NON-NLS-1$
 	public static final String ICON_IO_BY_HOST_AND_PORT = "io_by_host_and_port.png"; //$NON-NLS-1$
+	
+	public static final String ICON_FLAMEVIEW_SEARCH = "magnifyer24.png";	//$NON-NLS-1$
 
 	public static final String PAGE_JAVA_APPLICATION = "pages/methodprofiling.png"; //$NON-NLS-1$
 	public static final String PAGE_METHOD = "pages/method.png"; //$NON-NLS-1$

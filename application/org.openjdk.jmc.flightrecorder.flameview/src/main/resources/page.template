@@ -23,12 +23,14 @@
 	<div id="search" align="right">
 		<label for="packageNameInput">package:</label>
 		<input type="text" id="packageNameInput" size="22" onfocusout="higlightPackageName()" value="">
+		<img src="data:image/png;base64, %3$s" width="12" height="12">
 	</div>
 	<div id="chart"></div>
-	<script type="text/javascript">%3$s</script>
 	<script type="text/javascript">%4$s</script>
+	<script type="text/javascript">%5$s</script>
 	<script type="text/javascript">
-	
+		
+		
 		var searchPackageName = "";
 		var flameGraph;
 		var currentJson;
