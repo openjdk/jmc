@@ -50,7 +50,7 @@
         	.html(adjustTip);
 
 		function processGraph(jsonObj) {
-			adjustSearchField();
+			adjustSearch();
 			flameGraph = d3.flamegraph()
 				.width(windowAdjustedSize())
 				.cellHeight(18)
@@ -82,7 +82,7 @@
 
 		function resizeFlameGraph() {
 			if (flameGraph) {
-				adjustSearchField();
+				adjustSearch();
 				flameGraph.width(windowAdjustedSize());
 				d3.select("#chart")
 					.datum(currentJson)
@@ -90,7 +90,7 @@
 			}
 		}
 		
-		function adjustSearchField(){
+		function adjustSearch(){
 			document.getElementById("search").style.width = windowAdjustedSize();
 		}
 		
