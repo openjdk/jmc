@@ -57,9 +57,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
@@ -115,7 +115,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
-	private SashForm container;
+	private Composite container;
 	private TraceNode currentRoot;
 	private CompletableFuture<TraceNode> currentModelCalculator;
 	private boolean threadRootAtTop = true;
@@ -170,9 +170,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		container = new SashForm(parent, SWT.HORIZONTAL);
+		container = new Composite(parent, SWT.NONE);
+		container.setLayout(new FillLayout());
 		browser = new Browser(container, SWT.NONE);
-		container.setMaximizedControl(browser);
 		browser.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent e) {
