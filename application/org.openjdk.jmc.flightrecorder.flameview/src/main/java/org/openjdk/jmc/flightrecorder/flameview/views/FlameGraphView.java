@@ -87,6 +87,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	static {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
 		String cssD3Flamegraph = "jslibs/d3-flamegraph.css";
+		// jmc flameview stylesheet
+		String cssFlameView = "css/FlameGraphView.css";
 		// from: https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js
 		String jsHtml5shiv = "jslibs/html5shiv.min.js";
 		// from: https://oss.maxcdn.com/respond/1.4.2/respond.min.js
@@ -98,14 +100,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
 		// jmc flameview coloring functions
-		String jsFlameviewColoring = "flameviewColoring.js";
+		String jsFlameviewColoring = "src/main/js/flameviewColoring.js";
 
+		String stylesheets = loadLibraries(cssD3Flamegraph, cssFlameView);
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 
 		// formatter arguments for the template: %1 - CSSs, %2 - IE9 specific scripts, %3 - 3rd party scripts %4 - 4th Flameview Coloring
-		HTML_PAGE = String.format(fileContent("page.template"), fileContent(cssD3Flamegraph), jsIeLibraries,
-				jsD3Libraries, fileContent(jsFlameviewColoring));
+		HTML_PAGE = String.format(fileContent("page.template"), stylesheets, jsIeLibraries, jsD3Libraries,
+				fileContent(jsFlameviewColoring));
 	}
 
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);

@@ -27,7 +27,7 @@
 
 		function processGraph(jsonObj) {
 			flameGraph = d3.flamegraph()
-				.width(windowSize() * 0.9)
+				.width(chartSize())
 				.cellHeight(18)
 				.transitionDuration(320)
 				.minFrameSize(5)
@@ -43,13 +43,13 @@
 				.call(flameGraph);
 		}
 
-		function windowSize() {
-			return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+		function chartSize() {
+			return document.getElementById("chart").clientWidth;
 		}
 
 		function resizeFlameGraph() {
 			if (flameGraph) {
-				flameGraph.width(windowSize() * 0.9);
+				flameGraph.width(chartSize());
 				d3.select("#chart")
 					.datum(currentJson)
 					.call(flameGraph);
