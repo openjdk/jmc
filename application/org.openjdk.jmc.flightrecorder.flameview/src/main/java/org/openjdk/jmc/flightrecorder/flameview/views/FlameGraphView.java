@@ -108,7 +108,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
-		
+
 		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_FLAMEVIEW_SEARCH);
 		String imageBase64 = getBase64Image(image);
 
@@ -238,10 +238,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(TraceNode root) {
 		browser.setText(HTML_PAGE);
-		browser.addListener(SWT.Resize , event -> {
+		browser.addListener(SWT.Resize, event -> {
 			browser.execute("resizeFlameGraph();");
 		});
-		
+
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
 			public void completed(ProgressEvent event) {
@@ -292,8 +292,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static String createJsonDescTraceNode(TraceNode node) {
 		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
 				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", UNCLASSIFIABLE_FRAME_DESC),
-				toJSonKeyValue("v", String.valueOf(node.getValue()))
-				);
+				toJSonKeyValue("v", String.valueOf(node.getValue())));
 	}
 
 	private static String toJSonKeyValue(String key, String value) {
@@ -321,14 +320,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static String getStacktraceMessage(String key) {
 		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
 	}
-	
+
 	private static String getBase64Image(Image image) {
-		if(image == null ) {
+		if (image == null) {
 			return "";
 		} else {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageLoader loader = new ImageLoader();
-			loader.data = new ImageData[] { image.getImageData() };
+			loader.data = new ImageData[] {image.getImageData()};
 			loader.save(baos, SWT.IMAGE_PNG);
 			return Base64.getEncoder().encodeToString(baos.toByteArray());
 		}
