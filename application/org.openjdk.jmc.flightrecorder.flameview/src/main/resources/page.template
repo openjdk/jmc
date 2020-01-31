@@ -21,8 +21,7 @@
 
 <body>
 	<div id="search" align="right">
-		<label for="packageNameInput">package:</label>
-		<input type="text" id="packageNameInput" size="22" onfocusout="higlightPackageName()" value="">
+		<input type="text" id="packageNameInput" size="22" onfocusout="executeSearch()" value="">
 		<img src="data:image/png;base64, %3$s" width="12" height="12">
 	</div>
 	<div id="chart"></div>
@@ -31,14 +30,14 @@
 	<script type="text/javascript">
 		
 		
-		var searchPackageName = "";
+		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
 		
 		const packageInputField = document.getElementById("packageNameInput");
 		packageInputField.addEventListener("keyup", function(event) {
 				if(event.keyCode === 13){
-					higlightPackageName();	
+					executeSearch();	
 				}
 			}
 		);
@@ -68,11 +67,11 @@
 				.call(flameGraph);
 		}
 
-		function higlightPackageName(){
-			const inputPackageName = packageInputField.value;
-			if(searchPackageName !== inputPackageName){
-				searchPackageName = inputPackageName;
-				flameGraph.search(searchPackageName);
+		function executeSearch(){
+			const inputText = packageInputField.value;
+			if(textToSearch !== inputText){
+				textToSearch = inputText.toLowerCase();
+				flameGraph.search(textToSearch);
 			}		
 		}
 

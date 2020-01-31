@@ -117,12 +117,20 @@ const createHslColorString = function(h,s,l){
 };
 
 const colorCell = function (d) {
-	if (searchPackageName !== "" && d.data.p !== undefined && d.data.p.startsWith(searchPackageName)){
+	if (textToSearch !== "" && (evaluateStartWith(d.data.p) || evaluateStartWith(d.data.n))){
 		return "lightgoldenrodyellow";
 	} else {
 		return colorByPackage(d.data.p);
 	}
 };
+
+const evaluateStartWith = function(data){
+	if((data !== undefined && data.toLowerCase().startsWith(textToSearch))){
+		return true;
+	} else {
+		return false;
+	}
+}
 
 const adjustTip = function (d) {
 	var tipMessage = d.data.n + htmlTagBr;
