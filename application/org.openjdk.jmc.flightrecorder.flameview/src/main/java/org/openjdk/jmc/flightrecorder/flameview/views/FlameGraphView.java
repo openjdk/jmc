@@ -105,10 +105,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
 		// jmc flameview coloring functions
 		String jsFlameviewColoring = "flameviewColoring.js";
+		String cssFlameview = "flameview.css";
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
-		String styleheets = fileContent(cssD3Flamegraph);
+		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 
 		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_FLAMEVIEW_SEARCH);
 		String imageBase64 = getBase64Image(image);

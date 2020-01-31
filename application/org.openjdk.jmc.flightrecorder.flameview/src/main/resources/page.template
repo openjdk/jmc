@@ -8,15 +8,6 @@
 	<!--[if lt IE 9]>
 		<script>%2$s</script>
 	<![endif]-->
-	<style type=text/css>
-		label, input {
-			font-family: Helvetica, Arial, Verdana, sans-serif;
-			font-size: 12px;	
-		}
-		input {
-			margin-right: 2px;
-		}
-	</style>
 </head>
 
 <body>
