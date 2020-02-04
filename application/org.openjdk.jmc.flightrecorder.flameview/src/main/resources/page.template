@@ -20,7 +20,6 @@
 	<script type="text/javascript">%5$s</script>
 	<script type="text/javascript">
 		
-		
 		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
@@ -40,9 +39,8 @@
         	.html(adjustTip);
 
 		function processGraph(jsonObj) {
-			adjustSearch();
 			flameGraph = d3.flamegraph()
-				.width(windowAdjustedSize())
+				.width(windowSize())
 				.cellHeight(18)
 				.transitionDuration(320)
 				.minFrameSize(5)
@@ -72,20 +70,11 @@
 
 		function resizeFlameGraph() {
 			if (flameGraph) {
-				adjustSearch();
-				flameGraph.width(windowAdjustedSize());
+				flameGraph.width(windowSize());
 				d3.select("#chart")
 					.datum(currentJson)
 					.call(flameGraph);
 			}
-		}
-		
-		function adjustSearch(){
-			document.getElementById("search").style.width = windowAdjustedSize();
-		}
-		
-		function windowAdjustedSize(){
-			return windowSize() * 0.95;
 		}
 
 	</script>

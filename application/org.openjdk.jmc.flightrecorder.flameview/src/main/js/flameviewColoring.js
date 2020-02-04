@@ -117,15 +117,15 @@ const createHslColorString = function(h,s,l){
 };
 
 const colorCell = function (d) {
-	if (textToSearch !== "" && (evaluateStartWith(d.data.p) || evaluateStartWith(d.data.n))){
-		return "lightgoldenrodyellow";
+	if (textToSearch !== "" && (evaluateSearchElement(d.data.p) || evaluateSearchElement(d.data.n))){
+		return "magenta";
 	} else {
 		return colorByPackage(d.data.p);
 	}
 };
 
-const evaluateStartWith = function(data){
-	if((data !== undefined && data.toLowerCase().startsWith(textToSearch))){
+const evaluateSearchElement = function(text){
+	if((text !== undefined && text.toLowerCase().includes(textToSearch))){
 		return true;
 	} else {
 		return false;
