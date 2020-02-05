@@ -59,7 +59,7 @@
 		function executeSearch() {
 			const inputText = packageInputField.value;
 			if (textToSearch !== inputText) {
-				textToSearch = inputText.toLowerCase();
+				textToSearch = inputText;
 				flameGraph.search(textToSearch);
 			}		
 		}

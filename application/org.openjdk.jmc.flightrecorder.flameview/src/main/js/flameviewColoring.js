@@ -125,11 +125,16 @@ const colorCell = function(d) {
 };
 
 const evaluateSearchElement = function(text) {
-	if (text !== undefined && text.toLowerCase().includes(textToSearch)) {
+	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
+	if (text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch)) {
 		return true;
 	} else {
 		return false;
 	}
+}
+
+const removeSpecialCharacters = function(text) {
+	return text.trim().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '_').toLowerCase();
 }
 
 const adjustTip = function(d) {
