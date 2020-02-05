@@ -26,7 +26,7 @@
 		
 		const packageInputField = document.getElementById("packageNameInput");
 		packageInputField.addEventListener("keyup", function(event) {
-				if(event.keyCode === 13){
+				if (event.keyCode === 13) {
 					executeSearch();	
 				}
 			}
@@ -56,9 +56,9 @@
 				.call(flameGraph);
 		}
 
-		function executeSearch(){
+		function executeSearch() {
 			const inputText = packageInputField.value;
-			if(textToSearch !== inputText){
+			if (textToSearch !== inputText) {
 				textToSearch = inputText.toLowerCase();
 				flameGraph.search(textToSearch);
 			}		
