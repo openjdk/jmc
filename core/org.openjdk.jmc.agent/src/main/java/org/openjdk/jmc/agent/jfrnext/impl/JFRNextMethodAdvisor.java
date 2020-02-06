@@ -58,7 +58,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
 
 	private final JFRTransformDescriptor transformDescriptor;
-	private final Class<?> classBeingRedefined;
+	private final Class<?> inspectionClass;
 	private final Type[] argumentTypesRef;
 	private final Type returnTypeRef;
 	private final Type eventType;
@@ -69,11 +69,11 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> classBeingRedefined, int api, MethodVisitor mv, int access,
-								   String name, String desc) {
+	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api, 
+			MethodVisitor mv, int access, String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
-		this.classBeingRedefined = classBeingRedefined;
+		this.inspectionClass = inspectionClass;
 		// These are not accessible from the super type (made private), so must save an extra reference. :/
 		this.argumentTypesRef = Type.getArgumentTypes(desc);
 		this.returnTypeRef = Type.getReturnType(desc);
@@ -131,7 +131,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		}
 
 		for (Field field : transformDescriptor.getFields()) {
-			ReferenceChain refChain = field.resolveReferenceChain(classBeingRedefined).normalize();
+			ReferenceChain refChain = field.resolveReferenceChain(inspectionClass).normalize();
 
 			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
 				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + field.getExpression());
@@ -156,7 +156,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		Label continueCase = new Label();
 		List<Object> localVarVerifications = new ArrayList<>();
 		if (!isStatic) {
-			localVarVerifications.add(Type.getInternalName(classBeingRedefined)); // "this"
+			localVarVerifications.add(Type.getInternalName(inspectionClass)); // "this"
 		}
 		for (Type argType : argumentTypesRef) {
 			localVarVerifications.add(TypeUtils.getFrameVerificationType(argType));

@@ -42,21 +42,31 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFRNextClassVisitor extends ClassVisitor {
 	private final JFRTransformDescriptor transformDescriptor;
 	private final ClassLoader definingClassLoader;
-	private final Class<?> classBeingRedefined;
+	private final Class<?> inspectionClass;
 	private final ProtectionDomain protectionDomain;
 
 	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
-			Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
+			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+			InspectionClassLoader inspectionClassLoader) {
 		super(Opcodes.ASM5, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
-		this.classBeingRedefined = classBeingRedefined;
 		this.protectionDomain = protectionDomain;
+
+		try {
+			this.inspectionClass =
+					classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined :
+							inspectionClassLoader
+									.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e); // This should not happen
+		}
 	}
 
 	@Override
@@ -64,7 +74,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRNextMethodAdvisor(transformDescriptor, classBeingRedefined, Opcodes.ASM5, mv, access, name, desc);
+			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM5, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -91,7 +101,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		try {
 			return Class.forName(TypeUtils.getCanonicalName(transformDescriptor.getEventClassName()));
 		} catch (ClassNotFoundException e) {
-			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, classBeingRedefined);
+			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
 			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
 					definingClassLoader, protectionDomain);
 		}
