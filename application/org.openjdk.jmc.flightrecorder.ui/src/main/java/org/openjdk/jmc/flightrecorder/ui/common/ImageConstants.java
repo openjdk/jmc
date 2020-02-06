@@ -110,7 +110,7 @@ public class ImageConstants {
 	public static final String ICON_IO_BY_PORT = "io_by_port.png"; //$NON-NLS-1$
 	public static final String ICON_IO_BY_HOST_AND_PORT = "io_by_host_and_port.png"; //$NON-NLS-1$
 
-	public static final String ICON_MAGNIFIER = "magnifyer.png"; //$NON-NLS-1$
+	public static final String ICON_MAGNIFIER = "magnifier.png"; //$NON-NLS-1$
 
 	public static final String PAGE_JAVA_APPLICATION = "pages/methodprofiling.png"; //$NON-NLS-1$
 	public static final String PAGE_METHOD = "pages/method.png"; //$NON-NLS-1$

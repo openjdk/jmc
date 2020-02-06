@@ -12,7 +12,7 @@
 
 <body>
 	<div id="search" align="right">
-		<input type="text" id="packageNameInput" size="22" onfocusout="executeSearch()" value="">
+		<input type="text" id="packageNameInput" size="30" onfocusout="executeSearch()" value="">
 		<img src="data:image/png;base64, %3$s" width="12" height="12">
 	</div>
 	<div id="chart"></div>
