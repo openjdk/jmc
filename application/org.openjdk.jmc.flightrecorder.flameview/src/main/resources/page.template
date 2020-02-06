@@ -29,6 +29,8 @@
 		packageInputField.addEventListener("keyup", function(event) {
 				if (event.keyCode === 13) {
 					executeSearch();	
+				} else if (event.keyCode === 8 && packageInputField.value.length === 0) {
+					executeSearch();		
 				} else if (packageInputField.value.length > minSearchTextSize) {
 					executeSearch();
 				}
