@@ -126,16 +126,12 @@ const colorCell = function(d) {
 
 const evaluateSearchElement = function(text) {
 	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
-	if (text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch)) {
-		return true;
-	} else {
-		return false;
-	}
-}
+	return (text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch));
+};
 
 const removeSpecialCharacters = function(text) {
 	return text.trim().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '_').toLowerCase();
-}
+};
 
 const adjustTip = function(d) {
 	var tipMessage = d.data.n + htmlTagBr;
