@@ -111,7 +111,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 
-		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_FLAMEVIEW_SEARCH);
+		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_MAGNIFIER);
 		String imageBase64 = getBase64Image(image);
 
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts, %3 - Search Icon Base64, 
