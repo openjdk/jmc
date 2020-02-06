@@ -133,7 +133,6 @@ const evaluateSearchElement = function(text) {
 };
 
 const removeSpecialCharacters = function(text) {
-	//return text.trim().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '_').toLowerCase();
 	const map = Array.prototype.map;
     const resultText = map.call(text.trim().toLowerCase(), element => {
         if(specialCharactersMap.has(element)){
