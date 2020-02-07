@@ -451,14 +451,15 @@ class TypeManager {
 			if (JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION.equals(valueType)) {
 				reader = new TypeIdentifierReader(typeIdentifier, f.unsigned);
 			} else {
-				if (JfrInternalConstants.LINE_NUMBER_ID.equals(f.fieldIdentifier) ||
-						JfrInternalConstants.BCI_ID.equals(f.fieldIdentifier) ||
-						JfrInternalConstants.MODIFIERS_ID.equals(f.fieldIdentifier) ||
-						JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)) {
+				if (JfrInternalConstants.LINE_NUMBER_ID.equals(f.fieldIdentifier)
+						|| JfrInternalConstants.BCI_ID.equals(f.fieldIdentifier)
+						|| JfrInternalConstants.MODIFIERS_ID.equals(f.fieldIdentifier)
+						|| JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)) {
 					reader = new PrimitiveReader(typeIdentifier);
 				} else {
 					IUnit unit = UnitLookup.getUnitOrNull(valueType);
-					reader = new QuantityReader(typeIdentifier, unit == null ? UnitLookup.NUMBER_UNITY : unit, f.unsigned);
+					reader = new QuantityReader(typeIdentifier, unit == null ? UnitLookup.NUMBER_UNITY : unit,
+							f.unsigned);
 				}
 			}
 		}

@@ -39,7 +39,7 @@ public final class JfrInternalConstants {
 
 	public static final String BUFFER_LOST_TYPE_ID = "org.openjdk.jmc.flightrecorder.bufferlosttypeid"; //$NON-NLS-1$
 	public static final String TYPE_IDENTIFIER_VALUE_INTERPRETATION = "org.openjdk.jmc.flightrecorder.value_interpretation.type_identifier"; //$NON-NLS-1$
-	
+
 	public static final String LINE_NUMBER_ID = "lineNumber"; //$NON-NLS-1$
 	public static final String BCI_ID = "bytecodeIndex"; //$NON-NLS-1$
 	public static final String MODIFIERS_ID = "modifiers"; //$NON-NLS-1$
