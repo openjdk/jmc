@@ -60,9 +60,9 @@ const packageMarkerRest = "rest";
 const packagesIdentifierMap = new Map().set("java.", packageMarkerJava).set("sun.", packageMarkerSun).set("com.sun.", 
 		packageMarkerComSunAndJdk).set("jdk.", packageMarkerComSunAndJdk);
 const packageColorMap = new Map().set("", rootPackageColor);
-const specialCharactersMap = new Map().set('#','\x23').set('$','\x24').set('(', '\x28').set(')','\x29')
-		.set(',','\x2c').set('-','\x2d').set('.','\x2e').set('<','\x3c').set('>','\x3e').set('[','\x5b')
-		.set(']','\x5d').set('_','\x5f').set('{','\x7b').set('|','\x7c').set('}','\x7d').set('~','\x7e');
+const specialCharactersMap = new Map().set('#', '\x23').set('$', '\x24').set('(', '\x28').set(')', '\x29')
+		.set(',', '\x2c').set('-', '\x2d').set('.', '\x2e').set('<', '\x3c').set('>', '\x3e').set('[', '\x5b')
+		.set(']', '\x5d').set('_', '\x5f').set('{', '\x7b').set('|', '\x7c').set('}', '\x7d').set('~', '\x7e');
 
 const colorByPackage = function(p) {
 	if (p === undefined) {
@@ -134,12 +134,14 @@ const evaluateSearchElement = function(text) {
 
 const removeSpecialCharacters = function(text) {
 	const map = Array.prototype.map;
-    const resultText = map.call(text.trim().toLowerCase(), element => {
-        if(specialCharactersMap.has(element)){
-            return specialCharactersMap.get(element);
-        } else {
-            return element;}
-    }).join('');
+    const resultText = map.call(text.trim().toLowerCase(), 
+    		element => {
+    			if(specialCharactersMap.has(element)){
+    				return specialCharactersMap.get(element);
+    			} else {
+    				return element;}
+    			}
+    		).join('');
     return resultText;
 };
 
