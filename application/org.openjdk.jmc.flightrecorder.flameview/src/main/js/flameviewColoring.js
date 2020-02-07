@@ -140,7 +140,7 @@ const removeSpecialCharacters = function(text) {
 		} else {
 			return element;}
 		}).join('');
-    return resultText;
+	return resultText;
 };
 
 const adjustTip = function(d) {
