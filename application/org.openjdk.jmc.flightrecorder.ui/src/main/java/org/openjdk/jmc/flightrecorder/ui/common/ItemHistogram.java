@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 
@@ -161,8 +162,18 @@ public class ItemHistogram {
 		public void addPercentageColumn(
 			String colId, BiFunction<IItemCollection, IItemCollection, ?> valueFunction, String name,
 			String description, int style) {
-			columns.add(new ColumnBuilder(name, colId, grid.addPercentageColumn(valueFunction)).description(description)
-					.style(style).build());
+			IMemberAccessor<?, Object> column = grid.addPercentageColumn(valueFunction);
+			columns.add(new ColumnBuilder(name, colId, column).description(description).style(style)
+					.columnDrawer(new BackgroundFractionDrawer() {
+						@Override
+						public void handleEvent(Event event) {
+							Object row = event.item.getData();
+							Object item = column.getMember(row);
+							if (item instanceof Number) {
+								draw(((Number) item).doubleValue() / 100, event);
+							}
+						}
+					}).build());
 		}
 
 		public <T> void addColumn(IAttribute<T> a) {
