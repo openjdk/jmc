@@ -451,13 +451,15 @@ class TypeManager {
 			if (JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION.equals(valueType)) {
 				reader = new TypeIdentifierReader(typeIdentifier, f.unsigned);
 			} else {
-				IUnit unit = UnitLookup.getUnitOrNull(valueType);
-				/*
-				 * FIXME: Currently we convert all numbers to quantities. This might not be ideal,
-				 * for example for thread IDs. See multiple notes referring to this method in
-				 * StructTypes.
-				 */
-				reader = new QuantityReader(typeIdentifier, unit == null ? UnitLookup.NUMBER_UNITY : unit, f.unsigned);
+				if (JfrInternalConstants.LINE_NUMBER_ID.equals(f.fieldIdentifier) ||
+						JfrInternalConstants.BCI_ID.equals(f.fieldIdentifier) ||
+						JfrInternalConstants.MODIFIERS_ID.equals(f.fieldIdentifier) ||
+						JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)) {
+					reader = new PrimitiveReader(typeIdentifier);
+				} else {
+					IUnit unit = UnitLookup.getUnitOrNull(valueType);
+					reader = new QuantityReader(typeIdentifier, unit == null ? UnitLookup.NUMBER_UNITY : unit, f.unsigned);
+				}
 			}
 		}
 		if (f.isStoredInPool()) {
