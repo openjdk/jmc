@@ -7,3 +7,8 @@ input {
 svg {
 	width: 100%;
 }
+
+#icicleIcon {
+	cursor: pointer;
+			
+}

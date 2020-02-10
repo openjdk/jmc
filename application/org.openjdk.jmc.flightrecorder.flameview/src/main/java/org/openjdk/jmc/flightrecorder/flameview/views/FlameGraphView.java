@@ -112,11 +112,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 
 		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
+		String icicleIcon =	getIconBase64(ImageConstants.ICON_ARROW_DOWN);
 
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts, %3 - Search Icon Base64, 
-		// %4 - 3rd party scripts, %5 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
-				fileContent(jsFlameviewColoring));
+		// %4 - icicle graph Icon Base64, %5 - 3rd party scripts, %6 - Flameview Coloring,
+		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, icicleIcon,
+				jsD3Libraries, fileContent(jsFlameviewColoring));
 	}
 
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);

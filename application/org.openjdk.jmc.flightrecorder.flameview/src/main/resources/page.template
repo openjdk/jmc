@@ -14,16 +14,18 @@
 	<div id="search" align="right">
 		<input type="text" id="searchInput" size="30" onfocusout="executeSearch()" value="">
 		<img src="data:image/png;base64, %3$s" width="12" height="12">
+		<img id="icicleIcon" src="data:image/png;base64, %4$s" width="12" height="12" onclick="icicleView()">
 	</div>
 	<div id="chart"></div>
-	<script type="text/javascript">%4$s</script>
 	<script type="text/javascript">%5$s</script>
+	<script type="text/javascript">%6$s</script>
 	<script type="text/javascript">
 		
 		const minSearchTextSize = 3;
 		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
+		var viewInverted = false;
 		
 		const packageInputField = document.getElementById("searchInput");
 		packageInputField.addEventListener("keyup", function(event) {
@@ -53,6 +55,7 @@
 				.sort(true)
 				.title("")
 				.differential(false)
+				.inverted(viewInverted)
 				.tooltip(tip)
 				.color(colorCell);
 			currentJson = jsonObj;
@@ -60,6 +63,12 @@
 				.datum(currentJson)
 				.call(flameGraph);
 		};
+		
+		function icicleView() {
+			viewInverted = !viewInverted;
+			flameGraph.inverted(viewInverted)
+				.resetZoom();
+		}
 
 		function executeSearch() {
 			const inputText = removeSpecialCharacters(packageInputField.value);
