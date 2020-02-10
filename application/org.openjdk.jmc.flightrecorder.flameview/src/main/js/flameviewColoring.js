@@ -129,7 +129,7 @@ const colorCell = function(d) {
 
 const evaluateSearchElement = function(text) {
 	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
-	return (text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch));
+	return text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch);
 };
 
 const removeSpecialCharacters = function(text) {
