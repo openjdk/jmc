@@ -337,6 +337,9 @@ To set Eclipse up for JMC development, do the following:
 
 Note that importing configuration/ide/eclipse as an Eclipse project should automatically make the development launchers available to you.
 
+## FAQ
+For help with frequently asked questions, see the [JMC FAQ](https://wiki.openjdk.java.net/display/jmc/JMC+FAQ) on the JMC Wiki.
+
 ## License
 The Mission Control source code is made available under the Universal Permissive License (UPL), Version 1.0 or a BSD-style license, alternatively. The full open source license text is available at license/LICENSE.txt in the JMC project.
 
