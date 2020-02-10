@@ -111,12 +111,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 
-		Image image = FlightRecorderUI.getDefault().getImage(ImageConstants.ICON_MAGNIFIER);
-		String imageBase64 = getBase64Image(image);
+		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
 
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts, %3 - Search Icon Base64, 
 		// %4 - 3rd party scripts, %5 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, imageBase64, jsD3Libraries,
+		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
 				fileContent(jsFlameviewColoring));
 	}
 
@@ -323,7 +322,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
 	}
 
-	private static String getBase64Image(Image image) {
+	private static String getIconBase64(String iconName) {
+		Image image = FlightRecorderUI.getDefault().getImage(iconName);
 		if (image == null) {
 			return "";
 		} else {
