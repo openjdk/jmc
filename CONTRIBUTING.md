@@ -8,7 +8,10 @@ JDK Mission Control, please see <https://openjdk.java.net/contribute/>.
 ## Pull Requests
 
 The JDK Mission Control project (JMC) gladly accepts contributions in the form of pull 
-requests on [GitHub](https://github.com/openjdk/jmc/pulls/).
+requests on [GitHub](https://github.com/openjdk/jmc/pulls/). Ensure that the commit 
+message refers to an existing JMC issue in the [JDK Bug System](https://bugs.openjdk.java.net/).
+The format is "&lt;bug id number&gt;: Commit message". For example, for a PR for issue JMC-6789, the commit 
+message should be "6789: Commit message".  
 
 ## Mailing List
 
