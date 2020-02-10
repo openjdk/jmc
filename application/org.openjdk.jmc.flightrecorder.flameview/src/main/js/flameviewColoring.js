@@ -133,14 +133,12 @@ const evaluateSearchElement = function(text) {
 };
 
 const removeSpecialCharacters = function(text) {
-	const map = Array.prototype.map;
-	const resultText = map.call(text.trim().toLowerCase(), element => {
-		if(specialCharactersMap.has(element)){
+	return Array.prototype.map.call(text.trim().toLowerCase(), element => {
+		if (specialCharactersMap.has(element)) {
 			return specialCharactersMap.get(element);
 		} else {
-			return element;}
-		}).join('');
-	return resultText;
+			return element;
+		}}).join('');
 };
 
 const adjustTip = function(d) {
