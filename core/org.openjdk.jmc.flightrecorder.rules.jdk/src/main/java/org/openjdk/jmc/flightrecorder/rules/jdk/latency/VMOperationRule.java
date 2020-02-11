@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -132,37 +131,37 @@ public class VMOperationRule implements IRule {
 	}
 
 	private void findLongestEventInfo(IItemCollection items) {
-		List<IItem> sortedEvents = sortEventsByStartTime(items);
-		Iterator<IItem> i = sortedEvents.iterator();
-		IItem e1, e2 = null;
-		IItem startingEvent, curStartingEvent = null;
-		IQuantity longestDuration, curDuration = null;
+		IItem startingEvent = null;
+		IQuantity longestDuration = null;
+		IItem curStartingEvent = null;
+		IQuantity prevEndTime = null;
+		IQuantity curCombinedDur = null;
 
-		if (i.hasNext()) {
-			e1 = i.next();
-			curStartingEvent = e1;
-			startingEvent = curStartingEvent;
-			curDuration = getDuration(e1);
-			longestDuration = curDuration;
-		} else {
-			return;
-		}
-		while (i.hasNext()) {
-			e2 = i.next();
-			double secsBetweenEvents = getStartTime(e2).subtract(getEndTime(e1)).doubleValueIn(UnitLookup.SECOND);
-			if (getCaller(e1).equals(getCaller(e2)) && getOperation(e1).equals(getOperation(e2))
-					&& secsBetweenEvents <= MAX_SECONDS_BETWEEN_EVENTS) {
-				curDuration = curDuration.add(getDuration(e2));
+		List<IItem> sortedEvents = sortEventsByStartTime(items);
+		for (IItem event : sortedEvents) {
+			if (curStartingEvent == null) {
+				curStartingEvent = event;
+				curCombinedDur = getDuration(event);
+				longestDuration = curCombinedDur;
 			} else {
-				curDuration = getDuration(e2);
-				curStartingEvent = e2;
+				IQuantity startTime = getStartTime(event);
+				IQuantity duration = getDuration(event);
+				double timeBetweenEvents = startTime.subtract(prevEndTime).doubleValueIn(UnitLookup.SECOND);
+				if (getOperation(curStartingEvent).equals(getOperation(event))
+						&& getCaller(curStartingEvent).equals(getCaller(event))
+						&& timeBetweenEvents <= MAX_SECONDS_BETWEEN_EVENTS) {
+					curCombinedDur = curCombinedDur.add(duration);
+				} else {
+					curCombinedDur = duration;
+					curStartingEvent = event;
+				}
 			}
 
-			if (longestDuration.compareTo(curDuration) < 0) {
-				longestDuration = curDuration;
+			if (longestDuration.compareTo(curCombinedDur) < 0) {
+				longestDuration = curCombinedDur;
 				startingEvent = curStartingEvent;
 			}
-			e1 = e2;
+			prevEndTime = getEndTime(event);
 		}
 		this.longestDuration = longestDuration;
 		this.startingEvent = startingEvent;
