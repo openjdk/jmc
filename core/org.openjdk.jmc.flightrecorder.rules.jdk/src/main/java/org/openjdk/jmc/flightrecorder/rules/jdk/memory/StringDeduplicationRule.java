@@ -61,7 +61,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 /**
  * Intent of this rule is to find out if it would be worth enabling string deduplication. String
  * deduplication is available together with the G1 GC, see
- * <a href="http://openjdk.java.net/jeps/192">JEP 192</a>. Rule looks at how much memory is used by
+ * <a href="https://openjdk.java.net/jeps/192">JEP 192</a>. Rule looks at how much memory is used by
  * the char/byte arrays used internally in strings, it also check the heap usage.
  * <p>
  * The rule can only give guidance, it is up to the user to measure changes memory consumption after
@@ -180,12 +180,10 @@ public class StringDeduplicationRule extends AbstractRule {
 		}
 
 		Boolean useG1GC = items.getAggregate(JdkAggregators.USE_G1_GC);
+		Boolean useShenandoahGC = items.getAggregate(JdkAggregators.USE_SHENANDOAH_GC);
 		String extraCompatInfo = ""; //$NON-NLS-1$
-		if (!Boolean.TRUE.equals(useG1GC)) {
-			extraCompatInfo += "<p>" + Messages.getString(Messages.StringDeduplicationRule_RESULT_NON_G1_LONG); //$NON-NLS-1$
-		}
-		if (!javaVersion.isGreaterOrEqualThan(JavaVersionSupport.STRING_DEDUPLICATION_SUPPORTED)) {
-			extraCompatInfo += "<p>" + Messages.getString(Messages.StringDeduplicationRule_RESULT_PRE_8_20); //$NON-NLS-1$
+		if (!(Boolean.TRUE.equals(useG1GC)) && !(Boolean.TRUE.equals(useShenandoahGC))) {
+			extraCompatInfo += "<p>" + Messages.getString(Messages.StringDeduplicationRule_RESULT_GC_LONG); //$NON-NLS-1$
 		}
 
 		// Calculate string internal array ratios depending on available event types
