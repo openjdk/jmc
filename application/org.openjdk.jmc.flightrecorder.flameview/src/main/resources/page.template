@@ -14,18 +14,16 @@
 	<div id="search" align="right">
 		<input type="text" id="searchInput" size="30" onfocusout="executeSearch()" value="">
 		<img src="data:image/png;base64, %3$s" width="12" height="12">
-		<img id="icicleIcon" src="data:image/png;base64, %4$s" width="12" height="12" onclick="icicleView()">
 	</div>
 	<div id="chart"></div>
+	<script type="text/javascript">%4$s</script>
 	<script type="text/javascript">%5$s</script>
-	<script type="text/javascript">%6$s</script>
 	<script type="text/javascript">
 		
 		const minSearchTextSize = 3;
 		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
-		var viewInverted = false;
 		
 		const packageInputField = document.getElementById("searchInput");
 		packageInputField.addEventListener("keyup", function(event) {
@@ -45,7 +43,7 @@
         	.attr('class', 'd3-flame-graph-tip')
         	.html(adjustTip);
 
-		function processGraph(jsonObj) {
+		function processGraph(jsonObj, viewInverted) {
 			flameGraph = d3.flamegraph()
 				.width(windowSize())
 				.cellHeight(18)
@@ -64,10 +62,9 @@
 				.call(flameGraph);
 		};
 		
-		function icicleView() {
-			viewInverted = !viewInverted;
+		function icicleView(viewInverted) {
 			flameGraph.inverted(viewInverted)
-				.resetZoom();
+						.resetZoom();
 		}
 
 		function executeSearch() {
