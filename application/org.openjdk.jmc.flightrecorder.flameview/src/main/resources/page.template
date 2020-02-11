@@ -10,14 +10,32 @@
 	<![endif]-->
 </head>
 
-<body onresize="resizeFlameGraph()">
+<body>
+	<div id="search" align="right">
+		<input type="text" id="searchInput" size="30" onfocusout="executeSearch()" value="">
+		<img src="data:image/png;base64, %3$s" width="12" height="12">
+	</div>
 	<div id="chart"></div>
-	<script type="text/javascript">%3$s</script>
 	<script type="text/javascript">%4$s</script>
+	<script type="text/javascript">%5$s</script>
 	<script type="text/javascript">
-	
+		
+		const minSearchTextSize = 3;
+		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
+		
+		const packageInputField = document.getElementById("searchInput");
+		packageInputField.addEventListener("keyup", function(event) {
+				if (event.keyCode === 13) {
+					executeSearch();	
+				} else if (event.keyCode === 8 && packageInputField.value.length === 0) {
+					executeSearch();		
+				} else if (packageInputField.value.length > minSearchTextSize) {
+					executeSearch();
+				}
+			}
+		);
 		
 		const tip = d3.tip()
         	.direction("s")
@@ -27,7 +45,7 @@
 
 		function processGraph(jsonObj) {
 			flameGraph = d3.flamegraph()
-				.width(windowSize() * 0.9)
+				.width(windowSize())
 				.cellHeight(18)
 				.transitionDuration(320)
 				.minFrameSize(5)
@@ -41,20 +59,28 @@
 			d3.select("#chart")
 				.datum(currentJson)
 				.call(flameGraph);
-		}
+		};
+
+		function executeSearch() {
+			const inputText = removeSpecialCharacters(packageInputField.value);
+			if (textToSearch !== inputText) {
+				textToSearch = removeSpecialCharacters(inputText);
+				flameGraph.search("");
+			}		
+		};
 
 		function windowSize() {
 			return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-		}
+		};
 
 		function resizeFlameGraph() {
 			if (flameGraph) {
-				flameGraph.width(windowSize() * 0.9);
+				flameGraph.width(windowSize());
 				d3.select("#chart")
 					.datum(currentJson)
 					.call(flameGraph);
 			}
-		}
+		};
 
 	</script>
 </body>

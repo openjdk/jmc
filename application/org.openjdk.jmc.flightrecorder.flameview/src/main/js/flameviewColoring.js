@@ -32,7 +32,7 @@
  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-String.prototype.hashCode = function () {
+String.prototype.hashCode = function() {
 	var hash = 0;
 	if (this.length === 0) return hash;
 	for (var i = 0; i < this.length; i++) {
@@ -60,8 +60,11 @@ const packageMarkerRest = "rest";
 const packagesIdentifierMap = new Map().set("java.", packageMarkerJava).set("sun.", packageMarkerSun).set("com.sun.", 
 		packageMarkerComSunAndJdk).set("jdk.", packageMarkerComSunAndJdk);
 const packageColorMap = new Map().set("", rootPackageColor);
+const specialCharactersMap = new Map().set('#', '\x23').set('$', '\x24').set('(', '\x28').set(')', '\x29')
+		.set(',', '\x2c').set('-', '\x2d').set('.', '\x2e').set('<', '\x3c').set('>', '\x3e').set('[', '\x5b')
+		.set(']', '\x5d').set('_', '\x5f').set('{', '\x7b').set('|', '\x7c').set('}', '\x7d').set('~', '\x7e');
 
-const colorByPackage = function (p) {
+const colorByPackage = function(p) {
 	if (p === undefined) {
 		return invalidPackageColor;
 	} else {
@@ -92,7 +95,7 @@ const colorByPackage = function (p) {
 	}
 };
 
-const getPackageMarker = function(p){
+const getPackageMarker = function(p) {
 	for(let k of packagesIdentifierMap.keys()){
 		if(p.startsWith(k)){
 			return packagesIdentifierMap.get(k);
@@ -101,7 +104,7 @@ const getPackageMarker = function(p){
 	return packageMarkerRest;
 };
 
-const stripPackageName = function (p) {
+const stripPackageName = function(p) {
 	const splitString = p.split("\u002E");
 	const number = Math.min(splitString.length, packageConsideredDepth);
 	return splitString.slice(0, number).join("\u002E");
@@ -116,13 +119,31 @@ const createHslColorString = function(h,s,l){
 	return "hsl\u0028" + h + "\u002c " + s + "\u0025\u002c " + l + "\u0025\u0029";
 };
 
-const colorCell = function (d) {
-	return colorByPackage(d.data.p);
+const colorCell = function(d) {
+	if (textToSearch !== "" && (evaluateSearchElement(d.data.p) || evaluateSearchElement(d.data.n))) {
+		return "magenta";
+	} else {
+		return colorByPackage(d.data.p);
+	}
 };
 
-const adjustTip = function (d) {
+const evaluateSearchElement = function(text) {
+	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
+	return text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch);
+};
+
+const removeSpecialCharacters = function(text) {
+	return Array.prototype.map.call(text.trim().toLowerCase(), element => {
+		if (specialCharactersMap.has(element)) {
+			return specialCharactersMap.get(element);
+		} else {
+			return element;
+		}}).join('');
+};
+
+const adjustTip = function(d) {
 	var tipMessage = d.data.n + htmlTagBr;
-	if( d.data.d === undefined) {
+	if (d.data.d === undefined) {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;
 	} else {
 		tipMessage += "description: " + d.data.d + htmlTagBr;
