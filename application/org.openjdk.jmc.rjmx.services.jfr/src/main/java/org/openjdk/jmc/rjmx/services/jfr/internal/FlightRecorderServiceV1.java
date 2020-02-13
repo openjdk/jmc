@@ -131,6 +131,9 @@ public class FlightRecorderServiceV1 implements IFlightRecorderService {
 
 	public FlightRecorderServiceV1(IConnectionHandle handle) throws ConnectionException, ServiceNotAvailableException {
 		cfs = handle.getServiceOrThrow(ICommercialFeaturesService.class);
+		if (!JVMSupportToolkit.hasFlightRecorder(handle)) {
+			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
+		}
 		if (!isDynamicFlightRecorderSupported(handle) && isFlightRecorderDisabled(handle)) {
 			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
 		}
