@@ -270,8 +270,8 @@ public class LocalJVMToolkit {
 					} catch (Exception x) {
 						// ignore
 					}
-					connDesc = createDescriptor(name, jvmArgs, jvmName, jvmVendor, vmid, connectable, type, jvmArch, address,
-							version, isDebug);
+					connDesc = createDescriptor(name, jvmArgs, jvmName, jvmVendor, vmid, connectable, type, jvmArch,
+							address, version, isDebug);
 					return connDesc;
 				}
 			});
@@ -476,10 +476,10 @@ public class LocalJVMToolkit {
 	}
 
 	private static DiscoveryEntry createDescriptor(
-		String javaCommand, String jvmArgs, String jvmName, String jvmVendor, int pid, Connectable connectable, JVMType type,
-		JVMArch arch, String address, String version, boolean isDebug) {
-		JVMDescriptor jvmInfo = new JVMDescriptor(version, type, arch, javaCommand, jvmArgs, jvmName, jvmVendor, pid, isDebug,
-				connectable);
+		String javaCommand, String jvmArgs, String jvmName, String jvmVendor, int pid, Connectable connectable,
+		JVMType type, JVMArch arch, String address, String version, boolean isDebug) {
+		JVMDescriptor jvmInfo = new JVMDescriptor(version, type, arch, javaCommand, jvmArgs, jvmName, jvmVendor, pid,
+				isDebug, connectable);
 		LocalConnectionDescriptor lcd = new LocalConnectionDescriptor(pid, address, connectable == ATTACHABLE);
 		String guid = "Local-[PID:" + pid + ", seq:" + (SEQ_NUMBER++) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		IServerDescriptor sd = IServerDescriptor.create(guid, null, jvmInfo);

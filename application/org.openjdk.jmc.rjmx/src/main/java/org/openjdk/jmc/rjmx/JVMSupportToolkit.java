@@ -86,9 +86,11 @@ public final class JVMSupportToolkit {
 
 	/**
 	 * Checks if Flight Recorder is available for use
+	 * 
 	 * @param connection
-	 * @return If it is an Oracle JVM or there is a FlightRecorder VM option, then return true. Otherwise, return false.
-	 *         This is used for verifying JDK 8 JVMs that are not built with JFR enabled, e.g., OpenJDK 8
+	 * @return If it is an Oracle JVM or there is a FlightRecorder VM option, then return true.
+	 *         Otherwise, return false. This is used for verifying JDK 8 JVMs that are not built
+	 *         with JFR enabled, e.g., OpenJDK 8
 	 */
 	public static boolean hasFlightRecorder(IConnectionHandle connection) {
 		if (ConnectionToolkit.isOracle(connection)) {

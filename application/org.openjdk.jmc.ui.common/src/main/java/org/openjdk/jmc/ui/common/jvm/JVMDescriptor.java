@@ -82,7 +82,7 @@ public class JVMDescriptor {
 		return jvmArguments;
 	}
 
-	public String getJvmName () {
+	public String getJvmName() {
 		return jvmName;
 	}
 
