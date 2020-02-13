@@ -43,7 +43,7 @@
         	.attr('class', 'd3-flame-graph-tip')
         	.html(adjustTip);
 
-		function processGraph(jsonObj) {
+		function processGraph(jsonObj, viewInverted) {
 			flameGraph = d3.flamegraph()
 				.width(windowSize())
 				.cellHeight(18)
@@ -53,6 +53,7 @@
 				.sort(true)
 				.title("")
 				.differential(false)
+				.inverted(viewInverted)
 				.tooltip(tip)
 				.color(colorCell);
 			currentJson = jsonObj;
@@ -60,6 +61,11 @@
 				.datum(currentJson)
 				.call(flameGraph);
 		};
+		
+		function icicleView(viewInverted) {
+			flameGraph.inverted(viewInverted)
+						.resetZoom();
+		}
 
 		function executeSearch() {
 			const inputText = removeSpecialCharacters(packageInputField.value);
