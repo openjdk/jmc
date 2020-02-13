@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -85,6 +85,74 @@
 			</method>
 			<!-- location {ENTRY, EXIT, WRAP}-->
 			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.test11">
+			<name>JFR Hello World Event 11 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the value of static reference 'STATIC_STRING_FIELD'</description>
+			<path>demo/jfrhelloworldevent11</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR11</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<field>
+				<name>'STATIC_STRING_FIELD'</name>
+				<description>Capturing static field with simple field name</description>
+				<expression>STATIC_STRING_FIELD</expression>
+			</field>
+			<field>
+				<name>'InstrumentMe.STATIC_STRING_FIELD'</name>
+				<description>Capturing static field with class name prefixed field name</description>
+				<expression>InstrumentMe.STATIC_STRING_FIELD</expression>
+			</field>
+			<field>
+				<name>'org.openjdk.jmc.agent.test.InstrumentMe.STATIC_STRING_FIELD'</name>
+				<description>Capturing static field with full qualified class prefixed name</description>
+				<expression>org.openjdk.jmc.agent.test.InstrumentMe.STATIC_STRING_FIELD</expression>
+			</field>
+		</event>
+		<event id="demo.jfr.test12">
+			<name>JFR Hello World Event 12 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the values of 'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and 'STATIC_OBJECT_FIELD.instanceStringField'</description>
+			<path>demo/jfrhelloworldevent12</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR12</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<field>
+				<name>'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD'</name>
+				<description>Capturing static field on a object reference</description>
+				<expression>STATIC_OBJECT_FIELD.STATIC_STRING_FIELD</expression>
+			</field>
+			<field>
+				<name>'STATIC_OBJECT_FIELD.instanceStringField'</name>
+				<description>Capturing non-static field on a object reference</description>
+				<expression>STATIC_OBJECT_FIELD.instanceStringField</expression>
+			</field>
+		</event>
+		<event id="demo.jfr.test13">
+			<name>JFR Hello World Event 13 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the values of static 'STATIC_NULL_FIELD.STATIC_STRING_FIELD' and 'STATIC_NULL_FIELD.instanceStringField'</description>
+			<path>demo/jfrhelloworldevent13</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR11</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<field>
+				<name>'STATIC_NULL_FIELD.STATIC_STRING_FIELD'</name>
+				<description>Capturing static field on a null object reference</description>
+				<expression>STATIC_NULL_FIELD.STATIC_STRING_FIELD</expression>
+			</field>
+			<field>
+				<name>'STATIC_NULL_FIELD.instanceStringField'</name>
+				<description>Capturing non-static field on a null object reference</description>
+				<expression>STATIC_NULL_FIELD.instanceStringField</expression>
+			</field>
 		</event>
 		<event id="demo.jfr.testI1">
 			<name>JFR Hello World Instance Event 1 %TEST_NAME%</name>
@@ -236,6 +304,80 @@
 				<descriptor>()V</descriptor>
 			</method>
 			<rethrow>true</rethrow>
+		</event>
+		<event id="demo.jfr.testI11">
+			<name>JFR Hello World Instance Event 11 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the value of instance reference 'instanceStringField'</description>
+			<path>demo/jfrhelloworldeventI11</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printInstanceHelloWorldJFR11</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<field>
+				<name>'instanceStringField'</name>
+				<description>Capturing instance field with simple field name</description>
+				<expression>instanceStringField</expression>
+			</field>
+			<field>
+				<name>'this.instanceStringField'</name>
+				<description>Capturing instance field with "this" prefixed field name</description>
+				<expression>this.instanceStringField</expression>
+			</field>
+			<field>
+				<name>'InstrumentMe.this.instanceStringField'</name>
+				<description>Capturing instance field with qualified "this" prefixed field name</description>
+				<expression>InstrumentMe.this.instanceStringField</expression>
+			</field>
+		</event>
+		<event id="demo.jfr.testI12">
+			<name>JFR Hello World Instance Event 12 %TEST_NAME%</name>
+			<description>Defined in the xml file and added by the agent. Should record the values of various references</description>
+			<path>demo/jfrhelloworldeventI12</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe$MyInnerClass</class>
+			<method>
+				<name>instrumentationPoint</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<field>
+				<name>'innerClassField'</name>
+				<description>Capturing inner class field with simple field name</description>
+				<expression>innerClassField</expression>
+			</field>
+			<field>
+				<name>'this.innerClassField'</name>
+				<description>Capturing inner class field with "this" prefixed field name</description>
+				<expression>this.innerClassField</expression>
+			</field>
+
+			<field>
+				<name>'instanceStringField'</name>
+				<description>Capturing outer class field with simple field name</description>
+				<expression>instanceStringField</expression>
+			</field>
+			<field>
+				<name>'InstrumentMe.this.instanceStringField'</name>
+				<description>Capturing outer class field with qualified "this" prefixed field name</description>
+				<expression>InstrumentMe.this.instanceStringField</expression>
+			</field>
+			<field>
+				<name>'super.instanceStringField'</name>
+				<description>Capturing super class field with "super" prefixed field name</description>
+				<expression>super.instanceStringField</expression>
+			</field>
+
+			<field>
+				<name>'STATIC_STRING_FIELD'</name>
+				<description>Capturing outer class field with simple field name</description>
+				<expression>STATIC_STRING_FIELD</expression>
+			</field>
+			<field>
+				<name>'InstrumentMe.STATIC_STRING_FIELD'</name>
+				<description>Capturing outer class field with class name prefixed field name</description>
+				<expression>InstrumentMe.STATIC_STRING_FIELD</expression>
+			</field>
 		</event>
 	</events>
 </jfragent>

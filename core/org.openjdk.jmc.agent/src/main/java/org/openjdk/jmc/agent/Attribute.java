@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,52 +32,16 @@
  */
 package org.openjdk.jmc.agent;
 
-import org.openjdk.jmc.agent.util.TypeUtils;
+public interface Attribute {
+	String getName();
 
-/**
- * Metadata for a return value to be logged by the agent.
- */
-public final class ReturnValue implements Attribute {
-	private final String name;
-	private final String fieldName;
-	private final String description;
-	private final String contentType;
-	private final String relationKey;
-	private final String converterClassName;
+	String getFieldName();
 
-	public ReturnValue(String name, String description, String contentType, String relationKey, String converterClassName) {
-		this.name = name == null ? "Return Value" : name;
-		this.description = description;
-		this.contentType = contentType;
-		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
-		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
-	}
+	String getDescription();
 
-	public String getName() {
-		return name;
-	}
+	String getContentType();
 
-	public String getDescription() {
-		return description;
-	}
+	String getRelationKey();
 
-	public String getContentType() {
-		return contentType;
-	}
-
-	@Override
-	public String getRelationKey() {
-		return relationKey;
-	}
-
-	@Override
-	public String getConverterClassName() {
-		return converterClassName;
-	}
-
-	public String getFieldName() {
-		return fieldName;
-	}
-
+	String getConverterClassName();
 }

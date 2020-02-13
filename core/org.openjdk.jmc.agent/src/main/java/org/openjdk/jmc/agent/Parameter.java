@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,7 +37,7 @@ import org.openjdk.jmc.agent.util.TypeUtils;
 /**
  * Metadata for a parameter to be logged by the agent.
  */
-public final class Parameter {
+public final class Parameter implements Attribute {
 	public static final int INDEX_INVALID = -1;
 
 	private final int index;

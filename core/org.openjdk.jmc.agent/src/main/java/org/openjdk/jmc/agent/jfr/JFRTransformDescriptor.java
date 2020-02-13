@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
@@ -62,9 +63,10 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final boolean allowConverter;
 	private final List<Parameter> parameters;
 	private final ReturnValue returnValue;
+	private final List<Field> fields;
 
 	public JFRTransformDescriptor(String id, String className, Method method,
-			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue) {
+			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue, List<Field> fields) {
 		super(id, className, method, transformationAttributes);
 		classPrefix = initializeClassPrefix();
 		eventName = initializeEventName();
@@ -76,6 +78,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, false);
 		allowConverter = getBoolean(ATTRIBUTE_ALLOW_CONVERTER, false);
 		this.parameters = parameters;
+		this.fields = fields;
 		this.returnValue = returnValue;
 	}
 
@@ -176,6 +179,10 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 
 	public List<Parameter> getParameters() {
 		return parameters;
+	}
+
+	public List<Field> getFields() {
+		return fields;
 	}
 
 	public ReturnValue getReturnValue() {

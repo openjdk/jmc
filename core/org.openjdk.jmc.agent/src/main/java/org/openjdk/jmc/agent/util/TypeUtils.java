@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -120,13 +120,14 @@ public final class TypeUtils {
 	}
 
 	public static Class<?> defineClass(
-		String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
-		ProtectionDomain protectionDomain) {
+			String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
+			ProtectionDomain protectionDomain) {
 		try {
-			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD.invoke(UNSAFE, eventClassName, eventClass, i, length,
-					definingClassLoader, protectionDomain);
+			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD
+					.invoke(UNSAFE, eventClassName, eventClass, i, length, definingClassLoader, protectionDomain);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			Agent.getLogger().log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
+			Agent.getLogger()
+					.log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -227,12 +228,99 @@ public final class TypeUtils {
 	/**
 	 * Transforms a FQN in internal form, so that it can be used in e.g. formal descriptors.
 	 *
-	 * @param className
-	 *            the fully qualified class name in internal form.
+	 * @param className the fully qualified class name in internal form.
 	 * @return the transformed class name.
 	 */
 	public static String parameterize(String className) {
 		return "L" + className + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	/**
+	 * Converts a canonical class name into the internal form (binary name).
+	 * 
+	 * eg. <code>com.company.project</code> converts into <code>com/company/project</code>
+	 * 
+	 * @param className the canonical class name
+	 * @return the internal form
+	 */
+	public static String getInternalName(String className) {
+		return className.replace('.', '/');
+	}
+
+	/**
+	 * Converts a internal class name (binary name) into the canonical form.
+	 *
+	 * ie. <code>com/company/project</code> converts into <code>com.company.project</code> 
+	 * 
+	 * @param binaryName the internal class name
+	 * @return in canonical form
+	 */
+	public static String getCanonicalName(String binaryName) {
+		return binaryName.replace('/', '.');
+	}
+
+	/**
+	 * Returns the constant loading instruction that pushes a zero value of the given type onto the operand stack. A 
+	 * null reference is pushed if the given type is an object or an array.
+	 * 
+	 * @param type the type of the operand
+	 * @return the instruction
+	 */
+	public static int getConstZeroOpcode(Type type) {
+		switch (type.getSort()) {
+		case Type.BOOLEAN:
+		case Type.BYTE:
+		case Type.CHAR:
+		case Type.SHORT:
+		case Type.INT:
+			return Opcodes.ICONST_0;
+		case Type.FLOAT:
+			return Opcodes.FCONST_0;
+		case Type.LONG:
+			return Opcodes.LCONST_0;
+		case Type.DOUBLE:
+			return Opcodes.DCONST_0;
+		case Type.ARRAY:
+		case Type.OBJECT:
+			return Opcodes.ACONST_NULL;
+		case Type.METHOD:
+		case Type.VOID:
+			throw new UnsupportedOperationException();
+		default:
+			throw new AssertionError();
+		}
+	}
+
+	/**
+	 * Returns a array element for ASM's <code>MethodVisitor.visitFrame()</code> method used for frame verification of 
+	 * a given type.
+	 * 
+	 * @param type the type of the element on the operand stack or in the local variable table
+	 * @return a array element for <code>MethodVisitor.visitFrame()</code>'s parameter
+	 */
+	public static Object getFrameVerificationType(Type type) {
+		switch (type.getSort()) {
+		case Type.BOOLEAN:
+		case Type.BYTE:
+		case Type.CHAR:
+		case Type.SHORT:
+		case Type.INT:
+			return Opcodes.INTEGER;
+		case Type.FLOAT:
+			return Opcodes.FLOAT;
+		case Type.LONG:
+			return Opcodes.LONG;
+		case Type.DOUBLE:
+			return Opcodes.DOUBLE;
+		case Type.ARRAY:
+		case Type.OBJECT:
+			return type.getInternalName();
+		case Type.METHOD:
+		case Type.VOID:
+			throw new UnsupportedOperationException();
+		default:
+			throw new AssertionError();
+		}
 	}
 
 	/**

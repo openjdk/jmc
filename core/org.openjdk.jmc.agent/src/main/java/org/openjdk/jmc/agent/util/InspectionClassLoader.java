@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,54 +30,70 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent;
+package org.openjdk.jmc.agent.util;
 
-import org.openjdk.jmc.agent.util.TypeUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Metadata for a return value to be logged by the agent.
+ * One-time use loader for reflective class inspection. Don't keep static reference to one of these.
  */
-public final class ReturnValue implements Attribute {
-	private final String name;
-	private final String fieldName;
-	private final String description;
-	private final String contentType;
-	private final String relationKey;
-	private final String converterClassName;
+public class InspectionClassLoader extends ClassLoader {
 
-	public ReturnValue(String name, String description, String contentType, String relationKey, String converterClassName) {
-		this.name = name == null ? "Return Value" : name;
-		this.description = description;
-		this.contentType = contentType;
-		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
-		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getContentType() {
-		return contentType;
+	public InspectionClassLoader(ClassLoader parent) {
+		super(parent);
 	}
 
 	@Override
-	public String getRelationKey() {
-		return relationKey;
+	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		if (name.startsWith("java.")) {
+			return getParent().loadClass(name);
+		}
+
+		try {
+			return loadClass(name, true);
+		} catch (ClassNotFoundException e) {
+			return getParent().loadClass(name);
+		}
 	}
 
 	@Override
-	public String getConverterClassName() {
-		return converterClassName;
+	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+		Class<?> clazz = findLoadedClass(name);
+		if (clazz != null) {
+			return clazz;
+		}
+
+		clazz = findClass(name);
+
+		if (resolve) {
+			resolveClass(clazz);
+		}
+
+		return clazz;
 	}
 
-	public String getFieldName() {
-		return fieldName;
-	}
+	@Override
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
+		InputStream is = getParent().getResourceAsStream(TypeUtils.getInternalName(name) + ".class");
+		if (is == null) {
+			throw new ClassNotFoundException(name);
+		}
 
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[1024]; // 1024 is chosen arbitrarily
+		try {
+			while ((nRead = is.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+				buffer.flush();
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		byte[] bytes = buffer.toByteArray();
+		return defineClass(name, bytes, 0, bytes.length);
+	}
 }

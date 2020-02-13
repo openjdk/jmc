@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,25 @@ import java.util.List;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class InstrumentMe {
+	public static final String STATIC_STRING_FIELD = "org.openjdk.jmc.agent.test.InstrumentMe.STATIC_STRING_FIELD";
+	public static final MyPojo STATIC_OBJECT_FIELD = new MyPojo();
+	public static final MyPojo STATIC_NULL_FIELD = null;
+
+	public final String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.instanceStringField";
+
+	public static class MyPojo { 
+		public String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.MyPojo.instanceStringField";
+		public static String STATIC_STRING_FIELD = "org.openjdk.jmc.agent.test.InstrumentMe.MyPojo.STATIC_STRING_FIELD";
+	}
+	
+	public class MyInnerClass extends InstrumentMe{
+		private final String innerClassField = "org.openjdk.jmc.agent.test.InstrumentMe.MyInnerClass.innerClassField";
+
+		public void instrumentationPoint() {
+			// no op
+		}
+	}
+
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Thread runner = new Thread(new Runner(), "InstrumentMe Runner");
 		runner.setDaemon(true);
@@ -92,6 +111,8 @@ public class InstrumentMe {
 		} catch (RuntimeException e) {
 			System.out.println("#IJFR10. Caught a RuntimeException: " + e.getMessage());
 		}
+		instance.printInstanceHelloWorldJFR11();
+		instance.printInstanceHelloWorldJFR12();
 	}
 
 	private static void runStatic() throws InterruptedException {
@@ -111,18 +132,21 @@ public class InstrumentMe {
 		try {
 			printHelloWorldJFR8();
 		} catch (RuntimeException e) {
-			System.out.println("#IJFR8. Caught a RuntimeException: " + e.getMessage());
+			System.out.println("#SJFR8. Caught a RuntimeException: " + e.getMessage());
 		}
 		try {
 			printHelloWorldJFR9();
 		} catch (RuntimeException e) {
-			System.out.println("#IJFR9. Caught a RuntimeException: " + e.getMessage());
+			System.out.println("#SJFR9. Caught a RuntimeException: " + e.getMessage());
 		}
 		try {
 			printHelloWorldJFR10();
 		} catch (RuntimeException e) {
-			System.out.println("#IJFR10. Caught a RuntimeException: " + e.getMessage());
+			System.out.println("#SJFR10. Caught a RuntimeException: " + e.getMessage());
 		}
+		printHelloWorldJFR11();
+		printHelloWorldJFR12();
+		printHelloWorldJFR13();
 	}
 
 	private static Collection<Gurka> createGurkList() {
@@ -204,27 +228,42 @@ public class InstrumentMe {
 	}
 
 	public static void printHelloWorldJFR8() throws InterruptedException {
-		System.out.println("#IJFR8. About to throw a RuntimeException"); //$NON-NLS-1$
+		System.out.println("#SJFR8. About to throw a RuntimeException"); //$NON-NLS-1$
 		Thread.sleep(1000);
 		(new ArrayList<>()).get(1);
 	}
 
 	public static void printHelloWorldJFR9() throws InterruptedException {
-		System.out.println("#IJFR9. About to throw a RuntimeException"); //$NON-NLS-1$
+		System.out.println("#SJFR9. About to throw a RuntimeException"); //$NON-NLS-1$
 		Thread.sleep(1000);
 		(new ArrayList<>()).get(1);
 	}
 
 	public static void printHelloWorldJFR10() throws InterruptedException {
-		System.out.println("#IJFR10. About to throw a RuntimeException"); //$NON-NLS-1$
+		System.out.println("#SJFR10. About to throw a RuntimeException"); //$NON-NLS-1$
 		Thread.sleep(1000);
 
 		try {
 			(new ArrayList<>()).get(1);
 		} catch (RuntimeException e) {
-			System.out.println("#IJFR10. Caught a RuntimeException: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("#SJFR10. Caught a RuntimeException: " + e.getMessage()); //$NON-NLS-1$
 			throw e;
 		}
+	}
+
+	public static void printHelloWorldJFR11() throws InterruptedException {
+		System.out.println("#SJFR11. Capturing static field 'STATIC_STRING_FIELD'"); //$NON-NLS-1$
+		Thread.sleep(1000);
+	}
+
+	public static void printHelloWorldJFR12() throws InterruptedException {
+		System.out.println("#SJFR12. Capturing 'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and 'STATIC_OBJECT_FIELD.instanceStringField'"); //$NON-NLS-1$
+		Thread.sleep(1000);
+	}
+
+	public static void printHelloWorldJFR13() throws InterruptedException {
+		System.out.println("#SJFR13. Capturing 'STATIC_NULL_FIELD.STATIC_STRING_FIELD' and 'STATIC_NULL_FIELD.instanceStringField'"); //$NON-NLS-1$
+		Thread.sleep(1000);
 	}
 
 	public void printInstanceHelloWorld1() throws InterruptedException {
@@ -319,5 +358,15 @@ public class InstrumentMe {
 			System.out.println("#IJFR10. Caught a RuntimeException: " + e.getMessage()); //$NON-NLS-1$
 			throw e;
 		}
+	}
+
+	public void printInstanceHelloWorldJFR11() throws InterruptedException {
+		System.out.println("#IJFR11. Capturing instance field 'instanceStringField'"); //$NON-NLS-1$
+		Thread.sleep(1000);
+	}
+	
+	public void printInstanceHelloWorldJFR12() throws InterruptedException {
+		System.out.println("#IJFR12. Capturing fields from nested class 'InstrumentMe.MyInnerClass'"); //$NON-NLS-1$
+		new MyInnerClass().instrumentationPoint();
 	}
 }

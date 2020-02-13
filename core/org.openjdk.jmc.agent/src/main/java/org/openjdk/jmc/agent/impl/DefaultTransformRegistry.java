@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,12 +53,15 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class DefaultTransformRegistry implements TransformRegistry {
 	private static final String XML_ATTRIBUTE_NAME_ID = "id"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_NAME_EVENT = "event"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_METHOD_NAME = "method"; //$NON-NLS-1$
+	private static final String XML_ELEMENT_FIELD_NAME = "field"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_PARAMETER_NAME = "parameter"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_RETURN_VALUE_NAME = "returnvalue"; //$NON-NLS-1$
 
@@ -149,6 +152,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		streamReader.next();
 		Map<String, String> values = new HashMap<>();
 		List<Parameter> parameters = new LinkedList<>();
+		List<Field> fields = new LinkedList<>();
 		Method method = null;
 		ReturnValue[] returnValue = new ReturnValue[1];
 		while (streamReader.hasNext()) {
@@ -156,6 +160,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				String name = streamReader.getName().getLocalPart();
 				if (XML_ELEMENT_METHOD_NAME.equals(name)) {
 					method = parseMethod(streamReader, parameters, returnValue);
+					continue;
+				}
+				if (XML_ELEMENT_FIELD_NAME.equals(name)) {
+					fields.add(parseField(streamReader));
 					continue;
 				}
 				streamReader.next();
@@ -175,7 +183,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			streamReader.next();
 		}
 		transfer(globalDefaults, values);
-		return TransformDescriptor.create(id, getInternalName(values.get("class")), method, values, parameters, returnValue[0]); //$NON-NLS-1$
+		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, returnValue[0], fields); //$NON-NLS-1$
 	}
 
 	private static void transfer(HashMap<String, String> globalDefaults, Map<String, String> values) {
@@ -243,7 +251,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 						contentType = value;
 					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
 						relationKey = value;
-					} else if ("converter".equals(key)) {
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
 						converterClassName = value;
 					}
 				}
@@ -257,11 +265,55 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new Parameter(index, name, description, contentType, relationKey, converterClassName);
 	}
 
+	private static Field parseField(XMLStreamReader streamReader) throws XMLStreamException {
+		streamReader.next();
+		String name = null;
+		String expression = null;
+		String description = null;
+		String contentType = null;
+		String relationKey = null;
+		String converterClassName = null;
+
+		while (streamReader.hasNext()) {
+			if (streamReader.isStartElement()) {
+				String key = streamReader.getName().getLocalPart();
+				streamReader.next();
+				if (streamReader.hasText()) {
+					String value = streamReader.getText();
+					if (value != null) {
+						value = value.trim();
+					}
+					if ("name".equals(key)) { //$NON-NLS-1$
+						name = value;
+					} else if ("expression".equals(key)) {
+						expression = value;
+					} else if ("description".equals(key)) { //$NON-NLS-1$
+						description = value;
+					} else if ("contenttype".equals(key)) { //$NON-NLS-1$
+						contentType = value;
+					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
+						relationKey = value;
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
+						converterClassName = value;
+					}
+				}
+			} else if (streamReader.isEndElement()) {
+				if (XML_ELEMENT_FIELD_NAME.equals(streamReader.getName().getLocalPart())) {
+					break;
+				}
+			}
+			streamReader.next();
+		}
+		return new Field(name, expression, description, contentType, relationKey, converterClassName);
+	}
+
 	private static ReturnValue parseReturnValue(XMLStreamReader streamReader) throws XMLStreamException {
 		streamReader.next();
 		String name = null;
 		String description = null;
 		String contentType = null;
+		String relationKey = null;
+		String converterClassName = null;
 
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
@@ -278,6 +330,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 						description = value;
 					} else if ("contenttype".equals(key)) { //$NON-NLS-1$
 						contentType = value;
+					} else if ("relationkey".equals(key)) { //$NON-NLS-1$
+						relationKey = value;
+					} else if ("converter".equals(key)) { //$NON-NLS-1$
+						converterClassName = value;
 					}
 				}
 			} else if (streamReader.isEndElement()) {
@@ -287,11 +343,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			}
 			streamReader.next();
 		}
-		return new ReturnValue(name, description, contentType);
-	}
-
-	private static String getInternalName(String className) {
-		return className.replace('.', '/');
+		return new ReturnValue(name, description, contentType, relationKey, converterClassName);
 	}
 
 	private static Method parseMethod(XMLStreamReader streamReader, List<Parameter> parameters, ReturnValue[] returnValue)

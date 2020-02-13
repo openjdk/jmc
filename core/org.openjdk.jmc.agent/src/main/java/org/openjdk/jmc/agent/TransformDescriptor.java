@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -105,8 +105,8 @@ public abstract class TransformDescriptor {
 	 * @return the instantiated {@link TransformDescriptor}.
 	 */
 	public static TransformDescriptor create(
-		String id, String internalName, Method method, Map<String, String> values, List<Parameter> parameters, ReturnValue returnValue) {
-		return new JFRTransformDescriptor(id, internalName, method, values, parameters, returnValue);
+		String id, String internalName, Method method, Map<String, String> values, List<Parameter> parameters, ReturnValue returnValue, List<Field> fields) {
+		return new JFRTransformDescriptor(id, internalName, method, values, parameters, returnValue, fields);
 	}
 
 	@Override

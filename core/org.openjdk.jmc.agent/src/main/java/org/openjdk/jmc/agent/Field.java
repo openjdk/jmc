@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,52 +32,75 @@
  */
 package org.openjdk.jmc.agent;
 
+import org.openjdk.jmc.agent.util.expression.ExpressionResolver;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
+import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-/**
- * Metadata for a return value to be logged by the agent.
- */
-public final class ReturnValue implements Attribute {
+public class Field implements Attribute {
+
 	private final String name;
+	private final String expression;
 	private final String fieldName;
 	private final String description;
 	private final String contentType;
 	private final String relationKey;
 	private final String converterClassName;
 
-	public ReturnValue(String name, String description, String contentType, String relationKey, String converterClassName) {
-		this.name = name == null ? "Return Value" : name;
+	private Class<?> resolvingCaller;
+	private ReferenceChain referenceChain;
+
+	public Field(String name, String expression, String description, String contentType, String relationKey,
+			String converterClassName) {
+		this.name = name;
+		this.expression = expression;
 		this.description = description;
 		this.contentType = contentType;
 		this.relationKey = relationKey;
 		this.converterClassName = converterClassName;
-		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
+		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name);
 	}
 
+	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
+	public String getExpression() {
+		return expression;
+	}
+
+	@Override
+	public String getFieldName() {
+		return this.fieldName;
+	}
+
+	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
+	@Override
 	public String getContentType() {
-		return contentType;
+		return this.contentType;
 	}
 
 	@Override
 	public String getRelationKey() {
-		return relationKey;
+		return this.relationKey;
 	}
 
 	@Override
 	public String getConverterClassName() {
-		return converterClassName;
+		return this.converterClassName;
 	}
 
-	public String getFieldName() {
-		return fieldName;
-	}
+	public ReferenceChain resolveReferenceChain(Class<?> callerClass) throws IllegalSyntaxException {
+		if (!callerClass.equals(resolvingCaller)) {
+			resolvingCaller = callerClass;
+			referenceChain = ExpressionResolver.solve(callerClass, expression);
+		}
 
+		return referenceChain;
+	}
 }

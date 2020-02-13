@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,54 +30,22 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent;
+package org.openjdk.jmc.agent.util.expression;
 
-import org.openjdk.jmc.agent.util.TypeUtils;
-
-/**
- * Metadata for a return value to be logged by the agent.
- */
-public final class ReturnValue implements Attribute {
-	private final String name;
-	private final String fieldName;
-	private final String description;
-	private final String contentType;
-	private final String relationKey;
-	private final String converterClassName;
-
-	public ReturnValue(String name, String description, String contentType, String relationKey, String converterClassName) {
-		this.name = name == null ? "Return Value" : name;
-		this.description = description;
-		this.contentType = contentType;
-		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
-		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
+public class IllegalSyntaxException extends Exception {
+	public IllegalSyntaxException() {
+		super();
 	}
 
-	public String getName() {
-		return name;
+	public IllegalSyntaxException(String message) {
+		super(message);
 	}
 
-	public String getDescription() {
-		return description;
+	public IllegalSyntaxException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public String getContentType() {
-		return contentType;
+	public IllegalSyntaxException(Throwable cause) {
+		super(cause);
 	}
-
-	@Override
-	public String getRelationKey() {
-		return relationKey;
-	}
-
-	@Override
-	public String getConverterClassName() {
-		return converterClassName;
-	}
-
-	public String getFieldName() {
-		return fieldName;
-	}
-
 }
