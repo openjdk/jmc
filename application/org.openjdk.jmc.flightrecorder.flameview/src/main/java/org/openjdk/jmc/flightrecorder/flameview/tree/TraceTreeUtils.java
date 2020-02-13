@@ -33,8 +33,13 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -57,9 +62,9 @@ public class TraceTreeUtils {
 	 *            the model to trace the tree from.
 	 * @return the root.
 	 */
-	public static TraceNode createTree(StacktraceModel model, String rootName) {
+	public static TraceNode createTree(StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
-		TraceNode root = getRootTraceNode(rootName, rootFork);
+		TraceNode root = getRootTraceNode(rootFork);
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
 		}
@@ -74,8 +79,8 @@ public class TraceTreeUtils {
 	 * @return the root of the resulting tree.
 	 */
 	public static TraceNode createTree(
-		IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop, String rootName) {
-		return createTree(new StacktraceModel(threadRootAtTop, frameSeparator, items), rootName);
+		IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {
+		return createTree(new StacktraceModel(threadRootAtTop, frameSeparator, items));
 	}
 
 	private static void addBranch(TraceNode root, Branch branch) {
@@ -119,9 +124,43 @@ public class TraceTreeUtils {
 		return builder.toString();
 	}
 
-	private static TraceNode getRootTraceNode(String rootName, Fork rootFork) {
-		return new TraceNode(rootName == null ? DEFAULT_ROOT_NAME : rootName, rootFork.getItemsInFork(),
-				DEFAULT_ROOT_PACKAGE_NAME);
+	private static TraceNode getRootTraceNode(Fork rootFork) {
+		
+		StringBuilder titleSb = new StringBuilder();
+		StringBuilder descSb = new StringBuilder();
+		int maxItems = Math.min(3, rootFork.getBranchCount());
+		if(maxItems == 0) {
+			titleSb.append("No Events");
+		} else {
+			Map<String, Integer> eventsOccurences = new HashMap<>();
+			for(int i=0; i<maxItems;i++) {
+//				StacktraceFrame[] sFrames = rootFork.getBranch(i).getTailFrames();
+//				for(int j=0; j < sFrames.length; j++ ) {
+//					StacktraceFrame sf = sFrames[j];
+					SimpleArray<IItem> sa = rootFork.getBranch(i).getFirstFrame().getItems();
+					for(int j=0; j < sa.size(); j++) {
+						IItem ii = sa.get(j);
+						String desc = ii.getType().getName();
+						if(eventsOccurences.containsKey(desc)) {
+							eventsOccurences.put(desc, Integer.sum(ii.getType().getAttributes().size(), eventsOccurences.get(desc)));
+						} else {
+							eventsOccurences.put(desc, ii.getType().getAttributes().size());
+						}
+					}
+					
+//				}
+			}
+			
+			for(Map.Entry<String, Integer> e: eventsOccurences.entrySet()) {
+				titleSb.append(e.getKey()).append(", ");
+				descSb.append(e.getKey()).append(" (").append(e.getValue()).append(")").append("|");
+			}
+				
+			
+			titleSb.append("count:").append(eventsOccurences.size());
+		}
+		
+		return new TraceNode(titleSb.toString(), rootFork.getItemsInFork(), descSb.toString());
 	}
 
 	private static TraceNode getTraceNodeByStacktraceFrame(StacktraceFrame sFrame) {

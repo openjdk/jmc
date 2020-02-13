@@ -275,7 +275,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private CompletableFuture<TraceNode> getModelPreparer(
 		final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
-			return TraceTreeUtils.createTree(items, separator, threadRootAtTop, "-- <Root> --");
+			return TraceTreeUtils.createTree(items, separator, threadRootAtTop);
 		}, MODEL_EXECUTOR);
 	}
 
