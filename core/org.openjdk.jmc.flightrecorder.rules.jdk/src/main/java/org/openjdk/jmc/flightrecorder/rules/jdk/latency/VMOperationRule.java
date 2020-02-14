@@ -114,7 +114,7 @@ public class VMOperationRule implements IRule {
 			return new Result(this, score,
 					MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN), peakDuration),
 					MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG),
-							peakDuration, operation, Encode.forHtml(caller.getThreadName()), timeStr),
+							peakDuration, Encode.forHtml(operation), Encode.forHtml(caller.getThreadName()), timeStr),
 					JdkQueries.VM_OPERATIONS_BLOCKING);
 		}
 		return new Result(this, score,
