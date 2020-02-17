@@ -13,3 +13,4 @@ Export-Package: org.openjdk.jmc.common,
  org.openjdk.jmc.common.util,
  org.openjdk.jmc.common.version
 Automatic-Module-Name: org.openjdk.jmc.common
+Require-Bundle: org.owasp.encoder
