@@ -38,6 +38,7 @@ package org.openjdk.jmc.ui.common.jvm;
 public class JVMDescriptor {
 	private final String javaVersion;
 	private final JVMType jvmType;
+	private final String jvmName;
 	private final String jvmVendor;
 	private final JVMArch jvmArch;
 	private final String javaCommand;
@@ -47,13 +48,14 @@ public class JVMDescriptor {
 	private final Connectable connectable;
 
 	public JVMDescriptor(String javaVersion, JVMType jvmType, JVMArch jvmArch, String javaCommand, String jvmArguments,
-			String jvmVendor, Integer pid, boolean debug, Connectable attachable) {
+			String jvmName, String jvmVendor, Integer pid, boolean debug, Connectable attachable) {
 		super();
 		this.javaVersion = javaVersion;
 		this.jvmType = jvmType;
 		this.jvmArch = jvmArch;
 		this.javaCommand = javaCommand;
 		this.jvmArguments = jvmArguments;
+		this.jvmName = jvmName;
 		this.jvmVendor = jvmVendor;
 		this.pid = pid;
 		this.debug = debug;
@@ -78,6 +80,10 @@ public class JVMDescriptor {
 
 	public String getJVMArguments() {
 		return jvmArguments;
+	}
+
+	public String getJvmName() {
+		return jvmName;
 	}
 
 	public String getJvmVendor() {

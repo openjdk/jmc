@@ -91,7 +91,7 @@ public class JDPDescriptorProvider extends AbstractDescriptorProvider implements
 				String pid = map.get(JMXDataKeys.KEY_PID);
 				// NOTE: We would like to have the JVM type, architecture and vendor included in the JDP payload. We should probably file an enhancement request on JDK for this.
 				JVMDescriptor jvmInfo = new JVMDescriptor(null, JVMType.UNKNOWN, JVMArch.UNKNOWN, commandLine, null,
-						null, pid == null ? null : Integer.parseInt(pid), false, Connectable.MGMNT_AGENT_STARTED);
+						null, null, pid == null ? null : Integer.parseInt(pid), false, Connectable.MGMNT_AGENT_STARTED);
 				String path = null;
 				if (name == null) {
 				} else if (name.endsWith(PATH_SEPARATOR)) {
