@@ -136,7 +136,8 @@ public class ItemHistogram {
 
 		public void addPercentageColumn(String colId, IAggregator<?, ?> a, String name, String description) {
 			int style = a.getValueType() instanceof LinearKindOfQuantity ? SWT.RIGHT : SWT.NONE;
-			addPercentageColumn(colId, (rowItems, allItems) -> {
+
+			BiFunction<IItemCollection, IItemCollection, ?> percentageFunction = (rowItems, allItems) -> {
 				if (a.getValueType() instanceof LinearKindOfQuantity) {
 					IQuantity rowResult = (IQuantity) rowItems.getAggregate(a);
 					IQuantity allResult = (IQuantity) allItems.getAggregate(a);
@@ -145,7 +146,9 @@ public class ItemHistogram {
 					}
 				}
 				return rowItems.getAggregate(a);
-			}, name, description, style);
+			};
+
+			addPercentageColumn(colId, percentageFunction, name, description, style);
 		}
 
 		public void addColumn(
@@ -163,17 +166,18 @@ public class ItemHistogram {
 			String colId, BiFunction<IItemCollection, IItemCollection, ?> valueFunction, String name,
 			String description, int style) {
 			IMemberAccessor<?, Object> column = grid.addPercentageColumn(valueFunction);
+			BackgroundFractionDrawer percentageValueDrawer = new BackgroundFractionDrawer() {
+				@Override
+				public void handleEvent(Event event) {
+					Object row = event.item.getData();
+					Object item = column.getMember(row);
+					if (item instanceof Number) {
+						draw(((Number) item).doubleValue() / 100, event);
+					}
+				}
+			};
 			columns.add(new ColumnBuilder(name, colId, column).description(description).style(style)
-					.columnDrawer(new BackgroundFractionDrawer() {
-						@Override
-						public void handleEvent(Event event) {
-							Object row = event.item.getData();
-							Object item = column.getMember(row);
-							if (item instanceof Number) {
-								draw(((Number) item).doubleValue() / 100, event);
-							}
-						}
-					}).build());
+					.columnDrawer(percentageValueDrawer).build());
 		}
 
 		public <T> void addColumn(IAttribute<T> a) {
