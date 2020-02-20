@@ -42,7 +42,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.concurrent.CancellationException;
@@ -78,9 +77,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.StringToolkit;
@@ -205,8 +206,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ExportActionType {
-		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP)),
-		PRINT("Print", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP));
+		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT)),
+		PRINT("Print", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
 
 		private final String message;
 		private final int action;
@@ -347,13 +348,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
 				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
-				try {
-					browser.execute(StringToolkit.readString(
-							new URL("https://gist.githubusercontent.com/tabjy/23004ddb20595726246f8ad2fe55e265/raw")
-									.openStream()));
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
 			}
 		});
 	}
