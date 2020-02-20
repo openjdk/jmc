@@ -207,18 +207,22 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private enum ExportActionType {
 		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT)),
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
 		PRINT("Print", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
 		private final String message;
 		private final int action;
 		private final ImageDescriptor imageDescriptor;
+		private final ImageDescriptor disabledImageDescriptor;
 
-		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor) {
+		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor, ImageDescriptor disabledImageDescriptor) {
 			this.message = message;
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
+			this.disabledImageDescriptor = disabledImageDescriptor;
 		}
 
 	}
@@ -231,6 +235,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			this.actionType = actionType;
 			setToolTipText(actionType.message);
 			setImageDescriptor(actionType.imageDescriptor);
+			setDisabledImageDescriptor(actionType.disabledImageDescriptor);
 		}
 
 		@Override
@@ -256,6 +261,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
 		exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
 				new ExportAction(ExportActionType.PRINT)};
+		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
 		// methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
 		IMenuManager siteMenu = site.getActionBars().getMenuManager();
@@ -340,6 +346,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setViewerInput(TraceNode root) {
+		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 		browser.setText(HTML_PAGE);
 		browser.addListener(SWT.Resize, event -> {
 			browser.execute("resizeFlameGraph();");
@@ -350,6 +357,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
 				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
+				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 			}
 		});
 	}
