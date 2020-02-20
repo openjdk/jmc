@@ -8,6 +8,15 @@
 	<!--[if lt IE 9]>
 		<script>%2$s</script>
 	<![endif]-->
+	<style type="text/css" media="print">
+		body {
+			background: #fff;
+		}
+
+		#search {
+			display: none;
+		}
+	</style>
 </head>
 
 <body>
@@ -85,6 +94,70 @@
 				d3.select("#chart")
 					.datum(currentJson)
 					.call(flameGraph);
+			}
+		};
+
+		function serializeFlameGraph(svgNode) {
+			var clone = svgNode.cloneNode(true);
+			var style = document.createElement('style');
+			style.innerHTML =
+					".d3-flame-graph rect {" +
+					"	stroke: #EEEEEE;" +
+					"	fill-opacity: .8;" +
+					"}" +
+					".d3-flame-graph rect:hover {" +
+					"	stroke: #474747;" +
+					"	stroke-width: 0.5;" +
+					"	cursor: pointer;" +
+					"}" +
+					".d3-flame-graph-label {" +
+					"	pointer-events: none;" +
+					"	white-space: nowrap;" +
+					"   text-overflow: ellipsis;" +
+					"	overflow: hidden;" +
+					"	font-size: 12px;" +
+					"	font-family: Verdana;" +
+					"	margin-left: 4px;" +
+					"	margin-right: 4px;" +
+					"	line-height: 1.5;" +
+					"	padding: 0 0 0;" +
+					"	font-weight: 400;" +
+					"	color: black;" +
+					"	text-align: left;" +
+					"}";
+			clone.appendChild(style);
+
+			return new XMLSerializer().serializeToString(clone);
+		};
+
+		function rasterizeSvg(xml, width, height, type, callback) {
+			var image = document.createElement('img');
+			image.onload = function () {
+				try {
+					var canvas = document.createElement('canvas');
+					canvas.setAttribute("width", width);
+					canvas.setAttribute("height", height);
+
+					canvas.getContext('2d').drawImage(image, 0, 0);
+
+					var b64 = canvas.toDataURL(type);
+					callback(b64.substring(b64.indexOf('base64,') + 7));
+				} catch (e) {
+					callback(undefined, e.message)
+				}
+
+			};
+			image.src = 'data:image/svg+xml;base64,' + btoa(xml);
+		};
+
+		function exportFlameGraph(type, callbackName) {
+			var callback = window[callbackName].bind(this);
+			try {
+				var svg = document.querySelectorAll('#chart svg')[0];
+				var xml = serializeFlameGraph(svg);
+				rasterizeSvg(xml, svg.getAttribute("width"), svg.getAttribute("height"), type, callback);
+			} catch (e) {
+				callback(undefined, e.message);
 			}
 		};
 
