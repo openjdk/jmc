@@ -205,8 +205,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ExportActionType {
-		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP)), PRINT(
-				"Print", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP));
+		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP)),
+		PRINT("Print", IAction.AS_PUSH_BUTTON, flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP));
 
 		private final String message;
 		private final int action;
