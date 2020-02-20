@@ -37,6 +37,11 @@ import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCL
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_FLAME_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_JPEG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PNG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PRINT;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_AS;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -206,10 +211,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ExportActionType {
-		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+		SAVE_AS(flameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
-		PRINT("Print", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+		PRINT(flameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
@@ -245,7 +250,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				Executors.newSingleThreadExecutor().execute(FlameGraphView.this::saveFlameGraph);
 				break;
 			case PRINT:
-				browser.execute("window.print()");
+				browser.execute("window.print()"); //$NON-NLS-1$
 				break;
 			}
 		}
@@ -368,10 +373,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			FileDialog fd = new FileDialog(browser.getShell(), SWT.SAVE);
-			fd.setText("Save the flame graph as...");
-			fd.setFilterNames(new String[] {"JPEG image", "PNG image"});
-			fd.setFilterExtensions(new String[] {"*.jpg", "*.png"});
-			fd.setFileName("flame_graph");
+			fd.setText(flameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
+			fd.setFilterNames(new String[] {flameviewMessage(FLAMEVIEW_JPEG_IMAGE), flameviewMessage(FLAMEVIEW_PNG_IMAGE)});
+			fd.setFilterExtensions(new String[] {"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFileName("flame_graph"); //$NON-NLS-1$
 			fd.setOverwrite(true);
 			if (fd.open() == null) {
 				future.cancel(true);
@@ -380,19 +385,19 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 			String type;
 
-			// FIXME: FileDialog filterIndex returns -1: https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256
-			if (fd.getFileName().endsWith(".jpg") || fd.getFileName().endsWith(".jpeg")) {
-				type = "image/jpeg";
-			} else if (fd.getFileName().endsWith(".png")) {
-				type = "image/png";
+			// FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
+			if (fd.getFileName().endsWith(".jpg") || fd.getFileName().endsWith(".jpeg")) { //$NON-NLS-1$ //$NON-NLS-2$
+				type = "image/jpeg"; //$NON-NLS-1$
+			} else if (fd.getFileName().endsWith(".png")) { //$NON-NLS-1$
+				type = "image/png"; //$NON-NLS-1$
 			} else {
-				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format"));
+				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$
 				return;
 			}
 			destination[0] = fd.getFilterPath();
 			destination[1] = fd.getFileName();
 
-			String callback = "callback";
+			String callback = "_saveFlameGraphCallback"; //$NON-NLS-1$
 			new BrowserFunction(browser, callback) {
 				@Override
 				public Object function(Object[] arguments) {
@@ -402,12 +407,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					}
 					future.complete((String) arguments[0]);
 
-					this.dispose();
+					super.dispose();
 					return null;
 				}
 			};
 
-			browser.execute("exportFlameGraph('" + type + "', '" + callback + "')");
+			browser.execute("exportFlameGraph('" + type + "', '" + callback + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		});
 
 		try {
@@ -417,7 +422,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			fos.write(bytes);
 			fos.close();
 		} catch (InterruptedException | ExecutionException | IOException e) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e);
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
 		}
 	}
 
