@@ -377,24 +377,24 @@ public final class ConnectionToolkit {
 	public static boolean isOracle(IConnectionHandle handle) {
 		JVMDescriptor descriptor = handle.getServerDescriptor().getJvmInfo();
 		// This should normally not happen for discovered JVMs, but users can create custom connections
-		String vendor = null;
+		String name = null;
 		if (descriptor != null) {
-			vendor = descriptor.getJvmVendor();
+			name = descriptor.getJvmName();
 		} else {
 			// We try checking if connected
 			if (handle.isConnected()) {
 				MBeanServerConnection connection = handle.getServiceOrNull(MBeanServerConnection.class);
 				if (connection != null) {
 					try {
-						vendor = getRuntimeBean(connection).getVmVendor();
+						name = getRuntimeBean(connection).getVmName();
 					} catch (IOException e) {
-						// Worst case we classify JVM vendor wrong
+						// Worst case we classify JVM name wrong
 						RJMXPlugin.getDefault().getLogger().log(Level.WARNING, "Could not check if Oracle JVM", e);
 					}
 				}
 			}
 		}
-		return vendor != null && vendor.contains("Oracle");
+		return name != null && (name.contains("Java HotSpot"));
 	}
 
 	/**

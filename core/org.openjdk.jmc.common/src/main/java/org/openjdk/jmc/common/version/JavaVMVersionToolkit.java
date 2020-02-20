@@ -113,7 +113,7 @@ public class JavaVMVersionToolkit {
 		if (vmName == null) {
 			return false;
 		}
-		return vmName.startsWith("Java HotSpot") || vmName.startsWith("OpenJDK"); //$NON-NLS-1$ //$NON-NLS-2$;
+		return vmName.startsWith("Java HotSpot") || vmName.startsWith("OpenJDK") || vmName.startsWith("SAP"); //$NON-NLS-1$ //$NON-NLS-2$;
 	}
 
 }

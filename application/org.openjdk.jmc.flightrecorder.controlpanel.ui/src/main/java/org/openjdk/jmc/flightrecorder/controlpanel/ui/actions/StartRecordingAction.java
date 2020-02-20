@@ -62,7 +62,7 @@ public class StartRecordingAction extends AbstractWizardUserAction {
 	public IWizard doCreateWizard() throws Exception {
 		try (IConnectionHandle handle = recorder.getServerHandle().connect(Messages.ACTION_START_RECORDING_LABEL)) {
 			IFlightRecorderService flrService = handle.getServiceOrNull(IFlightRecorderService.class);
-			if (flrService == null) {
+			if (flrService == null || !JVMSupportToolkit.hasFlightRecorder(handle)) {
 				throw new FlightRecorderException(JVMSupportToolkit.getNoFlightRecorderErrorMessage(handle, false));
 			} else if (flrService.isEnabled()
 					|| ControlPanel.askUserForEnable(flrService, Messages.COMMERCIAL_FEATURES_QUESTION)) {
