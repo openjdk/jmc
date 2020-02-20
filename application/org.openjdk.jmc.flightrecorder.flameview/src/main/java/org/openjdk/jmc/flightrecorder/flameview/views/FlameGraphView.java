@@ -206,8 +206,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ExportActionType {
-		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT)),
-		PRINT("Print", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
+		SAVE_AS("Save as...", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT)),
+		PRINT("Print", IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
 
 		private final String message;
 		private final int action;
