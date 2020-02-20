@@ -213,17 +213,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private enum ExportActionType {
 		SAVE_AS(flameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
+						.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
 		PRINT(flameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
+						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
 		private final String message;
 		private final int action;
 		private final ImageDescriptor imageDescriptor;
 		private final ImageDescriptor disabledImageDescriptor;
 
-		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor, ImageDescriptor disabledImageDescriptor) {
+		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor,
+				ImageDescriptor disabledImageDescriptor) {
 			this.message = message;
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
@@ -374,7 +375,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			FileDialog fd = new FileDialog(browser.getShell(), SWT.SAVE);
 			fd.setText(flameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
-			fd.setFilterNames(new String[] {flameviewMessage(FLAMEVIEW_JPEG_IMAGE), flameviewMessage(FLAMEVIEW_PNG_IMAGE)});
+			fd.setFilterNames(
+					new String[] {flameviewMessage(FLAMEVIEW_JPEG_IMAGE), flameviewMessage(FLAMEVIEW_PNG_IMAGE)});
 			fd.setFilterExtensions(new String[] {"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
 			fd.setFileName("flame_graph"); //$NON-NLS-1$
 			fd.setOverwrite(true);
@@ -421,6 +423,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			FileOutputStream fos = new FileOutputStream(new File(destination[0], destination[1]));
 			fos.write(bytes);
 			fos.close();
+		} catch (CancellationException e) {
+			// noop
 		} catch (InterruptedException | ExecutionException | IOException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
 		}
