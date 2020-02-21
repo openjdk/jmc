@@ -1,5 +1,5 @@
 # The JMC Agent
-The JMC agent is an agent currently under development to add JFR instrumentation declaratively to a running program. The agent can, for example, be used to add flight recorder events to third party code for which the source is not available.
+The JMC agent allows users to add JFR instrumentation declaratively to a running program. The agent can, for example, be used to add flight recorder events to third party code for which the source is not available.
 
 To build the agent you will need a JDK 7 or later. To run the agent, a JDK 7 or later will be needed as well.
 
@@ -34,7 +34,3 @@ When running with a security manager, the 'control' Management Permission must b
 ## Known Issues
 * The full converter support is still to be merged into the open source repo
 * Support for emitting an event only on exception has yet to be implemented
-* Support for reflective access to fields has yet to be implemented
-* Support for emitting event even though an exception was raised in a called method (try-finally)
-* XML probe definition validation (schema)
-* Support for redefinitions and controlling the agent over JMX is not yet completed
