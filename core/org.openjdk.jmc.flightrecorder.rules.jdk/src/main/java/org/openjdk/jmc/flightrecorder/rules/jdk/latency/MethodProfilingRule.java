@@ -90,6 +90,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowVisitor;
+import org.owasp.encoder.Encode;
 
 /**
  * Rule that calculates the top method balance in a sliding window throughout the recording with a
@@ -285,7 +286,7 @@ public class MethodProfilingRule implements IRule {
 		longList.append("<ul>"); //$NON-NLS-1$
 		for (Entry<IMCStackTrace, MethodProfilingWindowResult> entry : percentByMethod.entrySet()) {
 			longList.append("<li>"); //$NON-NLS-1$
-			longList.append(entry.getValue());
+			longList.append(Encode.forHtml(entry.getValue().toString()));
 			longList.append("</li>"); //$NON-NLS-1$
 		}
 		longList.append("</ul>"); //$NON-NLS-1$
