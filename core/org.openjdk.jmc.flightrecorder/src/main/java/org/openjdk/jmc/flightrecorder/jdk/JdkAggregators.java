@@ -212,6 +212,8 @@ public final class JdkAggregators {
 			or(BOOLEAN_FLAG, FLAG_VALUE_BOOLEAN), ItemFilters.equals(FLAG_NAME, "UseStringDeduplication")); //$NON-NLS-1$
 	public static final IAggregator<Boolean, ?> USE_G1_GC = filter("UseG1GC", null, //$NON-NLS-1$
 			or(BOOLEAN_FLAG, FLAG_VALUE_BOOLEAN), ItemFilters.equals(FLAG_NAME, "UseG1GC")); //$NON-NLS-1$
+	public static final IAggregator<Boolean, ?> USE_SHENANDOAH_GC = filter("UseShenandoahGC", null, //$NON-NLS-1$
+			or(BOOLEAN_FLAG, FLAG_VALUE_BOOLEAN), ItemFilters.equals(FLAG_NAME, "UseShenandoahGC")); //$NON-NLS-1$
 	public static final IAggregator<Boolean, ?> COMPACT_STRINGS = filter("CompactStrings", null, //$NON-NLS-1$
 			or(BOOLEAN_FLAG, FLAG_VALUE_BOOLEAN), ItemFilters.equals(FLAG_NAME, "CompactStrings")); //$NON-NLS-1$
 	public static final IAggregator<IQuantity, ?> LARGEST_MAX_HEAP_SIZE_FROM_FLAG = filter(

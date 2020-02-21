@@ -500,10 +500,9 @@ public class Messages {
 	public static final String StringDeduplicationRule_RESULT_DONT_RECOMMEND_STRING_DEDUPLICATION = "StringDeduplicationRule_RESULT_DONT_RECOMMEND_STRING_DEDUPLICATION"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_HEAP_USAGE = "StringDeduplicationRule_RESULT_HEAP_USAGE"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_LONG_DESCRIPTION = "StringDeduplicationRule_RESULT_LONG_DESCRIPTION"; //$NON-NLS-1$
-	public static final String StringDeduplicationRule_RESULT_NON_G1_LONG = "StringDeduplicationRule_RESULT_NON_G1_LONG"; //$NON-NLS-1$
+	public static final String StringDeduplicationRule_RESULT_GC_LONG = "StringDeduplicationRule_RESULT_GC_LONG"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS = "StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_NO_MAX_HEAP_INFO = "StringDeduplicationRule_RESULT_NO_MAX_HEAP_INFO"; //$NON-NLS-1$
-	public static final String StringDeduplicationRule_RESULT_PRE_8_20 = "StringDeduplicationRule_RESULT_PRE_8_20"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_RECOMMEND_STRING_DEDUPLICATION = "StringDeduplicationRule_RESULT_RECOMMEND_STRING_DEDUPLICATION"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO = "StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO"; //$NON-NLS-1$
 	public static final String StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO = "StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO"; //$NON-NLS-1$
