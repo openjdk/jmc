@@ -59,6 +59,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.owasp.encoder.Encode;
 
 public class DumpReasonRule implements IRule {
 	private static final String DUMP_REASON_RESULT_ID = "DumpReason"; //$NON-NLS-1$
@@ -109,7 +110,7 @@ public class DumpReasonRule implements IRule {
 				score = 10;
 				shortDescription = Messages.getString(Messages.DumpReasonRule_TEXT_INFO_UNKNOWN);
 				longDescription = MessageFormat.format(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_UNKNOWN),
-						reasons);
+						Encode.forHtml(reasons));
 			}
 			return new Result(this, score, shortDescription, longDescription,
 					ItemQueryBuilder.fromWhere(itemFilter).build());

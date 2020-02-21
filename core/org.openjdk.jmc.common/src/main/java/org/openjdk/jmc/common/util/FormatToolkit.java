@@ -39,6 +39,7 @@ import org.openjdk.jmc.common.IMCPackage;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.messages.internal.Messages;
+import org.owasp.encoder.Encode;
 
 /**
  * Methods for formatting IMC* instances.
@@ -311,8 +312,8 @@ public class FormatToolkit {
 			int count = trace.getFrames().size();
 			for (IMCFrame frame : trace.getFrames()) {
 				IMCMethod method = frame.getMethod();
-				String methodText = getHumanReadable(method, showReturnValue, showReturnValuePackage, showClassName,
-						showClassPackageName, showArguments, showArgumentsPackage);
+				String methodText = Encode.forHtml(getHumanReadable(method, showReturnValue, showReturnValuePackage,
+						showClassName, showClassPackageName, showArguments, showArgumentsPackage));
 
 				sb.append(indent).append(linePrefix).append(methodText).append(lineSeparator);
 

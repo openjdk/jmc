@@ -75,6 +75,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.util.ItemResultSetFactory;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.owasp.encoder.Encode;
 
 /**
  * This rule looks at the loaded classes to try to figure out if multiple classes with the same name
@@ -145,7 +146,7 @@ public final class ClassLeakingRule implements IRule {
 			ClassEntry worst = entries.get(0);
 			return new Result(this, maxScore,
 					MessageFormat.format(Messages.getString(Messages.ClassLeakingRule_TEXT_WARN),
-							worst.getType().getFullName(), worst.getCount()),
+							Encode.forHtml(worst.getType().getFullName()), worst.getCount()),
 					longText.toString());
 		}
 		return new Result(this, 0, Messages.getString(Messages.ClassLeakingRule_TEXT_OK));
