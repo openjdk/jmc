@@ -142,7 +142,6 @@ public class VMOperationRule implements IRule {
 			if (curStartingEvent == null) {
 				curStartingEvent = event;
 				curCombinedDur = getDuration(event);
-				longestDuration = curCombinedDur;
 			} else {
 				IQuantity startTime = getStartTime(event);
 				IQuantity duration = getDuration(event);
@@ -157,7 +156,7 @@ public class VMOperationRule implements IRule {
 				}
 			}
 
-			if (longestDuration.compareTo(curCombinedDur) < 0) {
+			if (longestDuration == null || longestDuration.compareTo(curCombinedDur) < 0) {
 				longestDuration = curCombinedDur;
 				startingEvent = curStartingEvent;
 			}
