@@ -100,6 +100,8 @@ import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
+import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
@@ -122,9 +124,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Tip = "jslibs/d3-tip.min.js";
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
+		// from: https://cdn.jsdelivr.net/gh/aptmac/d3-flame-graph@internet-explorer-compatibility/dist/d3-flamegraph-ie.min.js
+		String jsD3FlameGraphIE = "jslibs/d3-flamegraph-ie.min.js";
 		// jmc flameview coloring functions
 		String jsFlameviewColoringName = "flameviewColoring.js";
 		String cssFlameview = "flameview.css";
+
+		if (Environment.getOSType().equals(OSType.WINDOWS)) {
+			jsD3FlameGraph = jsD3FlameGraphIE;
+		}
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);

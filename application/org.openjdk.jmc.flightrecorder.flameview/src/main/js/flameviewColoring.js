@@ -57,82 +57,108 @@ const packageMarkerJava = "java";
 const packageMarkerSun = "sun";
 const packageMarkerComSunAndJdk = "comSunAndJdk";
 const packageMarkerRest = "rest";
-const packagesIdentifierMap = new Map().set("java.", packageMarkerJava).set("sun.", packageMarkerSun).set("com.sun.", 
-		packageMarkerComSunAndJdk).set("jdk.", packageMarkerComSunAndJdk);
-const packageColorMap = new Map().set("", rootPackageColor);
-const specialCharactersMap = new Map().set('#', '\x23').set('$', '\x24').set('(', '\x28').set(')', '\x29')
-		.set(',', '\x2c').set('-', '\x2d').set('.', '\x2e').set('<', '\x3c').set('>', '\x3e').set('[', '\x5b')
-		.set(']', '\x5d').set('_', '\x5f').set('{', '\x7b').set('|', '\x7c').set('}', '\x7d').set('~', '\x7e');
+const packagesIdentifierMap = {
+	"java.": packageMarkerJava,
+	"sun.": packageMarkerSun,
+	"com.sun.": packageMarkerComSunAndJdk,
+	"jdk.": packageMarkerComSunAndJdk
+}
+const packageColorMap = {
+	"": rootPackageColor
+}
+const specialCharactersMap = {
+	"#": "\x23",
+	"$": "\x24",
+	"(": "\x28",
+	")": "\x29",
+	",": "\x2c",
+	"-": "\x2d",
+	".": "\x2e",
+	"<": "\x3c",
+	">": "\x3e",
+	"[": "\x5b",
+	"]": "\x5d",
+	"_": "\x5f",
+	"{": "\x7b",
+	"|": "\x7c",
+	"}": "\x7d",
+	"~": "\x7e"
+}
 
-const colorByPackage = function(p) {
+function colorByPackage (p) {
 	if (p === undefined) {
 		return invalidPackageColor;
 	} else {
 		const packageNameStrip = stripPackageName(p);
-		const packageSelectedColor = packageColorMap.get(packageNameStrip);
+		const packageSelectedColor = packageColorMap[packageNameStrip];
 		if (packageSelectedColor === undefined) {
 			const packageMarkerSelected = getPackageMarker(packageNameStrip);
 			const packageNameStripHash = packageNameStrip.hashCode();
 			switch (packageMarkerSelected) {
 			case packageMarkerJava:
-				packageColorMap.set(packageNameStrip, packageJavaColorLightGray);
+				packageColorMap[packageNameStrip] = packageJavaColorLightGray;
 				break;
 			case packageMarkerComSunAndJdk:
-				packageColorMap.set(packageNameStrip, packageComSunAndJdkColorDarkGray);
+				packageColorMap[packageNameStrip] = packageComSunAndJdkColorDarkGray;
 				break;
 			case packageMarkerSun:
-				packageColorMap.set(packageNameStrip, packageSunDarkColorGray);
+				packageColorMap[packageNameStrip] = packageSunDarkColorGray;
 				break;
 			case packageMarkerRest:
 				const packageRestSelectedColor = createHslColorString(adjustHslPropertyByHash(packageNameStripHash, packageRestValueH, packageRestValueHMax), packageRestSLValues[0], packageRestSLValues[1]);
-				packageColorMap.set(packageNameStrip, packageRestSelectedColor);
+				packageColorMap[packageNameStrip] = packageRestSelectedColor;
 				break;
 			}
-			return packageColorMap.get(packageNameStrip);
+			return packageColorMap[packageNameStrip];
 		} else {
 			return packageSelectedColor;
 		}
 	}
-};
+}
 
-const getPackageMarker = function(p) {
-	for(let k of packagesIdentifierMap.keys()){
-		if(p.startsWith(k)){
-			return packagesIdentifierMap.get(k);
-		}
-	}
-	return packageMarkerRest;
-};
+// string.startsWith() is ECMAScript 6; incompatible with Internet Explorer
+function startsWith (package, identifier) {
+	return package.lastIndexOf(identifier, 0) === 0;
+}
 
-const stripPackageName = function(p) {
+function getPackageMarker (p) {
+    for (var identifier in packagesIdentifierMap) {
+        if (startsWith(p, identifier)) {
+            return packagesIdentifierMap[identifier];
+        }
+    }
+    return packageMarkerRest;
+}
+
+function stripPackageName (p) {
 	const splitString = p.split("\u002E");
 	const number = Math.min(splitString.length, packageConsideredDepth);
 	return splitString.slice(0, number).join("\u002E");
-};
+}
 
-const adjustHslPropertyByHash = function (hash, min, max) {
+function adjustHslPropertyByHash (hash, min, max) {
 	const proposedValue = hash % (max - min) + min;
 	return Math.min(proposedValue, max);
-};
+}
 
-const createHslColorString = function(h,s,l){
+function createHslColorString (h,s,l) {
 	return "hsl\u0028" + h + "\u002c " + s + "\u0025\u002c " + l + "\u0025\u0029";
-};
+}
 
-const colorCell = function(d) {
+function colorCell (d) {
 	if (textToSearch !== "" && (evaluateSearchElement(d.data.p) || evaluateSearchElement(d.data.n))) {
 		return "magenta";
 	} else {
 		return colorByPackage(d.data.p);
 	}
-};
+}
 
-const evaluateSearchElement = function(text) {
+function evaluateSearchElement (text) {
 	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
 	return text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch);
 };
 
-const removeSpecialCharacters = function(text) {
+function removeSpecialCharacters (text) {
 	return Array.prototype.map.call(text.trim().toLowerCase(), element => {
 		if (specialCharactersMap.has(element)) {
 			return specialCharactersMap.get(element);
@@ -141,7 +167,7 @@ const removeSpecialCharacters = function(text) {
 		}}).join('');
 };
 
-const adjustTip = function(d) {
+function adjustTip (d) {
 	var tipMessage = d.data.n + htmlTagBr;
 	if (d.data.d === undefined) {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;
@@ -150,4 +176,4 @@ const adjustTip = function(d) {
 	}
 	tipMessage += "samples: " + d.data.v;
 	return tipMessage;
-};
+}

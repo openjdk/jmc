@@ -129,6 +129,18 @@
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
+                    </execution>
+                    <execution>
+						<id>d3-flamegraph-js-ie</id>
+						<phase>${download-maven-plugin.phase}</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>https://cdn.jsdelivr.net/gh/aptmac/d3-flame-graph@internet-explorer-compatibility/dist/d3-flamegraph-ie.min.js</url>
+							<unpack>false</unpack>
+							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
