@@ -146,7 +146,7 @@ function createHslColorString (h,s,l) {
 }
 
 function colorCell (d) {
-	if (textToSearch !== "" && (evaluateSearchElement(d.data.p) || evaluateSearchElement(d.data.n))) {
+	if (textToSearch !== "" && ((d.data.p !== "" && evaluateSearchElement(d.data.p)) || evaluateSearchElement(d.data.n))) {
 		return "magenta";
 	} else {
 		return colorByPackage(d.data.p);
@@ -155,16 +155,17 @@ function colorCell (d) {
 
 function evaluateSearchElement (text) {
 	var adjustTextToSearch = removeSpecialCharacters(textToSearch);
-	return text !== undefined && removeSpecialCharacters(text).includes(adjustTextToSearch);
+	return text !== undefined && removeSpecialCharacters(text).indexOf(adjustTextToSearch) !== -1;
 };
 
 function removeSpecialCharacters (text) {
-	return Array.prototype.map.call(text.trim().toLowerCase(), element => {
-		if (specialCharactersMap.has(element)) {
-			return specialCharactersMap.get(element);
-		} else {
-			return element;
-		}}).join('');
+	var textArray = text.toLowerCase().split("");
+	for (var i = 0; i < textArray.length; i++) {
+		if (specialCharactersMap.hasOwnProperty(textArray[i])) {
+			textArray[i] = specialCharactersMap[i];
+		}
+	}
+	return textArray.join("");
 };
 
 function adjustTip (d) {
