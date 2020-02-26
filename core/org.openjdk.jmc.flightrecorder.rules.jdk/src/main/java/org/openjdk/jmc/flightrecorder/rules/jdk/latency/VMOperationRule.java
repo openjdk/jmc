@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -147,7 +148,7 @@ public class VMOperationRule implements IRule {
 				IQuantity duration = getDuration(event);
 				double timeBetweenEvents = startTime.subtract(prevEndTime).doubleValueIn(UnitLookup.SECOND);
 				if (getOperation(curStartingEvent).equals(getOperation(event))
-						&& getCaller(curStartingEvent).equals(getCaller(event))
+						&& Objects.equals(getCaller(curStartingEvent), getCaller(event))
 						&& timeBetweenEvents <= MAX_SECONDS_BETWEEN_EVENTS) {
 					curCombinedDur = curCombinedDur.add(duration);
 				} else {
