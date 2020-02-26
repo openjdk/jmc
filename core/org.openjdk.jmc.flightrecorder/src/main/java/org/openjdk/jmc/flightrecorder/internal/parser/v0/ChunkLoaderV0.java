@@ -59,7 +59,7 @@ public class ChunkLoaderV0 implements IChunkLoader {
 	@Override
 	public byte[] call() throws Exception {
 		// Read constants
-		ReaderFactory readerFactory = new ReaderFactory(metadata, data, context);
+		ReaderFactory readerFactory = new ReaderFactory(metadata, data, context, structure);
 
 		// Read events
 		EventParserManager eventParser = new EventParserManager(readerFactory, context, metadata.getProducers());
