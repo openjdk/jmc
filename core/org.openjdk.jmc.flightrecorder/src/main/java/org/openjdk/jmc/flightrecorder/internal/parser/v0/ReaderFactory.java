@@ -55,9 +55,12 @@ class ReaderFactory {
 	private final FastAccessNumberMap<ConstantMap> constants = new FastAccessNumberMap<>(100, 5);
 	private final ChunkMetadata metadata;
 	private final FastAccessNumberMap<LabeledIdentifier> types = new FastAccessNumberMap<>();
+	private final ChunkStructure header;
 
-	ReaderFactory(ChunkMetadata metadata, byte[] chunkData, LoaderContext context) throws InvalidJfrFileException {
+	ReaderFactory(ChunkMetadata metadata, byte[] chunkData, LoaderContext context, ChunkStructure header)
+			throws InvalidJfrFileException {
 		this.metadata = metadata;
+		this.header = header;
 		for (ProducerDescriptor pd : metadata.getProducers()) {
 			for (ContentTypeDescriptor ct : pd.getContentTypes()) {
 				IValueReader reader = createReader(ct.getDataStructure());
@@ -123,9 +126,10 @@ class ReaderFactory {
 		if (vd.getDataType().isPrimitive()) {
 			return createPrimitiveReader(vd.getDataType(), vd.getContentType(), valueType);
 		} else if (vd.getDataType() == DataType.ARRAY) {
-			return new ArrayReader(createPrimitiveReader(vd.getInnerDataType(), vd.getContentType(), valueType));
+			return new ArrayReader(createPrimitiveReader(vd.getInnerDataType(), vd.getContentType(), valueType),
+					header);
 		} else if (vd.getDataType() == DataType.STRUCTARRAY) {
-			return new ArrayReader(createReader(vd.getChildren()));
+			return new ArrayReader(createReader(vd.getChildren()), header);
 		} else if (vd.getDataType() == DataType.STRUCT) {
 			return createReader(vd.getChildren());
 		} else {

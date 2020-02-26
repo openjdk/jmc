@@ -44,15 +44,20 @@ import org.openjdk.jmc.flightrecorder.internal.util.DataInputToolkit;
 final class ArrayReader implements IValueReader {
 
 	private final IValueReader reader;
+	private final ChunkStructure header;
 
-	ArrayReader(IValueReader reader) {
+	ArrayReader(IValueReader reader, ChunkStructure header) {
 		this.reader = reader;
+		this.header = header;
 	}
 
 	@Override
 	public Object readValue(byte[] bytes, Offset offset, long timestamp) throws InvalidJfrFileException {
 		int arraySize = readArraySize(bytes, offset.get());
 		offset.increase(DataType.INTEGER.getSize());
+		if (arraySize > header.getChunkSize()) {
+			throw new InvalidJfrFileException("Found array larger than chunk size"); //$NON-NLS-1$
+		}
 		Object[] array = new Object[arraySize];
 		for (int n = 0; n < arraySize; n++) {
 			array[n] = reader.readValue(bytes, offset, timestamp);
