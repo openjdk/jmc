@@ -58,8 +58,7 @@ public class TraceTreeUtils {
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 *
-	 * @param model
-	 *            the model to trace the tree from.
+	 * @param model the model to trace the tree from.
 	 * @return the root.
 	 */
 	public static TraceNode createTree(StacktraceModel model) {
@@ -74,12 +73,10 @@ public class TraceTreeUtils {
 	/**
 	 * Traces a tree of stack frames from an {@link IItemCollection}.
 	 *
-	 * @param items
-	 *            the events to aggregate the traces from.
+	 * @param items the events to aggregate the traces from.
 	 * @return the root of the resulting tree.
 	 */
-	public static TraceNode createTree(
-		IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {
+	public static TraceNode createTree(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {		
 		return createTree(new StacktraceModel(threadRootAtTop, frameSeparator, items));
 	}
 
@@ -125,41 +122,61 @@ public class TraceTreeUtils {
 	}
 
 	private static TraceNode getRootTraceNode(Fork rootFork) {
-		
+
 		StringBuilder titleSb = new StringBuilder();
 		StringBuilder descSb = new StringBuilder();
-		int maxItems = Math.min(3, rootFork.getBranchCount());
-		if(maxItems == 0) {
+		int maxItems = rootFork.getBranchCount();
+		if (maxItems == 0) {
 			titleSb.append("No Events");
 		} else {
 			Map<String, Integer> eventsOccurences = new HashMap<>();
-			for(int i=0; i<maxItems;i++) {
-//				StacktraceFrame[] sFrames = rootFork.getBranch(i).getTailFrames();
-//				for(int j=0; j < sFrames.length; j++ ) {
-//					StacktraceFrame sf = sFrames[j];
-					SimpleArray<IItem> sa = rootFork.getBranch(i).getFirstFrame().getItems();
-					for(int j=0; j < sa.size(); j++) {
-						IItem ii = sa.get(j);
-						String desc = ii.getType().getName();
-						if(eventsOccurences.containsKey(desc)) {
-							eventsOccurences.put(desc, Integer.sum(ii.getType().getAttributes().size(), eventsOccurences.get(desc)));
-						} else {
-							eventsOccurences.put(desc, ii.getType().getAttributes().size());
-						}
+			for (int i = 0; i < maxItems; i++) {
+				Branch b = rootFork.getBranch(i);
+//				StacktraceFrame sf = b.getFirstFrame();
+//				int itemsCount = b.getParentFork().getItemsInFork();
+				Branch[] branches = b.getParentFork().getBranches();
+				
+				for(int j=0; j < branches.length; j++) {
+					Branch br = branches[j];
+					int count1 = br.getFirstFrame().getItemCount();
+					String desc1 = br.getFirstFrame().getItems().get(0).getType().getName();
+					if (eventsOccurences.containsKey(desc1)) {
+						eventsOccurences.put(desc1, Integer.max(count1, eventsOccurences.get(desc1)));
+					} else {
+						eventsOccurences.put(desc1, count1);
 					}
-					
+				}
+				
+//				IItem ii = sa.get(0);
+//				String desc = ii.getType().getName();
+//
+//				if (eventsOccurences.containsKey(desc)) {
+//					eventsOccurences.put(desc, Integer.sum(itemsCount, eventsOccurences.get(desc)));
+//				} else {
+//					eventsOccurences.put(desc, itemsCount);
 //				}
+
+//				for (int j = 0; j < sa.size(); j++) {
+//					IItem ii = sa.get(j);
+//					String desc = ii.getType().getName();
+//					if (eventsOccurences.containsKey(desc)) {
+//						eventsOccurences.put(desc,
+//								Integer.sum(ii.getType().getAttributes().size(), eventsOccurences.get(desc)));
+//					} else {
+//						eventsOccurences.put(desc, ii.getType().getAttributes().size());
+//					}
+//				}
+
 			}
-			
-			for(Map.Entry<String, Integer> e: eventsOccurences.entrySet()) {
+
+			for (Map.Entry<String, Integer> e : eventsOccurences.entrySet()) {
 				titleSb.append(e.getKey()).append(", ");
 				descSb.append(e.getKey()).append(" (").append(e.getValue()).append(")").append("|");
 			}
-				
-			
+
 			titleSb.append("count:").append(eventsOccurences.size());
 		}
-		
+
 		return new TraceNode(titleSb.toString(), rootFork.getItemsInFork(), descSb.toString());
 	}
 
