@@ -33,18 +33,22 @@
 package org.openjdk.jmc.flightrecorder.rules.jdk.latency;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -61,11 +65,13 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.owasp.encoder.Encode;
 
 public class VMOperationRule implements IRule {
 
 	private static final String RESULT_ID = "VMOperations"; //$NON-NLS-1$
+	private static final double MAX_SECONDS_BETWEEN_EVENTS = 0.01;
+	private IQuantity longestDuration;
+	private IItem startingEvent;
 
 	public static final TypedPreference<IQuantity> WARNING_LIMIT = new TypedPreference<>("vm.vmoperation.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.VMOperationRule_CONFIG_WARNING_LIMIT),
@@ -92,34 +98,109 @@ public class VMOperationRule implements IRule {
 		}
 
 		IQuantity infoLimit = warningLimit.multiply(0.5);
-		// Get the longest blocking VM operation
-		IItem longestEvent = items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT)
-				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
-		if (longestEvent == null) {
+		findLongestEventInfo(items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
+		if (startingEvent == null) {
 			String zeroDuration = UnitLookup.SECOND.quantity(0).displayUsing(IDisplayable.AUTO);
 			return new Result(this, 0,
 					MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK), zeroDuration),
 					null, JdkQueries.VM_OPERATIONS);
 		}
-		IQuantity longestDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		String timeStr = RulesToolkit.getValue(longestEvent, JfrAttributes.START_TIME).displayUsing(IDisplayable.AUTO);
+		String timeStr = getStartTime(startingEvent).displayUsing(IDisplayable.AUTO);
 		String peakDuration = longestDuration.displayUsing(IDisplayable.AUTO);
+		String operation = getOperation(startingEvent);
+		IMCThread caller = getCaller(startingEvent);
 		double score = RulesToolkit.mapExp100(longestDuration.doubleValueIn(UnitLookup.SECOND),
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
+		boolean isCombinedDuration = getDuration(startingEvent).compareTo(longestDuration) != 0;
+		longestDuration = null;
+		startingEvent = null;
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String operation = RulesToolkit.getValue(longestEvent, JdkAttributes.OPERATION);
-			IMCThread caller = RulesToolkit.getValue(longestEvent, JdkAttributes.CALLER);
-			return new Result(this, score,
-					MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN), peakDuration),
-					MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG),
-							peakDuration, Encode.forHtml(operation), Encode.forHtml(caller.getThreadName()), timeStr),
+			String longMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION
+					: Messages.VMOperationRuleFactory_TEXT_WARN_LONG;
+			String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION
+					: Messages.VMOperationRuleFactory_TEXT_WARN;
+			return new Result(this, score, MessageFormat.format(Messages.getString(shortMessage), peakDuration),
+					MessageFormat.format(Messages.getString(longMessage), peakDuration, operation, caller, timeStr),
 					JdkQueries.VM_OPERATIONS_BLOCKING);
 		}
-		return new Result(this, score,
-				MessageFormat.format(Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK), peakDuration), null,
+		String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION
+				: Messages.VMOperationRuleFactory_TEXT_OK;
+		return new Result(this, score, MessageFormat.format(Messages.getString(shortMessage), peakDuration), null,
 				JdkQueries.FILE_READ);
+	}
+
+	private void findLongestEventInfo(IItemCollection items) {
+		IItem startingEvent = null;
+		IQuantity longestDuration = null;
+		IItem curStartingEvent = null;
+		IQuantity prevEndTime = null;
+		IQuantity curCombinedDur = null;
+
+		List<IItem> sortedEvents = sortEventsByStartTime(items);
+		for (IItem event : sortedEvents) {
+			if (curStartingEvent == null) {
+				curStartingEvent = event;
+				curCombinedDur = getDuration(event);
+			} else {
+				IQuantity startTime = getStartTime(event);
+				IQuantity duration = getDuration(event);
+				double timeBetweenEvents = startTime.subtract(prevEndTime).doubleValueIn(UnitLookup.SECOND);
+				if (getOperation(curStartingEvent).equals(getOperation(event))
+						&& Objects.equals(getCaller(curStartingEvent), getCaller(event))
+						&& timeBetweenEvents <= MAX_SECONDS_BETWEEN_EVENTS) {
+					curCombinedDur = curCombinedDur.add(duration);
+				} else {
+					curCombinedDur = duration;
+					curStartingEvent = event;
+				}
+			}
+
+			if (longestDuration == null || longestDuration.compareTo(curCombinedDur) < 0) {
+				longestDuration = curCombinedDur;
+				startingEvent = curStartingEvent;
+			}
+			prevEndTime = getEndTime(event);
+		}
+		this.longestDuration = longestDuration;
+		this.startingEvent = startingEvent;
+	}
+
+	private List<IItem> sortEventsByStartTime(IItemCollection items) {
+		List<IItem> sortedEvents = new ArrayList<>();
+		for (IItemIterable iter : items) {
+			for (IItem event : iter) {
+				sortedEvents.add(event);
+			}
+		}
+		Collections.sort(sortedEvents, new Comparator<IItem>() {
+			@Override
+			public int compare(IItem e1, IItem e2) {
+				return getStartTime(e1).compareTo(getStartTime(e2));
+			}
+		});
+		return sortedEvents;
+	}
+
+	private IQuantity getStartTime(IItem event) {
+		return RulesToolkit.getValue(event, JfrAttributes.START_TIME);
+	}
+
+	private IQuantity getEndTime(IItem event) {
+		return RulesToolkit.getValue(event, JfrAttributes.END_TIME);
+	}
+
+	private IQuantity getDuration(IItem event) {
+		return RulesToolkit.getValue(event, JfrAttributes.DURATION);
+	}
+
+	private IMCThread getCaller(IItem event) {
+		return RulesToolkit.getValue(event, JdkAttributes.CALLER);
+	}
+
+	private String getOperation(IItem event) {
+		return RulesToolkit.getValue(event, JdkAttributes.OPERATION);
 	}
 
 	@Override

@@ -529,8 +529,11 @@ public class Messages {
 	public static final String UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO = "UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO_LONG = "UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String VMOperationRuleFactory_TEXT_OK = "VMOperationRuleFactory_TEXT_OK"; //$NON-NLS-1$
+	public static final String VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION = "VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION"; //$NON-NLS-1$
 	public static final String VMOperationRuleFactory_TEXT_WARN = "VMOperationRuleFactory_TEXT_WARN"; //$NON-NLS-1$
+	public static final String VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION = "VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION"; //$NON-NLS-1$
 	public static final String VMOperationRuleFactory_TEXT_WARN_LONG = "VMOperationRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
+	public static final String VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION = "VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION"; //$NON-NLS-1$
 	public static final String VMOperationRule_CONFIG_WARNING_LIMIT = "VMOperationRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String VMOperationRule_CONFIG_WARNING_LIMIT_LONG = "VMOperationRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String VMOperations_RULE_NAME = "VMOperations_RULE_NAME"; //$NON-NLS-1$
