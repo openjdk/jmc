@@ -456,6 +456,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return classNames;
 	}
 
+	public List<String> getClassNames() {
+		return new ArrayList<>(transformData.keySet());
+	}
+
 	public void setRevertInstrumentation(boolean shouldRevert) {
 		this.revertInstrumentation = shouldRevert;
 	}

@@ -44,7 +44,7 @@ public interface TransformRegistry {
 	 */
 	boolean hasPendingTransforms(String className);
 
-	/**O
+	/**
 	 * Returns the list of {@link TransformDescriptor}s for the named class.
 	 *
 	 * @param className
@@ -52,6 +52,13 @@ public interface TransformRegistry {
 	 * @return the list of transformation metadata for the named class.
 	 */
 	List<TransformDescriptor> getTransformData(String className);
+
+	/**
+	 * Returns the names of all classes stored in the registry.
+	 *
+	 * @return the list of class names.
+	 */
+	List<String> getClassNames();
 
 	/**
 	 * Modifies class information in the registry according to the xml description.

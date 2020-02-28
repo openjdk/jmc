@@ -34,10 +34,11 @@ package org.openjdk.jmc.agent;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,6 +57,7 @@ public class Agent {
 	 */
 	public final static String VERSION = "0.0.2"; //$NON-NLS-1$
 	private final static String DEFAULT_CONFIG = "jfrprobes.xml"; //$NON-NLS-1$
+	private static boolean loadedDynamically = false;
 
 	/**
 	 * This method is run when the agent is started from the command line.
@@ -82,6 +84,7 @@ public class Agent {
 	public static void agentmain(String agentArguments, Instrumentation instrumentation) {
 		printVersion();
 		getLogger().fine("Starting from agentmain"); //$NON-NLS-1$
+		loadedDynamically = true;
 		initializeAgent(agentArguments, instrumentation);
 	}
 
@@ -100,6 +103,9 @@ public class Agent {
 		TransformRegistry registry = DefaultTransformRegistry.from(configuration);
 		instrumentation.addTransformer(new Transformer(registry), true);
 		AgentManagementFactory.createAndRegisterAgentControllerMBean(instrumentation, registry);
+		if (loadedDynamically) {
+			retransformClasses(registry.getClassNames(), instrumentation);
+		}
 	}
 
 	/**
@@ -127,6 +133,31 @@ public class Agent {
 			initializeAgent(stream, instrumentation);
 		} catch (XMLStreamException | IOException e) {
 			getLogger().log(Level.SEVERE, "Failed to read jfr probe definitions from " + file.getPath(), e); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Retransforms the required classes when the agent is loaded dynamically.
+	 *
+	 * @param clazzes
+	 *            list of names of classes to retransform
+	 * @param instrumentation
+	 *            the {@link Instrumentation} instance.
+	 */
+	private static void retransformClasses(List<String> clazzes, Instrumentation instrumentation) {
+		Class<?>[] classesToRetransform = new Class<?>[clazzes.size()];
+		for (int i = 0; i < clazzes.size(); i++) {
+			try {
+				Class<?> classToRetransform = Class.forName(clazzes.get(i).replace('/', '.'));
+				classesToRetransform[i] = classToRetransform;
+			} catch (ClassNotFoundException cnfe) {
+				getLogger().log(Level.SEVERE, "Unable to find class: " + clazzes.get(i), cnfe);
+			}
+		}
+		try {
+			instrumentation.retransformClasses(classesToRetransform);
+		} catch (UnmodifiableClassException e) {
+			getLogger().log(Level.SEVERE, "Unable to retransform classes", e);
 		}
 	}
 
