@@ -378,7 +378,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, DIR_ICONS + iconName);  //$NON-NLS-1$
+		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, DIR_ICONS + iconName); //$NON-NLS-1$
 	}
 
 	private static String getIconBase64(String iconName) {
