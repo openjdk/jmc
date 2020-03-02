@@ -61,6 +61,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
+import org.owasp.encoder.Encode;
 
 /**
  * Rule that checks how much of the total allocation is caused by possible primitive to object
@@ -181,7 +182,7 @@ public class AutoBoxingRule extends AbstractRule {
 		String mostAllocatedTypeInfo = ""; //$NON-NLS-1$
 		String mostAllocatedTypeInfoLong = ""; //$NON-NLS-1$
 		if (largestAllocatedType != null) {
-			String fullName = largestAllocatedType.getFullName();
+			String fullName = Encode.forHtml(largestAllocatedType.getFullName());
 			mostAllocatedTypeInfo = " " + MessageFormat //$NON-NLS-1$
 					.format(Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE), fullName);
 			mostAllocatedTypeInfoLong = "<p>" //$NON-NLS-1$

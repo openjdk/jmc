@@ -116,15 +116,20 @@ class ValueReaders {
 
 	static class ArrayReader implements IValueReader {
 		private final IValueReader elementReader;
+		private final ChunkStructure header;
 
-		ArrayReader(IValueReader elementReader) {
+		ArrayReader(IValueReader elementReader, ChunkStructure header) {
 			this.elementReader = elementReader;
+			this.header = header;
 		}
 
 		@Override
 		public Object read(IDataInput in, boolean allowUnresolvedReference)
 				throws IOException, InvalidJfrFileException {
 			int size = in.readInt();
+			if (size > header.getChunkSize()) {
+				throw new InvalidJfrFileException("Found array larger than chunk size"); //$NON-NLS-1$
+			}
 			Object[] values = new Object[size];
 			for (int i = 0; i < values.length; i++) {
 				values[i] = elementReader.read(in, allowUnresolvedReference);

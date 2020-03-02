@@ -78,6 +78,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.util.ItemResultSetFactory;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.owasp.encoder.Encode;
 
 /**
  * This rule is making use of the new dedicated biased locking revocation events available in JDK
@@ -141,7 +142,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 			longMessage.append("<p><ul>"); //$NON-NLS-1$
 			for (IMCType offender : revokedTypes) {
 				longMessage.append("<li>"); //$NON-NLS-1$
-				longMessage.append(offender.toString());
+				longMessage.append(Encode.forHtml(offender.toString()));
 				longMessage.append("</li>"); //$NON-NLS-1$
 			}
 			longMessage.append("</ul></p>"); //$NON-NLS-1$
@@ -176,7 +177,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 					break;
 				}
 				longMessage.append("<li>"); //$NON-NLS-1$
-				longMessage.append(classEntry);
+				longMessage.append(Encode.forHtml(classEntry.toString()));
 				longMessage.append("</li>"); //$NON-NLS-1$
 			}
 			longMessage.append("</ul></p>"); //$NON-NLS-1$
@@ -186,7 +187,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 		} else {
 			longMessage
 					.append(MessageFormat.format(Messages.getString(Messages.BiasedLockingRevocationRule_TEXT_EPILOGUE),
-							String.valueOf(filteredTypes)));
+							Encode.forHtml(String.valueOf(filteredTypes))));
 		}
 		return new Result(this, totalScore, shortMessage.toString(), longMessage.toString());
 	}

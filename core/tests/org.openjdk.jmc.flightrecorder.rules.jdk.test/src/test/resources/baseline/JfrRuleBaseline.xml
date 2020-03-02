@@ -2573,7 +2573,7 @@
             <severity>Warning</severity>
             <score>80.0</score>
             <shortDescription>The recording is from an early access build.</shortDescription>
-            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
+            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by &amp;#34;java_re&amp;#34; with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2975,7 +2975,7 @@
             <severity>Warning</severity>
             <score>80.0</score>
             <shortDescription>The recording is from an early access build.</shortDescription>
-            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
+            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by &amp;#34;java_re&amp;#34; with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -4183,7 +4183,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
             <severity>Warning</severity>
             <score>80.0</score>
             <shortDescription>The recording is from an early access build.</shortDescription>
-            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) 64-Bit Server VM (9-ea+148) for windows-amd64 JRE (9-ea+148), built on Dec  7 2016 18:47:38 by "javare" with MS VC++ 12.0 (VS2013)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
+            <longDescription>This recording is from an early access build of the JRE (Java HotSpot(TM) 64-Bit Server VM (9-ea+148) for windows-amd64 JRE (9-ea+148), built on Dec  7 2016 18:47:38 by &amp;#34;javare&amp;#34; with MS VC++ 12.0 (VS2013)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</longDescription>
         </rule>
         <rule>
             <id>FullGc</id>

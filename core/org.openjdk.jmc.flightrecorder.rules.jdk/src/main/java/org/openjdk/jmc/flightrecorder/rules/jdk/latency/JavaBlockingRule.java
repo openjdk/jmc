@@ -115,7 +115,8 @@ public class JavaBlockingRule implements IRule {
 
 		if (!threadExcludeRegexp.isEmpty()) {
 			excludeText = "<p>" + MessageFormat.format( //$NON-NLS-1$
-					Messages.getString(Messages.JavaBlockingRule_TEXT_EXCLUDED_THREADS), threadExcludeRegexp);
+					Messages.getString(Messages.JavaBlockingRule_TEXT_EXCLUDED_THREADS),
+					Encode.forHtml(threadExcludeRegexp));
 		}
 
 		double weightedValue = RulesToolkit.mapExp100(waitRatio.doubleValue() * balanceScore, 1);

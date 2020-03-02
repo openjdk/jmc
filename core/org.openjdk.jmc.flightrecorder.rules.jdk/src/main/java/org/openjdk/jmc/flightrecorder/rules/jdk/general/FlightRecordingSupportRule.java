@@ -57,6 +57,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.owasp.encoder.Encode;
 
 public class FlightRecordingSupportRule implements IRule {
 
@@ -130,13 +131,13 @@ public class FlightRecordingSupportRule implements IRule {
 					Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_SHORT),
 					MessageFormat.format(
 							Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_LONG),
-							versionString));
+							Encode.forHtml(versionString)));
 		}
 
 		if (usedVersion.isEarlyAccess()) {
 			return new Result(this, 80, Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_SHORT),
 					MessageFormat.format(Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_LONG),
-							versionString));
+							Encode.forHtml(versionString)));
 		}
 
 		return new Result(this, 0, Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK));
