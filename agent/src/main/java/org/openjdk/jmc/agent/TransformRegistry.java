@@ -33,6 +33,7 @@
 package org.openjdk.jmc.agent;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TransformRegistry {
 	/**
@@ -56,9 +57,9 @@ public interface TransformRegistry {
 	/**
 	 * Returns the names of all classes stored in the registry.
 	 *
-	 * @return the list of class names.
+	 * @return the unmodifiable set of class names.
 	 */
-	List<String> getClassNames();
+	Set<String> getClassNames();
 
 	/**
 	 * Modifies class information in the registry according to the xml description.

@@ -38,7 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -144,18 +146,18 @@ public class Agent {
 	 * @param instrumentation
 	 *            the {@link Instrumentation} instance.
 	 */
-	private static void retransformClasses(List<String> clazzes, Instrumentation instrumentation) {
-		Class<?>[] classesToRetransform = new Class<?>[clazzes.size()];
-		for (int i = 0; i < clazzes.size(); i++) {
+	private static void retransformClasses(Set<String> clazzes, Instrumentation instrumentation) {
+		List<Class<?>> classesToRetransform = new ArrayList<Class<?>>();
+		for (String clazz : clazzes) {
 			try {
-				Class<?> classToRetransform = Class.forName(clazzes.get(i).replace('/', '.'));
-				classesToRetransform[i] = classToRetransform;
+				Class<?> classToRetransform = Class.forName(clazz.replace('/', '.'));
+				classesToRetransform.add(classToRetransform);
 			} catch (ClassNotFoundException cnfe) {
-				getLogger().log(Level.SEVERE, "Unable to find class: " + clazzes.get(i), cnfe);
+				getLogger().log(Level.SEVERE, "Unable to find class: " + clazz, cnfe);
 			}
 		}
 		try {
-			instrumentation.retransformClasses(classesToRetransform);
+			instrumentation.retransformClasses(classesToRetransform.toArray(new Class<?>[0]));
 		} catch (UnmodifiableClassException e) {
 			getLogger().log(Level.SEVERE, "Unable to retransform classes", e);
 		}
