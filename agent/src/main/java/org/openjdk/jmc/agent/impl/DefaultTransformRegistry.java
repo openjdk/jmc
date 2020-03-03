@@ -35,11 +35,13 @@ package org.openjdk.jmc.agent.impl;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -454,6 +456,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		List<String> classNames = new ArrayList<>(transformData.keySet());
 		transformData.clear();
 		return classNames;
+	}
+
+	public Set<String> getClassNames() {
+		return Collections.unmodifiableSet(transformData.keySet());
 	}
 
 	public void setRevertInstrumentation(boolean shouldRevert) {
