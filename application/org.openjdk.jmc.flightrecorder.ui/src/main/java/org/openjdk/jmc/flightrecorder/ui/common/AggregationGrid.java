@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -62,11 +62,13 @@ public class AggregationGrid {
 	private static class AggregationModel {
 		final Object[][] cellData;
 		AggregateRow[] aggregateItems;
+		IItemCollection modelItems;
 		int itemsCount;
 
-		AggregationModel(int columnCount, int rowCount) {
-			cellData = new Object[columnCount][];
-			aggregateItems = new AggregateRow[rowCount];
+		AggregationModel(int columnCount, int rowCount, IItemCollection modelItems) {
+			this.cellData = new Object[columnCount][];
+			this.aggregateItems = new AggregateRow[rowCount];
+			this.modelItems = modelItems;
 		}
 
 		void addRow(Object key, List<IItem[]> items, int rowIndex) {
@@ -86,9 +88,9 @@ public class AggregationGrid {
 		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex) {
 			this.model = model;
 			this.key = key;
-			items = buildItemCollection(itemsByType);
-			count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
-			index = rowIndex;
+			this.items = buildItemCollection(itemsByType);
+			this.count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
+			this.index = rowIndex;
 		}
 
 		@Override
@@ -131,6 +133,34 @@ public class AggregationGrid {
 		}
 	}
 
+	private static class PercentageColumn implements IMemberAccessor<Object, Object> {
+
+		private final BiFunction<IItemCollection, IItemCollection, ?> valueFunction;
+		private final int columnIndex;
+
+		PercentageColumn(BiFunction<IItemCollection, IItemCollection, ?> valueFunction, int columnIndex) {
+			this.valueFunction = valueFunction;
+			this.columnIndex = columnIndex;
+		}
+
+		@Override
+		public Object getMember(Object inObject) {
+			if (inObject instanceof AggregateRow) {
+				AggregateRow ai = ((AggregateRow) inObject);
+				if (ai.model.cellData[columnIndex] == null) {
+					ai.model.cellData[columnIndex] = Arrays.stream(ai.model.aggregateItems).parallel()
+							.map(this::calculateValue).toArray();
+				}
+				return ai.model.cellData[columnIndex][((AggregateRow) inObject).index];
+			}
+			return null;
+		}
+
+		private Object calculateValue(AggregateRow row) {
+			return valueFunction.apply(row.items, row.model.modelItems);
+		}
+	}
+
 	private int createdColumns;
 
 	public static Object getKey(Object row) {
@@ -158,6 +188,12 @@ public class AggregationGrid {
 	// All rows built before the column was added will not have the extra column
 	public IMemberAccessor<?, Object> addColumn(Function<IItemCollection, ?> valueFunction) {
 		return new AggregateColumn(valueFunction, createdColumns++);
+	}
+
+	// All rows built before the column was added will not have the extra column
+	public IMemberAccessor<?, Object> addPercentageColumn(
+		BiFunction<IItemCollection, IItemCollection, ?> valueFunction) {
+		return new PercentageColumn(valueFunction, createdColumns++);
 	}
 
 	private static <T> void addStream(HashMap<T, List<IItem[]>> map, KeyedStream<T, IItem> ks) {
@@ -203,9 +239,9 @@ public class AggregationGrid {
 				.build(items.stream().map(ITEMS_BY_TYPE_CONSTRUCTOR).collect(Collectors.toList())::stream);
 	}
 
-	public <T> Object[] buildRows(Stream<IItemIterable> items, IAccessorFactory<T> classifier) {
-		Map<T, List<IItem[]>> itemsMap = mapItems(items, classifier);
-		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size());
+	public <T> Object[] buildRows(IItemCollection items, IAccessorFactory<T> classifier) {
+		Map<T, List<IItem[]>> itemsMap = mapItems(ItemCollectionToolkit.stream(items), classifier);
+		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size(), items);
 		int index = 0;
 		for (Entry<T, List<IItem[]>> e : itemsMap.entrySet()) {
 			model.addRow(e.getKey(), e.getValue(), index++);

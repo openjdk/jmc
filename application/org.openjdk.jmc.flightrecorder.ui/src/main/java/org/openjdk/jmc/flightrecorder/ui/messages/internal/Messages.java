@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -212,6 +212,8 @@ public class Messages extends NLS {
 	public static String HeapPage_ROW_MEMORY_USAGE_DESC;
 	public static String HeapPage_SELECTED_CLASS;
 	public static String HeapPage_SELECTED_CLASSES;
+	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE;
+	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC;
 	public static String INFORMATION_COMPONENT_NOT_AVAILABLE;
 	public static String IO_PAGE_DURATIONS_DESCRIPTION;
 	public static String IO_PAGE_EVENT_LOG_DESCRIPTION;
@@ -511,10 +513,16 @@ public class Messages extends NLS {
 	public static String ThreadsPage_NAME;
 	public static String ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
 	public static String TlabPage_PAGE_NAME;
+	public static String TlabPage_THREADS_TAB_NAME;
+	public static String TlabPage_METHODS_TAB_NAME;
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS;
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS_DESC;
-	public static String TlabPage_SELECTED_THREAD;
-	public static String TlabPage_SELECTED_THREADS;
+	public static String TlabPage_SELECTED_ONE;
+	public static String TlabPage_SELECTED_MANY;
+	public static String TlabPage_INSIDE_TLAB_SUM_PERCENTAGE;
+	public static String TlabPage_INSIDE_TLAB_SUM_PERCENTAGE_DESC;
+	public static String TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE;
+	public static String TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE_DESC;
 	public static String VMOPERATION_PAGE_DURATIONS_DESCRIPTION;
 	public static String VMOPERATION_PAGE_EVENT_LOG_DESCRIPTION;
 	public static String VMOPERATION_PAGE_TIMELINE_DESCRIPTION;
