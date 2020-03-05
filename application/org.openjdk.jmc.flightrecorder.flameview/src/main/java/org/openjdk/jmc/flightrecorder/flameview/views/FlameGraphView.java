@@ -386,11 +386,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 
 			String type;
-
+			String fileName = fd.getFileName().toLowerCase();
 			// FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
-			if (fd.getFileName().endsWith(".jpg") || fd.getFileName().endsWith(".jpeg")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) { //$NON-NLS-1$ //$NON-NLS-2$
 				type = "image/jpeg"; //$NON-NLS-1$
-			} else if (fd.getFileName().endsWith(".png")) { //$NON-NLS-1$
+			} else if (fileName.endsWith(".png")) { //$NON-NLS-1$
 				type = "image/png"; //$NON-NLS-1$
 			} else {
 				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$

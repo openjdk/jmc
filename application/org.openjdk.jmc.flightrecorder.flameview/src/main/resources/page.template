@@ -113,7 +113,7 @@
 					".d3-flame-graph-label {" +
 					"	pointer-events: none;" +
 					"	white-space: nowrap;" +
-					"   text-overflow: ellipsis;" +
+					"	text-overflow: ellipsis;" +
 					"	overflow: hidden;" +
 					"	font-size: 12px;" +
 					"	font-family: Verdana;" +
@@ -138,9 +138,15 @@
 					canvas.setAttribute("width", width);
 					canvas.setAttribute("height", height);
 
+					if (type !== "image/png") {
+						// fill opaque background
+						canvas.getContext('2d').fillStyle = 'white';
+						canvas.getContext('2d').fillRect(0, 0, width, height);
+					}
+
 					canvas.getContext('2d').drawImage(image, 0, 0);
 
-					var b64 = canvas.toDataURL(type);
+					var b64 = canvas.toDataURL(type, 1);
 					callback(b64.substring(b64.indexOf('base64,') + 7));
 				} catch (e) {
 					callback(undefined, e.message)
