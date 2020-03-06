@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -759,16 +759,19 @@
 			<state>
 				<sash weights="2,1" />
 				<table sortColumn="totalOutsideSize">
-					<column id="itemhistogram.key" width="500" />
-					<column id="itemhistogram.count" sortAscending="false" width="120" />
+					<column id="itemhistogram.key" width="350" />
 					<column id="insideCount" sortAscending="false" width="120"
 						hidden="true" />
 					<column id="outsideCount" sortAscending="false" width="120"
 						hidden="true" />
-					<column id="averageInsideSize" sortAscending="false" width="120" />
-					<column id="averageOutsideSize" sortAscending="false" width="120" />
-					<column id="totalInsideSize" sortAscending="false" width="120" />
-					<column id="totalOutsideSize" sortAscending="false" width="120" />
+					<column id="averageInsideSize" sortAscending="false" width="120"
+						hidden="true" />
+					<column id="averageOutsideSize" sortAscending="false" width="120"
+						hidden="true" />
+					<column id="totalInsideSize" sortAscending="false" width="150" />
+					<column id="totalInsideSizePercent" sortAscending="false" width="150" />
+					<column id="totalOutsideSize" sortAscending="false" width="200" />
+					<column id="totalOutsideSizePercent" sortAscending="false" width="200" />
 				</table>
 				<chart>
 					<checkedAction id="insideSize" />

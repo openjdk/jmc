@@ -56,7 +56,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -76,6 +75,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
@@ -92,6 +92,8 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class FlameGraphView extends ViewPart implements ISelectionListener {
+	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview"; //$NON-NLS-1$
 	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
 	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private static final String HTML_PAGE;
@@ -376,8 +378,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
-		return ResourceLocator
-				.imageDescriptorFromBundle("org.openjdk.jmc.flightrecorder.flameview", "icons/" + iconName).get(); //$NON-NLS-1$
+		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, DIR_ICONS + iconName); //$NON-NLS-1$
 	}
 
 	private static String getIconBase64(String iconName) {
