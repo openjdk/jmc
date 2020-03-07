@@ -72,6 +72,7 @@ public class Messages {
 	public static final String TimestampKind_SINCE_1970_MSG = "TimestampKind_SINCE_1970_MSG"; //$NON-NLS-1$
 	public static final String TypeHandling_MESSAGE_SIZE = "TypeHandling_MESSAGE_SIZE"; //$NON-NLS-1$
 	public static final String UnitLookup_TIMESTAMP_OUT_OF_RANGE = "UnitLookup_TIMESTAMP_OUT_OF_RANGE"; //$NON-NLS-1$
+	public static final String UnsupportedFormatException_LZ4_NOT_SUPPORTED = "UnsupportedFormatException_LZ4_NOT_SUPPORTED"; //$NON-NLS-1$
 
 	private Messages() {
 	}

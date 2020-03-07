@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
+import org.openjdk.jmc.common.messages.internal.Messages;
+
 /**
  * Common functionality you might want when you're working with I/O.
  */
@@ -71,6 +73,11 @@ public final class IOToolkit {
 	 * Magic bytes for recognizing GZip.
 	 */
 	private static final int MAGIC_GZ[] = new int[] {31, 139};
+
+	/**
+	 * Magic bytes for recognizing LZ4.
+	 */
+	private static final int MAGIC_LZ4[] = new int[] {4, 34, 77, 24};
 
 	private IOToolkit() {
 		throw new Error("Don't"); //$NON-NLS-1$
@@ -113,6 +120,9 @@ public final class IOToolkit {
 				ZipInputStream zin = new ZipInputStream(in);
 				zin.getNextEntry();
 				return zin;
+			} else if (hasMagic(file, MAGIC_LZ4)) {
+				throw new UnsupportedFormatException(
+						Messages.getString(Messages.UnsupportedFormatException_LZ4_NOT_SUPPORTED)); //$NON-NLS-1$
 			}
 			return in;
 		} catch (RuntimeException e) {
@@ -154,6 +164,10 @@ public final class IOToolkit {
 			ZipInputStream zin = new ZipInputStream(in);
 			zin.getNextEntry();
 			return zin;
+		}
+		if (hasMagic(in, MAGIC_LZ4)) {
+			throw new UnsupportedFormatException(
+					Messages.getString(Messages.UnsupportedFormatException_LZ4_NOT_SUPPORTED)); //$NON-NLS-1$
 		}
 		in.reset();
 		return in;
