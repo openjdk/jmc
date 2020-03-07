@@ -3,7 +3,7 @@ package org.openjdk.jmc.common.io;
 import java.io.IOException;
 
 /**
- * Thrown when an unsupported file format is discovered.
+ * Thrown when an unsupported compression format is discovered.
  */
 public class UnsupportedFormatException extends IOException {
 	public UnsupportedFormatException(String message) {
