@@ -88,6 +88,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return true;
 	}
 
+	public static TransformRegistry empty() {
+		return new DefaultTransformRegistry();
+	}
+
 	public static TransformRegistry from(InputStream in) throws XMLStreamException {
 		HashMap<String, String> globalDefaults = new HashMap<>();
 		DefaultTransformRegistry registry = new DefaultTransformRegistry();

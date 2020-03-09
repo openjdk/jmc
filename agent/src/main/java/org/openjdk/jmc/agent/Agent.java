@@ -58,7 +58,6 @@ public class Agent {
 	 * This should be generated as part of the build later.
 	 */
 	public final static String VERSION = "0.0.2"; //$NON-NLS-1$
-	private final static String DEFAULT_CONFIG = "jfrprobes.xml"; //$NON-NLS-1$
 	private static boolean loadedDynamically = false;
 
 	/**
@@ -102,7 +101,8 @@ public class Agent {
 	 */
 	public static void initializeAgent(InputStream configuration, Instrumentation instrumentation)
 			throws XMLStreamException {
-		TransformRegistry registry = DefaultTransformRegistry.from(configuration);
+		TransformRegistry registry =
+				configuration != null ? DefaultTransformRegistry.from(configuration) : DefaultTransformRegistry.empty();
 		instrumentation.addTransformer(new Transformer(registry), true);
 		AgentManagementFactory.createAndRegisterAgentControllerMBean(instrumentation, registry);
 		if (loadedDynamically) {
@@ -128,8 +128,14 @@ public class Agent {
 	 */
 	private static void initializeAgent(String agentArguments, Instrumentation instrumentation) {
 		if (agentArguments == null || agentArguments.trim().length() == 0) {
-			agentArguments = DEFAULT_CONFIG;
+			try {
+				initializeAgent((InputStream) null, instrumentation);
+			} catch (XMLStreamException e) {
+				// noop
+			}
+			return;
 		}
+
 		File file = new File(agentArguments);
 		try (InputStream stream = new FileInputStream(file)) {
 			initializeAgent(stream, instrumentation);
