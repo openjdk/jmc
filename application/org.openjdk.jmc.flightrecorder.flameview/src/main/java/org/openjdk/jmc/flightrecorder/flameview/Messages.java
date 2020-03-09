@@ -43,6 +43,11 @@ public class Messages {
 
 	public static final String FLAMEVIEW_FLAME_GRAPH = "FLAMEVIEW_FLAME_GRAPH"; //$NON-NLS-1$
 	public static final String FLAMEVIEW_ICICLE_GRAPH = "FLAMEVIEW_ICICLE_GRAPH"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_SAVE_AS = "FLAMEVIEW_SAVE_AS"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_PRINT = "FLAMEVIEW_PRINT"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_SAVE_FLAME_GRAPH_AS = "FLAMEVIEW_SAVE_FLAME_GRAPH_AS"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_JPEG_IMAGE = "FLAMEVIEW_JPEG_IMAGE"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_PNG_IMAGE = "FLAMEVIEW_PNG_IMAGE"; //$NON-NLS-1$
 
 	private Messages() {
 	}

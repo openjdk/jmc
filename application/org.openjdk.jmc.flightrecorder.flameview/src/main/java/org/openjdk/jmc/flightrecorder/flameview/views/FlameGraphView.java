@@ -37,13 +37,21 @@ import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCL
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_FLAME_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_JPEG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PNG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PRINT;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_AS;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -60,6 +68,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
@@ -69,11 +78,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -139,6 +151,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private IItemCollection currentItems;
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
+	private ExportAction[] exportActions;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -199,6 +212,53 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
+	private enum ExportActionType {
+		SAVE_AS(flameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench().getSharedImages()
+						.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
+		PRINT(flameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
+						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
+
+		private final String message;
+		private final int action;
+		private final ImageDescriptor imageDescriptor;
+		private final ImageDescriptor disabledImageDescriptor;
+
+		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor,
+				ImageDescriptor disabledImageDescriptor) {
+			this.message = message;
+			this.action = action;
+			this.imageDescriptor = imageDescriptor;
+			this.disabledImageDescriptor = disabledImageDescriptor;
+		}
+
+	}
+
+	private class ExportAction extends Action {
+		private final ExportActionType actionType;
+
+		private ExportAction(ExportActionType actionType) {
+			super(actionType.message, actionType.action);
+			this.actionType = actionType;
+			setToolTipText(actionType.message);
+			setImageDescriptor(actionType.imageDescriptor);
+			setDisabledImageDescriptor(actionType.disabledImageDescriptor);
+		}
+
+		@Override
+		public void run() {
+			switch (actionType) {
+			case SAVE_AS:
+				Executors.newSingleThreadExecutor().execute(FlameGraphView.this::saveFlameGraph);
+				break;
+			case PRINT:
+				browser.execute("window.print()"); //$NON-NLS-1$
+				break;
+			}
+		}
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -207,6 +267,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				new GroupByAction(GroupActionType.THREAD_ROOT)};
 		groupByFlameviewActions = new GroupByFlameviewAction[] {new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
 				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
+		exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
+				new ExportAction(ExportActionType.PRINT)};
+		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
 		// methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
 		IMenuManager siteMenu = site.getActionBars().getMenuManager();
@@ -218,6 +281,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		Stream.of(groupByFlameviewActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
 		Stream.of(groupByActions).forEach(toolBar::add);
+		toolBar.add(new Separator());
+		Stream.of(exportActions).forEach(toolBar::add);
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -289,6 +354,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setViewerInput(TraceNode root) {
+		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 		browser.setText(HTML_PAGE);
 		browser.addListener(SWT.Resize, event -> {
 			browser.execute("resizeFlameGraph();");
@@ -299,8 +365,71 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
 				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
+				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 			}
 		});
+	}
+
+	private void saveFlameGraph() {
+		CompletableFuture<String> future = new CompletableFuture<>();
+		String[] destination = new String[2];
+
+		DisplayToolkit.inDisplayThread().execute(() -> {
+			FileDialog fd = new FileDialog(browser.getShell(), SWT.SAVE);
+			fd.setText(flameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
+			fd.setFilterNames(
+					new String[] {flameviewMessage(FLAMEVIEW_JPEG_IMAGE), flameviewMessage(FLAMEVIEW_PNG_IMAGE)});
+			fd.setFilterExtensions(new String[] {"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFileName("flame_graph"); //$NON-NLS-1$
+			fd.setOverwrite(true);
+			if (fd.open() == null) {
+				future.cancel(true);
+				return;
+			}
+
+			String type;
+			String fileName = fd.getFileName().toLowerCase();
+			// FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
+			if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) { //$NON-NLS-1$ //$NON-NLS-2$
+				type = "image/jpeg"; //$NON-NLS-1$
+			} else if (fileName.endsWith(".png")) { //$NON-NLS-1$
+				type = "image/png"; //$NON-NLS-1$
+			} else {
+				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$
+				return;
+			}
+			destination[0] = fd.getFilterPath();
+			destination[1] = fd.getFileName();
+
+			String callback = "_saveFlameGraphCallback"; //$NON-NLS-1$
+			new BrowserFunction(browser, callback) {
+				@Override
+				public Object function(Object[] arguments) {
+					if (arguments.length > 1) {
+						future.completeExceptionally(new RuntimeException((String) arguments[1]));
+						return null;
+					}
+					future.complete((String) arguments[0]);
+
+					super.dispose();
+					return null;
+				}
+			};
+
+			browser.execute("exportFlameGraph('" + type + "', '" + callback + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		});
+
+		try {
+			String b64 = future.get();
+			byte[] bytes = Base64.getDecoder().decode(b64);
+			FileOutputStream fos = new FileOutputStream(new File(destination[0], destination[1]));
+			fos.write(bytes);
+			fos.close();
+		} catch (CancellationException e) {
+			// noop
+		} catch (InterruptedException | ExecutionException | IOException e) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
+		}
 	}
 
 	private static Void handleModelBuildException(Throwable ex) {
