@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -105,15 +106,15 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 
 	ChartAndPopupTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
 			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-			FlavorSelectorState flavorSelectorState) {
+			FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
 		super(pageFilter, model, parent, toolkit, pageContainer, state, sectionTitle, tableFilter, icon,
-				flavorSelectorState);
+				flavorSelectorState, classifier);
 	}
 
 	protected void init(
 		IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit, IPageContainer pageContainer,
 		IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-		FlavorSelectorState flavorSelectorState) {
+		FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
 		this.pageFilter = pageFilter;
 		this.model = model;
 		this.pageContainer = pageContainer;
@@ -123,7 +124,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		hiddenTableContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		hiddenTableContainer.setVisible(false);
 
-		hiddenTable = buildHistogram(hiddenTableContainer, state.getChild(TABLE));
+		hiddenTable = buildHistogram(hiddenTableContainer, state.getChild(TABLE), classifier);
 		hiddenTable.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
 
 		tableFilterComponent = FilterComponent.createFilterComponent(hiddenTable.getManager().getViewer().getControl(),

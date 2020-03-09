@@ -186,7 +186,7 @@ public class ThreadsPage extends AbstractDataPage {
 
 		ThreadsPageUi(Composite parent, FormToolkit toolkit, IPageContainer editor, IState state) {
 			super(pageFilter, getDataSource(), parent, toolkit, editor, state, getName(), pageFilter, getIcon(),
-					flavorSelectorState);
+					flavorSelectorState, JfrAttributes.EVENT_THREAD);
 			mmChart = (MCContextMenuManager) chartCanvas.getContextMenu();
 			mmText = (MCContextMenuManager) textCanvas.getContextMenu();
 			sash.setOrientation(SWT.HORIZONTAL);
@@ -411,7 +411,7 @@ public class ThreadsPage extends AbstractDataPage {
 
 			@Override
 			public void createControl(Composite parent) {
-				table = buildHistogram(parent, state.getChild(TABLE));
+				table = buildHistogram(parent, state.getChild(TABLE), JfrAttributes.EVENT_THREAD);
 				MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
 				ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
 				table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
