@@ -448,7 +448,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static String render(TraceNode root) {
 		StringBuilder builder = new StringBuilder();
-		render(builder, root);
+		String rootNodeStart = createJsonRootTraceNode(root);
+		builder.append(rootNodeStart);
+		renderChildren(builder, root);
+		builder.append("]}");
 		return builder.toString();
 	}
 
@@ -456,13 +459,22 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
+		renderChildren(builder, node);
+		builder.append("]}");
+	}
+	
+	private static void renderChildren(StringBuilder builder, TraceNode node) {
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
 			}
 		}
-		builder.append("]}");
+	}
+	
+	private static String createJsonRootTraceNode(TraceNode rootNode) {
+		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", rootNode.getName()),
+				toJSonKeyValue("p", ""), toJSonKeyValue("d", rootNode.getPackageName()));
 	}
 
 	private static String createJsonTraceNode(TraceNode node) {

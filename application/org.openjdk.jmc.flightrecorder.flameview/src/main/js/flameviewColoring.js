@@ -143,11 +143,42 @@ const removeSpecialCharacters = function(text) {
 
 const adjustTip = function(d) {
 	var tipMessage = d.data.n + htmlTagBr;
-	if (d.data.d === undefined) {
+	if (d.data.v == undefined) {
+		tipMessage += createTable(d.data.d);
+	} else if (d.data.d === undefined) {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;
 	} else {
 		tipMessage += "description: " + d.data.d + htmlTagBr;
 	}
-	tipMessage += "samples: " + d.data.v;
+	if (d.data.v !== undefined) {
+		tipMessage += "samples: " + d.data.v;
+	} 
 	return tipMessage;
 };
+
+const tagOpen = function(tag){
+	return "\u003C"+ tag +"\u003E";
+}
+const tagClose  = function(tag){
+	return "\u003C\u002F"+ tag +"\u003E";
+}
+
+const createTable = function(input){
+	var table = tagOpen("table");
+//	var table = "";
+	var tableRows = input.split("|");
+	table += tagOpen("tbody class='d3-flame-graph-tip'");
+	for(var i=0; i < tableRows.length - 1; i++) {
+		table += addTableRow(tableRows[i]);
+//		table += tableRows[i] + htmlTagBr;
+	}
+	table += tagClose("tbody");
+	table += tagClose("table");
+	return table;
+}
+
+const addTableRow = function(row) {
+	const rowValue = row.split(":");
+	return tagOpen("tr") + tagOpen("td") + rowValue[0]+tagClose("td")+tagOpen("td") + rowValue[1] + tagClose("td")+ tagClose("tr"); 
+	
+}
