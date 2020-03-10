@@ -34,8 +34,11 @@
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -53,14 +56,14 @@ import org.openjdk.jmc.flightrecorder.stacktrace.Messages;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class TraceTreeUtils {
 	public final static String DEFAULT_ROOT_NAME = "__root";
 	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
-	public final static int DEFAULT_ROOT_TITLE_MAX_EVENTS = 3;
+	public final static int DEFAULT_ROOT_TITLE_MAX_EVENTS = 2;
+	public final static int DEFAULT_ROOT_EVENT_MAX = 10;
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
 	/**
@@ -147,38 +150,52 @@ public class TraceTreeUtils {
 				for(int j=0; j < b.getFirstFrame().getItems().size(); j++) {
 					IType<?> itemType = b.getFirstFrame().getItems().get(j).getType();
 					String itemName = itemType.getName();
-					Long itemCount = itemCountByType.get(itemType);
-					eventsOccurences.put(itemName, itemCount);
+					if(!eventsOccurences.containsKey(itemName)) {
+						Long itemCount = itemCountByType.get(itemType);
+						totalItemsSum += itemCount;
+						eventsOccurences.put(itemName, itemCount);
+					}
 				}
 			}
 
-			totalItemsSum = itemCountByType.entrySet().stream()
-					.filter(e -> eventsOccurences.containsKey(e.getKey().getName()))
-					.map(Map.Entry::getValue)
-					.collect(Collectors.summingLong(Long::longValue));
 			titleSb.append(totalItemsSum).append(" events of ").append(eventsOccurences.size()).append(" types: ");
 			
-			boolean writeTitle = true;
+			
 			int maxEventsInTile = eventsOccurences.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS ?  
 					DEFAULT_ROOT_TITLE_MAX_EVENTS : eventsOccurences.size();
+			Map<String, Long> sortedEventsOccurences = eventsOccurences.entrySet().stream()
+					.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			
+			boolean writeTitle = true;
 			int i=0;
-			for (Map.Entry<String, Long> e : eventsOccurences.entrySet()) {
+			long restEventCount = 0;
+			for (Map.Entry<String, Long> e : sortedEventsOccurences.entrySet()) {
 				if(writeTitle) {
 					titleSb.append(e.getKey());
 					titleSb.append("[").append(e.getValue()).append("]");
-					if(i < maxEventsInTile - 1) {
+					if(i < maxEventsInTile) {
 						titleSb.append(", ");
 					}
-					i++;
-					if(i == DEFAULT_ROOT_TITLE_MAX_EVENTS) {
+					if(i == maxEventsInTile) {
 						writeTitle = false;
 					}
 				}
-				descSb.append(e.getValue()).append(":").append(e.getKey()).append("|");
+				if(i < DEFAULT_ROOT_EVENT_MAX ) {
+					descSb.append(e.getValue()).append(":").append(e.getKey()).append("|");
+				} else {
+					restEventCount =  Long.sum(restEventCount, e.getValue());
+				}
+				i++;
+			}
+			if(restEventCount > 0) {
+				descSb.append(restEventCount).append(":").append("others... (")
+				.append(sortedEventsOccurences.size() - DEFAULT_ROOT_EVENT_MAX).append(" types)").append("|");
 			}
 			
+					
 			if(eventsOccurences.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS) {
-				titleSb.append(" and more");
+				titleSb.append("...");
 			}	
 		}
 		

@@ -165,20 +165,18 @@ const tagClose  = function(tag){
 
 const createTable = function(input){
 	var table = tagOpen("table");
-//	var table = "";
 	var tableRows = input.split("|");
 	table += tagOpen("tbody class='d3-flame-graph-tip'");
+	var prevCount = 0;
 	for(var i=0; i < tableRows.length - 1; i++) {
-		table += addTableRow(tableRows[i]);
-//		table += tableRows[i] + htmlTagBr;
+		const rowValue = tableRows[i].split(":");
+		table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
 	}
 	table += tagClose("tbody");
 	table += tagClose("table");
 	return table;
 }
 
-const addTableRow = function(row) {
-	const rowValue = row.split(":");
-	return tagOpen("tr") + tagOpen("td") + rowValue[0]+tagClose("td")+tagOpen("td") + rowValue[1] + tagClose("td")+ tagClose("tr"); 
-	
+const addTableRow = function(eventCount, eventName) {
+	return tagOpen("tr") + tagOpen("td") + eventCount + tagClose("td") + tagOpen("td") + eventName + tagClose("td") + tagClose("tr"); 
 }
