@@ -52,6 +52,7 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
@@ -70,8 +71,6 @@ public class VMOperationRule implements IRule {
 
 	private static final String RESULT_ID = "VMOperations"; //$NON-NLS-1$
 	private static final double MAX_SECONDS_BETWEEN_EVENTS = 0.01;
-	private IQuantity longestDuration;
-	private IItem startingEvent;
 
 	public static final TypedPreference<IQuantity> WARNING_LIMIT = new TypedPreference<>("vm.vmoperation.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.VMOperationRule_CONFIG_WARNING_LIMIT),
@@ -99,7 +98,8 @@ public class VMOperationRule implements IRule {
 
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 
-		findLongestEventInfo(items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
+		Pair<IItem,IQuantity> longestEventInfo = findLongestEventInfo(items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
+		IItem startingEvent = longestEventInfo.left;
 		if (startingEvent == null) {
 			String zeroDuration = UnitLookup.SECOND.quantity(0).displayUsing(IDisplayable.AUTO);
 			return new Result(this, 0,
@@ -107,6 +107,7 @@ public class VMOperationRule implements IRule {
 					null, JdkQueries.VM_OPERATIONS);
 		}
 		String timeStr = getStartTime(startingEvent).displayUsing(IDisplayable.AUTO);
+		IQuantity longestDuration = longestEventInfo.right;
 		String peakDuration = longestDuration.displayUsing(IDisplayable.AUTO);
 		String operation = getOperation(startingEvent);
 		IMCThread caller = getCaller(startingEvent);
@@ -131,7 +132,7 @@ public class VMOperationRule implements IRule {
 				JdkQueries.FILE_READ);
 	}
 
-	private void findLongestEventInfo(IItemCollection items) {
+	private Pair<IItem, IQuantity> findLongestEventInfo(IItemCollection items) {
 		IItem startingEvent = null;
 		IQuantity longestDuration = null;
 		IItem curStartingEvent = null;
@@ -163,8 +164,7 @@ public class VMOperationRule implements IRule {
 			}
 			prevEndTime = getEndTime(event);
 		}
-		this.longestDuration = longestDuration;
-		this.startingEvent = startingEvent;
+		return new Pair<IItem, IQuantity>(startingEvent, longestDuration);
 	}
 
 	private List<IItem> sortEventsByStartTime(IItemCollection items) {
