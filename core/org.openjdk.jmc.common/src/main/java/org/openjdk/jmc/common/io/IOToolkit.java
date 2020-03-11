@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
-import org.openjdk.jmc.common.messages.internal.Messages;
+import net.jpountz.lz4.LZ4FrameInputStream;
 
 /**
  * Common functionality you might want when you're working with I/O.
@@ -101,8 +101,8 @@ public final class IOToolkit {
 	}
 
 	/**
-	 * Get an input stream for a optionally compressed file. If the file is compressed using either
-	 * GZip or ZIP then an appropriate unpacking will be done.
+	 * Get an input stream for a optionally compressed file. If the file is compressed using GZip,
+	 * ZIP or LZ4, then an appropriate unpacking will be done.
 	 *
 	 * @param file
 	 *            file to read from
@@ -121,8 +121,7 @@ public final class IOToolkit {
 				zin.getNextEntry();
 				return zin;
 			} else if (hasMagic(file, MAGIC_LZ4)) {
-				throw new UnsupportedFormatException(
-						Messages.getString(Messages.UnsupportedFormatException_LZ4_NOT_SUPPORTED)); //$NON-NLS-1$
+				return new LZ4FrameInputStream(in);
 			}
 			return in;
 		} catch (RuntimeException e) {
@@ -138,8 +137,8 @@ public final class IOToolkit {
 	}
 
 	/**
-	 * Get an input stream for a optionally compressed input stream. If the input stream is
-	 * compressed using either GZip or ZIP then an appropriate unpacking will be done.
+	 * Get an input stream for a optionally compressed input stream. If the file is compressed using
+	 * GZip, ZIP or LZ4, then an appropriate unpacking will be done.
 	 *
 	 * @param stream
 	 *            input stream to read from
@@ -149,27 +148,29 @@ public final class IOToolkit {
 	 */
 	public static InputStream openUncompressedStream(InputStream stream) throws IOException {
 		InputStream in = stream;
-		if (!in.markSupported()) {
-			in = new BufferedInputStream(stream);
-		}
-		in.mark(MAGIC_GZ.length + 1);
-		if (hasMagic(in, MAGIC_GZ)) {
+		if (in.markSupported()) {
+			in.mark(MAGIC_GZ.length + 1);
+			if (hasMagic(in, MAGIC_GZ)) {
+				in.reset();
+				return new GZIPInputStream(in);
+			}
 			in.reset();
-			return new GZIPInputStream(in);
-		}
-		in.reset();
-		in.mark(MAGIC_ZIP.length + 1);
-		if (hasMagic(in, MAGIC_ZIP)) {
+			in.mark(MAGIC_ZIP.length + 1);
+			if (hasMagic(in, MAGIC_ZIP)) {
+				in.reset();
+				ZipInputStream zin = new ZipInputStream(in);
+				zin.getNextEntry();
+				return zin;
+			}
 			in.reset();
-			ZipInputStream zin = new ZipInputStream(in);
-			zin.getNextEntry();
-			return zin;
+			in.mark(MAGIC_LZ4.length + 1);
+			if (hasMagic(in, MAGIC_LZ4)) {
+				in.reset();
+				return new LZ4FrameInputStream(in);
+			}
+			in.reset();
 		}
-		if (hasMagic(in, MAGIC_LZ4)) {
-			throw new UnsupportedFormatException(
-					Messages.getString(Messages.UnsupportedFormatException_LZ4_NOT_SUPPORTED)); //$NON-NLS-1$
-		}
-		in.reset();
+		in = new BufferedInputStream(stream);
 		return in;
 	}
 
@@ -226,6 +227,19 @@ public final class IOToolkit {
 	}
 
 	/**
+	 * Returns true if the file is LZ4 compressed.
+	 *
+	 * @param file
+	 *            the file to examine
+	 * @return {@code true} if it is an LZ4 compressed file, {@code false} otherwise
+	 * @throws IOException
+	 *             if an error occurred when trying to read from the file
+	 */
+	public static boolean isLZ4File(File file) throws IOException {
+		return hasMagic(file, MAGIC_LZ4);
+	}
+
+	/**
 	 * Checks if the file is a ZIP archive.
 	 *
 	 * @param file
@@ -259,6 +273,16 @@ public final class IOToolkit {
 	}
 
 	/**
+	 * Returns the magic bytes for identifying LZ4. This is a defensive copy. It's up to the user to
+	 * cache this to avoid excessive allocations.
+	 * 
+	 * @return a copy of the magic bytes for LZ4.
+	 */
+	public static int[] getLz4Magic() {
+		return MAGIC_ZIP.clone();
+	}
+
+	/**
 	 * Checks if the file is compressed in a way compatible with
 	 * {@link #openUncompressedStream(File)}.
 	 *
@@ -276,7 +300,12 @@ public final class IOToolkit {
 				return true;
 			}
 			is.reset();
-			return hasMagic(is, MAGIC_ZIP);
+			if (hasMagic(is, MAGIC_ZIP)) {
+				return true;
+			}
+			;
+			is.reset();
+			return hasMagic(is, MAGIC_LZ4);
 		}
 	}
 
