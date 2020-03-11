@@ -98,7 +98,8 @@ public class VMOperationRule implements IRule {
 
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 
-		Pair<IItem,IQuantity> longestEventInfo = findLongestEventInfo(items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
+		Pair<IItem, IQuantity> longestEventInfo = findLongestEventInfo(
+				items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
 		IItem startingEvent = longestEventInfo.left;
 		if (startingEvent == null) {
 			String zeroDuration = UnitLookup.SECOND.quantity(0).displayUsing(IDisplayable.AUTO);
