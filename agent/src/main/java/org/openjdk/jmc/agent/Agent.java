@@ -94,6 +94,7 @@ public class Agent {
 	 *
 	 * @param configuration
 	 *            the configuration options, as XML. The stream will be fully read, but not closed.
+	 *            An empty configuration will be used if this argument is <code>null</code>.
 	 * @param instrumentation
 	 *            the {@link Instrumentation} instance.
 	 * @throws XMLStreamException
@@ -131,7 +132,7 @@ public class Agent {
 			try {
 				initializeAgent((InputStream) null, instrumentation);
 			} catch (XMLStreamException e) {
-				// noop
+				// noop: null as InputStream causes defaults to be used - the stream will not be used
 			}
 			return;
 		}
