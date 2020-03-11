@@ -4,11 +4,26 @@ input {
 	margin-right: 2px;	
 }
 
-svg {
+svg, table {
 	width: 100%;
 }
 
-#icicleIcon {
-	cursor: pointer;
-			
+table {
+	margin-top: 4px;	
+}
+
+table, th, td {
+	border-collapse: collapse;
+	border: 1px solid grey;
+}
+
+
+th, td {
+	text-align: left;
+	padding: 2px;
+}
+
+.tdCount {
+	color: white;
+	text-align: right;	
 }

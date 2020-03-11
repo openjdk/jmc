@@ -33,17 +33,12 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IItem;
@@ -60,11 +55,14 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class TraceTreeUtils {
+	private static final Comparator<Map.Entry<String, Long>> COMPARATOR_SORT_EVENT_COUNT = 
+			Map.Entry.comparingByValue(Comparator.reverseOrder());
 	public final static String DEFAULT_ROOT_NAME = "__root";
 	public final static String DEFAULT_ROOT_PACKAGE_NAME = "";
 	public final static int DEFAULT_ROOT_TITLE_MAX_EVENTS = 2;
 	public final static int DEFAULT_ROOT_EVENT_MAX = 10;
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
+	
 
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
@@ -72,7 +70,7 @@ public class TraceTreeUtils {
 	 * @param model the model to trace the tree from.
 	 * @return the root.
 	 */
-	public static TraceNode createTree(Map<IType<IItem>, Long> itemCountByType, StacktraceModel model) {
+	public static TraceNode createTree(Map<IType<IItem>, Long> itemCountByType, StacktraceModel model) {		
 		Fork rootFork = model.getRootFork();
 		TraceNode root = getRootTraceNode(itemCountByType, rootFork);
 		for (Branch branch : rootFork.getBranches()) {
@@ -88,6 +86,7 @@ public class TraceTreeUtils {
 	 * @return the root of the resulting tree.
 	 */
 	public static TraceNode createTree(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {	
+			
 		Map<IType<IItem>, Long> itemCountByType = StreamSupport.stream(items.spliterator(), false)
 				.collect(Collectors.toMap(IItemIterable::getType, is -> is.getItemCount(), Long::sum));
 		return createTree(itemCountByType, new StacktraceModel(threadRootAtTop, frameSeparator, items));
@@ -162,10 +161,11 @@ public class TraceTreeUtils {
 			
 			
 			int maxEventsInTile = eventsOccurences.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS ?  
-					DEFAULT_ROOT_TITLE_MAX_EVENTS : eventsOccurences.size();
+					DEFAULT_ROOT_TITLE_MAX_EVENTS : eventsOccurences.size() - 1;
 			Map<String, Long> sortedEventsOccurences = eventsOccurences.entrySet().stream()
-					.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+					.sorted(COMPARATOR_SORT_EVENT_COUNT)
+					.collect(Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 			
 			boolean writeTitle = true;
 			int i=0;

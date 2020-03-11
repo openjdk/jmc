@@ -156,17 +156,26 @@ const adjustTip = function(d) {
 	return tipMessage;
 };
 
-const tagOpen = function(tag){
-	return "\u003C"+ tag +"\u003E";
+const tagOpen = function(tag, css) {
+	var result = "\u003C" + tag;
+	if(css === undefined)  s{
+		result +="\u003E";
+	} else {
+		result += " class='tdCount' \u003E";
+	}
+	return result;
 }
-const tagClose  = function(tag){
-	return "\u003C\u002F"+ tag +"\u003E";
+const tagClose  = function(tag) {
+	return "\u003C\u002F "+ tag + "\u003E";
 }
 
-const createTable = function(input){
-	var table = tagOpen("table");
+const createTable = function(input) {
+	var table = tagOpen("table class='d3-flame-graph-tip'");
 	var tableRows = input.split("|");
-	table += tagOpen("tbody class='d3-flame-graph-tip'");
+	if(tableRows.length > 1) {
+		table += createTableHeader();
+	}
+	table += tagOpen("tbody");
 	var prevCount = 0;
 	for(var i=0; i < tableRows.length - 1; i++) {
 		const rowValue = tableRows[i].split(":");
@@ -178,5 +187,25 @@ const createTable = function(input){
 }
 
 const addTableRow = function(eventCount, eventName) {
-	return tagOpen("tr") + tagOpen("td") + eventCount + tagClose("td") + tagOpen("td") + eventName + tagClose("td") + tagClose("tr"); 
+	return tableTr(tableTd(eventCount, "test"), tableTd(eventName));
 }
+
+const createTableHeader = function() { 
+	return tagOpen("thead") + tableTr(tableTh("Count"), tableTh("Event")) + tagClose("thead");
+}
+
+const tableTh = function(value) {
+	return tagOpen("th") + value + tagClose("th");
+}
+
+const tableTd = function(value, css) {
+	return tagOpen("td", css) + value + tagClose("td");
+}
+
+const tableTr = function(...elements) {
+	var result = tagOpen("tr");
+	result += elements.join("");
+	result += tagClose("tr");
+	return result;
+}
+
