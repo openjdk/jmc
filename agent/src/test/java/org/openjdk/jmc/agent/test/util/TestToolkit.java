@@ -32,14 +32,14 @@
  */
 package org.openjdk.jmc.agent.test.util;
 
+import org.openjdk.jmc.agent.util.IOToolkit;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Random;
 
 public final class TestToolkit {
@@ -53,40 +53,8 @@ public final class TestToolkit {
 
 	public static byte[] getByteCode(Class<?> c) throws IOException {
 		try (InputStream is = c.getClassLoader().getResourceAsStream(c.getName().replace('.', '/') + ".class")) { //$NON-NLS-1$
-			return readFully(is, -1, true);
+			return IOToolkit.readFully(is, -1, true);
 		}
-	}
-
-	public static byte[] readFully(InputStream is, int length, boolean readAll) throws IOException {
-		byte[] output = {};
-		if (length == -1) {
-			length = Integer.MAX_VALUE;
-		}
-		int pos = 0;
-		while (pos < length) {
-			int bytesToRead;
-			if (pos >= output.length) { // Only expand when there's no room
-				bytesToRead = Math.min(length - pos, output.length + 1024);
-				if (output.length < pos + bytesToRead) {
-					output = Arrays.copyOf(output, pos + bytesToRead);
-				}
-			} else {
-				bytesToRead = output.length - pos;
-			}
-			int cc = is.read(output, pos, bytesToRead);
-			if (cc < 0) {
-				if (readAll && length != Integer.MAX_VALUE) {
-					throw new EOFException("Detect premature EOF"); //$NON-NLS-1$
-				} else {
-					if (output.length != pos) {
-						output = Arrays.copyOf(output, pos);
-					}
-					break;
-				}
-			}
-			pos += cc;
-		}
-		return output;
 	}
 
 	public static long randomLong() {

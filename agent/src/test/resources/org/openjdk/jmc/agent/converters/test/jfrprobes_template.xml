@@ -48,92 +48,110 @@
 	<events>
 		<event id="demo.jfr.convertertest.String">
 			<name>ConverterEventString-%TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to String.</description>
+			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to
+				String.
+			</description>
 			<path>demo/converterevents/</path>
-			<kind>DURATION</kind>
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
 			</class>
 			<method>
 				<name>printGurkaToString</name>
 				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>
-					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterString</converter>
-				</parameter>
+				<parameters>
+					<parameter index="0">
+						<name>Gurka Attribute</name>
+						<description>The one and only converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkConverterString</converter>
+					</parameter>
+				</parameters>
 			</method>
 		</event>
 		<event id="demo.jfr.convertertest.Int">
 			<name>ConverterEventInt-%TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to an int.</description>
+			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to an
+				int.
+			</description>
 			<path>demo/converterevents</path>
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter</class>
 			<method>
 				<name>printGurkaToInt</name>
 				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>
-					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterInt</converter>
-				</parameter>
+				<parameters>
+					<parameter index="0">
+						<name>Gurka Attribute</name>
+						<description>The one and only converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkConverterInt</converter>
+					</parameter>
+				</parameters>
 			</method>
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Long">
 			<name>ConverterEventLong-%TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a long.</description>
+			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a
+				long.
+			</description>
 			<path>demo/converterevents</path>
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter</class>
 			<method>
 				<name>printGurkaToLong</name>
 				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>
-					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterLong</converter>
-				</parameter>
+				<parameters>
+					<parameter index="0">
+						<name>Gurka Attribute</name>
+						<description>The one and only converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkConverterLong</converter>
+					</parameter>
+				</parameters>
 			</method>
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Float">
 			<name>ConverterEventFloat-%TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a float.</description>
+			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a
+				float.
+			</description>
 			<path>demo/converterevents</path>
-			<thread>true</thread>
 			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter</class>
 			<method>
 				<name>printGurkaToFloat</name>
 				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>
-					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterFloat</converter>
-				</parameter>
+				<parameters>
+					<parameter index="0">
+						<name>Gurka Attribute</name>
+						<description>The one and only converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkConverterFloat</converter>
+					</parameter>
+				</parameters>
 			</method>
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Double">
 			<name>ConverterEventDouble-%TEST_NAME%</name>
-			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a float.</description>
+			<description>Defined in the xml file and added by the agent. Should transform the Gurka parameter to a
+				float.
+			</description>
 			<path>demo/converterevents</path>
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter</class>
 			<method>
 				<name>printGurkaToFloat</name>
 				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
-				<parameter index="0">
-					<name>Gurka Attribute</name>
-					<description>The one and only converted Gurk-parameter</description>
-					<contenttype>None</contenttype>
-					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterFloat</converter>
-				</parameter>
+				<parameters>
+					<parameter index="0">
+						<name>Gurka Attribute</name>
+						<description>The one and only converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkConverterFloat</converter>
+					</parameter>
+				</parameters>
 			</method>
 			<location>WRAP</location>
 		</event>
