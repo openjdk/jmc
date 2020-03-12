@@ -279,7 +279,7 @@ public final class IOToolkit {
 	 * @return a copy of the magic bytes for LZ4.
 	 */
 	public static int[] getLz4Magic() {
-		return MAGIC_ZIP.clone();
+		return MAGIC_LZ4.clone();
 	}
 
 	/**
