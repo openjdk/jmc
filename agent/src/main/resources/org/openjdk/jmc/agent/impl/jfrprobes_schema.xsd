@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element type="jfrAgentType" name="jfragent"/>
+
+	<xs:complexType name="jfrAgentType">
+		<xs:all>
+			<xs:element type="configType" name="config" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Global configuration options</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="eventsType" name="events" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="configType">
+		<xs:all>
+			<xs:element type="xs:string" name="classprefix" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the prefix to use when generating event class names</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="xs:boolean" name="allowtostring" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Will allow the recording of arrays and object parameters as Strings. This will cause toString to
+						be called for array elements and objects other than strings, which in turn can cause trouble if
+						the toString method is badly implemented. Use with care.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="xs:boolean" name="allowconverter" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Allows converters to be used. If a converter is badly implemented, you are on your own.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="eventsType">
+		<xs:sequence>
+			<xs:element type="eventType" name="event" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="eventType">
+		<xs:all>
+			<xs:element type="xs:string" name="name"/>
+			<xs:element type="classType" name="class"/>
+			<xs:element type="methodType" name="method"/>
+			<xs:element type="xs:string" name="description" minOccurs="0"/>
+			<xs:element type="pathType" name="path" minOccurs="0"/>
+			<xs:element type="xs:boolean" name="stacktrace" minOccurs="0"/>
+			<xs:element type="xs:boolean" name="rethrow" minOccurs="0"/>
+			<xs:element type="locationType" name="location" minOccurs="0"/>
+			<xs:element type="fieldsType" name="fields" minOccurs="0"/>
+		</xs:all>
+		<xs:attribute type="xs:string" name="id" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="classType">
+		<xs:annotation>
+			<xs:documentation>the fully qualified class name (FQCN) of the class to be transformed</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern value="([a-zA-Z_$][a-zA-Z0-9_$]*\.)*([a-zA-Z_$][a-zA-Z0-9_$]*)"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="methodType">
+		<xs:all>
+			<xs:element type="methodNameType" name="name"/>
+			<xs:element type="descriptorType" name="descriptor"/>
+			<xs:element type="parametersType" name="parameters" minOccurs="0"/>
+			<xs:element type="returnValueType" name="returnvalue" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:simpleType name="methodNameType">
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern value="[a-zA-Z_$][a-zA-Z0-9_$]*"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="descriptorType">
+		<xs:annotation>
+			<xs:documentation>see §4.3.3 in Java Virtual Machine Specification</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern
+					value="\((\[*([BCDFIJSZ]|L([a-zA-Z_$][a-zA-Z0-9_$]*/)*[a-zA-Z_$][a-zA-Z0-9_$]*;))*\)(V|\[*([BCDFIJSZ]|L([a-zA-Z_$][a-zA-Z0-9_$]*/)*[a-zA-Z_$][a-zA-Z0-9_$]*;))"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="parametersType">
+		<xs:annotation>
+			<xs:documentation>only if we allow toString</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element type="parameterType" name="parameter" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="parameterType">
+		<xs:all>
+			<xs:element type="xs:string" name="name"/>
+			<xs:element type="xs:string" name="description" minOccurs="0"/>
+			<xs:element type="contentTypeType" name="contenttype" minOccurs="0"/>
+			<xs:element type="relationKeyType" name="relationkey" minOccurs="0"/>
+			<xs:element type="converterType" name="converter" minOccurs="0"/>
+		</xs:all>
+		<xs:attribute type="xs:nonNegativeInteger" name="index" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="contentTypeType">
+		<xs:annotation>
+			<xs:documentation>see com.oracle.jrockit.jfr.ContentType</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Bytes"/>
+			<xs:enumeration value="Timestamp"/>
+			<xs:enumeration value="Millis"/>
+			<xs:enumeration value="Nanos"/>
+			<xs:enumeration value="Ticks"/>
+			<xs:enumeration value="Address"/>
+			<xs:enumeration value="OSThread"/>
+			<xs:enumeration value="JavaThread"/>
+			<xs:enumeration value="StackTrace"/>
+			<xs:enumeration value="Class"/>
+			<xs:enumeration value="Percentage"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="relationKeyType">
+		<xs:annotation>
+			<xs:documentation>
+				a unique URI signifying a relationship between different events based on the values of specific
+				fields
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:anyURI"/>
+	</xs:simpleType>
+
+	<xs:simpleType name="converterType">
+		<xs:annotation>
+			<xs:documentation>the fully qualified class name (FQCN) of the converter used</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="classType"/>
+	</xs:simpleType>
+
+	<xs:complexType name="returnValueType">
+		<xs:annotation>
+			<xs:documentation>This will only work if we allow toString</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element type="xs:string" name="description" minOccurs="0"/>
+			<xs:element type="contentTypeType" name="contenttype" minOccurs="0"/>
+			<xs:element type="relationKeyType" name="relationkey" minOccurs="0"/>
+			<xs:element type="converterType" name="converter" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:simpleType name="pathType">
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern value="([^/]+/)*([^/]*)"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="locationType">
+		<xs:annotation>
+			<xs:documentation>location {ENTRY, EXIT, WRAP}</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:enumeration value="ENTRY"/>
+			<xs:enumeration value="EXIT"/>
+			<xs:enumeration value="WRAP"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="fieldsType">
+		<xs:sequence>
+			<xs:element type="fieldType" name="field" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="fieldType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="name"/>
+			<xs:element type="xs:string" name="description"/>
+			<xs:element type="expressionType" name="expression"/>
+			<xs:element type="contentTypeType" name="contenttype" minOccurs="0"/>
+			<xs:element type="relationKeyType" name="relationkey" minOccurs="0"/>
+			<xs:element type="converterType" name="converter" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="expressionType">
+		<xs:annotation>
+			<xs:documentation>
+				an expression in a subset of primary expressions (see §15.8 in Java Language Specification) to be
+				evaluated
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern value="([a-zA-Z_$][a-zA-Z0-9_$]*\.)*([a-zA-Z_$][a-zA-Z0-9_$]*)(\.[a-zA-Z_$][a-zA-Z_$]*)*"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
