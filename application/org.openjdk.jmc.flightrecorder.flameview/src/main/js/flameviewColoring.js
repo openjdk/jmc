@@ -115,7 +115,7 @@ const adjustHslPropertyByHash = function (hash, min, max) {
 	return Math.min(proposedValue, max);
 };
 
-const createHslColorString = function(h,s,l){
+const createHslColorString = function(h,s,l) {
 	return "hsl\u0028" + h + "\u002c " + s + "\u0025\u002c " + l + "\u0025\u0029";
 };
 
@@ -156,16 +156,17 @@ const adjustTip = function(d) {
 	return tipMessage;
 };
 
-const tagOpen = function(tag, css) {
+const tagOpen = function(tag, cssClass) {
 	var result = "\u003C" + tag;
-	if(css === undefined)  s{
+	if (cssClass === undefined) {
 		result +="\u003E";
 	} else {
-		result += " class='tdCount' \u003E";
+		var cssExtended = " class='" + cssClass + "' \u003E";
+		result += cssExtended;
 	}
 	return result;
 }
-const tagClose  = function(tag) {
+const tagClose = function(tag) {
 	return "\u003C\u002F "+ tag + "\u003E";
 }
 
@@ -187,11 +188,11 @@ const createTable = function(input) {
 }
 
 const addTableRow = function(eventCount, eventName) {
-	return tableTr(tableTd(eventCount, "test"), tableTd(eventName));
+	return tableTr(tableTd(eventCount, "tdCount"), tableTd(eventName));
 }
 
 const createTableHeader = function() { 
-	return tagOpen("thead") + tableTr(tableTh("Count"), tableTh("Event")) + tagClose("thead");
+	return tagOpen("thead") + tableTr(tableTh("Count"), tableTh("Event Type")) + tagClose("thead");
 }
 
 const tableTh = function(value) {
