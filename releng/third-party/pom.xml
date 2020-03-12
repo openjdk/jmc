@@ -78,6 +78,14 @@
 									<id>org.owasp.encoder:encoder:1.2.2</id>
 								</artifact>
 								<artifact>
+									<id>org.lz4:lz4-java:1.7.1</id>
+									<override>true</override>
+									<instructions>
+										<Bundle-Name>org.lz4.lz4-java</Bundle-Name>
+										<Bundle-SymbolicName>org.lz4.lz4-java</Bundle-SymbolicName>
+									</instructions>
+								</artifact>
+								<artifact>
 									<id>org.hdrhistogram:HdrHistogram:2.1.11</id>
 								</artifact>
 								<artifact>
