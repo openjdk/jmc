@@ -24,6 +24,7 @@ th, td {
 }
 
 .tdCount {
+	width: 60px;
 	color: white;
 	text-align: right;	
 }

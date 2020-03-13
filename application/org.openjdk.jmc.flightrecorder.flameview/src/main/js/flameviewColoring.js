@@ -171,19 +171,17 @@ const tagClose = function(tag) {
 }
 
 const createTable = function(input) {
-	var table = tagOpen("table class='d3-flame-graph-tip'");
+	var table = "";
 	var tableRows = input.split("|");
 	if(tableRows.length > 1) {
-		table += createTableHeader();
+		table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
+		var prevCount = 0;
+		for(var i=0; i < tableRows.length - 1; i++) {
+			const rowValue = tableRows[i].split(":");
+			table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
+		}
+		table = table.concat(tagClose("tbody"), tagClose("table"));
 	}
-	table += tagOpen("tbody");
-	var prevCount = 0;
-	for(var i=0; i < tableRows.length - 1; i++) {
-		const rowValue = tableRows[i].split(":");
-		table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
-	}
-	table += tagClose("tbody");
-	table += tagClose("table");
 	return table;
 }
 
@@ -192,21 +190,18 @@ const addTableRow = function(eventCount, eventName) {
 }
 
 const createTableHeader = function() { 
-	return tagOpen("thead") + tableTr(tableTh("Count"), tableTh("Event Type")) + tagClose("thead");
+	return tagOpen("thead").concat(tableTr(tableTh("Count", "tdCount"), tableTh("Event Type")),tagClose("thead"));
 }
 
-const tableTh = function(value) {
-	return tagOpen("th") + value + tagClose("th");
+const tableTh = function(value, css) {
+	return tagOpen("th", css).concat(value, tagClose("th"));
 }
 
 const tableTd = function(value, css) {
-	return tagOpen("td", css) + value + tagClose("td");
+	return tagOpen("td", css).concat(value, tagClose("td"));
 }
 
 const tableTr = function(...elements) {
-	var result = tagOpen("tr");
-	result += elements.join("");
-	result += tagClose("tr");
-	return result;
+	return tagOpen("tr").concat(elements.join(""), tagClose("tr"));
 }
 

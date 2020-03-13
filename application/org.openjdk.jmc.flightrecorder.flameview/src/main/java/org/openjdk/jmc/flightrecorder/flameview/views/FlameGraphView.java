@@ -94,6 +94,7 @@ import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
 import org.openjdk.jmc.flightrecorder.flameview.tree.TraceNode;
 import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
@@ -338,11 +339,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
 	}
-
+	
 	private CompletableFuture<TraceNode> getModelPreparer(
 		final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
-			return TraceTreeUtils.createTree(items, separator, threadRootAtTop);
+			StacktraceModel model = new StacktraceModel(threadRootAtTop, frameSeparator, items);
+			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
+			return TraceTreeUtils.createTree(root, model);
 		}, MODEL_EXECUTOR);
 	}
 
@@ -438,7 +441,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 		return null;
 	}
-
+	
 	private static String toJSon(TraceNode root) {
 		if (root == null) {
 			return "\"\"";
