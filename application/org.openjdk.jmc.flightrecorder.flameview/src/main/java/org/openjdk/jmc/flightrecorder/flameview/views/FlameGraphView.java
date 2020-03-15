@@ -123,21 +123,21 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsD3Tip = "jslibs/d3-tip.min.js";
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
-		// jmc flameview coloring functions
-		String jsFlameviewColoringName = "flameviewColoring.js";
+		// jmc flameview coloring, tooltip and other  functions
+		String jsFlameviewName = "flameview.js";
 		String cssFlameview = "flameview.css";
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
-		String jsFlameviewColoring = fileContent(jsFlameviewColoringName);
+		String jsFlameview = fileContent(jsFlameviewName);
 
 		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
 
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts,
 		// %3 - Search Icon Base64, %4 - 3rd party scripts, %5 - Flameview Coloring,
 		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
-				jsFlameviewColoring);
+				jsFlameview);
 	}
 
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);

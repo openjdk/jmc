@@ -143,7 +143,7 @@ const removeSpecialCharacters = function(text) {
 
 const adjustTip = function(d) {
 	var tipMessage = d.data.n + htmlTagBr;
-	if (d.data.v == undefined) {
+	if (d.data.v === undefined) {
 		tipMessage += createTable(d.data.d);
 	} else if (d.data.d === undefined) {
 		tipMessage +=  "package: " + d.data.p + htmlTagBr;
