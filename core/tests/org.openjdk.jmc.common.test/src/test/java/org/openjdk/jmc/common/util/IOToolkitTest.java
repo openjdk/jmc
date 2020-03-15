@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.common.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.io.IOToolkit;
@@ -40,9 +43,62 @@ public class IOToolkitTest {
 	private static final int MAGIC_ZIP[] = new int[] {80, 75, 3, 4};
 	private static final int MAGIC_GZ[] = new int[] {31, 139};
 
+	private static final String UNCOMPRESSED = "test.txt";
+	private static final String GZ = "test.txt.gz";
+	private static final String LZ4 = "test.txt.lz4";
+	private static final String ZIP = "test.txt.zip";
+
+	private static final String GURKA = "Gurka";
+
 	@Test
 	public void testGetMagics() {
 		Assert.assertArrayEquals(MAGIC_ZIP, IOToolkit.getZipMagic());
 		Assert.assertArrayEquals(MAGIC_GZ, IOToolkit.getGzipMagic());
 	}
+
+	@Test
+	public void testUncompressUncompressed() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(UNCOMPRESSED));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
+	public void testUncompressZipped() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(ZIP));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
+	public void testUncompressGZipped() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(GZ));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
+	public void testUncompressLZ4() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(LZ4));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	public InputStream getStream(String resourceName) throws IOException {
+		InputStream stream = getClass().getClassLoader().getResourceAsStream(resourceName);
+		if (stream == null) {
+			throw new IOException("Could not find the resource " + resourceName);
+		}
+		return stream;
+	}
+
+	public String readFromStream(InputStream stream) throws IOException {
+		StringBuilder builder = new StringBuilder();
+		int c = 0;
+		while ((c = stream.read()) != -1) {
+			builder.append((char) c);
+		}
+		return builder.toString();
+	}
+
 }
