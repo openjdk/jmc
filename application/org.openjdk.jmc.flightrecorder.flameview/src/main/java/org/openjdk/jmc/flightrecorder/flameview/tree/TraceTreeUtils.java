@@ -33,6 +33,15 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_MORE;
+
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -61,20 +70,23 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class TraceTreeUtils {
 
-	public final static String EMPTY_STRING = "";						//$NON-NLS-1$
+	public final static String EMPTY_STRING = ""; //$NON-NLS-1$
 	public final static int DEFAULT_ROOT_TITLE_MAX_EVENTS = 2;
 	public final static int DEFAULT_ROOT_EVENT_MAX = 10;
+	public final static String SELECT_EVENT_DELIMITER = createFlameviewMessage(
+			FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER);
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
-	
-	
+
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 * 
-	 * @param root the root with description
-	 * @param model the model to trace the tree from
+	 * @param root
+	 *            the root with description
+	 * @param model
+	 *            the model to trace the tree from
 	 * @return the root
 	 */
-	public static TraceNode createTree(TraceNode root, StacktraceModel model) {		
+	public static TraceNode createTree(TraceNode root, StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
 		for (Branch branch : rootFork.getBranches()) {
 			addBranch(root, branch);
@@ -85,32 +97,36 @@ public class TraceTreeUtils {
 	/**
 	 * Root of Traces from the selection {@link IItemCollection}
 	 * 
-	 * @param items the items from the selection
-	 * @param branchCount branch count from {@link StacktraceModel} model
+	 * @param items
+	 *            the items from the selection
+	 * @param branchCount
+	 *            branch count from {@link StacktraceModel} model
 	 * @return root
 	 */
 	public static TraceNode createRootWithDescription(IItemCollection items, int branchCount) {
-		
-		StringBuilder titleSb = new StringBuilder().append("Selection: ");
+
+		StringBuilder titleSb = new StringBuilder();
 		StringBuilder descSb = new StringBuilder();
 		AtomicInteger totalItemsSum = new AtomicInteger(0);
-		
-		if(branchCount == 0) {
-			titleSb.append("Stacktrace not available");
+
+		if (branchCount == 0) {
+			titleSb.append(createFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
 		} else {
 			Map<String, Integer> orderedEventTypeNameWithCount = eventTypeNameWithCountSorted(items, totalItemsSum);
-			titleSb.append(totalItemsSum.get()).append(" events of ")
-				.append(orderedEventTypeNameWithCount.size()).append(" types: ");
+			String selectionText = createFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, totalItemsSum.get(),
+					orderedEventTypeNameWithCount.size());
+			titleSb.append(selectionText);
 			createNodeTitleAndDescription(titleSb, descSb, orderedEventTypeNameWithCount);
 		}
-		
-		return new TraceNode(titleSb.toString(),  0, descSb.toString());
+
+		return new TraceNode(titleSb.toString(), 0, descSb.toString());
 	}
-	
+
 	/**
 	 * Print the tree by the trace node
 	 * 
-	 * @param node trace node 
+	 * @param node
+	 *            trace node
 	 * @return tree
 	 */
 	public static String printTree(TraceNode node) {
@@ -119,6 +135,18 @@ public class TraceTreeUtils {
 		builder.append(System.lineSeparator());
 		printTree(builder, 0, node);
 		return builder.toString();
+	}
+
+	private static String createFlameviewMessage(String key, Object ... values) {
+		if (values == null) {
+			return getFlameviewMessage(key);
+		} else {
+			return MessageFormat.format(getFlameviewMessage(key), values);
+		}
+	}
+
+	private static String getFlameviewMessage(String key) {
+		return org.openjdk.jmc.flightrecorder.flameview.Messages.getString(key);
 	}
 
 	private static void addBranch(TraceNode root, Branch branch) {
@@ -153,8 +181,9 @@ public class TraceTreeUtils {
 		}
 		return builder.toString();
 	}
-	
-	private static Map<String, Integer> eventTypeNameWithCountSorted(IItemCollection items, AtomicInteger totalEventTypeSum) {
+
+	private static Map<String, Integer> eventTypeNameWithCountSorted(
+		IItemCollection items, AtomicInteger totalEventTypeSum) {
 		final HashMap<String, Integer> map = new HashMap<>();
 		IAggregator<IQuantity, ?> build = GroupingAggregator.build(EMPTY_STRING, EMPTY_STRING, JfrAttributes.EVENT_TYPE,
 				Aggregators.count(), new GroupingAggregator.IGroupsFinisher<IQuantity, IType<?>, CountConsumer>() {
@@ -178,41 +207,47 @@ public class TraceTreeUtils {
 		items.getAggregate(build);
 		return RulesToolkit.sortMap(map, false);
 	}
-	
-	private static void createNodeTitleAndDescription(StringBuilder titleSb, StringBuilder descSb, 
-			Map<String, Integer> orderedItemCountByType) {
-		
-		int i=0;
+
+	private static void createNodeTitleAndDescription(
+		StringBuilder titleSb, StringBuilder descSb, Map<String, Integer> orderedItemCountByType) {
+
+		int i = 0;
 		long restEventCount = 0;
 		boolean writeTitle = true;
-		int maxEventsInTile = orderedItemCountByType.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS ?  
-				DEFAULT_ROOT_TITLE_MAX_EVENTS : orderedItemCountByType.size() - 1;
+		int maxEventsInTile = orderedItemCountByType.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS
+				? DEFAULT_ROOT_TITLE_MAX_EVENTS : orderedItemCountByType.size() - 1;
 
-		for(Map.Entry<String, Integer> e: orderedItemCountByType.entrySet()) {
-			if(writeTitle) {
-				titleSb.append(e.getKey());
-				titleSb.append("[").append(e.getValue()).append("]");
-				if(i < maxEventsInTile) {
-					titleSb.append(", ");
+		for (Map.Entry<String, Integer> e : orderedItemCountByType.entrySet()) {
+			if (writeTitle) {
+				String eventType = createFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
+						String.valueOf(e.getValue()));
+				titleSb.append(eventType);
+				if (i < maxEventsInTile) {
+					titleSb.append(SELECT_EVENT_DELIMITER);
 				} else {
 					writeTitle = false;
 				}
 			}
-			if(i < DEFAULT_ROOT_EVENT_MAX ) {
-				descSb.append(e.getValue()).append(":").append(e.getKey()).append("|");
+			if (i < DEFAULT_ROOT_EVENT_MAX) {
+				String tableEvent = createFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN,
+						String.valueOf(e.getValue()), e.getKey());
+				descSb.append(tableEvent);
 			} else {
-				restEventCount =  Long.sum(restEventCount, e.getValue());
+				restEventCount = Long.sum(restEventCount, e.getValue());
 			}
 			i++;
 		}
-		
-		if(restEventCount > 0) {
-			descSb.append(restEventCount).append(":").append("others... (")
-			.append(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX).append(" types)").append("|");
+
+		if (restEventCount > 0) {
+			String restEventCountText = String.valueOf(restEventCount);
+			String restItemCountText = String.valueOf(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX);
+			String tableEventRest = createFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
+					restEventCountText, restItemCountText);
+			descSb.append(tableEventRest);
 		}
-		
-		if(maxEventsInTile < orderedItemCountByType.size() -  1) {
-			titleSb.append("...");
+
+		if (maxEventsInTile < orderedItemCountByType.size() - 1) {
+			titleSb.append(createFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); //$NON-NLS-1$
 		}
 	}
 

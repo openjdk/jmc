@@ -339,7 +339,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
 	}
-	
+
 	private CompletableFuture<TraceNode> getModelPreparer(
 		final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -441,7 +441,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 		return null;
 	}
-	
+
 	private static String toJSon(TraceNode root) {
 		if (root == null) {
 			return "\"\"";
@@ -465,7 +465,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		renderChildren(builder, node);
 		builder.append("]}");
 	}
-	
+
 	private static void renderChildren(StringBuilder builder, TraceNode node) {
 		for (int i = 0; i < node.getChildren().size(); i++) {
 			render(builder, node.getChildren().get(i));
@@ -474,10 +474,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 	}
-	
+
 	private static String createJsonRootTraceNode(TraceNode rootNode) {
-		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", rootNode.getName()),
-				toJSonKeyValue("p", ""), toJSonKeyValue("d", rootNode.getPackageName()));
+		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", rootNode.getName()), toJSonKeyValue("p", ""),
+				toJSonKeyValue("d", rootNode.getPackageName()));
 	}
 
 	private static String createJsonTraceNode(TraceNode node) {
