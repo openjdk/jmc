@@ -40,6 +40,9 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_MORE;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
+import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -61,19 +64,18 @@ import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.Messages;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
-public class TraceTreeUtils {
+public final class TraceTreeUtils {
 
 	public final static String EMPTY_STRING = ""; //$NON-NLS-1$
 	public final static int DEFAULT_ROOT_TITLE_MAX_EVENTS = 2;
 	public final static int DEFAULT_ROOT_EVENT_MAX = 10;
-	public final static String SELECT_EVENT_DELIMITER = createFlameviewMessage(
+	public final static String SELECT_EVENT_DELIMITER = getFlameviewMessage(
 			FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER);
 	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
@@ -110,11 +112,11 @@ public class TraceTreeUtils {
 		AtomicInteger totalItemsSum = new AtomicInteger(0);
 
 		if (branchCount == 0) {
-			titleSb.append(createFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
+			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
 		} else {
 			Map<String, Integer> orderedEventTypeNameWithCount = eventTypeNameWithCountSorted(items, totalItemsSum);
-			String selectionText = createFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, totalItemsSum.get(),
-					orderedEventTypeNameWithCount.size());
+			String selectionText = getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, String.valueOf(totalItemsSum.get()),
+					String.valueOf(orderedEventTypeNameWithCount.size()));
 			titleSb.append(selectionText);
 			createNodeTitleAndDescription(titleSb, descSb, orderedEventTypeNameWithCount);
 		}
@@ -135,18 +137,6 @@ public class TraceTreeUtils {
 		builder.append(System.lineSeparator());
 		printTree(builder, 0, node);
 		return builder.toString();
-	}
-
-	private static String createFlameviewMessage(String key, Object ... values) {
-		if (values == null) {
-			return getFlameviewMessage(key);
-		} else {
-			return MessageFormat.format(getFlameviewMessage(key), values);
-		}
-	}
-
-	private static String getFlameviewMessage(String key) {
-		return org.openjdk.jmc.flightrecorder.flameview.Messages.getString(key);
 	}
 
 	private static void addBranch(TraceNode root, Branch branch) {
@@ -219,7 +209,7 @@ public class TraceTreeUtils {
 
 		for (Map.Entry<String, Integer> e : orderedItemCountByType.entrySet()) {
 			if (writeTitle) {
-				String eventType = createFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
+				String eventType = getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
 						String.valueOf(e.getValue()));
 				titleSb.append(eventType);
 				if (i < maxEventsInTile) {
@@ -229,7 +219,7 @@ public class TraceTreeUtils {
 				}
 			}
 			if (i < DEFAULT_ROOT_EVENT_MAX) {
-				String tableEvent = createFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN,
+				String tableEvent = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN,
 						String.valueOf(e.getValue()), e.getKey());
 				descSb.append(tableEvent);
 			} else {
@@ -241,13 +231,13 @@ public class TraceTreeUtils {
 		if (restEventCount > 0) {
 			String restEventCountText = String.valueOf(restEventCount);
 			String restItemCountText = String.valueOf(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX);
-			String tableEventRest = createFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
+			String tableEventRest = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
 					restEventCountText, restItemCountText);
 			descSb.append(tableEventRest);
 		}
 
 		if (maxEventsInTile < orderedItemCountByType.size() - 1) {
-			titleSb.append(createFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); //$NON-NLS-1$
+			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); //$NON-NLS-1$
 		}
 	}
 
@@ -256,11 +246,12 @@ public class TraceTreeUtils {
 		IMCMethod method = frame.getMethod();
 		String packageName = FormatToolkit.getPackage(method.getType().getPackage());
 		if (frame == StacktraceModel.UNKNOWN_FRAME) {
-			return new TraceNode(Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME), sFrame.getItemCount(),
+			return new TraceNode(getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME), sFrame.getItemCount(),
 					packageName);
 		} else {
 			String name = FormatToolkit.getHumanReadable(method, false, false, true, false, true, false);
 			return new TraceNode(name, sFrame.getItemCount(), packageName);
 		}
 	}
+
 }

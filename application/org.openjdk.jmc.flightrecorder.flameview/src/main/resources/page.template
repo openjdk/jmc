@@ -30,6 +30,11 @@
 	<script type="text/javascript">
 		
 		const minSearchTextSize = 3;
+		var tooltipTableThCount = "Count";
+		var tooltipTableThEventType = "Event Type";
+		var tootlipPackage = "Package"
+		var tootlipDescription = "Description";
+		var tootlipSamples = "Samples";
 		var textToSearch = "";
 		var flameGraph;
 		var currentJson;

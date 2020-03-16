@@ -141,20 +141,41 @@ const removeSpecialCharacters = function(text) {
 		}}).join('');
 };
 
+
 const adjustTip = function(d) {
-	var tipMessage = d.data.n + htmlTagBr;
+	var tipMessage = "".concat(d.data.n, htmlTagBr);
 	if (d.data.v === undefined) {
-		tipMessage += createTable(d.data.d);
-	} else if (d.data.d === undefined) {
-		tipMessage +=  "package: " + d.data.p + htmlTagBr;
+		tipMessage += createRootTable(d.data.d);
 	} else {
-		tipMessage += "description: " + d.data.d + htmlTagBr;
+		tipMessage += createNodeTipTable(d.data);
 	}
-	if (d.data.v !== undefined) {
-		tipMessage += "samples: " + d.data.v;
-	} 
 	return tipMessage;
-};
+}
+
+const createNodeTipTable = function(data) {
+	var table = "".concat(tagOpen("table class='d3-flame-graph-tip'"), tagOpen("tbody"))
+	if (data.d === undefined) {
+		table = table.concat(addTableRow(tootlipPackage, data.p), addTableRow(tootlipSamples, data.v));
+	} else {
+		table += addTableRow(tootlipDescription, data.d);
+	}
+	return table.concat(tagClose("tbody"), tagClose("table"));
+}
+
+const createRootTable = function(input) {
+	var table = "";
+	var tableRows = input.split("|");
+	if(tableRows.length > 1) {
+		table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
+		var prevCount = 0;
+		for(var i=0; i < tableRows.length - 1; i++) {
+			const rowValue = tableRows[i].split(":");
+			table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
+		}
+		table = table.concat(tagClose("tbody"), tagClose("table"));
+	}
+	return table;
+}
 
 const tagOpen = function(tag, cssClass) {
 	var result = "\u003C" + tag;
@@ -170,27 +191,12 @@ const tagClose = function(tag) {
 	return "\u003C\u002F "+ tag + "\u003E";
 }
 
-const createTable = function(input) {
-	var table = "";
-	var tableRows = input.split("|");
-	if(tableRows.length > 1) {
-		table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
-		var prevCount = 0;
-		for(var i=0; i < tableRows.length - 1; i++) {
-			const rowValue = tableRows[i].split(":");
-			table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
-		}
-		table = table.concat(tagClose("tbody"), tagClose("table"));
-	}
-	return table;
-}
-
 const addTableRow = function(eventCount, eventName) {
 	return tableTr(tableTd(eventCount, "tdCount"), tableTd(eventName));
 }
 
 const createTableHeader = function() { 
-	return tagOpen("thead").concat(tableTr(tableTh("Count", "tdCount"), tableTh("Event Type")),tagClose("thead"));
+	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdCount"), tableTh(tooltipTableThCount)),tagClose("thead"));
 }
 
 const tableTh = function(value, css) {
