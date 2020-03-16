@@ -196,7 +196,7 @@ const addTableRow = function(eventCount, eventName) {
 }
 
 const createTableHeader = function() { 
-	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdCount"), tableTh(tooltipTableThCount)),tagClose("thead"));
+	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdCount"), tableTh(tooltipTableThEventType)),tagClose("thead"));
 }
 
 const tableTh = function(value, css) {

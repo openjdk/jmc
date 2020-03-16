@@ -30,11 +30,11 @@
 	<script type="text/javascript">
 		
 		const minSearchTextSize = 3;
-		var tooltipTableThCount = "Count";
-		var tooltipTableThEventType = "Event Type";
-		var tootlipPackage = "Package"
-		var tootlipDescription = "Description";
-		var tootlipSamples = "Samples";
+		var tooltipTableThCount;
+		var tooltipTableThEventType;
+		var tootlipPackage;
+		var tootlipDescription;
+		var tootlipSamples;
 		var textToSearch = "";
 		var flameGraph;
 		var currentJson;
@@ -50,6 +50,14 @@
 				}
 			}
 		);
+		
+		function configureTooltipText(ct, et, pt, st, dt) {
+			tooltipTableThCount = ct;
+			tooltipTableThEventType = et;
+			tootlipPackage = pt;
+			tootlipSamples = st;
+			tootlipDescription = dt;
+		};
 		
 		const tip = d3.tip()
         	.direction("s")

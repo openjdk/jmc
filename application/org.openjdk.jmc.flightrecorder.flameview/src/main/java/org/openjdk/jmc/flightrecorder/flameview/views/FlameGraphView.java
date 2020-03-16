@@ -42,6 +42,11 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PNG_IM
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_PRINT;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_AS;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_COUNT;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_TYPE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
 
@@ -111,6 +116,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview"; //$NON-NLS-1$
 	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
 	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
+	private static final String TABLE_COLUMN_COUNT = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_COUNT);
+	private static final String TABLE_COLUMN_EVENT_TYPE = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_TYPE);
+	private static final String TOOLTIP_PACKAGE = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE);
+	private static final String TOOLTIP_SAMPLES = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES);
+	private static final String TOOLTIP_DESCRIPTION = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION);
 	private static final String HTML_PAGE;
 	static {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
@@ -369,6 +379,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
+				browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
+						TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
+
 				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
 				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 			}
