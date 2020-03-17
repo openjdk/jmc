@@ -26,6 +26,12 @@ th, td {
 	padding-bottom: 2px;
 }
 
+.tdLabel {
+	width: 60px;
+	color: white;
+	text-align: left;	
+}
+
 .tdCount {
 	width: 60px;
 	color: white;

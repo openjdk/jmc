@@ -144,20 +144,29 @@ const removeSpecialCharacters = function(text) {
 
 const adjustTip = function(d) {
 	var tipMessage = "".concat(d.data.n, htmlTagBr);
-	if (d.data.v === undefined) {
-		tipMessage += createRootTable(d.data.d);
-	} else {
-		tipMessage += createNodeTipTable(d.data);
+	
+	if (nodeContainsChildren(d.data)) {
+		if (d.data.v === undefined) {
+			tipMessage += createRootTable(d.data.d);
+		} else {
+			tipMessage += createNodeTipTable(d.data);
+		}
 	}
+	
 	return tipMessage;
+}
+
+const nodeContainsChildren = function(data) {
+	return Array.isArray(data.c) && data.c.length;
 }
 
 const createNodeTipTable = function(data) {
 	var table = "".concat(tagOpen("table class='d3-flame-graph-tip'"), tagOpen("tbody"))
 	if (data.d === undefined) {
-		table = table.concat(addTableRow(tootlipPackage, data.p), addTableRow(tootlipSamples, data.v));
+		table = table.concat(addTableRow(tootlipPackage, data.p, "tdLabel"), 
+				addTableRow(tootlipSamples, data.v, "tdLabel"));
 	} else {
-		table += addTableRow(tootlipDescription, data.d);
+		table += addTableRow(tootlipDescription, data.d, "tdCount");
 	}
 	return table.concat(tagClose("tbody"), tagClose("table"));
 }
@@ -165,15 +174,13 @@ const createNodeTipTable = function(data) {
 const createRootTable = function(input) {
 	var table = "";
 	var tableRows = input.split("|");
-	if(tableRows.length > 1) {
-		table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
-		var prevCount = 0;
-		for(var i=0; i < tableRows.length - 1; i++) {
-			const rowValue = tableRows[i].split(":");
-			table += addTableRow(parseInt(rowValue[0]), rowValue[1]);
-		}
-		table = table.concat(tagClose("tbody"), tagClose("table"));
+	table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
+	var prevCount = 0;
+	for(var i=0; i < tableRows.length - 1; i++) {
+		const rowValue = tableRows[i].split(":");
+		table += addTableRow(parseInt(rowValue[0]), rowValue[1], "tdCount");
 	}
+	table = table.concat(tagClose("tbody"), tagClose("table"));
 	return table;
 }
 
@@ -191,12 +198,12 @@ const tagClose = function(tag) {
 	return "\u003C\u002F "+ tag + "\u003E";
 }
 
-const addTableRow = function(eventCount, eventName) {
-	return tableTr(tableTd(eventCount, "tdCount"), tableTd(eventName));
+const addTableRow = function(eventCount, eventName, cssStartTd) {
+	return tableTr(tableTd(eventCount, cssStartTd), tableTd(eventName));
 }
 
 const createTableHeader = function() { 
-	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdCount"), tableTh(tooltipTableThEventType)),tagClose("thead"));
+	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdLabel"), tableTh(tooltipTableThEventType)),tagClose("thead"));
 }
 
 const tableTh = function(value, css) {
