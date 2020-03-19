@@ -32,6 +32,11 @@
  */
 package org.openjdk.jmc.agent.jmx;
 
-public interface AgentControllerMBean {
+import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+
+public interface AgentControllerMXBean {
+
 	public void defineEventProbes(String xmlDescription) throws Exception;
+
+	public JFRTransformDescriptor[] retrieveCurrentTransforms();
 }

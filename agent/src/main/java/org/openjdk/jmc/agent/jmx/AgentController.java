@@ -34,15 +34,18 @@ package org.openjdk.jmc.agent.jmx;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementPermission;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 
-public class AgentController implements AgentControllerMBean {
+public class AgentController implements AgentControllerMXBean {
 	
 	private static final Logger logger = Logger.getLogger(AgentController.class.getName());
 	
@@ -90,6 +93,21 @@ public class AgentController implements AgentControllerMBean {
 		registry.setRevertInstrumentation(true);
 		instrumentation.retransformClasses(classesToRetransformArray);
 		registry.setRevertInstrumentation(false);
+	}
+
+	public JFRTransformDescriptor[] retrieveCurrentTransforms() {
+		checkSecurity();
+		Set<String> classNames = registry.getClassNames();
+		List<TransformDescriptor> tds  = new ArrayList<>();
+		for (String className : classNames) {
+			tds.addAll(registry.getTransformData(className));
+		}
+
+		List<JFRTransformDescriptor> jfrTds = new ArrayList<>();
+		for (TransformDescriptor td :tds) {
+			jfrTds.add((JFRTransformDescriptor) td);
+		}
+		return (jfrTds.toArray(new JFRTransformDescriptor[0]));
 	}
 
 	private void checkSecurity() {

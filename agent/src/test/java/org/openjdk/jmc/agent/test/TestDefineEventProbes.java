@@ -57,7 +57,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
-import org.openjdk.jmc.agent.jmx.AgentControllerMBean;
+import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class TestDefineEventProbes {
@@ -162,8 +162,8 @@ public class TestDefineEventProbes {
 	}
 
 	private void doDefineEventProbes(String xmlDescription) throws Exception  {
-		AgentControllerMBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMBean.class, false);
+		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
+				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 		mbean.defineEventProbes(xmlDescription);
 	}
 

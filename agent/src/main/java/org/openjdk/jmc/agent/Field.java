@@ -35,6 +35,9 @@ package org.openjdk.jmc.agent;
 import org.openjdk.jmc.agent.util.expression.ExpressionResolver;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
+
+import javax.management.openmbean.CompositeData;
+
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class Field implements Attribute {
@@ -59,6 +62,11 @@ public class Field implements Attribute {
 		this.relationKey = relationKey;
 		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name);
+	}
+
+	public static Field from(CompositeData cd) {
+		return new Field((String) cd.get("name"), (String) cd.get("expression"), (String) cd.get("description"),
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
 	}
 
 	@Override
