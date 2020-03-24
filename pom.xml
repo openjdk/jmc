@@ -110,7 +110,7 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2019-12</id>
+			<id>2020-03</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -124,7 +124,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2019-12</artifactId>
+									<artifactId>platform-definition-2020-03</artifactId>
 									<version>8.0.0-SNAPSHOT</version>
 								</artifact>
 							</target>
@@ -134,7 +134,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>2019-09</id>
+			<id>2019-12</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -145,7 +145,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2019-09</artifactId>
+									<artifactId>platform-definition-2019-12</artifactId>
 									<version>8.0.0-SNAPSHOT</version>
 								</artifact>
 							</target>
