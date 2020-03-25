@@ -77,6 +77,12 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
+	public void testEmpty() {
+		TransformRegistry registry = DefaultTransformRegistry.empty();
+		assertNotNull(registry);
+	}
+
+	@Test
 	public void testFrom() throws XMLStreamException, IOException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "From")); //$NON-NLS-1$

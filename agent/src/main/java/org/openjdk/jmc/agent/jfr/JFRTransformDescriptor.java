@@ -32,10 +32,15 @@
  */
 package org.openjdk.jmc.agent.jfr;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.TabularData;
 
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Field;
@@ -80,6 +85,33 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		this.parameters = parameters;
 		this.fields = fields;
 		this.returnValue = returnValue;
+	}
+
+	public static JFRTransformDescriptor from(CompositeData cd) {
+		List<Parameter> params = new ArrayList<>();
+		CompositeData[] cdParams = (CompositeData[]) cd.get("parameters");
+		for (CompositeData cdParam : cdParams) {
+			params.add(Parameter.from(cdParam));
+		}
+
+		List<Field> fields = new ArrayList<>();
+		CompositeData[] cdFields = (CompositeData[]) cd.get("fields");
+		for (CompositeData cdField : cdFields) {
+			fields.add(Field.from(cdField));
+		}
+
+		Map<String, String> attr = new HashMap<>();
+		TabularData td = (TabularData) cd.get("transformationAttributes");
+		Object[]  values =  td.values().toArray();
+		for (int i = 0; i < values.length; i++){
+			CompositeData cdValue = (CompositeData) values[i];
+			String value = (String) cdValue.get("value");
+			String key = (String) cdValue.get("key");
+			attr.put(key, value);
+		}
+
+		return new JFRTransformDescriptor((String) cd.get("id"), (String) cd.get("className"), Method.from((CompositeData) cd.get("method")),
+				attr, params, ReturnValue.from((CompositeData) cd.get("returnValue")), fields);
 	}
 
 	public String getEventClassName() {

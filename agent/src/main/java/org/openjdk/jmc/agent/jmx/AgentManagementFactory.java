@@ -50,7 +50,7 @@ public final class AgentManagementFactory {
 
 	private static AgentController agentControllerMBean;
 
-	public static AgentControllerMBean getAgentControllerBean() {
+	public static AgentControllerMXBean getAgentControllerBean() {
 		return agentControllerMBean;
 	}
 
