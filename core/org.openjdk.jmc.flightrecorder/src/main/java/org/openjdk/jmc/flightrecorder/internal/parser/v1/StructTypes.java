@@ -608,6 +608,11 @@ class StructTypes {
 		}
 
 		@Override
+		public Boolean isHidden() {
+			return (Boolean) hidden;
+		}
+
+		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;

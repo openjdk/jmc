@@ -154,6 +154,11 @@ public class MockStacktraceGenerator {
 			return isNative;
 		}
 
+		@Override
+		public Boolean isHidden() {
+			return null;
+		}
+
 	}
 
 	private static class MockType implements IMCType {
