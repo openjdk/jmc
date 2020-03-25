@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.agent;
 
+import javax.management.openmbean.CompositeData;
+
 /**
  * Definition of a method to be logged by the agent.
  */
@@ -42,6 +44,10 @@ public class Method {
 	public Method(String name, String signature) {
 		this.name = name;
 		this.signature = signature;
+	}
+
+	public static Method from(CompositeData cd) {
+		return new Method((String) cd.get("name"), (String) cd.get("signature"));
 	}
 
 	public String getName() {

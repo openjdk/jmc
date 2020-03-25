@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.agent;
 
+import javax.management.openmbean.CompositeData;
+
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 /**
@@ -57,6 +59,11 @@ public final class Parameter implements Attribute {
 		this.relationKey = relationKey;
 		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name); //$NON-NLS-1$
+	}
+
+	public static Parameter from(CompositeData cd) {
+		return new Parameter((int) cd.get("index"), (String) cd.get("name"), (String) cd.get("description"),
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
 	}
 
 	public int getIndex() {

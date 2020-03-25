@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.agent;
 
+import javax.management.openmbean.CompositeData;
+
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 /**
@@ -52,6 +54,14 @@ public final class ReturnValue implements Attribute {
 		this.relationKey = relationKey;
 		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
+	}
+
+	public static ReturnValue from(CompositeData cd) {
+		if (cd == null) {
+			return null;
+		}
+		return new ReturnValue((String) cd.get("name"), (String) cd.get("description"), (String) cd.get("contentType"),
+				(String) cd.get("relationKey"), (String) cd.get("converterClassName"));
 	}
 
 	public String getName() {

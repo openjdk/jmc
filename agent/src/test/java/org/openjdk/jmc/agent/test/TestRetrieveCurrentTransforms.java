@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,34 +33,38 @@
  */
 package org.openjdk.jmc.agent.test;
 
-import static org.junit.Assert.assertTrue;
 import java.lang.management.ManagementFactory;
 
 import javax.management.JMX;
 import javax.management.ObjectName;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 
-public class TestPermissionChecks {
+public class TestRetrieveCurrentTransforms {
 
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
+	private static final String EVENT_ID = "demo.jfr.test1"; //$NON-NLS-1$
+	private static final String METHOD_NAME = "printHelloWorldJFR1"; //$NON-NLS-1$
+	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
 
 	@Test
-	public void testPermissionChecks() throws Exception {
-		boolean exceptionThrown = false;
-		try {
-			doDefineEventProbes("");
-		} catch(SecurityException e) {
-			exceptionThrown = true;
+	public void testRetreiveCurrentTransforms() throws Exception {
+		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
+		Assert.assertTrue(jfrTds.length == 1);
+		for (JFRTransformDescriptor jfrTd : jfrTds) {
+			Assert.assertEquals(EVENT_ID, jfrTd.getId());
+			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
+			Assert.assertEquals(FIELD_NAME, jfrTd.getFields().get(0).getName());
 		}
-		assertTrue(exceptionThrown);
 	}
 
-	private void doDefineEventProbes(String xmlDescription) throws Exception  {
+	private JFRTransformDescriptor[] doRetrieveCurrentTransforms() throws Exception {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		mbean.defineEventProbes(xmlDescription);
+		return mbean.retrieveCurrentTransforms();
 	}
 
 	public void test() {

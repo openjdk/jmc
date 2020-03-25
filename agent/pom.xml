@@ -102,6 +102,7 @@
 					<excludes>
 						<exclude>TestDefineEventProbes.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
+						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -134,6 +135,19 @@
 								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
 								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
 							<includes>TestDefineEventProbes.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-retrieve-transforms</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple.xml
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestRetrieveCurrentTransforms.java</includes>
 						</configuration>
 					</execution>
         		</executions>
