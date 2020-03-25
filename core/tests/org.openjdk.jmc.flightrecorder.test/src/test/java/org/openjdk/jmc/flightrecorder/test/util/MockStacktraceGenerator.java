@@ -153,7 +153,7 @@ public class MockStacktraceGenerator {
 		public Boolean isNative() {
 			return isNative;
 		}
-		
+
 		@Override
 		public Boolean isHidden() {
 			return null;

@@ -98,7 +98,7 @@ public class MCMethod implements IMCMethod {
 	public final Boolean isNative() {
 		return m_isNative;
 	}
-	
+
 	@Override
 	public final Boolean isHidden() {
 		return null;

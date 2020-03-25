@@ -92,7 +92,7 @@ public interface IMCMethod {
 	 *         {@code null} if the information is not available
 	 */
 	Boolean isNative();
-	
+
 	/**
 	 * Whether this method is hidden.
 	 *
