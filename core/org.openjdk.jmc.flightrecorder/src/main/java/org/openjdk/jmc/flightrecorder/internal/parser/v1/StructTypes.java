@@ -606,6 +606,11 @@ class StructTypes {
 		public Boolean isNative() {
 			return null;
 		}
+		
+		@Override
+		public Boolean isHidden() {
+			return (Boolean) hidden;
+		}
 
 		@Override
 		public int hashCode() {
