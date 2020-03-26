@@ -33,18 +33,21 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_MORE;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_MORE;
-import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_EVENT;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_EVENTS;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPES;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,23 +55,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
 import org.openjdk.jmc.common.item.GroupingAggregator;
+import org.openjdk.jmc.common.item.GroupingAggregator.GroupEntry;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
-import org.openjdk.jmc.common.item.GroupingAggregator.GroupEntry;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public final class TraceTreeUtils {
 
@@ -82,10 +85,8 @@ public final class TraceTreeUtils {
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 * 
-	 * @param root
-	 *            the root with description
-	 * @param model
-	 *            the model to trace the tree from
+	 * @param root  the root with description
+	 * @param model the model to trace the tree from
 	 * @return the root
 	 */
 	public static TraceNode createTree(TraceNode root, StacktraceModel model) {
@@ -99,10 +100,8 @@ public final class TraceTreeUtils {
 	/**
 	 * Root of Traces from the selection {@link IItemCollection}
 	 * 
-	 * @param items
-	 *            the items from the selection
-	 * @param branchCount
-	 *            branch count from {@link StacktraceModel} model
+	 * @param items       the items from the selection
+	 * @param branchCount branch count from {@link StacktraceModel} model
 	 * @return root
 	 */
 	public static TraceNode createRootWithDescription(IItemCollection items, int branchCount) {
@@ -115,8 +114,7 @@ public final class TraceTreeUtils {
 			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
 		} else {
 			Map<String, Integer> orderedEventTypeNameWithCount = eventTypeNameWithCountSorted(items, totalItemsSum);
-			String selectionText = getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, String.valueOf(totalItemsSum.get()),
-					String.valueOf(orderedEventTypeNameWithCount.size()));
+			String selectionText = createSelectionText(totalItemsSum.get(), orderedEventTypeNameWithCount.size());
 			titleSb.append(selectionText);
 			createNodeTitleAndDescription(titleSb, descSb, orderedEventTypeNameWithCount);
 		}
@@ -127,8 +125,7 @@ public final class TraceTreeUtils {
 	/**
 	 * Print the tree by the trace node
 	 * 
-	 * @param node
-	 *            trace node
+	 * @param node trace node
 	 * @return tree
 	 */
 	public static String printTree(TraceNode node) {
@@ -137,6 +134,15 @@ public final class TraceTreeUtils {
 		builder.append(System.lineSeparator());
 		printTree(builder, 0, node);
 		return builder.toString();
+	}
+
+	private static String createSelectionText(int events, int types) {
+		String eventText = events > 1 ? getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_EVENTS)
+				: getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_EVENT);
+		String typeText = types > 1 ? getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_TYPES)
+				: getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_TYPE);
+		return getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, String.valueOf(events), eventText, String.valueOf(types),
+				typeText);
 	}
 
 	private static void addBranch(TraceNode root, Branch branch) {
@@ -172,8 +178,8 @@ public final class TraceTreeUtils {
 		return builder.toString();
 	}
 
-	private static Map<String, Integer> eventTypeNameWithCountSorted(
-		IItemCollection items, AtomicInteger totalEventTypeSum) {
+	private static Map<String, Integer> eventTypeNameWithCountSorted(IItemCollection items,
+			AtomicInteger totalEventTypeSum) {
 		final HashMap<String, Integer> map = new HashMap<>();
 		IAggregator<IQuantity, ?> build = GroupingAggregator.build(EMPTY_STRING, EMPTY_STRING, JfrAttributes.EVENT_TYPE,
 				Aggregators.count(), new GroupingAggregator.IGroupsFinisher<IQuantity, IType<?>, CountConsumer>() {
@@ -198,14 +204,15 @@ public final class TraceTreeUtils {
 		return RulesToolkit.sortMap(map, false);
 	}
 
-	private static void createNodeTitleAndDescription(
-		StringBuilder titleSb, StringBuilder descSb, Map<String, Integer> orderedItemCountByType) {
+	private static void createNodeTitleAndDescription(StringBuilder titleSb, StringBuilder descSb,
+			Map<String, Integer> orderedItemCountByType) {
 
 		int i = 0;
 		long restEventCount = 0;
 		boolean writeTitle = true;
 		int maxEventsInTile = orderedItemCountByType.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS
-				? DEFAULT_ROOT_TITLE_MAX_EVENTS : orderedItemCountByType.size() - 1;
+				? DEFAULT_ROOT_TITLE_MAX_EVENTS
+				: orderedItemCountByType.size() - 1;
 
 		for (Map.Entry<String, Integer> e : orderedItemCountByType.entrySet()) {
 			if (writeTitle) {
@@ -237,7 +244,7 @@ public final class TraceTreeUtils {
 		}
 
 		if (maxEventsInTile < orderedItemCountByType.size() - 1) {
-			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); //$NON-NLS-1$
+			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); // $NON-NLS-1$
 		}
 	}
 
