@@ -85,8 +85,10 @@ public final class TraceTreeUtils {
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 * 
-	 * @param root  the root with description
-	 * @param model the model to trace the tree from
+	 * @param root
+	 *            the root with description
+	 * @param model
+	 *            the model to trace the tree from
 	 * @return the root
 	 */
 	public static TraceNode createTree(TraceNode root, StacktraceModel model) {
@@ -100,8 +102,10 @@ public final class TraceTreeUtils {
 	/**
 	 * Root of Traces from the selection {@link IItemCollection}
 	 * 
-	 * @param items       the items from the selection
-	 * @param branchCount branch count from {@link StacktraceModel} model
+	 * @param items
+	 *            the items from the selection
+	 * @param branchCount
+	 *            branch count from {@link StacktraceModel} model
 	 * @return root
 	 */
 	public static TraceNode createRootWithDescription(IItemCollection items, int branchCount) {
@@ -125,7 +129,8 @@ public final class TraceTreeUtils {
 	/**
 	 * Print the tree by the trace node
 	 * 
-	 * @param node trace node
+	 * @param node
+	 *            trace node
 	 * @return tree
 	 */
 	public static String printTree(TraceNode node) {
@@ -178,8 +183,8 @@ public final class TraceTreeUtils {
 		return builder.toString();
 	}
 
-	private static Map<String, Integer> eventTypeNameWithCountSorted(IItemCollection items,
-			AtomicInteger totalEventTypeSum) {
+	private static Map<String, Integer> eventTypeNameWithCountSorted(
+		IItemCollection items, AtomicInteger totalEventTypeSum) {
 		final HashMap<String, Integer> map = new HashMap<>();
 		IAggregator<IQuantity, ?> build = GroupingAggregator.build(EMPTY_STRING, EMPTY_STRING, JfrAttributes.EVENT_TYPE,
 				Aggregators.count(), new GroupingAggregator.IGroupsFinisher<IQuantity, IType<?>, CountConsumer>() {
@@ -204,15 +209,14 @@ public final class TraceTreeUtils {
 		return RulesToolkit.sortMap(map, false);
 	}
 
-	private static void createNodeTitleAndDescription(StringBuilder titleSb, StringBuilder descSb,
-			Map<String, Integer> orderedItemCountByType) {
+	private static void createNodeTitleAndDescription(
+		StringBuilder titleSb, StringBuilder descSb, Map<String, Integer> orderedItemCountByType) {
 
 		int i = 0;
 		long restEventCount = 0;
 		boolean writeTitle = true;
 		int maxEventsInTile = orderedItemCountByType.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS
-				? DEFAULT_ROOT_TITLE_MAX_EVENTS
-				: orderedItemCountByType.size() - 1;
+				? DEFAULT_ROOT_TITLE_MAX_EVENTS : orderedItemCountByType.size() - 1;
 
 		for (Map.Entry<String, Integer> e : orderedItemCountByType.entrySet()) {
 			if (writeTitle) {
