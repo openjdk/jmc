@@ -115,7 +115,7 @@ const adjustHslPropertyByHash = function (hash, min, max) {
 	return Math.min(proposedValue, max);
 };
 
-const createHslColorString = function(h,s,l){
+const createHslColorString = function(h,s,l) {
 	return "hsl\u0028" + h + "\u002c " + s + "\u0025\u002c " + l + "\u0025\u0029";
 };
 
@@ -141,13 +141,80 @@ const removeSpecialCharacters = function(text) {
 		}}).join('');
 };
 
+
 const adjustTip = function(d) {
-	var tipMessage = d.data.n + htmlTagBr;
-	if (d.data.d === undefined) {
-		tipMessage +=  "package: " + d.data.p + htmlTagBr;
-	} else {
-		tipMessage += "description: " + d.data.d + htmlTagBr;
+	var tipMessage = "".concat(d.data.n, htmlTagBr);
+	
+	if (nodeContainsChildren(d.data)) {
+		if (d.data.v === undefined) {
+			tipMessage += createRootTable(d.data.d);
+		} else {
+			tipMessage += createNodeTipTable(d.data);
+		}
 	}
-	tipMessage += "samples: " + d.data.v;
+	
 	return tipMessage;
-};
+}
+
+const nodeContainsChildren = function(data) {
+	return Array.isArray(data.c) && data.c.length;
+}
+
+const createNodeTipTable = function(data) {
+	var table = "".concat(tagOpen("table class='d3-flame-graph-tip'"), tagOpen("tbody"))
+	if (data.d === undefined) {
+		table = table.concat(addTableRow(tootlipPackage, data.p, "tdLabel"), 
+				addTableRow(tootlipSamples, data.v, "tdLabel"));
+	} else {
+		table += addTableRow(tootlipDescription, data.d, "tdCount");
+	}
+	return table.concat(tagClose("tbody"), tagClose("table"));
+}
+
+const createRootTable = function(input) {
+	var table = "";
+	var tableRows = input.split("|");
+	table = table.concat(tagOpen("table class='d3-flame-graph-tip'"), createTableHeader(), tagOpen("tbody"));
+	var prevCount = 0;
+	for(var i=0; i < tableRows.length - 1; i++) {
+		const rowValue = tableRows[i].split(":");
+		table += addTableRow(parseInt(rowValue[0]), rowValue[1], "tdCount");
+	}
+	table = table.concat(tagClose("tbody"), tagClose("table"));
+	return table;
+}
+
+const tagOpen = function(tag, cssClass) {
+	var result = "\u003C" + tag;
+	if (cssClass === undefined) {
+		result +="\u003E";
+	} else {
+		var cssExtended = " class='" + cssClass + "' \u003E";
+		result += cssExtended;
+	}
+	return result;
+}
+const tagClose = function(tag) {
+	return "\u003C\u002F "+ tag + "\u003E";
+}
+
+const addTableRow = function(eventCount, eventName, cssStartTd) {
+	return tableTr(tableTd(eventCount, cssStartTd), tableTd(eventName));
+}
+
+const createTableHeader = function() { 
+	return tagOpen("thead").concat(tableTr(tableTh(tooltipTableThCount, "tdLabel"), tableTh(tooltipTableThEventType)),tagClose("thead"));
+}
+
+const tableTh = function(value, css) {
+	return tagOpen("th", css).concat(value, tagClose("th"));
+}
+
+const tableTd = function(value, css) {
+	return tagOpen("td", css).concat(value, tagClose("td"));
+}
+
+const tableTr = function(...elements) {
+	return tagOpen("tr").concat(elements.join(""), tagClose("tr"));
+}
+
