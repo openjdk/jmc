@@ -66,6 +66,7 @@ import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.CompositeKey;
 import org.openjdk.jmc.common.util.TypeHandling;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -123,6 +124,12 @@ public class ItemHistogram {
 		public void addCountColumn() {
 			columns.add(new ColumnBuilder(Messages.COUNT_COLUMN_NAME, COUNT_COL_ID, AggregationGrid::getCount)
 					.columnDrawer(COUNT_DRAWER).style(SWT.RIGHT).build());
+		}
+
+		public void addDurationColumn() {
+			columns.add(
+					new ColumnBuilder(JfrAttributes.DURATION.getName(), DURATION_COL_ID, AggregationGrid::getDuration)
+							.columnDrawer(DURATION_DRAWER).style(SWT.RIGHT).build());
 		}
 
 		public void addColumn(String colId, IAggregator<?, ?> a) {
@@ -269,8 +276,11 @@ public class ItemHistogram {
 
 	public static final String KEY_COL_ID = "itemhistogram.key"; //$NON-NLS-1$
 	public static final String COUNT_COL_ID = "itemhistogram.count"; //$NON-NLS-1$
+	public static final String DURATION_COL_ID = "itemhistogram.duration"; //$NON-NLS-1$
 
 	private static final Listener COUNT_DRAWER = BackgroundFractionDrawer.unchecked(AggregationGrid::getCountFraction);
+	private static final Listener DURATION_DRAWER = BackgroundFractionDrawer
+			.unchecked(AggregationGrid::getDurationFraction);
 	private final AggregationGrid grid;
 	private final ColumnManager columnManager;
 	private final IAccessorFactory<?> classifier;

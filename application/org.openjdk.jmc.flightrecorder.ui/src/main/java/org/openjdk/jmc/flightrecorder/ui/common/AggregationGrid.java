@@ -46,6 +46,7 @@ import java.util.stream.Collector.Characteristics;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -54,6 +55,7 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 
@@ -64,6 +66,7 @@ public class AggregationGrid {
 		AggregateRow[] aggregateItems;
 		IItemCollection modelItems;
 		int itemsCount;
+		double durationSum;
 
 		AggregationModel(int columnCount, int rowCount, IItemCollection modelItems) {
 			this.cellData = new Object[columnCount][];
@@ -75,6 +78,7 @@ public class AggregationGrid {
 			AggregateRow ai = new AggregateRow(this, key, items, rowIndex);
 			aggregateItems[rowIndex] = ai;
 			itemsCount += ai.count.longValue();
+			durationSum += ai.duration.doubleValue();
 		}
 	}
 
@@ -83,6 +87,7 @@ public class AggregationGrid {
 		final IItemCollection items;
 		final Object key;
 		final IQuantity count;
+		final IQuantity duration;
 		final AggregationModel model;
 
 		AggregateRow(AggregationModel model, Object key, List<IItem[]> itemsByType, int rowIndex) {
@@ -90,6 +95,7 @@ public class AggregationGrid {
 			this.key = key;
 			this.items = buildItemCollection(itemsByType);
 			this.count = UnitLookup.NUMBER_UNITY.quantity(itemsByType.stream().mapToInt(ia -> ia.length).sum());
+			this.duration = items.getAggregate(Aggregators.sum(JfrAttributes.DURATION));
 			this.index = rowIndex;
 		}
 
@@ -171,6 +177,10 @@ public class AggregationGrid {
 		return (row instanceof AggregateRow) ? ((AggregateRow) row).count : null;
 	}
 
+	public static IQuantity getDuration(Object row) {
+		return (row instanceof AggregateRow) ? ((AggregateRow) row).duration : null;
+	}
+
 	public static IItemCollection getItems(Object row) {
 		return ((AggregateRow) row).items;
 	}
@@ -180,6 +190,16 @@ public class AggregationGrid {
 			AggregateRow ai = ((AggregateRow) row);
 			if (ai.model.itemsCount > 0) {
 				return ai.count.doubleValue() / ai.model.itemsCount;
+			}
+		}
+		return 0;
+	}
+
+	public static double getDurationFraction(Object row) {
+		if ((row instanceof AggregateRow)) {
+			AggregateRow ai = ((AggregateRow) row);
+			if (ai.model.durationSum > 0) {
+				return ai.duration.doubleValue() / ai.model.durationSum;
 			}
 		}
 		return 0;

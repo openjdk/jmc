@@ -263,6 +263,7 @@ public class ItemHandlerPage extends AbstractDataPage {
 
 			ItemHistogramBuilder histogramBuilder = new ItemHistogramBuilder();
 			histogramBuilder.addCountColumn();
+			histogramBuilder.addDurationColumn();
 
 			for (Entry<String, IAttribute<?>> entry : acc.getAllAttributes().entrySet()) {
 				String combinedId = entry.getKey();
@@ -321,6 +322,7 @@ public class ItemHandlerPage extends AbstractDataPage {
 				List<ColumnSettings> defaultHistogramCols = new ArrayList<>();
 				defaultHistogramCols.add(new ColumnSettings(ItemHistogram.KEY_COL_ID, false, 500, null));
 				defaultHistogramCols.add(new ColumnSettings(ItemHistogram.COUNT_COL_ID, false, 150, false));
+				defaultHistogramCols.add(new ColumnSettings(ItemHistogram.DURATION_COL_ID, false, 150, false));
 				for (Entry<String, IAttribute<?>> entry : acc.getAllAttributes().entrySet()) {
 					String combinedId = entry.getKey();
 					IAttribute<?> a = entry.getValue();
