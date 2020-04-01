@@ -48,7 +48,7 @@
 	<modules>
 		<!-- Photon will be deprecated eventually - don't use it! -->
 		<module>platform-definition-photon</module>
-		<module>platform-definition-2019-09</module>
 		<module>platform-definition-2019-12</module>
+		<module>platform-definition-2020-03</module>
 	</modules>
 </project>

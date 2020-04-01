@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -32,7 +33,7 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2019-09" sequenceNumber="47">
+<target name="jmc-target-2020-03" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="1.6.3"/>
@@ -49,15 +50,15 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.500.v20190907-0428"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.100.v20190916-1045"/>
-            <unit id="org.eclipse.platform.sdk" version="4.13.0.I20190916-1045"/>
-            <repository location="http://download.eclipse.org/releases/2019-09/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.700.v20200207-2156"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.300.v20200305-0155"/>
+            <unit id="org.eclipse.platform.sdk" version="4.15.0.I20200305-0155"/>
+            <repository location="http://download.eclipse.org/releases/2020-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.12.0.v20190713060001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.12.0.v20190713060001"/>
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.17.0/2019-06/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.14.0.v20200113020001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.14.0.v20200113020001"/>
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.17.1/2019-12/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
