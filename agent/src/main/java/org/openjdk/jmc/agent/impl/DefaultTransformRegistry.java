@@ -114,7 +114,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new DefaultTransformRegistry();
 	}
 
-	private static void validateProbeDefinition(InputStream in) throws XMLStreamException {
+	public static void validateProbeDefinition(InputStream in) throws XMLStreamException {
 		try {
 			Validator validator = PROBE_SCHEMA.newValidator();
 			validator.validate(new StreamSource(in));
@@ -123,7 +123,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		}
 	}
 
-	private static void validateProbeDefinition(String configuration) throws XMLStreamException {
+	public static void validateProbeDefinition(String configuration) throws XMLStreamException {
 		validateProbeDefinition(new ByteArrayInputStream(configuration.getBytes()));
 	}
 
