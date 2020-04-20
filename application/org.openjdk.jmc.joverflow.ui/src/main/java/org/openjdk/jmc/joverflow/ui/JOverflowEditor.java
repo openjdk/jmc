@@ -267,7 +267,7 @@ public class JOverflowEditor extends EditorPart {
 		return false;
 	}
 
-	JOverflowUi getJOverflowUi() {
+	public JOverflowUi getJOverflowUi() {
 		return mJOverflowUi;
 	}
 
@@ -275,18 +275,18 @@ public class JOverflowEditor extends EditorPart {
 		return mSnapshot;
 	}
 
-	void addUiLoadedListener(UiLoadedListener listener) {
+	public void addUiLoadedListener(UiLoadedListener listener) {
 		mUiLoadedListeners.add(listener);
 		if (mJOverflowUi != null) {
 			listener.uiLoaded(mJOverflowUi);
 		}
 	}
 
-	void removeUiLoadedListener(UiLoadedListener listener) {
+	public void removeUiLoadedListener(UiLoadedListener listener) {
 		mUiLoadedListeners.remove(listener);
 	}
 
-	interface UiLoadedListener {
+	public interface UiLoadedListener {
 		void uiLoaded(JOverflowUi ui);
 	}
 }

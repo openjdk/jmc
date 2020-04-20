@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.openjdk.jmc.feature.joverflow.ext.treemap"
+      label="%name"
+      version="1.0.0.qualifier"
+      provider-name="%provider"
+      license-feature="org.openjdk.jmc.feature.license"
+      license-feature-version="8.0.0.qualifier">
+
+   <description url="%descriptionUrl">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <requires>
+      <import plugin="org.openjdk.jmc.common" match="equivalent"/>
+      <import plugin="org.eclipse.ui"/>
+   </requires>
+
+	<plugin
+         id="org.openjdk.jmc.joverflow.ext.treemap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

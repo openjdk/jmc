@@ -183,7 +183,7 @@ public class JOverflowUi extends Composite {
 		updateModel();
 	}
 
-	void addModelListener(final ModelListener listener) {
+	public void addModelListener(final ModelListener listener) {
 		mModelListeners.add(listener);
 
 		if (mModel != null) {
@@ -191,7 +191,7 @@ public class JOverflowUi extends Composite {
 		}
 	}
 
-	void removeModelListener(final ModelListener listener) {
+	public void removeModelListener(final ModelListener listener) {
 		mModelListeners.remove(listener);
 	}
 }
