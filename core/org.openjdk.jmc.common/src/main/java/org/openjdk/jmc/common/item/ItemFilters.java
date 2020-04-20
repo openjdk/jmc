@@ -431,6 +431,9 @@ public class ItemFilters {
 
 		@Override
 		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
+			if (regexp.isEmpty()) {
+				return PredicateToolkit.truePredicate();
+			}
 			return PredicateToolkit.matches(accessor, regexp);
 		}
 	}
@@ -442,6 +445,9 @@ public class ItemFilters {
 
 		@Override
 		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
+			if (regexp.isEmpty()) {
+				return PredicateToolkit.truePredicate();
+			}
 			return PredicateToolkit.not(PredicateToolkit.matches(accessor, regexp));
 		}
 	}

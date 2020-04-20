@@ -89,13 +89,13 @@ public class JavaBlockingRule implements IRule {
 	private static final String RESULT_ID = "JavaBlocking"; //$NON-NLS-1$
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		String threadExcludeRegexp = valueProvider.getPreferenceValue(EXCLUDED_THREADS_REGEXP);
-		items = items.apply(ItemFilters.not(ItemFilters.matches(JdkAttributes.EVENT_THREAD_NAME, threadExcludeRegexp)));
-
 		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.MONITOR_ENTER);
 		if (eventAvailability != EventAvailability.AVAILABLE) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.MONITOR_ENTER);
 		}
+
+		String threadExcludeRegexp = valueProvider.getPreferenceValue(EXCLUDED_THREADS_REGEXP);
+		items = items.apply(ItemFilters.notMatches(JdkAttributes.EVENT_THREAD_NAME, threadExcludeRegexp));
 
 		IQuantity startTime = RulesToolkit.getEarliestStartTime(items);
 		IQuantity endTime = RulesToolkit.getLatestEndTime(items);

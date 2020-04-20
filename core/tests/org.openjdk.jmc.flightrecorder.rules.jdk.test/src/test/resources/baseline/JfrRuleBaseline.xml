@@ -3868,7 +3868,7 @@
         <rule>
             <id>JavaBlocking</id>
             <severity>Information</severity>
-            <score>62.05152332723372</score>
+            <score>62.051706560483375</score>
             <shortDescription>Threads in the application were blocked on locks for a total of 1 min 26 s.</shortDescription>
             <longDescription>Threads in the application were blocked on locks for a total of 1 min 26 s. The most blocking monitor class was 'Logger', which was blocked 1,612 times for a total of 1 min 23 s.&lt;p&gt;The following regular expression was used to exclude threads from this rule: '(.*weblogic\.socket\.Muxer.*)'</longDescription>
         </rule>
