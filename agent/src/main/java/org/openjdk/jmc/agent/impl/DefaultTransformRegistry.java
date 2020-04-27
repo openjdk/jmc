@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.agent.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -45,10 +47,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
@@ -57,7 +64,9 @@ import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
+import org.openjdk.jmc.agent.util.IOToolkit;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.xml.sax.SAXException;
 
 public class DefaultTransformRegistry implements TransformRegistry {
 	private static final String XML_ATTRIBUTE_NAME_ID = "id"; //$NON-NLS-1$
@@ -79,6 +88,19 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 	private volatile boolean revertInstrumentation = false;
 
+	private static final String PROBE_SCHEMA_XSD = "jfrprobes_schema.xsd"; //$NON-NLS-1$
+	private static final Schema PROBE_SCHEMA;
+
+	static {
+		try {
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			PROBE_SCHEMA = factory
+					.newSchema(new StreamSource(DefaultTransformRegistry.class.getResourceAsStream(PROBE_SCHEMA_XSD)));
+		} catch (SAXException e) {
+			throw new ExceptionInInitializerError(e);
+		}
+	}
+
 	@Override
 	public boolean hasPendingTransforms(String className) {
 		List<TransformDescriptor> transforms = transformData.get(className);
@@ -92,11 +114,36 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new DefaultTransformRegistry();
 	}
 
+	public static void validateProbeDefinition(InputStream in) throws XMLStreamException {
+		try {
+			Validator validator = PROBE_SCHEMA.newValidator();
+			validator.validate(new StreamSource(in));
+		} catch (IOException | SAXException e) {
+			throw new XMLStreamException(e);
+		}
+	}
+
+	public static void validateProbeDefinition(String configuration) throws XMLStreamException {
+		validateProbeDefinition(new ByteArrayInputStream(configuration.getBytes()));
+	}
+
 	public static TransformRegistry from(InputStream in) throws XMLStreamException {
+		byte[] buf;
+		InputStream configuration;
+		try {
+			buf = IOToolkit.readFully(in, -1, true);
+			configuration = new ByteArrayInputStream(buf);
+			configuration.mark(0);
+			validateProbeDefinition(configuration);
+			configuration.reset();
+		} catch (IOException e) {
+			throw new XMLStreamException(e);
+		}
+
 		HashMap<String, String> globalDefaults = new HashMap<>();
 		DefaultTransformRegistry registry = new DefaultTransformRegistry();
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(in);
+		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(configuration);
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
 				QName element = streamReader.getName();
@@ -422,6 +469,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 	public List<TransformDescriptor> modify(String xmlDescription) {
 		try  {
+			validateProbeDefinition(xmlDescription);
+
 			List<TransformDescriptor> tds = new ArrayList<TransformDescriptor>();
 			StringReader reader = new StringReader(xmlDescription);
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
