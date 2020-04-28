@@ -9,7 +9,6 @@ import org.eclipse.ui.part.PageBookView;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
 import org.openjdk.jmc.joverflow.ui.JOverflowEditor;
 import org.openjdk.jmc.joverflow.ui.JOverflowUi;
-import org.openjdk.jmc.joverflow.ui.JavaThingPage;
 import org.openjdk.jmc.joverflow.ui.model.ModelListener;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
 
@@ -29,8 +28,6 @@ public class TreemapPageBookView extends PageBookView {
 		if (part instanceof JOverflowEditor) {
 			final JOverflowEditor editor = ((JOverflowEditor) part);
 
-//			JavaThingPage page = new JavaThingPage(editor);
-//			editor.addUiLoadedListener((ui) -> ui.addModelListener(page));
 			MessagePage page = new MessagePage();
 			page.setMessage("Joverflow editor selected");
 			
