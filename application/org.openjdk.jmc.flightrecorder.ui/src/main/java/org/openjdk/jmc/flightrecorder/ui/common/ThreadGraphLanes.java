@@ -200,6 +200,10 @@ public class ThreadGraphLanes {
 		buildChart.run();
 	}
 
+	public void buildChart() {
+		buildChart.run();
+	}
+
 	private void setLaneDefinitionEnablement(LaneDefinition oldLd, int laneIndex, boolean isEnabled) {
 		LaneDefinition newLd = new LaneDefinition(oldLd.getName(), isEnabled, oldLd.getFilter(), oldLd.isRestLane());
 		laneDefs.set(laneIndex, newLd);

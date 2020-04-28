@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.common;
 
-import java.util.stream.Collectors;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -49,21 +47,20 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.flightrecorder.ui.common.LaneEditor.LaneDefinition;
+import org.openjdk.jmc.flightrecorder.ui.common.LaneEditor.EditLanesContainer;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class DropdownLaneFilter extends Composite {
-	private static final int EXTRA_SHELL_WIDTH = 100;
-	private static final int SHELL_HEIGHT = 400;
+	private static final int EXTRA_SHELL_WIDTH = 300;
+	private static final int SHELL_HEIGHT = 500;
 	private Button dropdownButton;
 	private GridLayout layout;
 	private MCContextMenuManager[] mms;
 	private Shell shell;
 	private ThreadGraphLanes lanes;
-	private TypeFilterBuilder filterEditor;
+	private EditLanesContainer container;
 
 	public DropdownLaneFilter(Composite parent, ThreadGraphLanes lanes, MCContextMenuManager[] mms) {
 		super(parent, SWT.NONE);
@@ -115,10 +112,8 @@ public class DropdownLaneFilter extends Composite {
 		shell.setSize(shellRect.width + EXTRA_SHELL_WIDTH, SHELL_HEIGHT);
 		shell.setLocation(shellRect.x, shellRect.y);
 
-		filterEditor = new TypeFilterBuilder(shell, this::onTypeFilterChange);
-		filterEditor.setInput(lanes.getTypeTree());
-		filterEditor.selectTypes(lanes.getEnabledLanes());
-		filterEditor.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		container = new EditLanesContainer(shell, lanes.getTypeTree(), lanes.getLaneDefinitions(), () -> updateChart());
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		shell.open();
 	}
 
@@ -145,14 +140,8 @@ public class DropdownLaneFilter extends Composite {
 		return buttonRect.contains(cursor);
 	}
 
-	/**
-	 * Creates a new filter, Quick Filter, to be used by the dropdown lane filter. Sets the quick
-	 * filter to be active, and update the context menu.
-	 */
-	private void onTypeFilterChange() {
-		LaneDefinition quickLaneDef = new LaneDefinition(Messages.DropdownLaneFilter_QUICK_FILTER, true,
-				ItemFilters.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet())), false);
-		lanes.useDropdownFilter(quickLaneDef);
+	private void updateChart() {
+		lanes.buildChart();
 		lanes.updateContextMenus(mms, false);
 	}
 }
