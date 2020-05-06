@@ -1186,7 +1186,7 @@ library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
 
 
-%% The following notice is provided with respect to Javamail 1.6.3,
+%% The following notice is provided with respect to Javamail 1.6.5,
 which may be included with this product.
 
 Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
