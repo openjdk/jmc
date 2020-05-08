@@ -34,17 +34,16 @@ package org.openjdk.jmc.rjmx.ui.internal;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 import org.openjdk.jmc.ui.misc.MCSectionPart;
 
 /**
  * Action for removing a {@link SectionPart} in a {@link SectionPartManager}
  */
 public class RemoveAction extends Action {
-	private final static ImageDescriptor ICON = AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui", //$NON-NLS-1$
-			"icons/full/elcl16/close_view.gif"); //$NON-NLS-1$
+	private final static ImageDescriptor ICON = ResourceLocator.imageDescriptorFromBundle("org.eclipse.ui", //$NON-NLS-1$
+			"icons/full/elcl16/close_view.gif").orElse(null); //$NON-NLS-1$
 	final private SectionPartManager m_sectionPartmanager;
 	final private MCSectionPart m_part;
 
