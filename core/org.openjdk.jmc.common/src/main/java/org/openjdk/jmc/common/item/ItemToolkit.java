@@ -39,7 +39,7 @@ import java.util.Iterator;
  * Toolkit methods for performing operations on items.
  */
 public class ItemToolkit {
-
+	
 	/**
 	 * @deprecated This method returns a member accessor that is not thread safe. Instead of
 	 *             creating an accessor that could be used for multiple item types, items should be

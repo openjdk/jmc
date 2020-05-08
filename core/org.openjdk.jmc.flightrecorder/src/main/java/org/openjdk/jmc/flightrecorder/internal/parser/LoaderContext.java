@@ -94,6 +94,7 @@ public class LoaderContext {
 		return sinkFactory;
 	}
 
+	@SuppressWarnings("deprecation")
 	public EventArray[] buildEventArrays() throws CouldNotLoadRecordingException {
 		sinkFactory.flush();
 		Iterator<EventTypeEntry> eventTypes = repositoryBuilder.getEventTypes();
