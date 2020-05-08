@@ -439,7 +439,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
 	}
-	
+
 	// See JMC-6787
 	@SuppressWarnings("deprecation")
 	private void rebuildViewer() {
