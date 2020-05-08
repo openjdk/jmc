@@ -36,8 +36,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import org.openjdk.jmc.ui.common.jvm.JVMCommandLineToolkit;
-
 public class JVMCommandLineToolkitTest {
 
 	// Tests for getMainClassOrJar
