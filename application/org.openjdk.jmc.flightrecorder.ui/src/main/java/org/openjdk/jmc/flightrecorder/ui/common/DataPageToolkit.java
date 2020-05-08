@@ -655,6 +655,7 @@ public class DataPageToolkit {
 
 	public static void createChartTooltip(ChartCanvas chart, Set<IAttribute<?>> excludedAttributes) {
 		createChartTooltip(chart, () -> new ChartToolTipProvider() {
+			@SuppressWarnings("deprecation")
 			@Override
 			protected Stream<IAttribute<?>> getAttributeStream(IType<IItem> type) {
 				return type.getAttributes().stream().filter(a -> !excludedAttributes.contains(a));
@@ -880,6 +881,7 @@ public class DataPageToolkit {
 	}
 
 	// FIXME: Move to some AttributeToolkit?
+	@SuppressWarnings("deprecation")
 	private static Stream<IAttribute<?>> getAttributes(IItemCollection items) {
 		return ItemCollectionToolkit.stream(items).filter(IItemIterable::hasItems)
 				.flatMap(is -> is.getType().getAttributes().stream());
@@ -1070,7 +1072,7 @@ public class DataPageToolkit {
 				}
 
 				private ImageData resizeImage(ImageData imageData, int width, int height) {
-					Image original = ImageDescriptor.createFromImageData(imageData).createImage();
+					Image original = ImageDescriptor.createFromImageDataProvider((zoom) -> imageData).createImage();
 					Image scaled = new Image(Display.getDefault(), width, height);
 					GC gc = new GC(scaled);
 					gc.setAntialias(SWT.ON);

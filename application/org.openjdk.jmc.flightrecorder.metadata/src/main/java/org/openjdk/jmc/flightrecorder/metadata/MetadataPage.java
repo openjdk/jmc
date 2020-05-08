@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreePath;
@@ -50,8 +51,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IItemIterable;
@@ -234,7 +233,7 @@ public class MetadataPage extends AbstractDataPage {
 
 		@Override
 		public ImageDescriptor getImageDescriptor(IState state) {
-			return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, ICON);
+			return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, ICON).orElse(null);
 		}
 
 		@Override
