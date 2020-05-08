@@ -43,7 +43,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IConfigurationStorageDelegate;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
