@@ -1,19 +1,23 @@
 package org.openjdk.jmc.joverflow.ext.treemap.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Treemap extends Canvas implements PaintListener {
 
-public class Treemap extends Composite {
+	private boolean borderVisible = true;
+
 	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
 
 	// All created items of this receiver. Should recycle if possible.
-	private List<TreemapItem> items = new ArrayList<>();
+//	private List<TreemapItem> items = new ArrayList<>();
+
+	// TODO: checkWidget() when appropriate
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style value describing its behavior and
@@ -28,23 +32,40 @@ public class Treemap extends Composite {
 	 */
 	public Treemap(Composite parent, int style) {
 		super(checkNull(parent), style);
-		
+
 		if ((style & SWT.VIRTUAL) == SWT.VIRTUAL) {
 			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by Treemap");
 		}
+
+		addPaintListener(this);
 	}
 
-	private static <T> T checkNull(T control) {
+	/*package-private*/ static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
 		return control;
 	}
-	
-	/*package-private*/ void createItem(TreemapItem item) {
-		items.add(item);
+
+	/*package-private*/ static Treemap checkNull(Treemap treemap) {
+		if (treemap == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+
+		return treemap;
 	}
+
+	@Override
+	public void paintControl(PaintEvent paintEvent) {
+		System.out.println(getClientArea().toString());
+
+		getTopItem().paintItem(paintEvent.gc, getClientArea());
+	}
+
+//	/*package-private*/ void createItem(TreemapItem item) {
+//		items.add(item);
+//	}
 
 // TODO: call notifyListeners​(int eventType, Event event) instead
 //	/**
@@ -128,7 +149,7 @@ public class Treemap extends Composite {
 	 * @param all   true if all child items of the indexed item should be cleared recursively, and false otherwise
 	 */
 	public void clear(int index, boolean all) {
-
+		rootItem.clear(index, all);
 	}
 
 	/**
@@ -138,7 +159,7 @@ public class Treemap extends Composite {
 	 * @param all true if all child items should be cleared recursively, and false otherwise
 	 */
 	public void clearAll(boolean all) {
-
+		rootItem.clearAll(all);
 	}
 
 	/**
@@ -147,7 +168,7 @@ public class Treemap extends Composite {
 	 * @param item the item to be deselected
 	 */
 	public void deselect(TreemapItem item) {
-
+		// TODO
 	}
 
 	/**
@@ -156,21 +177,21 @@ public class Treemap extends Composite {
 	 * @param item the item to be selected
 	 */
 	public void select(TreemapItem item) {
-
+		// TODO
 	}
 
 	/**
 	 * Selects all of the items in the receiver.
 	 */
 	public void selectAll() {
-
+		// TODO
 	}
 
 	/**
 	 * Deselects all selected items in the receiver.
 	 */
 	public void deselectAll() {
-
+		// TODO
 	}
 
 	/**
@@ -181,7 +202,7 @@ public class Treemap extends Composite {
 	 * @return the item at the given index
 	 */
 	public TreemapItem getItem(int index) {
-		return null;
+		return rootItem.getItem(index);
 	}
 
 	/**
@@ -195,7 +216,7 @@ public class Treemap extends Composite {
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
-		return null;
+		return rootItem.getItem(point);
 	}
 
 	/**
@@ -205,7 +226,7 @@ public class Treemap extends Composite {
 	 * @return the number of items
 	 */
 	public int getItemCount() {
-		return 0;
+		return rootItem.getItemCount();
 	}
 
 	/**
@@ -215,6 +236,7 @@ public class Treemap extends Composite {
 	 */
 	public void setItemCount(int count) {
 		// TODO: implement this if we want to support SWT.VIRTUAL
+		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
 	}
 
 	/**
@@ -226,7 +248,7 @@ public class Treemap extends Composite {
 	 * @return the items
 	 */
 	public TreemapItem[] getItems() {
-		return new TreemapItem[0];
+		return rootItem.getItems();
 	}
 
 	/**
@@ -236,8 +258,8 @@ public class Treemap extends Composite {
 	 *
 	 * @return the visibility state of the borders
 	 */
-	public boolean getBorderVisible() {
-		return false;
+	public boolean getBordersVisible() {
+		return borderVisible;
 	}
 
 	/**
@@ -247,17 +269,17 @@ public class Treemap extends Composite {
 	 *
 	 * @param show the new visibility state
 	 */
-	public void setLinesVisible(boolean show) {
-
+	public void setBordersVisible(boolean show) {
+		borderVisible = show;
 	}
 
 	/**
-	 * Returns the receiver's parent item, which must be a TreeItem or null when the receiver is a root.
+	 * Returns the receiver's root item, which must be a TreeItem.
 	 *
 	 * @return the receiver's parent item
 	 */
-	public TreemapItem getParentItem() {
-		return null;
+	public TreemapItem getRootItem() {
+		return rootItem;
 	}
 
 	/**
@@ -282,11 +304,11 @@ public class Treemap extends Composite {
 	 * @param item the item to select
 	 */
 	public void setSelection(TreemapItem item) {
-
+		// TODO
 	}
 
 	public void setSelection(TreemapItem[] items) {
-		
+		// TODO
 	}
 
 	/**
@@ -305,7 +327,8 @@ public class Treemap extends Composite {
 	 * @return the item at the top of the receiver
 	 */
 	public TreemapItem getTopItem() {
-		return null;
+		// TODO: track which item is on top
+		return getRootItem();
 	}
 
 	/**
@@ -315,7 +338,7 @@ public class Treemap extends Composite {
 	 * @param item
 	 */
 	public void setTopItem(TreemapItem item) {
-		
+		// TODO
 	}
 	
 	/**
@@ -326,25 +349,45 @@ public class Treemap extends Composite {
 	 * @return the index of the item
 	 */
 	public int indexOf(TreemapItem item) {
-		return 0;
+		return rootItem.indexOf(item);
+	}
+
+
+	/**
+	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
+	 * an exception if the index is out of range. 
+	 *
+	 * @param index index of the item to remove
+	 */
+	public void remove(int index) {
+		rootItem.remove(index);
+	}
+
+	/**
+	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
+	 * argument, and remove that item.
+	 *
+	 * @param item the item to be removed
+	 */
+	public void remove(TreemapItem item) {
+		item = TreemapItem.checkNull(item);
+
+		if (item.getParent() != this) {
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+		}
+
+		item.updateAncestor();
+
+		for (TreemapItem child : item.getItems()) {
+			remove(child);
+		}
 	}
 
 	/**
 	 * Removes all of the items from the receiver.
 	 */
 	public void removeAll() {
-
-	}
-
-	/**
-	 * Sets the font that the receiver will use to paint textual information to the font specified by the argument, or
-	 * to the default font for that kind of control if the argument is null.
-	 *
-	 * @param font the new font (or null)
-	 */
-	@Override
-	public void setFont(Font font) {
-
+		rootItem.removeAll();
 	}
 
 	/**
@@ -354,7 +397,7 @@ public class Treemap extends Composite {
 	 * @param item the item to be shown
 	 */
 	public void showItem(TreemapItem item) {
-
+		// TODO
 	}
 
 	/**
@@ -362,7 +405,10 @@ public class Treemap extends Composite {
 	 * Otherwise, the items are scrolled until the selection is visible.
 	 */
 	public void showSelection() {
-		
+		TreemapItem[] selection = getSelection();
+
+		// TODO: find top most selection
+		showItem(selection[0]);
 	}
 }
 
