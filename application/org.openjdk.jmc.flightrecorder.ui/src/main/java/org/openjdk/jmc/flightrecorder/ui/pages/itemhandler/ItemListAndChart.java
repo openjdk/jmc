@@ -146,6 +146,7 @@ class ItemListAndChart {
 			String combinedId = entry.getKey();
 			IAttribute<?> a = entry.getValue();
 			ContentType<?> contentType = a.getContentType();
+			@SuppressWarnings("deprecation")
 			IMemberAccessor<?, IItem> accessor = ItemToolkit.accessor(a);
 			itemListBuilder.addColumn(combinedId, a.getName(), a.getDescription(),
 					contentType instanceof LinearKindOfQuantity, accessor);

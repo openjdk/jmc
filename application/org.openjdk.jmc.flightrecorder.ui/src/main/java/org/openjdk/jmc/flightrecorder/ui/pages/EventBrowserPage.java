@@ -284,6 +284,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		private void rebuildItemList() {
 			mergeListSettings();
 

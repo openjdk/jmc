@@ -90,7 +90,7 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
  * queried for more information.
  */
 public class StacktraceModel {
-
+	@SuppressWarnings("deprecation")
 	private final IMemberAccessor<IMCStackTrace, IItem> accessor = ItemToolkit.accessor(JfrAttributes.EVENT_STACKTRACE);
 	private final boolean threadRootAtTop;
 	private final FrameSeparator frameSeparator;
@@ -142,6 +142,7 @@ public class StacktraceModel {
 	 * The first call may take some time due to calculations, so it may be useful to call this in a
 	 * background thread if used in a UI.
 	 */
+	@SuppressWarnings("deprecation")
 	public Fork getRootFork() {
 		if (rootFork == null) {
 			rootFork = new Fork(ItemToolkit.asIterable(items));

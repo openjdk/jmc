@@ -124,7 +124,7 @@ public class SWTColorToolkit {
 		gc.setForeground(getColor(BORDER_COLOR));
 		gc.drawRectangle(1, 1, size - 3, size - 3);
 		gc.dispose();
-		ImageDescriptor id = ImageDescriptor.createFromImageData(i.getImageData());
+		ImageDescriptor id = ImageDescriptor.createFromImageDataProvider((zoom) -> i.getImageData(zoom));
 		i.dispose();
 		return id;
 	}

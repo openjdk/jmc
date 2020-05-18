@@ -39,16 +39,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.subscription.IMRIMetadataProvider;
 import org.openjdk.jmc.rjmx.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This class is used to read the default metadata from the mrimetadata.xml file.

@@ -42,8 +42,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.osgi.framework.BundleContext;
-
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -52,6 +51,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
+import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the life cycle for the Flight Recording plug-in.
@@ -202,7 +202,7 @@ public final class FlightRecorderUI extends MCAbstractUIPlugin {
 
 	public PageManager getPageManager() {
 		if (pageManager == null) {
-			IWorkbench workbench = getWorkbench();
+			IWorkbench workbench = PlatformUI.getWorkbench();
 			Runnable callback = () -> DisplayToolkit.safeAsyncExec(() -> refreshJfrEditors(workbench));
 			pageManager = new PageManager(getPreferences().get(PAGE_MANAGER_ID, null), callback);
 		}

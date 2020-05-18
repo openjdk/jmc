@@ -65,9 +65,9 @@ import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnManager.ColumnComparator;
-import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.column.IColumn;
 import org.openjdk.jmc.ui.column.TableSettings;
+import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 
 public class ItemList {
 
@@ -76,6 +76,7 @@ public class ItemList {
 		private final List<IColumn> columns = new ArrayList<>();
 
 		public void addColumn(IAttribute<?> a) {
+			@SuppressWarnings("deprecation")
 			IMemberAccessor<?, IItem> accessor = ItemToolkit.accessor(a);
 			// FIXME: Calculate column id, e.g. using getColumnId.
 			// Otherwise there will be problem if adding multiple attributes with the same id.

@@ -90,6 +90,7 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 		return imageMap;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected Stream<IAttribute<?>> getAttributeStream(IType<IItem> type) {
 		return type.getAttributes().stream();
 	}
