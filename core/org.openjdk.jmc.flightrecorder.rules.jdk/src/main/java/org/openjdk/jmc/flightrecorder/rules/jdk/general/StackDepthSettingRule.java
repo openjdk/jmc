@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,13 +46,17 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
 import org.openjdk.jmc.common.item.GroupingAggregator;
 import org.openjdk.jmc.common.item.GroupingAggregator.GroupEntry;
 import org.openjdk.jmc.common.item.IAggregator;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -72,34 +77,45 @@ public class StackDepthSettingRule implements IRule {
 	private static final String STACKDEPTH_SETTING_RESULT_ID = "StackdepthSetting"; //$NON-NLS-1$
 
 	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		IItemFilter truncatedTracesFilter = ItemFilters.equals(JdkAttributes.STACK_TRACE_TRUNCATED, true);
-		IQuantity numberOfTruncatedTraces = items.getAggregate(Aggregators.count(truncatedTracesFilter));
-		IQuantity numberOfTraces = items
-				.getAggregate(Aggregators.count(ItemFilters.hasAttribute(JfrAttributes.EVENT_STACKTRACE)));
-		if (numberOfTraces == null) {
+		IItemFilter stackTracesFilter = ItemFilters.hasAttribute(JfrAttributes.EVENT_STACKTRACE);
+		Map<String, Long> truncatedTracesByType = new HashMap<>();
+		Map<String, Long> tracesByType = new HashMap<>();
+		long truncatedTraces = 0L;
+		long totalTraces = 0L;
+		for (IItemIterable itemIterable : items.apply(stackTracesFilter)) {
+			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(itemIterable.getType());
+			for (IItem item : itemIterable) {
+				String typeIdentifier = itemIterable.getType().getName();
+				IMCStackTrace stacktrace = stacktraceAccessor.getMember(item);
+				totalTraces++;
+				Long tracesForType = tracesByType.containsKey(typeIdentifier) ? tracesByType.get(typeIdentifier) : 0L;
+				tracesByType.put(typeIdentifier, tracesForType + 1);
+				if (stacktrace != null && stacktrace.getTruncationState().isTruncated()) {
+					truncatedTraces++;
+					Long truncatedTracesForType = truncatedTracesByType.containsKey(typeIdentifier) ? truncatedTracesByType.get(typeIdentifier) : 0L;
+					truncatedTracesByType.put(typeIdentifier, truncatedTracesForType + 1);
+				}
+			}
+		}
+		if (totalTraces == 0L) {
 			return RulesToolkit.getNotApplicableResult(this,
 					Messages.getString(Messages.StackdepthSettingRule_TEXT_NA));
 		}
-		if (numberOfTruncatedTraces.longValue() > 0) {
-			IItemCollection truncatedTraces = items.apply(truncatedTracesFilter);
-			Map<String, Integer> truncatedTraceCounts = getTraceCount(truncatedTraces);
-			Set<String> eventTypes = new HashSet<>();
-			for (IType<?> type : truncatedTraces.getAggregate(Aggregators.distinct(JfrAttributes.EVENT_TYPE))) {
-				eventTypes.add(type.getIdentifier());
-			}
-			Map<String, Integer> allTraceCounts = getTraceCount(items.apply(ItemFilters.type(eventTypes)));
+		if (truncatedTraces > 0) {
+			ArrayList<String> typesWithTruncatedTraces = new ArrayList<>(truncatedTracesByType.keySet());
+			Collections.sort(typesWithTruncatedTraces);
 			StringBuilder listBuilder = new StringBuilder();
-			for (Entry<String, Integer> entry : truncatedTraceCounts.entrySet()) {
+			for (String type : typesWithTruncatedTraces) {
 				listBuilder.append("<li>"); //$NON-NLS-1$
-				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY
-						.quantity((double) entry.getValue() / (double) allTraceCounts.get(entry.getKey()));
+				Long value = truncatedTracesByType.get(type);
+				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY.quantity((double) value / (double) tracesByType.get(type));
 				listBuilder.append(
 						MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE),
-								Encode.forHtml(entry.getKey()), percentTruncated.displayUsing(IDisplayable.AUTO)));
+								Encode.forHtml(type), percentTruncated.displayUsing(IDisplayable.AUTO)));
 				listBuilder.append("</li>"); //$NON-NLS-1$
 			}
 
-			double truncatedTracesRatio = numberOfTruncatedTraces.ratioTo(numberOfTraces);
+			double truncatedTracesRatio = truncatedTraces / (double) totalTraces;
 			String shortMessage = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO);
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
 			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
@@ -124,30 +140,6 @@ public class StackDepthSettingRule implements IRule {
 			}
 		});
 		return evaluationTask;
-	}
-
-	private Map<String, Integer> getTraceCount(IItemCollection items) {
-		final HashMap<String, Integer> map = new HashMap<>();
-		IAggregator<IQuantity, ?> build = GroupingAggregator.build("", "", JfrAttributes.EVENT_TYPE, //$NON-NLS-1$ //$NON-NLS-2$
-				Aggregators.count(), new GroupingAggregator.IGroupsFinisher<IQuantity, IType<?>, CountConsumer>() {
-
-					@Override
-					public IType<IQuantity> getValueType() {
-						return UnitLookup.NUMBER;
-					}
-
-					@Override
-					public IQuantity getValue(Iterable<? extends GroupEntry<IType<?>, CountConsumer>> groups) {
-						for (GroupEntry<IType<?>, CountConsumer> groupEntry : groups) {
-							CountConsumer consumer = groupEntry.getConsumer();
-							IType<?> key = groupEntry.getKey();
-							map.put(key.getName(), consumer.getCount());
-						}
-						return null;
-					}
-				});
-		items.getAggregate(build);
-		return RulesToolkit.sortMap(map, false);
 	}
 
 	@Override
