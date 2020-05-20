@@ -74,11 +74,10 @@ public class TreemapItem extends Item {
 			// adding a 0 weighted node to the end of decreasingly sorted list preserves the sorted structure
 			parentItem.children.add(this);
 		}
-
-//		parent.createItem(this);
 	}
 
-	/*package-private*/ static TreemapItem checkNull(TreemapItem item) {
+	/*package-private*/
+	static TreemapItem checkNull(TreemapItem item) {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -99,13 +98,12 @@ public class TreemapItem extends Item {
 	}
 
 	private void clearThis() {
-		// TODO: clear more attributes
 		this.realWeight = 0;
 		this.apparentWeight = -1;
 		this.foreground = null;
 		this.background = null;
 		this.font = null;
-		
+
 		if (darkenBackground != null && !darkenBackground.isDisposed()) {
 			darkenBackground.dispose();
 		}
@@ -218,13 +216,14 @@ public class TreemapItem extends Item {
 
 		// calculate child rectangles
 		List<TreemapItem> elements = Arrays.asList(getItems());
-		SquarifiedTreeMap algorithm = new SquarifiedTreeMap(availableRegion, elements);
+		SquarifiedTreemap algorithm = new SquarifiedTreemap(availableRegion, elements);
 		Map<TreemapItem, Rectangle2D.Double> squarifiedMap = algorithm.squarify();
 
 		for (TreemapItem item : elements) {
 			Rectangle2D.Double childRect = squarifiedMap.get(item);
 
 			if (childRect.width < MIN_SIZE || childRect.height < MIN_SIZE) {
+				item.clearBounds(true);
 				continue;
 			}
 
@@ -241,17 +240,31 @@ public class TreemapItem extends Item {
 			item.paintItem(gc, new Rectangle(x, y, w, h));
 		}
 	}
-	
+
+	private void clearBounds(boolean all) {
+		bounds = null;
+		textBounds = null;
+
+		if (!all) {
+			return;
+		}
+
+		for (TreemapItem child : getItems()) {
+			child.clearBounds(true);
+		}
+	}
+
 	/**
-	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in the receiver. The 
+	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in the receiver. The
 	 * text, weight and other attributes of the item are set to the default value.
-	 * 
 	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
 	 *
 	 * @param index the index of the item to clear
-	 * @param all true if all child items of the indexed item should be cleared recursively, and false otherwise
+	 * @param all   true if all child items of the indexed item should be cleared recursively, and false otherwise
 	 */
 	public void clear(int index, boolean all) {
+		checkWidget();
+
 		TreemapItem target = children.get(index);
 		target.clearThis();
 
@@ -261,17 +274,18 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Clears all the items in the receiver. The text, weight and other attributes of the items are set to their default 
-	 * values. 
-	 * 
+	 * Clears all the items in the receiver. The text, weight and other attributes of the items are set to their default
+	 * values.
 	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
-	 * 
+	 *
 	 * @param all true if all child items should be cleared recursively, and false otherwise
 	 */
 	public void clearAll(boolean all) {
+		checkWidget();
+
 		children.forEach(item -> {
 			item.clearThis();
-			
+
 			if (all) {
 				item.clearAll(true);
 			}
@@ -293,6 +307,8 @@ public class TreemapItem extends Item {
 	 * @return the background color
 	 */
 	public Color getBackground() {
+		checkWidget();
+
 		if (background != null) {
 			return background;
 		}
@@ -315,7 +331,7 @@ public class TreemapItem extends Item {
 		}
 		return darkenBackground;
 	}
-	
+
 	/**
 	 * Sets the receiver's background color to the color specified by the argument, or to the default system color for
 	 * the item if the argument is null.
@@ -323,6 +339,8 @@ public class TreemapItem extends Item {
 	 * @param color the new color (or null)
 	 */
 	public void setBackground(Color color) {
+		checkWidget();
+
 		background = color;
 
 		if (darkenBackground != null && !darkenBackground.isDisposed()) {
@@ -337,6 +355,8 @@ public class TreemapItem extends Item {
 	 * @return the bounding rectangle of the receiver's text
 	 */
 	public Rectangle getBounds() {
+		checkWidget();
+
 		return bounds;
 	}
 
@@ -346,14 +366,16 @@ public class TreemapItem extends Item {
 	 * @return the receiver's font
 	 */
 	public Font getFont() {
+		checkWidget();
+
 		if (font != null) {
 			return font;
 		}
-		
+
 		if (parentItem != null) {
 			return parentItem.getFont();
 		}
-		
+
 		return parent.getFont();
 	}
 
@@ -364,7 +386,9 @@ public class TreemapItem extends Item {
 	 * @param font the new font (or null)
 	 */
 	public void setFont(Font font) {
-		 this.font = font;
+		checkWidget();
+
+		this.font = font;
 	}
 
 	/**
@@ -373,6 +397,8 @@ public class TreemapItem extends Item {
 	 * @return the receiver's foreground color
 	 */
 	public Color getForeground() {
+		checkWidget();
+
 		if (foreground != null) {
 			return foreground;
 		}
@@ -391,6 +417,8 @@ public class TreemapItem extends Item {
 	 * @param color the new color (or null)
 	 */
 	public void setForeground(Color color) {
+		checkWidget();
+
 		this.foreground = color;
 	}
 
@@ -402,6 +430,8 @@ public class TreemapItem extends Item {
 	 * @return the item at the given index
 	 */
 	public TreemapItem getItem(int index) {
+		checkWidget();
+
 		return children.get(index);
 	}
 
@@ -413,6 +443,8 @@ public class TreemapItem extends Item {
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
+		checkWidget();
+
 		if (getBounds() == null || !getBounds().contains(point)) {
 			return null;
 		}
@@ -422,7 +454,7 @@ public class TreemapItem extends Item {
 				return child.getItem(point);
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -432,6 +464,8 @@ public class TreemapItem extends Item {
 	 * @return the number of items
 	 */
 	public int getItemCount() {
+		checkWidget();
+
 		return children.size();
 	}
 
@@ -441,6 +475,8 @@ public class TreemapItem extends Item {
 	 * @param count the number of items
 	 */
 	public void setItemCount(int count) {
+		checkWidget();
+
 		// TODO: implement this if we want to support SWT.VIRTUAL
 		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
 	}
@@ -453,6 +489,8 @@ public class TreemapItem extends Item {
 	 * @return the receiver's items
 	 */
 	public TreemapItem[] getItems() {
+		checkWidget();
+
 		return children.toArray(new TreemapItem[0]);
 	}
 
@@ -462,6 +500,8 @@ public class TreemapItem extends Item {
 	 * @return the receiver's parent
 	 */
 	public Treemap getParent() {
+		checkWidget();
+
 		return parent;
 	}
 
@@ -471,6 +511,8 @@ public class TreemapItem extends Item {
 	 * @return the receiver's parent item
 	 */
 	public TreemapItem getParentItem() {
+		checkWidget();
+
 		return parentItem;
 	}
 
@@ -480,15 +522,19 @@ public class TreemapItem extends Item {
 	 * @return the receiver's bounding text rectangle
 	 */
 	public Rectangle getTextBounds() {
+		checkWidget();
+
 		return textBounds;
 	}
 
 	/**
-	 * Returns the receiver's weight, which is the sum of weights of all its direct children. 
-	 * 
+	 * Returns the receiver's weight, which is the sum of weights of all its direct children.
+	 *
 	 * @return the receiver's weight
 	 */
 	public double getWeight() {
+		checkWidget();
+
 		if (apparentWeight == -1) {
 			cacheApparentWeight();
 		}
@@ -498,10 +544,12 @@ public class TreemapItem extends Item {
 
 	/**
 	 * Sets the receiver's weight. Throws an exception if the receiver is not a leaf node..
-	 * 
+	 *
 	 * @param weight the new weight
 	 */
 	public void setWeight(double weight) {
+		checkWidget();
+
 		if (weight < 0) {
 			throw new IllegalArgumentException("weight must be positive");
 		}
@@ -520,16 +568,20 @@ public class TreemapItem extends Item {
 	 * @return the index of the item
 	 */
 	public int indexOf(TreemapItem item) {
+		checkWidget();
+
 		return children.indexOf(item);
 	}
 
 	/**
 	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range. 
-	 * 
+	 * an exception if the index is out of range.
+	 *
 	 * @param index index of the item to remove
 	 */
 	public void remove(int index) {
+		checkWidget();
+
 		parent.remove(getItem(index));
 	}
 
@@ -537,6 +589,8 @@ public class TreemapItem extends Item {
 	 * Removes all of the items from the receiver.
 	 */
 	public void removeAll() {
+		checkWidget();
+
 		for (int i = 0; i < getItemCount(); i++) {
 			remove(i);
 		}

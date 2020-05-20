@@ -4,25 +4,28 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TypedListener;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapEvent;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Treemap extends Canvas {
 	private boolean borderVisible = true;
 
 	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
-	private Map<TreemapListener, TypedListener> treemapListeners = new HashMap<>();
+	private Set<TreemapListener> treemapListeners = new HashSet<>();
 
 	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
 	private TreemapItem topItem = rootItem;
@@ -30,9 +33,7 @@ public class Treemap extends Canvas {
 
 	// the following members need to be disposed
 	private Cursor cursor;
-	private TreemapToolTip toolTip = new TreemapToolTip(this);;
-
-	// TODO: checkWidget() when appropriate
+	private TreemapToolTip toolTip = new TreemapToolTip(this);
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style value describing its behavior and
@@ -117,7 +118,6 @@ public class Treemap extends Canvas {
 			}
 
 			setTopItem(item);
-			// TODO: notify TreemapListener
 			return;
 		}
 	}
@@ -131,14 +131,12 @@ public class Treemap extends Canvas {
 			}
 
 			setSelection(item);
-			// TODO: notify TreemapListener
 			return;
 		}
 
 		// middle button: show the root node as top
 		if (mouseEvent.button == 2) {
 			setTopItem(getRootItem());
-			// TODO: notify TreemapListener
 			return;
 		}
 
@@ -148,7 +146,6 @@ public class Treemap extends Canvas {
 				return;
 			}
 			setTopItem(parentItem);
-			// TODO: notify TreemapListener
 			return;
 		}
 	}
@@ -157,6 +154,25 @@ public class Treemap extends Canvas {
 		// noop
 	}
 
+	private Event createEventForItem(int type, TreemapItem item) {
+		Event e = new Event();
+		e.display = getDisplay();
+		e.widget = this;
+		e.type = type;
+		e.item = item;
+		e.index = this.indexOf(item);
+
+		if (item != null && item.getBounds() != null) {
+			Rectangle bounds = item.getBounds();
+			e.x = bounds.x;
+			e.y = bounds.y;
+			e.width = bounds.width;
+			e.height = bounds.height;
+		}
+
+		return e;
+	}
+	
 	/**
 	 * Adds the listener to the collection of listeners who will be notified when the user changes the receiver's
 	 * selection, by sending it one of the messages defined in the SelectionListener interface.
@@ -210,7 +226,13 @@ public class Treemap extends Canvas {
 	 * @param listener the listener which should be notified
 	 */
 	public void addTreemapListener(TreemapListener listener) {
-		// TODO
+		this.checkWidget();
+
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+
+		treemapListeners.add(listener);
 	}
 
 	/**
@@ -220,7 +242,13 @@ public class Treemap extends Canvas {
 	 * @param listener the listener which should no longer be notified
 	 */
 	public void removeTreemapListener(TreemapListener listener) {
-		// TODO
+		this.checkWidget();
+
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+
+		treemapListeners.remove(listener);
 	}
 
 	/**
@@ -233,6 +261,8 @@ public class Treemap extends Canvas {
 	 * @param all   true if all child items of the indexed item should be cleared recursively, and false otherwise
 	 */
 	public void clear(int index, boolean all) {
+		checkWidget();
+
 		rootItem.clear(index, all);
 	}
 
@@ -243,6 +273,8 @@ public class Treemap extends Canvas {
 	 * @param all true if all child items should be cleared recursively, and false otherwise
 	 */
 	public void clearAll(boolean all) {
+		checkWidget();
+
 		rootItem.clearAll(all);
 	}
 
@@ -308,6 +340,8 @@ public class Treemap extends Canvas {
 	 * @return the item at the given index
 	 */
 	public TreemapItem getItem(int index) {
+		checkWidget();
+
 		return rootItem.getItem(index);
 	}
 
@@ -322,6 +356,8 @@ public class Treemap extends Canvas {
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
+		checkWidget();
+
 		return topItem.getItem(point);
 	}
 
@@ -332,6 +368,8 @@ public class Treemap extends Canvas {
 	 * @return the number of items
 	 */
 	public int getItemCount() {
+		checkWidget();
+
 		return rootItem.getItemCount();
 	}
 
@@ -341,6 +379,8 @@ public class Treemap extends Canvas {
 	 * @param count the number of items
 	 */
 	public void setItemCount(int count) {
+		checkWidget();
+
 		// TODO: implement this if we want to support SWT.VIRTUAL
 		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
 	}
@@ -354,6 +394,8 @@ public class Treemap extends Canvas {
 	 * @return the items
 	 */
 	public TreemapItem[] getItems() {
+		checkWidget();
+
 		return rootItem.getItems();
 	}
 
@@ -365,6 +407,8 @@ public class Treemap extends Canvas {
 	 * @return the visibility state of the borders
 	 */
 	public boolean getBordersVisible() {
+		checkWidget();
+
 		return borderVisible;
 	}
 
@@ -376,6 +420,8 @@ public class Treemap extends Canvas {
 	 * @param show the new visibility state
 	 */
 	public void setBordersVisible(boolean show) {
+		checkWidget();
+
 		borderVisible = show;
 	}
 
@@ -385,6 +431,8 @@ public class Treemap extends Canvas {
 	 * @return the receiver's parent item
 	 */
 	public TreemapItem getRootItem() {
+		checkWidget();
+
 		return rootItem;
 	}
 
@@ -399,6 +447,8 @@ public class Treemap extends Canvas {
 	 * @return an array representing the selection
 	 */
 	public TreemapItem getSelection() {
+		checkWidget();
+
 		return selectedItem;
 	}
 
@@ -418,13 +468,7 @@ public class Treemap extends Canvas {
 
 		selectedItem = item;
 
-		Event e = new Event();
-		e.display = getDisplay();
-		e.widget = this;
-		e.type = SWT.Selection;
-		e.item = item;
-		e.index = this.indexOf(item);
-
+		Event e = createEventForItem(SWT.Selection, item);
 		notifyListeners(SWT.Selection, e);
 		redraw();
 	}
@@ -436,6 +480,8 @@ public class Treemap extends Canvas {
 	 * @return the item at the top of the receiver
 	 */
 	public TreemapItem getTopItem() {
+		checkWidget();
+
 		return topItem;
 	}
 
@@ -446,6 +492,8 @@ public class Treemap extends Canvas {
 	 * @param item the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
+		checkWidget();
+
 		item = TreemapItem.checkNull(item);
 
 		if (item.getParent() != this) {
@@ -455,9 +503,16 @@ public class Treemap extends Canvas {
 		TreemapItem oldItem = topItem;
 		topItem = item;
 		
-		if (oldItem != topItem) {
-			redraw();
+		if (oldItem == topItem) {
+			return;
 		}
+
+		Event e = createEventForItem(SWT.NONE, topItem);
+		for (TreemapListener listener : treemapListeners) {
+			listener.treemapTopChanged(new TreemapEvent(e));
+		}
+
+		redraw();
 	}
 	
 	/**
@@ -468,6 +523,8 @@ public class Treemap extends Canvas {
 	 * @return the index of the item
 	 */
 	public int indexOf(TreemapItem item) {
+		checkWidget();
+
 		return rootItem.indexOf(item);
 	}
 
@@ -479,6 +536,8 @@ public class Treemap extends Canvas {
 	 * @param index index of the item to remove
 	 */
 	public void remove(int index) {
+		checkWidget();
+
 		rootItem.remove(index);
 	}
 
@@ -489,6 +548,8 @@ public class Treemap extends Canvas {
 	 * @param item the item to be removed
 	 */
 	public void remove(TreemapItem item) {
+		checkWidget();
+
 		item = TreemapItem.checkNull(item);
 
 		if (item.getParent() != this) {
@@ -506,6 +567,8 @@ public class Treemap extends Canvas {
 	 * Removes all of the items from the receiver.
 	 */
 	public void removeAll() {
+		checkWidget();
+
 		rootItem.removeAll();
 	}
 
@@ -516,7 +579,24 @@ public class Treemap extends Canvas {
 	 * @param item the item to be shown
 	 */
 	public void showItem(TreemapItem item) {
-		// TODO
+		checkWidget();
+
+		item = TreemapItem.checkNull(item);
+
+		if (item.getParent() != this) {
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+		}
+
+		TreemapItem top = item.getParentItem();
+		if (top == null) {
+			top = item;
+		}
+
+		setTopItem(top);
+
+		if (item.getBounds() == null) {
+			setTopItem(top);
+		}
 	}
 
 	/**
@@ -524,6 +604,8 @@ public class Treemap extends Canvas {
 	 * Otherwise, the items are scrolled until the selection is visible.
 	 */
 	public void showSelection() {
+		checkWidget();
+
 		TreemapItem selection = getSelection();
 		if (selection == null) {
 			return;
