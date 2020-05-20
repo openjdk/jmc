@@ -32,11 +32,11 @@ public class TreemapItem extends Item {
 
 	private Rectangle bounds = null;
 	private Rectangle textBounds = null;
-	private double realWeight = 0; // the weight of the node
-	private double apparentWeight = -1; // the cached sum of all direct children's apparent weights + realWeight
-	// -1 indicates not yet cached
 
-	// the following members need to be disposed
+	private double realWeight = 0; // the weight of the node
+	// the cached sum of all direct children's apparent weights + realWeight. -1 indicates not yet cached
+	private double apparentWeight = -1;
+
 	private Color darkenBackground = null;
 
 	/**
@@ -71,8 +71,8 @@ public class TreemapItem extends Item {
 		this.parentItem = parentItem;
 
 		if (parentItem != null) {
-			parentItem.children.add(this); // adding a 0 weighted node to the end of decreasingly sorted list preserves 
-			// the sorted structure
+			// adding a 0 weighted node to the end of decreasingly sorted list preserves the sorted structure
+			parentItem.children.add(this);
 		}
 
 //		parent.createItem(this);
@@ -134,13 +134,13 @@ public class TreemapItem extends Item {
 		Color fg = gc.getForeground();
 		Font font = gc.getFont();
 
-		// clear background
-		gc.setBackground(getBackground());
 		int[] rectangle = new int[] {bounds.x, bounds.y, //
 				bounds.x + bounds.width, bounds.y, //
 				bounds.x + bounds.width, bounds.y + bounds.height, //
 				bounds.x, bounds.y + bounds.height};
 
+		// fill background
+		gc.setBackground(parent.getSelection() == this ? getDarkenBackground() : getBackground());
 		gc.fillPolygon(rectangle);
 
 		if (getParent().getBordersVisible() && getParentItem() != null) {
@@ -206,6 +206,9 @@ public class TreemapItem extends Item {
 		{
 			double w = Math.max(0, bounds.width - 2 * HORIZONTAL_PADDING);
 			double h = Math.max(0, bounds.height - 2 * VERTICAL_PADDING);
+			if (textBounds != null && textBounds.height > VERTICAL_PADDING) {
+				h = h - textBounds.height + VERTICAL_PADDING;
+			}
 			availableRegion = new Rectangle2D.Double(0, 0, w, h);
 		}
 
@@ -229,6 +232,9 @@ public class TreemapItem extends Item {
 
 			int x = (int) childBounds.x + bounds.x + HORIZONTAL_PADDING;
 			int y = (int) childBounds.y + bounds.y + VERTICAL_PADDING;
+			if (textBounds != null && textBounds.height > VERTICAL_PADDING) {
+				y = y + textBounds.height - VERTICAL_PADDING;
+			}
 			int w = (int) childBounds.width;
 			int h = (int) childBounds.height;
 
@@ -407,8 +413,17 @@ public class TreemapItem extends Item {
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
-		// TODO
-		return null;
+		if (getBounds() == null || !getBounds().contains(point)) {
+			return null;
+		}
+
+		for (TreemapItem child : children) {
+			if (child.getBounds() != null && child.getBounds().contains(point)) {
+				return child.getItem(point);
+			}
+		}
+		
+		return this;
 	}
 
 	/**
@@ -465,8 +480,7 @@ public class TreemapItem extends Item {
 	 * @return the receiver's bounding text rectangle
 	 */
 	public Rectangle getTextBounds() {
-		// TODO
-		return null;
+		return textBounds;
 	}
 
 	/**

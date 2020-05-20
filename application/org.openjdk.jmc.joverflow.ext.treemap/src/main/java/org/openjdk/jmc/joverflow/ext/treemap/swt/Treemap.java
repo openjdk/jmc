@@ -1,21 +1,36 @@
 package org.openjdk.jmc.joverflow.ext.treemap.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.TypedListener;
 
-public class Treemap extends Canvas implements PaintListener {
+import java.util.HashMap;
+import java.util.Map;
 
+public class Treemap extends Canvas {
 	private boolean borderVisible = true;
 
-	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
+	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
+	private Map<TreemapListener, TypedListener> treemapListeners = new HashMap<>();
 
-	// All created items of this receiver. Should recycle if possible.
-//	private List<TreemapItem> items = new ArrayList<>();
+	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
+	private TreemapItem topItem = rootItem;
+	private TreemapItem selectedItem = null;
+
+	// the following members need to be disposed
+	private Cursor cursor;
+	private TreemapToolTip toolTip = new TreemapToolTip(this);;
 
 	// TODO: checkWidget() when appropriate
 
@@ -37,7 +52,41 @@ public class Treemap extends Canvas implements PaintListener {
 			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by Treemap");
 		}
 
-		addPaintListener(this);
+		addPaintListener(this::onPaintControl);
+		addMouseListener(new MouseListener() {
+			@Override
+			public void mouseDoubleClick(MouseEvent mouseEvent) {
+				onMouseDoubleClick(mouseEvent);
+			}
+
+			@Override
+			public void mouseDown(MouseEvent mouseEvent) {
+				onMouseDown(mouseEvent);
+			}
+
+			@Override
+			public void mouseUp(MouseEvent mouseEvent) {
+				onMouseUp(mouseEvent);
+			}
+		});
+
+		addListener(SWT.MouseMove, e -> {
+			TreemapItem item = getItem(new Point(e.x, e.y));
+			if (item == null) {
+				return;
+			}
+
+			if (cursor != null && !cursor.isDisposed()) {
+				cursor.dispose();
+			}
+
+			cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW)
+					: new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
+			setCursor(cursor);
+
+			// TODO: better data binding mechanism
+			toolTip.setText(item.getText() + "\n" + item.getBounds() + "\n" + item.getTextBounds());
+		});
 	}
 
 	/*package-private*/ static Composite checkNull(Composite control) {
@@ -56,44 +105,57 @@ public class Treemap extends Canvas implements PaintListener {
 		return treemap;
 	}
 
-	@Override
-	public void paintControl(PaintEvent paintEvent) {
-		System.out.println(getClientArea().toString());
-
+	private void onPaintControl(PaintEvent paintEvent) {
 		getTopItem().paintItem(paintEvent.gc, getClientArea());
 	}
 
-//	/*package-private*/ void createItem(TreemapItem item) {
-//		items.add(item);
-//	}
+	private void onMouseDoubleClick(MouseEvent mouseEvent) {
+		if (mouseEvent.button == 1) { // if not left button
+			TreemapItem item = getItem(new Point(mouseEvent.x, mouseEvent.y));
+			if (item == null) {
+				return;
+			}
 
-// TODO: call notifyListeners​(int eventType, Event event) instead
-//	/**
-//	 * Adds the listener to the collection of listeners who will be notified when an event of the given type occurs.
-//	 * When the event does occur in the widget, the listener is notified by sending it the handleEvent() message. The
-//	 * event type is one of the event constants defined in class SWT.
-//	 *
-//	 * @param eventType the type of event to listen for
-//	 * @param listener  the listener which should be notified when the event occurs
-//	 */
-//	@Override
-//	public void addListener(int eventType, Listener listener) {
-//		super.addListener(eventType, listener);
-//
-//		// TODO: implement this if we want to support SWT.VIRTUAL
-//	}
-//
-//	/**
-//	 * Removes the listener from the collection of listeners who will be notified when an event of the given type 
-//	 * occurs. The event type is one of the event constants defined in class SWT.
-//	 * 
-//	 * @param eventType the type of event to listen for
-//	 * @param listener the listener which should no longer be notified
-//	 */
-//	@Override
-//	public void removeListener(int eventType, Listener listener) {
-//
-//	}
+			setTopItem(item);
+			// TODO: notify TreemapListener
+			return;
+		}
+	}
+
+	private void onMouseDown(MouseEvent mouseEvent) {
+		// left button: select (highlight) a node
+		if (mouseEvent.button == 1) {
+			TreemapItem item = getItem(new Point(mouseEvent.x, mouseEvent.y));
+			if (item == null) {
+				return;
+			}
+
+			setSelection(item);
+			// TODO: notify TreemapListener
+			return;
+		}
+
+		// middle button: show the root node as top
+		if (mouseEvent.button == 2) {
+			setTopItem(getRootItem());
+			// TODO: notify TreemapListener
+			return;
+		}
+
+		if (mouseEvent.button == 3) {
+			TreemapItem parentItem = getTopItem().getParentItem();
+			if (parentItem == null) {
+				return;
+			}
+			setTopItem(parentItem);
+			// TODO: notify TreemapListener
+			return;
+		}
+	}
+
+	private void onMouseUp(MouseEvent mouseEvent) {
+		// noop
+	}
 
 	/**
 	 * Adds the listener to the collection of listeners who will be notified when the user changes the receiver's
@@ -106,7 +168,17 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @param listener the listener which should be notified when the user changes the receiver's selection
 	 */
 	public void addSelectionListener(SelectionListener listener) {
+		this.checkWidget();
 
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+
+		selectionListeners.putIfAbsent(listener, new TypedListener(listener));
+		TypedListener typedListener = selectionListeners.get(listener);
+
+		addListener(SWT.Selection, typedListener);
+		addListener(SWT.DefaultSelection, typedListener);
 	}
 
 	/**
@@ -116,7 +188,19 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @param listener the listener which should no longer be notified
 	 */
 	public void removeSelectionListener(SelectionListener listener) {
+		this.checkWidget();
 
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+
+		TypedListener typedListener = selectionListeners.remove(listener);
+		if (typedListener == null) {
+			return;
+		}
+
+		removeListener(SWT.Selection, typedListener);
+		removeListener(SWT.DefaultSelection, typedListener);
 	}
 
 	/**
@@ -126,7 +210,7 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @param listener the listener which should be notified
 	 */
 	public void addTreemapListener(TreemapListener listener) {
-
+		// TODO
 	}
 
 	/**
@@ -136,7 +220,7 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @param listener the listener which should no longer be notified
 	 */
 	public void removeTreemapListener(TreemapListener listener) {
-
+		// TODO
 	}
 
 	/**
@@ -162,36 +246,58 @@ public class Treemap extends Canvas implements PaintListener {
 		rootItem.clearAll(all);
 	}
 
+	@Override
+	public void dispose() {
+		if (cursor != null && !cursor.isDisposed()) {
+			cursor.dispose();
+		}
+
+		super.dispose();
+	}
+
 	/**
-	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected.
+	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected. Indices that are 
+	 * out of range are ignored.
 	 *
-	 * @param item the item to be deselected
+	 * @param index the index of the item to deselect
 	 */
-	public void deselect(TreemapItem item) {
-		// TODO
+	public void deselect(int index) {
+		checkWidget();
+
+		try {
+			getItem(index);
+			deselect();
+		} catch (IndexOutOfBoundsException e) {
+			// noop
+		}
 	}
 
 	/**
-	 * Selects an item in the receiver. If the item was already selected, it remains selected.
+	 * Deselects the item in the receive that is currently selected. Noop if there is no selection.
 	 *
-	 * @param item the item to be selected
 	 */
-	public void select(TreemapItem item) {
-		// TODO
+	public void deselect() {
+		checkWidget();
+		
+		if (getSelection() != null) {
+			setSelection(null);
+		}
 	}
 
 	/**
-	 * Selects all of the items in the receiver.
+	 * Selects an item in the receiver. If the item was already selected, it remains selected. Indices that are out of 
+	 * range are ignored.
+	 *
+	 * @param index the index of the item to select
 	 */
-	public void selectAll() {
-		// TODO
-	}
+	public void select(int index) {
+		checkWidget();
 
-	/**
-	 * Deselects all selected items in the receiver.
-	 */
-	public void deselectAll() {
-		// TODO
+		try {
+			setSelection(getItem(index));
+		} catch (IndexOutOfBoundsException e) {
+			// noop
+		}
 	}
 
 	/**
@@ -216,7 +322,7 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
-		return rootItem.getItem(point);
+		return topItem.getItem(point);
 	}
 
 	/**
@@ -292,8 +398,8 @@ public class Treemap extends Canvas implements PaintListener {
 	 * 
 	 * @return an array representing the selection
 	 */
-	public TreemapItem[] getSelection() {
-		return null;
+	public TreemapItem getSelection() {
+		return selectedItem;
 	}
 
 	/**
@@ -304,20 +410,23 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @param item the item to select
 	 */
 	public void setSelection(TreemapItem item) {
-		// TODO
-	}
+		checkWidget();
 
-	public void setSelection(TreemapItem[] items) {
-		// TODO
-	}
+		if (item != null && item.getParent() != this) {
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+		}
 
-	/**
-	 * Returns the number of selected items contained in the receiver.
-	 *
-	 * @return the number of selected items
-	 */
-	public int getSelectionCount() {
-		return 0;
+		selectedItem = item;
+
+		Event e = new Event();
+		e.display = getDisplay();
+		e.widget = this;
+		e.type = SWT.Selection;
+		e.item = item;
+		e.index = this.indexOf(item);
+
+		notifyListeners(SWT.Selection, e);
+		redraw();
 	}
 
 	/**
@@ -327,18 +436,28 @@ public class Treemap extends Canvas implements PaintListener {
 	 * @return the item at the top of the receiver
 	 */
 	public TreemapItem getTopItem() {
-		// TODO: track which item is on top
-		return getRootItem();
+		return topItem;
 	}
 
 	/**
 	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded, 
 	 * collapsed, scrolled or new items are added or removed.
 	 * 
-	 * @param item
+	 * @param item the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
-		// TODO
+		item = TreemapItem.checkNull(item);
+
+		if (item.getParent() != this) {
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+		}
+
+		TreemapItem oldItem = topItem;
+		topItem = item;
+		
+		if (oldItem != topItem) {
+			redraw();
+		}
 	}
 	
 	/**
@@ -405,10 +524,12 @@ public class Treemap extends Canvas implements PaintListener {
 	 * Otherwise, the items are scrolled until the selection is visible.
 	 */
 	public void showSelection() {
-		TreemapItem[] selection = getSelection();
+		TreemapItem selection = getSelection();
+		if (selection == null) {
+			return;
+		}
 
-		// TODO: find top most selection
-		showItem(selection[0]);
+		showItem(selection);
 	}
 }
 
