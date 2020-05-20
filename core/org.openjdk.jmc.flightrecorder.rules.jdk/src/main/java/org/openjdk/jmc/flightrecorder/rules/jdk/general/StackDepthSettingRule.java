@@ -83,7 +83,8 @@ public class StackDepthSettingRule implements IRule {
 		long truncatedTraces = 0L;
 		long totalTraces = 0L;
 		for (IItemIterable itemIterable : items.apply(stackTracesFilter)) {
-			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(itemIterable.getType());
+			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = JfrAttributes.EVENT_STACKTRACE
+					.getAccessor(itemIterable.getType());
 			for (IItem item : itemIterable) {
 				String typeIdentifier = itemIterable.getType().getName();
 				IMCStackTrace stacktrace = stacktraceAccessor.getMember(item);
@@ -92,7 +93,8 @@ public class StackDepthSettingRule implements IRule {
 				tracesByType.put(typeIdentifier, tracesForType + 1);
 				if (stacktrace != null && stacktrace.getTruncationState().isTruncated()) {
 					truncatedTraces++;
-					Long truncatedTracesForType = truncatedTracesByType.containsKey(typeIdentifier) ? truncatedTracesByType.get(typeIdentifier) : 0L;
+					Long truncatedTracesForType = truncatedTracesByType.containsKey(typeIdentifier)
+							? truncatedTracesByType.get(typeIdentifier) : 0L;
 					truncatedTracesByType.put(typeIdentifier, truncatedTracesForType + 1);
 				}
 			}
@@ -108,7 +110,8 @@ public class StackDepthSettingRule implements IRule {
 			for (String type : typesWithTruncatedTraces) {
 				listBuilder.append("<li>"); //$NON-NLS-1$
 				Long value = truncatedTracesByType.get(type);
-				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY.quantity((double) value / (double) tracesByType.get(type));
+				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY
+						.quantity((double) value / (double) tracesByType.get(type));
 				listBuilder.append(
 						MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE),
 								Encode.forHtml(type), percentTruncated.displayUsing(IDisplayable.AUTO)));
