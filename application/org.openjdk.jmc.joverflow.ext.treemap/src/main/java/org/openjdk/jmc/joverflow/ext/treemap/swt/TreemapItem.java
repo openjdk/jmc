@@ -547,12 +547,24 @@ public class TreemapItem extends Item {
 		return apparentWeight;
 	}
 
+	/**
+	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * about this item.
+	 * 
+	 * @return the widget message
+	 */
 	public String getMessage() {
 		checkWidget();
 
 		return message;
 	}
 
+	/**
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * about this item.
+	 * 
+	 * @param message the new message
+	 */
 	public void setMessage(String message) {
 		checkWidget();
 
@@ -600,7 +612,8 @@ public class TreemapItem extends Item {
 	public void remove(int index) {
 		checkWidget();
 
-		parent.remove(getItem(index));
+		TreemapItem item = getItem(index);
+		children.remove(item);
 	}
 
 	/**
@@ -609,8 +622,10 @@ public class TreemapItem extends Item {
 	public void removeAll() {
 		checkWidget();
 
-		for (int i = 0; i < getItemCount(); i++) {
-			remove(i);
+		for (TreemapItem child : children) {
+			child.removeAll();
 		}
+
+		children.clear();
 	}
 }

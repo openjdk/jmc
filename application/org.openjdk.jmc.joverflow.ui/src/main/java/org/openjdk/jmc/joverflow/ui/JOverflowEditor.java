@@ -271,7 +271,7 @@ public class JOverflowEditor extends EditorPart {
 		return mJOverflowUi;
 	}
 
-	Snapshot getSnapshot() {
+	public Snapshot getSnapshot() {
 		return mSnapshot;
 	}
 

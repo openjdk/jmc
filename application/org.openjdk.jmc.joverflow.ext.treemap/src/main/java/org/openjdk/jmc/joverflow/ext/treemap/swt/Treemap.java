@@ -19,6 +19,7 @@ import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Treemap extends Canvas {
@@ -493,6 +494,28 @@ public class Treemap extends Canvas {
 	}
 
 	/**
+	 * Sets the receiver's text.
+	 * 
+	 * @return the new text
+	 */
+	public String getText() {
+		checkWidget();
+
+		return rootItem.getText();
+	}
+
+	/**
+	 * Returns the receiver's text, which will be an empty string if it has never been set.
+	 * 
+	 * @param message the receiver's text
+	 */
+	public void setText(String message) {
+		checkWidget();
+
+		rootItem.setText(message);
+	}
+	
+	/**
 	 * Returns the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
 	 *
@@ -542,6 +565,30 @@ public class Treemap extends Canvas {
 	}
 
 	/**
+	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * about this item.
+	 *
+	 * @return the widget message
+	 */
+	public String getMessage() {
+		checkWidget();
+
+		return rootItem.getMessage();
+	}
+
+	/**
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * about this item.
+	 *
+	 * @param message the new message
+	 */
+	public void setMessage(String message) {
+		checkWidget();
+
+		rootItem.setMessage(message);
+	}
+
+	/**
 	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
 	 * argument, and returns the index of that item. If no item is found, returns -1.
 	 *
@@ -564,28 +611,6 @@ public class Treemap extends Canvas {
 		checkWidget();
 
 		rootItem.remove(index);
-	}
-
-	/**
-	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
-	 * argument, and remove that item.
-	 *
-	 * @param item the item to be removed
-	 */
-	public void remove(TreemapItem item) {
-		checkWidget();
-
-		item = TreemapItem.checkNull(item);
-
-		if (item.getParent() != this) {
-			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
-		}
-
-		item.updateAncestor();
-
-		for (TreemapItem child : item.getItems()) {
-			remove(child);
-		}
 	}
 
 	/**

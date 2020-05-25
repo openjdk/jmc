@@ -6,11 +6,8 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
-import org.openjdk.jmc.joverflow.support.RefChainElement;
 import org.openjdk.jmc.joverflow.ui.JOverflowEditor;
 import org.openjdk.jmc.joverflow.ui.JOverflowUi;
-import org.openjdk.jmc.joverflow.ui.model.ModelListener;
-import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
 
 public class TreemapPageBookView extends PageBookView {
 
@@ -30,42 +27,22 @@ public class TreemapPageBookView extends PageBookView {
 		}
 
 		final JOverflowEditor editor = ((JOverflowEditor) part);
-		MessagePage page = new MessagePage();
-		page.setMessage("Joverflow editor selected");
+		TreemapPage page = new TreemapPage(editor);
 
-		if (part instanceof JOverflowEditor) {
-//			editor.addUiLoadedListener((ui) -> ui.addModelListener(new ModelListener() {
-//				private int mTotalInstancesCount = 0;
-//				
-//				@Override
-//				public void include(ObjectCluster cluster, RefChainElement referenceChain) {
-//					// TODO Auto-generated method stub
-//					mTotalInstancesCount += cluster.getObjectCount();
-//				}
-//
-//				@Override
-//				public void allIncluded() {
-//					// TODO Auto-generated method stub
-//					page.setMessage(String.format("%d objects added", mTotalInstancesCount));
-//					
-//					mTotalInstancesCount = 0;
-//				}
-//			}));
+		editor.addUiLoadedListener((ui) -> ui.addModelListener(page));
 
-			initPage(page);
-			page.createControl(getPageBook());
-			return new PageRec(part, page);
-		}
-		return null;
+		initPage(page);
+		page.createControl(getPageBook());
+		return new PageRec(part, page);
 	}
 
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
 		if (part instanceof JOverflowEditor) {
-//			final JOverflowUi ui = ((JOverflowEditor) part).getJOverflowUi();
-//			if (ui != null) {
-//				// TODO: remove listener
-//			}
+			final JOverflowUi ui = ((JOverflowEditor) part).getJOverflowUi();
+			if (ui != null) {
+				ui.removeModelListener((TreemapPage) pageRecord.page);
+			}
 		}
 
 		pageRecord.page.dispose();
