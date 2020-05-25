@@ -122,9 +122,6 @@ public class Treemap extends Canvas {
 				return;
 			}
 
-			if (item.getItemCount() == 0 && item.getParentItem() != null) {
-				item = item.getParentItem();
-			}
 			setTopItem(item);
 			return;
 		}
@@ -148,6 +145,7 @@ public class Treemap extends Canvas {
 			return;
 		}
 
+		// right button: show the parent node as top
 		if (mouseEvent.button == 3) {
 			TreemapItem parentItem = getTopItem().getParentItem();
 			if (parentItem == null) {
@@ -510,6 +508,8 @@ public class Treemap extends Canvas {
 	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
 	 *
+	 * If the item is a leaf (ie. no child), then the parent item is set as top if not null.
+	 * 
 	 * @param item the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
@@ -519,6 +519,11 @@ public class Treemap extends Canvas {
 
 		if (item.getParent() != this) {
 			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+		}
+
+		// if item is a leaf, then show it's parent item.
+		if (item.getItemCount() == 0 && item.getParentItem() != null) {
+			item = item.getParentItem();
 		}
 
 		TreemapItem oldItem = topItem;

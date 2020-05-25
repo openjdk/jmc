@@ -25,29 +25,32 @@ public class TreemapPageBookView extends PageBookView {
 
 	@Override
 	protected PageRec doCreatePage(IWorkbenchPart part) {
+		if (!(part instanceof JOverflowEditor)) {
+			return null;
+		}
+
+		final JOverflowEditor editor = ((JOverflowEditor) part);
+		MessagePage page = new MessagePage();
+		page.setMessage("Joverflow editor selected");
+
 		if (part instanceof JOverflowEditor) {
-			final JOverflowEditor editor = ((JOverflowEditor) part);
-
-			MessagePage page = new MessagePage();
-			page.setMessage("Joverflow editor selected");
-			
-			editor.addUiLoadedListener((ui) -> ui.addModelListener(new ModelListener() {
-				private int mTotalInstancesCount = 0;
-				
-				@Override
-				public void include(ObjectCluster cluster, RefChainElement referenceChain) {
-					// TODO Auto-generated method stub
-					mTotalInstancesCount += cluster.getObjectCount();
-				}
-
-				@Override
-				public void allIncluded() {
-					// TODO Auto-generated method stub
-					page.setMessage(String.format("%d objects added", mTotalInstancesCount));
-					
-					mTotalInstancesCount = 0;
-				}
-			}));
+//			editor.addUiLoadedListener((ui) -> ui.addModelListener(new ModelListener() {
+//				private int mTotalInstancesCount = 0;
+//				
+//				@Override
+//				public void include(ObjectCluster cluster, RefChainElement referenceChain) {
+//					// TODO Auto-generated method stub
+//					mTotalInstancesCount += cluster.getObjectCount();
+//				}
+//
+//				@Override
+//				public void allIncluded() {
+//					// TODO Auto-generated method stub
+//					page.setMessage(String.format("%d objects added", mTotalInstancesCount));
+//					
+//					mTotalInstancesCount = 0;
+//				}
+//			}));
 
 			initPage(page);
 			page.createControl(getPageBook());
@@ -59,10 +62,10 @@ public class TreemapPageBookView extends PageBookView {
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
 		if (part instanceof JOverflowEditor) {
-			final JOverflowUi ui = ((JOverflowEditor) part).getJOverflowUi();
-			if (ui != null) {
-				// TODO: remove listener
-			}
+//			final JOverflowUi ui = ((JOverflowEditor) part).getJOverflowUi();
+//			if (ui != null) {
+//				// TODO: remove listener
+//			}
 		}
 
 		pageRecord.page.dispose();
