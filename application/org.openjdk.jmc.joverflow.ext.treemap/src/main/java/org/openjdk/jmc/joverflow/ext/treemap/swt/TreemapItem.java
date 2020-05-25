@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class TreemapItem extends Item {
 	private static final String ELLIPSIS = "...";
@@ -37,6 +38,9 @@ public class TreemapItem extends Item {
 	// the cached sum of all direct children's apparent weights + realWeight. -1 indicates not yet cached
 	private double apparentWeight = -1;
 
+	private String message = "";
+
+	// to be disposed
 	private Color darkenBackground = null;
 
 	/**
@@ -111,6 +115,7 @@ public class TreemapItem extends Item {
 
 		this.setData(null);
 		this.setText("");
+		this.setMessage("");
 
 		updateAncestor();
 	}
@@ -540,6 +545,19 @@ public class TreemapItem extends Item {
 		}
 
 		return apparentWeight;
+	}
+
+	public String getMessage() {
+		checkWidget();
+
+		return message;
+	}
+
+	public void setMessage(String message) {
+		checkWidget();
+
+		Objects.requireNonNull(message);
+		this.message = message;
 	}
 
 	/**

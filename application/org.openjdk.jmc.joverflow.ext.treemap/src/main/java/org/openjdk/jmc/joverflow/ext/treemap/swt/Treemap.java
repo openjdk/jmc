@@ -23,6 +23,7 @@ import java.util.Set;
 
 public class Treemap extends Canvas {
 	private boolean borderVisible = true;
+	private boolean toolTipEnabled = true;
 
 	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
 	private Set<TreemapListener> treemapListeners = new HashSet<>();
@@ -81,16 +82,19 @@ public class Treemap extends Canvas {
 				cursor.dispose();
 			}
 
-			cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW)
-					: new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
+			cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW) :
+					new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
 			setCursor(cursor);
 
-			// TODO: better data binding mechanism
-			toolTip.setText(item.getText() + "\n" + item.getBounds() + "\n" + item.getTextBounds());
+			if (toolTipEnabled) {
+				toolTip.setItem(item);
+			}
+
 		});
 	}
 
-	/*package-private*/ static Composite checkNull(Composite control) {
+	/*package-private*/
+	static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -98,7 +102,8 @@ public class Treemap extends Canvas {
 		return control;
 	}
 
-	/*package-private*/ static Treemap checkNull(Treemap treemap) {
+	/*package-private*/
+	static Treemap checkNull(Treemap treemap) {
 		if (treemap == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -117,6 +122,9 @@ public class Treemap extends Canvas {
 				return;
 			}
 
+			if (item.getItemCount() == 0 && item.getParentItem() != null) {
+				item = item.getParentItem();
+			}
 			setTopItem(item);
 			return;
 		}
@@ -172,7 +180,7 @@ public class Treemap extends Canvas {
 
 		return e;
 	}
-	
+
 	/**
 	 * Adds the listener to the collection of listeners who will be notified when the user changes the receiver's
 	 * selection, by sending it one of the messages defined in the SelectionListener interface.
@@ -254,7 +262,6 @@ public class Treemap extends Canvas {
 	/**
 	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in the receiver. The
 	 * text, icon and other attributes of the item are set to the default value.
-	 * 
 	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
 	 *
 	 * @param index the index of the item to clear
@@ -288,7 +295,7 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected. Indices that are 
+	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected. Indices that are
 	 * out of range are ignored.
 	 *
 	 * @param index the index of the item to deselect
@@ -306,18 +313,17 @@ public class Treemap extends Canvas {
 
 	/**
 	 * Deselects the item in the receive that is currently selected. Noop if there is no selection.
-	 *
 	 */
 	public void deselect() {
 		checkWidget();
-		
+
 		if (getSelection() != null) {
 			setSelection(null);
 		}
 	}
 
 	/**
-	 * Selects an item in the receiver. If the item was already selected, it remains selected. Indices that are out of 
+	 * Selects an item in the receiver. If the item was already selected, it remains selected. Indices that are out of
 	 * range are ignored.
 	 *
 	 * @param index the index of the item to select
@@ -425,6 +431,23 @@ public class Treemap extends Canvas {
 		borderVisible = show;
 	}
 
+	public boolean getToolTipEnabled() {
+		checkWidget();
+
+		return toolTipEnabled;
+	}
+
+	public void setToolTipEnabled(boolean enabled) {
+		checkWidget();
+
+		toolTipEnabled = enabled;
+		if (enabled) {
+			toolTip.activate();
+		} else {
+			toolTip.deactivate();
+		}
+	}
+
 	/**
 	 * Returns the receiver's root item, which must be a TreeItem.
 	 *
@@ -439,11 +462,9 @@ public class Treemap extends Canvas {
 	/**
 	 * Returns an array of TreeItems that are currently selected in the receiver. The order of the items is unspecified.
 	 * An empty array indicates that no items are selected.
-	 * 
 	 * Note: This is not the actual structure used by the receiver to maintain its selection, so modifying the array
 	 * will not affect the receiver.
 	 *
-	 * 
 	 * @return an array representing the selection
 	 */
 	public TreemapItem getSelection() {
@@ -474,9 +495,9 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the item which is currently at the top of the receiver. This item can change when items are expanded, 
+	 * Returns the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
-	 * 
+	 *
 	 * @return the item at the top of the receiver
 	 */
 	public TreemapItem getTopItem() {
@@ -486,9 +507,9 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded, 
+	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
-	 * 
+	 *
 	 * @param item the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
@@ -502,7 +523,7 @@ public class Treemap extends Canvas {
 
 		TreemapItem oldItem = topItem;
 		topItem = item;
-		
+
 		if (oldItem == topItem) {
 			return;
 		}
@@ -514,7 +535,7 @@ public class Treemap extends Canvas {
 
 		redraw();
 	}
-	
+
 	/**
 	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
 	 * argument, and returns the index of that item. If no item is found, returns -1.
@@ -528,10 +549,9 @@ public class Treemap extends Canvas {
 		return rootItem.indexOf(item);
 	}
 
-
 	/**
 	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range. 
+	 * an exception if the index is out of range.
 	 *
 	 * @param index index of the item to remove
 	 */
@@ -600,7 +620,7 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Shows the first selection. If the selection is already showing in the receiver, this method simply returns. 
+	 * Shows the first selection. If the selection is already showing in the receiver, this method simply returns.
 	 * Otherwise, the items are scrolled until the selection is visible.
 	 */
 	public void showSelection() {

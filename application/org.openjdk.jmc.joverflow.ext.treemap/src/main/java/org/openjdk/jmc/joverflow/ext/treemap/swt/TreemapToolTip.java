@@ -10,7 +10,8 @@ import org.eclipse.jface.window.ToolTip;
 
 public class TreemapToolTip extends ToolTip {
 	private static final int PADDING = 5;
-	private String text = "";
+
+	private TreemapItem item = null;
 
 	public TreemapToolTip(Control parent) {
 		super(parent);
@@ -30,13 +31,19 @@ public class TreemapToolTip extends ToolTip {
 		ret.setBackground(parent.getBackground());
 
 		Label label = new Label(ret, SWT.NONE);
-		label.setText(text);
+		label.setText(item != null ? item.getMessage() : "");
 		label.setForeground(parent.getForeground());
 
 		return ret;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setItem(TreemapItem item) {
+		this.item = item;
+
+		if (item.getMessage().isEmpty()) {
+			deactivate();
+		} else {
+			activate();
+		}
 	}
 }
