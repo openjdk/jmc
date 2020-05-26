@@ -1,10 +1,13 @@
 package org.openjdk.jmc.joverflow.ext.treemap;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.TreemapItem;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TreemapPage extends Page implements ModelListener {
-	public static final Color[] COLORS = {new Color(Display.getCurrent(), 250, 206, 210), // red
+	private static final Color[] COLORS = {new Color(Display.getCurrent(), 250, 206, 210), // red
 			new Color(Display.getCurrent(), 185, 214, 255), // blue
 			new Color(Display.getCurrent(), 229, 229, 229), // grey
 			new Color(Display.getCurrent(), 255, 231, 199), // orange
@@ -28,9 +31,17 @@ public class TreemapPage extends Page implements ModelListener {
 			new Color(Display.getCurrent(), 255, 255, 255), // white
 			new Color(Display.getCurrent(), 205, 249, 212), // green
 	};
-	
+	private static final String MESSAGE_NO_INSTANCE_SELECTED = "No instances selected";
+	private static final String LABEL_ROOT = "[ROOT]";
+
 	private final JOverflowEditor editor;
 
+	private Composite container;
+	private StackLayout containerLayout;
+	private Composite messageContainer;
+	private Composite treemapContainer;
+	
+	private Label message;
 	private Treemap treemap;
 
 	private HashMap<String, Double> classes = new HashMap<>();
@@ -41,14 +52,32 @@ public class TreemapPage extends Page implements ModelListener {
 
 	@Override
 	public void createControl(Composite parent) {
-		treemap = new Treemap(parent, SWT.NONE);
-		treemap.setText("[ROOT]");
+		container = new Composite(parent, SWT.PUSH);
+		containerLayout = new StackLayout();
+		container.setLayout(containerLayout);
+
+		messageContainer = new Composite(container, SWT.NONE);
+		FillLayout layout = new FillLayout();
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
+		messageContainer.setLayout(layout);
+
+		message = new Label(messageContainer, SWT.NONE);
+		message.setText(MESSAGE_NO_INSTANCE_SELECTED);
+
+		treemapContainer = new Composite(container, SWT.NONE);
+		treemapContainer.setLayout(new FillLayout());
+
+		treemap = new Treemap(treemapContainer, SWT.NONE);
+		treemap.setText(LABEL_ROOT);
+
+		containerLayout.topControl = messageContainer;
 		updateInput();
 	}
 
 	@Override
 	public Control getControl() {
-		return treemap;
+		return container;
 	}
 
 	@Override
@@ -65,6 +94,10 @@ public class TreemapPage extends Page implements ModelListener {
 
 		JavaClass clazz = getObjectAtPosition(cluster.getGlobalObjectIndex(0)).getClazz();
 		String className = clazz.getName();
+		if (className.charAt(0) == '[') {
+			className = cluster.getClassName();
+		}
+		
 		classes.putIfAbsent(className, 0.0);
 		double size = classes.get(className);
 		size += cluster.getMemory();
@@ -78,25 +111,30 @@ public class TreemapPage extends Page implements ModelListener {
 	}
 
 	private void updateInput() {
+		if (classes.size() == 0) {
+			containerLayout.topControl = messageContainer;
+			container.layout();
+			return;
+		}
+
 		if (treemap == null) {
 			return;
 		}
 
 		treemap.removeAll();
-		if (treemap.getItemCount() > 0) {
-			throw new RuntimeException("wtf?");
-		}
 		HashMap<String, TreemapItem> items = new HashMap<>();
 		for (Map.Entry<String, Double> entry : classes.entrySet()) {
 			addTreemapItem(treemap, items, entry.getKey(), entry.getValue());
 		}
-		
+
 		TreemapItem rootItem = treemap.getRootItem();
-		rootItem.setMessage("[ROOT]");
+		rootItem.setMessage(LABEL_ROOT);
 		setColorAndMessage(rootItem, 0);
 		treemap.setTopItem(rootItem);
 		treemap.setSelection(null);
-		treemap.redraw();
+
+		containerLayout.topControl = treemapContainer;
+		container.layout();
 	}
 
 	private void addTreemapItem(Treemap parent, Map<String, TreemapItem> items, String fullName, double size) {
