@@ -3,7 +3,6 @@ package org.openjdk.jmc.joverflow.ext.treemap.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -22,6 +21,8 @@ import java.util.Map;
 import java.util.Stack;
 
 public class Breadcrumb extends Canvas {
+	private static final int PADDING = 2;
+
 	private Stack<BreadcrumbItem> items = new Stack<>();
 
 	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
@@ -53,21 +54,23 @@ public class Breadcrumb extends Canvas {
 	}
 
 	@Override
-	public Point computeSize(int wHint, int hHint) {
-		System.out.println("computing size");
+	public Point computeSize(int wHint, int hHint, boolean changed) {
 		int width = 0;
 		int height = 0;
 
+		GC gc = new GC(this);
 		for (BreadcrumbItem item : items) {
-			Rectangle bounds = item.getBounds();
-			if (bounds == null) {
-				return new Point(0, 0);
-			}
+			Point dimension = item.getDimension(gc);
 
-			width += item.getBounds().width;
-			height = Math.max(height, item.getBounds().height);
+			width += dimension.x;
+			height = Math.max(height, dimension.y);
 		}
-		return new Point(Math.max(width, wHint), Math.max(height, hHint));
+		return new Point(Math.max(width, wHint) + 2 * PADDING, Math.max(height, hHint) + 2 * PADDING);
+	}
+
+	@Override
+	public Rectangle computeTrim(int x, int y, int width, int height) {
+		return new Rectangle(x - PADDING, y - PADDING, width + 2 * PADDING, height + 2 * PADDING);
 	}
 
 	/*package-private*/
@@ -173,6 +176,17 @@ public class Breadcrumb extends Canvas {
 
 		removeListener(SWT.Selection, typedListener);
 		removeListener(SWT.DefaultSelection, typedListener);
+	}
+
+	@Override
+	public Rectangle getClientArea() {
+		Rectangle bounds = super.getClientArea();
+		bounds.x += PADDING;
+		bounds.y += PADDING;
+		bounds.width -= 2 * PADDING;
+		bounds.height -= 2 * PADDING;
+
+		return bounds;
 	}
 
 	public void popItem() {

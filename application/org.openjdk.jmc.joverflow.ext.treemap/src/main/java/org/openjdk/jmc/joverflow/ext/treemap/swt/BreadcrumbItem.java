@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Item;
 public class BreadcrumbItem extends Item {
 	private static final int PADDING = 4;
 	private static final int ARROW_WIDTH = 4;
-	
+
 	private Breadcrumb parent;
 
 	private Color background = null;
@@ -27,7 +27,7 @@ public class BreadcrumbItem extends Item {
 
 	public BreadcrumbItem(Breadcrumb parent, int style) {
 		super(Breadcrumb.checkNull(parent), style);
-		
+
 		this.parent = parent;
 		parent.createItem(this);
 	}
@@ -44,7 +44,8 @@ public class BreadcrumbItem extends Item {
 		textBounds.width = textExtent.x;
 		textBounds.height = textExtent.y;
 
-		bounds = new Rectangle(bounds.x, bounds.y, textBounds.width + 2 * PADDING + 2 * ARROW_WIDTH, textBounds.height + 2 * PADDING);
+		bounds = new Rectangle(bounds.x, bounds.y, textBounds.width + 2 * PADDING + 2 * ARROW_WIDTH,
+				textBounds.height + 2 * PADDING);
 		this.bounds = bounds;
 
 		gc.setForeground(getBackground());
@@ -73,8 +74,7 @@ public class BreadcrumbItem extends Item {
 				bounds.x + bounds.width, bounds.y + bounds.height / 2, //
 				bounds.x + bounds.width - ARROW_WIDTH, bounds.y + bounds.height, //
 				bounds.x, bounds.y + bounds.height, //
-				bounds.x + ARROW_WIDTH, bounds.y + bounds.height / 2,
-		};
+				bounds.x + ARROW_WIDTH, bounds.y + bounds.height / 2,};
 		gc.drawPolygon(polygon);
 
 		gc.setForeground(getForeground());
@@ -84,12 +84,24 @@ public class BreadcrumbItem extends Item {
 		gc.setForeground(fg);
 		gc.setFont(font);
 	}
-	
+
+	/*package-private*/ Point getDimension(GC gc) {
+		Font font = gc.getFont();
+		gc.setFont(getFont());
+
+		Point extend = gc.textExtent(getText());
+		extend.x += 2 * PADDING + 2 * ARROW_WIDTH;
+		extend.y += 2 * PADDING;
+
+		gc.setFont(font);
+		return extend;
+	}
+
 	public void clear() {
 		this.foreground = null;
 		this.background = null;
 		this.font = null;
-		
+
 		this.setData(null);
 		this.setText("");
 	}
@@ -133,7 +145,7 @@ public class BreadcrumbItem extends Item {
 		}
 		return darkenBackground;
 	}
-	
+
 	/**
 	 * Sets the receiver's background color to the color specified by the argument, or to the default system color for
 	 * the item if the argument is null.
@@ -215,7 +227,7 @@ public class BreadcrumbItem extends Item {
 		}
 		return lighterForeground;
 	}
-	
+
 	/**
 	 * Sets the foreground color at the given column index in the receiver to the color specified by the argument, or to
 	 * the default system color for the item if the argument is null.
