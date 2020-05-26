@@ -219,9 +219,9 @@ public class BreadcrumbItem extends Item {
 	private Color getLighterForeground() {
 		if (lighterForeground == null || lighterForeground.isDisposed()) {
 			Color bg = getForeground();
-			int r = Math.min((int) (bg.getRed() * 1.3), 255);
-			int g = Math.min((int) (bg.getGreen() * 1.3), 255);
-			int b = Math.min((int) (bg.getBlue() * 1.3), 255);
+			int r = Math.min((int) (bg.getRed() * 2), 255);
+			int g = Math.min((int) (bg.getGreen() * 2), 255);
+			int b = Math.min((int) (bg.getBlue() * 2), 255);
 
 			lighterForeground = new Color(Display.getCurrent(), r, g, b);
 		}

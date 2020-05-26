@@ -2,7 +2,6 @@ package org.openjdk.jmc.joverflow.ext.treemap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
@@ -12,14 +11,12 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.Breadcrumb;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.BreadcrumbItem;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.TreemapItem;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapEvent;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaHeapObject;
@@ -33,8 +30,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.function.Consumer;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class TreemapPage extends Page implements ModelListener {
 	private static final Color[] COLORS = {new Color(Display.getCurrent(), 250, 206, 210), // red
@@ -50,6 +47,7 @@ public class TreemapPage extends Page implements ModelListener {
 	private static final String LABEL_ROOT = "[ROOT]";
 
 	private final JOverflowEditor editor;
+	private final TreemapAction[] treemapActions;
 
 	private Composite container;
 	private StackLayout containerLayout;
@@ -62,8 +60,9 @@ public class TreemapPage extends Page implements ModelListener {
 
 	private HashMap<String, Double> classes = new HashMap<>();
 
-	TreemapPage(JOverflowEditor editor) {
-		this.editor = editor;
+	TreemapPage(JOverflowEditor editor, TreemapAction[] treemapActions) {
+		this.editor = Objects.requireNonNull(editor);
+		this.treemapActions = Objects.requireNonNull(treemapActions);
 	}
 
 	@Override
@@ -139,6 +138,11 @@ public class TreemapPage extends Page implements ModelListener {
 				}
 			}));
 		}
+		
+		{
+			treemap.addSelectionListener(SelectionListener.widgetSelectedAdapter(selectionEvent -> bindTreemapActions()));
+			treemap.addTreemapListener(TreemapListener.treemapTopChangedAdapter(treemapEvent -> bindTreemapActions()));
+		}
 
 		containerLayout.topControl = messageContainer;
 		updateInput();
@@ -151,7 +155,7 @@ public class TreemapPage extends Page implements ModelListener {
 
 	@Override
 	public void setFocus() {
-		treemap.setFocus();
+		getControl().setFocus();
 	}
 
 	@Override
@@ -177,6 +181,35 @@ public class TreemapPage extends Page implements ModelListener {
 	public void allIncluded() {
 		updateInput();
 		classes.clear();
+
+		bindTreemapActions();
+	}
+
+	public void bindTreemapActions() {
+		if (containerLayout.topControl != treemapContainer) {
+			Stream.of(treemapActions).forEach((action) -> action.setEnabled(false));
+			return;
+		}
+		
+		TreemapItem selected = treemap.getSelection();
+		TreemapItem root = treemap.getRootItem();
+		TreemapItem top = treemap.getTopItem();
+
+		Stream.of(treemapActions).forEach((action) -> {
+			switch (action.getType()) {
+			case ZOOM_IN:
+				action.setEnabled(selected != null && selected != top);
+				action.setRunnable(() -> treemap.setTopItem(selected));
+				break;
+			case ZOOM_OUT:
+				action.setEnabled(top.getParentItem() != null);
+				action.setRunnable(() -> treemap.setTopItem(top.getParentItem()));
+				break;
+			case ZOOM_OFF:
+				action.setEnabled(top != root);
+				action.setRunnable(() -> treemap.setTopItem(root));
+			}
+		});
 	}
 
 	private void updateInput() {
