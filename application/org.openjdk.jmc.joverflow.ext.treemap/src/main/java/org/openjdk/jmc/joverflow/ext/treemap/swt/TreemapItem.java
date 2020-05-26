@@ -130,7 +130,7 @@ public class TreemapItem extends Item {
 		apparentWeight = sum;
 	}
 
-	/*package-private*/ void paintItem(GC gc, Rectangle bounds) {
+	/*package-private*/ void paintItem(GC gc, Rectangle bounds, boolean all) {
 		this.bounds = bounds;
 
 		Color bg = gc.getBackground();
@@ -151,8 +151,15 @@ public class TreemapItem extends Item {
 			gc.drawPolygon(rectangle);
 		}
 
+		gc.setFont(getFont());
 		paintTextIfPossible(gc);
-		paintChildrenIfPossible(gc);
+		if (all) {
+			paintChildrenIfPossible(gc);
+		} else {
+			for (TreemapItem child : getItems()) {
+				child.clearBounds(true);
+			}
+		}
 
 		gc.setBackground(bg);
 		gc.setForeground(fg);
@@ -242,7 +249,7 @@ public class TreemapItem extends Item {
 			int w = (int) childBounds.width;
 			int h = (int) childBounds.height;
 
-			item.paintItem(gc, new Rectangle(x, y, w, h));
+			item.paintItem(gc, new Rectangle(x, y, w, h), true);
 		}
 	}
 
@@ -548,9 +555,9 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information
 	 * about this item.
-	 * 
+	 *
 	 * @return the widget message
 	 */
 	public String getMessage() {
@@ -560,9 +567,9 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information
 	 * about this item.
-	 * 
+	 *
 	 * @param message the new message
 	 */
 	public void setMessage(String message) {

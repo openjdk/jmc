@@ -3,6 +3,7 @@ package org.openjdk.jmc.joverflow.ext.treemap.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
@@ -23,15 +24,16 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Treemap extends Canvas {
-	private boolean borderVisible = true;
-	private boolean toolTipEnabled = true;
+	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
 
 	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
 	private Set<TreemapListener> treemapListeners = new HashSet<>();
 
-	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
 	private TreemapItem topItem = rootItem;
 	private TreemapItem selectedItem = null;
+
+	private boolean borderVisible = true;
+	private boolean toolTipEnabled = true;
 
 	// the following members need to be disposed
 	private Cursor cursor;
@@ -69,29 +71,10 @@ public class Treemap extends Canvas {
 
 			@Override
 			public void mouseUp(MouseEvent mouseEvent) {
-				onMouseUp(mouseEvent);
+				// noop
 			}
 		});
-
-		addListener(SWT.MouseMove, e -> {
-			TreemapItem item = getItem(new Point(e.x, e.y));
-			if (item == null) {
-				return;
-			}
-
-			if (cursor != null && !cursor.isDisposed()) {
-				cursor.dispose();
-			}
-
-			cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW) :
-					new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
-			setCursor(cursor);
-
-			if (toolTipEnabled) {
-				toolTip.setItem(item);
-			}
-
-		});
+		addMouseMoveListener(this::onMouseMove);
 	}
 
 	/*package-private*/
@@ -113,19 +96,20 @@ public class Treemap extends Canvas {
 	}
 
 	private void onPaintControl(PaintEvent paintEvent) {
-		getTopItem().paintItem(paintEvent.gc, getClientArea());
+		getTopItem().paintItem(paintEvent.gc, getClientArea(), true);
 	}
 
 	private void onMouseDoubleClick(MouseEvent mouseEvent) {
-		if (mouseEvent.button == 1) { // if not left button
-			TreemapItem item = getItem(new Point(mouseEvent.x, mouseEvent.y));
-			if (item == null) {
-				return;
-			}
-
-			setTopItem(item);
+		if (mouseEvent.button != 1) { // we care only about left button
 			return;
 		}
+
+		TreemapItem item = getItem(new Point(mouseEvent.x, mouseEvent.y));
+		if (item == null) {
+			return;
+		}
+
+		setTopItem(item);
 	}
 
 	private void onMouseDown(MouseEvent mouseEvent) {
@@ -157,8 +141,23 @@ public class Treemap extends Canvas {
 		}
 	}
 
-	private void onMouseUp(MouseEvent mouseEvent) {
-		// noop
+	private void onMouseMove(MouseEvent mouseEvent) {
+		TreemapItem item = getItem(new Point(mouseEvent.x, mouseEvent.y));
+		if (item == null) {
+			return;
+		}
+
+		if (cursor != null && !cursor.isDisposed()) {
+			cursor.dispose();
+		}
+
+		cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW) :
+				new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
+		setCursor(cursor);
+
+		if (toolTipEnabled) {
+			toolTip.setItem(item);
+		}
 	}
 
 	private Event createEventForItem(int type, TreemapItem item) {
@@ -167,7 +166,7 @@ public class Treemap extends Canvas {
 		e.widget = this;
 		e.type = type;
 		e.item = item;
-		e.index = this.indexOf(item);
+		e.index = indexOf(item);
 
 		if (item != null && item.getBounds() != null) {
 			Rectangle bounds = item.getBounds();
@@ -495,7 +494,7 @@ public class Treemap extends Canvas {
 
 	/**
 	 * Sets the receiver's text.
-	 * 
+	 *
 	 * @return the new text
 	 */
 	public String getText() {
@@ -506,7 +505,7 @@ public class Treemap extends Canvas {
 
 	/**
 	 * Returns the receiver's text, which will be an empty string if it has never been set.
-	 * 
+	 *
 	 * @param message the receiver's text
 	 */
 	public void setText(String message) {
@@ -514,7 +513,7 @@ public class Treemap extends Canvas {
 
 		rootItem.setText(message);
 	}
-	
+
 	/**
 	 * Returns the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
@@ -530,9 +529,8 @@ public class Treemap extends Canvas {
 	/**
 	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded,
 	 * collapsed, scrolled or new items are added or removed.
-	 *
 	 * If the item is a leaf (ie. no child), then the parent item is set as top if not null.
-	 * 
+	 *
 	 * @param item the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
@@ -565,7 +563,7 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information
 	 * about this item.
 	 *
 	 * @return the widget message
@@ -577,7 +575,7 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information 
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information
 	 * about this item.
 	 *
 	 * @param message the new message

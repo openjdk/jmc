@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.jface.window.ToolTip;
 
-public class TreemapToolTip extends ToolTip {
+/*package-private*/ class TreemapToolTip extends ToolTip {
 	private static final int PADDING = 5;
 
 	private TreemapItem item = null;
