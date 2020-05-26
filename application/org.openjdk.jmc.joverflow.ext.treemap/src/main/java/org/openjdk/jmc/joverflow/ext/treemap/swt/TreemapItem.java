@@ -137,18 +137,13 @@ public class TreemapItem extends Item {
 		Color fg = gc.getForeground();
 		Font font = gc.getFont();
 
-		int[] rectangle = new int[] {bounds.x, bounds.y, //
-				bounds.x + bounds.width, bounds.y, //
-				bounds.x + bounds.width, bounds.y + bounds.height, //
-				bounds.x, bounds.y + bounds.height};
-
 		// fill background
 		gc.setBackground(parent.getSelection() == this ? getDarkenBackground() : getBackground());
-		gc.fillPolygon(rectangle);
+		gc.fillRectangle(bounds);
 
-		if (getParent().getBordersVisible() && getParentItem() != null) {
+		if (getParent().getBordersVisible()) {
 			gc.setForeground(getDarkenBackground());
-			gc.drawPolygon(rectangle);
+			gc.drawRectangle(bounds);
 		}
 
 		gc.setFont(getFont());
@@ -180,7 +175,7 @@ public class TreemapItem extends Item {
 
 	private boolean tryPaintText(GC gc, String text) {
 		Rectangle textBounds;
-		if (getParent().getBordersVisible() && getParentItem() != null) {
+		if (getParent().getBordersVisible()) {
 			textBounds = new Rectangle(bounds.x, bounds.y, bounds.width - 2, bounds.height - 2); // -2 for the border
 		} else {
 			textBounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -199,7 +194,7 @@ public class TreemapItem extends Item {
 		gc.setFont(getFont());
 		gc.setForeground(getForeground());
 
-		if (getParent().getBordersVisible() && getParentItem() != null) {
+		if (getParent().getBordersVisible()) {
 			gc.drawText(text, bounds.x + 1, bounds.y + 1); // +1 so it doesn't overlap with the border
 		} else {
 			gc.drawText(text, bounds.x, bounds.y);

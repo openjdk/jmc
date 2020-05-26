@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class Breadcrumb extends Canvas {
-	private static final int PADDING = 2;
+	private static final int TRIM = 2;
 
 	private Stack<BreadcrumbItem> items = new Stack<>();
 
@@ -65,12 +65,12 @@ public class Breadcrumb extends Canvas {
 			width += dimension.x;
 			height = Math.max(height, dimension.y);
 		}
-		return new Point(Math.max(width, wHint) + 2 * PADDING, Math.max(height, hHint) + 2 * PADDING);
+		return new Point(Math.max(width, wHint) + 2 * TRIM, Math.max(height, hHint) + 2 * TRIM);
 	}
 
 	@Override
 	public Rectangle computeTrim(int x, int y, int width, int height) {
-		return new Rectangle(x - PADDING, y - PADDING, width + 2 * PADDING, height + 2 * PADDING);
+		return new Rectangle(x - TRIM, y - TRIM, width + 2 * TRIM, height + 2 * TRIM);
 	}
 
 	/*package-private*/
@@ -84,6 +84,8 @@ public class Breadcrumb extends Canvas {
 
 	/*package-private*/ void createItem(BreadcrumbItem item) {
 		items.push(item);
+
+		redraw();
 	}
 
 	private void onPaintControl(PaintEvent paintEvent) {
@@ -136,6 +138,10 @@ public class Breadcrumb extends Canvas {
 		e.type = type;
 		e.item = item;
 		e.index = indexOf(item);
+		
+		if (item != null) {
+			e.data = item.getData();
+		}
 
 		if (item != null && item.getBounds() != null) {
 			Rectangle bounds = item.getBounds();
@@ -181,10 +187,10 @@ public class Breadcrumb extends Canvas {
 	@Override
 	public Rectangle getClientArea() {
 		Rectangle bounds = super.getClientArea();
-		bounds.x += PADDING;
-		bounds.y += PADDING;
-		bounds.width -= 2 * PADDING;
-		bounds.height -= 2 * PADDING;
+		bounds.x += TRIM;
+		bounds.y += TRIM;
+		bounds.width -= 2 * TRIM;
+		bounds.height -= 2 * TRIM;
 
 		return bounds;
 	}

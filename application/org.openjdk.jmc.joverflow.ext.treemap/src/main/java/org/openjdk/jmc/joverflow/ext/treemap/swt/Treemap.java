@@ -3,7 +3,6 @@ package org.openjdk.jmc.joverflow.ext.treemap.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
@@ -20,10 +19,11 @@ import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public class Treemap extends Canvas {
+	private static final int TRIM = 2;
+
 	private TreemapItem rootItem = new TreemapItem(this, SWT.NONE);
 
 	private Map<SelectionListener, TypedListener> selectionListeners = new HashMap<>();
@@ -168,6 +168,10 @@ public class Treemap extends Canvas {
 		e.item = item;
 		e.index = indexOf(item);
 
+		if (item != null) {
+			e.data = item.getData();
+		}
+
 		if (item != null && item.getBounds() != null) {
 			Rectangle bounds = item.getBounds();
 			e.x = bounds.x;
@@ -177,6 +181,22 @@ public class Treemap extends Canvas {
 		}
 
 		return e;
+	}
+
+	@Override
+	public Rectangle getClientArea() {
+		Rectangle bounds = super.getClientArea();
+		bounds.x += TRIM;
+		bounds.y += TRIM;
+		bounds.width -= 2 * TRIM;
+		bounds.height -= 2 * TRIM;
+
+		return bounds;
+	}
+
+	@Override
+	public Rectangle computeTrim(int x, int y, int width, int height) {
+		return new Rectangle(x - TRIM, y - TRIM, width + 2 * TRIM, height + 2 * TRIM);
 	}
 
 	/**

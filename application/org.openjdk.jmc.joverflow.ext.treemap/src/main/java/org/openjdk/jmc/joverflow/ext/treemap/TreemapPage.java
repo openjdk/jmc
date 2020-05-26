@@ -2,15 +2,25 @@ package org.openjdk.jmc.joverflow.ext.treemap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.Breadcrumb;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.BreadcrumbItem;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
 import org.openjdk.jmc.joverflow.ext.treemap.swt.TreemapItem;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapEvent;
+import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaHeapObject;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
@@ -18,8 +28,13 @@ import org.openjdk.jmc.joverflow.ui.JOverflowEditor;
 import org.openjdk.jmc.joverflow.ui.model.ModelListener;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.function.Consumer;
 
 public class TreemapPage extends Page implements ModelListener {
 	private static final Color[] COLORS = {new Color(Display.getCurrent(), 250, 206, 210), // red
@@ -40,9 +55,10 @@ public class TreemapPage extends Page implements ModelListener {
 	private StackLayout containerLayout;
 	private Composite messageContainer;
 	private Composite treemapContainer;
-	
+
 	private Label message;
 	private Treemap treemap;
+	private Breadcrumb breadcrumb;
 
 	private HashMap<String, Double> classes = new HashMap<>();
 
@@ -66,10 +82,63 @@ public class TreemapPage extends Page implements ModelListener {
 		message.setText(MESSAGE_NO_INSTANCE_SELECTED);
 
 		treemapContainer = new Composite(container, SWT.NONE);
-		treemapContainer.setLayout(new FillLayout());
+		treemapContainer.setLayout(new FormLayout());
+
+		breadcrumb = new Breadcrumb(treemapContainer, SWT.NONE);
+		{
+			FormData bcLayoutData = new FormData();
+			bcLayoutData.top = new FormAttachment(0, 0);
+			bcLayoutData.left = new FormAttachment(0, 0);
+			bcLayoutData.right = new FormAttachment(100, 0);
+			breadcrumb.setLayoutData(bcLayoutData);
+		}
 
 		treemap = new Treemap(treemapContainer, SWT.NONE);
+		{
+			FormData tmLayoutData = new FormData();
+			tmLayoutData.bottom = new FormAttachment(100);
+			tmLayoutData.top = new FormAttachment(breadcrumb);
+			tmLayoutData.left = new FormAttachment(0);
+			tmLayoutData.right = new FormAttachment(100, 0);
+			treemap.setLayoutData(tmLayoutData);
+		}
 		treemap.setText(LABEL_ROOT);
+
+		{
+			TreemapItem rootItem = treemap.getRootItem();
+			BreadcrumbItem breadcrumbItem = new BreadcrumbItem(breadcrumb, SWT.NONE);
+			breadcrumbItem.setData(rootItem);
+			breadcrumbItem.setText(rootItem.getText());
+		}
+
+		{
+			breadcrumb.addSelectionListener(SelectionListener.widgetSelectedAdapter(selectionEvent -> {
+				if (!(selectionEvent.data instanceof TreemapItem)) {
+					return;
+				}
+
+				TreemapItem item = (TreemapItem) selectionEvent.data;
+				treemap.setTopItem(item);
+			}));
+
+			treemap.addTreemapListener(TreemapListener.treemapTopChangedAdapter(treemapEvent -> {
+				TreemapItem item = (TreemapItem) treemapEvent.item;
+				breadcrumb.removeAll();
+
+				List<TreemapItem> path = new ArrayList<>();
+				do {
+					path.add(item);
+					item = item.getParentItem();
+				} while (item != null);
+
+				Collections.reverse(path);
+				for (TreemapItem i : path) {
+					BreadcrumbItem breadcrumbItem = new BreadcrumbItem(breadcrumb, SWT.NONE);
+					breadcrumbItem.setData(i);
+					breadcrumbItem.setText(i.getText());
+				}
+			}));
+		}
 
 		containerLayout.topControl = messageContainer;
 		updateInput();
@@ -97,7 +166,7 @@ public class TreemapPage extends Page implements ModelListener {
 		if (className.charAt(0) == '[') {
 			className = cluster.getClassName();
 		}
-		
+
 		classes.putIfAbsent(className, 0.0);
 		double size = classes.get(className);
 		size += cluster.getMemory();
@@ -180,7 +249,7 @@ public class TreemapPage extends Page implements ModelListener {
 			setColorAndMessage(child, depth + 1);
 		}
 	}
-	
+
 	private String getHumanReadableSize(double bytes) {
 		String unit = "B";
 		double quantity = bytes;

@@ -137,9 +137,9 @@ public class BreadcrumbItem extends Item {
 	private Color getDarkenBackground() {
 		if (darkenBackground == null || darkenBackground.isDisposed()) {
 			Color bg = getBackground();
-			int r = (int) (bg.getRed() * 0.8);
-			int g = (int) (bg.getGreen() * 0.8);
-			int b = (int) (bg.getBlue() * 0.8);
+			int r = (int) (bg.getRed() * 0.9);
+			int g = (int) (bg.getGreen() * 0.9);
+			int b = (int) (bg.getBlue() * 0.9);
 
 			darkenBackground = new Color(Display.getCurrent(), r, g, b);
 		}
@@ -219,9 +219,9 @@ public class BreadcrumbItem extends Item {
 	private Color getLighterForeground() {
 		if (lighterForeground == null || lighterForeground.isDisposed()) {
 			Color bg = getForeground();
-			int r = Math.min((int) (bg.getRed() * 1.25), 255);
-			int g = Math.min((int) (bg.getGreen() * 1.25), 255);
-			int b = Math.min((int) (bg.getBlue() * 1.25), 255);
+			int r = Math.min((int) (bg.getRed() * 1.3), 255);
+			int g = Math.min((int) (bg.getGreen() * 1.3), 255);
+			int b = Math.min((int) (bg.getBlue() * 1.3), 255);
 
 			lighterForeground = new Color(Display.getCurrent(), r, g, b);
 		}
