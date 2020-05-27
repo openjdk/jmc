@@ -64,7 +64,7 @@ import org.eclipse.jface.window.ToolTip;
 		ret.setBackground(parent.getBackground());
 
 		Label label = new Label(ret, SWT.NONE);
-		label.setText(item != null ? item.getMessage() : ""); //$NON-NLS-1$
+		label.setText(item != null ? item.getToolTipText() : ""); //$NON-NLS-1$
 		label.setForeground(parent.getForeground());
 
 		return ret;
@@ -73,7 +73,7 @@ import org.eclipse.jface.window.ToolTip;
 	public void setItem(TreemapItem item) {
 		this.item = item;
 
-		if (item.getMessage().isEmpty()) {
+		if (item.getToolTipText().isEmpty()) {
 			deactivate();
 		} else {
 			activate();

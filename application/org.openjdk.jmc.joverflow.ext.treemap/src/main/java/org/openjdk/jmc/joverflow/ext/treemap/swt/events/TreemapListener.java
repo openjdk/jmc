@@ -38,6 +38,10 @@ import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
 
 import java.util.function.Consumer;
 
+/**
+ * Classes which implement this interface provide methods that deal with setting new item as top for
+ * a treemap.
+ */
 public interface TreemapListener extends SWTEventListener {
 
 	/**

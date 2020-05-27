@@ -50,6 +50,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Instances of this class represent a selectable user interface object that represents a node in a
+ * treemap widget.
+ */
 public class TreemapItem extends Item {
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 	private static final int HORIZONTAL_PADDING = 13;
@@ -71,14 +75,14 @@ public class TreemapItem extends Item {
 	// the cached sum of all direct children's apparent weights + realWeight. -1 indicates not yet cached
 	private double apparentWeight = -1;
 
-	private String message = ""; //$NON-NLS-1$
+	private String toolTipText = ""; //$NON-NLS-1$
 
 	// to be disposed
 	private Color darkenBackground = null;
 
 	/**
-	 * Constructs TreemapItem and inserts it into Treemap. Item is inserted as last direct child of
-	 * the tree.
+	 * Constructs a new instance of this class and inserts it into the parent treemap. The new item
+	 * is inserted as a direct child of the root.
 	 *
 	 * @param parent
 	 *            a treemap control which will be the parent of the new instance (cannot be null)
@@ -90,11 +94,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Constructs TreeItem and inserts it into Tree. Item is inserted as last direct child of the
-	 * specified TreeItem.
+	 * Constructs TreeItem and inserts it into Tree. The new item is inserted as direct child of the
+	 * specified item..
 	 *
 	 * @param parentItem
-	 *            a treemap control which will be the parent of the new instance (cannot be null)
+	 *            a treemap item which will be the parent of the new instance (cannot be null)
 	 * @param style
 	 *            the style of control to construct
 	 */
@@ -106,7 +110,6 @@ public class TreemapItem extends Item {
 		super(parent, style);
 
 		if ((style & SWT.VIRTUAL) == SWT.VIRTUAL) {
-			// TODO: implement this if we want to support SWT.VIRTUAL
 			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem"); //$NON-NLS-1$
 		}
 
@@ -154,7 +157,7 @@ public class TreemapItem extends Item {
 
 		this.setData(null);
 		this.setText(""); //$NON-NLS-1$
-		this.setMessage(""); //$NON-NLS-1$
+		this.setToolTipText(""); //$NON-NLS-1$
 
 		updateAncestor();
 	}
@@ -303,7 +306,6 @@ public class TreemapItem extends Item {
 	/**
 	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in
 	 * the receiver. The text, weight and other attributes of the item are set to the default value.
-	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested
 	 * again as needed.
 	 *
 	 * @param index
@@ -325,8 +327,7 @@ public class TreemapItem extends Item {
 
 	/**
 	 * Clears all the items in the receiver. The text, weight and other attributes of the items are
-	 * set to their default values. TODO: If the tree was created with the SWT.VIRTUAL style, these
-	 * attributes are requested again as needed.
+	 * set to their default values.
 	 *
 	 * @param all
 	 *            true if all child items should be cleared recursively, and false otherwise
@@ -528,19 +529,6 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the number of child items contained in the receiver.
-	 *
-	 * @param count
-	 *            the number of items
-	 */
-	public void setItemCount(int count) {
-		checkWidget();
-
-		// TODO: implement this if we want to support SWT.VIRTUAL
-		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem"); //$NON-NLS-1$
-	}
-
-	/**
 	 * Returns a (possibly empty) array of TreeItems which are the direct item children of the
 	 * receiver. Note: This is not the actual structure used by the receiver to maintain its list of
 	 * items, so modifying the array will not affect the receiver.
@@ -603,33 +591,31 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the widget message. The message text is displayed as a tooltip for the user,
-	 * indicating more information about this item.
+	 * Returns the widget's tool tip text indicating more information about this item.
 	 *
-	 * @return the widget message
+	 * @return the widget tool tip text
 	 */
-	public String getMessage() {
+	public String getToolTipText() {
 		checkWidget();
 
-		return message;
+		return toolTipText;
 	}
 
 	/**
-	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating
-	 * more information about this item.
+	 * Sets the widget's tool tip text indicating more information about this item.
 	 *
-	 * @param message
-	 *            the new message
+	 * @param text
+	 *            the new tool tip text
 	 */
-	public void setMessage(String message) {
+	public void setToolTipText(String text) {
 		checkWidget();
 
-		Objects.requireNonNull(message);
-		this.message = message;
+		Objects.requireNonNull(text);
+		this.toolTipText = text;
 	}
 
 	/**
-	 * Sets the receiver's weight. Throws an exception if the receiver is not a leaf node..
+	 * Sets the receiver's weight, which must be a non-negative number.
 	 *
 	 * @param weight
 	 *            the new weight

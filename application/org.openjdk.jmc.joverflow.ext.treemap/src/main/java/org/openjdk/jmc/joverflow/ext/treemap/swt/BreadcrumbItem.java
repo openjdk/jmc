@@ -41,6 +41,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 
+/**
+ * Instances of this class represent a selectable user interface object that represents an entry in
+ * a breadcrumb widget.
+ */
 public class BreadcrumbItem extends Item {
 	private static final int PADDING = 4;
 	private static final int ARROW_WIDTH = 4;
@@ -58,6 +62,15 @@ public class BreadcrumbItem extends Item {
 	private Color darkenBackground = null;
 	private Color lighterForeground = null;
 
+	/**
+	 * Constructs a new instance of this class and inserts it into the parent breadcrumb. The item
+	 * is inserted as the last item maintained by its parent.
+	 * 
+	 * @param parent
+	 *            a breadcrumb control which will be the parent of the new instance (cannot be null)
+	 * @param style
+	 *            the style of control to construct
+	 */
 	public BreadcrumbItem(Breadcrumb parent, int style) {
 		super(Breadcrumb.checkNull(parent), style);
 
@@ -255,9 +268,9 @@ public class BreadcrumbItem extends Item {
 	private Color getLighterForeground() {
 		if (lighterForeground == null || lighterForeground.isDisposed()) {
 			Color bg = getForeground();
-			int r = Math.min((int) (bg.getRed() * 2), 255);
-			int g = Math.min((int) (bg.getGreen() * 2), 255);
-			int b = Math.min((int) (bg.getBlue() * 2), 255);
+			int r = Math.min(bg.getRed() * 2, 255);
+			int g = Math.min(bg.getGreen() * 2, 255);
+			int b = Math.min(bg.getBlue() * 2, 255);
 
 			lighterForeground = new Color(Display.getCurrent(), r, g, b);
 		}

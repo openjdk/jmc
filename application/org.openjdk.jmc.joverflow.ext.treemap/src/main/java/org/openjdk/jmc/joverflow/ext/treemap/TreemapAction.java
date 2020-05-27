@@ -38,9 +38,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.openjdk.jmc.ui.CoreImages;
 
-class TreemapAction extends Action {
+/* package-private */ class TreemapAction extends Action {
 	private final TreemapActionType actionType;
-	private Runnable runnable;
+	private Runnable runnable = () -> {
+	};
 
 	TreemapAction(TreemapActionType actionType) {
 		super(actionType.message, actionType.action);
@@ -63,8 +64,8 @@ class TreemapAction extends Action {
 	}
 
 	enum TreemapActionType {
-		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN),
-		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT),
+		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN), // 
+		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT), // 
 		ZOOM_OFF(Messages.TreemapAction_ZOOM_OFF_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OFF);
 
 		private final String message;

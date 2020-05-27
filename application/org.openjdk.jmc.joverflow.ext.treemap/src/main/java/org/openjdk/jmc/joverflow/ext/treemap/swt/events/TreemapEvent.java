@@ -36,8 +36,17 @@ package org.openjdk.jmc.joverflow.ext.treemap.swt.events;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Event;
 
+/**
+ * Instances of this class are sent as a result of new item being set as the top.
+ */
 public final class TreemapEvent extends SelectionEvent {
 
+	/**
+	 * Constructs a new instance of this class based on the information in the given untyped event.
+	 * 
+	 * @param e
+	 *            the untyped event containing the information
+	 */
 	public TreemapEvent(Event e) {
 		super(e);
 	}

@@ -66,7 +66,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class TreemapPage extends Page implements ModelListener {
+/* package-private */ class TreemapPage extends Page implements ModelListener {
 	private static final Color[] COLORS = {new Color(Display.getCurrent(), 250, 206, 210), // red
 			new Color(Display.getCurrent(), 185, 214, 255), // blue
 			new Color(Display.getCurrent(), 229, 229, 229), // grey
@@ -76,7 +76,6 @@ public class TreemapPage extends Page implements ModelListener {
 			new Color(Display.getCurrent(), 255, 255, 255), // white
 			new Color(Display.getCurrent(), 205, 249, 212), // green
 	};
-	private static final String MESSAGE_NO_INSTANCE_SELECTED = Messages.TreemapPage_NO_INSTANCES_SELECTED;
 	private static final String LABEL_ROOT = "[ROOT]"; //$NON-NLS-1$
 
 	private final JOverflowEditor editor;
@@ -111,7 +110,7 @@ public class TreemapPage extends Page implements ModelListener {
 		messageContainer.setLayout(layout);
 
 		message = new Label(messageContainer, SWT.NONE);
-		message.setText(MESSAGE_NO_INSTANCE_SELECTED);
+		message.setText(Messages.TreemapPage_NO_INSTANCES_SELECTED);
 
 		treemapContainer = new Composite(container, SWT.NONE);
 		treemapContainer.setLayout(new FormLayout());
@@ -136,6 +135,7 @@ public class TreemapPage extends Page implements ModelListener {
 		}
 		treemap.setText(LABEL_ROOT);
 
+		// set "[ROOT]" item
 		{
 			TreemapItem rootItem = treemap.getRootItem();
 			BreadcrumbItem breadcrumbItem = new BreadcrumbItem(breadcrumb, SWT.NONE);
@@ -143,6 +143,7 @@ public class TreemapPage extends Page implements ModelListener {
 			breadcrumbItem.setText(rootItem.getText());
 		}
 
+		// links treemap and breadcrumb events
 		{
 			breadcrumb.addSelectionListener(SelectionListener.widgetSelectedAdapter(selectionEvent -> {
 				if (!(selectionEvent.data instanceof TreemapItem)) {
@@ -172,6 +173,7 @@ public class TreemapPage extends Page implements ModelListener {
 			}));
 		}
 
+		// rebind action buttons
 		{
 			treemap.addSelectionListener(
 					SelectionListener.widgetSelectedAdapter(selectionEvent -> bindTreemapActions()));
@@ -263,8 +265,8 @@ public class TreemapPage extends Page implements ModelListener {
 		}
 
 		TreemapItem rootItem = treemap.getRootItem();
-		rootItem.setMessage(LABEL_ROOT);
-		setColorAndMessage(rootItem, 0);
+		rootItem.setToolTipText(LABEL_ROOT);
+		setColorAndToolTip(rootItem, 0);
 		treemap.setTopItem(rootItem);
 		treemap.setSelection(null);
 
@@ -277,7 +279,7 @@ public class TreemapPage extends Page implements ModelListener {
 			TreemapItem item = items.get(fullName);
 			double bytes = item.getWeight() + size;
 			item.setWeight(bytes);
-			item.setMessage(fullName);
+			item.setToolTipText(fullName);
 			return;
 		}
 
@@ -287,7 +289,7 @@ public class TreemapPage extends Page implements ModelListener {
 			if (size != 0) {
 				item.setWeight(size);
 			}
-			item.setMessage(fullName);
+			item.setToolTipText(fullName);
 			items.put(fullName, item);
 			return;
 		}
@@ -300,19 +302,19 @@ public class TreemapPage extends Page implements ModelListener {
 		TreemapItem parentItem = items.get(parentName);
 		TreemapItem item = new TreemapItem(parentItem, SWT.NONE);
 		item.setText(fullName.substring(parentName.length() + 1));
-		item.setMessage(fullName);
+		item.setToolTipText(fullName);
 		if (size != 0) {
 			item.setWeight(size);
 		}
 		items.put(fullName, item);
 	}
 
-	private void setColorAndMessage(TreemapItem item, int depth) {
-		item.setMessage(item.getMessage() + "\n" + getHumanReadableSize(item.getWeight())); //$NON-NLS-1$
+	private void setColorAndToolTip(TreemapItem item, int depth) {
+		item.setToolTipText(item.getToolTipText() + "\n" + getHumanReadableSize(item.getWeight())); //$NON-NLS-1$
 		item.setBackground(COLORS[depth % COLORS.length]);
 
 		for (TreemapItem child : item.getItems()) {
-			setColorAndMessage(child, depth + 1);
+			setColorAndToolTip(child, depth + 1);
 		}
 	}
 
