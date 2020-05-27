@@ -56,7 +56,7 @@ public class TreemapPageBookView extends PageBookView {
 		MessagePage page = new MessagePage();
 		initPage(page);
 		page.createControl(book);
-		page.setMessage("No JOverflow editor selected");
+		page.setMessage(Messages.TreemapPageBookView_NO_JOVERFLOW_EDITOR_SELECTED);
 		return page;
 	}
 

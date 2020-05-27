@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TreemapItem extends Item {
-	private static final String ELLIPSIS = "...";
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 	private static final int HORIZONTAL_PADDING = 13;
 	private static final int VERTICAL_PADDING = 13;
 	private static final int MIN_SIZE = 1;
@@ -71,26 +71,32 @@ public class TreemapItem extends Item {
 	// the cached sum of all direct children's apparent weights + realWeight. -1 indicates not yet cached
 	private double apparentWeight = -1;
 
-	private String message = "";
+	private String message = ""; //$NON-NLS-1$
 
 	// to be disposed
 	private Color darkenBackground = null;
 
 	/**
-	 * Constructs TreemapItem and inserts it into Treemap. Item is inserted as last direct child of the tree.
+	 * Constructs TreemapItem and inserts it into Treemap. Item is inserted as last direct child of
+	 * the tree.
 	 *
-	 * @param parent a treemap control which will be the parent of the new instance (cannot be null)
-	 * @param style  the style of control to construct
+	 * @param parent
+	 *            a treemap control which will be the parent of the new instance (cannot be null)
+	 * @param style
+	 *            the style of control to construct
 	 */
 	public TreemapItem(Treemap parent, int style) {
 		this(Treemap.checkNull(parent), parent.getRootItem(), style);
 	}
 
 	/**
-	 * Constructs TreeItem and inserts it into Tree. Item is inserted as last direct child of the specified TreeItem.
+	 * Constructs TreeItem and inserts it into Tree. Item is inserted as last direct child of the
+	 * specified TreeItem.
 	 *
-	 * @param parentItem a treemap control which will be the parent of the new instance (cannot be null)
-	 * @param style      the style of control to construct
+	 * @param parentItem
+	 *            a treemap control which will be the parent of the new instance (cannot be null)
+	 * @param style
+	 *            the style of control to construct
 	 */
 	public TreemapItem(TreemapItem parentItem, int style) {
 		this(checkNull(parentItem).parent, parentItem, style);
@@ -101,7 +107,7 @@ public class TreemapItem extends Item {
 
 		if ((style & SWT.VIRTUAL) == SWT.VIRTUAL) {
 			// TODO: implement this if we want to support SWT.VIRTUAL
-			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
+			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem"); //$NON-NLS-1$
 		}
 
 		this.parent = parent;
@@ -113,7 +119,7 @@ public class TreemapItem extends Item {
 		}
 	}
 
-	/*package-private*/
+	/* package-private */
 	static TreemapItem checkNull(TreemapItem item) {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -147,8 +153,8 @@ public class TreemapItem extends Item {
 		this.darkenBackground = null;
 
 		this.setData(null);
-		this.setText("");
-		this.setMessage("");
+		this.setText(""); //$NON-NLS-1$
+		this.setMessage(""); //$NON-NLS-1$
 
 		updateAncestor();
 	}
@@ -163,7 +169,7 @@ public class TreemapItem extends Item {
 		apparentWeight = sum;
 	}
 
-	/*package-private*/ void paintItem(GC gc, Rectangle bounds, boolean all) {
+	/* package-private */ void paintItem(GC gc, Rectangle bounds, boolean all) {
 		this.bounds = bounds;
 
 		Color bg = gc.getBackground();
@@ -197,7 +203,7 @@ public class TreemapItem extends Item {
 	// add label to tile if space permits
 	private void paintTextIfPossible(GC gc) {
 		String text = getText();
-		if (text == null || text.equals("")) {
+		if (text == null || text.equals("")) { //$NON-NLS-1$
 			return;
 		}
 
@@ -295,12 +301,16 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in the receiver. The
-	 * text, weight and other attributes of the item are set to the default value.
-	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
+	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in
+	 * the receiver. The text, weight and other attributes of the item are set to the default value.
+	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested
+	 * again as needed.
 	 *
-	 * @param index the index of the item to clear
-	 * @param all   true if all child items of the indexed item should be cleared recursively, and false otherwise
+	 * @param index
+	 *            the index of the item to clear
+	 * @param all
+	 *            true if all child items of the indexed item should be cleared recursively, and
+	 *            false otherwise
 	 */
 	public void clear(int index, boolean all) {
 		checkWidget();
@@ -314,11 +324,12 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Clears all the items in the receiver. The text, weight and other attributes of the items are set to their default
-	 * values.
-	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
+	 * Clears all the items in the receiver. The text, weight and other attributes of the items are
+	 * set to their default values. TODO: If the tree was created with the SWT.VIRTUAL style, these
+	 * attributes are requested again as needed.
 	 *
-	 * @param all true if all child items should be cleared recursively, and false otherwise
+	 * @param all
+	 *            true if all child items should be cleared recursively, and false otherwise
 	 */
 	public void clearAll(boolean all) {
 		checkWidget();
@@ -373,10 +384,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the receiver's background color to the color specified by the argument, or to the default system color for
-	 * the item if the argument is null.
+	 * Sets the receiver's background color to the color specified by the argument, or to the
+	 * default system color for the item if the argument is null.
 	 *
-	 * @param color the new color (or null)
+	 * @param color
+	 *            the new color (or null)
 	 */
 	public void setBackground(Color color) {
 		checkWidget();
@@ -420,10 +432,12 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the font that the receiver will use to paint textual information for this item to the font specified by the
-	 * argument, or to the default font for that kind of control if the argument is null.
+	 * Sets the font that the receiver will use to paint textual information for this item to the
+	 * font specified by the argument, or to the default font for that kind of control if the
+	 * argument is null.
 	 *
-	 * @param font the new font (or null)
+	 * @param font
+	 *            the new font (or null)
 	 */
 	public void setFont(Font font) {
 		checkWidget();
@@ -451,10 +465,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the foreground color at the given column index in the receiver to the color specified by the argument, or to
-	 * the default system color for the item if the argument is null.
+	 * Sets the foreground color at the given column index in the receiver to the color specified by
+	 * the argument, or to the default system color for the item if the argument is null.
 	 *
-	 * @param color the new color (or null)
+	 * @param color
+	 *            the new color (or null)
 	 */
 	public void setForeground(Color color) {
 		checkWidget();
@@ -463,10 +478,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range.
+	 * Returns the item at the given, zero-relative index, sorted in descending order by weight, in
+	 * the receiver. Throws an exception if the index is out of range.
 	 *
-	 * @param index the index of the item to return
+	 * @param index
+	 *            the index of the item to return
 	 * @return the item at the given index
 	 */
 	public TreemapItem getItem(int index) {
@@ -476,10 +492,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the item at the given point in the receiver or null if no such item exists. The point is in the
-	 * coordinate system of the receiver.
+	 * Returns the item at the given point in the receiver or null if no such item exists. The point
+	 * is in the coordinate system of the receiver.
 	 *
-	 * @param point the point used to locate the item
+	 * @param point
+	 *            the point used to locate the item
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
@@ -499,7 +516,8 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the number of items contained in the receiver that are direct item children of the receiver.
+	 * Returns the number of items contained in the receiver that are direct item children of the
+	 * receiver.
 	 *
 	 * @return the number of items
 	 */
@@ -512,19 +530,20 @@ public class TreemapItem extends Item {
 	/**
 	 * Sets the number of child items contained in the receiver.
 	 *
-	 * @param count the number of items
+	 * @param count
+	 *            the number of items
 	 */
 	public void setItemCount(int count) {
 		checkWidget();
 
 		// TODO: implement this if we want to support SWT.VIRTUAL
-		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
+		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Returns a (possibly empty) array of TreeItems which are the direct item children of the receiver.
-	 * Note: This is not the actual structure used by the receiver to maintain its list of items, so modifying the array
-	 * will not affect the receiver.
+	 * Returns a (possibly empty) array of TreeItems which are the direct item children of the
+	 * receiver. Note: This is not the actual structure used by the receiver to maintain its list of
+	 * items, so modifying the array will not affect the receiver.
 	 *
 	 * @return the receiver's items
 	 */
@@ -546,7 +565,8 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the receiver's parent item, which must be a TreeItem or null when the receiver is a root.
+	 * Returns the receiver's parent item, which must be a TreeItem or null when the receiver is a
+	 * root.
 	 *
 	 * @return the receiver's parent item
 	 */
@@ -583,8 +603,8 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information
-	 * about this item.
+	 * Returns the widget message. The message text is displayed as a tooltip for the user,
+	 * indicating more information about this item.
 	 *
 	 * @return the widget message
 	 */
@@ -595,10 +615,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information
-	 * about this item.
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating
+	 * more information about this item.
 	 *
-	 * @param message the new message
+	 * @param message
+	 *            the new message
 	 */
 	public void setMessage(String message) {
 		checkWidget();
@@ -610,13 +631,14 @@ public class TreemapItem extends Item {
 	/**
 	 * Sets the receiver's weight. Throws an exception if the receiver is not a leaf node..
 	 *
-	 * @param weight the new weight
+	 * @param weight
+	 *            the new weight
 	 */
 	public void setWeight(double weight) {
 		checkWidget();
 
 		if (weight < 0) {
-			throw new IllegalArgumentException("weight must be positive");
+			throw new IllegalArgumentException("weight must be positive"); //$NON-NLS-1$
 		}
 
 		realWeight = weight;
@@ -626,10 +648,12 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
-	 * argument, and returns the index of that item. If no item is found, returns -1.
+	 * Searches the receiver's list starting at the first item (index 0) until an item is found that
+	 * is equal to the argument, and returns the index of that item. If no item is found, returns
+	 * -1.
 	 *
-	 * @param item the search item
+	 * @param item
+	 *            the search item
 	 * @return the index of the item
 	 */
 	public int indexOf(TreemapItem item) {
@@ -639,10 +663,11 @@ public class TreemapItem extends Item {
 	}
 
 	/**
-	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range.
+	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in
+	 * the receiver. Throws an exception if the index is out of range.
 	 *
-	 * @param index index of the item to remove
+	 * @param index
+	 *            index of the item to remove
 	 */
 	public void remove(int index) {
 		checkWidget();

@@ -64,7 +64,7 @@ import org.eclipse.jface.window.ToolTip;
 		ret.setBackground(parent.getBackground());
 
 		Label label = new Label(ret, SWT.NONE);
-		label.setText(item != null ? item.getMessage() : "");
+		label.setText(item != null ? item.getMessage() : ""); //$NON-NLS-1$
 		label.setForeground(parent.getForeground());
 
 		return ret;

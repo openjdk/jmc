@@ -41,7 +41,7 @@ import org.openjdk.jmc.ui.CoreImages;
 class TreemapAction extends Action {
 	private final TreemapActionType actionType;
 	private Runnable runnable;
-	
+
 	TreemapAction(TreemapActionType actionType) {
 		super(actionType.message, actionType.action);
 		this.actionType = actionType;
@@ -63,9 +63,9 @@ class TreemapAction extends Action {
 	}
 
 	enum TreemapActionType {
-		ZOOM_IN("Zoom-in to the selected node", IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN),
-		ZOOM_OUT("Zoom-out to the parent node", IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT),
-		ZOOM_OFF("Display the root node", IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OFF);
+		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN),
+		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT),
+		ZOOM_OFF(Messages.TreemapAction_ZOOM_OFF_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OFF);
 
 		private final String message;
 		private final int action;

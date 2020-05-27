@@ -43,11 +43,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- *  This class implements the Squarified algorithm for Treemaps. Using it, it is
- *  possible to associate a rectangle to a {@link TreemapItem} element and its
- *  children.
- *  <p>
- *  @see TreemapItem
+ * This class implements the Squarified algorithm for Treemaps. Using it, it is possible to
+ * associate a rectangle to a {@link TreemapItem} element and its children.
+ * <p>
+ * 
+ * @see TreemapItem
  */
 class SquarifiedTreemap {
 
@@ -58,14 +58,12 @@ class SquarifiedTreemap {
 	 *
 	 * Which is an improvement on:
 	 *
-	 * Mark Bruls, Kees Huizing and Jarke J. van Wijk, "Squarified
-	 * Treemaps" in Data Visualization 2000: Proceedings of the Joint
-	 * EUROGRAPHICS and IEEE TCVG Symposium on Visualization in Amsterdam,
-	 * The Netherlands, May 29–30, 2000. Berlin, Germany: Springer Science
-	 * & Business Media, 2012
+	 * Mark Bruls, Kees Huizing and Jarke J. van Wijk, "Squarified Treemaps" in Data Visualization
+	 * 2000: Proceedings of the Joint EUROGRAPHICS and IEEE TCVG Symposium on Visualization in
+	 * Amsterdam, The Netherlands, May 29–30, 2000. Berlin, Germany: Springer Science & Business
+	 * Media, 2012
 	 *
-	 * The paper itself is also available online at:
-	 * https://www.win.tue.nl/~vanwijk/stm.pdf
+	 * The paper itself is also available online at: https://www.win.tue.nl/~vanwijk/stm.pdf
 	 */
 
 	/**
@@ -109,12 +107,13 @@ class SquarifiedTreemap {
 	private double lastY = 0;
 
 	/**
-	 * Performs setup to facilitate the generation of squarified rectangles to represent the
-	 * nodes in {@param elements}.
+	 * Performs setup to facilitate the generation of squarified rectangles to represent the nodes
+	 * in {@param elements}.
 	 *
-	 * @param region   the region that is available for placing rectangles.
-	 * @param elements the list of nodes to represent, which must be sorted in descending order
-	 *                 by weight
+	 * @param region
+	 *            the region that is available for placing rectangles.
+	 * @param elements
+	 *            the list of nodes to represent, which must be sorted in descending order by weight
 	 */
 	public SquarifiedTreemap(Rectangle2D.Double region, List<TreemapItem> elements) {
 		this.elements = new LinkedList<>();
@@ -150,13 +149,16 @@ class SquarifiedTreemap {
 	/**
 	 * Recursively determine the rectangles that represent the set of nodes.
 	 *
-	 * @param nodes   remaining nodes to be processed.
-	 * @param row     the nodes that have been included in the row currently under construction.
-	 * @param rowArea the total area allocated to this row.
-	 * @param side    the length of the side against which to calculate the the aspect ratio.
+	 * @param nodes
+	 *            remaining nodes to be processed.
+	 * @param row
+	 *            the nodes that have been included in the row currently under construction.
+	 * @param rowArea
+	 *            the total area allocated to this row.
+	 * @param side
+	 *            the length of the side against which to calculate the the aspect ratio.
 	 */
-	private void squarifyHelper(
-			LinkedList<TreemapItem> nodes, List<TreemapItem> row, double rowArea, double side) {
+	private void squarifyHelper(LinkedList<TreemapItem> nodes, List<TreemapItem> row, double rowArea, double side) {
 
 		if (nodes.isEmpty() && row.isEmpty()) {
 			// nothing to do here, just return
@@ -179,9 +181,9 @@ class SquarifiedTreemap {
 
 		/*
 		 * Determine if adding another rectangle to the current row improves the overall aspect
-		 * ratio.  If the current row is not (and therefore cannot be) improved then it is
-		 * finalized, and the algorithm is run recursively on the remaining nodes that have not yet
-		 * been placed in a row.
+		 * ratio. If the current row is not (and therefore cannot be) improved then it is finalized,
+		 * and the algorithm is run recursively on the remaining nodes that have not yet been placed
+		 * in a row.
 		 */
 		List<TreemapItem> expandedRow = new ArrayList<>(row);
 		expandedRow.add(nodes.getFirst());
@@ -209,8 +211,8 @@ class SquarifiedTreemap {
 	 * Recalculate the drawing direction.
 	 */
 	private void updateDirection() {
-		drawingDir =
-				availableRegion.getWidth() > availableRegion.getHeight() ? DIRECTION.TOP_BOTTOM : DIRECTION.LEFT_RIGHT;
+		drawingDir = availableRegion.getWidth() > availableRegion.getHeight() ? DIRECTION.TOP_BOTTOM
+				: DIRECTION.LEFT_RIGHT;
 	}
 
 	/**
@@ -223,8 +225,10 @@ class SquarifiedTreemap {
 	/**
 	 * For each node in the row, this method creates a rectangle to represent it graphically.
 	 *
-	 * @param row     the set of nodes that constitute a row.
-	 * @param rowArea the area allocated to the row.
+	 * @param row
+	 *            the set of nodes that constitute a row.
+	 * @param rowArea
+	 *            the area allocated to the row.
 	 */
 	private void finalizeRow(List<TreemapItem> row, double rowArea) {
 		if (row == null || row.isEmpty()) {
@@ -260,8 +264,10 @@ class SquarifiedTreemap {
 	 * Create a rectangle that has a size determined by what fraction of the total row area is
 	 * allocated to it.
 	 *
-	 * @param rowArea  the total area allocated to the row.
-	 * @param fraction the portion of the total area allocated to the rectangle being created.
+	 * @param rowArea
+	 *            the total area allocated to the row.
+	 * @param fraction
+	 *            the portion of the total area allocated to the rectangle being created.
 	 * @return the created rectangle.
 	 */
 	private Rectangle2D.Double createRectangle(Double rowArea, Double fraction) {
@@ -291,7 +297,8 @@ class SquarifiedTreemap {
 	/**
 	 * Ensure that a value is within an expected numeric range
 	 *
-	 * @param d the value to check.
+	 * @param d
+	 *            the value to check.
 	 * @return 0 if the input is NaN, else the number
 	 */
 	double validate(double d) {
@@ -328,7 +335,8 @@ class SquarifiedTreemap {
 	/**
 	 * Recalculate the origin to draw next rectangles.
 	 *
-	 * @param r the rectangle from which recalculate the origin.
+	 * @param r
+	 *            the rectangle from which recalculate the origin.
 	 */
 	private void updateXY(Rectangle2D.Double r) {
 		if (drawingDir == DIRECTION.LEFT_RIGHT) {
@@ -343,7 +351,8 @@ class SquarifiedTreemap {
 	/**
 	 * Initialize the origin at the rectangle's origin.
 	 *
-	 * @param r the rectangle used as origin source.
+	 * @param r
+	 *            the rectangle used as origin source.
 	 */
 	private void initializeXY(Rectangle2D.Double r) {
 		lastX = r.x;
@@ -371,11 +380,14 @@ class SquarifiedTreemap {
 
 	/**
 	 * For each node in the row, determine the ratio longer side / shorter side of the rectangle
-	 * that would represent it.  Return the maximum ratio.
+	 * that would represent it. Return the maximum ratio.
 	 *
-	 * @param row     the list of nodes in this row.
-	 * @param rowArea the area allocated to this row.
-	 * @param side    the length of the side against which to calculate the the aspect ratio.
+	 * @param row
+	 *            the list of nodes in this row.
+	 * @param rowArea
+	 *            the area allocated to this row.
+	 * @param side
+	 *            the length of the side against which to calculate the the aspect ratio.
 	 * @return the maximum ratio calculated for this row.
 	 */
 	private double maxAspectRatio(List<TreemapItem> row, double rowArea, double side) {
@@ -401,15 +413,15 @@ class SquarifiedTreemap {
 	}
 
 	/**
-	 * This method check which from the values in input, that represent
-	 * rectangles' aspect ratio, produces more approximatively a square.
-	 * It checks if one of the aspect ratio values gives a value nearest to 1
-	 * against the other, which means that width and height are similar.
+	 * This method check which from the values in input, that represent rectangles' aspect ratio,
+	 * produces more approximatively a square. It checks if one of the aspect ratio values gives a
+	 * value nearest to 1 against the other, which means that width and height are similar.
 	 *
-	 * @param actualAR   the actual aspect ratio
-	 * @param expandedAR the aspect ratio to evaluate
-	 * @return false if the actual aspect ratio is better than the new one,
-	 * else true.
+	 * @param actualAR
+	 *            the actual aspect ratio
+	 * @param expandedAR
+	 *            the aspect ratio to evaluate
+	 * @return false if the actual aspect ratio is better than the new one, else true.
 	 */
 	private boolean willImprove(double actualAR, double expandedAR) {
 		if (actualAR == 0) {

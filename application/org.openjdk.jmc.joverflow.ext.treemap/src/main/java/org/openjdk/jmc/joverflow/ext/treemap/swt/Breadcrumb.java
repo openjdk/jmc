@@ -106,7 +106,7 @@ public class Breadcrumb extends Canvas {
 		return new Rectangle(x - TRIM, y - TRIM, width + 2 * TRIM, height + 2 * TRIM);
 	}
 
-	/*package-private*/
+	/* package-private */
 	static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -115,7 +115,7 @@ public class Breadcrumb extends Canvas {
 		return control;
 	}
 
-	/*package-private*/ void createItem(BreadcrumbItem item) {
+	/* package-private */ void createItem(BreadcrumbItem item) {
 		items.push(item);
 
 		redraw();
@@ -159,8 +159,8 @@ public class Breadcrumb extends Canvas {
 			cursor.dispose();
 		}
 
-		cursor = item == null ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW) :
-				new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
+		cursor = item == null ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW)
+				: new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
 		setCursor(cursor);
 	}
 
@@ -171,7 +171,7 @@ public class Breadcrumb extends Canvas {
 		e.type = type;
 		e.item = item;
 		e.index = indexOf(item);
-		
+
 		if (item != null) {
 			e.data = item.getData();
 		}
@@ -296,7 +296,7 @@ public class Breadcrumb extends Canvas {
 
 	public void setSelection(BreadcrumbItem item) {
 		if (item != null && item.getParent() != this) {
-			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver"); //$NON-NLS-1$
 		}
 
 		setSelection(items.indexOf(item));

@@ -73,21 +73,23 @@ public class Treemap extends Canvas {
 	private TreemapToolTip toolTip = new TreemapToolTip(this);
 
 	/**
-	 * Constructs a new instance of this class given its parent and a style value describing its behavior and
-	 * appearance.
-	 * The style value is either one of the style constants defined in class SWT which is applicable to instances of
-	 * this class, or must be built by bitwise OR'ing together (that is, using the int "|" operator) two or more of
-	 * those SWT style constants. The class description lists the style constants that are applicable to the class.
-	 * Style bits are also inherited from superclasses.
+	 * Constructs a new instance of this class given its parent and a style value describing its
+	 * behavior and appearance. The style value is either one of the style constants defined in
+	 * class SWT which is applicable to instances of this class, or must be built by bitwise OR'ing
+	 * together (that is, using the int "|" operator) two or more of those SWT style constants. The
+	 * class description lists the style constants that are applicable to the class. Style bits are
+	 * also inherited from superclasses.
 	 *
-	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
-	 * @param style  the style of control to construct
+	 * @param parent
+	 *            a composite control which will be the parent of the new instance (cannot be null)
+	 * @param style
+	 *            the style of control to construct
 	 */
 	public Treemap(Composite parent, int style) {
 		super(checkNull(parent), style);
 
 		if ((style & SWT.VIRTUAL) == SWT.VIRTUAL) {
-			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by Treemap");
+			throw new UnsupportedOperationException("SWT.VIRTUAL is not support by Treemap"); //$NON-NLS-1$
 		}
 
 		addPaintListener(this::onPaintControl);
@@ -110,7 +112,7 @@ public class Treemap extends Canvas {
 		addMouseMoveListener(this::onMouseMove);
 	}
 
-	/*package-private*/
+	/* package-private */
 	static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -119,7 +121,7 @@ public class Treemap extends Canvas {
 		return control;
 	}
 
-	/*package-private*/
+	/* package-private */
 	static Treemap checkNull(Treemap treemap) {
 		if (treemap == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -184,8 +186,8 @@ public class Treemap extends Canvas {
 			cursor.dispose();
 		}
 
-		cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW) :
-				new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
+		cursor = item.getItemCount() == 0 ? new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW)
+				: new Cursor(Display.getCurrent(), SWT.CURSOR_CROSS);
 		setCursor(cursor);
 
 		if (toolTipEnabled) {
@@ -233,14 +235,17 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Adds the listener to the collection of listeners who will be notified when the user changes the receiver's
-	 * selection, by sending it one of the messages defined in the SelectionListener interface.
-	 * When widgetSelected is called, the item field of the event object is valid. If the receiver has the SWT.CHECK
-	 * style and the check selection changes, the event object detail field contains the value SWT.CHECK.
-	 * widgetDefaultSelected is typically called when an item is double-clicked. The item field of the event object is
-	 * valid for default selection, but the detail field is not used.
+	 * Adds the listener to the collection of listeners who will be notified when the user changes
+	 * the receiver's selection, by sending it one of the messages defined in the SelectionListener
+	 * interface. When widgetSelected is called, the item field of the event object is valid. If the
+	 * receiver has the SWT.CHECK style and the check selection changes, the event object detail
+	 * field contains the value SWT.CHECK. widgetDefaultSelected is typically called when an item is
+	 * double-clicked. The item field of the event object is valid for default selection, but the
+	 * detail field is not used.
 	 *
-	 * @param listener the listener which should be notified when the user changes the receiver's selection
+	 * @param listener
+	 *            the listener which should be notified when the user changes the receiver's
+	 *            selection
 	 */
 	public void addSelectionListener(SelectionListener listener) {
 		this.checkWidget();
@@ -257,10 +262,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Removes the listener from the collection of listeners who will be notified when the user changes the receiver's
-	 * selection.
+	 * Removes the listener from the collection of listeners who will be notified when the user
+	 * changes the receiver's selection.
 	 *
-	 * @param listener the listener which should no longer be notified
+	 * @param listener
+	 *            the listener which should no longer be notified
 	 */
 	public void removeSelectionListener(SelectionListener listener) {
 		this.checkWidget();
@@ -279,10 +285,12 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Adds the listener to the collection of listeners who will be notified when an item in the receiver is expanded or
-	 * collapsed by sending it one of the messages defined in the TreeListener interface.
+	 * Adds the listener to the collection of listeners who will be notified when an item in the
+	 * receiver is expanded or collapsed by sending it one of the messages defined in the
+	 * TreeListener interface.
 	 *
-	 * @param listener the listener which should be notified
+	 * @param listener
+	 *            the listener which should be notified
 	 */
 	public void addTreemapListener(TreemapListener listener) {
 		this.checkWidget();
@@ -295,10 +303,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Removes the listener from the collection of listeners who will be notified when items in the receiver are
-	 * expanded or collapsed.
+	 * Removes the listener from the collection of listeners who will be notified when items in the
+	 * receiver are expanded or collapsed.
 	 *
-	 * @param listener the listener which should no longer be notified
+	 * @param listener
+	 *            the listener which should no longer be notified
 	 */
 	public void removeTreemapListener(TreemapListener listener) {
 		this.checkWidget();
@@ -311,12 +320,16 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in the receiver. The
-	 * text, icon and other attributes of the item are set to the default value.
-	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
+	 * Clears the item at the given zero-relative index, sorted in descending order by weight, in
+	 * the receiver. The text, icon and other attributes of the item are set to the default value.
+	 * TODO: If the tree was created with the SWT.VIRTUAL style, these attributes are requested
+	 * again as needed.
 	 *
-	 * @param index the index of the item to clear
-	 * @param all   true if all child items of the indexed item should be cleared recursively, and false otherwise
+	 * @param index
+	 *            the index of the item to clear
+	 * @param all
+	 *            true if all child items of the indexed item should be cleared recursively, and
+	 *            false otherwise
 	 */
 	public void clear(int index, boolean all) {
 		checkWidget();
@@ -325,10 +338,12 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Clears all the items in the receiver. The text, icon and other attributes of the items are set to their default
-	 * values. If the tree was created with the SWT.VIRTUAL style, these attributes are requested again as needed.
+	 * Clears all the items in the receiver. The text, icon and other attributes of the items are
+	 * set to their default values. If the tree was created with the SWT.VIRTUAL style, these
+	 * attributes are requested again as needed.
 	 *
-	 * @param all true if all child items should be cleared recursively, and false otherwise
+	 * @param all
+	 *            true if all child items should be cleared recursively, and false otherwise
 	 */
 	public void clearAll(boolean all) {
 		checkWidget();
@@ -346,10 +361,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected. Indices that are
-	 * out of range are ignored.
+	 * Deselects an item in the receiver. If the item was already deselected, it remains deselected.
+	 * Indices that are out of range are ignored.
 	 *
-	 * @param index the index of the item to deselect
+	 * @param index
+	 *            the index of the item to deselect
 	 */
 	public void deselect(int index) {
 		checkWidget();
@@ -374,10 +390,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Selects an item in the receiver. If the item was already selected, it remains selected. Indices that are out of
-	 * range are ignored.
+	 * Selects an item in the receiver. If the item was already selected, it remains selected.
+	 * Indices that are out of range are ignored.
 	 *
-	 * @param index the index of the item to select
+	 * @param index
+	 *            the index of the item to select
 	 */
 	public void select(int index) {
 		checkWidget();
@@ -390,10 +407,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range.
+	 * Returns the item at the given, zero-relative index, sorted in descending order by weight, in
+	 * the receiver. Throws an exception if the index is out of range.
 	 *
-	 * @param index the index of the item to return
+	 * @param index
+	 *            the index of the item to return
 	 * @return the item at the given index
 	 */
 	public TreemapItem getItem(int index) {
@@ -403,13 +421,15 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the item at the given point in the receiver or null if no such item exists. The point is in the
-	 * coordinate system of the receiver.
-	 * The item that is returned represents an item that could be selected by the user. For example, if selection only
-	 * occurs in items in the first column, then null is returned if the point is outside of the item. Note that the
-	 * SWT.FULL_SELECTION style hint, which specifies the selection policy, determines the extent of the selection.
+	 * Returns the item at the given point in the receiver or null if no such item exists. The point
+	 * is in the coordinate system of the receiver. The item that is returned represents an item
+	 * that could be selected by the user. For example, if selection only occurs in items in the
+	 * first column, then null is returned if the point is outside of the item. Note that the
+	 * SWT.FULL_SELECTION style hint, which specifies the selection policy, determines the extent of
+	 * the selection.
 	 *
-	 * @param point the point used to locate the item
+	 * @param point
+	 *            the point used to locate the item
 	 * @return the item at the given point, or null if the point is not in a selectable item
 	 */
 	public TreemapItem getItem(Point point) {
@@ -419,8 +439,8 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the number of items contained in the receiver that are direct item children of the receiver. The number
-	 * that is returned is the number of roots in the tree.
+	 * Returns the number of items contained in the receiver that are direct item children of the
+	 * receiver. The number that is returned is the number of roots in the tree.
 	 *
 	 * @return the number of items
 	 */
@@ -433,20 +453,21 @@ public class Treemap extends Canvas {
 	/**
 	 * Sets the number of root-level items contained in the receiver.
 	 *
-	 * @param count the number of items
+	 * @param count
+	 *            the number of items
 	 */
 	public void setItemCount(int count) {
 		checkWidget();
 
 		// TODO: implement this if we want to support SWT.VIRTUAL
-		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem");
+		throw new UnsupportedOperationException("SWT.VIRTUAL is not support by TreemapItem"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Returns a (possibly empty) array of items contained in the receiver that are direct item children of the
-	 * receiver. These are the roots of the tree.
-	 * Note: This is not the actual structure used by the receiver to maintain its list of items, so modifying the array
-	 * will not affect the receiver.
+	 * Returns a (possibly empty) array of items contained in the receiver that are direct item
+	 * children of the receiver. These are the roots of the tree. Note: This is not the actual
+	 * structure used by the receiver to maintain its list of items, so modifying the array will not
+	 * affect the receiver.
 	 *
 	 * @return the items
 	 */
@@ -457,9 +478,10 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns true if the receiver's borders are visible, and false otherwise.
-	 * If one of the receiver's ancestors is not visible or some other condition makes the receiver not visible, this
-	 * method may still indicate that it is considered visible even though it may not actually be showing.
+	 * Returns true if the receiver's borders are visible, and false otherwise. If one of the
+	 * receiver's ancestors is not visible or some other condition makes the receiver not visible,
+	 * this method may still indicate that it is considered visible even though it may not actually
+	 * be showing.
 	 *
 	 * @return the visibility state of the borders
 	 */
@@ -470,11 +492,12 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Marks the receiver's lines as visible if the argument is true, and marks it invisible otherwise.
-	 * If one of the receiver's ancestors is not visible or some other condition makes the receiver not visible, marking
-	 * it visible may not actually cause it to be displayed.
+	 * Marks the receiver's lines as visible if the argument is true, and marks it invisible
+	 * otherwise. If one of the receiver's ancestors is not visible or some other condition makes
+	 * the receiver not visible, marking it visible may not actually cause it to be displayed.
 	 *
-	 * @param show the new visibility state
+	 * @param show
+	 *            the new visibility state
 	 */
 	public void setBordersVisible(boolean show) {
 		checkWidget();
@@ -511,9 +534,9 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns an array of TreeItems that are currently selected in the receiver. The order of the items is unspecified.
-	 * An empty array indicates that no items are selected.
-	 * Note: This is not the actual structure used by the receiver to maintain its selection, so modifying the array
+	 * Returns an array of TreeItems that are currently selected in the receiver. The order of the
+	 * items is unspecified. An empty array indicates that no items are selected. Note: This is not
+	 * the actual structure used by the receiver to maintain its selection, so modifying the array
 	 * will not affect the receiver.
 	 *
 	 * @return an array representing the selection
@@ -525,17 +548,18 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Sets the receiver's selection to the given item. The current selection is cleared before the new item is
-	 * selected, and if necessary the receiver is scrolled to make the new selection visible.
-	 * If the item is not in the receiver, then it is ignored.
+	 * Sets the receiver's selection to the given item. The current selection is cleared before the
+	 * new item is selected, and if necessary the receiver is scrolled to make the new selection
+	 * visible. If the item is not in the receiver, then it is ignored.
 	 *
-	 * @param item the item to select
+	 * @param item
+	 *            the item to select
 	 */
 	public void setSelection(TreemapItem item) {
 		checkWidget();
 
 		if (item != null && item.getParent() != this) {
-			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver"); //$NON-NLS-1$
 		}
 
 		selectedItem = item;
@@ -559,7 +583,8 @@ public class Treemap extends Canvas {
 	/**
 	 * Returns the receiver's text, which will be an empty string if it has never been set.
 	 *
-	 * @param message the receiver's text
+	 * @param message
+	 *            the receiver's text
 	 */
 	public void setText(String message) {
 		checkWidget();
@@ -568,8 +593,8 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the item which is currently at the top of the receiver. This item can change when items are expanded,
-	 * collapsed, scrolled or new items are added or removed.
+	 * Returns the item which is currently at the top of the receiver. This item can change when
+	 * items are expanded, collapsed, scrolled or new items are added or removed.
 	 *
 	 * @return the item at the top of the receiver
 	 */
@@ -580,11 +605,12 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Sets the item which is currently at the top of the receiver. This item can change when items are expanded,
-	 * collapsed, scrolled or new items are added or removed.
-	 * If the item is a leaf (ie. no child), then the parent item is set as top if not null.
+	 * Sets the item which is currently at the top of the receiver. This item can change when items
+	 * are expanded, collapsed, scrolled or new items are added or removed. If the item is a leaf
+	 * (ie. no child), then the parent item is set as top if not null.
 	 *
-	 * @param item the item to be displayed as top
+	 * @param item
+	 *            the item to be displayed as top
 	 */
 	public void setTopItem(TreemapItem item) {
 		checkWidget();
@@ -592,7 +618,7 @@ public class Treemap extends Canvas {
 		item = TreemapItem.checkNull(item);
 
 		if (item.getParent() != this) {
-			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver"); //$NON-NLS-1$
 		}
 
 		// if item is a leaf, then show it's parent item.
@@ -616,8 +642,8 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Returns the widget message. The message text is displayed as a tooltip for the user, indicating more information
-	 * about this item.
+	 * Returns the widget message. The message text is displayed as a tooltip for the user,
+	 * indicating more information about this item.
 	 *
 	 * @return the widget message
 	 */
@@ -628,10 +654,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating more information
-	 * about this item.
+	 * Sets the widget message. The message text is displayed as a tooltip for the user, indicating
+	 * more information about this item.
 	 *
-	 * @param message the new message
+	 * @param message
+	 *            the new message
 	 */
 	public void setMessage(String message) {
 		checkWidget();
@@ -640,10 +667,12 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Searches the receiver's list starting at the first item (index 0) until an item is found that is equal to the
-	 * argument, and returns the index of that item. If no item is found, returns -1.
+	 * Searches the receiver's list starting at the first item (index 0) until an item is found that
+	 * is equal to the argument, and returns the index of that item. If no item is found, returns
+	 * -1.
 	 *
-	 * @param item the search item
+	 * @param item
+	 *            the search item
 	 * @return the index of the item
 	 */
 	public int indexOf(TreemapItem item) {
@@ -653,10 +682,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in the receiver. Throws
-	 * an exception if the index is out of range.
+	 * Removes the item at the given, zero-relative index, sorted in descending order by weight, in
+	 * the receiver. Throws an exception if the index is out of range.
 	 *
-	 * @param index index of the item to remove
+	 * @param index
+	 *            index of the item to remove
 	 */
 	public void remove(int index) {
 		checkWidget();
@@ -674,10 +704,11 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Shows the item. If the item is already showing in the receiver, this method simply returns. Otherwise, the items
-	 * are expanded until the item is visible.
+	 * Shows the item. If the item is already showing in the receiver, this method simply returns.
+	 * Otherwise, the items are expanded until the item is visible.
 	 *
-	 * @param item the item to be shown
+	 * @param item
+	 *            the item to be shown
 	 */
 	public void showItem(TreemapItem item) {
 		checkWidget();
@@ -685,7 +716,7 @@ public class Treemap extends Canvas {
 		item = TreemapItem.checkNull(item);
 
 		if (item.getParent() != this) {
-			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver");
+			throw new IllegalArgumentException("the given TreemapItem does not belong to the receiver"); //$NON-NLS-1$
 		}
 
 		TreemapItem top = item.getParentItem();
@@ -701,8 +732,8 @@ public class Treemap extends Canvas {
 	}
 
 	/**
-	 * Shows the first selection. If the selection is already showing in the receiver, this method simply returns.
-	 * Otherwise, the items are scrolled until the selection is visible.
+	 * Shows the first selection. If the selection is already showing in the receiver, this method
+	 * simply returns. Otherwise, the items are scrolled until the selection is visible.
 	 */
 	public void showSelection() {
 		checkWidget();
@@ -715,17 +746,3 @@ public class Treemap extends Canvas {
 		showItem(selection);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

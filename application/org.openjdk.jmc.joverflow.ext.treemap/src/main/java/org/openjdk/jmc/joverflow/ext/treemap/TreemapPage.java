@@ -76,8 +76,8 @@ public class TreemapPage extends Page implements ModelListener {
 			new Color(Display.getCurrent(), 255, 255, 255), // white
 			new Color(Display.getCurrent(), 205, 249, 212), // green
 	};
-	private static final String MESSAGE_NO_INSTANCE_SELECTED = "No instances selected";
-	private static final String LABEL_ROOT = "[ROOT]";
+	private static final String MESSAGE_NO_INSTANCE_SELECTED = Messages.TreemapPage_NO_INSTANCES_SELECTED;
+	private static final String LABEL_ROOT = "[ROOT]"; //$NON-NLS-1$
 
 	private final JOverflowEditor editor;
 	private final TreemapAction[] treemapActions;
@@ -171,9 +171,10 @@ public class TreemapPage extends Page implements ModelListener {
 				}
 			}));
 		}
-		
+
 		{
-			treemap.addSelectionListener(SelectionListener.widgetSelectedAdapter(selectionEvent -> bindTreemapActions()));
+			treemap.addSelectionListener(
+					SelectionListener.widgetSelectedAdapter(selectionEvent -> bindTreemapActions()));
 			treemap.addTreemapListener(TreemapListener.treemapTopChangedAdapter(treemapEvent -> bindTreemapActions()));
 		}
 
@@ -192,8 +193,7 @@ public class TreemapPage extends Page implements ModelListener {
 	}
 
 	@Override
-	public void include(
-			ObjectCluster cluster, RefChainElement referenceChain) {
+	public void include(ObjectCluster cluster, RefChainElement referenceChain) {
 		if (cluster.getObjectCount() == 0) {
 			return;
 		}
@@ -223,7 +223,7 @@ public class TreemapPage extends Page implements ModelListener {
 			Stream.of(treemapActions).forEach((action) -> action.setEnabled(false));
 			return;
 		}
-		
+
 		TreemapItem selected = treemap.getSelection();
 		TreemapItem root = treemap.getRootItem();
 		TreemapItem top = treemap.getTopItem();
@@ -308,7 +308,7 @@ public class TreemapPage extends Page implements ModelListener {
 	}
 
 	private void setColorAndMessage(TreemapItem item, int depth) {
-		item.setMessage(item.getMessage() + "\n" + getHumanReadableSize(item.getWeight()));
+		item.setMessage(item.getMessage() + "\n" + getHumanReadableSize(item.getWeight())); //$NON-NLS-1$
 		item.setBackground(COLORS[depth % COLORS.length]);
 
 		for (TreemapItem child : item.getItems()) {
@@ -317,26 +317,26 @@ public class TreemapPage extends Page implements ModelListener {
 	}
 
 	private String getHumanReadableSize(double bytes) {
-		String unit = "B";
+		String unit = "B"; //$NON-NLS-1$
 		double quantity = bytes;
 		if (quantity > 1024) {
 			quantity /= 1024;
-			unit = "KiB";
+			unit = "KiB"; //$NON-NLS-1$
 		}
 		if (quantity > 1024) {
 			quantity /= 1024;
-			unit = "MiB";
+			unit = "MiB"; //$NON-NLS-1$
 		}
 		if (quantity > 1024) {
 			quantity /= 1024;
-			unit = "GiB";
+			unit = "GiB"; //$NON-NLS-1$
 		}
 		if (quantity > 1024) {
 			quantity /= 1024;
-			unit = "TiB";
+			unit = "TiB"; //$NON-NLS-1$
 		}
 
-		return String.format("%.2f %s", quantity, unit);
+		return String.format("%.2f %s", quantity, unit); //$NON-NLS-1$
 	}
 
 	private JavaHeapObject getObjectAtPosition(int globalObjectPos) {

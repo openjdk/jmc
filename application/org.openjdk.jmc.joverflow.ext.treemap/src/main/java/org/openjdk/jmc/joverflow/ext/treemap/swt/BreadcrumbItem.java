@@ -65,7 +65,7 @@ public class BreadcrumbItem extends Item {
 		parent.createItem(this);
 	}
 
-	/*package-private*/ void paintItem(GC gc, Rectangle bounds) {
+	/* package-private */ void paintItem(GC gc, Rectangle bounds) {
 		Color bg = gc.getBackground();
 		Color fg = gc.getForeground();
 		Font font = gc.getFont();
@@ -118,7 +118,7 @@ public class BreadcrumbItem extends Item {
 		gc.setFont(font);
 	}
 
-	/*package-private*/ Point getDimension(GC gc) {
+	/* package-private */ Point getDimension(GC gc) {
 		Font font = gc.getFont();
 		gc.setFont(getFont());
 
@@ -136,7 +136,7 @@ public class BreadcrumbItem extends Item {
 		this.font = null;
 
 		this.setData(null);
-		this.setText("");
+		this.setText(""); //$NON-NLS-1$
 	}
 
 	@Override
@@ -180,10 +180,11 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * Sets the receiver's background color to the color specified by the argument, or to the default system color for
-	 * the item if the argument is null.
+	 * Sets the receiver's background color to the color specified by the argument, or to the
+	 * default system color for the item if the argument is null.
 	 *
-	 * @param color the new color (or null)
+	 * @param color
+	 *            the new color (or null)
 	 */
 	public void setBackground(Color color) {
 		checkWidget();
@@ -223,10 +224,12 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * Sets the font that the receiver will use to paint textual information for this item to the font specified by the
-	 * argument, or to the default font for that kind of control if the argument is null.
+	 * Sets the font that the receiver will use to paint textual information for this item to the
+	 * font specified by the argument, or to the default font for that kind of control if the
+	 * argument is null.
 	 *
-	 * @param font the new font (or null)
+	 * @param font
+	 *            the new font (or null)
 	 */
 	public void setFont(Font font) {
 		checkWidget();
@@ -262,10 +265,11 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * Sets the foreground color at the given column index in the receiver to the color specified by the argument, or to
-	 * the default system color for the item if the argument is null.
+	 * Sets the foreground color at the given column index in the receiver to the color specified by
+	 * the argument, or to the default system color for the item if the argument is null.
 	 *
-	 * @param color the new color (or null)
+	 * @param color
+	 *            the new color (or null)
 	 */
 	public void setForeground(Color color) {
 		checkWidget();
