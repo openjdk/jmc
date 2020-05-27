@@ -42,8 +42,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.openjdk.jmc.common.io.IOToolkit;
-
 /**
  * Contain algorithmic conversion and overrides for the display name of event path segments. Also,
  * algorithmic generation and overrides for the color of event types. For these purposes, a case

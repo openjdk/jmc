@@ -35,6 +35,7 @@ package org.openjdk.jmc.ide.launch;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
@@ -86,7 +87,7 @@ public class LaunchPlugin extends MCAbstractUIPlugin {
 	}
 
 	static Shell getActiveWorkbenchShell() {
-		IWorkbenchWindow window = LaunchPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
 		if (window != null) {
 			return window.getShell();

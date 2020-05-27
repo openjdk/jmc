@@ -38,8 +38,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openjdk.jmc.common.io.IOToolkit;
-
 /**
  * Provides Mission Control version information.
  */

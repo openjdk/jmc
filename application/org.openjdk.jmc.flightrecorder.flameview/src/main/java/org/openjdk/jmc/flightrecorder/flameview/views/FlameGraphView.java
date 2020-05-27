@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.flameview.views;
 
-import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
-import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_FLAME_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_ICICLE_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_JPEG_IMAGE;
@@ -44,11 +42,13 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_A
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_COUNT;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_TYPE;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,6 +71,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -82,8 +83,8 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IMemento;
@@ -94,15 +95,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
 import org.openjdk.jmc.flightrecorder.flameview.tree.TraceNode;
 import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -529,7 +529,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, DIR_ICONS + iconName); //$NON-NLS-1$
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
 	}
 
 	private static String getIconBase64(String iconName) {

@@ -53,6 +53,7 @@ public class InstrumentMe {
 	}
 	
 	public class MyInnerClass extends InstrumentMe{
+		@SuppressWarnings("unused")
 		private final String innerClassField = "org.openjdk.jmc.agent.test.InstrumentMe.MyInnerClass.innerClassField";
 
 		public void instrumentationPoint() {

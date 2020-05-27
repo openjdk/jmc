@@ -45,11 +45,13 @@
 			</method>
 			<!-- location {ENTRY, EXIT, WRAP}-->
 			<location>WRAP</location>
-			<field>
-				<name>'InstrumentMe.STATIC_STRING_FIELD'</name>
-				<description>Capturing outer class field with class name prefixed field name</description>
-				<expression>InstrumentMe.STATIC_STRING_FIELD</expression>
-			</field>
+			<fields>
+				<field>
+					<name>'InstrumentMe.STATIC_STRING_FIELD'</name>
+					<description>Capturing outer class field with class name prefixed field name</description>
+					<expression>InstrumentMe.STATIC_STRING_FIELD</expression>
+				</field>
+			</fields>
 		</event>
 	</events>
 </jfragent>

@@ -40,6 +40,7 @@
 
 	<properties>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jakarta.mail.version>1.6.5</jakarta.mail.version>
 	</properties>
 
 	<build>
@@ -61,7 +62,7 @@
 									<id>org.twitter4j:twitter4j-core:4.0.7</id>
 								</artifact>
 								<artifact>
-									<id>com.sun.mail:jakarta.mail:1.6.3</id>
+									<id>com.sun.mail:jakarta.mail:${jakarta.mail.version}</id>
 									<override>true</override>
 									<instructions>
 										<Import-Package>*;resolution:=optional</Import-Package>
@@ -70,9 +71,6 @@
 								</artifact>
 								<artifact>
 									<id>com.sun.activation:jakarta.activation:1.2.1</id>
-								</artifact>
-								<artifact>
-									<id>javax.mail:dsn:1.4</id>
 								</artifact>
 								<artifact>
 									<id>org.owasp.encoder:encoder:1.2.2</id>
@@ -157,10 +155,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>OPS4j</id>
-			<url>http://repository.ops4j.org/maven2/</url>
-		</repository>
-	</repositories>
 </project>

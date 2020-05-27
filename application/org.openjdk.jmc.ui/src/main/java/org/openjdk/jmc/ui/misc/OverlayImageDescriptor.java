@@ -54,7 +54,7 @@ public class OverlayImageDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		ImageData id = base.getImageData();
+		ImageData id = base.getImageData(100);
 		if (reduceAlpha) {
 			// Just using global alpha messes up normal alpha
 			for (int x = 0; x < id.width; x++) {
@@ -63,17 +63,18 @@ public class OverlayImageDescriptor extends CompositeImageDescriptor {
 				}
 			}
 		}
-		drawImage(id, 0, 0);
+		// Trick to get the auto scaling to work
+		drawImage(zoom -> zoom == 100 ? id : null, 0, 0);
 		for (ImageDescriptor overlay : overlays) {
 			if (overlay != null) {
-				drawImage(overlay.getImageData(), 0, 0);
+				drawImage((zoom) -> overlay.getImageData(zoom), 0, 0);
 			}
 		}
 	}
 
 	@Override
 	protected Point getSize() {
-		ImageData baseData = base.getImageData();
+		ImageData baseData = base.getImageData(100);
 		return new Point(baseData.width, baseData.height);
 	}
 

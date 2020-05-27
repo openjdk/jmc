@@ -550,6 +550,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 			return Stream.empty();
 		} else {
 			IItemIterable single = iterables.next();
+			@SuppressWarnings("deprecation")
 			List<IAttribute<?>> attributes = single.getType().getAttributes();
 			if (iterables.hasNext()) {
 				attributes = new ArrayList<>(attributes); // modifiable copy

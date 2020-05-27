@@ -43,6 +43,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
@@ -120,7 +121,7 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 			final String title = Messages.AlertPlugin_TRIGGER_ALERT_TEXT;
 			final int style = SWT.BALLOON | SWT.ICON_WARNING;
 
-			DisplayToolkit.safeAsyncExec(getDefault().getWorkbench().getDisplay(), new Runnable() {
+			DisplayToolkit.safeAsyncExec(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 				@Override
 				public void run() {
 					UIPlugin.getDefault().getTrayManager().showTooltip(title, message, style);
@@ -179,10 +180,10 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 
 	public void showDialog(boolean alwaysShow) {
 		if (getPopup() || alwaysShow || hasDialog()) {
-			DisplayToolkit.safeAsyncExec(getDefault().getWorkbench().getDisplay(), new Runnable() {
+			DisplayToolkit.safeAsyncExec(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 				@Override
 				public void run() {
-					Display display = getDefault().getWorkbench().getDisplay();
+					Display display = PlatformUI.getWorkbench().getDisplay();
 					Shell shell = display.getActiveShell();
 					if (shell != null && !shell.isDisposed()) {
 						if (!hasDialog()) {
@@ -212,7 +213,7 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 	}
 
 	public static AlertDialog createDialog(Shell shell) {
-		Display display = getDefault().getWorkbench().getDisplay();
+		Display display = PlatformUI.getWorkbench().getDisplay();
 		if (display != null && !display.isDisposed() && display.getActiveShell() != null
 				&& !display.getActiveShell().isDisposed()) {
 			return new AlertDialog(display.getActiveShell());

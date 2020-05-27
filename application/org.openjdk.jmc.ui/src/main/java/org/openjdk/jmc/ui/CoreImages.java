@@ -35,7 +35,7 @@ package org.openjdk.jmc.ui;
 import java.util.MissingResourceException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.jface.resource.ResourceLocator;
 
 /**
  * Storage for common ImageDescriptors.
@@ -177,7 +177,7 @@ public class CoreImages {
 	}
 
 	private static ImageDescriptor createDescriptor(String relPath) {
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(UIPlugin.PLUGIN_ID, relPath);
+		ImageDescriptor desc = ResourceLocator.imageDescriptorFromBundle(UIPlugin.PLUGIN_ID, relPath).orElse(null);
 		if (desc == null) {
 			// FIXME: Throwing an exception has the development time advantage of being very intrusive. For release time, logging might be better.
 			throw new MissingResourceException("Missing image '" + relPath + '\'', ImageDescriptor.class.getName(), //$NON-NLS-1$

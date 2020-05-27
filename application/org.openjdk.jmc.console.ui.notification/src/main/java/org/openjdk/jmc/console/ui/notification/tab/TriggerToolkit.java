@@ -43,19 +43,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.osgi.util.NLS;
-import org.osgi.framework.Bundle;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.console.ui.notification.NotificationPlugin;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationRegistry;
 import org.openjdk.jmc.ui.common.util.StatusFactory;
+import org.osgi.framework.Bundle;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Toolkit for triggers

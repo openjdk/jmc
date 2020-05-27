@@ -35,7 +35,6 @@ package org.openjdk.jmc.rjmx.test;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
