@@ -233,7 +233,8 @@ import java.util.stream.Stream;
 		Stream.of(treemapActions).forEach((action) -> {
 			switch (action.getType()) {
 			case ZOOM_IN:
-				action.setEnabled(selected != null && selected != top);
+				action.setEnabled(selected != null && selected != top
+						&& !(selected.getItemCount() == 0 && selected.getParentItem() == top));
 				action.setRunnable(() -> treemap.setTopItem(selected));
 				break;
 			case ZOOM_OUT:
