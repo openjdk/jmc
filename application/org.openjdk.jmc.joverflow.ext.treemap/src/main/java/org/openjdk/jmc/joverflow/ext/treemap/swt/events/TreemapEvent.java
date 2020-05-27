@@ -41,6 +41,8 @@ import org.eclipse.swt.widgets.Event;
  */
 public final class TreemapEvent extends SelectionEvent {
 
+	static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a new instance of this class based on the information in the given untyped event.
 	 * 
