@@ -160,9 +160,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-//	private TraceNode currentRoot;
 	private CompletableFuture<TraceModelHolder> currentModelCalculator;
-//	private CompletableFuture<Void> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
@@ -206,8 +204,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
 			if (newValue != threadRootAtTop) {
 				threadRootAtTop = newValue;
-//				rebuildModel(currentItems);
-				System.out.println("GROUP by ACTION: " + currentItems.hasItems());
 				rebuildModel();
 			}
 		}
@@ -338,23 +334,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
-//			if (items == null) {
-//				setItems(ItemCollectionToolkit.build(Stream.empty()));
-//			} else if (!items.equals(currentItems)) {
-//				setItems(items);
-//			}	
 			if (items != null && items.hasItems() && !items.equals(currentItems)) {
 				setItems(items);
 			} 
-			
-			
+				
 		}
 	}
 
 	private void setItems(IItemCollection items) {
 		currentItems = items;
-//		rebuildModel(items);
-		System.out.println("SET ITEMS: " + items.hasItems());
 		rebuildModel();
 	}
 
@@ -362,13 +350,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void rebuildModel() {
 		// Release old model before building the new
 		if (currentModelCalculator != null) {
-			System.out.println("TO CANCEL");
 			currentModelCalculator.cancel(true);
-			if(currentModelCalculator.isCancelled()) {
-				System.out.println("IS CANCELED");
-			} else {
-				System.out.println("NOT CANCELED");
-			}
 		}
 //		currentModelCalculator = getModelPreparer(currentItems, frameSeparator, true);
 //		CompletableFuture<TraceNode> currentModelCalculator = getModelPreparer(frameSeparator, true);
@@ -385,7 +367,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 //			final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		 final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
-//			StacktraceModel model = new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 			StacktraceModel model = createStacktraceModel();
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
@@ -394,12 +375,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			}
-			
-//			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
-			System.out.println("getModelPreparer thread:" + Thread.currentThread().getName());
-			System.out.println("getModelPreparer time:" + System.currentTimeMillis());
-			System.out.println("getModelPreparer rootFork branchCount:" + rootFork.getBranchCount());
-			System.out.println("getModelPreparer rootFork itemsInFork:" + rootFork.getItemsInFork());
+
 			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());			
 			return new TraceModelHolder(TraceTreeUtils.createTree(root, model), model);
 		}, MODEL_EXECUTOR);
@@ -418,29 +394,26 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 	
 	private static final class TraceModelHolder {
-		private TraceNode root;
-		private StacktraceModel model;
+		private final TraceNode root;
+		private final StacktraceModel model;
 		public TraceModelHolder(TraceNode root, StacktraceModel model) {
 			super();
 			this.root = root;
 			this.model = model;
 		}
-		
+		private TraceNode root() {
+			return root;
+		}
+
+		private StacktraceModel model() {
+			return model;
+		}	
 	}
 
 	private void setModel(TraceModelHolder holder) {
-//		if (!browser.isDisposed() && !root.equals(currentRoot)) {
-//		if (!browser.isDisposed() && !currentModelCalculator.isCancelled()) {
 		// Check that the model is up to date
-		if (holder.model.equals(createStacktraceModel()) && !browser.isDisposed() ) {
-//			currentRoot = root;
-			System.out.println("TRACE_NODE name= " + holder.root.getName());
-			System.out.println("TRACE_NODE childeren = " + holder.root.getChildren().size());
-			System.out.println("TRACE_NODE childeren = " + holder.root.getChildren());
-			if(holder.root.getChildren().size() > 0) {
-				System.out.println("TRACE_NODE child: " + holder.root.getChildren().get(0));
-			}
-			setViewerInput(holder.root);
+		if (holder.model().equals(createStacktraceModel()) && !browser.isDisposed() ) {
+			setViewerInput(holder.root());
 		}
 	}
 
@@ -459,13 +432,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
 							TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
 
-					System.out.println("SET_VIEWER name= " + root.getName());
-					System.out.println("SET_VIEWER childeren = " + root.getChildren().size());
-					System.out.println("SET_VIEWER childeren = " + root.getChildren());
-					
-					String someJson = toJSon(root);
-					System.out.println("SOME JSON:" + someJson);
-					browser.execute(String.format("processGraph(%s, %s);", someJson, icicleViewActive));
+					browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 				}
 			});
@@ -546,9 +513,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		if (root == null) {
 			return "\"\"";
 		}
-		System.out.println("TO_JSON: root=" + root.getName());
-		System.out.println("TO_JSON: children=" + root.getChildren().size());
-		System.out.println("TO_JSON: children=" + root.getChildren());
 		return render(root);
 	}
 
