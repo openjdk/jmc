@@ -103,7 +103,10 @@ import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.CoreImages;
@@ -157,11 +160,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private TraceNode currentRoot;
-	private CompletableFuture<TraceNode> currentModelCalculator;
+//	private TraceNode currentRoot;
+	private CompletableFuture<TraceModelHolder> currentModelCalculator;
+//	private CompletableFuture<Void> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
-	private IItemCollection currentItems;
+	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
@@ -202,7 +206,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
 			if (newValue != threadRootAtTop) {
 				threadRootAtTop = newValue;
-				rebuildModel(currentItems);
+//				rebuildModel(currentItems);
+				System.out.println("GROUP by ACTION: " + currentItems.hasItems());
+				rebuildModel();
 			}
 		}
 	}
@@ -331,61 +337,140 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-			setItems(AdapterUtil.getAdapter(first, IItemCollection.class));
+			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
+//			if (items == null) {
+//				setItems(ItemCollectionToolkit.build(Stream.empty()));
+//			} else if (!items.equals(currentItems)) {
+//				setItems(items);
+//			}	
+			if (items != null && items.hasItems() && !items.equals(currentItems)) {
+				setItems(items);
+			} 
+			
+			
 		}
 	}
 
 	private void setItems(IItemCollection items) {
-		if (items != null) {
-			currentItems = items;
-			rebuildModel(items);
-		}
+		currentItems = items;
+//		rebuildModel(items);
+		System.out.println("SET ITEMS: " + items.hasItems());
+		rebuildModel();
 	}
 
-	private void rebuildModel(IItemCollection items) {
+//	private void rebuildModel(IItemCollection items) {
+	private void rebuildModel() {
 		// Release old model before building the new
 		if (currentModelCalculator != null) {
+			System.out.println("TO CANCEL");
 			currentModelCalculator.cancel(true);
+			if(currentModelCalculator.isCancelled()) {
+				System.out.println("IS CANCELED");
+			} else {
+				System.out.println("NOT CANCELED");
+			}
 		}
-		currentModelCalculator = getModelPreparer(items, frameSeparator, true);
+//		currentModelCalculator = getModelPreparer(currentItems, frameSeparator, true);
+//		CompletableFuture<TraceNode> currentModelCalculator = getModelPreparer(frameSeparator, true);
+		currentModelCalculator = getModelPreparer(frameSeparator, true);
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
 	}
-
-	private CompletableFuture<TraceNode> getModelPreparer(
-		final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
-		return CompletableFuture.supplyAsync(() -> {
-			StacktraceModel model = new StacktraceModel(threadRootAtTop, frameSeparator, items);
-			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
-			return TraceTreeUtils.createTree(root, model);
-		}, MODEL_EXECUTOR);
+	
+	private StacktraceModel createStacktraceModel() {
+		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private void setModel(TraceNode root) {
-		if (!browser.isDisposed() && !root.equals(currentRoot)) {
-			currentRoot = root;
-			setViewerInput(root);
+	private CompletableFuture<TraceModelHolder> getModelPreparer(
+//			final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
+		 final FrameSeparator separator, final boolean materializeSelectedBranches) {
+		return CompletableFuture.supplyAsync(() -> {
+//			StacktraceModel model = new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
+			StacktraceModel model = createStacktraceModel();
+			Fork rootFork = model.getRootFork();
+			if (materializeSelectedBranches) {
+				Branch selectedBranch = getLastSelectedBranch(rootFork);
+				if (selectedBranch != null) {
+					selectedBranch.getEndFork();
+				}
+			}
+			
+//			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
+			System.out.println("getModelPreparer thread:" + Thread.currentThread().getName());
+			System.out.println("getModelPreparer time:" + System.currentTimeMillis());
+			System.out.println("getModelPreparer rootFork branchCount:" + rootFork.getBranchCount());
+			System.out.println("getModelPreparer rootFork itemsInFork:" + rootFork.getItemsInFork());
+			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());			
+			return new TraceModelHolder(TraceTreeUtils.createTree(root, model), model);
+		}, MODEL_EXECUTOR);
+	}
+	
+	// See JMC-6787
+	@SuppressWarnings("deprecation")
+	private static Branch getLastSelectedBranch(Fork fromFork) {
+		Branch lastSelectedBranch = null;
+		Branch branch = fromFork.getSelectedBranch();
+		while (branch != null) {
+			lastSelectedBranch = branch;
+			branch = branch.getEndFork().getSelectedBranch();
+		}
+		return lastSelectedBranch;
+	}
+	
+	private static final class TraceModelHolder {
+		private TraceNode root;
+		private StacktraceModel model;
+		public TraceModelHolder(TraceNode root, StacktraceModel model) {
+			super();
+			this.root = root;
+			this.model = model;
+		}
+		
+	}
+
+	private void setModel(TraceModelHolder holder) {
+//		if (!browser.isDisposed() && !root.equals(currentRoot)) {
+//		if (!browser.isDisposed() && !currentModelCalculator.isCancelled()) {
+		// Check that the model is up to date
+		if (holder.model.equals(createStacktraceModel()) && !browser.isDisposed() ) {
+//			currentRoot = root;
+			System.out.println("TRACE_NODE name= " + holder.root.getName());
+			System.out.println("TRACE_NODE childeren = " + holder.root.getChildren().size());
+			System.out.println("TRACE_NODE childeren = " + holder.root.getChildren());
+			if(holder.root.getChildren().size() > 0) {
+				System.out.println("TRACE_NODE child: " + holder.root.getChildren().get(0));
+			}
+			setViewerInput(holder.root);
 		}
 	}
 
 	private void setViewerInput(TraceNode root) {
-		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
-		browser.setText(HTML_PAGE);
-		browser.addListener(SWT.Resize, event -> {
-			browser.execute("resizeFlameGraph();");
-		});
+		if(!currentModelCalculator.isCancelled()) {
+			Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
+			browser.setText(HTML_PAGE);
+			browser.addListener(SWT.Resize, event -> {
+				browser.execute("resizeFlameGraph();");
+			});
 
-		browser.addProgressListener(new ProgressAdapter() {
-			@Override
-			public void completed(ProgressEvent event) {
-				browser.removeProgressListener(this);
-				browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
-						TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
+			browser.addProgressListener(new ProgressAdapter() {
+				@Override
+				public void completed(ProgressEvent event) {
+					browser.removeProgressListener(this);
+					browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
+							TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
 
-				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
-				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
-			}
-		});
+					System.out.println("SET_VIEWER name= " + root.getName());
+					System.out.println("SET_VIEWER childeren = " + root.getChildren().size());
+					System.out.println("SET_VIEWER childeren = " + root.getChildren());
+					
+					String someJson = toJSon(root);
+					System.out.println("SOME JSON:" + someJson);
+					browser.execute(String.format("processGraph(%s, %s);", someJson, icicleViewActive));
+					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
+				}
+			});
+		}
+		
 	}
 
 	private void saveFlameGraph() {
@@ -461,6 +546,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		if (root == null) {
 			return "\"\"";
 		}
+		System.out.println("TO_JSON: root=" + root.getName());
+		System.out.println("TO_JSON: children=" + root.getChildren().size());
+		System.out.println("TO_JSON: children=" + root.getChildren());
 		return render(root);
 	}
 

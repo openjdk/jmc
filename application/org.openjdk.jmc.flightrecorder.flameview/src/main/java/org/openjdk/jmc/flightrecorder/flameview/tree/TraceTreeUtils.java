@@ -113,6 +113,7 @@ public final class TraceTreeUtils {
 		StringBuilder titleSb = new StringBuilder();
 		StringBuilder descSb = new StringBuilder();
 		AtomicInteger totalItemsSum = new AtomicInteger(0);
+		System.out.println("createRootWithDescription branchCount: " + branchCount);
 
 		if (branchCount == 0) {
 			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
