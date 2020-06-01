@@ -160,7 +160,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private CompletableFuture<TraceModelHolder> currentModelCalculator;
+	private CompletableFuture<TraceNodeModelContainer> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
@@ -346,14 +346,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		rebuildModel();
 	}
 
-//	private void rebuildModel(IItemCollection items) {
 	private void rebuildModel() {
-		// Release old model before building the new
+		// try to cancel downstream calculation
 		if (currentModelCalculator != null) {
 			currentModelCalculator.cancel(true);
 		}
-//		currentModelCalculator = getModelPreparer(currentItems, frameSeparator, true);
-//		CompletableFuture<TraceNode> currentModelCalculator = getModelPreparer(frameSeparator, true);
 		currentModelCalculator = getModelPreparer(frameSeparator, true);
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
@@ -363,8 +360,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private CompletableFuture<TraceModelHolder> getModelPreparer(
-//			final IItemCollection items, final FrameSeparator separator, final boolean materializeSelectedBranches) {
+	private CompletableFuture<TraceNodeModelContainer> getModelPreparer(
 		 final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
 			StacktraceModel model = createStacktraceModel();
@@ -377,7 +373,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 
 			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());			
-			return new TraceModelHolder(TraceTreeUtils.createTree(root, model), model);
+			return new TraceNodeModelContainer(TraceTreeUtils.createTree(root, model), model);
 		}, MODEL_EXECUTOR);
 	}
 	
@@ -393,10 +389,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return lastSelectedBranch;
 	}
 	
-	private static final class TraceModelHolder {
+	private static final class TraceNodeModelContainer {
 		private final TraceNode root;
 		private final StacktraceModel model;
-		public TraceModelHolder(TraceNode root, StacktraceModel model) {
+		public TraceNodeModelContainer(TraceNode root, StacktraceModel model) {
 			super();
 			this.root = root;
 			this.model = model;
@@ -410,7 +406,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}	
 	}
 
-	private void setModel(TraceModelHolder holder) {
+	private void setModel(TraceNodeModelContainer holder) {
 		// Check that the model is up to date
 		if (holder.model().equals(createStacktraceModel()) && !browser.isDisposed() ) {
 			setViewerInput(holder.root());
@@ -418,6 +414,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setViewerInput(TraceNode root) {
+		// check that the currentModelCalculator has not been canceled
 		if(!currentModelCalculator.isCancelled()) {
 			Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 			browser.setText(HTML_PAGE);
