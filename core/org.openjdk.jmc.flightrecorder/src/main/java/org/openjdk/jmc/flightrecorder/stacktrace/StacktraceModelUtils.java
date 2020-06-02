@@ -4,9 +4,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 
 /**
- * 
- * StacktraceUtils useful shared functionality on {@link StacktraceModel} 
- *
+ * StacktraceUtils useful shared functionality on {@link StacktraceModel}
  */
 public final class StacktraceModelUtils {
 
