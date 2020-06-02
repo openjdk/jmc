@@ -160,7 +160,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private CompletableFuture<TraceNodeModelContainer> currentModelCalculator;
+	private volatile CompletableFuture<TraceNodeModelContainer> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
@@ -334,10 +334,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
-			if (items != null && items.hasItems() && !items.equals(currentItems)) {
+			if (items != null && !items.equals(currentItems)) {
 				setItems(items);
 			} 
-				
 		}
 	}
 
@@ -351,6 +350,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		if (currentModelCalculator != null) {
 			currentModelCalculator.cancel(true);
 		}
+
 		currentModelCalculator = getModelPreparer(frameSeparator, true);
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
@@ -406,10 +406,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}	
 	}
 
-	private void setModel(TraceNodeModelContainer holder) {
+	private void setModel(TraceNodeModelContainer container) {
 		// Check that the model is up to date
-		if (holder.model().equals(createStacktraceModel()) && !browser.isDisposed() ) {
-			setViewerInput(holder.root());
+		if (container.model().equals(createStacktraceModel()) && !browser.isDisposed() ) {
+			setViewerInput(container.root());
 		}
 	}
 
