@@ -164,7 +164,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private volatile CompletableFuture<TraceNodeModelContainer> currentModelCalculator;
+	private volatile CompletableFuture<ModelsContainer> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
@@ -279,6 +279,34 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * Container for created {@link TraceNode} and {@link StacktraceModel}
+	 *
+	 */
+	private static final class ModelsContainer {
+		private final TraceNode root;
+		private final StacktraceModel model;
+
+		public ModelsContainer(TraceNode root, StacktraceModel model) {
+			super();
+			this.root = root;
+			this.model = model;
+		}
+
+		private TraceNode root() {
+			return root;
+		}
+		
+		private boolean isEqualStacktraceModel(StacktraceModel m) {
+			return model.equals(m);
+		}
+
+		private boolean isReady() {
+			return root != null && model != null;
+		}
+	}
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -367,7 +395,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private CompletableFuture<TraceNodeModelContainer> getModelPreparer(final FrameSeparator separator,
+	private CompletableFuture<ModelsContainer> getModelPreparer(final FrameSeparator separator,
 			final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
 			StacktraceModel model = createStacktraceModel();
@@ -378,36 +406,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			}
-
+			
 			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
-			return new TraceNodeModelContainer(TraceTreeUtils.createTree(root, model), model);
+			return new ModelsContainer(TraceTreeUtils.createTree(root, model), model);
+
 		}, MODEL_EXECUTOR);
 	}
 
-	private static final class TraceNodeModelContainer {
-		private final TraceNode root;
-		private final StacktraceModel model;
-
-		public TraceNodeModelContainer(TraceNode root, StacktraceModel model) {
-			super();
-			this.root = root;
-			this.model = model;
-		}
-
-		private TraceNode root() {
-			return root;
-		}
-
-		private StacktraceModel model() {
-			return model;
-		}
-	}
-
-	private void setModel(TraceNodeModelContainer container) {
-		// Check that the model is up to date
-		if (container.model().equals(createStacktraceModel()) && !browser.isDisposed()) {
+	private void setModel(ModelsContainer container) {
+		// Check that the models are prepared and up to date 
+		if (container.isReady() && container.isEqualStacktraceModel(createStacktraceModel()) && !browser.isDisposed()) {
 			setViewerInput(container.root());
-		}
+		} 
 	}
 
 	private void setViewerInput(TraceNode root) {
