@@ -175,10 +175,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
 		LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
-		ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON,
-				flameviewImageDescriptor(FlameviewImages.ICON_ICICLE_FLIP)),
-		FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON,
-				flameviewImageDescriptor(FlameviewImages.ICON_FLAME_FLIP));
+		ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
+				FlameviewImages.ICON_ICICLE_FLIP)),
+		FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
+				FlameviewImages.ICON_FLAME_FLIP));
 
 		private final String message;
 		private final int action;
@@ -232,13 +232,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ExportActionType {
-		SAVE_AS(getFlameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON,
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT),
-				PlatformUI.getWorkbench().getSharedImages()
-						.getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
-		PRINT(getFlameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON,
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT),
-				PlatformUI.getWorkbench().getSharedImages()
+		SAVE_AS(getFlameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench()
+				.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench()
+						.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
+		PRINT(getFlameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
 						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
 		private final String message;
@@ -279,11 +277,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
 	 * Container for created {@link TraceNode} and {@link StacktraceModel}
-	 *
 	 */
 	private static final class ModelsContainer {
 		private final TraceNode root;
@@ -298,7 +294,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		private TraceNode root() {
 			return root;
 		}
-		
+
 		private boolean isEqualStacktraceModel(StacktraceModel m) {
 			return model.equals(m);
 		}
@@ -312,13 +308,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-		groupByActions = new GroupByAction[] { new GroupByAction(GroupActionType.LAST_FRAME),
-				new GroupByAction(GroupActionType.THREAD_ROOT) };
-		groupByFlameviewActions = new GroupByFlameviewAction[] {
-				new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
-				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH) };
-		exportActions = new ExportAction[] { new ExportAction(ExportActionType.SAVE_AS),
-				new ExportAction(ExportActionType.PRINT) };
+		groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
+				new GroupByAction(GroupActionType.THREAD_ROOT)};
+		groupByFlameviewActions = new GroupByFlameviewAction[] {new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
+				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
+		exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
+				new ExportAction(ExportActionType.PRINT)};
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
 		// methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
@@ -395,8 +390,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private CompletableFuture<ModelsContainer> getModelPreparer(final FrameSeparator separator,
-			final boolean materializeSelectedBranches) {
+	private CompletableFuture<ModelsContainer> getModelPreparer(
+		final FrameSeparator separator, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
 			StacktraceModel model = createStacktraceModel();
 			Fork rootFork = model.getRootFork();
@@ -406,7 +401,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			}
-			
+
 			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
 			return new ModelsContainer(TraceTreeUtils.createTree(root, model), model);
 
@@ -417,7 +412,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Check that the models are prepared and up to date 
 		if (container.isReady() && container.isEqualStacktraceModel(createStacktraceModel()) && !browser.isDisposed()) {
 			setViewerInput(container.root());
-		} 
+		}
 	}
 
 	private void setViewerInput(TraceNode root) {
@@ -448,9 +443,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			FileDialog fd = new FileDialog(browser.getShell(), SWT.SAVE);
 			fd.setText(getFlameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
-			fd.setFilterNames(new String[] { getFlameviewMessage(FLAMEVIEW_JPEG_IMAGE),
-					getFlameviewMessage(FLAMEVIEW_PNG_IMAGE) });
-			fd.setFilterExtensions(new String[] { "*.jpg", "*.png" }); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFilterNames(
+					new String[] {getFlameviewMessage(FLAMEVIEW_JPEG_IMAGE), getFlameviewMessage(FLAMEVIEW_PNG_IMAGE)});
+			fd.setFilterExtensions(new String[] {"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
 			fd.setFileName("flame_graph"); //$NON-NLS-1$
 			fd.setOverwrite(true);
 			if (fd.open() == null) {
@@ -564,7 +559,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return "\"" + key + "\": " + "\"" + value + "\"";
 	}
 
-	private static String loadLibraries(String... libs) {
+	private static String loadLibraries(String ... libs) {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
@@ -593,7 +588,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		} else {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageLoader loader = new ImageLoader();
-			loader.data = new ImageData[] { image.getImageData() };
+			loader.data = new ImageData[] {image.getImageData()};
 			loader.save(baos, SWT.IMAGE_PNG);
 			return Base64.getEncoder().encodeToString(baos.toByteArray());
 		}
