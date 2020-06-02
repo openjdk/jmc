@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
+import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModelUtils.getLastSelectedBranch;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +90,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.ViewPart;
-
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IState;
@@ -866,18 +867,6 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			input.addAll(selectedBranch.getTailFrames());
 			addSelectedBranches(selectedBranch.getEndFork(), input, backwards);
 		}
-	}
-
-	// See JMC-6787
-	@SuppressWarnings("deprecation")
-	private static Branch getLastSelectedBranch(Fork fromFork) {
-		Branch lastSelectedBranch = null;
-		Branch branch = fromFork.getSelectedBranch();
-		while (branch != null) {
-			lastSelectedBranch = branch;
-			branch = branch.getEndFork().getSelectedBranch();
-		}
-		return lastSelectedBranch;
 	}
 
 	private static Fork getRootFork(Fork fork) {
