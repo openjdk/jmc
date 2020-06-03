@@ -164,6 +164,18 @@ public class StacktraceModel {
 		return null;
 	}
 
+	// See JMC-6787
+	@SuppressWarnings("deprecation")
+	public static Branch getLastSelectedBranch(Fork fromFork) {
+		Branch lastSelectedBranch = null;
+		Branch branch = fromFork.getSelectedBranch();
+		while (branch != null) {
+			lastSelectedBranch = branch;
+			branch = branch.getEndFork().getSelectedBranch();
+		}
+		return lastSelectedBranch;
+	}
+
 	/**
 	 * A special marker object that indicates a frame that cannot be determined.
 	 * <p>

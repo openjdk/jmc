@@ -49,7 +49,7 @@ import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlamevie
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
-import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModelUtils.getLastSelectedBranch;
+import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.getLastSelectedBranch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

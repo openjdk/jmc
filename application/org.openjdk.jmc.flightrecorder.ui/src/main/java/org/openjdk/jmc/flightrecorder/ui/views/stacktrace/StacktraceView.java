@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
-import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModelUtils.getLastSelectedBranch;
+import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.getLastSelectedBranch;
 
 import java.util.Arrays;
 import java.util.List;
