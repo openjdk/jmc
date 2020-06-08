@@ -80,7 +80,7 @@ public class AgentController implements AgentControllerMXBean {
 	}
 
 	private Class<?>[] revertAllTransforms() {
-		HashSet<Class<?>> classesToRetransform = new HashSet<Class<?>>();
+		Set<Class<?>> classesToRetransform = new HashSet<>();
 		List<String> classNames = registry.clearAllTransformData();
 		for (String className : classNames ) {
 			try {
@@ -94,7 +94,7 @@ public class AgentController implements AgentControllerMXBean {
 	}
 
 	private Class<?>[] defineSpecificTransforms(List<TransformDescriptor> descriptors) {
-		HashSet<Class<?>> classesToRetransform = new HashSet<Class<?>>();
+		Set<Class<?>> classesToRetransform = new HashSet<>();
 		for (TransformDescriptor descriptor : descriptors) {
 			try {
 				Class<?> classToRetransform = Class.forName(descriptor.getClassName().replace('/', '.'));
