@@ -221,7 +221,7 @@ import java.util.stream.Stream;
 	}
 
 	public void bindTreemapActions() {
-		if (containerLayout.topControl != treemapContainer) {
+		if (containerLayout == null || containerLayout.topControl != treemapContainer) {
 			Stream.of(treemapActions).forEach((action) -> action.setEnabled(false));
 			return;
 		}
