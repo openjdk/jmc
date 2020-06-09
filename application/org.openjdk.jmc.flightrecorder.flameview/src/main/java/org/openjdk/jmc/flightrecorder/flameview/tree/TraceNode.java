@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TraceNode {
+	public static final TraceNode EMPTY = new TraceNode(null, 0, null);
 	private final int value;
 	private final String name;
 	private final String packageName;

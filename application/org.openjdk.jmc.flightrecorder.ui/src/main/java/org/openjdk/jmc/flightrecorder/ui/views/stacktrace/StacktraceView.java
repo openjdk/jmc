@@ -38,6 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -175,6 +177,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 	}
 
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
 	private static final String HELP_CONTEXT_ID = FlightRecorderUI.PLUGIN_ID + ".StacktraceView"; //$NON-NLS-1$
 	// FIXME: Define dynamic color (editable in preferences, to handle dark themes etc.)
 	private static final Color ALTERNATE_COLOR = SWTColorToolkit.getColor(new RGB(255, 255, 240));
@@ -686,7 +689,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				}
 			}
 			return model;
-		});
+		}, MODEL_EXECUTOR);
 	}
 
 	private static Void handleModelBuildException(Throwable ex) {

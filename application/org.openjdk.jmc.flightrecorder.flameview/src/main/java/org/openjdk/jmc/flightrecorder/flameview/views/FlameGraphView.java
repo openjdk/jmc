@@ -62,6 +62,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -164,10 +165,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private volatile CompletableFuture<ModelsContainer> currentModelCalculator;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems = ItemCollectionToolkit.build(Stream.empty());
+	private volatile AtomicBoolean modelCalculationActive = new AtomicBoolean();
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
@@ -282,10 +283,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	 * Container for created {@link TraceNode} and {@link StacktraceModel}
 	 */
 	private static final class ModelsContainer {
+		private static final ModelsContainer EMPTY = new ModelsContainer(null, null);
 		private final TraceNode root;
 		private final StacktraceModel model;
 
-		public ModelsContainer(TraceNode root, StacktraceModel model) {
+		private ModelsContainer(TraceNode root, StacktraceModel model) {
 			super();
 			this.root = root;
 			this.model = model;
@@ -301,6 +303,41 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		private boolean isReady() {
 			return root != null && model != null;
+		}
+	}
+
+	/**
+	 * JsonModel hold the calculated json string and has state that can not be finished due to the
+	 * usage inside the {@link CompletableFuture} future, can be only set to ready
+	 */
+	private static class JSonModelBuilder {
+		private static final JSonModelBuilder EMPTY = new JSonModelBuilder("\"\"", true);
+		private final StringBuilder builder = new StringBuilder();
+		private boolean ready;
+
+		private JSonModelBuilder() {
+			this.ready = false;
+		}
+
+		private JSonModelBuilder(String json, boolean ready) {
+			this.builder.append(json);
+			this.ready = ready;
+		}
+
+		private void append(String s) {
+			this.builder.append(s);
+		}
+
+		private String build() {
+			return builder.toString();
+		}
+
+		private boolean isReady() {
+			return ready;
+		}
+
+		private void setReady() {
+			this.ready = true;
 		}
 	}
 
@@ -373,15 +410,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void setItems(IItemCollection items) {
 		currentItems = items;
 		rebuildModel();
+
 	}
 
 	private void rebuildModel() {
-		// try to cancel downstream calculation
-		if (currentModelCalculator != null) {
-			currentModelCalculator.cancel(true);
+		if (modelCalculationActive.get()) {
+			modelCalculationActive.set(false);
 		}
-
-		currentModelCalculator = getModelPreparer(frameSeparator, true);
+		final CompletableFuture<ModelsContainer> currentModelCalculator = getModelPreparer(createStacktraceModel(),
+				true);
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
 	}
@@ -391,9 +428,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private CompletableFuture<ModelsContainer> getModelPreparer(
-		final FrameSeparator separator, final boolean materializeSelectedBranches) {
+		final StacktraceModel model, final boolean materializeSelectedBranches) {
 		return CompletableFuture.supplyAsync(() -> {
-			StacktraceModel model = createStacktraceModel();
+			modelCalculationActive.set(true);
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
 				Branch selectedBranch = getLastSelectedBranch(rootFork);
@@ -402,9 +439,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				}
 			}
 
-			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
-			return new ModelsContainer(TraceTreeUtils.createTree(root, model), model);
-
+			if (modelCalculationActive.get()) {
+				TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
+				return new ModelsContainer(TraceTreeUtils.createTree(root, model), model);
+			} else {
+				System.out.println("FLAME, getModelPreparer CANCEL");
+				return ModelsContainer.EMPTY;
+			}
 		}, MODEL_EXECUTOR);
 	}
 
@@ -412,6 +453,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Check that the models are prepared and up to date 
 		if (container.isReady() && container.isEqualStacktraceModel(createStacktraceModel()) && !browser.isDisposed()) {
 			setViewerInput(container.root());
+		} else {
+			System.out.println("FLAME, setModel CANCEL");
 		}
 	}
 
@@ -428,9 +471,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				browser.removeProgressListener(this);
 				browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
 						TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
-
-				browser.execute(String.format("processGraph(%s, %s);", toJSon(root), icicleViewActive));
-				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
+				JSonModelBuilder jsonModel = toJSonModel(root);
+				if (jsonModel.isReady()) {
+					browser.execute(String.format("processGraph(%s, %s);", jsonModel.build(), icicleViewActive));
+					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
+				} else {
+					System.out.println("FLAME, setViewerInput CANCEL");
+				}
 			}
 		});
 
@@ -506,37 +553,55 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return null;
 	}
 
-	private static String toJSon(TraceNode root) {
+	private JSonModelBuilder toJSonModel(TraceNode root) {
 		if (root == null) {
-			return "\"\"";
+			return JSonModelBuilder.EMPTY;
 		}
 		return render(root);
 	}
 
-	private static String render(TraceNode root) {
-		StringBuilder builder = new StringBuilder();
+	private JSonModelBuilder render(TraceNode root) {
+		JSonModelBuilder builder = new JSonModelBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
-		renderChildren(builder, root);
+		AtomicBoolean renderActive = new AtomicBoolean(true);
+		renderChildren(renderActive, builder, root);
 		builder.append("]}");
-		return builder.toString();
+		if (renderActive.get()) {
+			builder.setReady();
+		}
+		return builder;
 	}
 
-	private static void render(StringBuilder builder, TraceNode node) {
+	private void render(AtomicBoolean renderActive, JSonModelBuilder builder, TraceNode node) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
-		renderChildren(builder, node);
+		renderChildren(renderActive, builder, node);
 		builder.append("]}");
 	}
 
-	private static void renderChildren(StringBuilder builder, TraceNode node) {
-		for (int i = 0; i < node.getChildren().size(); i++) {
-			render(builder, node.getChildren().get(i));
-			if (i < node.getChildren().size() - 1) {
-				builder.append(",");
+	private void renderChildren(AtomicBoolean renderActive, JSonModelBuilder builder, TraceNode node) {
+
+		int i = 0;
+		while (i < node.getChildren().size()) {
+			if (modelCalculationActive.get()) {
+				render(renderActive, builder, node.getChildren().get(i));
+				if (i < node.getChildren().size() - 1) {
+					builder.append(",");
+				}
+			} else {
+				modelCalculationActive.set(false);
 			}
+			i++;
 		}
+
+//		for (int i = 0; i < node.getChildren().size(); i++) {
+//			render(builder, node.getChildren().get(i));
+//			if (i < node.getChildren().size() - 1) {
+//				builder.append(",");
+//			}
+//		}
 	}
 
 	private static String createJsonRootTraceNode(TraceNode rootNode) {
