@@ -50,6 +50,7 @@ import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCL
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.openjdk.jmc.common.IMCFrame;
@@ -85,17 +86,28 @@ public final class TraceTreeUtils {
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 * 
+	 * @param active
+	 *            is calculation still active
 	 * @param root
 	 *            the root with description
 	 * @param model
 	 *            the model to trace the tree from
 	 * @return the root
 	 */
-	public static TraceNode createTree(TraceNode root, StacktraceModel model) {
+	public static TraceNode createTree(final AtomicBoolean active, TraceNode root, StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
-		for (Branch branch : rootFork.getBranches()) {
-			addBranch(root, branch);
+
+		final Branch[] branches = rootFork.getBranches();
+		int i = 0;
+		while (active.get() && i < branches.length) {
+			addBranch(root, branches[i]);
+			i++;
 		}
+
+		if (i < branches.length) {
+			root.setCanceled();
+		}
+
 		return root;
 	}
 

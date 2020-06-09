@@ -429,8 +429,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private CompletableFuture<ModelsContainer> getModelPreparer(
 		final StacktraceModel model, final boolean materializeSelectedBranches) {
+		modelCalculationActive.set(true);
 		return CompletableFuture.supplyAsync(() -> {
-			modelCalculationActive.set(true);
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
 				Branch selectedBranch = getLastSelectedBranch(rootFork);
@@ -441,9 +441,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 			if (modelCalculationActive.get()) {
 				TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
-				return new ModelsContainer(TraceTreeUtils.createTree(root, model), model);
+				TraceNode traceNode = TraceTreeUtils.createTree(modelCalculationActive, root, model);
+				return traceNode.isCanceled() ? ModelsContainer.EMPTY : new ModelsContainer(traceNode, model);
 			} else {
-				System.out.println("FLAME, getModelPreparer CANCEL");
 				return ModelsContainer.EMPTY;
 			}
 		}, MODEL_EXECUTOR);
@@ -453,9 +453,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Check that the models are prepared and up to date 
 		if (container.isReady() && container.isEqualStacktraceModel(createStacktraceModel()) && !browser.isDisposed()) {
 			setViewerInput(container.root());
-		} else {
-			System.out.println("FLAME, setModel CANCEL");
-		}
+		} 
 	}
 
 	private void setViewerInput(TraceNode root) {
@@ -475,9 +473,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				if (jsonModel.isReady()) {
 					browser.execute(String.format("processGraph(%s, %s);", jsonModel.build(), icicleViewActive));
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
-				} else {
-					System.out.println("FLAME, setViewerInput CANCEL");
-				}
+				} 
 			}
 		});
 
@@ -569,6 +565,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		builder.append("]}");
 		if (renderActive.get()) {
 			builder.setReady();
+			System.out.println("RENDER READY");
+		} else {
+			System.out.println("RENDER CANCELED");
 		}
 		return builder;
 	}
@@ -591,7 +590,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					builder.append(",");
 				}
 			} else {
-				modelCalculationActive.set(false);
+				renderActive.set(false);
 			}
 			i++;
 		}
