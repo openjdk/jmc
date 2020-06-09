@@ -307,21 +307,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	/**
-	 * JsonModel hold the calculated json string and has state that can not be finished due to the
-	 * usage inside the {@link CompletableFuture} future, can be only set to ready
+	 * JSonModelBuilder holds the calculated json string, can be canceled
 	 */
 	private static class JSonModelBuilder {
-		private static final JSonModelBuilder EMPTY = new JSonModelBuilder("\"\"", true);
+		private static final JSonModelBuilder EMPTY = new JSonModelBuilder("\"\"");
 		private final StringBuilder builder = new StringBuilder();
-		private boolean ready;
+		private boolean canceled = false;
 
 		private JSonModelBuilder() {
-			this.ready = false;
 		}
 
-		private JSonModelBuilder(String json, boolean ready) {
+		private JSonModelBuilder(String json) {
 			this.builder.append(json);
-			this.ready = ready;
 		}
 
 		private void append(String s) {
@@ -332,12 +329,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			return builder.toString();
 		}
 
-		private boolean isReady() {
-			return ready;
+		private boolean isCanceled() {
+			return canceled;
 		}
 
-		private void setReady() {
-			this.ready = true;
+		private void setCanceled() {
+			this.canceled = true;
 		}
 	}
 
@@ -467,13 +464,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
-						TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
-				JSonModelBuilder jsonModel = toJSonModel(root);
-				if (jsonModel.isReady()) {
-					browser.execute(String.format("processGraph(%s, %s);", jsonModel.build(), icicleViewActive));
+				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
+				if (!jsonModelBuilder.isCanceled()) {
+					browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
+							TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
+					browser.execute(String.format("processGraph(%s, %s);", jsonModelBuilder.build(), icicleViewActive));
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 				} 
+				
 			}
 		});
 
@@ -563,12 +561,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		AtomicBoolean renderActive = new AtomicBoolean(true);
 		renderChildren(renderActive, builder, root);
 		builder.append("]}");
-		if (renderActive.get()) {
-			builder.setReady();
-			System.out.println("RENDER READY");
-		} else {
-			System.out.println("RENDER CANCELED");
-		}
 		return builder;
 	}
 
@@ -583,24 +575,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void renderChildren(AtomicBoolean renderActive, JSonModelBuilder builder, TraceNode node) {
 
 		int i = 0;
-		while (i < node.getChildren().size()) {
-			if (modelCalculationActive.get()) {
-				render(renderActive, builder, node.getChildren().get(i));
-				if (i < node.getChildren().size() - 1) {
-					builder.append(",");
-				}
-			} else {
+		while (renderActive.get() && i < node.getChildren().size()) {
+			if (!modelCalculationActive.get()) {
 				renderActive.set(false);
+				builder.setCanceled();
+			}
+				
+			render(renderActive, builder, node.getChildren().get(i));
+			if (i < node.getChildren().size() - 1) {
+				builder.append(",");
 			}
 			i++;
 		}
-
-//		for (int i = 0; i < node.getChildren().size(); i++) {
-//			render(builder, node.getChildren().get(i));
-//			if (i < node.getChildren().size() - 1) {
-//				builder.append(",");
-//			}
-//		}
 	}
 
 	private static String createJsonRootTraceNode(TraceNode rootNode) {
