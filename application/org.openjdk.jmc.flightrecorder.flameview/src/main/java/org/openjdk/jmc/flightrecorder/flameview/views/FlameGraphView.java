@@ -450,7 +450,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Check that the models are prepared and up to date 
 		if (container.isReady() && container.isEqualStacktraceModel(createStacktraceModel()) && !browser.isDisposed()) {
 			setViewerInput(container.root());
-		} 
+		}
 	}
 
 	private void setViewerInput(TraceNode root) {
@@ -466,12 +466,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				browser.removeProgressListener(this);
 				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 				if (!jsonModelBuilder.isCanceled()) {
-					browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
-							TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
+					browser.execute(
+							String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
+									TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
 					browser.execute(String.format("processGraph(%s, %s);", jsonModelBuilder.build(), icicleViewActive));
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
-				} 
-				
+				}
+
 			}
 		});
 
@@ -580,7 +581,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				renderActive.set(false);
 				builder.setCanceled();
 			}
-				
+
 			render(renderActive, builder, node.getChildren().get(i));
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
