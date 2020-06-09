@@ -108,7 +108,7 @@ public class Transformer implements ClassFileTransformer {
 					new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain,
 							inspectionClassLoader); 
 			ClassReader reader = new ClassReader(classfileBuffer);
-			reader.accept(visitor, 0);
+			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 			return classWriter.toByteArray();
 		} catch (Throwable t) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
