@@ -86,7 +86,8 @@ final class DefaultIItemResultSet implements IItemResultSet {
 						row[column] = accessors[column].getMember(item);
 					}
 					for (int j = 0; j < aggregators.size(); j++) {
-						row[column + j] = new SingleEntryItemCollection(item).getAggregate(aggregators.get(j));
+						row[column + j] = new SingleEntryItemCollection(item, input.getChunkRanges())
+								.getAggregate(aggregators.get(j));
 					}
 					data.add(row);
 				}

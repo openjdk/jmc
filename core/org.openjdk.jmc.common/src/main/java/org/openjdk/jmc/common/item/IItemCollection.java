@@ -32,6 +32,11 @@
  */
 package org.openjdk.jmc.common.item;
 
+import java.util.Set;
+
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
+
 /**
  * An immutable collection of items.
  */
@@ -63,4 +68,14 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 * @return {@code true} if the collections contains items, {@code false} otherwise
 	 */
 	boolean hasItems();
+
+	/**
+	 * Returns a set of IRange representations of the time ranges of all chunks represented by this
+	 * item collection. This set is not affected by any filtering operations on the item collection
+	 * since its use is to show the time ranges in which events could possibly have been emitted.
+	 * 
+	 * @return a set of IRange objects representing the time ranges of the chunks represented by
+	 *         this IItemCollection
+	 */
+	Set<IRange<IQuantity>> getChunkRanges();
 }

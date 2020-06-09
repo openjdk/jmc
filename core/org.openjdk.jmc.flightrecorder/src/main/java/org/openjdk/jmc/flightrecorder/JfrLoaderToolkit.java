@@ -43,6 +43,7 @@ import java.util.List;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
@@ -58,9 +59,9 @@ public class JfrLoaderToolkit {
 	 *            the files to read the recording from
 	 * @param extensions
 	 *            the extensions to use when parsing the file
-	 * @return an array of EventArrays (one event type per EventArray)
+	 * @return an object holding an array of EventArrays (one event type per EventArray)
 	 */
-	private static EventArray[] loadFile(List<File> files, List<? extends IParserExtension> extensions)
+	private static EventArrays loadFile(List<File> files, List<? extends IParserExtension> extensions)
 			throws IOException, CouldNotLoadRecordingException {
 		List<InputStream> streams = new ArrayList<>(files.size());
 		for (File file : files) {

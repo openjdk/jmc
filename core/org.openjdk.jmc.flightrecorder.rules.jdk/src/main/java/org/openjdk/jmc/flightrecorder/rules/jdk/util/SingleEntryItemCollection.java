@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -45,6 +46,8 @@ import org.openjdk.jmc.common.item.IItemConsumer;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 
 /**
  * Implementation helper class for handling a singular {@link IItem} as an {@link IItemCollection}.
@@ -69,6 +72,11 @@ final class SingleEntryItemCollection implements IItemCollection {
 		@Override
 		public IItemCollection apply(IItemFilter filter) {
 			return this;
+		}
+
+		@Override
+		public Set<IRange<IQuantity>> getChunkRanges() {
+			return null;
 		}
 	};
 
@@ -168,9 +176,11 @@ final class SingleEntryItemCollection implements IItemCollection {
 	}
 
 	private final IItem item;
+	private final Set<IRange<IQuantity>> chunkRanges;
 
-	SingleEntryItemCollection(IItem item) {
+	SingleEntryItemCollection(IItem item, Set<IRange<IQuantity>> chunkRanges) {
 		this.item = item;
+		this.chunkRanges = chunkRanges;
 	}
 
 	@Override
@@ -216,5 +226,10 @@ final class SingleEntryItemCollection implements IItemCollection {
 	@Override
 	public boolean hasItems() {
 		return true;
+	}
+
+	@Override
+	public Set<IRange<IQuantity>> getChunkRanges() {
+		return chunkRanges;
 	}
 }

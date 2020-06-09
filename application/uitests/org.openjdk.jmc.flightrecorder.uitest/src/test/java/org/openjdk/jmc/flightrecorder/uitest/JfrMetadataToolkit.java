@@ -41,6 +41,7 @@ import java.util.TreeMap;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IAccessorKey;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 
 @SuppressWarnings("restriction")
@@ -49,8 +50,8 @@ public class JfrMetadataToolkit {
 	protected static SortedMap<String, SortedMap<String, String>> parseRecordingFile(File recordingFile) {
 		SortedMap<String, SortedMap<String, String>> eventTypeMap = new TreeMap<>();
 		try (InputStream stream = IOToolkit.openUncompressedStream(recordingFile)) {
-			EventArray[] eventArrays = FlightRecordingLoader.loadStream(stream, false, false);
-			for (EventArray entry : eventArrays) {
+			EventArrays eventArrays = FlightRecordingLoader.loadStream(stream, false, false);
+			for (EventArray entry : eventArrays.getArrays()) {
 				SortedMap<String, String> attrs = new TreeMap<>();
 				for (IAccessorKey<?> a : entry.getType().getAccessorKeys().keySet()) {
 					attrs.put(a.getIdentifier(), a.getContentType().getIdentifier());

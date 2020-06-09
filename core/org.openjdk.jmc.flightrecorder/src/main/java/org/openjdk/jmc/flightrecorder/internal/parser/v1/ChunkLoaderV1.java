@@ -56,6 +56,7 @@ public class ChunkLoaderV1 implements IChunkLoader {
 		this.header = header;
 		this.data = data;
 		this.context = context;
+		context.addChunkRange(header.getChunkRange());
 	}
 
 	@Override

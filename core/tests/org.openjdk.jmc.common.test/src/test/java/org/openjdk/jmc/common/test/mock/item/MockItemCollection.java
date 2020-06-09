@@ -33,8 +33,10 @@
 package org.openjdk.jmc.common.test.mock.item;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -44,6 +46,8 @@ import org.openjdk.jmc.common.item.IItemConsumer;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 
 public class MockItemCollection<T, CT extends IType<?>> implements IItemCollection {
 	private List<IItem> items = new ArrayList<>();
@@ -120,5 +124,10 @@ public class MockItemCollection<T, CT extends IType<?>> implements IItemCollecti
 				throw new UnsupportedOperationException();
 			}
 		});
+	}
+
+	@Override
+	public Set<IRange<IQuantity>> getChunkRanges() {
+		return Collections.emptySet();
 	}
 }
