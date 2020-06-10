@@ -103,7 +103,7 @@ public class ItemCollectionToolkit {
 		}
 
 		@Override
-		public Set<IRange<IQuantity>> getChunkRanges() {
+		public Set<IRange<IQuantity>> getTimeRanges() {
 			return chunkRanges;
 		}
 
@@ -132,7 +132,7 @@ public class ItemCollectionToolkit {
 	}
 
 	public static IItemCollection merge(Supplier<Stream<IItemCollection>> items) {
-		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getChunkRanges().stream())
+		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getTimeRanges().stream())
 				.collect(Collectors.toSet());
 		return ItemCollectionToolkit.build(() -> items.get().flatMap(ItemCollectionToolkit::stream), chunkRanges);
 	}

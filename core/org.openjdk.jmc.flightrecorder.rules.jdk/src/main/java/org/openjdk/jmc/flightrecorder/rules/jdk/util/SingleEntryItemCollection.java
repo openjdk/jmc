@@ -75,7 +75,7 @@ final class SingleEntryItemCollection implements IItemCollection {
 		}
 
 		@Override
-		public Set<IRange<IQuantity>> getChunkRanges() {
+		public Set<IRange<IQuantity>> getTimeRanges() {
 			return null;
 		}
 	};
@@ -229,7 +229,7 @@ final class SingleEntryItemCollection implements IItemCollection {
 	}
 
 	@Override
-	public Set<IRange<IQuantity>> getChunkRanges() {
+	public Set<IRange<IQuantity>> getTimeRanges() {
 		return chunkRanges;
 	}
 }
