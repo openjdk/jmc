@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Flight Recorder Model Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder;singleton:=true
 Bundle-Version: 8.0.0.qualifier
@@ -13,6 +13,7 @@ Export-Package: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.parser,
  org.openjdk.jmc.flightrecorder.parser.filter,
  org.openjdk.jmc.flightrecorder.stacktrace,
+ org.openjdk.jmc.flightrecorder.stacktrace.graph,
  org.openjdk.jmc.flightrecorder.stacktrace.messages.internal,
  org.openjdk.jmc.flightrecorder.util
 Require-Bundle: org.openjdk.jmc.common;visibility:=reexport

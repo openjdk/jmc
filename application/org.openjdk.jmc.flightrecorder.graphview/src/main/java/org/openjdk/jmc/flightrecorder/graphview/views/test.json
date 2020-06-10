@@ -1,0 +1,60 @@
+{
+	"children": [
+		{
+			"name": "MyOtherObject.toString()",
+			"value": "14",
+			"children": [
+				{
+					"name": "MyObject.toString()",
+					"value": "3",
+					"children": []
+				},
+				{
+					"name": "MyOtherObject.toString()",
+					"value": "2",
+					"children": [
+						{
+							"name": "Object.toString()",
+							"value": "1",
+							"children": []
+						}
+					]
+				},
+				{
+					"name": "Object.toString()",
+					"value": "4",
+					"children": []
+				},
+				{
+					"name": "Lalala.toString()",
+					"value": "1",
+					"children": [
+						{
+							"name": "Object.toString()",
+							"value": "1",
+							"children": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Object.toString()",
+			"value": "4",
+			"children": []
+		},
+		{
+			"name": "Lalala.toString()",
+			"value": "1",
+			"children": [
+				{
+					"name": "Object.toString()",
+					"value": "1",
+					"children": []
+				}
+			]
+		}
+	],
+	"name":"-- Click me to reset --",
+	"value":"19"
+}
