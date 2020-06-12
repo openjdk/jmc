@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.ui;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -53,14 +54,17 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.ui.EventTypeFolderNode.TypeWithCategory;
 
 public class StreamModel {
 
 	private final EventArray[] eventsByType;
+	private final Set<IRange<IQuantity>> chunkRanges;
 
-	StreamModel(EventArray[] eventsByType) {
-		this.eventsByType = eventsByType;
+	StreamModel(EventArrays eventsByType) {
+		this.eventsByType = eventsByType.getArrays();
+		this.chunkRanges = eventsByType.getChunkTimeranges();
 	}
 
 	public IItemCollection getItems(IRange<IQuantity> range, IItemFilter filter) {
@@ -76,17 +80,22 @@ public class StreamModel {
 						eventType);
 			}
 		}).filter(Objects::nonNull).toArray(IItemIterable[]::new);
-		return ItemCollectionToolkit.build(() -> Arrays.stream(rangedStreams));
+		return ItemCollectionToolkit.build(() -> Arrays.stream(rangedStreams), chunkRanges);
 	}
 
 	public IItemCollection getItems(IRange<IQuantity> range) {
-		return ItemCollectionToolkit.build(() -> Arrays.stream(eventsByType).map(ea -> ItemIterableToolkit
-				.build(() -> itemSupplier(ea.getEvents(), ea.getType(), range).get(), ea.getType())));
+		return ItemCollectionToolkit.build(
+				() -> Arrays.stream(eventsByType)
+						.map(ea -> ItemIterableToolkit
+								.build(() -> itemSupplier(ea.getEvents(), ea.getType(), range).get(), ea.getType())),
+				chunkRanges);
 	}
 
 	public IItemCollection getItems() {
-		return ItemCollectionToolkit.build(() -> Arrays.stream(eventsByType)
-				.map(ea -> ItemIterableToolkit.build(() -> Arrays.stream(ea.getEvents()), ea.getType())));
+		return ItemCollectionToolkit.build(
+				() -> Arrays.stream(eventsByType)
+						.map(ea -> ItemIterableToolkit.build(() -> Arrays.stream(ea.getEvents()), ea.getType())),
+				chunkRanges);
 	}
 
 	private static Supplier<Stream<IItem>> itemSupplier(IItem[] events, IType<IItem> ofType, IRange<IQuantity> range) {

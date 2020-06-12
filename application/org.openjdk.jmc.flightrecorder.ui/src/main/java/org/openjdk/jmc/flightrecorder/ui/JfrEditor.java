@@ -78,6 +78,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.util.ExceptionToolkit;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
@@ -373,7 +374,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		setPartName(ei.getName());
 	}
 
-	void repositoryLoaded(EventArray[] repo, IRange<IQuantity> fullRange) {
+	void repositoryLoaded(EventArrays repo, IRange<IQuantity> fullRange) {
 		if (!resultContainer.isDisposed()) {
 			items = new StreamModel(repo);
 			this.fullRange = fullRange;

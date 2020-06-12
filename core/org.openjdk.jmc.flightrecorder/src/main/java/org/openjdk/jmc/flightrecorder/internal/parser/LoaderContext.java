@@ -34,15 +34,20 @@ package org.openjdk.jmc.flightrecorder.internal.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.parser.RepositoryBuilder.EventTypeEntry;
 import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
@@ -58,6 +63,7 @@ public class LoaderContext {
 	private final ConcurrentHashMap<Object, CanonicalConstantMap<Object>> constantsByType = new ConcurrentHashMap<>();
 	private final boolean hideExperimentals;
 	private final List<? extends IParserExtension> extensions;
+	private final Set<IRange<IQuantity>> chunkRanges;
 
 	public LoaderContext(List<? extends IParserExtension> extensions, boolean hideExperimentals) {
 		this.extensions = extensions;
@@ -68,6 +74,7 @@ public class LoaderContext {
 			sinkFactory = extensions.get(i).getEventSinkFactory(sinkFactory);
 		}
 		this.sinkFactory = sinkFactory;
+		this.chunkRanges = new HashSet<>();
 	}
 
 	public CanonicalConstantMap<Object> getConstantPool(Object poolKey) {
@@ -94,8 +101,12 @@ public class LoaderContext {
 		return sinkFactory;
 	}
 
+	public void addChunkRange(IRange<IQuantity> chunkRange) {
+		this.chunkRanges.add(chunkRange);
+	}
+
 	@SuppressWarnings("deprecation")
-	public EventArray[] buildEventArrays() throws CouldNotLoadRecordingException {
+	public EventArrays buildEventArrays() throws CouldNotLoadRecordingException {
 		sinkFactory.flush();
 		Iterator<EventTypeEntry> eventTypes = repositoryBuilder.getEventTypes();
 		ArrayList<EventArray> eventArrays = new ArrayList<>();
@@ -123,7 +134,7 @@ public class LoaderContext {
 			}
 
 		}
-		return eventArrays.toArray(new EventArray[eventArrays.size()]);
+		return new EventArrays(eventArrays.toArray(new EventArray[eventArrays.size()]), chunkRanges);
 	}
 
 }
