@@ -656,6 +656,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			if (items == null) {
 				setItems(ItemCollectionToolkit.build(Stream.empty()));
 			} else if (!items.equals(itemsToShow)) {
+				System.out.println("STACKTRACE: selectionChanged: " + items.hashCode());
 				setItems(items);
 			}
 		}
