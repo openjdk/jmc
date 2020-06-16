@@ -400,8 +400,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
 			if (items == null) {
 				setItems(ItemCollectionToolkit.build(Stream.empty()));
-			} else if(!items.equals(currentItems)) {
-				System.out.println("FLAME: selectionChanged: " + items.hashCode());
+			} else if (!items.equals(currentItems)) {
 				setItems(items);
 			}
 		}
@@ -412,13 +411,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		rebuildModel();
 
 	}
-	
+
 	private void rebuildModel() {
 		if (modelCalculationActive.get()) {
 			modelCalculationActive.set(false);
-		}	
-				
-		final CompletableFuture<ModelsContainer> currentModelCalculator = getModelPreparer(createStacktraceModel(), true);		
+		}
+
+		final CompletableFuture<ModelsContainer> currentModelCalculator = getModelPreparer(createStacktraceModel(),
+				true);
 		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
 				.exceptionally(FlameGraphView::handleModelBuildException);
 	}
@@ -426,7 +426,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private StacktraceModel createStacktraceModel() {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
-	
+
 	private CompletableFuture<ModelsContainer> getModelPreparer(
 		final StacktraceModel model, final boolean materializeSelectedBranches) {
 		modelCalculationActive.set(true);
@@ -453,9 +453,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Check that the models are prepared and up to date 
 		if (container.isReady() && !browser.isDisposed() && container.isEqualStacktraceModel(createStacktraceModel())) {
 			setViewerInput(container.root());
-		} else {
-			System.out.println("FLAME: setModel CANCELED");
-		}
+		} 
 	}
 
 	private void setViewerInput(TraceNode root) {
