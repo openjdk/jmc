@@ -98,10 +98,16 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
 
 			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
-
+			
 			// Simply rethrow. Event commits are instrumented by onMethodExit()
 			shouldInstrumentThrow = true;
 			visitInsn(ATHROW);
+		} else if (transformDescriptor.isEmitOnException()) {
+			// If we've specified that we only want to emit on exception we should commit event here
+			visitLabel(tryEnd);
+			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
+
+			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
 		}
 
 		super.visitEnd();
@@ -232,7 +238,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		if (opcode == ATHROW && !shouldInstrumentThrow) {
 			return;
 		}
-
+		if (!transformDescriptor.isEmitOnException() )
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			ReturnValue returnValue = transformDescriptor.getReturnValue();
 			if (returnValue != null) {
