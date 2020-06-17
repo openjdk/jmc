@@ -102,8 +102,7 @@ public class Breadcrumb extends Canvas {
 		addMouseMoveListener(this::onMouseMove);
 	}
 
-	/* package-private */
-	static Composite checkNull(Composite control) {
+	/* package-private */ static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}

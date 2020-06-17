@@ -52,7 +52,7 @@ import org.eclipse.jface.window.ToolTip;
 
 	@Override
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		Composite ret = new Composite(parent, SWT.NONE);
+		Composite container = new Composite(parent, SWT.NONE);
 
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.marginLeft = PADDING;
@@ -60,14 +60,14 @@ import org.eclipse.jface.window.ToolTip;
 		rowLayout.marginRight = PADDING;
 		rowLayout.marginBottom = PADDING;
 
-		ret.setLayout(rowLayout);
-		ret.setBackground(parent.getBackground());
+		container.setLayout(rowLayout);
+		container.setBackground(parent.getBackground());
 
-		Label label = new Label(ret, SWT.NONE);
+		Label label = new Label(container, SWT.NONE);
 		label.setText(item != null ? item.getToolTipText() : ""); //$NON-NLS-1$
 		label.setForeground(parent.getForeground());
 
-		return ret;
+		return container;
 	}
 
 	public void setItem(TreemapItem item) {

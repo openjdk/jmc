@@ -111,7 +111,7 @@ public class TreemapPageBookView extends PageBookView {
 
 		treemapActions = new TreemapAction[] {new TreemapAction(TreemapAction.TreemapActionType.ZOOM_IN), //
 				new TreemapAction(TreemapAction.TreemapActionType.ZOOM_OUT), //
-				new TreemapAction(TreemapAction.TreemapActionType.ZOOM_OFF), //
+				new TreemapAction(TreemapAction.TreemapActionType.ZOOM_OFF) //
 		};
 		Stream.of(treemapActions).forEach((action) -> action.setEnabled(false));
 

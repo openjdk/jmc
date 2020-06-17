@@ -53,7 +53,7 @@
       <import plugin="org.eclipse.ui"/>
    </requires>
 
-	<plugin
+   <plugin
          id="org.openjdk.jmc.joverflow.ext.treemap"
          download-size="0"
          install-size="0"

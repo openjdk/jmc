@@ -122,8 +122,7 @@ public class TreemapItem extends Item {
 		}
 	}
 
-	/* package-private */
-	static TreemapItem checkNull(TreemapItem item) {
+	/* package-private */ static TreemapItem checkNull(TreemapItem item) {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}

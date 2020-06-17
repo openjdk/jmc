@@ -35,16 +35,16 @@
 <?eclipse version="3.4"?>
 <plugin>
 
- 	<extension point="org.eclipse.ui.views">
-		<category name="JOverflow" id="JOverflow"/>
-		<view
-            allowMultiple="false"
-            category="JOverflow"
-            class="org.openjdk.jmc.joverflow.ext.treemap.TreemapPageBookView"
-            id="org.openjdk.jmc.joverflow.ext.treemap.TreemapPageBookView"
-            icon="icons/treemap.png"
-            name="JOverflow Treemap"
-            restorable="true">
-		</view>
-	</extension>
+    <extension point="org.eclipse.ui.views">
+        <category name="JOverflow" id="JOverflow"/>
+        <view
+              allowMultiple="false"
+              category="JOverflow"
+              class="org.openjdk.jmc.joverflow.ext.treemap.TreemapPageBookView"
+              id="org.openjdk.jmc.joverflow.ext.treemap.TreemapPageBookView"
+              icon="icons/treemap.png"
+              name="JOverflow Treemap"
+              restorable="true">
+        </view>
+    </extension>
 </plugin>
