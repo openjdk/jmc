@@ -33,51 +33,47 @@
  */
 package org.openjdk.jmc.joverflow.ext.treemap;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.openjdk.jmc.ui.CoreImages;
+import org.openjdk.jmc.ui.MCAbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
-/* package-private */ class TreemapAction extends Action {
-	private static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
+/**
+ * The activator class controls the plug-in life cycle.
+ */
+public class JOverflowTreemapPlugin extends MCAbstractUIPlugin {
 
-	private final TreemapActionType actionType;
-	private Runnable runnable = () -> {
-	};
+	// The plug-in ID
+	private static final String PLUGIN_ID = "org.openjdk.jmc.joverflow.ext.treemap"; //$NON-NLS-1$
 
-	TreemapAction(TreemapActionType actionType) {
-		super(actionType.message, actionType.action);
-		this.actionType = actionType;
-		setToolTipText(actionType.message);
-		setImageDescriptor(actionType.imageDescriptor);
+	static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
+
+	// The shared instance
+	private static JOverflowTreemapPlugin m_plugin;
+
+	/**
+	 * The constructor
+	 */
+	public JOverflowTreemapPlugin() {
+		super(PLUGIN_ID);
 	}
 
 	@Override
-	public void run() {
-		runnable.run();
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		m_plugin = this;
 	}
 
-	public void setRunnable(Runnable callback) {
-		runnable = callback;
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		m_plugin = null;
+		super.stop(context);
 	}
 
-	public TreemapActionType getType() {
-		return actionType;
-	}
-
-	enum TreemapActionType {
-		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN), // 
-		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT), // 
-		ZOOM_RESET(Messages.TreemapAction_ZOOM_RESET_DESCRIPTION, IAction.AS_PUSH_BUTTON, JOverflowTreemapPlugin.getDefault().getMCImageDescriptor(JOverflowTreemapPlugin.ICON_RESET));
-
-		private final String message;
-		private final int action;
-		private final ImageDescriptor imageDescriptor;
-
-		TreemapActionType(String message, int action, ImageDescriptor imageDescriptor) {
-			this.message = message;
-			this.action = action;
-			this.imageDescriptor = imageDescriptor;
-		}
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
+	public static JOverflowTreemapPlugin getDefault() {
+		return m_plugin;
 	}
 }

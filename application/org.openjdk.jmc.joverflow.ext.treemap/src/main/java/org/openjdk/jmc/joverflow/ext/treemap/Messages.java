@@ -40,7 +40,7 @@ public class Messages extends NLS {
 
 	public static String TreemapAction_ZOOM_IN_DESCRIPTION;
 	public static String TreemapAction_ZOOM_OUT_DESCRIPTION;
-	public static String TreemapAction_ZOOM_OFF_DESCRIPTION;
+	public static String TreemapAction_ZOOM_RESET_DESCRIPTION;
 	public static String TreemapPageBookView_NO_JOVERFLOW_EDITOR_SELECTED;
 	public static String TreemapPage_NO_INSTANCES_SELECTED;
 

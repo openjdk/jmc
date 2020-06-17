@@ -242,7 +242,7 @@ import java.util.stream.Stream;
 				action.setEnabled(top.getParentItem() != null);
 				action.setRunnable(() -> treemap.setTopItem(top.getParentItem()));
 				break;
-			case ZOOM_OFF:
+			case ZOOM_RESET:
 				action.setEnabled(top != root);
 				action.setRunnable(() -> treemap.setTopItem(root));
 			}
