@@ -68,7 +68,8 @@ import org.openjdk.jmc.ui.CoreImages;
 	enum TreemapActionType {
 		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN), // 
 		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT), // 
-		ZOOM_RESET(Messages.TreemapAction_ZOOM_RESET_DESCRIPTION, IAction.AS_PUSH_BUTTON, JOverflowTreemapPlugin.getDefault().getMCImageDescriptor(JOverflowTreemapPlugin.ICON_RESET));
+		ZOOM_RESET(Messages.TreemapAction_ZOOM_RESET_DESCRIPTION, IAction.AS_PUSH_BUTTON, JOverflowTreemapPlugin
+				.getDefault().getMCImageDescriptor(JOverflowTreemapPlugin.ICON_RESET));
 
 		private final String message;
 		private final int action;
