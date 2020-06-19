@@ -61,7 +61,6 @@ public class DropdownLaneFilter extends Composite {
 	private Shell shell;
 	private ThreadGraphLanes lanes;
 	private EditLanesContainer container;
-
 	public DropdownLaneFilter(Composite parent, ThreadGraphLanes lanes, MCContextMenuManager[] mms) {
 		super(parent, SWT.NONE);
 		this.lanes = lanes;

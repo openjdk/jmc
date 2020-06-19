@@ -75,7 +75,6 @@ public class TimeFilter extends Composite {
 
 	public TimeFilter(Composite parent, IRange<IQuantity> recordingRange, Listener resetListener) {
 		super(parent, SWT.NONE);
-		this.setBackground(Palette.getThreadsPageBackgroundColor());
 		this.setLayout(new GridLayout(7, false));
 
 		inspectRecordingRange(recordingRange);
@@ -83,17 +82,14 @@ public class TimeFilter extends Composite {
 		Label eventsLabel = new Label(this, SWT.LEFT);
 		eventsLabel.setText(Messages.TimeFilter_FILTER_EVENTS);
 		eventsLabel.setFont(JFaceResources.getFontRegistry().get(JFaceResources.BANNER_FONT));
-		eventsLabel.setBackground(Palette.getThreadsPageBackgroundColor());
 
 		Label fromLabel = new Label(this, SWT.CENTER);
 		fromLabel.setText(Messages.TimeFilter_FROM);
-		fromLabel.setBackground(Palette.getThreadsPageBackgroundColor());
 
 		startDisplay = new TimeDisplay(this, FilterType.START, recordingRange.getStart());
 
 		Label toLabel = new Label(this, SWT.CENTER);
 		toLabel.setText(Messages.TimeFilter_TO);
-		toLabel.setBackground(Palette.getThreadsPageBackgroundColor());
 
 		endDisplay = new TimeDisplay(this, FilterType.END, recordingRange.getEnd());
 
@@ -158,7 +154,6 @@ public class TimeFilter extends Composite {
 			super(parent, SWT.NONE);
 			this.type = type;
 			this.defaultTime = defaultTime;
-			this.setBackground(Palette.getThreadsPageBackgroundColor());
 			this.setLayout(new GridLayout());
 			timeText = new Text(this, SWT.SEARCH | SWT.SINGLE);
 			// if the recording spans multiple days, include the date in the time display

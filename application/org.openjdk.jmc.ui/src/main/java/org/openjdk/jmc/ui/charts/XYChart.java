@@ -51,7 +51,8 @@ import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor.ITick;
-import org.openjdk.jmc.ui.misc.ChartDisplayControlBar;
+import org.openjdk.jmc.ui.misc.ChartButtonGroup;
+import org.openjdk.jmc.ui.misc.ChartControlBar;
 import org.openjdk.jmc.ui.misc.TimelineCanvas;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
@@ -89,8 +90,8 @@ public class XYChart {
 	private double zoomPanPower = ZOOM_PAN_FACTOR / ZOOM_PAN_MODIFIER;
 	private double currentZoom;
 	private int zoomSteps;
-	private ChartDisplayControlBar displayBar;
-	private ChartFilterControlBar filterBar;
+	private ChartButtonGroup buttonGroup;
+	private ChartControlBar controlBar;
 	private Stack<Integer> modifiedSteps;
 	private TimelineCanvas timelineCanvas;
 	private int longestCharWidth = 0;
@@ -105,12 +106,12 @@ public class XYChart {
 
 	// JFR Threads Page
 	public XYChart(IRange<IQuantity> range, IXDataRenderer rendererRoot, int xOffset, Integer yOffset,
-			TimelineCanvas timelineCanvas, ChartFilterControlBar filterBar, ChartDisplayControlBar displayBar) {
+			TimelineCanvas timelineCanvas, ChartControlBar controlBar, ChartButtonGroup buttonGroup) {
 		this(range.getStart(), range.getEnd(), rendererRoot, xOffset);
 		this.yOffset = yOffset;
 		this.timelineCanvas = timelineCanvas;
-		this.filterBar = filterBar;
-		this.displayBar = displayBar;
+		this.controlBar = controlBar;
+		this.buttonGroup = buttonGroup;
 		this.rangeDuration = range.getExtent();
 		this.currentZoom = BASE_ZOOM_LEVEL;
 		this.isZoomCalculated = false;
@@ -216,8 +217,8 @@ public class XYChart {
 	}
 
 	public void updateZoomPanIndicator() {
-		if (displayBar != null) {
-			displayBar.updateZoomPanIndicator();
+		if (buttonGroup != null) {
+			buttonGroup.updateZoomPanIndicator();
 		}
 	}
 
@@ -434,8 +435,8 @@ public class XYChart {
 		}
 		currentStart = newStart;
 		currentEnd = newEnd;
-		filterBar.setStartTime(currentStart);
-		filterBar.setEndTime(currentEnd);
+		controlBar.setStartTime(currentStart);
+		controlBar.setEndTime(currentEnd);
 		isZoomCalculated = true;
 		return true;
 	}
@@ -515,8 +516,6 @@ public class XYChart {
 		} else {
 			zoomOut(steps);
 		}
-		// set displayBar text
-		displayBar.setZoomPercentageText(currentZoom);
 		return true;
 	}
 
@@ -592,7 +591,6 @@ public class XYChart {
 		zoomSteps = 0;
 		zoomPanPower = ZOOM_PAN_FACTOR / ZOOM_PAN_MODIFIER;
 		currentZoom = BASE_ZOOM_LEVEL;
-		displayBar.setZoomPercentageText(currentZoom);
 		modifiedSteps = new Stack<Integer>();
 	}
 
@@ -608,8 +606,6 @@ public class XYChart {
 		double percentage = calculateZoom(newStart, newEnd);
 		zoomSteps = calculateZoomSteps(percentage);
 		currentZoom = BASE_ZOOM_LEVEL + (percentage * 100);
-		displayBar.setScaleValue(zoomSteps);
-		displayBar.setZoomPercentageText(currentZoom);
 	}
 
 	/**
@@ -679,9 +675,9 @@ public class XYChart {
 				currentStart = QuantitiesToolkit.min(rangeStart, currentStart);
 				currentEnd = QuantitiesToolkit.max(rangeEnd, currentEnd);
 			}
-			if (filterBar != null) {
-				filterBar.setStartTime(currentStart);
-				filterBar.setEndTime(currentEnd);
+			if (controlBar != null) {
+				controlBar.setStartTime(currentStart);
+				controlBar.setEndTime(currentEnd);
 			}
 			rangeListeners.stream().forEach(l -> l.accept(getVisibleRange()));
 		}

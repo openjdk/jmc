@@ -68,7 +68,6 @@ import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorSta
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
-import org.openjdk.jmc.ui.charts.ChartFilterControlBar;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.XYChart;
@@ -76,7 +75,8 @@ import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.misc.ActionUiToolkit;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
-import org.openjdk.jmc.ui.misc.ChartDisplayControlBar;
+import org.openjdk.jmc.ui.misc.ChartControlBar;
+import org.openjdk.jmc.ui.misc.ChartButtonGroup;
 import org.openjdk.jmc.ui.misc.ChartLaneHeightControls;
 import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
@@ -92,11 +92,11 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	private static final int TIMELINE_HEIGHT = 40;
 	private static final int X_OFFSET = 0;
 	private static final int Y_OFFSET = 0;
-	protected ChartFilterControlBar filterBar;
+	protected ChartControlBar controlBar;
 	protected ChartTextCanvas textCanvas;
 	protected ItemHistogram hiddenTable;
 	protected IPageContainer pageContainer;
-	private ChartDisplayControlBar displayBar;
+	private ChartButtonGroup buttonGroup;
 	private Composite hiddenTableContainer;
 	private IItemCollection selectionItems;
 	private IItemFilter pageFilter;
@@ -158,9 +158,9 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		scPageContainer.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				int width = filterBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-				int height = filterBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
-						+ displayBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+				int width = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+				int height = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
+						+ buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 				if (width > 0 && height > 0) {
 					scPageContainer.setMinSize(scPageContainer.computeSize(width, height));
 					scPageContainer.removeListener(SWT.Resize, this);
@@ -175,12 +175,12 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 				onSetRange(false);
 			}
 		};
-		filterBar = new ChartFilterControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
-		filterBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		controlBar = new ChartControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
+		controlBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
-		// Container to hold the chart (& timeline) and display toolbar
+		// Container to hold the chart (& timeline)
 		Composite graphContainer = toolkit.createComposite(chartContainer);
-		GridLayout gridLayout = new GridLayout(2, false);
+		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		graphContainer.setLayout(gridLayout);
@@ -272,7 +272,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		timelineCanvas.setLayoutData(gridData);
 
 		// add the display bar to the right of the chart scrolled composite
-		displayBar = new ChartDisplayControlBar(graphContainer);
+		buttonGroup = controlBar.getButtonGroup();
 
 		allChartSeriesActions = initializeChartConfiguration(state);
 		IState chartState = state.getChild(CHART);
@@ -285,7 +285,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		DataPageToolkit.createChartTimestampTooltip(chartCanvas);
 
 		chart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), X_OFFSET, Y_OFFSET,
-				timelineCanvas, filterBar, displayBar);
+				timelineCanvas, controlBar, buttonGroup);
 		DataPageToolkit.setChart(chartCanvas, chart, pageContainer::showSelection);
 		DataPageToolkit.setChart(textCanvas, chart, pageContainer::showSelection);
 		SelectionStoreActionToolkit.addSelectionStoreRangeActions(pageContainer.getSelectionStore(), chart,
@@ -295,13 +295,15 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 				JfrAttributes.LIFETIME, NLS.bind(Messages.ChartAndTableUI_TIMELINE_SELECTION, form.getText()),
 				textCanvas.getContextMenu());
 
-		// Wire-up the chart & text canvases to the filter and display bars
-		displayBar.setChart(chart);
-		displayBar.setChartCanvas(chartCanvas);
-		displayBar.setTextCanvas(textCanvas);
-		displayBar.createZoomPan(zoomPanContainer);
-		chartCanvas.setZoomOnClickListener(mouseDown -> displayBar.zoomOnClick(mouseDown));
-		chartCanvas.setZoomToSelectionListener(() -> displayBar.zoomToSelection());
+
+		chartCanvas.setZoomOnClickListener(mouseDown -> buttonGroup.zoomOnClick(mouseDown));
+		chartCanvas.setZoomToSelectionListener(() -> buttonGroup.zoomToSelection());
+
+		// Wire-up the chart & text canvases to the control bar and button group
+		controlBar.setChart(chart);
+		controlBar.setChartCanvas(chartCanvas);
+		controlBar.setTextCanvas(textCanvas);
+		buttonGroup.createZoomPan(zoomPanContainer);
 		timelineCanvas.setChart(chart);
 
 		if (chartState != null) {
@@ -337,7 +339,6 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
 		chart.resetZoomFactor();
-		displayBar.resetZoomScale();
 		buildChart();
 	}
 

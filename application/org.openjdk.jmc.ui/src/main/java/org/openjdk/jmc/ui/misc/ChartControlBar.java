@@ -31,50 +31,60 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.charts;
+package org.openjdk.jmc.ui.misc;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
-import org.openjdk.jmc.ui.misc.ChartCanvas;
-import org.openjdk.jmc.ui.misc.PatternFly.Palette;
-import org.openjdk.jmc.ui.misc.TimeFilter;
+import org.openjdk.jmc.ui.charts.XYChart;
 
-public class ChartFilterControlBar extends Composite {
+public class ChartControlBar extends Composite {
 
-	private static final String THREADS_LABEL = "Threads";
-
+	private ChartButtonGroup buttonGroup;
+	private Composite laneFilterContainer;
 	private TimeFilter timeFilter;
 
-	public ChartFilterControlBar(Composite parent, Listener resetListener, IRange<IQuantity> recordingRange) {
+	public ChartControlBar(Composite parent, Listener resetListener, IRange<IQuantity> recordingRange) {
 		super(parent, SWT.NONE);
 		this.setLayout(new GridLayout(3, false));
-		this.setBackground(Palette.getThreadsPageBackgroundColor());
-		Label nameLabel = new Label(this, SWT.CENTER | SWT.HORIZONTAL);
-		nameLabel.setText(THREADS_LABEL);
-		nameLabel.setBackground(Palette.getThreadsPageBackgroundColor());
-		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, true);
-		gd.widthHint = 180;
-		nameLabel.setLayoutData(gd);
-		nameLabel.setFont(JFaceResources.getFontRegistry().get(JFaceResources.BANNER_FONT));
 
 		timeFilter = new TimeFilter(this, recordingRange, resetListener);
 		timeFilter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+		laneFilterContainer = new Composite(this, SWT.NONE);
+		laneFilterContainer.setLayout(new GridLayout());
+
+		Composite buttonGroupContainer = new Composite(this, SWT.NONE);
+		buttonGroupContainer.setLayout(new GridLayout());
+		buttonGroupContainer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		buttonGroup = new ChartButtonGroup(buttonGroupContainer);
+	}
+
+	public Composite getLaneFilterContainer() {
+		return laneFilterContainer;
+	}
+
+	public ChartButtonGroup getButtonGroup() {
+		return buttonGroup;
 	}
 
 	public void setChart(XYChart chart) {
+		buttonGroup.setChart(chart);
 		timeFilter.setChart(chart);
 	}
 
 	public void setChartCanvas(ChartCanvas canvas) {
+		buttonGroup.setChartCanvas(canvas);
 		timeFilter.setChartCanvas(canvas);
+	}
+
+	public void setTextCanvas(ChartTextCanvas textCanvas) {
+		buttonGroup.setTextCanvas(textCanvas);
 	}
 
 	public void setStartTime(IQuantity startTime) {

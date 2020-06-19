@@ -204,18 +204,16 @@ public class ThreadsPage extends AbstractDataPage {
 							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE)));
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
-			setupFilterBar();
+			setupLaneFilter();
 			buildChart();
 			chart.setVisibleRange(visibleRange.getStart(), visibleRange.getEnd());
 			onFilterChange(tableFilter);
 		}
 
-		private void setupFilterBar() {
+		private void setupLaneFilter() {
 			MCContextMenuManager[] mms = {mmChart, mmText};
-			laneFilter = new DropdownLaneFilter(filterBar, lanes, mms);
+			laneFilter = new DropdownLaneFilter(controlBar.getLaneFilterContainer(), lanes, mms);
 			laneFilter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-			filterBar.setChart(chart);
-			filterBar.setChartCanvas(chartCanvas);
 		}
 
 		/**
