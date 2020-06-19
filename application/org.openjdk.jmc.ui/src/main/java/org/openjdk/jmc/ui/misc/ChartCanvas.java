@@ -77,9 +77,8 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class ChartCanvas extends Canvas {
-	private static final int DEFAULT_LANE_HEIGHT = 50;
-	private int laneHeight = DEFAULT_LANE_HEIGHT;
-	private int minLaneheight = 20;
+	private int laneHeight;
+	private int minLaneHeight = -1;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
 	private List<Rectangle2D> highlightRects;
@@ -232,6 +231,10 @@ public class ChartCanvas extends Canvas {
 		@Override
 		public void paintControl(PaintEvent e) {
 			Rectangle rect = new Rectangle(0, 0, getParent().getSize().x, getParent().getSize().y);
+			if (minLaneHeight == -1) {
+				minLaneHeight = calculateMinLaneHeight(rect);
+				laneHeight = minLaneHeight;
+			}
 			if (getNumItems() == 0) {
 				rect = getClientArea();
 			} else if (getNumItems() == 1 || (laneHeight * getNumItems() < rect.height)) {
@@ -242,7 +245,7 @@ public class ChartCanvas extends Canvas {
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
 				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
-				minLaneheight = Math.max(20, (int) (g2d.getFontMetrics().getHeight() * xScale + 3));
+				minLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
 				Point adjusted = translateDisplayToImageCoordinates(rect.width, rect.height);
 				g2d.setColor(Palette.PF_BLACK_100.getAWTColor());
 				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
@@ -279,12 +282,16 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
-	public void adjustLaneHeight(int amount) {
-		laneHeight = Math.min(Math.max(minLaneheight, laneHeight + amount), DEFAULT_LANE_HEIGHT);
+	private int calculateMinLaneHeight(Rectangle rect) {
+		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
 	}
 
-	public void resetLaneHeight() {
-		laneHeight = DEFAULT_LANE_HEIGHT;
+	void adjustLaneHeight(int amount) {
+		laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+	}
+
+	void resetLaneHeight() {
+		laneHeight = minLaneHeight;
 	}
 
 	class Zoomer implements Listener {

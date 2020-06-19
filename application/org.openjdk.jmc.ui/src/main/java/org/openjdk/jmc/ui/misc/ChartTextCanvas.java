@@ -67,9 +67,8 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class ChartTextCanvas extends Canvas {
-	private static final int DEFAULT_LANE_HEIGHT = 50;
-	private int laneHeight = DEFAULT_LANE_HEIGHT;
-	private int minLaneheight = 20;
+	private int laneHeight;
+	private int minLaneHeight = -1;
 	private int numItems;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
@@ -220,13 +219,17 @@ public class ChartTextCanvas extends Canvas {
 			int minScrollWidth = (int) ((awtChart.getLongestCharWidth() + 10) * xScale);
 			int rectWidth = Math.max(minScrollWidth, getParent().getSize().x);
 			Rectangle rect = new Rectangle(0, 0, rectWidth, getParent().getSize().y);
+			if (minLaneHeight == -1) {
+				minLaneHeight = calculateMinLaneHeight(rect);
+				laneHeight = minLaneHeight;
+			}
 			if (getNumItems() != 1 && !(laneHeight * getNumItems() < rect.height)) {
 				rect.height = laneHeight * getNumItems();
 			}
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
 				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
-				minLaneheight = Math.max(20, (int) (g2d.getFontMetrics().getHeight() * xScale + 3));
+				minLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
 				Point adjusted = chartCanvas.translateDisplayToImageCoordinates(rect.width, rect.height);
 				g2d.setColor(Palette.PF_BLACK_100.getAWTColor());
 				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
@@ -241,12 +244,16 @@ public class ChartTextCanvas extends Canvas {
 		}
 	}
 
-	public void adjustLaneHeight(int amount) {
-		laneHeight = Math.min(Math.max(minLaneheight, laneHeight + amount), DEFAULT_LANE_HEIGHT);
+	private int calculateMinLaneHeight(Rectangle rect) {
+		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
 	}
 
-	public void resetLaneHeight() {
-		laneHeight = DEFAULT_LANE_HEIGHT;
+	void adjustLaneHeight(int amount) {
+		laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+	}
+
+	void resetLaneHeight() {
+		laneHeight = minLaneHeight;
 	}
 
 	class KeyNavigator implements KeyListener {
@@ -348,7 +355,7 @@ public class ChartTextCanvas extends Canvas {
 		this.hoveredItemData = data;
 	}
 
-	public void resetHoveredItemData() {
+	void resetHoveredItemData() {
 		this.hoveredItemData = null;
 	}
 

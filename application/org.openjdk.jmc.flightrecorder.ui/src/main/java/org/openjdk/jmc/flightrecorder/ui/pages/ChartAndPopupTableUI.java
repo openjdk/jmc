@@ -339,6 +339,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
 		chart.resetZoomFactor();
+		heightBtns.resetLaneHeightToMinimum();
 		buildChart();
 	}
 

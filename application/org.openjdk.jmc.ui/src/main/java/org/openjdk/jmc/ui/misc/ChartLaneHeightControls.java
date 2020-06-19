@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class ChartLaneHeightControls extends Composite {
 	private Button incHeightBtn;
@@ -54,7 +53,6 @@ public class ChartLaneHeightControls extends Composite {
 		this.setLayout(new GridLayout(2, true));
 		this.chartCanvas = chartCanvas;
 		this.textCanvas = textCanvas;
-		this.setBackground(Palette.PF_BLACK_100.getSWTColor());
 
 		decHeightBtn = new Button(this, SWT.PUSH);
 		decHeightBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
@@ -88,4 +86,10 @@ public class ChartLaneHeightControls extends Composite {
 		}
 	}
 
+	public void resetLaneHeightToMinimum() {
+		chartCanvas.resetLaneHeight();
+		if (textCanvas != null) {
+			textCanvas.resetLaneHeight();
+		}
+	}
 }
