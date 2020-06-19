@@ -49,8 +49,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import org.openjdk.jmc.flightrecorder.ui.common.LaneEditor.EditLanesContainer;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
-import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class DropdownLaneFilter extends Composite {
 	private static final int EXTRA_SHELL_WIDTH = 300;
@@ -65,11 +66,9 @@ public class DropdownLaneFilter extends Composite {
 		super(parent, SWT.NONE);
 		this.lanes = lanes;
 		this.mms = mms;
-		this.setBackground(Palette.getThreadsPageBackgroundColor());
-		GridLayout layout = new GridLayout();
+		this.layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		this.layout = layout;
 		setLayout(layout);
 		dropdownButton = new Button(this, SWT.TOGGLE);
 		dropdownButton.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -77,8 +76,16 @@ public class DropdownLaneFilter extends Composite {
 		dropdownButton.addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				if (dropdownButton.getSelection()) {
-					displayDropdown();
+				// FIXME: There are currently issues with paint timings with Mac OS at the moment
+				// where toggling an activity lane from the dropdown does not redraw the chart.
+				// As a precaution, use the default Edit Lanes Dialog instead for Mac.
+				if (Environment.getOSType() == OSType.MAC) {
+					lanes.openEditLanesDialog(mms, false);
+					dropdownButton.setSelection(false);
+				} else {
+					if (dropdownButton.getSelection()) {
+						displayDropdown();
+					}
 				}
 			}
 		});
