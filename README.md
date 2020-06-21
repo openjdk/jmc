@@ -320,22 +320,8 @@ To install it into Eclipe, simply open Eclipse and select Help | Install New Sof
 application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.0.0-SNAPSHOT.zip
 ```
 
-## Setting Up for Development and Launching in Eclipse
-First make sure that you have a recent version of Eclipse. An Eclipse 2018-09 with the JDK 11 plug-in installed (available from Eclipse Marketplace) will do. You may also want to install the Mercurial Plug-in for Eclipse (MercurialEclipse). The Eclipse Marketplace is available under **Help | Eclipse Marketplace...**.
-
-To set Eclipse up for JMC development, do the following:
-
-1. First ensure that you have started the jetty server in the first step of building JMC.
-2. Next open (File | Open...) the Eclipse target platform of interest, for example releng/platform-definitions/platform-definition-photon/platform.target
-3. In the upper right corner of the platform editor that opens, click the link "Set as Active Target Platform"
-4. Import the projects you are interested in (core and/or application) into a recent Eclipse.
-5. If importing the application projects, make sure you create a user library (Preferences | Java/Build Path/User Libraries) named JMC_JDK, and add (Add External JARs...) the following JARs from a JDK 8 (u40 or above) to the User Library:
- - tools.jar (<JDK>/lib/tools.jar)
- - jconsole.jar (<JDK>/lib/jconsole.jar)
- - jfxswt.jar (<JDK>/jre/lib/jfxswt.jar)
- - jfxrt.jar (<JDK>/jre/lib/ext/jfxrt.jar)
-
-Note that importing configuration/ide/eclipse as an Eclipse project should automatically make the development launchers available to you.
+## Setting up Development Environment
+Please follow the [Developer Guide](docs/devguide/README.md).
 
 ## FAQ
 For help with frequently asked questions, see the [JMC FAQ](https://wiki.openjdk.java.net/display/jmc/JMC+FAQ) on the JMC Wiki.
