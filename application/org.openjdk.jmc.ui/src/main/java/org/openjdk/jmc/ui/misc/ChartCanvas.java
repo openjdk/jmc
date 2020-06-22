@@ -287,7 +287,13 @@ public class ChartCanvas extends Canvas {
 	}
 
 	void adjustLaneHeight(int amount) {
-		laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+		if (laneHeight == -1 && amount > 0) { 
+			resetLaneHeight();
+		} else if ((laneHeight + amount) < minLaneHeight) {
+			laneHeight = -1;
+		} else { 
+			laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+		}
 	}
 
 	void resetLaneHeight() {
