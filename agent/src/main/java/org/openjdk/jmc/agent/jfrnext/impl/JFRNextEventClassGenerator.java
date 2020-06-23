@@ -54,7 +54,6 @@ public class JFRNextEventClassGenerator {
 	private static final String CLASS_EVENT = "jdk/jfr/Event"; //$NON-NLS-1$
 
 	public static byte[] generateEventClass(JFRTransformDescriptor td, Class<?> classBeingRedefined) throws Exception {
-		System.out.println("[DEBUG] Emit on exception? " + td.isEmitOnException());
 		ClassWriter cw = new ClassWriter(0);
 		// FIXME: Perhaps switch to Opcodes V9 when there is one.
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, td.getEventClassName(), null, CLASS_EVENT, null);
