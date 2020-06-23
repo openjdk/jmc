@@ -74,7 +74,6 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	public JFRTransformDescriptor(String id, String className, Method method,
 			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue, List<Field> fields) {
 		super(id, className, method, transformationAttributes);
-		System.out.println("Did we get here?");
 		classPrefix = initializeClassPrefix();
 		eventName = initializeEventName();
 		eventClassName = initializeEventClassName();
@@ -85,7 +84,6 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, false);
 		allowConverter = getBoolean(ATTRIBUTE_ALLOW_CONVERTER, false);
 		emitOnException = getBoolean(ATTRIBUTE_EMIT_ON_EXCEPTION, false);
-		System.out.println("EmitonException? " + emitOnException);
 		this.parameters = parameters;
 		this.fields = fields;
 		this.returnValue = returnValue;
@@ -201,7 +199,6 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	}
 
 	private boolean getBoolean(String attribute, boolean defaultValue) {
-		System.out.println("[DEBUG] Read attribute: " + attribute);
 		String strVal = getTransformationAttribute(attribute);
 		if (strVal == null || strVal.isEmpty()) {
 			Logger.getLogger(JFRTransformDescriptor.class.getName()).log(Level.FINE,

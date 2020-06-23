@@ -108,28 +108,22 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			// If we've specified that we only want to emit on exception we should commit event here
 			visitLabel(tryEnd);
 			visitLabel(catchBegin);
-			// If we've specified that we only want to emit on exception we want to commit the event during the catch
-			// rather than at the end.
 			mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
-			//commitEvent();
+			// Rethrow if desired, otherwise return.
 			if (transformDescriptor.isUseRethrow()) {
 				visitInsn(ATHROW);
 			} else {
-				System.out.println("Return Type: " + returnTypeRef.getSort());
 				if (returnTypeRef.getSort() != Type.VOID) {
-					System.out.println("Did we make it here?");
 					ReturnValue returnValue = transformDescriptor.getReturnValue();
 					if (returnValue != null) {
 						emitSettingReturnParam(0, returnValue);
 					}
 				}
-				System.out.println("Visiting Return");
 				visitInsn(RETURN);
 			}
 			visitTryCatchBlock(tryBegin, tryEnd, catchBegin, THROWABLE_BINARY_NAME);
 			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
 		}
-
 		super.visitEnd();
 	}
 
@@ -256,7 +250,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	@Override
 	protected void onMethodExit(int opcode) {
 		if (transformDescriptor.isEmitOnException()) {
-			System.out.println("EmitOnException, returning");
+			// We handle event comitting/returning elsewhere, nothing to do here.
 			return;
 		}
 		if (opcode == ATHROW && !shouldInstrumentThrow) {
@@ -272,7 +266,6 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	}
 
 	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) {
-		System.out.println("Should not reach here");
 		if (returnTypeRef.getSize() == 1) {
 			dup();
 			mv.visitVarInsn(ALOAD, eventLocal);
