@@ -76,7 +76,8 @@ public abstract class LabeledPageFactory implements IDataPageFactory {
 		if (iconStr != null) {
 			byte[] pngData = Base64.getDecoder().decode(iconStr);
 			try {
-				return ImageDescriptor.createFromImageData(new ImageData(new ByteArrayInputStream(pngData)));
+				return ImageDescriptor
+						.createFromImageDataProvider((zoom) -> new ImageData(new ByteArrayInputStream(pngData)));
 			} catch (Exception e) {
 				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING,
 						"Could not load icon for page: " + getName(state), e); //$NON-NLS-1$
@@ -96,7 +97,7 @@ public abstract class LabeledPageFactory implements IDataPageFactory {
 			try {
 				ImageLoader loader = new ImageLoader();
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				loader.data = new ImageData[] {image.getImageData()};
+				loader.data = new ImageData[] {image.getImageData(100)};
 				loader.save(out, SWT.IMAGE_PNG);
 				String iconStr = Base64.getEncoder().encodeToString(out.toByteArray());
 				to.putString(LabeledPageFactory.ATTRIBUTE_ICON, iconStr);

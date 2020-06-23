@@ -39,7 +39,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.ui.ActivitiesToolkit;
 import org.openjdk.jmc.ui.UIPlugin;
 
@@ -54,7 +54,7 @@ public class ShellViewCoommand extends Action {
 
 	@Override
 	public void run() {
-		IWorkbenchWindow w = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow w = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (w != null) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {

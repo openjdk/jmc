@@ -54,6 +54,7 @@ public class ChunkLoaderV0 implements IChunkLoader {
 		this.context = context;
 		// Read metadata
 		metadata = new ChunkMetadata(data, structure.getMetadataOffset());
+		context.addChunkRange(QuantityRange.createWithEnd(metadata.getStartTime(), metadata.getEndTime()));
 	}
 
 	@Override

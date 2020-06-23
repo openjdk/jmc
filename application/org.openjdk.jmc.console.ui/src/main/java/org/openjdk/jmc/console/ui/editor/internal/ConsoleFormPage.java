@@ -42,6 +42,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -52,15 +53,13 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.service.prefs.Preferences;
-
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.misc.MementoToolkit;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * Extension point class that console tabs can subclass. The ConsoleTab uses the FormPage .
@@ -174,7 +173,7 @@ public class ConsoleFormPage extends FormPage implements IConsolePageContainer {
 		String iconName = config.getAttribute(ATTRIBUTE_ICON);
 		if (iconName != null) {
 			String pluginId = config.getDeclaringExtension().getContributor().getName();
-			ImageDescriptor iconDesc = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, iconName);
+			ImageDescriptor iconDesc = ResourceLocator.imageDescriptorFromBundle(pluginId, iconName).orElse(null);
 			icon = (Image) JFaceResources.getResources().get(iconDesc);
 		}
 	}

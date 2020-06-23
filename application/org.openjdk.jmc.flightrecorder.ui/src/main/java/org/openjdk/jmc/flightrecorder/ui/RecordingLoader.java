@@ -64,6 +64,7 @@ import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.internal.ChunkInfo;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 import org.openjdk.jmc.flightrecorder.internal.NotEnoughMemoryException;
 import org.openjdk.jmc.flightrecorder.internal.VersionNotSupportedException;
@@ -93,7 +94,7 @@ public class RecordingLoader extends Job {
 		boolean closeEditor = true;
 		try {
 			File file = MCPathEditorInput.getFile(ei);
-			EventArray[] events = doCreateRecording(file, new ProgressMonitor(monitor, ui));
+			EventArrays events = doCreateRecording(file, new ProgressMonitor(monitor, ui));
 			checkForJRockitRecording(events);
 			onRecordingLoaded(events);
 			closeEditor = false;
@@ -114,10 +115,10 @@ public class RecordingLoader extends Job {
 		}
 	}
 
-	private void onRecordingLoaded(EventArray[] events) {
+	private void onRecordingLoaded(EventArrays events) {
 		IQuantity startTime = null;
 		IQuantity endTime = null;
-		for (EventArray typeEntry : events) {
+		for (EventArray typeEntry : events.getArrays()) {
 			IItem[] ea = typeEntry.getEvents();
 			IMemberAccessor<IQuantity, IItem> stAccessor = JfrAttributes.START_TIME.getAccessor(typeEntry.getType());
 			IMemberAccessor<IQuantity, IItem> etAccessor = JfrAttributes.END_TIME.getAccessor(typeEntry.getType());
@@ -159,7 +160,7 @@ public class RecordingLoader extends Job {
 		});
 	}
 
-	private EventArray[] doCreateRecording(File file, ProgressMonitor lm)
+	private EventArrays doCreateRecording(File file, ProgressMonitor lm)
 			throws CouldNotLoadRecordingException, IOException {
 		// FIXME: Can we calculate available memory without resorting to System.gc?
 		System.gc();
@@ -181,8 +182,8 @@ public class RecordingLoader extends Job {
 		return loadFromUnzippedFile(file, fileName, lm, availableMemory);
 	}
 
-	private static void checkForJRockitRecording(EventArray[] events) {
-		for (EventArray ea : events) {
+	private static void checkForJRockitRecording(EventArrays events) {
+		for (EventArray ea : events.getArrays()) {
 			if (ea.getType().getIdentifier().startsWith("http://www.oracle.com/jrockit/")) { //$NON-NLS-1$
 				DisplayToolkit.safeSyncExec(new Runnable() {
 					@Override
@@ -196,7 +197,7 @@ public class RecordingLoader extends Job {
 		}
 	}
 
-	private EventArray[] loadFromUnzippedFile(
+	private EventArrays loadFromUnzippedFile(
 		File unzippedFile, String recordingFileName, ProgressMonitor lm, long availableMemory)
 			throws IOException, CouldNotLoadRecordingException {
 		boolean hideExperimentals = !FlightRecorderUI.getDefault().includeExperimentalEventsAndFields();

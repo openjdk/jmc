@@ -45,11 +45,8 @@ import java.util.HashSet;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.service.prefs.Preferences;
-
-import org.openjdk.jmc.ui.common.security.SecureStore;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.util.Environment;
+import org.osgi.service.prefs.Preferences;
 
 @SuppressWarnings("nls")
 public class SecureStoreTest {

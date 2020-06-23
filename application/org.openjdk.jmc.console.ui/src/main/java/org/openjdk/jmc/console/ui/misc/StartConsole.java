@@ -37,11 +37,10 @@ import java.io.PrintStream;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.commands.Statement;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditorInput;
 import org.openjdk.jmc.rjmx.util.internal.RJMXStartCommand;
-import org.openjdk.jmc.ui.UIPlugin;
 
 /**
  * Command for starting up the JMX Console on a RJMX-descriptor.
@@ -49,7 +48,7 @@ import org.openjdk.jmc.ui.UIPlugin;
 public class StartConsole extends RJMXStartCommand {
 	@Override
 	public boolean execute(Statement statement, PrintStream out) {
-		IWorkbenchWindow window = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IEditorInput input = new ConsoleEditorInput(createConnectionDescriptor(statement, out));
 			try {

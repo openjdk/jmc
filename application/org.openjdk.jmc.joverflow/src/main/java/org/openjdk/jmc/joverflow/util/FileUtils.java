@@ -44,8 +44,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openjdk.jmc.common.io.IOToolkit;
-
 /**
  * Simple file-related utilities.
  */

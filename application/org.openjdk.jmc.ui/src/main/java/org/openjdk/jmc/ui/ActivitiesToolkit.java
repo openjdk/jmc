@@ -35,6 +35,7 @@ package org.openjdk.jmc.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 
 /**
@@ -49,7 +50,7 @@ public final class ActivitiesToolkit {
 	}
 
 	public static IWorkbenchActivitySupport getActivitySupport() {
-		return UIPlugin.getDefault().getWorkbench().getActivitySupport();
+		return PlatformUI.getWorkbench().getActivitySupport();
 	}
 
 	public static boolean enableActivity(String id) {

@@ -225,7 +225,7 @@ public class ResultReportUi {
 			}
 			ImageLoader loader = new ImageLoader();
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			loader.data = new ImageData[] {image.getImageData()};
+			loader.data = new ImageData[] {image.getImageData(100)};
 			loader.save(out, SWT.IMAGE_PNG);
 			return Base64.getEncoder().encodeToString(out.toByteArray());
 		}

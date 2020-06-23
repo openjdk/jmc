@@ -34,8 +34,6 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.actions;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.osgi.util.NLS;
-
-import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.FlightRecorderProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;

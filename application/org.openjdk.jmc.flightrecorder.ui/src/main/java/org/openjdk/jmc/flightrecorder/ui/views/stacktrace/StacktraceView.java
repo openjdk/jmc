@@ -283,6 +283,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			}
 		}
 
+		// See JMC-6787
+		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
 			StacktraceFrame frame = (StacktraceFrame) getStructuredSelection().getFirstElement();
@@ -334,6 +336,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			Branch branch = ((StacktraceFrame) getStructuredSelection().getFirstElement()).getBranch();
+			// See JMC-6787
+			@SuppressWarnings("deprecation")
 			Branch selectedSibling = branch.selectSibling(offset);
 			provider.refresh();
 			provider.setSelection(new StructuredSelection(selectedSibling.getFirstFrame()));
@@ -436,6 +440,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 	}
 
+	// See JMC-6787
+	@SuppressWarnings("deprecation")
 	private void rebuildViewer() {
 		boolean hasFocus = viewer.getControl().isFocusControl();
 		ISelection oldSelection = viewer.getSelection();
@@ -823,6 +829,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		return isFirstInBranchWithSiblings(frame) && !isInOpenFork(frame);
 	}
 
+	// See JMC-6787
+	@SuppressWarnings("deprecation")
 	private static boolean isInOpenFork(StacktraceFrame frame) {
 		return frame.getBranch().getParentFork().getSelectedBranch() == null;
 	}
@@ -841,6 +849,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	 * this argument.
 	 */
 	private static void addSelectedBranches(Fork fork, SimpleArray<StacktraceFrame> input, boolean backwards) {
+		// See JMC-6787
+		@SuppressWarnings("deprecation")
 		Branch selectedBranch = fork.getSelectedBranch();
 		if (selectedBranch == null) {
 			Stream.of(fork.getFirstFrames()).forEach(input::add);
@@ -858,6 +868,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 	}
 
+	// See JMC-6787
+	@SuppressWarnings("deprecation")
 	private static Branch getLastSelectedBranch(Fork fromFork) {
 		Branch lastSelectedBranch = null;
 		Branch branch = fromFork.getSelectedBranch();

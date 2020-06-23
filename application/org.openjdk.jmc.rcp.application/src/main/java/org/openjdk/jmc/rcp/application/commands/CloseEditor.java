@@ -37,10 +37,9 @@ import java.io.PrintStream;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.commands.IExecute;
 import org.openjdk.jmc.commands.Statement;
-import org.openjdk.jmc.ui.UIPlugin;
 
 /**
  * This class should move to core
@@ -49,7 +48,7 @@ public final class CloseEditor implements IExecute {
 
 	@Override
 	public boolean execute(Statement statement, PrintStream out) {
-		IWorkbenchWindow ww = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow ww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (ww != null) {
 			IWorkbenchPage wp = ww.getActivePage();
 			if (wp != null) {

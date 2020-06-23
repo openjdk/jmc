@@ -38,10 +38,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
-
-import org.openjdk.jmc.ui.UIPlugin;
 
 public class ContextLookup {
 	public static Object getContext(PrintStream out) {
@@ -53,7 +52,7 @@ public class ContextLookup {
 	}
 
 	final static IEditorPart getActiveMainEditor() {
-		IWorkbenchWindow ww = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow ww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (ww != null) {
 			IWorkbenchPage wp = ww.getActivePage();
 			if (wp == null) {

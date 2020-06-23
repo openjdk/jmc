@@ -48,8 +48,11 @@ import org.openjdk.jmc.common.item.IItemConsumer;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
+import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 
 /**
  * Java 1.7 based implementation of {@link IItemCollection} using {@link IItemIterable} iterators.
@@ -112,18 +115,20 @@ class EventCollection implements IItemCollection {
 
 	private final Set<IType<IItem>> types = new HashSet<>();
 	private final ArrayList<EventTypeEntry> items;
+	private final Set<IRange<IQuantity>> chunkRanges;
 
-	static IItemCollection build(EventArray[] events) {
-		ArrayList<EventTypeEntry> items = new ArrayList<>(events.length);
-		for (EventArray ea : events) {
+	static IItemCollection build(EventArrays events) {
+		ArrayList<EventTypeEntry> items = new ArrayList<>(events.getArrays().length);
+		for (EventArray ea : events.getArrays()) {
 			EventTypeEntry entry = new EventTypeEntry(ea);
 			items.add(entry);
 		}
-		return new EventCollection(items);
+		return new EventCollection(items, events.getChunkTimeranges());
 	}
 
-	private EventCollection(ArrayList<EventTypeEntry> items) {
+	private EventCollection(ArrayList<EventTypeEntry> items, Set<IRange<IQuantity>> chunkRanges) {
 		this.items = items;
+		this.chunkRanges = chunkRanges;
 		for (EventTypeEntry e : items) {
 			types.add(e.events.getType());
 		}
@@ -140,7 +145,7 @@ class EventCollection implements IItemCollection {
 				newEntries.add(newEntry);
 			}
 		}
-		return new EventCollection(newEntries);
+		return new EventCollection(newEntries, chunkRanges);
 	}
 
 	private static Iterator<IItem> buildIterator(IItem[] array, IPredicate<? super IItem> filter) {
@@ -213,5 +218,10 @@ class EventCollection implements IItemCollection {
 				throw new UnsupportedOperationException();
 			}
 		});
+	}
+
+	@Override
+	public Set<IRange<IQuantity>> getTimeRanges() {
+		return chunkRanges;
 	}
 }

@@ -74,6 +74,6 @@ public class Application implements IApplication {
 
 	@Override
 	public void stop() {
-		ApplicationPlugin.getDefault().getWorkbench().close();
+		PlatformUI.getWorkbench().close();
 	}
 }
