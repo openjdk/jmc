@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -267,26 +267,26 @@ public class JOverflowEditor extends EditorPart {
 		return false;
 	}
 
-	public JOverflowUi getJOverflowUi() {
+	JOverflowUi getJOverflowUi() {
 		return mJOverflowUi;
 	}
 
-	public Snapshot getSnapshot() {
+	Snapshot getSnapshot() {
 		return mSnapshot;
 	}
 
-	public void addUiLoadedListener(UiLoadedListener listener) {
+	void addUiLoadedListener(UiLoadedListener listener) {
 		mUiLoadedListeners.add(listener);
 		if (mJOverflowUi != null) {
 			listener.uiLoaded(mJOverflowUi);
 		}
 	}
 
-	public void removeUiLoadedListener(UiLoadedListener listener) {
+	void removeUiLoadedListener(UiLoadedListener listener) {
 		mUiLoadedListeners.remove(listener);
 	}
 
-	public interface UiLoadedListener {
+	interface UiLoadedListener {
 		void uiLoaded(JOverflowUi ui);
 	}
 }

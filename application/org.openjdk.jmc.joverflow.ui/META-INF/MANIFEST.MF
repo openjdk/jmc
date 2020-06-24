@@ -13,5 +13,3 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.joverflow.ui.JOverflowPlugin
 Automatic-Module-Name: org.openjdk.jmc.joverflow.ui
 Import-Package: org.openjdk.jmc.flightrecorder.ui
-Export-Package: org.openjdk.jmc.joverflow.ui,
- org.openjdk.jmc.joverflow.ui.model

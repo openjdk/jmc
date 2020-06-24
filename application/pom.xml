@@ -77,7 +77,6 @@
 		<module>org.openjdk.jmc.feature.ide.launch</module>
 		<module>org.openjdk.jmc.feature.jconsole</module>
 		<module>org.openjdk.jmc.feature.joverflow</module>
-		<module>org.openjdk.jmc.feature.joverflow.ext.treemap</module>
 		<module>org.openjdk.jmc.feature.license</module>
 		<module>org.openjdk.jmc.feature.pde</module>
 		<module>org.openjdk.jmc.feature.rcp</module>
@@ -100,7 +99,6 @@
 		<module>org.openjdk.jmc.ide.ui</module>
 		<module>org.openjdk.jmc.joverflow</module>
 		<module>org.openjdk.jmc.joverflow.ui</module>
-		<module>org.openjdk.jmc.joverflow.ext.treemap</module>
 		<module>org.openjdk.jmc.osgi.extension</module>
 		<module>org.openjdk.jmc.pde</module>
 		<module>org.openjdk.jmc.rcp.application</module>

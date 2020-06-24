@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -183,7 +183,7 @@ public class JOverflowUi extends Composite {
 		updateModel();
 	}
 
-	public void addModelListener(final ModelListener listener) {
+	void addModelListener(final ModelListener listener) {
 		mModelListeners.add(listener);
 
 		if (mModel != null) {
@@ -191,7 +191,7 @@ public class JOverflowUi extends Composite {
 		}
 	}
 
-	public void removeModelListener(final ModelListener listener) {
+	void removeModelListener(final ModelListener listener) {
 		mModelListeners.remove(listener);
 	}
 }
