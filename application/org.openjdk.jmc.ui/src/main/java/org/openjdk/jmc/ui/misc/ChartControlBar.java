@@ -46,23 +46,25 @@ import org.openjdk.jmc.ui.charts.XYChart;
 public class ChartControlBar extends Composite {
 
 	private ChartButtonGroup buttonGroup;
+	private ChartLaneHeightControls laneHeightControls;
 	private Composite laneFilterContainer;
 	private TimeFilter timeFilter;
 
 	public ChartControlBar(Composite parent, Listener resetListener, IRange<IQuantity> recordingRange) {
 		super(parent, SWT.NONE);
-		this.setLayout(new GridLayout(3, false));
+		this.setLayout(new GridLayout(4, false));
 
 		timeFilter = new TimeFilter(this, recordingRange, resetListener);
 		timeFilter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		laneFilterContainer = new Composite(this, SWT.NONE);
 		laneFilterContainer.setLayout(new GridLayout());
-
+		
 		Composite buttonGroupContainer = new Composite(this, SWT.NONE);
-		buttonGroupContainer.setLayout(new GridLayout());
+		buttonGroupContainer.setLayout(new GridLayout(3, false));
 		buttonGroupContainer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		buttonGroup = new ChartButtonGroup(buttonGroupContainer);
+		laneHeightControls = new ChartLaneHeightControls(buttonGroupContainer);
 	}
 
 	public Composite getLaneFilterContainer() {
@@ -73,6 +75,10 @@ public class ChartControlBar extends Composite {
 		return buttonGroup;
 	}
 
+	public void resetLaneHeightToMinimum() {
+		laneHeightControls.resetLaneHeightToMinimum();
+	}
+
 	public void setChart(XYChart chart) {
 		buttonGroup.setChart(chart);
 		timeFilter.setChart(chart);
@@ -80,11 +86,13 @@ public class ChartControlBar extends Composite {
 
 	public void setChartCanvas(ChartCanvas canvas) {
 		buttonGroup.setChartCanvas(canvas);
+		laneHeightControls.setChartCanvas(canvas);
 		timeFilter.setChartCanvas(canvas);
 	}
 
 	public void setTextCanvas(ChartTextCanvas textCanvas) {
 		buttonGroup.setTextCanvas(textCanvas);
+		laneHeightControls.setTextCanvas(textCanvas);
 	}
 
 	public void setStartTime(IQuantity startTime) {

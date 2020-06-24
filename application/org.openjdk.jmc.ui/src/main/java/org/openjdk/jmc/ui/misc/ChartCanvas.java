@@ -79,6 +79,7 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 public class ChartCanvas extends Canvas {
 	private int laneHeight;
 	private int minLaneHeight = -1;
+	private int savedLaneHeight;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
 	private List<Rectangle2D> highlightRects;
@@ -286,14 +287,31 @@ public class ChartCanvas extends Canvas {
 		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
 	}
 
+	public boolean isLaneHeightMinimumSize() {
+		return laneHeight == minLaneHeight;
+	}
+
+	void setOverviewLaneHeight() {
+		this.savedLaneHeight = laneHeight;
+		setLaneHeight(-1);
+		zoomer = new Zoomer();
+		addListener(SWT.MouseVerticalWheel, zoomer);
+	}
+
 	void adjustLaneHeight(int amount) {
-		if (laneHeight == -1 && amount > 0) { 
-			resetLaneHeight();
-		} else if ((laneHeight + amount) < minLaneHeight) {
-			laneHeight = -1;
-		} else { 
-			laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+		if (laneHeight == -1) { 
+			restoreLaneHeight();
 		}
+		laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+	}
+
+	void setLaneHeight(int height) {
+		this.laneHeight = height;
+	}
+
+	void restoreLaneHeight() {
+		laneHeight = savedLaneHeight;
+		removeListener(SWT.MouseVerticalWheel, zoomer);
 	}
 
 	void resetLaneHeight() {
@@ -443,6 +461,7 @@ public class ChartCanvas extends Canvas {
 	private XYChart awtChart;
 	private MCContextMenuManager chartMenu;
 	private ChartTextCanvas textCanvas;
+	private Listener zoomer;
 
 	public ChartCanvas(Composite parent) {
 		super(parent, SWT.NO_BACKGROUND);

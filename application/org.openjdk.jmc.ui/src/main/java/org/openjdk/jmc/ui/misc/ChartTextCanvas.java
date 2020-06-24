@@ -68,6 +68,7 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class ChartTextCanvas extends Canvas {
 	private int laneHeight;
+	private int savedLaneHeight;
 	private int minLaneHeight = -1;
 	private int numItems;
 	private int lastMouseX = -1;
@@ -248,14 +249,24 @@ public class ChartTextCanvas extends Canvas {
 		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
 	}
 
+	void setOverviewLaneHeight() {
+		this.savedLaneHeight = laneHeight;
+		setLaneHeight(-1);
+	}
+
 	void adjustLaneHeight(int amount) {
-		if (laneHeight == -1 && amount > 0) { 
-			resetLaneHeight();
-		} else if ((laneHeight + amount) < minLaneHeight) {
-			laneHeight = -1;
-		} else { 
-			laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+		if (laneHeight == -1) { 
+			restoreLaneHeight();
 		}
+		laneHeight = Math.max(minLaneHeight, laneHeight + amount);
+	}
+
+	void setLaneHeight(int height) {
+		this.laneHeight = height;
+	}
+
+	void restoreLaneHeight() {
+		laneHeight = savedLaneHeight;
 	}
 
 	void resetLaneHeight() {

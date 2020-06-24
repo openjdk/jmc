@@ -87,9 +87,7 @@ public class TimelineCanvas extends Canvas {
 	}
 
 	private int calculateXOffset() {
-		int offset = sashForm.getChildren()[0].getSize().x + sashForm.getSashWidth()
-				- getParent().getChildren()[0].getSize().x;
-		return Math.max(offset, 0);
+		return sashForm.getChildren()[0].getSize().x + sashForm.getSashWidth();
 	}
 
 	public void renderRangeIndicator(int x1, int x2) {

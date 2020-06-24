@@ -43,17 +43,25 @@ import org.eclipse.swt.widgets.Listener;
 import org.openjdk.jmc.ui.UIPlugin;
 
 public class ChartLaneHeightControls extends Composite {
-	private Button incHeightBtn;
 	private Button decHeightBtn;
+	private Button incHeightBtn;
+	private Button overviewBtn;
 	private ChartCanvas chartCanvas;
 	private ChartTextCanvas textCanvas;
 
-	public ChartLaneHeightControls(Composite parent, ChartCanvas chartCanvas, ChartTextCanvas textCanvas) {
+	public ChartLaneHeightControls(Composite parent) {
 		super(parent, SWT.NONE);
-		this.setLayout(new GridLayout(2, true));
-		this.chartCanvas = chartCanvas;
-		this.textCanvas = textCanvas;
+		GridLayout gl = new GridLayout(3, true);
+		gl.horizontalSpacing = 0;
+		gl.marginWidth = 0;
+		this.setLayout(gl);
 
+		initDecreaseHeightButton();
+		initIncreaseHeightButton();
+		initOverviewButton();
+	}
+
+	private void initDecreaseHeightButton() {
 		decHeightBtn = new Button(this, SWT.PUSH);
 		decHeightBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		decHeightBtn.setImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_MINUS));
@@ -64,7 +72,10 @@ public class ChartLaneHeightControls extends Composite {
 				adjustLaneHeight(-1);
 			}
 		});
+		decHeightBtn.setEnabled(false);
+	}
 
+	private void initIncreaseHeightButton() {
 		incHeightBtn = new Button(this, SWT.PUSH);
 		incHeightBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		incHeightBtn.setToolTipText(Messages.ChartLaneHeightControls_LANE_HEIGHT_INCREASE_TOOLTIP);
@@ -77,6 +88,41 @@ public class ChartLaneHeightControls extends Composite {
 		});
 	}
 
+	private void initOverviewButton() {
+		overviewBtn = new Button(this, SWT.TOGGLE);
+		overviewBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		overviewBtn.setToolTipText("TODO");
+		overviewBtn.setImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_COLOR_PALETTE));
+		overviewBtn.addListener(SWT.Selection,  new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				if (!overviewBtn.getSelection()) {
+					chartCanvas.restoreLaneHeight();
+					chartCanvas.redrawChart();
+					if (textCanvas != null) {
+						textCanvas.restoreLaneHeight();
+						textCanvas.redrawChartText();
+					}
+				} else {
+					chartCanvas.setOverviewLaneHeight();
+					chartCanvas.redrawChart();
+					if (textCanvas != null) {
+						textCanvas.setOverviewLaneHeight();
+						textCanvas.redrawChartText();
+					}
+				}
+			}
+		});
+	}
+
+	void setChartCanvas(ChartCanvas chartCanvas) {
+		this.chartCanvas = chartCanvas;
+	}
+
+	void setTextCanvas(ChartTextCanvas textCanvas) {
+		this.textCanvas = textCanvas;
+	}
+
 	private void adjustLaneHeight(int amount) {
 		chartCanvas.adjustLaneHeight(amount);
 		chartCanvas.redrawChart();
@@ -84,9 +130,17 @@ public class ChartLaneHeightControls extends Composite {
 			textCanvas.adjustLaneHeight(amount);
 			textCanvas.redrawChartText();
 		}
+		if (chartCanvas.isLaneHeightMinimumSize()) {
+			decHeightBtn.setEnabled(false);
+		} else {
+			decHeightBtn.setEnabled(true);
+		}
+		if (overviewBtn.getSelection()) {
+			overviewBtn.setSelection(false);
+		}
 	}
 
-	public void resetLaneHeightToMinimum() {
+	void resetLaneHeightToMinimum() {
 		chartCanvas.resetLaneHeight();
 		if (textCanvas != null) {
 			textCanvas.resetLaneHeight();

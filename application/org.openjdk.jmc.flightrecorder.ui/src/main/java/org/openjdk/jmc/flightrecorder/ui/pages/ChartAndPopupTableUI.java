@@ -77,7 +77,6 @@ import org.openjdk.jmc.ui.misc.ActionUiToolkit;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
 import org.openjdk.jmc.ui.misc.ChartControlBar;
 import org.openjdk.jmc.ui.misc.ChartButtonGroup;
-import org.openjdk.jmc.ui.misc.ChartLaneHeightControls;
 import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
 import org.openjdk.jmc.ui.misc.TimelineCanvas;
@@ -102,7 +101,6 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	private IItemFilter pageFilter;
 	private IRange<IQuantity> timeRange;
 	private TimelineCanvas timelineCanvas;
-	private ChartLaneHeightControls heightBtns;
 
 	ChartAndPopupTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
 			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
@@ -256,17 +254,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		scText.setExpandHorizontal(true);
 		scText.setExpandVertical(true);
 
-		Composite timelineAndHeightBtnsContainer = toolkit.createComposite(chartAndTimelineContainer);
-		gridLayout = new GridLayout(2, false);
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		timelineAndHeightBtnsContainer.setLayout(gridLayout);
-		timelineAndHeightBtnsContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-		heightBtns = new ChartLaneHeightControls(timelineAndHeightBtnsContainer, chartCanvas, textCanvas);
-		heightBtns.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-
-		timelineCanvas = new TimelineCanvas(timelineAndHeightBtnsContainer, chartCanvas, sash, Y_SCALE);
+		timelineCanvas = new TimelineCanvas(chartAndTimelineContainer, chartCanvas, sash, Y_SCALE);
 		GridData gridData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
 		gridData.heightHint = (int) (TIMELINE_HEIGHT * Y_SCALE);
 		timelineCanvas.setLayoutData(gridData);
@@ -339,7 +327,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
 		chart.resetZoomFactor();
-		heightBtns.resetLaneHeightToMinimum();
+		controlBar.resetLaneHeightToMinimum();
 		buildChart();
 	}
 
