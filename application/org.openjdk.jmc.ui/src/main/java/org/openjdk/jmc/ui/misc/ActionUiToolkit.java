@@ -38,6 +38,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -77,7 +78,14 @@ public class ActionUiToolkit {
 		@Override
 		public Image getImage(Object element) {
 			ImageDescriptor icon = ((IAction) element).getImageDescriptor();
-			return icon == null ? null : manager.createImage(icon);
+			try {
+				if (icon != null) {
+					return manager.createImage(icon);
+				}
+			} catch (DeviceResourceException e) {
+				return null;
+			}
+			return null;
 		}
 
 		@Override
