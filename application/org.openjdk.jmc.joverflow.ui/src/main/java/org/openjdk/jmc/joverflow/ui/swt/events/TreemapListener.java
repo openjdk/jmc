@@ -31,54 +31,29 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap;
+package org.openjdk.jmc.joverflow.ui.swt.events;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.openjdk.jmc.ui.CoreImages;
+import org.eclipse.swt.internal.SWTEventListener;
+import org.openjdk.jmc.joverflow.ui.swt.Treemap;
 
-/* package-private */ class TreemapAction extends Action {
-	private static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
+import java.util.function.Consumer;
 
-	private final TreemapActionType actionType;
-	private Runnable runnable = () -> {
-	};
+/**
+ * Classes which implement this interface provide methods that deal with setting new item as top for
+ * a treemap.
+ */
+public interface TreemapListener extends SWTEventListener {
 
-	TreemapAction(TreemapActionType actionType) {
-		super(actionType.message, actionType.action);
-		this.actionType = actionType;
-		setToolTipText(actionType.message);
-		setImageDescriptor(actionType.imageDescriptor);
-	}
+	/**
+	 * Sent when a treemap becomes the new top.
+	 *
+	 * @param event
+	 *            an event containing information about the treemap operation
+	 * @see Treemap#getTopItem()
+	 */
+	void treemapTopChanged(TreemapEvent event);
 
-	@Override
-	public void run() {
-		runnable.run();
-	}
-
-	public void setRunnable(Runnable callback) {
-		runnable = callback;
-	}
-
-	public TreemapActionType getType() {
-		return actionType;
-	}
-
-	enum TreemapActionType {
-		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN), // 
-		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT), // 
-		ZOOM_RESET(Messages.TreemapAction_ZOOM_RESET_DESCRIPTION, IAction.AS_PUSH_BUTTON, JOverflowTreemapPlugin
-				.getDefault().getMCImageDescriptor(JOverflowTreemapPlugin.ICON_RESET));
-
-		private final String message;
-		private final int action;
-		private final ImageDescriptor imageDescriptor;
-
-		TreemapActionType(String message, int action, ImageDescriptor imageDescriptor) {
-			this.message = message;
-			this.action = action;
-			this.imageDescriptor = imageDescriptor;
-		}
+	static TreemapListener treemapTopChangedAdapter(final Consumer<TreemapEvent> c) {
+		return c::accept;
 	}
 }

@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap.swt;
+package org.openjdk.jmc.joverflow.ui.swt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -46,8 +46,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TypedListener;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapEvent;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
+import org.openjdk.jmc.joverflow.ui.swt.events.TreemapEvent;
+import org.openjdk.jmc.joverflow.ui.swt.events.TreemapListener;
 
 import java.util.HashMap;
 import java.util.HashSet;

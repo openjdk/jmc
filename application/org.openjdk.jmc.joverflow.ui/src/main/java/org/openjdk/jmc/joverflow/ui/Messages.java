@@ -31,52 +31,24 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap.swt;
+package org.openjdk.jmc.joverflow.ui;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.jface.window.ToolTip;
+import org.eclipse.osgi.util.NLS;
 
-/*package-private*/ class TreemapToolTip extends ToolTip {
-	private static final int PADDING = 5;
+public class Messages extends NLS {
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.joverflow.ui.messages"; //$NON-NLS-1$
 
-	private TreemapItem item = null;
+	public static String TreemapAction_ZOOM_IN_DESCRIPTION;
+	public static String TreemapAction_ZOOM_OUT_DESCRIPTION;
+	public static String TreemapAction_ZOOM_RESET_DESCRIPTION;
+	public static String TreemapPageBookView_NO_JOVERFLOW_EDITOR_SELECTED;
+	public static String TreemapPage_NO_INSTANCES_SELECTED;
 
-	public TreemapToolTip(Control parent) {
-		super(parent);
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	@Override
-	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.marginLeft = PADDING;
-		rowLayout.marginTop = PADDING;
-		rowLayout.marginRight = PADDING;
-		rowLayout.marginBottom = PADDING;
-
-		container.setLayout(rowLayout);
-		container.setBackground(parent.getBackground());
-
-		Label label = new Label(container, SWT.NONE);
-		label.setText(item != null ? item.getToolTipText() : ""); //$NON-NLS-1$
-		label.setForeground(parent.getForeground());
-
-		return container;
-	}
-
-	public void setItem(TreemapItem item) {
-		this.item = item;
-
-		if (item.getToolTipText().isEmpty()) {
-			deactivate();
-		} else {
-			activate();
-		}
+	private Messages() {
 	}
 }

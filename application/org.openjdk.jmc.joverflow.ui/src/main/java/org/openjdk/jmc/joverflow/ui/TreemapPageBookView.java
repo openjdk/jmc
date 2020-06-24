@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap;
+package org.openjdk.jmc.joverflow.ui;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.IViewSite;
@@ -42,8 +42,6 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
-import org.openjdk.jmc.joverflow.ui.JOverflowEditor;
-import org.openjdk.jmc.joverflow.ui.JOverflowUi;
 
 import java.util.stream.Stream;
 

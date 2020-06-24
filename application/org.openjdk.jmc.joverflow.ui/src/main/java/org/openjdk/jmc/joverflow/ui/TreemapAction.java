@@ -31,25 +31,54 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap.swt.events;
+package org.openjdk.jmc.joverflow.ui;
 
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.openjdk.jmc.ui.CoreImages;
 
-/**
- * Instances of this class are sent as a result of new item being set as the top.
- */
-public final class TreemapEvent extends SelectionEvent {
+/* package-private */ class TreemapAction extends Action {
+	private static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
 
-	static final long serialVersionUID = 1L;
+	private final TreemapActionType actionType;
+	private Runnable runnable = () -> {
+	};
 
-	/**
-	 * Constructs a new instance of this class based on the information in the given untyped event.
-	 * 
-	 * @param e
-	 *            the untyped event containing the information
-	 */
-	public TreemapEvent(Event e) {
-		super(e);
+	TreemapAction(TreemapActionType actionType) {
+		super(actionType.message, actionType.action);
+		this.actionType = actionType;
+		setToolTipText(actionType.message);
+		setImageDescriptor(actionType.imageDescriptor);
+	}
+
+	@Override
+	public void run() {
+		runnable.run();
+	}
+
+	public void setRunnable(Runnable callback) {
+		runnable = callback;
+	}
+
+	public TreemapActionType getType() {
+		return actionType;
+	}
+
+	enum TreemapActionType {
+		ZOOM_IN(Messages.TreemapAction_ZOOM_IN_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_IN), // 
+		ZOOM_OUT(Messages.TreemapAction_ZOOM_OUT_DESCRIPTION, IAction.AS_PUSH_BUTTON, CoreImages.ZOOM_OUT), // 
+		ZOOM_RESET(Messages.TreemapAction_ZOOM_RESET_DESCRIPTION, IAction.AS_PUSH_BUTTON, JOverflowPlugin
+				.getDefault().getMCImageDescriptor(JOverflowPlugin.ICON_UNDO_EDIT));
+
+		private final String message;
+		private final int action;
+		private final ImageDescriptor imageDescriptor;
+
+		TreemapActionType(String message, int action, ImageDescriptor imageDescriptor) {
+			this.message = message;
+			this.action = action;
+			this.imageDescriptor = imageDescriptor;
+		}
 	}
 }

@@ -31,29 +31,52 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap.swt.events;
+package org.openjdk.jmc.joverflow.ui.swt;
 
-import org.eclipse.swt.internal.SWTEventListener;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
+import org.eclipse.jface.window.ToolTip;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 
-import java.util.function.Consumer;
+/*package-private*/ class TreemapToolTip extends ToolTip {
+	private static final int PADDING = 5;
 
-/**
- * Classes which implement this interface provide methods that deal with setting new item as top for
- * a treemap.
- */
-public interface TreemapListener extends SWTEventListener {
+	private TreemapItem item = null;
 
-	/**
-	 * Sent when a treemap becomes the new top.
-	 *
-	 * @param event
-	 *            an event containing information about the treemap operation
-	 * @see Treemap#getTopItem()
-	 */
-	void treemapTopChanged(TreemapEvent event);
+	public TreemapToolTip(Control parent) {
+		super(parent);
+	}
 
-	static TreemapListener treemapTopChangedAdapter(final Consumer<TreemapEvent> c) {
-		return c::accept;
+	@Override
+	protected Composite createToolTipContentArea(Event event, Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginLeft = PADDING;
+		rowLayout.marginTop = PADDING;
+		rowLayout.marginRight = PADDING;
+		rowLayout.marginBottom = PADDING;
+
+		container.setLayout(rowLayout);
+		container.setBackground(parent.getBackground());
+
+		Label label = new Label(container, SWT.NONE);
+		label.setText(item != null ? item.getToolTipText() : ""); //$NON-NLS-1$
+		label.setForeground(parent.getForeground());
+
+		return container;
+	}
+
+	public void setItem(TreemapItem item) {
+		this.item = item;
+
+		if (item.getToolTipText().isEmpty()) {
+			deactivate();
+		} else {
+			activate();
+		}
 	}
 }

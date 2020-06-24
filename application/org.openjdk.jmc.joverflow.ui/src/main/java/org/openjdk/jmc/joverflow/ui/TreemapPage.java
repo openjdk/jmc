@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap;
+package org.openjdk.jmc.joverflow.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -46,15 +46,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.Breadcrumb;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.BreadcrumbItem;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.Treemap;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.TreemapItem;
-import org.openjdk.jmc.joverflow.ext.treemap.swt.events.TreemapListener;
+import org.openjdk.jmc.joverflow.ui.swt.Breadcrumb;
+import org.openjdk.jmc.joverflow.ui.swt.BreadcrumbItem;
+import org.openjdk.jmc.joverflow.ui.swt.Treemap;
+import org.openjdk.jmc.joverflow.ui.swt.TreemapItem;
+import org.openjdk.jmc.joverflow.ui.swt.events.TreemapListener;
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaHeapObject;
 import org.openjdk.jmc.joverflow.support.RefChainElement;
-import org.openjdk.jmc.joverflow.ui.JOverflowEditor;
 import org.openjdk.jmc.joverflow.ui.model.ModelListener;
 import org.openjdk.jmc.joverflow.ui.model.ObjectCluster;
 

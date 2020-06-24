@@ -31,49 +31,25 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.joverflow.ext.treemap;
+package org.openjdk.jmc.joverflow.ui.swt.events;
 
-import org.openjdk.jmc.ui.MCAbstractUIPlugin;
-import org.osgi.framework.BundleContext;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Event;
 
 /**
- * The activator class controls the plug-in life cycle.
+ * Instances of this class are sent as a result of new item being set as the top.
  */
-public class JOverflowTreemapPlugin extends MCAbstractUIPlugin {
+public final class TreemapEvent extends SelectionEvent {
 
-	// The plug-in ID
-	private static final String PLUGIN_ID = "org.openjdk.jmc.joverflow.ext.treemap"; //$NON-NLS-1$
-
-	static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
-
-	// The shared instance
-	private static JOverflowTreemapPlugin m_plugin;
+	static final long serialVersionUID = 1L;
 
 	/**
-	 * The constructor
+	 * Constructs a new instance of this class based on the information in the given untyped event.
+	 * 
+	 * @param e
+	 *            the untyped event containing the information
 	 */
-	public JOverflowTreemapPlugin() {
-		super(PLUGIN_ID);
-	}
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		m_plugin = this;
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		m_plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static JOverflowTreemapPlugin getDefault() {
-		return m_plugin;
+	public TreemapEvent(Event e) {
+		super(e);
 	}
 }
