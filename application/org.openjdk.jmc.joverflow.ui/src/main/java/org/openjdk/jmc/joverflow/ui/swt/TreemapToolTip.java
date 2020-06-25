@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 
-/*package-private*/ class TreemapToolTip extends ToolTip {
+class TreemapToolTip extends ToolTip {
 	private static final int PADDING = 5;
 
 	private TreemapItem item = null;

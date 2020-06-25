@@ -102,7 +102,7 @@ public class Breadcrumb extends Canvas {
 		addMouseMoveListener(this::onMouseMove);
 	}
 
-	/* package-private */ static Composite checkNull(Composite control) {
+	static Composite checkNull(Composite control) {
 		if (control == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -110,7 +110,7 @@ public class Breadcrumb extends Canvas {
 		return control;
 	}
 
-	/* package-private */ void createItem(BreadcrumbItem item) {
+	void createItem(BreadcrumbItem item) {
 		items.push(item);
 
 		redraw();

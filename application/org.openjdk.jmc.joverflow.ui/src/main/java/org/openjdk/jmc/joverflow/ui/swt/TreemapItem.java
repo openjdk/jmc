@@ -122,7 +122,7 @@ public class TreemapItem extends Item {
 		}
 	}
 
-	/* package-private */ static TreemapItem checkNull(TreemapItem item) {
+	static TreemapItem checkNull(TreemapItem item) {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -171,7 +171,7 @@ public class TreemapItem extends Item {
 		apparentWeight = sum;
 	}
 
-	/* package-private */ void paintItem(GC gc, Rectangle bounds, boolean all) {
+	void paintItem(GC gc, Rectangle bounds, boolean all) {
 		this.bounds = bounds;
 
 		Color bg = gc.getBackground();

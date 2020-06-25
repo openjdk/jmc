@@ -49,7 +49,7 @@ import java.util.Objects;
  * 
  * @see TreemapItem
  */
-/* package-private */ class SquarifiedTreemap {
+class SquarifiedTreemap {
 
 	/*
 	 * The algorithm this implements is described in detail here:

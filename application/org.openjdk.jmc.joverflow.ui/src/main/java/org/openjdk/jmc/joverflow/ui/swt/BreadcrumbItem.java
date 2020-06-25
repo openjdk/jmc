@@ -78,7 +78,7 @@ public class BreadcrumbItem extends Item {
 		parent.createItem(this);
 	}
 
-	/* package-private */ void paintItem(GC gc, Rectangle bounds) {
+	void paintItem(GC gc, Rectangle bounds) {
 		Color bg = gc.getBackground();
 		Color fg = gc.getForeground();
 		Font font = gc.getFont();
@@ -131,7 +131,7 @@ public class BreadcrumbItem extends Item {
 		gc.setFont(font);
 	}
 
-	/* package-private */ Point getDimension(GC gc) {
+	Point getDimension(GC gc) {
 		Font font = gc.getFont();
 		gc.setFont(getFont());
 

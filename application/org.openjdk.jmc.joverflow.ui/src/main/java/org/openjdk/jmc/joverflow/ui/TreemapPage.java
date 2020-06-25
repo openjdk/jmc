@@ -65,7 +65,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-/* package-private */ class TreemapPage extends Page implements ModelListener {
+class TreemapPage extends Page implements ModelListener {
 	private static final Color[] COLORS = { //
 			new Color(Display.getCurrent(), 250, 206, 210), // red
 			new Color(Display.getCurrent(), 185, 214, 255), // blue
