@@ -28,13 +28,11 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 
 public class LuceneVersionRule implements IRule {
-	
+
 	private static final String RESULT_ID = "LuceneVersion"; //$NON-NLS-1$
 
 	private enum LuceneConsumer {
-		LUCENE,
-		SOLR,
-		ELASTIC_SEARCH;
+		LUCENE, SOLR, ELASTIC_SEARCH;
 	}
 
 	@Override
@@ -59,11 +57,14 @@ public class LuceneVersionRule implements IRule {
 			double score = RulesToolkit.mapExp100(lookaheadSuccessErrors.longValue(), 2, 20);
 			switch (consumerType) {
 			case ELASTIC_SEARCH:
-				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_ES), Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_ES));
+				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_ES),
+						Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_ES));
 			case SOLR:
-				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_SOLR), Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_SOLR));
+				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_SOLR),
+						Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_SOLR));
 			default:
-				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_LUCENE), Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_LUCENE));
+				return new Result(this, score, Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_LUCENE),
+						Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_LUCENE));
 			}
 		} else if (lookaheadSuccessErrors.longValue() == 1) {
 			switch (consumerType) {
@@ -80,7 +81,8 @@ public class LuceneVersionRule implements IRule {
 
 	private LuceneConsumer isElasticSearch(IItemCollection items) {
 		for (IItemIterable itemIterable : items) {
-			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(itemIterable.getType());
+			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = JfrAttributes.EVENT_STACKTRACE
+					.getAccessor(itemIterable.getType());
 			for (IItem item : itemIterable) {
 				IMCStackTrace member = stacktraceAccessor.getMember(item);
 				for (IMCFrame frame : member.getFrames()) {
