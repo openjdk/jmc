@@ -516,6 +516,7 @@ public class Messages extends NLS {
 	public static String ThreadsPage_LANE_FILTER_HEADER;
 	public static String ThreadsPage_LANE_TOOLTIP_TITLE;
 	public static String ThreadsPage_NAME;
+	public static String ThreadsPage_NAME_LEGACY;
 	public static String ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
 	public static String ThreadsPage_TABLE_POPUP_DESCRIPTION;
 	public static String ThreadsPage_TABLE_POPUP_TITLE;

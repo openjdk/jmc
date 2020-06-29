@@ -65,7 +65,6 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	private static final String NEW_START_TIME = "08:06:19:500";
 	private static final String INVALID_START_TIME = "08:06:19:480";
 	private static final String INVALID_END_TIME = "08:07:19:733";
-	private static final String DEFAULT_ZOOM = "100.00 %";
 	private static final String HIDE_THREAD = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_HIDE_THREAD_ACTION;
 	private static final String RESET_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
 	private static final String TABLE_TOOLTIP = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_VIEW_THREAD_DETAILS;
@@ -122,50 +121,45 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testZoom() {
+		MCText startTimeField = MCText.getByText(START_TIME);
 		MCButton zoomInBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_IN));
 		MCButton zoomOutBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_OUT));
-		MCText zoomDisplay = MCText.getByText(DEFAULT_ZOOM);
 
-		//zoom with display bar
-		Assert.assertEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
+		// zoom with display bar
+		Assert.assertEquals(START_TIME, startTimeField.getText());
 		zoomInBtn.click();
 		chartCanvas.clickChart();
-		Assert.assertNotEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
+		Assert.assertNotEquals(START_TIME, startTimeField.getText());
 
 		zoomOutBtn.click();
 		chartCanvas.clickChart();
-		Assert.assertEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
+		Assert.assertEquals(START_TIME, startTimeField.getText());
 
-		//zoom with controls
+		// zoom with controls
 		chartCanvas.clickChart();
 		chartCanvas.keyboardZoomIn();
-		Assert.assertNotEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
+		Assert.assertNotEquals(START_TIME, startTimeField.getText());
 
 		chartCanvas.keyboardZoomOut();
-		Assert.assertEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
+		Assert.assertEquals(START_TIME, startTimeField.getText());
 	}
 
 	@Test
 	public void testResetButtons() {
 		MCText StartTimeField = MCText.getByText(START_TIME);
-		MCText zoomDisplay = MCText.getByText(DEFAULT_ZOOM);
 		MCButton resetBtn = MCButton.getByLabel(RESET_BUTTON);
 		MCButton scaleToFitBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_SCALE_TO_FIT));
 
 		StartTimeField.setText(NEW_START_TIME);
 		Assert.assertNotEquals(START_TIME, StartTimeField.getText());
-		Assert.assertNotEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
 
 		resetBtn.click();
 		Assert.assertEquals(START_TIME, StartTimeField.getText());
-		Assert.assertEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
 
 		StartTimeField.setText(NEW_START_TIME);
 		Assert.assertNotEquals(START_TIME, StartTimeField.getText());
-		Assert.assertNotEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
 
 		scaleToFitBtn.click();
-		Assert.assertEquals(zoomDisplay.getText(), DEFAULT_ZOOM);
 		Assert.assertEquals(START_TIME, StartTimeField.getText());
 	}
 
