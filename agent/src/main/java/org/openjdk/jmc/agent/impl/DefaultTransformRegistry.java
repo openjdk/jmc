@@ -253,7 +253,6 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			while (streamReader.hasNext()) {
 				if (streamReader.isStartElement()) {
 					String key = streamReader.getName().getLocalPart();
-					System.out.println("Got Key: " + key);
 					streamReader.next();
 					if (streamReader.hasText()) {
 						String value = streamReader.getText();

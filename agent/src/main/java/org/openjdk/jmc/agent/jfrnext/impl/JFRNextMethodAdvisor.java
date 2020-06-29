@@ -81,21 +81,21 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		this.returnTypeRef = Type.getReturnType(desc);
 		this.eventType = Type.getObjectType(transformDescriptor.getEventClassName());
 
-		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow(); // don't instrument inner throws if rethrow is enabled
+		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow() || !transformDescriptor.isEmitOnException(); // don't instrument inner throws if rethrow is enabled
 	}
 
 	@Override
 	public void visitCode() {
 		super.visitCode();
 
-		if (transformDescriptor.isUseRethrow()) {
+		if (transformDescriptor.isUseRethrow() || transformDescriptor.isEmitOnException()) {
 			visitLabel(tryBegin);
 		}
 	}
 
 	@Override
 	public void visitEnd() {
-		if (transformDescriptor.isUseRethrow()) {
+		if (transformDescriptor.isUseRethrow() && !transformDescriptor.isEmitOnException()) {
 			visitLabel(tryEnd);
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
 
@@ -105,24 +105,16 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			shouldInstrumentThrow = true;
 			visitInsn(ATHROW);
 		} else if (transformDescriptor.isEmitOnException()) {
-			// If we've specified that we only want to emit on exception we should commit event here
 			visitLabel(tryEnd);
-			visitLabel(catchBegin);
-			mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
-			// Rethrow if desired, otherwise return.
-			if (transformDescriptor.isUseRethrow()) {
-				visitInsn(ATHROW);
-			} else {
-				if (returnTypeRef.getSort() != Type.VOID) {
-					ReturnValue returnValue = transformDescriptor.getReturnValue();
-					if (returnValue != null) {
-						emitSettingReturnParam(0, returnValue);
-					}
-				}
-				visitInsn(RETURN);
-			}
 			visitTryCatchBlock(tryBegin, tryEnd, catchBegin, THROWABLE_BINARY_NAME);
-			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+			if (!transformDescriptor.isUseRethrow()) {
+				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+				visitInsn(RETURN);
+			} else {
+				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+				shouldInstrumentThrow = true;
+				visitInsn(ATHROW);
+			}
 		}
 		super.visitEnd();
 	}
@@ -250,8 +242,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	@Override
 	protected void onMethodExit(int opcode) {
 		if (transformDescriptor.isEmitOnException()) {
-			// We handle event comitting/returning elsewhere, nothing to do here.
-			return;
+			visitLabel(catchBegin);
 		}
 		if (opcode == ATHROW && !shouldInstrumentThrow) {
 			return;

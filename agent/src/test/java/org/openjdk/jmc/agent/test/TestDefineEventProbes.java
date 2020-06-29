@@ -98,7 +98,7 @@ public class TestDefineEventProbes {
 	public void testDefineEventProbes() throws Exception {
 		boolean exceptionThrown = false;
 		try {
-			dumpByteCode(TestToolkit.getByteCode(InstrumentMe.class));
+			//dumpByteCode(TestToolkit.getByteCode(InstrumentMe.class));
 			InstrumentMe.printHelloWorldJFR6();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);

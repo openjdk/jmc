@@ -59,7 +59,8 @@ public class TestEmitOnlyOnException {
 	private static final String EVENT_DESCRIPTION = "JFR Emit on Exception Event %TEST_NAME%";
 	private static final String EVENT_PATH = "demo/emitonexceptionevent";
 	private static final String EVENT_CLASS_NAME = "org.openjdk.jmc.agent.test.TestDummy";
-	private static final String METHOD_NAME = "testWithoutException";
+	private static final String METHOD_NAME = "testWithException";
+	private static final String METHOD_NAME_2 = "testWithoutException";
 	private static final String METHOD_DESCRIPTOR = "()V";
 	
 	private static final String XML_DESCRIPTION = "<jfragent>"
@@ -79,18 +80,25 @@ public class TestEmitOnlyOnException {
 			+ "</method>"
 			+ "<location>WRAP</location>"
 			+ "</event>"
+			+ "<event id=\"" + EVENT_ID + "2" + "\">"
+			+ "<name>" + EVENT_NAME + "2" + "</name>"
+			+ "<description>" + EVENT_DESCRIPTION + "2" + "</description>"
+			+ "<path>" + EVENT_PATH + "</path>"
+			+ "<stacktrace>true</stacktrace>"
+			+ "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>"
+			+ "<name>" + METHOD_NAME_2 + "</name>"
+			+ "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
+			+ "</method>"
+			+ "<location>WRAP</location>"
+			+ "</event>"
 			+ "</events>"
 			+ "</jfragent>";
 	
 	@Test
 	public void testEmitOnException() throws Exception {
 		TestDummy t = new TestDummy();
-		System.out.println("==== Pre Instrumentation ====");
-		dumpByteCode(TestToolkit.getByteCode(TestDummy.class));
-		System.out.println("=============================");
 		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(XML_DESCRIPTION.getBytes())); //$NON-NLS-1$
-		System.out.println(registry.getClassNames().toString());
-		System.out.println(Type.getInternalName(TestDummy.class));
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(TestDummy.class)));
 		
 		Transformer jfrTransformer = new Transformer(registry);
@@ -103,9 +111,6 @@ public class TestEmitOnlyOnException {
 			t.testWithoutException();
 			t.testWithException();
 		} catch (Exception e) {}
-		System.out.println("==== Post Instrumentation ====");
-		dumpByteCode(transformedClass);
-		System.out.println("==============================");
 	}
 	
 	public void dumpByteCode(byte[] transformedClass) throws IOException {
