@@ -67,7 +67,6 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	private Label tryBegin = new Label();
 	private Label tryEnd = new Label();
 	private Label catchBegin = new Label();
-	private Label catchEnd = new Label();
 
 	private boolean shouldInstrumentThrow;
 
