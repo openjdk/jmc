@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -62,7 +61,6 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.item.ItemFilters.Types;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -97,13 +95,11 @@ public class ThreadGraphLanes {
 	private List<IAction> actions;
 	private String tooltipTitle;
 	private EventTypeFolderNode typeTree;
-	private boolean quickFilterExist;
 
 	public ThreadGraphLanes(Supplier<StreamModel> dataSourceSupplier, Runnable buildChart) {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
 		this.actions = new ArrayList<>();
-		this.quickFilterExist = false;
 		this.typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
 				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
 	}
@@ -149,20 +145,6 @@ public class ThreadGraphLanes {
 		return ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]));
 	}
 
-	/**
-	 * Retrieves the set of lane names that are currently enabled.<br>
-	 * Note: The "Rest lane" is of type ItemFilters$Composite, and cannot be cast to Types, so it
-	 * gets filtered out of the end result.
-	 * 
-	 * @return the enabled lanes independent from the rest lane
-	 */
-	public Set<String> getEnabledLanes() {
-		List<IItemFilter> laneFilters = laneDefs.stream()
-				.filter((Predicate<? super LaneDefinition>) LaneDefinition::isEnabledAndNotRestLane)
-				.map(ld -> ld.getFilter()).collect(Collectors.toList());
-		return ((Types) ItemFilters.or(laneFilters.toArray(new IItemFilter[laneFilters.size()]))).getTypes();
-	}
-
 	private void setTooltipTitle(String description) {
 		this.tooltipTitle = description;
 	}
@@ -173,31 +155,6 @@ public class ThreadGraphLanes {
 
 	private void resetTooltipTitle() {
 		this.tooltipTitle = null;
-	}
-
-	/**
-	 * Introduces a "Quick Filter" to the lane definitions which is controlled by the dropdown lane
-	 * filter. Initially, the enabled activity lanes will be a copy of the currently enabled lanes.
-	 * When initially used, the "Quick Filter" will be the only active lane definition in an attempt
-	 * to preserve the lane activity of the existing lane definitions. The "Quick Filter" is meant
-	 * for easy viewing of activities, and will not be persisted.
-	 */
-	public void useDropdownFilter(LaneDefinition quickFilterDef) {
-		if (quickFilterExist) {
-			for (int i = 0; i < laneDefs.size(); i++) {
-				if (quickFilterDef.getName().equals(laneDefs.get(i).getName())) {
-					laneDefs.remove(laneDefs.get(i));
-					laneDefs.add(i, quickFilterDef);
-				}
-			}
-		} else {
-			for (int i = 0; i < laneDefs.size(); i++) {
-				setLaneDefinitionEnablement(laneDefs.get(i), i, false);
-			}
-			laneDefs.add(0, quickFilterDef);
-			quickFilterExist = true;
-		}
-		buildChart.run();
 	}
 
 	public void buildChart() {

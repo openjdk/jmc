@@ -76,10 +76,12 @@ public class DropdownLaneFilter extends Composite {
 		dropdownButton.addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				// FIXME: There are currently issues with paint timings with Mac OS at the moment
+				// FIXME: Mac: There are currently issues with paint timings with Mac OS at the moment
 				// where toggling an activity lane from the dropdown does not redraw the chart.
-				// As a precaution, use the default Edit Lanes Dialog instead for Mac.
-				if (Environment.getOSType() == OSType.MAC) {
+				// FIXME: Windows: works IFF the menu item that is toggled is also highlight. For example,
+				// if the user wanted to toggle the Java Compiler lanes, then it's not enough to just click
+				// the checkbox - the Java Compiler item must be highlighted at the time of toggling
+				if (Environment.getOSType() != OSType.LINUX) {
 					lanes.openEditLanesDialog(mms, false);
 					dropdownButton.setSelection(false);
 				} else {

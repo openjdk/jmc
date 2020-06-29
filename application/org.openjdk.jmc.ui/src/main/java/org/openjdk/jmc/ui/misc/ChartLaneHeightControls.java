@@ -48,6 +48,7 @@ public class ChartLaneHeightControls extends Composite {
 	private Button overviewBtn;
 	private ChartCanvas chartCanvas;
 	private ChartTextCanvas textCanvas;
+	private final int ADJUST_AMOUNT = 3;
 
 	public ChartLaneHeightControls(Composite parent) {
 		super(parent, SWT.NONE);
@@ -69,7 +70,7 @@ public class ChartLaneHeightControls extends Composite {
 		decHeightBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				adjustLaneHeight(-1);
+				adjustLaneHeight(-ADJUST_AMOUNT);
 			}
 		});
 		decHeightBtn.setEnabled(false);
@@ -83,7 +84,7 @@ public class ChartLaneHeightControls extends Composite {
 		incHeightBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				adjustLaneHeight(1);
+				adjustLaneHeight(ADJUST_AMOUNT);
 			}
 		});
 	}

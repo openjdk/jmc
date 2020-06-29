@@ -171,6 +171,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 			@Override
 			public void handleEvent(Event event) {
 				onSetRange(false);
+				// TODO: this should also reset the table selection
 			}
 		};
 		controlBar = new ChartControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
@@ -230,7 +231,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		toolkit.adapt(sash);
 
-		ScrolledComposite scText = new ScrolledComposite(sash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		ScrolledComposite scText = new ScrolledComposite(sash, SWT.BORDER | SWT.V_SCROLL);
 		GridData scTextGd = new GridData(SWT.FILL, SWT.FILL, false, true);
 		scTextGd.widthHint = 180;
 		scText.setLayoutData(scTextGd);
