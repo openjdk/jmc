@@ -56,7 +56,7 @@ public class TypeLabelProvider {
 		case JdkTypeIDs.BIASED_LOCK_SELF_REVOCATION:
 			return Palette.PF_LIGHT_GREEN_400.getAWTColor();
 		case JdkTypeIDs.FILE_READ:
-			return Palette.PF_ORANGE_400.getAWTColor();
+			return Palette.PF_ORANGE_300.getAWTColor();
 		case JdkTypeIDs.FILE_WRITE:
 			return Palette.PF_CYAN_600.getAWTColor();
 		case JdkTypeIDs.ERRORS_THROWN:
@@ -76,7 +76,7 @@ public class TypeLabelProvider {
 		case JdkTypeIDs.SWEEP_CODE_CACHE:
 			return Palette.PF_LIGHT_GREEN_500.getAWTColor();
 		case JdkTypeIDs.SOCKET_READ:
-			return Palette.PF_RED_200.getAWTColor();
+			return new Color(0xC8321E);
 		case JdkTypeIDs.SOCKET_WRITE:
 			return Palette.PF_LIGHT_BLUE_500.getAWTColor();
 		case JdkTypeIDs.CLASS_LOAD:
@@ -84,27 +84,21 @@ public class TypeLabelProvider {
 		case JdkTypeIDs.COMPILATION:
 			return Palette.PF_GOLD_300.getAWTColor();
 		case JdkTypeIDs.GC_PAUSE:
-			return Palette.PF_ORANGE_500.getAWTColor();
+			return new Color(0xDC3C00);
 		case JdkTypeIDs.GC_PAUSE_L1:
-			return Palette.PF_GOLD_400.getAWTColor();
+			return new Color(0xE6CB45);
 		case JdkTypeIDs.GC_PAUSE_L2:
-			return Palette.PF_BLUE_400.getAWTColor();
+			return new Color(0x458AE6);
 		case JdkTypeIDs.GC_PAUSE_L3:
-			return Palette.PF_PURPLE_300.getAWTColor();
+			return new Color(0xE645E2);
 		case JdkTypeIDs.GC_PAUSE_L4:
-			return Palette.PF_LIGHT_GREEN_600.getAWTColor();
+			return new Color(0x85A115);
 		case JdkTypeIDs.SAFEPOINT_BEGIN:
 			return Palette.PF_PURPLE_200.getAWTColor();
 		case JdkTypeIDs.SAFEPOINT_CLEANUP:
 			return Palette.PF_PURPLE_500.getAWTColor();
 		case JdkTypeIDs.SAFEPOINT_CLEANUP_TASK:
 			return Palette.PF_BLUE_300.getAWTColor();
-		case JdkTypeIDs.SAFEPOINT_END:
-			return Palette.PF_GREEN_400.getAWTColor();
-		case JdkTypeIDs.SAFEPOINT_STATE_SYNC:
-			return Palette.PF_LIGHT_GREEN_200.getAWTColor();
-		case JdkTypeIDs.SAFEPOINT_WAIT_BLOCKED:
-			return Palette.PF_GREEN_500.getAWTColor();
 		case JdkTypeIDs.VM_OPERATIONS:
 			return Palette.PF_ORANGE_500.getAWTColor();
 		case JdkTypeIDs.ALLOC_INSIDE_TLAB:
