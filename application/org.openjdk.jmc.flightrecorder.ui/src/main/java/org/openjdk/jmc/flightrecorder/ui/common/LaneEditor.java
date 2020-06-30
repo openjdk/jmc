@@ -389,23 +389,23 @@ public class LaneEditor {
 			}
 			if (selectedIndex >= 0) {
 				LaneDefinition ld = lanes.get(selectedIndex);
-				if (!ld.isRestLane()) {
-					IItemFilter newFilter = ItemFilters
-							.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
-					LaneDefinition newLd = new LaneDefinition(ld.name, lanesViewer.getChecked(ld), newFilter,
-							ld.isRestLane);
-					lanes.set(selectedIndex, newLd);
-					lanesViewer.replace(newLd, selectedIndex);
-					if (restLane != null) {
-						LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled,
-								getRestFilter(lanes), true);
-						int restIndex = lanes.indexOf(restLane);
-						lanes.set(restIndex, newRest);
-						lanesViewer.replace(newRest, restIndex);
-						restLane = newRest;
-					}
-					lanesViewer.refresh();
+				IItemFilter newFilter = ItemFilters
+						.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
+				LaneDefinition newLd = new LaneDefinition(ld.name, lanesViewer.getChecked(ld), newFilter,
+						ld.isRestLane);
+				lanes.set(selectedIndex, newLd);
+				lanesViewer.replace(newLd, selectedIndex);
+				if (ld.isRestLane()) {
+					restLane = newLd;
+				} else {
+					LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled,
+							getRestFilter(lanes), true);
+					int restIndex = findLaneDefinitionIndexByName(restLane);
+					lanes.set(restIndex, newRest);
+					lanesViewer.replace(newRest, restIndex);
+					restLane = newRest;
 				}
+				lanesViewer.refresh();
 			}
 		}
 	}
