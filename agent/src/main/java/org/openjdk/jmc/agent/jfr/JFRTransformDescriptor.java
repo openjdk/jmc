@@ -66,6 +66,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final boolean useRethrow;
 	private final boolean allowToString;
 	private final boolean allowConverter;
+	private final boolean emitOnException;
 	private final List<Parameter> parameters;
 	private final ReturnValue returnValue;
 	private final List<Field> fields;
@@ -82,6 +83,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		useRethrow = getBoolean(ATTRIBUTE_RETHROW, false);
 		allowToString = getBoolean(ATTRIBUTE_ALLOW_TO_STRING, false);
 		allowConverter = getBoolean(ATTRIBUTE_ALLOW_CONVERTER, false);
+		emitOnException = getBoolean(ATTRIBUTE_EMIT_ON_EXCEPTION, false);
 		this.parameters = parameters;
 		this.fields = fields;
 		this.returnValue = returnValue;
@@ -148,6 +150,10 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	
 	public boolean isAllowConverter() {
 		return allowConverter;
+	}
+	
+	public boolean isEmitOnException() {
+		return emitOnException;
 	}
 
 	private String initializeClassPrefix() {

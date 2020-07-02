@@ -36,6 +36,13 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element type="xs:boolean" name="emitonexception" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Causes events to only be emitted if the instrmented method throws an exception
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 
