@@ -55,6 +55,18 @@
             restorable="true">
       </view>
    </extension>
+ <extension point="org.eclipse.ui.views">
+     <category name="JOverflow" id="JOverflow"/>
+      <view
+                allowMultiple="false"
+                category="JOverflow"
+                class="org.openjdk.jmc.joverflow.ui.TreemapPageBookView"
+                id="org.openjdk.jmc.joverflow.ui.TreemapPageBookView"
+                icon="icons/treemap.png"
+                name="JOverflow Treemap"
+                restorable="true">
+      </view>
+   </extension>
  
  <extension point="org.eclipse.ui.editors">
       <editor
