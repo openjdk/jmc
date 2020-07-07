@@ -753,7 +753,11 @@ public class ChartCanvas extends Canvas {
 	 */
 	public void redrawChart() {
 		awtNeedsRedraw = true;
-		redraw();
+		getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				redraw();
+			}
+		});
 	}
 
 	private void redrawChartText() {

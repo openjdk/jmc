@@ -433,7 +433,6 @@ public class ChartTextCanvas extends Canvas {
 	}
 
 	public void syncScroll(Point scrollPoint) {
-		getParent().getVerticalBar().setVisible(false);
 		((ScrolledComposite) getParent()).setOrigin(scrollPoint);
 	}
 
@@ -466,7 +465,11 @@ public class ChartTextCanvas extends Canvas {
 	 */
 	public void redrawChartText() {
 		awtNeedsRedraw = true;
-		redraw();
+		getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				redraw();
+			}
+		});
 	}
 
 	private void redrawChart() {
