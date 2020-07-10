@@ -41,18 +41,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
@@ -77,7 +76,6 @@ import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
-import org.openjdk.jmc.flightrecorder.ui.common.FilterComponent;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
@@ -87,18 +85,14 @@ import org.openjdk.jmc.flightrecorder.ui.common.ItemRow;
 import org.openjdk.jmc.flightrecorder.ui.common.DropdownLaneFilter;
 import org.openjdk.jmc.flightrecorder.ui.common.ThreadGraphLanes;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
-import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.QuantitySpanRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
-import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
-import org.openjdk.jmc.ui.wizards.IPerformFinishable;
-import org.openjdk.jmc.ui.wizards.OnePageWizardDialog;
 
 public class ThreadsPage extends AbstractDataPage {
 
@@ -169,18 +163,25 @@ public class ThreadsPage extends AbstractDataPage {
 
 	private class ThreadsPageUi extends ChartAndPopupTableUI {
 		private static final String THREADS_TABLE_FILTER = "threadsTableFilter"; //$NON-NLS-1$
+		private static final String FOLD_CHART_ACTION = "foldChartAction"; //$NON-NLS-1$
+		private static final String FOLD_TABLE_ACTION = "foldTableAction"; //$NON-NLS-1$
 		private static final String HIDE_THREAD = "hideThread"; //$NON-NLS-1$
 		private static final String RESET_CHART = "resetChart"; //$NON-NLS-1$
-		private static final String TABLE = "table"; //$NON-NLS-1$
+		public static final String TOOLBAR_FOLD_ACTIONS = "foldActions"; //$NON-NLS-1$
 		private Boolean isChartMenuActionsInit;
 		private Boolean isChartModified;
+		private Boolean isToolbarAction = false;
 		private Boolean reloadThreads;
+		private IAction foldChartAction;
+		private IAction foldTableAction;
 		private IAction hideThreadActionChart;
 		private IAction hideThreadActionText;
 		private IAction resetChartAction;
+		private int[] weights;
 		private List<IXDataRenderer> threadRows;
 		private MCContextMenuManager mmChart;
 		private MCContextMenuManager mmText;
+		private MCContextMenuManager[] mms;
 		private ThreadGraphLanes lanes;
 		private DropdownLaneFilter laneFilter;
 
@@ -189,25 +190,127 @@ public class ThreadsPage extends AbstractDataPage {
 					flavorSelectorState, JfrAttributes.EVENT_THREAD);
 			mmChart = (MCContextMenuManager) chartCanvas.getContextMenu();
 			mmText = (MCContextMenuManager) textCanvas.getContextMenu();
-			sash.setOrientation(SWT.HORIZONTAL);
+			mms = new MCContextMenuManager[] {mmChart, mmText};
+			initializeStoredSashWeights();
+			canvasSash.setOrientation(SWT.HORIZONTAL);
+			addMouseListenerToSash();
 			addActionsToContextMenu();
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
-			MCContextMenuManager[] mms = {mmChart, mmText};
 			lanes.updateContextMenus(mms, false);
-			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mms, false),
-							Messages.ThreadsPage_EDIT_LANES,
-							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
-			form.getToolBarManager()
-					.add(ActionToolkit.action(() -> openViewThreadDetailsDialog(state),
-							Messages.ThreadsPage_VIEW_THREAD_DETAILS,
-							FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE)));
+			addActionsToToolbar(form.getToolBarManager());
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
 			setupLaneFilter();
 			buildChart();
+			table.getManager().setSelectionState(histogramSelectionState);
+			for (Item columnWidget : ((TableViewer) table.getManager().getViewer()).getTable().getColumns()) {
+				columnWidget.addListener(SWT.Selection, e -> buildChart());
+			}
 			chart.setVisibleRange(visibleRange.getStart(), visibleRange.getEnd());
 			onFilterChange(tableFilter);
+		}
+
+		private void addActionsToToolbar(IToolBarManager tb) {
+			foldTableAction = ActionToolkit.checkAction(selected -> {
+				isToolbarAction = true;
+				performToolbarAction(FOLD_TABLE_ACTION, selected);
+				isToolbarAction = false;
+			}, sash.getWeights()[0] == 0 ? Messages.ThreadsPage_SHOW_TABLE_TOOLTIP : Messages.ThreadsPage_FOLD_TABLE_TOOLTIP, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE));
+			foldTableAction.setChecked(sash.getWeights()[0] == 0 ? false : true);
+
+			foldChartAction = ActionToolkit.checkAction(selected -> {
+				isToolbarAction = true;
+				performToolbarAction(FOLD_CHART_ACTION, selected);
+				isToolbarAction = false;
+			}, sash.getWeights()[1] == 0 ? Messages.ThreadsPage_SHOW_CHART_TOOLTIP : Messages.ThreadsPage_FOLD_CHART_TOOLTIP, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_CHART_BAR));
+			foldChartAction.setChecked(sash.getWeights()[1] == 0 ? false : true);
+
+			tb.add(new GroupMarker(TOOLBAR_FOLD_ACTIONS));
+			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, foldTableAction);
+			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, foldChartAction);
+			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, new Separator());
+		
+			tb.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mms, false), Messages.ThreadsPage_EDIT_LANES,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
+		}
+		
+		private void addMouseListenerToSash() {
+			for (int i = 0; i < sash.getChildren().length; i++) {
+				if (sash.getChildren()[i] instanceof Sash) {
+					sash.getChildren()[i].addMouseListener(new org.eclipse.swt.events.MouseListener() {
+
+						@Override
+						public void mouseDown(org.eclipse.swt.events.MouseEvent e) {
+							// if the user manually interacts with the sash to make a folded component visible again,
+							// ensure the tool bar items are checked accordingly
+							if (!isToolbarAction && (foldTableAction.isChecked() != foldChartAction.isChecked())) {
+								performToolbarAction(FOLD_TABLE_ACTION, true);
+								performToolbarAction(FOLD_CHART_ACTION, true);
+								foldTableAction.setChecked(true);
+								foldChartAction.setChecked(true);
+							}
+						}
+
+						@Override
+						public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {}
+
+						@Override
+						public void mouseUp(org.eclipse.swt.events.MouseEvent e) {}
+					});
+				}
+			}
+		}
+
+		private void performToolbarAction(String action, boolean selected) {
+			switch(action) {
+				case FOLD_TABLE_ACTION:
+					if (selected) {
+						sash.setWeights(this.getStoredSashWeights());
+						foldTableAction.setToolTipText(Messages.ThreadsPage_FOLD_TABLE_TOOLTIP);
+					} else {
+						// if the chart is folded, don't fold the table
+						if (sash.getWeights()[1] == 0) {
+							this.foldTableAction.setChecked(true);
+						} else {
+							this.setStoredSashWeights(sash.getWeights());
+							sash.setWeights(new int[] {0, 5});
+							foldTableAction.setToolTipText(Messages.ThreadsPage_SHOW_TABLE_TOOLTIP);
+						}
+					}
+					break;
+				case FOLD_CHART_ACTION:
+					if (selected) {
+						sash.setWeights(this.getStoredSashWeights());
+						foldChartAction.setToolTipText(Messages.ThreadsPage_FOLD_CHART_TOOLTIP);
+					} else {
+						// if the table is folded, don't fold the chart
+						if (sash.getWeights()[0] == 0) {
+							this.foldChartAction.setChecked(true);
+						} else {
+							this.setStoredSashWeights(sash.getWeights());
+							sash.setWeights(new int[] {1, 0});
+							foldChartAction.setToolTipText(Messages.ThreadsPage_SHOW_CHART_TOOLTIP);
+						}
+					}
+					break;
+			}
+		}
+		
+		private void initializeStoredSashWeights() {
+			// if either the chart or table are folded on init, store a default value of {1, 2}
+			if (sash.getWeights()[0] == 0 || sash.getWeights()[1] == 0) {
+				this.setStoredSashWeights(new int[] {1, 2});
+			} else {
+				this.setStoredSashWeights(sash.getWeights());
+			}
+		}
+
+		protected int[] getStoredSashWeights() {
+			return this.weights;
+		}
+
+		protected void setStoredSashWeights(int[] weights) {
+			this.weights = weights;
 		}
 
 		private void setupLaneFilter() {
@@ -260,19 +363,17 @@ public class ThreadsPage extends AbstractDataPage {
 		 */
 		private void addActionsToContextMenu() {
 			mmChart.add(new Separator());
+			mmText.add(new Separator());
 			IAction hideThreadActionChart = ActionToolkit.action(
 					() -> this.hideThread(chartCanvas.getHoveredItemData()), Messages.ThreadsPage_HIDE_THREAD_ACTION,
 					UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_DELETE));
-
 			hideThreadActionChart.setId(HIDE_THREAD);
 			this.hideThreadActionChart = hideThreadActionChart;
 			mmChart.add(hideThreadActionChart);
 
-			mmText.add(new Separator());
 			IAction hideThreadActionText = ActionToolkit.action(() -> this.hideThread(textCanvas.getHoveredItemData()),
 					Messages.ThreadsPage_HIDE_THREAD_ACTION,
 					UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_DELETE));
-
 			hideThreadActionText.setId(HIDE_THREAD);
 			this.hideThreadActionText = hideThreadActionText;
 			mmText.add(hideThreadActionText);
@@ -283,7 +384,6 @@ public class ThreadsPage extends AbstractDataPage {
 			resetChartAction.setId(RESET_CHART);
 			resetChartAction.setEnabled(this.isChartModified);
 			this.resetChartAction = resetChartAction;
-
 			mmChart.add(resetChartAction);
 			mmText.add(resetChartAction);
 
@@ -318,7 +418,7 @@ public class ThreadsPage extends AbstractDataPage {
 		@Override
 		protected IXDataRenderer getChartRenderer(IItemCollection itemsInTable, HistogramSelection tableSelection) {
 			List<IXDataRenderer> rows = new ArrayList<>();
-			ItemHistogram histogram = getUndisposedTable();
+			ItemHistogram histogram = table;
 			IItemCollection selectedItems;
 			HistogramSelection selection;
 			if (tableSelection.getRowCount() == 0) {
@@ -371,12 +471,11 @@ public class ThreadsPage extends AbstractDataPage {
 			tableFilterComponent.saveState(state.createChild(THREADS_TABLE_FILTER));
 			lanes.saveTo(state);
 			saveToLocal();
-			Display.getCurrent().setData(NO_INPUT_METHOD, null);
 		}
 
 		private void saveToLocal() {
 			flavorSelectorState = flavorSelector.getFlavorSelectorState();
-			histogramSelectionState = getUndisposedTable().getManager().getSelectionState();
+			histogramSelectionState = table.getManager().getSelectionState();
 			visibleRange = chart.getVisibleRange();
 		}
 
@@ -388,79 +487,8 @@ public class ThreadsPage extends AbstractDataPage {
 			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
 			return lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANE)));
 		}
-
-		private TablePopup tablePopup;
-
-		public void openViewThreadDetailsDialog(IState state) {
-			tablePopup = new TablePopup(state);
-			OnePageWizardDialog.openAndHideCancelButton(tablePopup, 500, 600);
-		}
-
-		private class TablePopup extends WizardPage implements IPerformFinishable {
-
-			private IState state;
-
-			protected TablePopup(IState state) {
-				super("ThreadDetailsPage"); //$NON-NLS-1$
-				this.state = state;
-				setTitle(Messages.ThreadsPage_TABLE_POPUP_TITLE);
-				setDescription(Messages.ThreadsPage_TABLE_POPUP_DESCRIPTION);
-			}
-
-			@Override
-			public void createControl(Composite parent) {
-				table = buildHistogram(parent, state.getChild(TABLE), JfrAttributes.EVENT_THREAD);
-				MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
-				ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
-				table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
-				table.getManager().getViewer()
-						.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
-				SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
-						NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, getName()), mm);
-				tableFilterComponent = FilterComponent.createFilterComponent(
-						table.getManager().getViewer().getControl(), table.getManager(), tableFilter,
-						model.getItems().apply(pageFilter), pageContainer.getSelectionStore()::getSelections,
-						this::onFilterChangeHelper);
-				mm.add(tableFilterComponent.getShowFilterAction());
-				mm.add(tableFilterComponent.getShowSearchAction());
-				table.getManager().setSelectionState(histogramSelectionState);
-				tableFilterComponent.loadState(state.getChild(THREADS_TABLE_FILTER));
-				onFilterChange(tableFilter);
-
-				if (selectionInput != null) {
-					table.getManager().getViewer().setSelection(new StructuredSelection(selectionInput));
-				}
-
-				Item[] columnWidgets = ((TableViewer) table.getManager().getViewer()).getTable().getColumns();
-				for (Item columWidget : columnWidgets) {
-					columWidget.addListener(SWT.Selection, e -> columnSortChanged());
-				}
-
-				setControl(parent);
-			}
-
-			private void columnSortChanged() {
-				if (!table.getSelection().getItems().hasItems()) {
-					buildChart();
-				}
-			}
-
-			private void onFilterChangeHelper(IItemFilter filter) {
-				onFilterChange(filter);
-			}
-
-			@Override
-			public boolean performFinish() {
-				IItemCollection lastSelection = table.getSelection().getItems();
-				table.show(lastSelection);
-				selectionInput = (Object[]) table.getManager().getViewer().getInput();
-				return true;
-			}
-		}
 	}
 
-	private static final String NO_INPUT_METHOD = "org.eclipse.swt.internal.gtk.noInputMethod"; //$NON-NLS-1$
-	private Object[] selectionInput;
 	private FlavorSelectorState flavorSelectorState;
 	private SelectionState histogramSelectionState;
 	private IItemFilter tableFilter;
@@ -469,7 +497,6 @@ public class ThreadsPage extends AbstractDataPage {
 	public ThreadsPage(IPageDefinition definition, StreamModel model, IPageContainer editor) {
 		super(definition, model, editor);
 		visibleRange = editor.getRecordingRange();
-		Display.getCurrent().setData(NO_INPUT_METHOD, true);
 	}
 
 	@Override

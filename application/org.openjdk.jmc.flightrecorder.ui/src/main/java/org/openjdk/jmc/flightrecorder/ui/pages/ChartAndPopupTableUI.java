@@ -65,14 +65,15 @@ import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.FilterComponent;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
-import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.XYChart;
+import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
+import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.ActionUiToolkit;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
 import org.openjdk.jmc.ui.misc.ChartControlBar;
@@ -93,13 +94,12 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	private static final int Y_OFFSET = 0;
 	protected ChartControlBar controlBar;
 	protected ChartTextCanvas textCanvas;
-	protected ItemHistogram hiddenTable;
 	protected IPageContainer pageContainer;
 	private ChartButtonGroup buttonGroup;
-	private Composite hiddenTableContainer;
 	private IItemCollection selectionItems;
 	private IItemFilter pageFilter;
 	private IRange<IQuantity> timeRange;
+	protected SashForm canvasSash;
 	private TimelineCanvas timelineCanvas;
 
 	ChartAndPopupTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
@@ -117,17 +117,22 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		this.model = model;
 		this.pageContainer = pageContainer;
 		form = DataPageToolkit.createForm(parent, toolkit, sectionTitle, icon);
+		sash = new SashForm(form.getBody(), SWT.VERTICAL);
+		toolkit.adapt(sash);
 
-		hiddenTableContainer = new Composite(form, SWT.NONE);
-		hiddenTableContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		hiddenTableContainer.setVisible(false);
-
-		hiddenTable = buildHistogram(hiddenTableContainer, state.getChild(TABLE), classifier);
-		hiddenTable.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
-
-		tableFilterComponent = FilterComponent.createFilterComponent(hiddenTable.getManager().getViewer().getControl(),
-				hiddenTable.getManager(), tableFilter, model.getItems().apply(pageFilter),
+		table = buildHistogram(sash, state.getChild(TABLE), classifier);
+		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
+		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
+		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
+		table.getManager().getViewer()
+		.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
+		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
+				NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, sectionTitle), mm);
+		tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
+				table.getManager(), tableFilter, model.getItems().apply(pageFilter),
 				pageContainer.getSelectionStore()::getSelections, this::onFilterChange);
+		mm.add(tableFilterComponent.getShowFilterAction());
+		mm.add(tableFilterComponent.getShowSearchAction());
 
 		/**
 		 * Scrolled Composite Page Container - Contains all page functionality Chart Container (1
@@ -143,7 +148,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		 */
 
 		// Scrolled Composite containing all page functionality
-		ScrolledComposite scPageContainer = new ScrolledComposite(form.getBody(), SWT.H_SCROLL | SWT.V_SCROLL);
+		ScrolledComposite scPageContainer = new ScrolledComposite(sash, SWT.H_SCROLL | SWT.V_SCROLL);
 
 		chartContainer = toolkit.createComposite(scPageContainer);
 		chartContainer.setLayout(new GridLayout());
@@ -171,7 +176,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 			@Override
 			public void handleEvent(Event event) {
 				onSetRange(false);
-				// TODO: this should also reset the table selection
+				table.getManager().getViewer().setSelection(null);
 			}
 		};
 		controlBar = new ChartControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
@@ -227,18 +232,18 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		chartAndTextContainer.setLayout(gridLayout);
 		chartAndTextContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		sash = new SashForm(chartAndTextContainer, SWT.VERTICAL);
-		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		toolkit.adapt(sash);
+		canvasSash = new SashForm(chartAndTextContainer, SWT.HORIZONTAL);
+		canvasSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		toolkit.adapt(canvasSash);
 
-		ScrolledComposite scText = new ScrolledComposite(sash, SWT.BORDER | SWT.V_SCROLL);
+		ScrolledComposite scText = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
 		GridData scTextGd = new GridData(SWT.FILL, SWT.FILL, false, true);
 		scTextGd.widthHint = 180;
 		scText.setLayoutData(scTextGd);
 		textCanvas = new ChartTextCanvas(scText);
 		textCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
 
-		ScrolledComposite scChart = new ScrolledComposite(sash, SWT.BORDER | SWT.V_SCROLL);
+		ScrolledComposite scChart = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
 		scChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		chartCanvas = new ChartCanvas(scChart);
 		chartCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -255,7 +260,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		scText.setExpandHorizontal(true);
 		scText.setExpandVertical(true);
 
-		timelineCanvas = new TimelineCanvas(chartAndTimelineContainer, chartCanvas, sash, Y_SCALE);
+		timelineCanvas = new TimelineCanvas(chartAndTimelineContainer, chartCanvas, canvasSash, Y_SCALE);
 		GridData gridData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
 		gridData.heightHint = (int) (TIMELINE_HEIGHT * Y_SCALE);
 		timelineCanvas.setLayoutData(gridData);
@@ -303,7 +308,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 						.ifPresent(a -> chartLegend.setSelection(new StructuredSelection(a)));
 			}
 		}
-
+		canvasSash.setWeights(new int[] {1, 4});
 		flavorSelector = FlavorSelector.itemsWithTimerange(form, pageFilter, model.getItems(), pageContainer,
 				this::onFlavorSelected, this::onSetRange, flavorSelectorState);
 	}
@@ -318,36 +323,40 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		}
 	}
 
-	@Override
-	public void saveTo(IWritableState writableState) {
-		table = getUndisposedTable();
-		super.saveTo(writableState);
-	}
-
 	private void onSetRange(Boolean useRange) {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
 		chart.resetZoomFactor();
+		table.getManager().getViewer().setSelection(null);
+		if (table != null) {
+			table.getManager().getViewer().setSelection(null);
+		}
 		controlBar.resetLaneHeightToMinimum();
 		buildChart();
+	}
+
+	@Override
+	public void saveTo(IWritableState writableState) {
+		super.saveTo(writableState);
 	}
 
 	private void onFlavorSelected(IItemCollection items, IRange<IQuantity> timeRange) {
 		this.selectionItems = items;
 		this.timeRange = timeRange;
-		hiddenTable.show(getItems());
+		table.show(getItems());
+
 		if (selectionItems != null) {
-			Object[] tableInput = (Object[]) hiddenTable.getManager().getViewer().getInput();
+			Object[] tableInput = (Object[]) table.getManager().getViewer().getInput();
 			if (tableInput != null) {
-				hiddenTable.getManager().getViewer().setSelection(new StructuredSelection(tableInput));
+				table.getManager().getViewer().setSelection(new StructuredSelection(tableInput));
 			} else {
-				hiddenTable.getManager().getViewer().setSelection(null);
+				table.getManager().getViewer().setSelection(null);
 			}
-		}
+        }
 	}
 
 	protected void buildChart() {
-		IXDataRenderer rendererRoot = getChartRenderer(getItems(), getUndisposedTable().getSelection());
+		IXDataRenderer rendererRoot = getChartRenderer(getItems(), table.getSelection());
 		chartCanvas.replaceRenderer(rendererRoot);
 		textCanvas.replaceRenderer(rendererRoot);
 	}
@@ -358,13 +367,5 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 
 	public void setTimeRange(IRange<IQuantity> range) {
 		this.timeRange = range;
-	}
-
-	protected ItemHistogram getUndisposedTable() {
-		return isDisposed(table) ? hiddenTable : table;
-	}
-
-	private boolean isDisposed(ItemHistogram histogram) {
-		return histogram == null ? true : histogram.getManager().getViewer().getControl().isDisposed();
 	}
 }
