@@ -203,6 +203,7 @@ public class ThreadsPage extends AbstractDataPage {
 			setupLaneFilter();
 			buildChart();
 			table.getManager().setSelectionState(histogramSelectionState);
+			tableFilterComponent.loadState(state.getChild(THREADS_TABLE_FILTER));
 			for (Item columnWidget : ((TableViewer) table.getManager().getViewer()).getTable().getColumns()) {
 				columnWidget.addListener(SWT.Selection, e -> buildChart());
 			}
@@ -273,7 +274,7 @@ public class ThreadsPage extends AbstractDataPage {
 							this.foldTableAction.setChecked(true);
 						} else {
 							this.setStoredSashWeights(sash.getWeights());
-							sash.setWeights(new int[] {0, 5});
+							sash.setWeights(new int[] {0, 3});
 							foldTableAction.setToolTipText(Messages.ThreadsPage_SHOW_TABLE_TOOLTIP);
 						}
 					}
@@ -297,9 +298,9 @@ public class ThreadsPage extends AbstractDataPage {
 		}
 		
 		private void initializeStoredSashWeights() {
-			// if either the chart or table are folded on init, store a default value of {1, 2}
+			// if either the chart or table are folded on init, store a default value of {1, 3}
 			if (sash.getWeights()[0] == 0 || sash.getWeights()[1] == 0) {
-				this.setStoredSashWeights(new int[] {1, 2});
+				this.setStoredSashWeights(new int[] {1, 3});
 			} else {
 				this.setStoredSashWeights(sash.getWeights());
 			}

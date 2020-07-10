@@ -85,9 +85,10 @@ import org.openjdk.jmc.ui.misc.TimelineCanvas;
 abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 
 	private static final double Y_SCALE = Display.getCurrent().getDPI().y / Environment.getNormalDPI();
-	private static final String SASH = "sash"; //$NON-NLS-1$
 	private static final String TABLE = "table"; //$NON-NLS-1$
 	private static final String CHART = "chart"; //$NON-NLS-1$
+	private static final String CANVAS_SASH = "canvasSash"; //$NON-NLS-1$
+	private static final String PAGE_SASH = "pageSash"; //$NON-NLS-1$
 	private static final String SELECTED = "selected"; //$NON-NLS-1$
 	private static final int TIMELINE_HEIGHT = 40;
 	private static final int X_OFFSET = 0;
@@ -275,7 +276,6 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
 		gridData.widthHint = 180;
 		chartLegend.getControl().setLayoutData(gridData);
-		PersistableSashForm.loadState(sash, state.getChild(SASH));
 		DataPageToolkit.createChartTimestampTooltip(chartCanvas);
 
 		chart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), X_OFFSET, Y_OFFSET,
@@ -308,7 +308,19 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 						.ifPresent(a -> chartLegend.setSelection(new StructuredSelection(a)));
 			}
 		}
-		canvasSash.setWeights(new int[] {1, 4});
+
+		if (state.getChild(PAGE_SASH) == null) {
+			sash.setWeights(new int[] {0, 3});
+		} else {
+			PersistableSashForm.loadState(sash, state.getChild(PAGE_SASH));
+		}
+
+		if (state.getChild(CANVAS_SASH) == null) {
+			canvasSash.setWeights(new int[] {1, 4});
+		} else {
+			PersistableSashForm.loadState(canvasSash, state.getChild(CANVAS_SASH));
+		}
+
 		flavorSelector = FlavorSelector.itemsWithTimerange(form, pageFilter, model.getItems(), pageContainer,
 				this::onFlavorSelected, this::onSetRange, flavorSelectorState);
 	}
@@ -338,6 +350,8 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	@Override
 	public void saveTo(IWritableState writableState) {
 		super.saveTo(writableState);
+		PersistableSashForm.saveState(sash, writableState.createChild(PAGE_SASH));
+		PersistableSashForm.saveState(canvasSash, writableState.createChild(CANVAS_SASH));
 	}
 
 	private void onFlavorSelected(IItemCollection items, IRange<IQuantity> timeRange) {

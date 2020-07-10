@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.flightrecorder.uitest;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +50,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrNavigator;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrUi;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
+import org.openjdk.jmc.test.jemmy.misc.wrappers.MCSashForm;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCText;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTextCanvas;
@@ -65,15 +67,19 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	private static final String NEW_START_TIME = "08:06:19:500";
 	private static final String INVALID_START_TIME = "08:06:19:480";
 	private static final String INVALID_END_TIME = "08:07:19:733";
+	private static final String FOLD_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_FOLD_CHART_TOOLTIP;
+	private static final String FOLD_TABLE = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_FOLD_TABLE_TOOLTIP;
 	private static final String HIDE_THREAD = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_HIDE_THREAD_ACTION;
 	private static final String RESET_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
-	private static final String TABLE_TOOLTIP = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_VIEW_THREAD_DETAILS;
-	private static final String TABLE_SHELL_TEXT = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_TABLE_POPUP_TITLE;
+	private static final String SHOW_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_SHOW_CHART_TOOLTIP;
+	private static final String SHOW_TABLE = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_SHOW_TABLE_TOOLTIP;
 	private static final String TIME_FILTER_ERROR = org.openjdk.jmc.ui.misc.Messages.TimeFilter_ERROR;
 
 	private static MCChartCanvas chartCanvas;
+	private static MCSashForm sashForm;
 	private static MCTextCanvas textCanvas;
 	private static MCTable threadsTable;
+	private static MCToolBar toolbar;
 	private boolean selected;
 
 	@Rule
@@ -82,24 +88,27 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		public void before() {
 			JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
 			JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
+	        toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
+	        toolbar.clickToolItem(SHOW_TABLE);
 			chartCanvas = MCChartCanvas.getChartCanvas();
 			textCanvas = MCTextCanvas.getTextCanvas();
 			selected = false;
+			sashForm = MCSashForm.getMCSashForm();
+			threadsTable = MCTable.getByColumnHeader(TABLE_COLUMN_HEADER);
 		}
 
 		@Override
 		public void after() {
 			selected = false;
+			toolbar.clickToolItem(FOLD_TABLE);
 			MCMenu.closeActiveEditor();
 		}
 	};
 
 	@Test
 	public void testTextCanvasSelection() throws InterruptedException, ExecutionException, TimeoutException {
-		openThreadsTable();
 		threadsTable.selectItems(0, 0);
 		Assert.assertEquals(1, threadsTable.getSelectionCount());
-		closeThreadsTable();
 
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		CompletableFuture.supplyAsync(new Supplier<Void>() {
@@ -186,9 +195,7 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testMenuItemEnablement() {
-		openThreadsTable();
 		final int numThreads = threadsTable.getItemCount();
-		closeThreadsTable();
 
 		Assert.assertTrue(numThreads > 0);
 
@@ -210,18 +217,14 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	public void testHideAllThreads() {
 		final int numSelection = 7;
 
-		openThreadsTable();
 		final int numThreads = threadsTable.getItemCount();
-		closeThreadsTable();
 
 		Assert.assertTrue(numThreads > 0 && numThreads >= numSelection);
 		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 
-		openThreadsTable();
 		// Select a limited number of threads in the chart using the table
 		threadsTable.selectItems(0, numSelection - 1);
-		closeThreadsTable();
 
 		// Hide all the threads from the chart
 		for (int i = 0; i < numSelection; i++) {
@@ -239,40 +242,69 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 	}
 
-	@Test
-	public void testPopupTableSelection() {
-		openThreadsTable();
-		final int numSelection = 7;
-		final int numThreads = threadsTable.getItemCount();
-		Assert.assertTrue(numThreads > 0 && numThreads >= numSelection);
+    @Test
+    public void testFoldingChart() {
+        // Sash weights should both be non-zero to display the chart and table
+        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
 
-		threadsTable.selectItems(0, numSelection - 1);
-		int originalSelection = threadsTable.getSelectionCount();
-		Assert.assertEquals(numSelection, originalSelection);
-		closeThreadsTable();
+        // Sash weight corresponding to the chart should be zero when folded
+        toolbar.clickToolItem(FOLD_CHART);
+        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] == 0);
 
-		openThreadsTable();
-		int newSelection = threadsTable.getSelectionCount();
-		Assert.assertEquals(newSelection, originalSelection);
-		closeThreadsTable();
-	}
+        // When unfolded, the sash weights should be non-zero
+        toolbar.clickToolItem(SHOW_CHART);
+        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+    }
 
-	private void openThreadsTable() {
-		if (threadsTable == null) {
-			MCToolBar.focusMc();
-			MCToolBar tb = MCToolBar.getByToolTip(TABLE_TOOLTIP);
-			tb.clickToolItem(TABLE_TOOLTIP);
-			threadsTable = MCTable.getByColumnHeader(TABLE_SHELL_TEXT, TABLE_COLUMN_HEADER);
-		}
-	}
+    @Test
+    public void testFoldingTable() {
+        // Sash weights should both be non-zero to display the chart and table
+        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
 
-	private void closeThreadsTable() {
-		if (threadsTable != null) {
-			MCButton okButton = MCButton.getByLabel(TABLE_SHELL_TEXT, OK_BUTTON);
-			okButton.click();
-			threadsTable = null;
-			MCToolBar.focusMc();
-		}
-	}
+        // Sash weight corresponding to the table should be zero when folded
+        toolbar.clickToolItem(FOLD_TABLE);
+        Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
 
+        // When unfolded, the sash weights should be non-zero
+        toolbar.clickToolItem(SHOW_TABLE);
+        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+    }
+
+    @Test
+    public void testInvalidActions() {
+        toolbar.clickToolItem(FOLD_TABLE);
+        int[] weights = sashForm.getWeights();
+        toolbar.clickToolItem(FOLD_CHART);
+        // If the table is already folded, the fold chart action shouldn't work
+        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+        toolbar.clickToolItem(SHOW_TABLE);
+
+        toolbar.clickToolItem(FOLD_CHART);
+        weights = sashForm.getWeights();
+        toolbar.clickToolItem(FOLD_TABLE);
+        // If the chart is already folded, the fold table action shouldn't work
+        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+
+        // Bring back the chart before retiring
+        toolbar.clickToolItem(SHOW_CHART);
+    }
+
+    @Test
+    public void testPersistingSashWeights() {
+        // Fold the table away
+        toolbar.clickToolItem(FOLD_TABLE);
+        int[] weights = sashForm.getWeights();
+        Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
+        MCMenu.closeActiveEditor();
+
+        // Re-open the JFR file & verify the table is still folded
+        JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
+        JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
+        sashForm = MCSashForm.getMCSashForm();
+        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+
+        // Bring back the table before retiring
+        toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
+        toolbar.clickToolItem(SHOW_TABLE);
+    }
 }
