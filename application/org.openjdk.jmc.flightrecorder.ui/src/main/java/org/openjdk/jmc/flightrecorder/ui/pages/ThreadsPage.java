@@ -216,25 +216,29 @@ public class ThreadsPage extends AbstractDataPage {
 				isToolbarAction = true;
 				performToolbarAction(FOLD_TABLE_ACTION, selected);
 				isToolbarAction = false;
-			}, sash.getWeights()[0] == 0 ? Messages.ThreadsPage_SHOW_TABLE_TOOLTIP : Messages.ThreadsPage_FOLD_TABLE_TOOLTIP, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE));
+			}, sash.getWeights()[0] == 0 ? Messages.ThreadsPage_SHOW_TABLE_TOOLTIP
+					: Messages.ThreadsPage_FOLD_TABLE_TOOLTIP,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE));
 			foldTableAction.setChecked(sash.getWeights()[0] == 0 ? false : true);
 
 			foldChartAction = ActionToolkit.checkAction(selected -> {
 				isToolbarAction = true;
 				performToolbarAction(FOLD_CHART_ACTION, selected);
 				isToolbarAction = false;
-			}, sash.getWeights()[1] == 0 ? Messages.ThreadsPage_SHOW_CHART_TOOLTIP : Messages.ThreadsPage_FOLD_CHART_TOOLTIP, FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_CHART_BAR));
+			}, sash.getWeights()[1] == 0 ? Messages.ThreadsPage_SHOW_CHART_TOOLTIP
+					: Messages.ThreadsPage_FOLD_CHART_TOOLTIP,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_CHART_BAR));
 			foldChartAction.setChecked(sash.getWeights()[1] == 0 ? false : true);
 
 			tb.add(new GroupMarker(TOOLBAR_FOLD_ACTIONS));
 			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, foldTableAction);
 			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, foldChartAction);
 			tb.appendToGroup(TOOLBAR_FOLD_ACTIONS, new Separator());
-		
+
 			tb.add(ActionToolkit.action(() -> lanes.openEditLanesDialog(mms, false), Messages.ThreadsPage_EDIT_LANES,
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 		}
-		
+
 		private void addMouseListenerToSash() {
 			for (int i = 0; i < sash.getChildren().length; i++) {
 				if (sash.getChildren()[i] instanceof Sash) {
@@ -253,50 +257,52 @@ public class ThreadsPage extends AbstractDataPage {
 						}
 
 						@Override
-						public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {}
+						public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
+						}
 
 						@Override
-						public void mouseUp(org.eclipse.swt.events.MouseEvent e) {}
+						public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
+						}
 					});
 				}
 			}
 		}
 
 		private void performToolbarAction(String action, boolean selected) {
-			switch(action) {
-				case FOLD_TABLE_ACTION:
-					if (selected) {
-						sash.setWeights(this.getStoredSashWeights());
-						foldTableAction.setToolTipText(Messages.ThreadsPage_FOLD_TABLE_TOOLTIP);
+			switch (action) {
+			case FOLD_TABLE_ACTION:
+				if (selected) {
+					sash.setWeights(this.getStoredSashWeights());
+					foldTableAction.setToolTipText(Messages.ThreadsPage_FOLD_TABLE_TOOLTIP);
+				} else {
+					// if the chart is folded, don't fold the table
+					if (sash.getWeights()[1] == 0) {
+						this.foldTableAction.setChecked(true);
 					} else {
-						// if the chart is folded, don't fold the table
-						if (sash.getWeights()[1] == 0) {
-							this.foldTableAction.setChecked(true);
-						} else {
-							this.setStoredSashWeights(sash.getWeights());
-							sash.setWeights(new int[] {0, 3});
-							foldTableAction.setToolTipText(Messages.ThreadsPage_SHOW_TABLE_TOOLTIP);
-						}
+						this.setStoredSashWeights(sash.getWeights());
+						sash.setWeights(new int[] {0, 3});
+						foldTableAction.setToolTipText(Messages.ThreadsPage_SHOW_TABLE_TOOLTIP);
 					}
-					break;
-				case FOLD_CHART_ACTION:
-					if (selected) {
-						sash.setWeights(this.getStoredSashWeights());
-						foldChartAction.setToolTipText(Messages.ThreadsPage_FOLD_CHART_TOOLTIP);
+				}
+				break;
+			case FOLD_CHART_ACTION:
+				if (selected) {
+					sash.setWeights(this.getStoredSashWeights());
+					foldChartAction.setToolTipText(Messages.ThreadsPage_FOLD_CHART_TOOLTIP);
+				} else {
+					// if the table is folded, don't fold the chart
+					if (sash.getWeights()[0] == 0) {
+						this.foldChartAction.setChecked(true);
 					} else {
-						// if the table is folded, don't fold the chart
-						if (sash.getWeights()[0] == 0) {
-							this.foldChartAction.setChecked(true);
-						} else {
-							this.setStoredSashWeights(sash.getWeights());
-							sash.setWeights(new int[] {1, 0});
-							foldChartAction.setToolTipText(Messages.ThreadsPage_SHOW_CHART_TOOLTIP);
-						}
+						this.setStoredSashWeights(sash.getWeights());
+						sash.setWeights(new int[] {1, 0});
+						foldChartAction.setToolTipText(Messages.ThreadsPage_SHOW_CHART_TOOLTIP);
 					}
-					break;
+				}
+				break;
 			}
 		}
-		
+
 		private void initializeStoredSashWeights() {
 			// if either the chart or table are folded on init, store a default value of {1, 3}
 			if (sash.getWeights()[0] == 0 || sash.getWeights()[1] == 0) {

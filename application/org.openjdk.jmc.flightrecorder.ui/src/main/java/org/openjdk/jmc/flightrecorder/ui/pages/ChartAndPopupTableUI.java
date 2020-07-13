@@ -112,8 +112,8 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 
 	protected void init(
 		IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit, IPageContainer pageContainer,
-		IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-		FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
+		IState state, String sectionTitle, IItemFilter tableFilter, Image icon, FlavorSelectorState flavorSelectorState,
+		IAttribute<?> classifier) {
 		this.pageFilter = pageFilter;
 		this.model = model;
 		this.pageContainer = pageContainer;
@@ -126,7 +126,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
 		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
 		table.getManager().getViewer()
-		.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
+				.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
 		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
 				NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, sectionTitle), mm);
 		tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
@@ -289,7 +289,6 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 				JfrAttributes.LIFETIME, NLS.bind(Messages.ChartAndTableUI_TIMELINE_SELECTION, form.getText()),
 				textCanvas.getContextMenu());
 
-
 		chartCanvas.setZoomOnClickListener(mouseDown -> buttonGroup.zoomOnClick(mouseDown));
 		chartCanvas.setZoomToSelectionListener(() -> buttonGroup.zoomToSelection());
 
@@ -339,7 +338,6 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		IRange<IQuantity> range = useRange ? timeRange : pageContainer.getRecordingRange();
 		chart.setVisibleRange(range.getStart(), range.getEnd());
 		chart.resetZoomFactor();
-		table.getManager().getViewer().setSelection(null);
 		if (table != null) {
 			table.getManager().getViewer().setSelection(null);
 		}
@@ -366,7 +364,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 			} else {
 				table.getManager().getViewer().setSelection(null);
 			}
-        }
+		}
 	}
 
 	protected void buildChart() {

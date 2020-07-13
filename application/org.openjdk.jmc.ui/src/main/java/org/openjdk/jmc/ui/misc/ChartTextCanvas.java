@@ -246,7 +246,8 @@ public class ChartTextCanvas extends Canvas {
 	}
 
 	private int calculateMinLaneHeight(Rectangle rect) {
-		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
+		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
+				* xScale);
 	}
 
 	void setOverviewLaneHeight() {
@@ -255,7 +256,7 @@ public class ChartTextCanvas extends Canvas {
 	}
 
 	void adjustLaneHeight(int amount) {
-		if (laneHeight == -1) { 
+		if (laneHeight == -1) {
 			restoreLaneHeight();
 		}
 		laneHeight = Math.max(minLaneHeight, laneHeight + amount);

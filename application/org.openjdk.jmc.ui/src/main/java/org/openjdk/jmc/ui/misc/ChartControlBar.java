@@ -59,7 +59,7 @@ public class ChartControlBar extends Composite {
 
 		laneFilterContainer = new Composite(this, SWT.NONE);
 		laneFilterContainer.setLayout(new GridLayout());
-		
+
 		Composite buttonGroupContainer = new Composite(this, SWT.NONE);
 		buttonGroupContainer.setLayout(new GridLayout(3, false));
 		buttonGroupContainer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));

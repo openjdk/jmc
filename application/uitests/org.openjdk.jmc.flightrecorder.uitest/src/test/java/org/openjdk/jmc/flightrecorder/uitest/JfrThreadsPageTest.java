@@ -271,7 +271,7 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
     }
 
     @Test
-    public void testInvalidActions() {
+    public void testInvalidFoldingActions() {
         toolbar.clickToolItem(FOLD_TABLE);
         int[] weights = sashForm.getWeights();
         toolbar.clickToolItem(FOLD_CHART);

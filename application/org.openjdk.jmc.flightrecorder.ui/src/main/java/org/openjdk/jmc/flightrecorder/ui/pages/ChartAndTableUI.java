@@ -110,8 +110,8 @@ abstract class ChartAndTableUI implements IPageUI {
 
 	protected void init(
 		IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit, IPageContainer pageContainer,
-		IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
-		FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
+		IState state, String sectionTitle, IItemFilter tableFilter, Image icon, FlavorSelectorState flavorSelectorState,
+		IAttribute<?> classifier) {
 		this.pageFilter = pageFilter;
 		this.model = model;
 		this.pageContainer = pageContainer;

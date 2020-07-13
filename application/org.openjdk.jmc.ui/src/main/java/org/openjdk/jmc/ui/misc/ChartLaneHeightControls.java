@@ -48,7 +48,7 @@ public class ChartLaneHeightControls extends Composite {
 	private Button overviewBtn;
 	private ChartCanvas chartCanvas;
 	private ChartTextCanvas textCanvas;
-	private final int ADJUST_AMOUNT = 3;
+	private static final int ADJUST_AMOUNT = 3;
 
 	public ChartLaneHeightControls(Composite parent) {
 		super(parent, SWT.NONE);
@@ -94,7 +94,7 @@ public class ChartLaneHeightControls extends Composite {
 		overviewBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		overviewBtn.setToolTipText("TODO");
 		overviewBtn.setImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_COLOR_PALETTE));
-		overviewBtn.addListener(SWT.Selection,  new Listener() {
+		overviewBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				if (!overviewBtn.getSelection()) {

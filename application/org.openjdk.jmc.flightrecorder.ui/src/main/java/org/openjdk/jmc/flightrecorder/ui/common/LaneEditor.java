@@ -116,23 +116,23 @@ public class LaneEditor {
 
 		EditLanesContainer(Composite parent, EventTypeFolderNode root, List<LaneDefinition> lanes) {
 			this(parent, root, lanes, null);
-        }
+		}
 
 		EditLanesContainer(Composite parent, EventTypeFolderNode root, List<LaneDefinition> lanes, Runnable action) {
 			super(parent, SWT.NONE);
-            this.root = root;
-            this.lanes = lanes;
-            this.updateChart = action;
-            restLane = ensureRestLane(lanes);
-            init();
+			this.root = root;
+			this.lanes = lanes;
+			this.updateChart = action;
+			restLane = ensureRestLane(lanes);
+			init();
 		}
 
 		public List<LaneDefinition> getLanes() {
 			return lanes;
 		}
 
-        private void init() {
-            // FIXME: Do we want to group under categories somehow, or just hide the filters that don't have any existing event types.
+		private void init() {
+			// FIXME: Do we want to group under categories somehow, or just hide the filters that don't have any existing event types.
 			this.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
 
 			Composite laneHeaderContainer = new Composite(this, SWT.NONE);
@@ -291,7 +291,7 @@ public class LaneEditor {
 					e -> laneSelectionChanges(((IStructuredSelection) e.getSelection()).getFirstElement()));
 			LaneDefinition firstLane = lanes.get(0);
 			lanesViewer.setSelection(new StructuredSelection(firstLane));
-        }
+		}
 
 		private void addLane() {
 			int selectIndex = Math.max(0, lanes.indexOf(selected));
@@ -368,7 +368,7 @@ public class LaneEditor {
 			saveFilter(); // updates the LaneDefinition with the new filter
 			updateChart.run(); // repaints the chart and text canvases
 		}
-		
+
 		private int findLaneDefinitionIndexByName(Object selected) {
 			int index = -1;
 			if (selected != null) {
@@ -389,8 +389,7 @@ public class LaneEditor {
 			}
 			if (selectedIndex >= 0) {
 				LaneDefinition ld = lanes.get(selectedIndex);
-				IItemFilter newFilter = ItemFilters
-						.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
+				IItemFilter newFilter = ItemFilters.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
 				LaneDefinition newLd = new LaneDefinition(ld.name, lanesViewer.getChecked(ld), newFilter,
 						ld.isRestLane);
 				lanes.set(selectedIndex, newLd);
@@ -398,8 +397,8 @@ public class LaneEditor {
 				if (ld.isRestLane()) {
 					restLane = newLd;
 				} else {
-					LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled,
-							getRestFilter(lanes), true);
+					LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled, getRestFilter(lanes),
+							true);
 					int restIndex = findLaneDefinitionIndexByName(restLane);
 					lanes.set(restIndex, newRest);
 					lanesViewer.replace(newRest, restIndex);
@@ -438,7 +437,8 @@ public class LaneEditor {
 			for (int i = 0; i < lanes.size(); i++) {
 				LaneDefinition ld = lanes.get(i);
 				if (ld.isEnabled() != container.lanesViewer.getChecked(ld)) {
-					lanes.set(i, new LaneDefinition(ld.name, container.lanesViewer.getChecked(ld), ld.filter, ld.isRestLane));
+					lanes.set(i, new LaneDefinition(ld.name, container.lanesViewer.getChecked(ld), ld.filter,
+							ld.isRestLane));
 				}
 			}
 			return true;
