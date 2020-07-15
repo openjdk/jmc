@@ -438,8 +438,7 @@ public class ThreadDumpsPage extends AbstractDataPage {
 		String[] parts = str.split(SEPARATOR);
 		if (parts.length > 2) {
 			ThreadDump[] dumps = new ThreadDump[parts.length - 2];
-			ThreadDumpCollection parent = new ThreadDumpCollection(title,
-					str, dumps);
+			ThreadDumpCollection parent = new ThreadDumpCollection(title, str, dumps);
 			for (int i = 0; i < dumps.length; i++) {
 				dumps[i] = parseThreadDump(parts[i + 1], parent);
 			}
