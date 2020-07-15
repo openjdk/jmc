@@ -6,28 +6,63 @@ Builds of Mission Control can currently be found in the Oracle JDK on supported 
 
 For more information on Mission Control, see http://www.oracle.com/missioncontrol.
 
-### Core API Features
+## Downloading Builds
+Binary distributions of JDK Mission Control are provided by different downstream vendors.
 
-* Core APIs for parsing and processing Java flight recordings 
+### AdoptOpenJDK
+* Released version
+* EA builds of upcoming release
+* Downloadable Eclipse update site archive
 
-* Core API can *read* recordings from JDK 7 and above
+[http://adoptopenjdk.net/jmc](http://adoptopenjdk.net/jmc)
 
-* Core API can *run* on JDK 7 and above
 
-* Core API contains a framework for handling units of measurement and physical quantities
+### Azul (Zulu Mission Control)
+* Released version
 
-* Core API supports headless analysis of Java flight recordings
+[https://www.azul.com/products/zulu-mission-control](https://www.azul.com/products/zulu-mission-control)
 
+
+### Bell-Soft (Liberica Mission Control)
+* Released version
+
+[https://bell-sw.com/downloads](https://bell-sw.com/downloads)
+
+### Oracle
+* Released version
+* Integrated (in-app) update site
+* Eclipse update site
+
+[http://jdk.java.net/jmc](http://jdk.java.net/jmc)
+
+### Red Hat
+* Released version
+
+Red Hat distributes JDK Mission Control as RPMs in Fedora and RHEL. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
+
+## Mission Control Features
 
 ### Application Features
 
-* An application supporting framework for hosting various useful Java tools 
+* A framework for hosting various useful Java tools 
 
 * A tool for visualizing the contents of Java flight recordings, and the results of an automated analysis of the contents
 
 * A JMX Console 
 
 * A tool for heap waste analysis
+
+### Core API Features
+
+* Core APIs for parsing and processing Java flight recordings 
+
+* Core API can *read* recordings from JDK 7 and above
+
+* Core API can *run* on JDK 8 and above
+
+* Core API contains a framework for handling units of measurement and physical quantities
+
+* Core API supports headless analysis of Java flight recordings
 
 
 ### Core API Example
@@ -103,7 +138,7 @@ public class RunRulesOnFileSimple {
 ```
 
 
-Example for programmatically running rules in parallel (requires JDK8):
+Example for programmatically running rules in parallel:
 
 ```java
 import java.io.File;
@@ -177,6 +212,7 @@ public class RunRulesOnFile {
 ## Building Mission Control from Source
 
 Prerequisites for building Mission Control:
+
 1. Install JDK 8, and make sure it is the JDK in use (java -version)
 
 2. Install Maven (version 3.3.x. or above)
