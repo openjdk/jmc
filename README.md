@@ -32,7 +32,6 @@ Binary distributions of JDK Mission Control are provided by different downstream
 * Released version
 * Integrated (in-app) update site
 * Eclipse update site
-* Downloadable Eclipse update site archive
 
 [http://jdk.java.net/jmc](http://jdk.java.net/jmc)
 
