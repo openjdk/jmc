@@ -166,6 +166,7 @@
 			<xs:documentation>This will only work if we allow toString</xs:documentation>
 		</xs:annotation>
 		<xs:all>
+			<xs:element type="xs:string" name="name" minOccurs="0" />
 			<xs:element type="xs:string" name="description" minOccurs="0" />
 			<xs:element type="contentTypeType" name="contenttype" minOccurs="0" />
 			<xs:element type="relationKeyType" name="relationkey" minOccurs="0" />
