@@ -67,16 +67,16 @@ public interface TransformRegistry {
 	 * @param xmlDescription
 	 *           an XML snippet describing the wanted modifications.
 	 *
-	 * @return a list of {@link TransformDescriptor}s corresponding to the wanted transformations.
+	 * @return a set of class names associated with modified {@link TransformDescriptor}s.
 	 */
-	List<TransformDescriptor> modify(String xmlDescription);
+	Set<String> modify(String xmlDescription);
 
 	/**
 	 * Clears all classes and their corresponding transforms in the registry.
 	 *
 	 * @return the set of class names that were cleared.
 	 */
-	List<String> clearAllTransformData();
+	Set<String> clearAllTransformData();
 
 	/**
 	 * Signify classes are or are not being reverted to their pre instrumentation versions.

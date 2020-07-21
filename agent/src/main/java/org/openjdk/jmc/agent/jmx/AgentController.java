@@ -62,16 +62,16 @@ public class AgentController implements AgentControllerMXBean {
 		Class<?>[] classesToRetransformArray;
 		boolean revertAll = xmlDescription == null ? true : xmlDescription.isEmpty();
 		if (revertAll) {
-			classesToRetransformArray = revertAllTransforms();
+			classesToRetransformArray = retransformClasses(registry.clearAllTransformData());
 		} else {
-			List<TransformDescriptor> descriptors = registry.modify(xmlDescription);
-			if (descriptors == null) {
+			Set<String> initialClasses = new HashSet<>(registry.getClassNames());
+			Set<String> modifiedClasses = registry.modify(xmlDescription);
+			if (modifiedClasses == null) {
 				logger.log(Level.SEVERE, "Failed to identify transformations: " + xmlDescription);
 				return;
-			} else if (descriptors.isEmpty()) {
-				classesToRetransformArray = revertAllTransforms();
 			} else {
-				classesToRetransformArray = defineSpecificTransforms(descriptors);
+				modifiedClasses.addAll(initialClasses);
+				classesToRetransformArray = retransformClasses(modifiedClasses);
 			}
 		}
 		registry.setRevertInstrumentation(true);
@@ -79,28 +79,14 @@ public class AgentController implements AgentControllerMXBean {
 		registry.setRevertInstrumentation(false);
 	}
 
-	private Class<?>[] revertAllTransforms() {
+	private Class<?>[] retransformClasses(Set<String> classNames) {
 		Set<Class<?>> classesToRetransform = new HashSet<>();
-		List<String> classNames = registry.clearAllTransformData();
-		for (String className : classNames ) {
+		for (String className : classNames) {
 			try {
 				Class<?> classToRetransform = Class.forName(className.replace('/', '.'));
 				classesToRetransform.add(classToRetransform);
 			} catch (ClassNotFoundException cnfe) {
 				logger.log(Level.SEVERE, "Unable to find class: " + className, cnfe);
-			}
-		}
-		return classesToRetransform.toArray(new Class<?>[0]);
-	}
-
-	private Class<?>[] defineSpecificTransforms(List<TransformDescriptor> descriptors) {
-		Set<Class<?>> classesToRetransform = new HashSet<>();
-		for (TransformDescriptor descriptor : descriptors) {
-			try {
-				Class<?> classToRetransform = Class.forName(descriptor.getClassName().replace('/', '.'));
-				classesToRetransform.add(classToRetransform);
-			} catch (ClassNotFoundException cnfe) {
-				logger.log(Level.SEVERE, "Unable to find class: " + descriptor.getClassName(), cnfe);
 			}
 		}
 		return classesToRetransform.toArray(new Class<?>[0]);

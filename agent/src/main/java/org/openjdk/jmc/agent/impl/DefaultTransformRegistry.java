@@ -39,6 +39,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -468,29 +469,26 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return builder.toString();
 	}
 
-	public List<TransformDescriptor> modify(String xmlDescription) {
+	public Set<String> modify(String xmlDescription) {
 		try  {
 			validateProbeDefinition(xmlDescription);
 
-			List<TransformDescriptor> tds = new ArrayList<TransformDescriptor>();
 			StringReader reader = new StringReader(xmlDescription);
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			XMLStreamReader streamReader = inputFactory.createXMLStreamReader(reader);
 			HashMap<String, String> globalDefaults = new HashMap<String, String>();
-			List<String> removedOldClasses = new ArrayList<String>();
+			Set<String> modifiedClasses = new HashSet<>();
 			logger.info(xmlDescription);
 			while (streamReader.hasNext()) {
 				if (streamReader.isStartElement()) {
 					QName element = streamReader.getName();
 					if (XML_ELEMENT_NAME_EVENT.equals(element.getLocalPart())) {
 						TransformDescriptor td = parseTransformData(streamReader, globalDefaults);
-						if(!removedOldClasses.contains(td.getClassName())) {
+						if(modifiedClasses.add(td.getClassName())) {
 							transformData.remove(td.getClassName());
-							removedOldClasses.add(td.getClassName());
 						}
 						if (validate(this,td)) {
 							add(this, td);
-							tds.add(td);
 						}
 						continue;
 					} else if (XML_ELEMENT_CONFIGURATION.equals(element.getLocalPart())) {
@@ -499,15 +497,25 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				}
 				streamReader.next();
 			}
-			return tds;
+			clearAllOtherTransformData(modifiedClasses);
+			return modifiedClasses;
 		} catch (XMLStreamException xse) {
 			logger.log(Level.SEVERE, "Failed to create XML Stream Reader", xse);
 			return null;
 		}
 	}
 
-	public List<String> clearAllTransformData() {
-		List<String> classNames = new ArrayList<>(transformData.keySet());
+	private void clearAllOtherTransformData(Set<String> classesToKeep) {
+		Set<String> classNames = new HashSet<>(getClassNames());
+		for (String className : classNames) {
+			if (!classesToKeep.contains(className)) {
+				transformData.remove(className);
+			}
+		}
+	}
+
+	public Set<String> clearAllTransformData() {
+		Set<String> classNames = new HashSet<>(getClassNames());
 		transformData.clear();
 		return classNames;
 	}
