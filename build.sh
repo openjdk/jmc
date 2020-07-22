@@ -100,7 +100,7 @@ function packageJmc() {
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
 
-    echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/jmc"
+    echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc"
 }
 
 function clean() {
