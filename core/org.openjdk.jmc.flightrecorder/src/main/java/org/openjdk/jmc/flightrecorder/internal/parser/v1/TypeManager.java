@@ -219,11 +219,11 @@ class TypeManager {
 			case STRUCT_TYPE_PACKAGE_2:
 				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
 			default:
-				return getDefaultStructType(fieldCount);
+				return createDefaultStructReader(fieldCount);
 			}
 		}
 
-		private AbstractStructReader getDefaultStructType(int fieldCount) {
+		private AbstractStructReader createDefaultStructReader(int fieldCount) {
 			synchronized (structTypes) {
 				StructContentType<Object[]> structType = structTypes.get(element.classId);
 				if (structType == null) {
@@ -267,7 +267,7 @@ class TypeManager {
 			case STRUCT_TYPE_PACKAGE:
 				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
 			default:
-				return getDefaultStructType(fieldCount);
+				return createDefaultStructReader(fieldCount);
 			}
 		}
 
