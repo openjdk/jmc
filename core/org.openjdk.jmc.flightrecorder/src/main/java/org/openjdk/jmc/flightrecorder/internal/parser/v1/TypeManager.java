@@ -115,9 +115,6 @@ class TypeManager {
 		}
 	}
 
-	// NOTE: Using constant pool id as identifier.
-	private final Map<Long, StructContentType<Object[]>> STRUCT_TYPES = new HashMap<>();
-
 	private class TypeEntry {
 		private static final String STRUCT_TYPE_CLASS = "java.lang.Class"; //$NON-NLS-1$
 		private static final String STRUCT_TYPE_THREAD = "java.lang.Thread"; //$NON-NLS-1$
@@ -222,15 +219,21 @@ class TypeManager {
 			case STRUCT_TYPE_PACKAGE_2:
 				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
 			default:
-				synchronized (STRUCT_TYPES) {
-					StructContentType<Object[]> structType = STRUCT_TYPES.get(element.classId);
-					if (structType == null) {
-						structType = new StructContentType<>(element.typeIdentifier, element.label,
-								element.description);
-						STRUCT_TYPES.put(element.classId, structType);
-					}
-					return new StructReader(structType, fieldCount);
+				return getDefaultStructType(fieldCount);
+			}
+		}
+
+		private AbstractStructReader getDefaultStructType(int fieldCount) {
+			synchronized (structTypes) {
+				StructContentType<Object[]> structType = structTypes.get(element.classId);
+				if (structType == null) {
+					// Note that these struct types won't have localized names - so unless there really is a label
+					// set, we don't really care and set label to identifier.
+					structType = new StructContentType<>(element.typeIdentifier,
+							element.label != null ? element.label : element.typeIdentifier, element.description);
+					structTypes.put(element.classId, structType);
 				}
+				return new StructReader(structType, fieldCount);
 			}
 		}
 
@@ -264,15 +267,7 @@ class TypeManager {
 			case STRUCT_TYPE_PACKAGE:
 				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
 			default:
-				synchronized (STRUCT_TYPES) {
-					StructContentType<Object[]> structType = STRUCT_TYPES.get(element.classId);
-					if (structType == null) {
-						structType = new StructContentType<>(element.typeIdentifier, element.label,
-								element.description);
-						STRUCT_TYPES.put(element.classId, structType);
-					}
-					return new StructReader(structType, fieldCount);
-				}
+				return getDefaultStructType(fieldCount);
 			}
 		}
 
@@ -372,6 +367,8 @@ class TypeManager {
 		}
 	}
 
+	// NOTE: Using constant pool id as identifier.
+	private final Map<Long, StructContentType<Object[]>> structTypes = new HashMap<>();
 	private final FastAccessNumberMap<TypeEntry> otherTypes = new FastAccessNumberMap<>();
 	private final FastAccessNumberMap<EventTypeEntry> eventTypes = new FastAccessNumberMap<>();
 	private final ChunkStructure header;
