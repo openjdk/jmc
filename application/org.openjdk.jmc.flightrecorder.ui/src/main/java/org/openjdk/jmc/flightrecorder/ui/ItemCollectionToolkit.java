@@ -34,11 +34,13 @@ package org.openjdk.jmc.flightrecorder.ui;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -56,6 +58,8 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemToolkit;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
 /**
@@ -66,9 +70,11 @@ public class ItemCollectionToolkit {
 	private static class StreamBackedItemCollection implements IItemCollection {
 
 		private final Supplier<Stream<IItemIterable>> items;
+		private final Set<IRange<IQuantity>> chunkRanges;
 
-		StreamBackedItemCollection(Supplier<Stream<IItemIterable>> items) {
+		StreamBackedItemCollection(Supplier<Stream<IItemIterable>> items, Set<IRange<IQuantity>> chunkRanges) {
 			this.items = items;
+			this.chunkRanges = chunkRanges;
 		}
 
 		@Override
@@ -83,7 +89,7 @@ public class ItemCollectionToolkit {
 
 		@Override
 		public StreamBackedItemCollection apply(IItemFilter filter) {
-			return new StreamBackedItemCollection(() -> ItemIterableToolkit.filter(items.get(), filter));
+			return new StreamBackedItemCollection(() -> ItemIterableToolkit.filter(items.get(), filter), chunkRanges);
 		}
 
 		@Override
@@ -96,23 +102,39 @@ public class ItemCollectionToolkit {
 			return items.get().anyMatch(IItemIterable::hasItems);
 		}
 
+		@Override
+		public Set<IRange<IQuantity>> getTimeRanges() {
+			return chunkRanges;
+		}
+
 	}
 
-	public static final IItemCollection EMPTY = new StreamBackedItemCollection(() -> Stream.empty());
+	public static final IItemCollection EMPTY = new StreamBackedItemCollection(() -> Stream.empty(),
+			Collections.emptySet());
 
-	public static IItemCollection build(Stream<? extends IItem> items) {
+	public static IItemCollection build(Stream<? extends IItem> items, Set<IRange<IQuantity>> chunkRanges) {
 		Map<IType<IItem>, List<IItem>> byTypeMap = items.collect(Collectors.groupingBy(ItemToolkit::getItemType));
 		List<Entry<IType<IItem>, List<IItem>>> entryList = new ArrayList<>(byTypeMap.entrySet());
 		return ItemCollectionToolkit
 				.build(() -> entryList.stream().map(e -> ItemIterableToolkit.build(e.getValue()::stream, e.getKey())));
 	}
 
+	public static IItemCollection build(Stream<? extends IItem> items) {
+		return build(items, Collections.emptySet());
+	}
+
+	public static IItemCollection build(Supplier<Stream<IItemIterable>> items, Set<IRange<IQuantity>> chunkRanges) {
+		return new StreamBackedItemCollection(items, Collections.emptySet());
+	}
+
 	public static IItemCollection build(Supplier<Stream<IItemIterable>> items) {
-		return new StreamBackedItemCollection(items);
+		return build(items, Collections.emptySet());
 	}
 
 	public static IItemCollection merge(Supplier<Stream<IItemCollection>> items) {
-		return ItemCollectionToolkit.build(() -> items.get().flatMap(ItemCollectionToolkit::stream));
+		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getTimeRanges().stream())
+				.collect(Collectors.toSet());
+		return ItemCollectionToolkit.build(() -> items.get().flatMap(ItemCollectionToolkit::stream), chunkRanges);
 	}
 
 	public static <V> Optional<IItemIterable> join(IItemCollection items, String withTypeId) {

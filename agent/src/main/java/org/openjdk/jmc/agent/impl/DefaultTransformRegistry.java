@@ -277,6 +277,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		globalDefaults.put(TransformDescriptor.ATTRIBUTE_ALLOW_TO_STRING, "false"); //$NON-NLS-1$
 		// For safety reasons, allowing converters is opt-in
 		globalDefaults.put(TransformDescriptor.ATTRIBUTE_ALLOW_CONVERTER, "false"); //$NON-NLS-1$
+		globalDefaults.put(TransformDescriptor.ATTRIBUTE_EMIT_ON_EXCEPTION, "false"); //$NON-NLS-1$
 	}
 
 	private static Parameter parseParameter(int index, XMLStreamReader streamReader) throws XMLStreamException {

@@ -262,10 +262,4 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "end", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-
-    @Override
-    public void visitFrame(int type, int numLocal, Object[] local, int numStack, Object[] stack) {
-        // force to always use expanded frames
-        super.visitFrame(Opcodes.F_NEW, numLocal, local, numStack, stack);
-    }
 }

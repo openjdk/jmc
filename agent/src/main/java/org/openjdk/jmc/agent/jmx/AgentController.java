@@ -59,40 +59,51 @@ public class AgentController implements AgentControllerMXBean {
 
 	public void defineEventProbes(String xmlDescription) throws Exception{
 		checkSecurity();
-		HashSet<Class<?>> classesToRetransform = new HashSet<Class<?>>();
+		Class<?>[] classesToRetransformArray;
 		boolean revertAll = xmlDescription == null ? true : xmlDescription.isEmpty();
 		if (revertAll) {
-			List<String> classNames = registry.clearAllTransformData();
-			for (String className : classNames ) {
-				try {
-					Class<?> classToRetransform = Class.forName(className.replace('/', '.'));
-					classesToRetransform.add(classToRetransform);
-				} catch (ClassNotFoundException cnfe) {
-					logger.log(Level.SEVERE, "Unable to find class: " + className, cnfe);
-				}
-			}
+			classesToRetransformArray = revertAllTransforms();
 		} else {
 			List<TransformDescriptor> descriptors = registry.modify(xmlDescription);
-			boolean noDescriptors = descriptors == null ? true : descriptors.isEmpty();
-			if (noDescriptors) {
+			if (descriptors == null) {
 				logger.log(Level.SEVERE, "Failed to identify transformations: " + xmlDescription);
 				return;
-			}
-			for (TransformDescriptor descriptor : descriptors) {
-				try {
-					Class<?> classToRetransform = Class.forName(descriptor.getClassName().replace('/', '.'));
-					classesToRetransform.add(classToRetransform);
-				} catch (ClassNotFoundException cnfe) {
-					logger.log(Level.SEVERE, "Unable to find class: " + descriptor.getClassName(), cnfe);
-				}
+			} else if (descriptors.isEmpty()) {
+				classesToRetransformArray = revertAllTransforms();
+			} else {
+				classesToRetransformArray = defineSpecificTransforms(descriptors);
 			}
 		}
-
-		Class<?>[] classesToRetransformArray = classesToRetransform.toArray(new Class<?>[0]);
-
 		registry.setRevertInstrumentation(true);
 		instrumentation.retransformClasses(classesToRetransformArray);
 		registry.setRevertInstrumentation(false);
+	}
+
+	private Class<?>[] revertAllTransforms() {
+		Set<Class<?>> classesToRetransform = new HashSet<>();
+		List<String> classNames = registry.clearAllTransformData();
+		for (String className : classNames ) {
+			try {
+				Class<?> classToRetransform = Class.forName(className.replace('/', '.'));
+				classesToRetransform.add(classToRetransform);
+			} catch (ClassNotFoundException cnfe) {
+				logger.log(Level.SEVERE, "Unable to find class: " + className, cnfe);
+			}
+		}
+		return classesToRetransform.toArray(new Class<?>[0]);
+	}
+
+	private Class<?>[] defineSpecificTransforms(List<TransformDescriptor> descriptors) {
+		Set<Class<?>> classesToRetransform = new HashSet<>();
+		for (TransformDescriptor descriptor : descriptors) {
+			try {
+				Class<?> classToRetransform = Class.forName(descriptor.getClassName().replace('/', '.'));
+				classesToRetransform.add(classToRetransform);
+			} catch (ClassNotFoundException cnfe) {
+				logger.log(Level.SEVERE, "Unable to find class: " + descriptor.getClassName(), cnfe);
+			}
+		}
+		return classesToRetransform.toArray(new Class<?>[0]);
 	}
 
 	public JFRTransformDescriptor[] retrieveCurrentTransforms() {

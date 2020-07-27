@@ -72,7 +72,7 @@ public final class FlightRecordingLoader {
 	private static final short VERSION_2 = 2; // JDK11
 	private static final byte[] FLIGHT_RECORDER_MAGIC = {'F', 'L', 'R', '\0'};
 
-	public static EventArray[] loadStream(InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk)
+	public static EventArrays loadStream(InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk)
 			throws CouldNotLoadRecordingException, IOException {
 		return loadStream(stream, ParserExtensionRegistry.getParserExtensions(), hideExperimentals,
 				ignoreTruncatedChunk);
@@ -90,7 +90,7 @@ public final class FlightRecordingLoader {
 	 *            reading the data
 	 * @return an array of EventArrays (one event type per EventArray)
 	 */
-	public static EventArray[] loadStream(
+	public static EventArrays loadStream(
 		InputStream stream, List<? extends IParserExtension> extensions, boolean hideExperimentals,
 		boolean ignoreTruncatedChunk) throws CouldNotLoadRecordingException, IOException {
 		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk);
@@ -185,14 +185,14 @@ public final class FlightRecordingLoader {
 		}
 	}
 
-	public static EventArray[] readChunks(
+	public static EventArrays readChunks(
 		Runnable monitor, IChunkSupplier chunkSupplier, boolean hideExperimentals, boolean ignoreTruncatedChunk)
 			throws CouldNotLoadRecordingException, IOException {
 		return readChunks(monitor, ParserExtensionRegistry.getParserExtensions(), chunkSupplier, hideExperimentals,
 				ignoreTruncatedChunk);
 	}
 
-	public static EventArray[] readChunks(
+	public static EventArrays readChunks(
 		Runnable monitor, List<? extends IParserExtension> extensions, IChunkSupplier chunkSupplier,
 		boolean hideExperimentals, boolean ignoreTruncatedChunk) throws CouldNotLoadRecordingException, IOException {
 		LoaderContext context = new LoaderContext(extensions, hideExperimentals);
