@@ -65,6 +65,7 @@ public class ChartControlBar extends Composite {
 		buttonGroupContainer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		buttonGroup = new ChartButtonGroup(buttonGroupContainer);
 		laneHeightControls = new ChartLaneHeightControls(buttonGroupContainer);
+		buttonGroup.setResetLaneHeightAction(() -> resetLaneHeightToMinimum());
 	}
 
 	public Composite getLaneFilterContainer() {

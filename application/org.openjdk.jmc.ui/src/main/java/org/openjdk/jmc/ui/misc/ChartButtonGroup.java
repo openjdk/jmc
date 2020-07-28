@@ -81,6 +81,7 @@ public class ChartButtonGroup extends Composite {
 	private Button zoomPanBtn;
 	private ChartCanvas chartCanvas;
 	private ChartTextCanvas textCanvas;
+	private Runnable resetLaneHeightAction;
 	private XYChart chart;
 	private ZoomPan zoomPan;
 
@@ -196,6 +197,7 @@ public class ChartButtonGroup extends Composite {
 			public void handleEvent(Event event) {
 				chart.resetTimeline();
 				chartCanvas.redrawChart();
+				getDisplay().syncExec(resetLaneHeightAction);
 			}
 		});
 		buttonGroup.add(scaleToFitBtn);
@@ -203,6 +205,10 @@ public class ChartButtonGroup extends Composite {
 
 	void setChart(XYChart chart) {
 		this.chart = chart;
+	}
+
+	void setResetLaneHeightAction(Runnable resetLaneHeightAction) {
+		this.resetLaneHeightAction = resetLaneHeightAction;
 	}
 
 	void setChartCanvas(ChartCanvas chartCanvas) {

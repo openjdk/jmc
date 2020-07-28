@@ -82,7 +82,7 @@ import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
 import org.openjdk.jmc.ui.misc.TimelineCanvas;
 
-abstract class ChartAndPopupTableUI extends ChartAndTableUI {
+abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 
 	private static final double Y_SCALE = Display.getCurrent().getDPI().y / Environment.getNormalDPI();
 	private static final String TABLE = "table"; //$NON-NLS-1$
@@ -103,7 +103,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 	protected SashForm canvasSash;
 	private TimelineCanvas timelineCanvas;
 
-	ChartAndPopupTableUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
+	ThreadsPageLayoutUI(IItemFilter pageFilter, StreamModel model, Composite parent, FormToolkit toolkit,
 			IPageContainer pageContainer, IState state, String sectionTitle, IItemFilter tableFilter, Image icon,
 			FlavorSelectorState flavorSelectorState, IAttribute<?> classifier) {
 		super(pageFilter, model, parent, toolkit, pageContainer, state, sectionTitle, tableFilter, icon,
@@ -124,7 +124,7 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		table = buildHistogram(sash, state.getChild(TABLE), classifier);
 		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
 		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
-		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
+		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart(true));
 		table.getManager().getViewer()
 				.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
 		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
@@ -341,8 +341,8 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		if (table != null) {
 			table.getManager().getViewer().setSelection(null);
 		}
-		controlBar.resetLaneHeightToMinimum();
-		buildChart();
+		chartCanvas.resetLaneHeight();
+		buildChart(true);
 	}
 
 	@Override
@@ -367,8 +367,11 @@ abstract class ChartAndPopupTableUI extends ChartAndTableUI {
 		}
 	}
 
-	protected void buildChart() {
+	protected void buildChart(boolean resetLaneHeightControls) {
 		IXDataRenderer rendererRoot = getChartRenderer(getItems(), table.getSelection());
+		if (resetLaneHeightControls) {
+			controlBar.resetLaneHeightToMinimum();
+		}
 		chartCanvas.replaceRenderer(rendererRoot);
 		textCanvas.replaceRenderer(rendererRoot);
 	}

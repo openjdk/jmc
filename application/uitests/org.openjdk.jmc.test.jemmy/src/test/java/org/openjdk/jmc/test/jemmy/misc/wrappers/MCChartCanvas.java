@@ -114,7 +114,6 @@ public class MCChartCanvas extends MCJemmyBase {
 	/**
 	 * Click the center of the chart in the ChartCanvas
 	 */
-	@SuppressWarnings("unchecked")
 	public void clickChart() {
 		Display.getDefault().syncExec(() -> {
 			control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
@@ -157,7 +156,7 @@ public class MCChartCanvas extends MCJemmyBase {
 		Fetcher<Point> fetcher = new Fetcher<Point>() {
 			@Override
 			public void run() {
-				setOutput(new Point(control.getScreenBounds().x / 2, control.getScreenBounds().y / 2));
+				setOutput(new Point(control.getControl().getParent().getSize().x / 2, control.getControl().getParent().getSize().y / 2));
 			}
 		};
 		Display.getDefault().syncExec(fetcher);

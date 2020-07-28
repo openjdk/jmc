@@ -220,12 +220,14 @@ public class ChartTextCanvas extends Canvas {
 			int minScrollWidth = (int) ((awtChart.getLongestCharWidth() + 10) * xScale);
 			int rectWidth = Math.max(minScrollWidth, getParent().getSize().x);
 			Rectangle rect = new Rectangle(0, 0, rectWidth, getParent().getSize().y);
-			if (minLaneHeight == -1) {
-				minLaneHeight = calculateMinLaneHeight(rect);
-				laneHeight = minLaneHeight;
-			}
-			if (getNumItems() != 1 && !(laneHeight * getNumItems() < rect.height)) {
-				rect.height = laneHeight * getNumItems();
+			if (getNumItems() > 0) {
+				if (minLaneHeight == -1) {
+					minLaneHeight = chartCanvas.calculateMinLaneHeight(rect);
+					laneHeight = minLaneHeight;
+				}
+				if (getNumItems() != 1 && !(laneHeight * getNumItems() < rect.height)) {
+					rect.height = laneHeight * getNumItems();
+				}
 			}
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
@@ -243,11 +245,6 @@ public class ChartTextCanvas extends Canvas {
 			}
 			awtCanvas.paint(e, 0, 0);
 		}
-	}
-
-	private int calculateMinLaneHeight(Rectangle rect) {
-		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
-				* xScale);
 	}
 
 	void setOverviewLaneHeight() {
@@ -271,7 +268,10 @@ public class ChartTextCanvas extends Canvas {
 	}
 
 	void resetLaneHeight() {
-		laneHeight = minLaneHeight;
+		if (minLaneHeight != -1) {
+			minLaneHeight = chartCanvas.initMinLaneHeight();
+			laneHeight = minLaneHeight;
+		}
 	}
 
 	class KeyNavigator implements KeyListener {
@@ -466,7 +466,7 @@ public class ChartTextCanvas extends Canvas {
 	 */
 	public void redrawChartText() {
 		awtNeedsRedraw = true;
-		getDisplay().syncExec(new Runnable() {
+		getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (!isDisposed()) {
 					redraw();

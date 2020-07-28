@@ -79,6 +79,7 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 public class ChartCanvas extends Canvas {
 	private int laneHeight;
 	private int minLaneHeight = -1;
+	private int minReadableLaneHeight;
 	private int savedLaneHeight;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
@@ -246,16 +247,14 @@ public class ChartCanvas extends Canvas {
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
 				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
-				minLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
 				Point adjusted = translateDisplayToImageCoordinates(rect.width, rect.height);
 				g2d.setColor(Palette.PF_BLACK_100.getAWTColor());
 				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
 				render(g2d, adjusted.x, adjusted.y);
-				if (getParent() instanceof ScrolledComposite) {
+				if (isScrollableChart()) {
+					minReadableLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
+					minLaneHeight = initMinLaneHeight();
 					((ScrolledComposite) getParent()).setMinSize(rect.width, rect.height);
-				}
-				if (highlightRects != null) {
-					updateHighlightRects();
 				}
 				awtNeedsRedraw = false;
 			}
@@ -279,11 +278,25 @@ public class ChartCanvas extends Canvas {
 						gc.drawRectangle(x, y, width, height);
 					}
 				}
+				updateHighlightRects();
 			}
 		}
 	}
 
-	private int calculateMinLaneHeight(Rectangle rect) {
+	private boolean isScrollableChart() {
+		return getParent() instanceof ScrolledComposite;
+	}
+
+	protected int initMinLaneHeight() {
+		// if the min readable lane height * the number of items exceeds the screen, then use min readable height
+		if (minReadableLaneHeight * getNumItems() > getParent().getSize().y) {
+			return minReadableLaneHeight;
+		} else { // if the minimum readable lane height * the number of items leaves extra space, then the min height is the height / number of items
+			return getParent().getSize().y / getNumItems();
+		}
+	}
+
+	protected int calculateMinLaneHeight(Rectangle rect) {
 		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
 				* xScale);
 	}
@@ -315,8 +328,14 @@ public class ChartCanvas extends Canvas {
 		removeListener(SWT.MouseVerticalWheel, zoomer);
 	}
 
-	void resetLaneHeight() {
-		laneHeight = minLaneHeight;
+	public void resetLaneHeight() {
+		if (minLaneHeight != -1) {
+			if (laneHeight == -1) {
+				removeListener(SWT.MouseVerticalWheel, zoomer);
+			}
+			minLaneHeight = initMinLaneHeight();
+			laneHeight = minLaneHeight;
+		}
 	}
 
 	class Zoomer implements Listener {
@@ -478,7 +497,7 @@ public class ChartCanvas extends Canvas {
 		if (Environment.getOSType() == OSType.WINDOWS) {
 			addMouseTrackListener(new WheelStealingZoomer());
 		}
-		if (getParent() instanceof ScrolledComposite) { // JFR Threads Page
+		if (isScrollableChart()) { // JFR Threads Page
 			((ScrolledComposite) getParent()).getVerticalBar().addListener(SWT.Selection, e -> vBarScroll());
 		} else {
 			addMouseTrackListener(selector);
@@ -754,7 +773,7 @@ public class ChartCanvas extends Canvas {
 	 */
 	public void redrawChart() {
 		awtNeedsRedraw = true;
-		getDisplay().syncExec(new Runnable() {
+		getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (!isDisposed()) {
 					redraw();

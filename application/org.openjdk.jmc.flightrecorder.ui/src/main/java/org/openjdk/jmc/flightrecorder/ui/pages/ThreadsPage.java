@@ -50,8 +50,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Sash;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
@@ -161,7 +162,7 @@ public class ThreadsPage extends AbstractDataPage {
 				Messages.JavaApplicationPage_COLUMN_THREAD_DURATION_DESC);
 	}
 
-	private class ThreadsPageUi extends ChartAndPopupTableUI {
+	private class ThreadsPageUi extends ThreadsPageLayoutUI {
 		private static final String THREADS_TABLE_FILTER = "threadsTableFilter"; //$NON-NLS-1$
 		private static final String FOLD_CHART_ACTION = "foldChartAction"; //$NON-NLS-1$
 		private static final String FOLD_TABLE_ACTION = "foldTableAction"; //$NON-NLS-1$
@@ -170,7 +171,6 @@ public class ThreadsPage extends AbstractDataPage {
 		public static final String TOOLBAR_FOLD_ACTIONS = "foldActions"; //$NON-NLS-1$
 		private Boolean isChartMenuActionsInit;
 		private Boolean isChartModified;
-		private Boolean isToolbarAction = false;
 		private Boolean reloadThreads;
 		private IAction foldChartAction;
 		private IAction foldTableAction;
@@ -193,7 +193,7 @@ public class ThreadsPage extends AbstractDataPage {
 			mms = new MCContextMenuManager[] {mmChart, mmText};
 			initializeStoredSashWeights();
 			canvasSash.setOrientation(SWT.HORIZONTAL);
-			addMouseListenerToSash();
+			addResizeListenerToTableAndChartComponents();
 			addActionsToContextMenu();
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
 			lanes.updateContextMenus(mms, false);
@@ -201,11 +201,11 @@ public class ThreadsPage extends AbstractDataPage {
 			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
 			setupLaneFilter();
-			buildChart();
+			buildChart(true);
 			table.getManager().setSelectionState(histogramSelectionState);
 			tableFilterComponent.loadState(state.getChild(THREADS_TABLE_FILTER));
 			for (Item columnWidget : ((TableViewer) table.getManager().getViewer()).getTable().getColumns()) {
-				columnWidget.addListener(SWT.Selection, e -> buildChart());
+				columnWidget.addListener(SWT.Selection, e -> buildChart(false));
 			}
 			chart.setVisibleRange(visibleRange.getStart(), visibleRange.getEnd());
 			onFilterChange(tableFilter);
@@ -213,18 +213,14 @@ public class ThreadsPage extends AbstractDataPage {
 
 		private void addActionsToToolbar(IToolBarManager tb) {
 			foldTableAction = ActionToolkit.checkAction(selected -> {
-				isToolbarAction = true;
 				performToolbarAction(FOLD_TABLE_ACTION, selected);
-				isToolbarAction = false;
 			}, sash.getWeights()[0] == 0 ? Messages.ThreadsPage_SHOW_TABLE_TOOLTIP
 					: Messages.ThreadsPage_FOLD_TABLE_TOOLTIP,
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_TABLE));
 			foldTableAction.setChecked(sash.getWeights()[0] == 0 ? false : true);
 
 			foldChartAction = ActionToolkit.checkAction(selected -> {
-				isToolbarAction = true;
 				performToolbarAction(FOLD_CHART_ACTION, selected);
-				isToolbarAction = false;
 			}, sash.getWeights()[1] == 0 ? Messages.ThreadsPage_SHOW_CHART_TOOLTIP
 					: Messages.ThreadsPage_FOLD_CHART_TOOLTIP,
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_CHART_BAR));
@@ -239,33 +235,24 @@ public class ThreadsPage extends AbstractDataPage {
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT)));
 		}
 
-		private void addMouseListenerToSash() {
-			for (int i = 0; i < sash.getChildren().length; i++) {
-				if (sash.getChildren()[i] instanceof Sash) {
-					sash.getChildren()[i].addMouseListener(new org.eclipse.swt.events.MouseListener() {
-
-						@Override
-						public void mouseDown(org.eclipse.swt.events.MouseEvent e) {
-							// if the user manually interacts with the sash to make a folded component visible again,
-							// ensure the tool bar items are checked accordingly
-							if (!isToolbarAction && (foldTableAction.isChecked() != foldChartAction.isChecked())) {
-								performToolbarAction(FOLD_TABLE_ACTION, true);
-								performToolbarAction(FOLD_CHART_ACTION, true);
-								foldTableAction.setChecked(true);
-								foldChartAction.setChecked(true);
-							}
-						}
-
-						@Override
-						public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
-						}
-
-						@Override
-						public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
-						}
-					});
+		private void addResizeListenerToTableAndChartComponents() {
+			tableFilterComponent.getComponent().addListener(SWT.Resize, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					if (!foldTableAction.isChecked() && tableFilterComponent.getComponent().getSize().y > 0) {
+						foldTableAction.setChecked(true);
+					}
 				}
-			}
+			});
+
+			canvasSash.addListener(SWT.Resize, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					if (!foldChartAction.isChecked() && chartCanvas.getSize().y > 0) {
+						foldChartAction.setChecked(true);
+					}
+				}
+			});
 		}
 
 		private void performToolbarAction(String action, boolean selected) {
@@ -280,7 +267,7 @@ public class ThreadsPage extends AbstractDataPage {
 						this.foldTableAction.setChecked(true);
 					} else {
 						this.setStoredSashWeights(sash.getWeights());
-						sash.setWeights(new int[] {0, 3});
+						sash.setWeights(new int[] {0, 2});
 						foldTableAction.setToolTipText(Messages.ThreadsPage_SHOW_TABLE_TOOLTIP);
 					}
 				}
@@ -304,9 +291,9 @@ public class ThreadsPage extends AbstractDataPage {
 		}
 
 		private void initializeStoredSashWeights() {
-			// if either the chart or table are folded on init, store a default value of {1, 3}
+			// if either the chart or table are folded on init, store a default value of {1, 2}
 			if (sash.getWeights()[0] == 0 || sash.getWeights()[1] == 0) {
-				this.setStoredSashWeights(new int[] {1, 3});
+				this.setStoredSashWeights(new int[] {1, 2});
 			} else {
 				this.setStoredSashWeights(sash.getWeights());
 			}
@@ -335,7 +322,7 @@ public class ThreadsPage extends AbstractDataPage {
 				if (index != -1) {
 					this.threadRows.remove(index);
 					this.reloadThreads = false;
-					buildChart();
+					buildChart(false);
 					if (!this.isChartModified) {
 						this.isChartModified = true;
 						setResetChartActionEnablement(true);
@@ -401,7 +388,7 @@ public class ThreadsPage extends AbstractDataPage {
 		 * Redraws the chart, and disables the reset chart menu action
 		 */
 		private void resetChartToSelection() {
-			buildChart();
+			buildChart(false);
 			this.isChartModified = false;
 			setResetChartActionEnablement(false);
 			setHideThreadActionEnablement(true);
@@ -491,7 +478,7 @@ public class ThreadsPage extends AbstractDataPage {
 			this.isChartMenuActionsInit = false;
 			this.isChartModified = false;
 			this.reloadThreads = true;
-			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart());
+			lanes = new ThreadGraphLanes(() -> getDataSource(), () -> buildChart(false));
 			return lanes.initializeChartConfiguration(Stream.of(state.getChildren(THREAD_LANE)));
 		}
 	}
