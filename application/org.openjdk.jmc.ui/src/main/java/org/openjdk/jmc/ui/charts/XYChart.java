@@ -184,6 +184,7 @@ public class XYChart {
 
 	public void renderTextCanvasText(Graphics2D context, int width, int height) {
 		AffineTransform oldTransform = context.getTransform();
+		axisWidth = width - xOffset;
 		doRenderTextCanvasText(context, height);
 		context.setTransform(oldTransform);
 	}

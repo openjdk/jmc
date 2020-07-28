@@ -297,7 +297,7 @@ public class ChartCanvas extends Canvas {
 	}
 
 	protected int calculateMinLaneHeight(Rectangle rect) {
-		return minLaneHeight = (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
+		return (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
 				* xScale);
 	}
 
