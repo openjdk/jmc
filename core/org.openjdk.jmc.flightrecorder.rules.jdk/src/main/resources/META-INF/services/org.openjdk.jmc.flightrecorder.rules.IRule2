@@ -1,0 +1,2 @@
+org.openjdk.jmc.flightrecorder.rules.jdk.next.OneDependencyRule
+org.openjdk.jmc.flightrecorder.rules.jdk.next.NoDependencyRule
