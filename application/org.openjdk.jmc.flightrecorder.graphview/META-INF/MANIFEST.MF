@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Flamegraph
-Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ext.graphview;singleton:=true
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview;singleton:=true
 Bundle-Version: 8.0.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder;bundle-version="8.0.0",
  org.openjdk.jmc.flightrecorder.ui;bundle-version="8.0.0",
@@ -20,5 +20,5 @@ Require-Bundle: org.openjdk.jmc.flightrecorder;bundle-version="8.0.0",
  org.opentest4j,
  org.apiguardian
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.graphview
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.graphview
 Bundle-Vendor: Oracle Corporation
