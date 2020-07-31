@@ -20,6 +20,7 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule2;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
@@ -57,6 +58,7 @@ public class NoDependencyRule implements IRule2 {
 				IQuantity bytes = UnitLookup.GIBIBYTE.quantity(2);
 				return ResultBuilder
 						.createFor(NoDependencyRule.this)
+						.setSeverity(Severity.OK)
 						.setSummary("No dependencies for this rule")
 						.setExplanation("There are bytes in the heap!!!")
 						.setSolution("Don't allocate things!")
@@ -65,11 +67,6 @@ public class NoDependencyRule implements IRule2 {
 			}
 		});
 		return futureTask;
-	}
-
-	@Override
-	public Collection<Class<? extends IRule2>> getDependencies() {
-		return Collections.emptySet();
 	}
 
 	@Override

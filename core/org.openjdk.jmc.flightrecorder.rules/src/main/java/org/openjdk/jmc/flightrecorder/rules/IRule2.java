@@ -21,8 +21,6 @@ public interface IRule2 {
 	
 	RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults);
 	
-	Collection<Class<? extends IRule2>> getDependencies();
-	
 	Collection<TypedPreference<?>> getConfigurationAttributes();
 	
 	Collection<TypedResult<?>> getResults();

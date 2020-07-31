@@ -32,8 +32,9 @@ public class RuleRegistry2 {
 			rulesByClass.put(next.getClass(), next);
 		}
 		for (IRule2 rule : rules) {
-			for (Class<? extends IRule2> dependency : rule.getDependencies()) {
-				ruleDependencyGraph.addEdge(rulesByClass.get(dependency), rule);
+			DependsOn[] dependencies = rule.getClass().getAnnotationsByType(DependsOn.class);
+			for (DependsOn dependency : dependencies) {
+				ruleDependencyGraph.addEdge(rulesByClass.get(dependency.value()), rule);
 			}
 		}
 		TopologicalOrderIterator<IRule2, DefaultEdge> iterator = new TopologicalOrderIterator<>(ruleDependencyGraph);

@@ -25,8 +25,6 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 @DependsOn(value = NoDependencyRule.class, severity = Severity.OK)
 public class OneDependencyRule implements IRule2 {
 	
-	private static final Collection<Class<? extends IRule2>> DEPENDENCIES = Arrays.<Class<? extends IRule2>> asList(NoDependencyRule.class);
-
 	@Override
 	public String getId() {
 		return "OneDependency";
@@ -59,7 +57,7 @@ public class OneDependencyRule implements IRule2 {
 							.createFor(OneDependencyRule.this)
 							.setSeverity(Severity.INFO)
 							.setSummary("We found {foundBytes} earlier!")
-							.setExplanation(MessageFormat.format("A dependency for this rule found {{0}}", NoDependencyRule.FOUND_BYTES.getIdentifier()))
+							.setExplanation(MessageFormat.format("A dependency for this rule found '{'{0}'}'", NoDependencyRule.FOUND_BYTES.getIdentifier()))
 							.setSolution("Fix the earlier issue, it might be important")
 							.build();
 				} else {
@@ -73,11 +71,6 @@ public class OneDependencyRule implements IRule2 {
 			}
 		});
 		return futureTask;
-	}
-
-	@Override
-	public Collection<Class<? extends IRule2>> getDependencies() {
-		return DEPENDENCIES;
 	}
 
 	@Override

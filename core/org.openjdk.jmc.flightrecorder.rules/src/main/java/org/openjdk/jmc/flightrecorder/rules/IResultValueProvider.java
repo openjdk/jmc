@@ -11,4 +11,5 @@ public interface IResultValueProvider {
 	 */
 	<T> T getResultValue(TypedResult<T> result);
 	
+	<T> T getResultByIdentifier(String identifier);
 }
