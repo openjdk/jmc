@@ -389,7 +389,7 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_VM_OPERATION_COUNT_DESC), JdkFilters.VM_OPERATIONS);
 	public static final IAggregator<IQuantity, ?> VM_OPERATION_DURATION = Aggregators.sum(
 			Messages.getString(Messages.AGGR_VM_OPERATION_DURATION),
-			Messages.getString(Messages.AGGR_VM_OPERATION_DURATION_DESC), JfrAttributes.DURATION);
+			Messages.getString(Messages.AGGR_VM_OPERATION_DURATION_DESC), JdkTypeIDs.VM_OPERATIONS, JfrAttributes.DURATION);
 
 	public static final IAggregator<IQuantity, ?> COMPILATIONS_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_COMPILATIONS_COUNT),
