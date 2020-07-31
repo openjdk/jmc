@@ -111,6 +111,6 @@ public class PasswordsInEnvironmentRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.ENVIRONMENT_VARIABLES_TOPIC;
+		return JfrRuleTopics.ENVIRONMENT_VARIABLES;
 	}
 }

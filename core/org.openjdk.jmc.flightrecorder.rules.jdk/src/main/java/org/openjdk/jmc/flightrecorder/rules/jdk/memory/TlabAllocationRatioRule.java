@@ -124,7 +124,7 @@ public class TlabAllocationRatioRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.TLAB_TOPIC;
+		return JfrRuleTopics.TLAB;
 	}
 
 }

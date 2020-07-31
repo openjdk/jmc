@@ -120,7 +120,7 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 	public FewSampledThreadsRule() {
 		super("FewSampledThreads", Messages.getString(Messages.FewSampledThreadsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT,
+				JfrRuleTopics.JAVA_APPLICATION, SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT,
 				SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD);
 	}
 

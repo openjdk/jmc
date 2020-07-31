@@ -133,7 +133,7 @@ public class SocketIOPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.SOCKET_IO_TOPIC};
+			return new String[] {JfrRuleTopics.SOCKET_IO};
 		}
 
 		@Override

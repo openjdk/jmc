@@ -147,6 +147,6 @@ public class SocketWriteRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.SOCKET_IO_TOPIC;
+		return JfrRuleTopics.SOCKET_IO;
 	}
 }

@@ -35,36 +35,31 @@ package org.openjdk.jmc.flightrecorder.rules.util;
 /**
  * A number of constant strings that are used as topics by JMC rules and pages. These are only used
  * as a convenience, you are by no means limited to these strings.
- * <p>
- * NOTE: If we want the word TOPIC in these constants, it should be the first word. Let's consider
- * this for 8.0.0. See JMC-6487.
  */
 public final class JfrRuleTopics {
-	public static final String CLASS_LOADING_TOPIC = "classloading"; //$NON-NLS-1$
-	public static final String CODE_CACHE_TOPIC = "code_cache"; //$NON-NLS-1$
-	public static final String COMPILATIONS_TOPIC = "compilations"; //$NON-NLS-1$
-	public static final String ENVIRONMENT_VARIABLES_TOPIC = "environment_variables"; //$NON-NLS-1$
-	public static final String EXCEPTIONS_TOPIC = "exceptions"; //$NON-NLS-1$
-	public static final String FILE_IO_TOPIC = "file_io"; //$NON-NLS-1$
-	public static final String SOCKET_IO_TOPIC = "socket_io"; //$NON-NLS-1$
-	public static final String GARBAGE_COLLECTION_TOPIC = "garbage_collection"; //$NON-NLS-1$
-	public static final String GC_CONFIGURATION_TOPIC = "gc_configuration"; //$NON-NLS-1$
-	public static final String TLAB_TOPIC = "tlab"; //$NON-NLS-1$
-	public static final String HEAP_TOPIC = "heap"; //$NON-NLS-1$
-	public static final String LOCK_INSTANCES_TOPIC = "lock_instances"; //$NON-NLS-1$
-	public static final String JAVA_APPLICATION_TOPIC = "java_application"; //$NON-NLS-1$
-	public static final String METHOD_PROFILING_TOPIC = "method_profiling"; //$NON-NLS-1$
-	public static final String JVM_INFORMATION_TOPIC = "jvm_information"; //$NON-NLS-1$
-	public static final String SYSTEM_PROPERTIES_TOPIC = "system_properties"; //$NON-NLS-1$
-	public static final String SYSTEM_INFORMATION_TOPIC = "system_information"; //$NON-NLS-1$
-	public static final String PROCESSES_TOPIC = "processes"; //$NON-NLS-1$
-	public static final String RECORDING_TOPIC = "recording"; //$NON-NLS-1$
-	public static final String THREAD_DUMPS_TOPIC = "thread_dumps"; //$NON-NLS-1$
-	public static final String THREADS_TOPIC = "threads"; //$NON-NLS-1$
-	public static final String VM_OPERATIONS_TOPIC = "vm_operations"; //$NON-NLS-1$
-	public static final String MEMORY_LEAK_TOPIC = "memoryleak"; //$NON-NLS-1$
-	public static final String BIASED_LOCKING_TOPIC = "biased_locking"; //$NON-NLS-1$
-	public static final String NATIVE_LIBRARY_TOPIC = "native_library"; //$NON-NLS-1$
-	@Deprecated
 	public static final String BIASED_LOCKING = "biased_locking"; //$NON-NLS-1$
+	public static final String CLASS_LOADING = "classloading"; //$NON-NLS-1$
+	public static final String CODE_CACHE = "code_cache"; //$NON-NLS-1$
+	public static final String COMPILATIONS = "compilations"; //$NON-NLS-1$
+	public static final String ENVIRONMENT_VARIABLES = "environment_variables"; //$NON-NLS-1$
+	public static final String EXCEPTIONS = "exceptions"; //$NON-NLS-1$
+	public static final String FILE_IO = "file_io"; //$NON-NLS-1$
+	public static final String GARBAGE_COLLECTION = "garbage_collection"; //$NON-NLS-1$
+	public static final String GC_CONFIGURATION = "gc_configuration"; //$NON-NLS-1$
+	public static final String HEAP = "heap"; //$NON-NLS-1$
+	public static final String JAVA_APPLICATION = "java_application"; //$NON-NLS-1$
+	public static final String JVM_INFORMATION = "jvm_information"; //$NON-NLS-1$
+	public static final String LOCK_INSTANCES = "lock_instances"; //$NON-NLS-1$
+	public static final String MEMORY_LEAK = "memoryleak"; //$NON-NLS-1$
+	public static final String METHOD_PROFILING = "method_profiling"; //$NON-NLS-1$
+	public static final String NATIVE_LIBRARY = "native_library"; //$NON-NLS-1$
+	public static final String PROCESSES = "processes"; //$NON-NLS-1$
+	public static final String RECORDING = "recording"; //$NON-NLS-1$
+	public static final String SOCKET_IO = "socket_io"; //$NON-NLS-1$
+	public static final String SYSTEM_INFORMATION = "system_information"; //$NON-NLS-1$
+	public static final String SYSTEM_PROPERTIES = "system_properties"; //$NON-NLS-1$
+	public static final String THREAD_DUMPS = "thread_dumps"; //$NON-NLS-1$
+	public static final String THREADS = "threads"; //$NON-NLS-1$
+	public static final String TLAB = "tlab"; //$NON-NLS-1$
+	public static final String VM_OPERATIONS = "vm_operations"; //$NON-NLS-1$
 }

@@ -70,7 +70,7 @@ public class CompareCpuRule extends AbstractRule {
 			UnitLookup.PERCENT.quantity(20));
 
 	public CompareCpuRule() {
-		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES_TOPIC, //$NON-NLS-1$
+		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES, //$NON-NLS-1$
 				OTHER_CPU_INFO_LIMIT, OTHER_CPU_WARNING_LIMIT);
 	}
 

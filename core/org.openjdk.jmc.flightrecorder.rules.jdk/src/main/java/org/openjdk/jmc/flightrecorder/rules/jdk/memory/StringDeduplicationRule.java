@@ -107,7 +107,7 @@ public class StringDeduplicationRule extends AbstractRule {
 
 	public StringDeduplicationRule() {
 		super("StringDeduplication", Messages.getString(Messages.StringDeduplicationRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP_TOPIC, STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT,
+				JfrRuleTopics.HEAP, STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT,
 				STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT, STRING_ARRAY_ALLOCATION_FRAMES);
 	}
 

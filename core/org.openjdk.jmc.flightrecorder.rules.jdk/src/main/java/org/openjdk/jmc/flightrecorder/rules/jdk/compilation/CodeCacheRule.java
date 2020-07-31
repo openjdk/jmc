@@ -286,6 +286,6 @@ public class CodeCacheRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.CODE_CACHE_TOPIC;
+		return JfrRuleTopics.CODE_CACHE;
 	}
 }

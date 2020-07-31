@@ -64,7 +64,7 @@ public class NativeLibraryPage extends DistinctItemsPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.NATIVE_LIBRARY_TOPIC};
+			return new String[] {JfrRuleTopics.NATIVE_LIBRARY};
 		}
 
 		@Override

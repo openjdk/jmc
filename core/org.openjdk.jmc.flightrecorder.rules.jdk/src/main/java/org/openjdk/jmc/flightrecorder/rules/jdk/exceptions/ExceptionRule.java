@@ -142,6 +142,6 @@ public class ExceptionRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.EXCEPTIONS_TOPIC;
+		return JfrRuleTopics.EXCEPTIONS;
 	}
 }
