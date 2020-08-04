@@ -42,6 +42,7 @@ public class TestProbeDefinitionValidation {
 				+ "                        <converter>com.company.project.MyConverter</converter>\n"
 				+ "                    </parameter>\n" + "                </parameters>\n"
 				+ "                <returnvalue>\n"
+				+ "                    <name>returnValue</name>\n"
 				+ "                    <description>the return value</description>\n"
 				+ "                    <contenttype>None</contenttype>\n"
 				+ "                    <relationkey>http://project.company.com/relation_id/parameter#0</relationkey>\n"

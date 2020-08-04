@@ -6,28 +6,63 @@ Builds of Mission Control can currently be found in the Oracle JDK on supported 
 
 For more information on Mission Control, see http://www.oracle.com/missioncontrol.
 
-### Core API Features
+## Downloading Builds
+Binary distributions of JDK Mission Control are provided by different downstream vendors.
 
-* Core APIs for parsing and processing Java flight recordings 
+### AdoptOpenJDK
+* Released version
+* EA builds of upcoming release
+* Downloadable Eclipse update site archive
 
-* Core API can *read* recordings from JDK 7 and above
+[http://adoptopenjdk.net/jmc](http://adoptopenjdk.net/jmc)
 
-* Core API can *run* on JDK 7 and above
 
-* Core API contains a framework for handling units of measurement and physical quantities
+### Azul (Zulu Mission Control)
+* Released version
 
-* Core API supports headless analysis of Java flight recordings
+[https://www.azul.com/products/zulu-mission-control](https://www.azul.com/products/zulu-mission-control)
 
+
+### Bell-Soft (Liberica Mission Control)
+* Released version
+
+[https://bell-sw.com/downloads](https://bell-sw.com/downloads)
+
+### Oracle
+* Released version
+* Integrated (in-app) update site
+* Eclipse update site
+
+[http://jdk.java.net/jmc](http://jdk.java.net/jmc)
+
+### Red Hat
+* Released version
+
+Red Hat distributes JDK Mission Control as RPMs in Fedora and RHEL. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
+
+## Mission Control Features
 
 ### Application Features
 
-* An application supporting framework for hosting various useful Java tools 
+* A framework for hosting various useful Java tools 
 
 * A tool for visualizing the contents of Java flight recordings, and the results of an automated analysis of the contents
 
 * A JMX Console 
 
 * A tool for heap waste analysis
+
+### Core API Features
+
+* Core APIs for parsing and processing Java flight recordings 
+
+* Core API can *read* recordings from JDK 7 and above
+
+* Core API can *run* on JDK 8 and above
+
+* Core API contains a framework for handling units of measurement and physical quantities
+
+* Core API supports headless analysis of Java flight recordings
 
 
 ### Core API Example
@@ -103,7 +138,7 @@ public class RunRulesOnFileSimple {
 ```
 
 
-Example for programmatically running rules in parallel (requires JDK8):
+Example for programmatically running rules in parallel:
 
 ```java
 import java.io.File;
@@ -177,6 +212,7 @@ public class RunRulesOnFile {
 ## Building Mission Control from Source
 
 Prerequisites for building Mission Control:
+
 1. Install JDK 8, and make sure it is the JDK in use (java -version)
 
 2. Install Maven (version 3.3.x. or above)
@@ -320,22 +356,8 @@ To install it into Eclipe, simply open Eclipse and select Help | Install New Sof
 application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.0.0-SNAPSHOT.zip
 ```
 
-## Setting Up for Development and Launching in Eclipse
-First make sure that you have a recent version of Eclipse. An Eclipse 2018-09 with the JDK 11 plug-in installed (available from Eclipse Marketplace) will do. You may also want to install the Mercurial Plug-in for Eclipse (MercurialEclipse). The Eclipse Marketplace is available under **Help | Eclipse Marketplace...**.
-
-To set Eclipse up for JMC development, do the following:
-
-1. First ensure that you have started the jetty server in the first step of building JMC.
-2. Next open (File | Open...) the Eclipse target platform of interest, for example releng/platform-definitions/platform-definition-photon/platform.target
-3. In the upper right corner of the platform editor that opens, click the link "Set as Active Target Platform"
-4. Import the projects you are interested in (core and/or application) into a recent Eclipse.
-5. If importing the application projects, make sure you create a user library (Preferences | Java/Build Path/User Libraries) named JMC_JDK, and add (Add External JARs...) the following JARs from a JDK 8 (u40 or above) to the User Library:
- - tools.jar (<JDK>/lib/tools.jar)
- - jconsole.jar (<JDK>/lib/jconsole.jar)
- - jfxswt.jar (<JDK>/jre/lib/jfxswt.jar)
- - jfxrt.jar (<JDK>/jre/lib/ext/jfxrt.jar)
-
-Note that importing configuration/ide/eclipse as an Eclipse project should automatically make the development launchers available to you.
+## Setting up Development Environment
+Please follow the [Developer Guide](docs/devguide/README.md).
 
 ## FAQ
 For help with frequently asked questions, see the [JMC FAQ](https://wiki.openjdk.java.net/display/jmc/JMC+FAQ) on the JMC Wiki.

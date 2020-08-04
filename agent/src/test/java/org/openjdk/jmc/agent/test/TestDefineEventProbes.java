@@ -35,6 +35,9 @@ package org.openjdk.jmc.agent.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 
 import java.util.ArrayList;
@@ -51,6 +54,8 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
+import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
@@ -58,6 +63,7 @@ import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
 import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
+import org.openjdk.jmc.agent.test.util.TestToolkit;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class TestDefineEventProbes {
@@ -92,6 +98,7 @@ public class TestDefineEventProbes {
 	public void testDefineEventProbes() throws Exception {
 		boolean exceptionThrown = false;
 		try {
+			//dumpByteCode(TestToolkit.getByteCode(InstrumentMe.class));
 			InstrumentMe.printHelloWorldJFR6();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -169,5 +176,14 @@ public class TestDefineEventProbes {
 
 	public void test() {
 		//Dummy method for instrumentation
+	}
+	
+	public void dumpByteCode(byte[] transformedClass) throws IOException {
+		// If we've asked for verbose information, we write the generated class
+		// and also dump the registry contents to stdout.
+		TraceClassVisitor visitor = new TraceClassVisitor(new PrintWriter(System.out));
+		CheckClassAdapter checkAdapter = new CheckClassAdapter(visitor);
+		ClassReader reader = new ClassReader(transformedClass);
+		reader.accept(checkAdapter, 0);
 	}
 }

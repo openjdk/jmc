@@ -373,6 +373,17 @@ public class Messages {
 	public static final String LowOnPhysicalMemoryFactory_TEXT_INFO = "LowOnPhysicalMemoryFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String LowOnPhysicalMemoryFactory_TEXT_INFO_LONG = "LowOnPhysicalMemoryFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String LowOnPhysicalMemoryFactory_TEXT_OK = "LowOnPhysicalMemoryFactory_TEXT_OK"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_LONG_DESCRIPTION_LUCENE = "LuceneVersionRule_LONG_DESCRIPTION_LUCENE"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_LONG_DESCRIPTION_ES = "LuceneVersionRule_LONG_DESCRIPTION_ES"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_LONG_DESCRIPTION_SOLR = "LuceneVersionRule_LONG_DESCRIPTION_SOLR"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_SHORT_DESCRIPTION_LUCENE = "LuceneVersionRule_SHORT_DESCRIPTION_LUCENE"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_SHORT_DESCRIPTION_ES = "LuceneVersionRule_SHORT_DESCRIPTION_ES"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_SHORT_DESCRIPTION_SOLR = "LuceneVersionRule_SHORT_DESCRIPTION_SOLR"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_OK_TEXT_LUCENE = "LuceneVersionRule_OK_TEXT_LUCENE"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_OK_TEXT_ES = "LuceneVersionRule_OK_TEXT_ES"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_OK_TEXT_SOLR = "LuceneVersionRule_OK_TEXT_SOLR"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_NA_TEXT = "LuceneVersionRule_NA_TEXT"; //$NON-NLS-1$
+	public static final String LuceneVersionRule_RULE_NAME = "LuceneVersionRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String ManagementAgentRule_TEXT_INFO = "ManagementAgentRule_TEXT_INFO"; //$NON-NLS-1$
 	public static final String ManagementAgentRule_TEXT_INFO_LONG = "ManagementAgentRule_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ManagmentAgentRuleFactory_RULE_NAME = "ManagmentAgentRuleFactory_RULE_NAME"; //$NON-NLS-1$
