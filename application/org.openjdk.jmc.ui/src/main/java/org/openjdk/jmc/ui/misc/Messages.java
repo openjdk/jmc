@@ -47,6 +47,7 @@ public class Messages extends NLS {
 	public static String ChartDisplayControlBar_ZOOM_OUT_HOLD_TOOLTIP;
 	public static String ChartLaneHeightControls_LANE_HEIGHT_DECREASE_TOOLTIP;
 	public static String ChartLaneHeightControls_LANE_HEIGHT_INCREASE_TOOLTIP;
+	public static String ChartLaneHeightControls_OVERVIEW_BUTTON_TOOLTIP;
 	public static String DIALOG_FILE_EXISTS_TITLE;
 	public static String DIALOG_OVERWRITE_QUESTION_TEXT;
 	public static String EXPORT_AS_IMAGE_ACTION_TEXT;

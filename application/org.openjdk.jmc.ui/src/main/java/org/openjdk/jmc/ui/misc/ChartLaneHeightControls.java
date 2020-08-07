@@ -92,8 +92,8 @@ public class ChartLaneHeightControls extends Composite {
 	private void initOverviewButton() {
 		overviewBtn = new Button(this, SWT.TOGGLE);
 		overviewBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		overviewBtn.setToolTipText("Legacy Mode");
-		overviewBtn.setImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_COLOR_PALETTE));
+		overviewBtn.setToolTipText(Messages.ChartLaneHeightControls_OVERVIEW_BUTTON_TOOLTIP);
+		overviewBtn.setImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_ADRESS));
 		overviewBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -114,14 +114,6 @@ public class ChartLaneHeightControls extends Composite {
 				}
 			}
 		});
-	}
-
-	void setChartCanvas(ChartCanvas chartCanvas) {
-		this.chartCanvas = chartCanvas;
-	}
-
-	void setTextCanvas(ChartTextCanvas textCanvas) {
-		this.textCanvas = textCanvas;
 	}
 
 	private void adjustLaneHeight(int amount) {
@@ -149,4 +141,13 @@ public class ChartLaneHeightControls extends Composite {
 		decHeightBtn.setEnabled(false);
 		overviewBtn.setSelection(false);
 	}
+
+	void setChartCanvas(ChartCanvas chartCanvas) {
+		this.chartCanvas = chartCanvas;
+	}
+
+	void setTextCanvas(ChartTextCanvas textCanvas) {
+		this.textCanvas = textCanvas;
+	}
+
 }
