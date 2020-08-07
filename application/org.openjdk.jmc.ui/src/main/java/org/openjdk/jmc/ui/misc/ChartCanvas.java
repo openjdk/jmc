@@ -81,6 +81,7 @@ public class ChartCanvas extends Canvas {
 	private int minLaneHeight = -1;
 	private int minReadableLaneHeight;
 	private int savedLaneHeight;
+	private int numItems = 0;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
 	private List<Rectangle2D> highlightRects;
@@ -218,16 +219,6 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
-	private int numItems = 0;
-
-	public void setNumItems(int numItems) {
-		this.numItems = numItems;
-	}
-
-	private int getNumItems() {
-		return numItems;
-	}
-
 	class Painter implements PaintListener {
 
 		@Override
@@ -283,6 +274,14 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
+	public void setNumItems(int numItems) {
+		this.numItems = numItems;
+	}
+
+	private int getNumItems() {
+		return numItems;
+	}
+
 	private boolean isScrollableChart() {
 		return getParent() instanceof ScrolledComposite;
 	}
@@ -297,8 +296,7 @@ public class ChartCanvas extends Canvas {
 	}
 
 	protected int calculateMinLaneHeight(Rectangle rect) {
-		return (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight()
-				* xScale);
+		return (int) (awtCanvas.getGraphics(rect.width, rect.height).getFontMetrics().getHeight() * xScale);
 	}
 
 	public boolean isLaneHeightMinimumSize() {

@@ -198,8 +198,8 @@ public class ThreadsPage extends AbstractDataPage {
 			// FIXME: The lanes field is initialized by initializeChartConfiguration which is called by the super constructor. This is too indirect for SpotBugs to resolve and should be simplified.
 			lanes.updateContextMenus(mms, false);
 			addActionsToToolbar(form.getToolBarManager());
-			form.getToolBarManager().update(true);
 			chartLegend.getControl().dispose();
+			form.getToolBarManager().update(true);
 			setupLaneFilter();
 			buildChart(true);
 			table.getManager().setSelectionState(histogramSelectionState);

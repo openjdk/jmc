@@ -74,9 +74,9 @@ import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
-import org.openjdk.jmc.ui.misc.ActionUiToolkit;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
 import org.openjdk.jmc.ui.misc.ChartControlBar;
+import org.openjdk.jmc.ui.misc.ActionUiToolkit;
 import org.openjdk.jmc.ui.misc.ChartButtonGroup;
 import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
@@ -96,6 +96,7 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 	protected ChartControlBar controlBar;
 	protected ChartTextCanvas textCanvas;
 	protected IPageContainer pageContainer;
+	private Composite zoomPanContainer;
 	private ChartButtonGroup buttonGroup;
 	private IItemCollection selectionItems;
 	private IItemFilter pageFilter;
@@ -121,159 +122,14 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 		sash = new SashForm(form.getBody(), SWT.VERTICAL);
 		toolkit.adapt(sash);
 
-		table = buildHistogram(sash, state.getChild(TABLE), classifier);
-		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
-		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
-		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart(true));
-		table.getManager().getViewer()
-				.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
-		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
-				NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, sectionTitle), mm);
-		tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
-				table.getManager(), tableFilter, model.getItems().apply(pageFilter),
-				pageContainer.getSelectionStore()::getSelections, this::onFilterChange);
-		mm.add(tableFilterComponent.getShowFilterAction());
-		mm.add(tableFilterComponent.getShowSearchAction());
-
-		/**
-		 * Scrolled Composite Page Container - Contains all page functionality Chart Container (1
-		 * column gridlayout) - Contains filter bar & graph container Graph Container (2 column
-		 * gridlayout) - Contains chart and timeline container & display bar Chart and Timeline
-		 * Container (1 column gridlayout) Contains chart and text container and timeline canvas
-		 * Timeline and Height Buttons Container (2 column gridlayout) Contains timeline and lane
-		 * height button controls Zoom-pan and Chart Container (formlayout) - Contains chart and
-		 * text container contents and zoom-pan overlay Zoom-pan Container (filllayout) - Contains
-		 * zoom-pan chart overlay Full screen Chart Container (1 column gridlayout) - Contains chart
-		 * container Chart and Text Container (2 column gridlayout) - Contains scText and
-		 * textCanvas) & scChart (and chart canvas)
-		 */
-
-		// Scrolled Composite containing all page functionality
-		ScrolledComposite scPageContainer = new ScrolledComposite(sash, SWT.H_SCROLL | SWT.V_SCROLL);
-
-		chartContainer = toolkit.createComposite(scPageContainer);
-		chartContainer.setLayout(new GridLayout());
-		chartContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		scPageContainer.setContent(chartContainer);
-		scPageContainer.setAlwaysShowScrollBars(false);
-		scPageContainer.setExpandHorizontal(true);
-		scPageContainer.setExpandVertical(true);
-		scPageContainer.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				int width = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-				int height = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
-						+ buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-				if (width > 0 && height > 0) {
-					scPageContainer.setMinSize(scPageContainer.computeSize(width, height));
-					scPageContainer.removeListener(SWT.Resize, this);
-				}
-			}
-		});
-
-		// Filter Controls
-		Listener resetListener = new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				onSetRange(false);
-				table.getManager().getViewer().setSelection(null);
-			}
-		};
-		controlBar = new ChartControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
-		controlBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-
-		// Container to hold the chart (& timeline)
-		Composite graphContainer = toolkit.createComposite(chartContainer);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		graphContainer.setLayout(gridLayout);
-		graphContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		// Container to hold the chart and timeline canvas
-		Composite chartAndTimelineContainer = toolkit.createComposite(graphContainer);
-		gridLayout = new GridLayout();
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		chartAndTimelineContainer.setLayout(gridLayout);
-		chartAndTimelineContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		// Container to hold the chart and a zoom-pan overlay
-		Composite zoomPanAndChartContainer = toolkit.createComposite(chartAndTimelineContainer);
-		zoomPanAndChartContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		zoomPanAndChartContainer.setLayout(new FormLayout());
-
-		// Container to hold fixed zoom-pan display
-		Composite zoomPanContainer = toolkit.createComposite(zoomPanAndChartContainer);
-		zoomPanContainer.setLayout(new FillLayout());
-		FormData fd = new FormData();
-		fd.height = 80;
-		fd.width = 150;
-		fd.bottom = new FormAttachment(100, -12);
-		fd.right = new FormAttachment(100, -12);
-		zoomPanContainer.setLayoutData(fd);
-
-		// Container to hold the chart
-		Composite fullScreenChartContainer = toolkit.createComposite(zoomPanAndChartContainer);
-		fullScreenChartContainer.setLayout(gridLayout);
-		fd = new FormData();
-		fd.right = new FormAttachment(100, -1);
-		fd.top = new FormAttachment(0, 1);
-		fd.left = new FormAttachment(0, 1);
-		fd.bottom = new FormAttachment(100, -1);
-		fullScreenChartContainer.setLayoutData(fd);
-
-		// Container to hold the text and chart canvases
-		Composite chartAndTextContainer = toolkit.createComposite(fullScreenChartContainer);
-		gridLayout = new GridLayout(2, false);
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		chartAndTextContainer.setLayout(gridLayout);
-		chartAndTextContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		canvasSash = new SashForm(chartAndTextContainer, SWT.HORIZONTAL);
-		canvasSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		toolkit.adapt(canvasSash);
-
-		ScrolledComposite scText = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
-		GridData scTextGd = new GridData(SWT.FILL, SWT.FILL, false, true);
-		scTextGd.widthHint = 180;
-		scText.setLayoutData(scTextGd);
-		textCanvas = new ChartTextCanvas(scText);
-		textCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-
-		ScrolledComposite scChart = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
-		scChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		chartCanvas = new ChartCanvas(scChart);
-		chartCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		chartCanvas.setTextCanvas(textCanvas);
-		textCanvas.setChartCanvas(chartCanvas);
-
-		scChart.setContent(chartCanvas);
-		scChart.setAlwaysShowScrollBars(true);
-		scChart.setExpandHorizontal(true);
-		scChart.setExpandVertical(true);
-		scText.setContent(textCanvas);
-		scText.setAlwaysShowScrollBars(false);
-		scText.setExpandHorizontal(true);
-		scText.setExpandVertical(true);
-
-		timelineCanvas = new TimelineCanvas(chartAndTimelineContainer, chartCanvas, canvasSash, Y_SCALE);
-		GridData gridData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
-		gridData.heightHint = (int) (TIMELINE_HEIGHT * Y_SCALE);
-		timelineCanvas.setLayoutData(gridData);
-
-		// add the display bar to the right of the chart scrolled composite
-		buttonGroup = controlBar.getButtonGroup();
+		setupTable(state, sectionTitle, tableFilter, classifier);
+		setupChartContainers(toolkit);
 
 		allChartSeriesActions = initializeChartConfiguration(state);
 		IState chartState = state.getChild(CHART);
 		ActionToolkit.loadCheckState(chartState, allChartSeriesActions.stream());
 		chartLegend = ActionUiToolkit.buildCheckboxViewer(chartContainer, allChartSeriesActions.stream());
-		gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
 		gridData.widthHint = 180;
 		chartLegend.getControl().setLayoutData(gridData);
 		DataPageToolkit.createChartTimestampTooltip(chartCanvas);
@@ -293,6 +149,8 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 		chartCanvas.setZoomToSelectionListener(() -> buttonGroup.zoomToSelection());
 
 		// Wire-up the chart & text canvases to the control bar and button group
+		chartCanvas.setTextCanvas(textCanvas);
+		textCanvas.setChartCanvas(chartCanvas);
 		controlBar.setChart(chart);
 		controlBar.setChartCanvas(chartCanvas);
 		controlBar.setTextCanvas(textCanvas);
@@ -322,6 +180,111 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 
 		flavorSelector = FlavorSelector.itemsWithTimerange(form, pageFilter, model.getItems(), pageContainer,
 				this::onFlavorSelected, this::onSetRange, flavorSelectorState);
+	}
+
+	private void setupTable(IState state, String sectionTitle, IItemFilter tableFilter, IAttribute<?> classifier) {
+		// Setup the table
+		table = buildHistogram(sash, state.getChild(TABLE), classifier);
+		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
+		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
+		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart(true));
+		table.getManager().getViewer()
+				.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
+		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
+				NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, sectionTitle), mm);
+		tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
+				table.getManager(), tableFilter, model.getItems().apply(pageFilter),
+				pageContainer.getSelectionStore()::getSelections, this::onFilterChange);
+		mm.add(tableFilterComponent.getShowFilterAction());
+		mm.add(tableFilterComponent.getShowSearchAction());
+	}
+
+	private void setupChartContainers(FormToolkit toolkit) {
+		// Scrolled Composite containing all of the chart-related components
+		ScrolledComposite scChartContainer = new ScrolledComposite(sash, SWT.H_SCROLL | SWT.V_SCROLL);
+		scChartContainer.setAlwaysShowScrollBars(false);
+		scChartContainer.setExpandHorizontal(true);
+		scChartContainer.setExpandVertical(true);
+		scChartContainer.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				int width = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+				int height = controlBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y
+						+ buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+				if (width > 0 && height > 0) {
+					scChartContainer.setMinSize(scChartContainer.computeSize(width, height));
+					scChartContainer.removeListener(SWT.Resize, this);
+				}
+			}
+		});
+
+		// chartContainer to layout all of the chart components
+		chartContainer = toolkit.createComposite(scChartContainer);
+		chartContainer.setLayout(new GridLayout());
+		chartContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		scChartContainer.setContent(chartContainer);
+
+		// Chart Control Toolbar
+		Listener resetListener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				onSetRange(false);
+				table.getManager().getViewer().setSelection(null);
+			}
+		};
+		controlBar = new ChartControlBar(chartContainer, resetListener, pageContainer.getRecordingRange());
+		controlBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		buttonGroup = controlBar.getButtonGroup();
+
+		// Container to hold the chartContainer and a zoom-pan overlay
+		Composite zoomPanAndChartContainer = toolkit.createComposite(chartContainer);
+		zoomPanAndChartContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		zoomPanAndChartContainer.setLayout(new FormLayout());
+
+		// Container to hold fixed zoom-pan display
+		zoomPanContainer = toolkit.createComposite(zoomPanAndChartContainer);
+		zoomPanContainer.setLayout(new FillLayout());
+		FormData fd = new FormData();
+		fd.height = 80;
+		fd.width = 150;
+		fd.bottom = new FormAttachment(100, -12);
+		fd.right = new FormAttachment(100, -12);
+		zoomPanContainer.setLayoutData(fd);
+
+		// SashForm to hold the two canvas components: chart text canvas on the left, chart canvas on the right
+		canvasSash = new SashForm(zoomPanAndChartContainer, SWT.HORIZONTAL);
+		fd = new FormData();
+		fd.right = new FormAttachment(100, -1);
+		fd.top = new FormAttachment(0, 1);
+		fd.left = new FormAttachment(0, 1);
+		fd.bottom = new FormAttachment(100, -1);
+		canvasSash.setLayoutData(fd);
+		toolkit.adapt(canvasSash);
+
+		ScrolledComposite scText = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
+		GridData scTextGd = new GridData(SWT.FILL, SWT.FILL, false, true);
+		textCanvas = new ChartTextCanvas(scText);
+		textCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+		scTextGd.widthHint = 180;
+		scText.setLayoutData(scTextGd);
+		scText.setContent(textCanvas);
+		scText.setAlwaysShowScrollBars(false);
+		scText.setExpandHorizontal(true);
+		scText.setExpandVertical(true);
+
+		ScrolledComposite scChart = new ScrolledComposite(canvasSash, SWT.BORDER | SWT.V_SCROLL);
+		chartCanvas = new ChartCanvas(scChart);
+		chartCanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		scChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		scChart.setContent(chartCanvas);
+		scChart.setAlwaysShowScrollBars(true);
+		scChart.setExpandHorizontal(true);
+		scChart.setExpandVertical(true);
+
+		timelineCanvas = new TimelineCanvas(chartContainer, chartCanvas, canvasSash, Y_SCALE);
+		GridData gridData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+		gridData.heightHint = (int) (TIMELINE_HEIGHT * Y_SCALE);
+		timelineCanvas.setLayoutData(gridData);
 	}
 
 	protected void onFilterChange(IItemFilter filter) {

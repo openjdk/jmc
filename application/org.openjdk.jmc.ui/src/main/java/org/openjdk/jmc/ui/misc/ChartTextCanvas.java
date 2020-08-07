@@ -70,7 +70,7 @@ public class ChartTextCanvas extends Canvas {
 	private int laneHeight;
 	private int savedLaneHeight;
 	private int minLaneHeight = -1;
-	private int numItems;
+	private int numItems = 0;
 	private int lastMouseX = -1;
 	private int lastMouseY = -1;
 	private List<Rectangle2D> highlightRects;
@@ -205,14 +205,6 @@ public class ChartTextCanvas extends Canvas {
 		}
 	}
 
-	public void setNumItems(int numItems) {
-		this.numItems = numItems;
-	}
-
-	private int getNumItems() {
-		return numItems;
-	}
-
 	class Painter implements PaintListener {
 
 		@Override
@@ -245,6 +237,14 @@ public class ChartTextCanvas extends Canvas {
 			}
 			awtCanvas.paint(e, 0, 0);
 		}
+	}
+
+	public void setNumItems(int numItems) {
+		this.numItems = numItems;
+	}
+
+	private int getNumItems() {
+		return numItems;
 	}
 
 	void setOverviewLaneHeight() {
