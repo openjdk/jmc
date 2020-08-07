@@ -54,7 +54,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			InspectionClassLoader inspectionClassLoader) {
-		super(Opcodes.ASM5, cv);
+		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
@@ -74,7 +74,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM5, mv, access, name, desc);
+			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
 		}
 		return mv;
 	}
