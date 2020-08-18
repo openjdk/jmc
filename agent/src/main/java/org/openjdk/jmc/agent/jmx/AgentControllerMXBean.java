@@ -38,6 +38,11 @@ public interface AgentControllerMXBean {
 
 	public void defineEventProbes(String xmlDescription) throws Exception;
 
+	/**
+	 * Returns the most recent XML configuration that was successfully applied.
+	 *
+	 * @return an XML snippet of the current configuration.
+	 */
 	public String retrieveEventProbes();
 
 	public JFRTransformDescriptor[] retrieveCurrentTransforms();
