@@ -39,6 +39,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -52,7 +53,7 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 public class TestDefaultTransformRegistry {
 
 	private static final String XML_EVENT_DESCRIPTION = "<event id=\"demo.jfr.test1\">"
-			+ "<name>JFR Hello World Event 1 Modify </name>"
+			+ "<name>JFR Hello World Event 1 %TEST_NAME% </name>"
 			+ "<description>Defined in the xml file and added by the agent.</description>"
 			+ "<path>demo/jfrhelloworldevent1</path>"
 			+ "<stacktrace>true</stacktrace>"
@@ -104,12 +105,11 @@ public class TestDefaultTransformRegistry {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
 		assertNotNull(registry);
-		List<TransformDescriptor> descriptors = registry.modify(getXMLDescription(XML_EVENT_DESCRIPTION));
-		assertNotNull(descriptors);
-		assertTrue(descriptors.size() == 1);
-		assertEquals(descriptors.get(0).getClassName(), "org/openjdk/jmc/agent/test/InstrumentMe");
-		assertEquals(descriptors.get(0).getMethod().toString(), "printHelloWorldJFR1()V");
-		assertTrue(registry.hasPendingTransforms("org/openjdk/jmc/agent/test/InstrumentMe"));
+		Set<String> modifiedClassNames = registry.modify(getXMLDescription(XML_EVENT_DESCRIPTION));
+		assertNotNull(modifiedClassNames);
+		assertTrue(modifiedClassNames.size() == 1);
+		assertEquals(modifiedClassNames.iterator().next(), Type.getInternalName(InstrumentMe.class));
+		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
 	}
 
 	@Test
@@ -117,19 +117,20 @@ public class TestDefaultTransformRegistry {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
 		assertNotNull(registry);
-		final String collisionDescirption = getXMLDescription(XML_EVENT_DESCRIPTION.concat(XML_EVENT_DESCRIPTION));
-		List<TransformDescriptor> descriptors = registry.modify(collisionDescirption);
-		assertNotNull(descriptors);
-		assertTrue(descriptors.size() == 1);
+		final String collisionDescription = getXMLDescription(XML_EVENT_DESCRIPTION.concat(XML_EVENT_DESCRIPTION));
+		Set<String> modifiedClassNames = registry.modify(collisionDescription);
+		assertNotNull(modifiedClassNames);
+		assertTrue(modifiedClassNames.size() == 1);
 	}
 
 	@Test
 	public void testClearAllTransformData() throws XMLStreamException, IOException {
 		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "clearAllTransformData")); //$NON-NLS-1$
+				.from(TestToolkit.getProbesXMLFromTemplate(getXMLDescription(XML_EVENT_DESCRIPTION), "clearAllTransformData")); //$NON-NLS-1$
 		assertNotNull(registry);
-		List<String> classesCleared = registry.clearAllTransformData();
-		assertEquals(classesCleared.get(0),Type.getInternalName(InstrumentMe.class));
+		Set<String> classesCleared = registry.clearAllTransformData();
+		assertTrue(classesCleared.size() == 1);
+		assertEquals(classesCleared.iterator().next(),Type.getInternalName(InstrumentMe.class));
 		assertNull(registry.getTransformData(Type.getInternalName(InstrumentMe.class)));
 	}
 
