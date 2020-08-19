@@ -67,10 +67,20 @@ public class TestRetrieveEventProbes {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 
-		Assert.assertTrue(mbean.retrieveEventProbes().isEmpty());
+		Assert.assertNotEquals(mbean.retrieveEventProbes(), XML_TEST_DESCRIPTION);
 		mbean.defineEventProbes(XML_TEST_DESCRIPTION);
-		String currentConfiguration = mbean.retrieveEventProbes();
-		Assert.assertEquals(XML_TEST_DESCRIPTION, currentConfiguration);
+		Assert.assertEquals(mbean.retrieveEventProbes(), XML_TEST_DESCRIPTION);
+	}
+
+	@Test
+	public void testRetrieveInvalidConfiguration() throws Exception {
+		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
+				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
+
+		String initialConfiguration = mbean.retrieveEventProbes();
+		String invalidConfiguration = XML_TEST_DESCRIPTION.concat("</jfragent>");
+		mbean.defineEventProbes(invalidConfiguration);
+		Assert.assertEquals(mbean.retrieveEventProbes(), initialConfiguration);
 	}
 
 	public void test() {
