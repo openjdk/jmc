@@ -73,6 +73,7 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
+			transformDescriptor.matchFound(true);
 			return new JFRMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
 		}
 		return mv;
@@ -87,6 +88,11 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
 					t);
 		}
+		if (!transformDescriptor.isMatchFound()) {
+			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
+					 + transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
+		}
+
 		super.visitEnd();
 	}
 
