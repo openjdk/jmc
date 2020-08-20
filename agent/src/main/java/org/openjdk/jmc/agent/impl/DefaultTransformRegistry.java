@@ -32,9 +32,11 @@
  */
 package org.openjdk.jmc.agent.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +49,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -88,6 +91,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	private final HashMap<String, List<TransformDescriptor>> transformData = new HashMap<>();
 
 	private volatile boolean revertInstrumentation = false;
+
+	private String currentConfiguration = "";
 
 	private static final String PROBE_SCHEMA_XSD = "jfrprobes_schema.xsd"; //$NON-NLS-1$
 	private static final Schema PROBE_SCHEMA;
@@ -162,6 +167,12 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			}
 			streamReader.next();
 		}
+		try {
+			configuration.reset();
+		} catch (IOException e) {
+			throw new XMLStreamException(e);
+		}
+		registry.setCurrentConfiguration(getXmlAsString(configuration));
 		return registry;
 	}
 
@@ -497,6 +508,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				}
 				streamReader.next();
 			}
+			currentConfiguration = xmlDescription;
 			clearAllOtherTransformData(modifiedClasses);
 			return modifiedClasses;
 		} catch (XMLStreamException xse) {
@@ -520,8 +532,20 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return classNames;
 	}
 
+	private static String getXmlAsString(InputStream in) {
+		return new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
+	}
+
 	public Set<String> getClassNames() {
 		return Collections.unmodifiableSet(transformData.keySet());
+	}
+
+	public String getCurrentConfiguration() {
+		return currentConfiguration;
+	}
+
+	public void setCurrentConfiguration(String configuration) {
+		currentConfiguration = configuration;
 	}
 
 	public void setRevertInstrumentation(boolean shouldRevert) {

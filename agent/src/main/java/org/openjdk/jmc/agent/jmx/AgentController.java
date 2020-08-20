@@ -63,6 +63,7 @@ public class AgentController implements AgentControllerMXBean {
 		boolean revertAll = xmlDescription == null ? true : xmlDescription.isEmpty();
 		if (revertAll) {
 			classesToRetransformArray = retransformClasses(registry.clearAllTransformData());
+			registry.setCurrentConfiguration("");
 		} else {
 			Set<String> initialClasses = new HashSet<>(registry.getClassNames());
 			Set<String> modifiedClasses = registry.modify(xmlDescription);
@@ -105,6 +106,11 @@ public class AgentController implements AgentControllerMXBean {
 			jfrTds.add((JFRTransformDescriptor) td);
 		}
 		return (jfrTds.toArray(new JFRTransformDescriptor[0]));
+	}
+
+	public String retrieveEventProbes() {
+		checkSecurity();
+		return registry.getCurrentConfiguration();
 	}
 
 	private void checkSecurity() {

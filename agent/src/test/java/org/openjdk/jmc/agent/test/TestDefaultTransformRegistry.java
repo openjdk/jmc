@@ -124,6 +124,18 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
+	public void testModifyInvalidXml() throws XMLStreamException, IOException {
+		TransformRegistry registry = DefaultTransformRegistry
+				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
+		assertNotNull(registry);
+		final String initialConfiguration = registry.getCurrentConfiguration();
+		final String invalidSnippet = XML_EVENT_DESCRIPTION;
+		Set<String> modifiedClassNames = registry.modify(invalidSnippet);
+		assertNull(modifiedClassNames);
+		assertEquals(registry.getCurrentConfiguration(), initialConfiguration);
+	}
+
+	@Test
 	public void testClearAllTransformData() throws XMLStreamException, IOException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getXMLDescription(XML_EVENT_DESCRIPTION), "clearAllTransformData")); //$NON-NLS-1$

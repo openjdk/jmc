@@ -62,6 +62,21 @@ public interface TransformRegistry {
 	Set<String> getClassNames();
 
 	/**
+	 * Returns the currently instrumented configuration.
+	 *
+	 * @return an XML snippet of the configuration.
+	 */
+	String getCurrentConfiguration();
+
+	/**
+	 * Set the current configuration that will be instrumented
+	 *
+	 * @param xmlDescription
+	 *           an XML snippet describing the current configuration
+	 */
+	void setCurrentConfiguration(String xmlDescription);
+
+	/**
 	 * Modifies class information in the registry according to the xml description.
 	 *
 	 * @param xmlDescription
