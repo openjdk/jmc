@@ -88,8 +88,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		public void before() {
 			JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
 			JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
-	        toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
-	        toolbar.clickToolItem(SHOW_TABLE);
+			toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
+			toolbar.clickToolItem(SHOW_TABLE);
 			chartCanvas = MCChartCanvas.getChartCanvas();
 			textCanvas = MCTextCanvas.getTextCanvas();
 			selected = false;
@@ -242,69 +242,69 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 	}
 
-    @Test
-    public void testFoldingChart() {
-        // Sash weights should both be non-zero to display the chart and table
-        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+	@Test
+	public void testFoldingChart() {
+		// Sash weights should both be non-zero to display the chart and table
+		Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
 
-        // Sash weight corresponding to the chart should be zero when folded
-        toolbar.clickToolItem(FOLD_CHART);
-        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] == 0);
+		// Sash weight corresponding to the chart should be zero when folded
+		toolbar.clickToolItem(FOLD_CHART);
+		Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] == 0);
 
-        // When unfolded, the sash weights should be non-zero
-        toolbar.clickToolItem(SHOW_CHART);
-        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
-    }
+		// When unfolded, the sash weights should be non-zero
+		toolbar.clickToolItem(SHOW_CHART);
+		Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+	}
 
-    @Test
-    public void testFoldingTable() {
-        // Sash weights should both be non-zero to display the chart and table
-        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+	@Test
+	public void testFoldingTable() {
+		// Sash weights should both be non-zero to display the chart and table
+		Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
 
-        // Sash weight corresponding to the table should be zero when folded
-        toolbar.clickToolItem(FOLD_TABLE);
-        Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
+		// Sash weight corresponding to the table should be zero when folded
+		toolbar.clickToolItem(FOLD_TABLE);
+		Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
 
-        // When unfolded, the sash weights should be non-zero
-        toolbar.clickToolItem(SHOW_TABLE);
-        Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
-    }
+		// When unfolded, the sash weights should be non-zero
+		toolbar.clickToolItem(SHOW_TABLE);
+		Assert.assertTrue(sashForm.getWeights()[0] != 0 && sashForm.getWeights()[1] != 0);
+	}
 
-    @Test
-    public void testInvalidFoldingActions() {
-        toolbar.clickToolItem(FOLD_TABLE);
-        int[] weights = sashForm.getWeights();
-        toolbar.clickToolItem(FOLD_CHART);
-        // If the table is already folded, the fold chart action shouldn't work
-        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
-        toolbar.clickToolItem(SHOW_TABLE);
+	@Test
+	public void testInvalidFoldingActions() {
+		toolbar.clickToolItem(FOLD_TABLE);
+		int[] weights = sashForm.getWeights();
+		toolbar.clickToolItem(FOLD_CHART);
+		// If the table is already folded, the fold chart action shouldn't work
+		Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+		toolbar.clickToolItem(SHOW_TABLE);
 
-        toolbar.clickToolItem(FOLD_CHART);
-        weights = sashForm.getWeights();
-        toolbar.clickToolItem(FOLD_TABLE);
-        // If the chart is already folded, the fold table action shouldn't work
-        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+		toolbar.clickToolItem(FOLD_CHART);
+		weights = sashForm.getWeights();
+		toolbar.clickToolItem(FOLD_TABLE);
+		// If the chart is already folded, the fold table action shouldn't work
+		Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
 
-        // Bring back the chart before retiring
-        toolbar.clickToolItem(SHOW_CHART);
-    }
+		// Bring back the chart before retiring
+		toolbar.clickToolItem(SHOW_CHART);
+	}
 
-    @Test
-    public void testPersistingSashWeights() {
-        // Fold the table away
-        toolbar.clickToolItem(FOLD_TABLE);
-        int[] weights = sashForm.getWeights();
-        Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
-        MCMenu.closeActiveEditor();
+	@Test
+	public void testPersistingSashWeights() {
+		// Fold the table away
+		toolbar.clickToolItem(FOLD_TABLE);
+		int[] weights = sashForm.getWeights();
+		Assert.assertTrue(sashForm.getWeights()[0] == 0 && sashForm.getWeights()[1] != 0);
+		MCMenu.closeActiveEditor();
 
-        // Re-open the JFR file & verify the table is still folded
-        JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
-        JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
-        sashForm = MCSashForm.getMCSashForm();
-        Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
+		// Re-open the JFR file & verify the table is still folded
+		JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
+		JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
+		sashForm = MCSashForm.getMCSashForm();
+		Assert.assertTrue(Arrays.equals(weights, sashForm.getWeights()));
 
-        // Bring back the table before retiring
-        toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
-        toolbar.clickToolItem(SHOW_TABLE);
-    }
+		// Bring back the table before retiring
+		toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
+		toolbar.clickToolItem(SHOW_TABLE);
+	}
 }

@@ -156,7 +156,8 @@ public class MCChartCanvas extends MCJemmyBase {
 		Fetcher<Point> fetcher = new Fetcher<Point>() {
 			@Override
 			public void run() {
-				setOutput(new Point(control.getControl().getParent().getSize().x / 2, control.getControl().getParent().getSize().y / 2));
+				setOutput(new Point(control.getControl().getParent().getSize().x / 2,
+						control.getControl().getParent().getSize().y / 2));
 			}
 		};
 		Display.getDefault().syncExec(fetcher);
