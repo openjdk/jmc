@@ -120,6 +120,6 @@ public class PasswordsInArgumentsRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 }

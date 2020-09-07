@@ -121,7 +121,7 @@ public class ThreadDumpsPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.THREAD_DUMPS_TOPIC};
+			return new String[] {JfrRuleTopics.THREAD_DUMPS};
 		}
 
 		@Override

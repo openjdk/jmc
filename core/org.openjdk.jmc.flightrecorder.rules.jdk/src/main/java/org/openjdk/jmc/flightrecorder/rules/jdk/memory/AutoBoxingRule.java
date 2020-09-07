@@ -120,7 +120,7 @@ public class AutoBoxingRule extends AbstractRule {
 
 	public AutoBoxingRule() {
 		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP_TOPIC, AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
+				JfrRuleTopics.HEAP, AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
 	}
 
 	@Override

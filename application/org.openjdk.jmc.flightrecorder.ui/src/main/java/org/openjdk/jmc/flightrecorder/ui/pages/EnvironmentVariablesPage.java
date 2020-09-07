@@ -65,7 +65,7 @@ public class EnvironmentVariablesPage extends DistinctItemsPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.ENVIRONMENT_VARIABLES_TOPIC};
+			return new String[] {JfrRuleTopics.ENVIRONMENT_VARIABLES};
 		}
 
 		@Override

@@ -115,7 +115,7 @@ public class JavaApplicationPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.JAVA_APPLICATION_TOPIC, JfrRuleTopics.METHOD_PROFILING_TOPIC};
+			return new String[] {JfrRuleTopics.JAVA_APPLICATION, JfrRuleTopics.METHOD_PROFILING};
 		}
 
 		@Override

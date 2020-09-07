@@ -91,7 +91,7 @@ public class GcFreedRatioRule extends AbstractRule {
 			UnitLookup.NUMBER_UNITY.quantity(10));
 
 	public GcFreedRatioRule() {
-		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, //$NON-NLS-1$
+		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP, //$NON-NLS-1$
 				GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT, SHORT_RECORDING_LIMIT);
 	}
 

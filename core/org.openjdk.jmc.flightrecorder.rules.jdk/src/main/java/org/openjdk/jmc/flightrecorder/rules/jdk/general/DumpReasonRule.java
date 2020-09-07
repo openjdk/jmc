@@ -150,6 +150,6 @@ public class DumpReasonRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.RECORDING_TOPIC;
+		return JfrRuleTopics.RECORDING;
 	}
 }

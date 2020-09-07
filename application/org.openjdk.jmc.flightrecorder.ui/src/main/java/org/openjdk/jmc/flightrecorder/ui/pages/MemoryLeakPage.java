@@ -124,7 +124,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.MEMORY_LEAK_TOPIC};
+			return new String[] {JfrRuleTopics.MEMORY_LEAK};
 		}
 
 		@Override

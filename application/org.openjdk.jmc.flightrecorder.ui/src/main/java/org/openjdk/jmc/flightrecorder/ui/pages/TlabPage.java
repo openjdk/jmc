@@ -94,7 +94,7 @@ public class TlabPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.TLAB_TOPIC};
+			return new String[] {JfrRuleTopics.TLAB};
 		}
 
 		@Override

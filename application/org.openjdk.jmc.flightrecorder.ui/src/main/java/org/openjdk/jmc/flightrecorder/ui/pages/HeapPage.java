@@ -110,7 +110,7 @@ public class HeapPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.HEAP_TOPIC};
+			return new String[] {JfrRuleTopics.HEAP};
 		}
 
 		@Override

@@ -69,7 +69,7 @@ public class GcPauseRatioRule extends AbstractRule {
 
 	public GcPauseRatioRule() {
 		super("GcPauseRatio", Messages.getString(Messages.GcPauseRatioRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, INFO_LIMIT, WARNING_LIMIT, WINDOW_SIZE);
+				JfrRuleTopics.GARBAGE_COLLECTION, INFO_LIMIT, WARNING_LIMIT, WINDOW_SIZE);
 	}
 
 	@Override

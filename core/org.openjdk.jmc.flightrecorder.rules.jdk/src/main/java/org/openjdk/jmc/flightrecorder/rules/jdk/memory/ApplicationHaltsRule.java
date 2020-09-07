@@ -72,7 +72,7 @@ public class ApplicationHaltsRule extends AbstractRule {
 
 	public ApplicationHaltsRule() {
 		super("ApplicationHalts", Messages.getString(Messages.ApplicationHaltsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
+				JfrRuleTopics.JAVA_APPLICATION, APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
 	}
 
 	@Override

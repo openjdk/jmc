@@ -92,7 +92,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.METHOD_PROFILING_TOPIC};
+			return new String[] {JfrRuleTopics.METHOD_PROFILING};
 		}
 
 		@Override
