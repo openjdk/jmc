@@ -169,9 +169,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
-	private TraceNode currentTraceRoot;
-//	private volatile AtomicBoolean modelCalculationActive = new AtomicBoolean();
-	private volatile Future<Void> modelCalculationFuture;
+	private TraceNode currentTraceRoot = TraceNode.EMPTY;
+	private Future<Void> modelCalculationFuture;
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
@@ -453,19 +452,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			if(Thread.currentThread().isAlive()) {
 				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
-				
+
 				if(Thread.currentThread().isAlive() && !traceNode.isCanceled() && !jsonModelBuilder.isCanceled()) {
-					
 					ModelsContainer modelContainer = new ModelsContainer(traceNode, model, jsonModelBuilder.build());
-					if(Thread.currentThread().isAlive()) {
-						DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
-					} else {
-						writeLog("callable, not alive, not display thread:" + Thread.currentThread().getName());
-					}
-					
-					
+					DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
+
 				} else {
-					writeLog("callable, not alive, traceNode.isCanceled, jsonModelBuild.isCanceled, thread:" + Thread.currentThread().getName());
+					writeLog("callable, not alive, traceNode.isCanceled, jsonModelBuild.isCanceled, thread canceled:" + Thread.currentThread().getName());
 				}
 			}else {
 				writeLog("getModelPreparer Thread, canceled: " + Thread.currentThread().getName());
@@ -479,47 +472,16 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setModel(ModelsContainer container) {
-		// Check that the models are prepared and up to date 
-//		if (container.isReady() && !browser.isDisposed() && container.isEqualStacktraceModel(createStacktraceModel())) {
-		if (currentTraceRoot == null) {
-			writeLog("setModel1: JSON: " + Thread.currentThread().getName());
-//			setViewerInput(container.root());
-			setViewerInput(container.json());
-			currentTraceRoot = container.root();
-		} else if (container.isReady() && !browser.isDisposed() && 
-				!currentTraceRoot.equals(container.root()) && 
-				container.isEqualStacktraceModel(createStacktraceModel())) {
+		// Check that the model is prepared for current stacktrace and ui update is required 
+		if (!browser.isDisposed() && container.isReady()
+				&& container.isEqualStacktraceModel(createStacktraceModel())
+				&& !currentTraceRoot.equals(container.root())  
+				) {
 			writeLog("setModel2: JSON: " + Thread.currentThread().getName());
-//			setViewerInput(container.root());
 			currentTraceRoot = container.root();
 			setViewerInput(container.json());
-		} 
+		}
 	}
-
-//	private void setViewerInput(TraceNode root) {
-//		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
-//		browser.setText(HTML_PAGE);
-//		browser.addListener(SWT.Resize, event -> {
-//			browser.execute("resizeFlameGraph();");
-//		});
-//
-//		browser.addProgressListener(new ProgressAdapter() {
-//			@Override
-//			public void completed(ProgressEvent event) {
-//				browser.removeProgressListener(this);
-//				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
-//				if (!jsonModelBuilder.isCanceled()) {
-//					browser.execute(
-//							String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
-//									TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
-//					browser.execute(String.format("processGraph(%s, %s);", jsonModelBuilder.build(), icicleViewActive));
-//					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
-//				}
-//
-//			}
-//		});
-//
-//	}
 	
 	private void setViewerInput(String json) {
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
@@ -538,8 +500,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					browser.execute(String.format("processGraph(%s, %s);", json, icicleViewActive));
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
 				}
-
-			
 		});
 
 	}

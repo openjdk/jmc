@@ -85,21 +85,18 @@ public final class TraceTreeUtils {
 	/**
 	 * Traces a TraceTree from a {@link StacktraceModel}.
 	 * 
-	 * @param active
-	 *            is calculation still active
 	 * @param root
 	 *            the root with description
 	 * @param model
 	 *            the model to trace the tree from
 	 * @return the root
 	 */
-//	public static TraceNode createTree(final AtomicBoolean active, TraceNode root, StacktraceModel model) {
-	public static TraceNode createTree(TraceNode root, StacktraceModel model) {
+	public static TraceNode createTree(final TraceNode root, final StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
 
 		final Branch[] branches = rootFork.getBranches();
 		int i = 0;
-		while (!Thread.currentThread().isInterrupted() && i < branches.length) {
+		while (Thread.currentThread().isAlive() && i < branches.length) {
 			addBranch(root, branches[i]);
 			i++;
 		}
@@ -162,14 +159,22 @@ public final class TraceTreeUtils {
 				typeText);
 	}
 
-	private static void addBranch(TraceNode root, Branch branch) {
-		StacktraceFrame firstFrame = branch.getFirstFrame();
+	private static void addBranch(final TraceNode root, final Branch branch) {
+		final StacktraceFrame firstFrame = branch.getFirstFrame();
 		TraceNode currentNode = getTraceNodeByStacktraceFrame(firstFrame);
 		root.addChild(currentNode);
-		for (StacktraceFrame frame : branch.getTailFrames()) {
+		
+		final StacktraceFrame[] frames = branch.getTailFrames();
+		int i = 0;
+		while (Thread.currentThread().isAlive() && i < frames.length) {
+			final StacktraceFrame frame = frames[i];
 			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
+			i++;
+		}
+		if(i < frames.length) {
+			root.setCanceled();
 		}
 		addFork(currentNode, branch.getEndFork());
 	}
