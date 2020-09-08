@@ -169,7 +169,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
-	private TraceNode currentTraceRoot = TraceNode.EMPTY;
+	private TraceNode currentTraceNode = TraceNode.EMPTY;
 	private Future<Void> modelCalculationFuture;
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
@@ -284,8 +284,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	/**
 	 * Container for created {@link TraceNode} and {@link StacktraceModel}
 	 */
-	private static final class ModelsContainer {
-		private static final ModelsContainer EMPTY = new ModelsContainer(null, null, null);
+	private final class ModelsContainer {
 		private final TraceNode root;
 		private final StacktraceModel model;
 		private final String json;
@@ -305,8 +304,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		private boolean isEqualStacktraceModel(StacktraceModel m) {
-			
-			return Thread.currentThread().isInterrupted() ? false : model.equals(m);
+			return Thread.currentThread().isAlive() ? model.equals(m) : false;
 		}
 
 		private boolean isReady() {
@@ -417,7 +415,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void setItems(IItemCollection items) {
 		currentItems = items;
 		rebuildModel();
-
 	}
 
 	private void writeLog(String message) {
@@ -430,15 +427,16 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			writeLog("rebuildModel, canceled, from thread: " + Thread.currentThread().getName() + ", feature done: " + modelCalculationFuture.isDone());
 		}
 
-		modelCalculationFuture = getModelPreparer(createStacktraceModel(), true);
+		modelCalculationFuture = getModelPreparer(currentItems, true);
 	}
 
-	private StacktraceModel createStacktraceModel() {
+	private StacktraceModel createCurrentStacktraceModel() {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private Future<Void> getModelPreparer(final StacktraceModel model, final boolean materializeSelectedBranches){
+	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches){
 		
+		final StacktraceModel model = createCurrentStacktraceModel();
 		final Callable<Void> callable = () -> {
 			
 			Fork rootFork = model.getRootFork();
@@ -448,15 +446,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			} 
-			TraceNode root = TraceTreeUtils.createRootWithDescription(currentItems, rootFork.getBranchCount());
+			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
 			if(Thread.currentThread().isAlive()) {
 				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 
-				if(Thread.currentThread().isAlive() && !traceNode.isCanceled() && !jsonModelBuilder.isCanceled()) {
+				if(Thread.currentThread().isAlive()) {
 					ModelsContainer modelContainer = new ModelsContainer(traceNode, model, jsonModelBuilder.build());
 					DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
-
 				} else {
 					writeLog("callable, not alive, traceNode.isCanceled, jsonModelBuild.isCanceled, thread canceled:" + Thread.currentThread().getName());
 				}
@@ -474,11 +471,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void setModel(ModelsContainer container) {
 		// Check that the model is prepared for current stacktrace and ui update is required 
 		if (!browser.isDisposed() && container.isReady()
-				&& container.isEqualStacktraceModel(createStacktraceModel())
-				&& !currentTraceRoot.equals(container.root())  
+				&& container.isEqualStacktraceModel(createCurrentStacktraceModel())
+				&& !currentTraceNode.equals(container.root())  
 				) {
-			writeLog("setModel2: JSON: " + Thread.currentThread().getName());
-			currentTraceRoot = container.root();
+			currentTraceNode = container.root();
 			setViewerInput(container.json());
 		}
 	}
@@ -585,20 +581,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		JSonModelBuilder builder = new JSonModelBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
-//		AtomicBoolean renderActive = new AtomicBoolean(true);
-//		renderChildren(renderActive, builder, root);
 		renderChildren(builder, root);
 		builder.append("]}");
 		return builder;
 	}
 
-//	private void render(AtomicBoolean renderActive, JSonModelBuilder builder, TraceNode node) {
-//		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
-//				: createJsonTraceNode(node);
-//		builder.append(start);
-//		renderChildren(renderActive, builder, node);
-//		builder.append("]}");
-//	}
 	
 	private void render(JSonModelBuilder builder, TraceNode node) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
@@ -608,43 +595,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		builder.append("]}");
 	}
 	
-//	private void renderChildren(AtomicBoolean renderActive, JSonModelBuilder builder, TraceNode node) {
-//
-//		int i = 0;
-//		while (renderActive.get() && i < node.getChildren().size()) {
-//			if (!modelCalculationActive.get()) {
-//				renderActive.set(false);
-//				builder.setCanceled();
-//			}
-//
-//			render(renderActive, builder, node.getChildren().get(i));
-//			if (i < node.getChildren().size() - 1) {
-//				builder.append(",");
-//			}
-//			i++;
-//		}
-//	}
-
-//	private void renderChildren(JSonModelBuilder builder, TraceNode node) {
-//
-//		int i = 0;
-//		while (!Thread.currentThread().isInterrupted() && i < node.getChildren().size()) {
-//			if (Thread.currentThread().isInterrupted()) {
-//				builder.setCanceled();
-//			}
-//
-//			render(renderActive, builder, node.getChildren().get(i));
-//			if (i < node.getChildren().size() - 1) {
-//				builder.append(",");
-//			}
-//			i++;
-//		}
-//	}
-	
 	private void renderChildren(JSonModelBuilder builder, TraceNode node) {
 
 		int i = 0;
-		while (!Thread.currentThread().isInterrupted() && i < node.getChildren().size()) {
+		while (Thread.currentThread().isAlive() && i < node.getChildren().size()) {
 			render(builder, node.getChildren().get(i));
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
