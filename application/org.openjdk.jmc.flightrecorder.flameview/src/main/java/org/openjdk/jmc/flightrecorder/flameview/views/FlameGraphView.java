@@ -283,7 +283,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	/**
 	 * Container for created {@link TraceNode} and {@link StacktraceModel}
 	 */
-	private final class ModelsContainer {
+	private static final class ModelsContainer {
 		private final TraceNode root;
 		private final StacktraceModel model;
 		private final String json;
