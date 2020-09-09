@@ -297,6 +297,6 @@ public class IncreasingLiveSetRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.MEMORY_LEAK_TOPIC;
+		return JfrRuleTopics.MEMORY_LEAK;
 	}
 }

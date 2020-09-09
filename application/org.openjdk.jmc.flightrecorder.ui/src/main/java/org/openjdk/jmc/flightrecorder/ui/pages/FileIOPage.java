@@ -116,7 +116,7 @@ public class FileIOPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.FILE_IO_TOPIC};
+			return new String[] {JfrRuleTopics.FILE_IO};
 		}
 
 		@Override

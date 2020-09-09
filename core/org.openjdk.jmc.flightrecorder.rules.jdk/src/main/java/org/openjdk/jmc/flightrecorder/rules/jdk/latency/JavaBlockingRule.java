@@ -189,6 +189,6 @@ public class JavaBlockingRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.LOCK_INSTANCES_TOPIC;
+		return JfrRuleTopics.LOCK_INSTANCES;
 	}
 }

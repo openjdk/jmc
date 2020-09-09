@@ -172,6 +172,6 @@ public class LongGcPauseRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.GARBAGE_COLLECTION_TOPIC;
+		return JfrRuleTopics.GARBAGE_COLLECTION;
 	}
 }

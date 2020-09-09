@@ -151,7 +151,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.GARBAGE_COLLECTION_TOPIC};
+			return new String[] {JfrRuleTopics.GARBAGE_COLLECTION};
 		}
 
 		@Override

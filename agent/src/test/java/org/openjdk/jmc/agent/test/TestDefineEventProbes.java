@@ -144,7 +144,7 @@ public class TestDefineEventProbes {
 				if (!name.equals("<init>")) {
 					return mv;
 				}
-				return new AdviceAdapter(Opcodes.ASM5, mv, access, name, "()V") {
+				return new AdviceAdapter(Opcodes.ASM8, mv, access, name, "()V") {
 					@Override
 					protected void onMethodExit(int opcode) {
 						mv.visitTypeInsn(Opcodes.NEW, "java/lang/RuntimeException");

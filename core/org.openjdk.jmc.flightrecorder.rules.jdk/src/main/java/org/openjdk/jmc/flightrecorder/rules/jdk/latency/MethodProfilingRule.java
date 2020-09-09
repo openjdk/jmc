@@ -568,7 +568,7 @@ public class MethodProfilingRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.METHOD_PROFILING_TOPIC;
+		return JfrRuleTopics.METHOD_PROFILING;
 	}
 
 }
