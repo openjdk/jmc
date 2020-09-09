@@ -96,13 +96,13 @@ public final class TraceTreeUtils {
 
 		final Branch[] branches = rootFork.getBranches();
 		int i = 0;
-		while (Thread.currentThread().isAlive() && !root.isCanceled() && i < branches.length) {
+		while (Thread.currentThread().isAlive() && root.isValid() && i < branches.length) {
 			addBranch(root, branches[i]);
 			i++;
 		}
 
 		if (i < branches.length) {
-			root.setCanceled();
+			root.setInvalid();
 		}
 
 		return root;
@@ -166,7 +166,7 @@ public final class TraceTreeUtils {
 
 		final StacktraceFrame[] frames = branch.getTailFrames();
 		int i = 0;
-		while (Thread.currentThread().isAlive() && i < frames.length) {
+		while (Thread.currentThread().isAlive() && root.isValid() && i < frames.length) {
 			final StacktraceFrame frame = frames[i];
 			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
@@ -174,7 +174,7 @@ public final class TraceTreeUtils {
 			i++;
 		}
 		if (i < frames.length) {
-			root.setCanceled();
+			root.setInvalid();
 		}
 		addFork(currentNode, branch.getEndFork());
 	}

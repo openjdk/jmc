@@ -303,8 +303,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		private boolean isReady(StacktraceModel m) {
-			return Thread.currentThread().isAlive() && root != null && model != null && json != null
-					&& !root.isCanceled() && model.equals(m);
+			return Thread.currentThread().isAlive() && root != null && model != null && json != null && root.isValid()
+					&& model.equals(m);
 		}
 	}
 
@@ -442,7 +442,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 
-				if (Thread.currentThread().isAlive() && jsonModelBuilder.isValid()) {
+				if (Thread.currentThread().isAlive() && traceNode.isValid() && jsonModelBuilder.isValid()) {
 					ModelsContainer modelContainer = new ModelsContainer(traceNode, model, jsonModelBuilder.build());
 					DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
 				}

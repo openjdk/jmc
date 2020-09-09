@@ -42,7 +42,7 @@ public class TraceNode {
 	private final String name;
 	private final String packageName;
 	private final List<TraceNode> children = new ArrayList<>();
-	private boolean canceled = false;
+	private boolean valid = true;
 
 	public TraceNode(String name, int value, String packageName) {
 		this.name = name;
@@ -70,12 +70,12 @@ public class TraceNode {
 		children.add(child);
 	}
 
-	public boolean isCanceled() {
-		return canceled;
+	public boolean isValid() {
+		return valid;
 	}
 
-	public void setCanceled() {
-		this.canceled = true;
+	public void setInvalid() {
+		this.valid = false;
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class TraceNode {
 		result = prime * result + ((children == null) ? 0 : children.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
-		result = prime * result + (canceled ? 1231 : 1237);
+		result = prime * result + (valid ? 1231 : 1237);
 		result = prime * result + value;
 		return result;
 	}
@@ -114,7 +114,7 @@ public class TraceNode {
 				return false;
 		} else if (!packageName.equals(other.packageName))
 			return false;
-		if (canceled != other.canceled)
+		if (valid != other.valid)
 			return false;
 		if (value != other.value)
 			return false;
@@ -122,7 +122,7 @@ public class TraceNode {
 	}
 
 	public String toString() {
-		return "TraceNode [name: " + name + ", value: " + value + ", canceled:" + canceled + ", packageName: "
-				+ packageName + ", children: " + children.size() + "]";
+		return "TraceNode [name: " + name + ", value: " + value + ", valid:" + valid + ", packageName: " + packageName
+				+ ", children: " + children.size() + "]";
 	}
 }
