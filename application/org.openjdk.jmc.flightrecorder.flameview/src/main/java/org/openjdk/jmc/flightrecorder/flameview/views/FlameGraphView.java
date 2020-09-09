@@ -49,7 +49,6 @@ import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlamevie
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
-import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.getLastSelectedBranch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -298,17 +297,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		private TraceNode root() {
 			return root;
 		}
-		
+
 		private String json() {
 			return json;
 		}
 
-		private boolean isEqualStacktraceModel(StacktraceModel m) {
-			return Thread.currentThread().isAlive() ? model.equals(m) : false;
-		}
-
-		private boolean isReady() {
-			return root != null && !root.isCanceled() && model != null && json != null;
+		private boolean isReady(StacktraceModel m) {
+			return Thread.currentThread().isAlive() && root != null && model != null && json != null
+					&& !root.isCanceled() && model.equals(m);
 		}
 	}
 
@@ -318,7 +314,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static class JSonModelBuilder {
 		private static final JSonModelBuilder EMPTY = new JSonModelBuilder("\"\"");
 		private final StringBuilder builder = new StringBuilder();
-		private boolean canceled = false;
+		private boolean valid = true;
 
 		private JSonModelBuilder() {
 		}
@@ -335,12 +331,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			return builder.toString();
 		}
 
-		private boolean isCanceled() {
-			return canceled;
+		private boolean isValid() {
+			return valid;
 		}
 
-		private void setCanceled() {
-			this.canceled = true;
+		private void setInvalid() {
+			this.valid = false;
 		}
 	}
 
@@ -417,14 +413,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		rebuildModel();
 	}
 
-	private void writeLog(String message) {
-		FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, message); //$NON-NLS-1$
-	}
-	
 	private void rebuildModel() {
-		if(modelCalculationFuture != null) {
+		if (modelCalculationFuture != null) {
 			modelCalculationFuture.cancel(true);
-			writeLog("rebuildModel, canceled, from thread: " + Thread.currentThread().getName() + ", feature done: " + modelCalculationFuture.isDone());
 		}
 
 		modelCalculationFuture = getModelPreparer(currentItems, true);
@@ -434,51 +425,44 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, currentItems);
 	}
 
-	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches){
-		
+	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches) {
+
 		final StacktraceModel model = createCurrentStacktraceModel();
-		final Callable<Void> callable = () -> {
-			
+		final Callable<Void> modelPreparerTask = () -> {
+
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
-				Branch selectedBranch = getLastSelectedBranch(rootFork);
+				Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
 				if (selectedBranch != null) {
 					selectedBranch.getEndFork();
 				}
-			} 
+			}
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
-			if(Thread.currentThread().isAlive()) {
+			if (Thread.currentThread().isAlive()) {
 				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 				JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 
-				if(Thread.currentThread().isAlive()) {
+				if (Thread.currentThread().isAlive() && jsonModelBuilder.isValid()) {
 					ModelsContainer modelContainer = new ModelsContainer(traceNode, model, jsonModelBuilder.build());
 					DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
-				} else {
-					writeLog("callable, not alive, traceNode.isCanceled, jsonModelBuild.isCanceled, thread canceled:" + Thread.currentThread().getName());
 				}
-			}else {
-				writeLog("getModelPreparer Thread, canceled: " + Thread.currentThread().getName());
 			}
-			
 			return null;
 		};
-		
-		return  MODEL_EXECUTOR.submit(callable);
-		
+
+		return MODEL_EXECUTOR.submit(modelPreparerTask);
+
 	}
 
 	private void setModel(ModelsContainer container) {
 		// Check that the model is prepared for current stacktrace and ui update is required 
-		if (!browser.isDisposed() && container.isReady()
-				&& container.isEqualStacktraceModel(createCurrentStacktraceModel())
-				&& !currentTraceNode.equals(container.root())  
-				) {
+		if (!browser.isDisposed() && container.isReady(createCurrentStacktraceModel())
+				&& !container.root().equals(currentTraceNode)) {
 			currentTraceNode = container.root();
 			setViewerInput(container.json());
 		}
 	}
-	
+
 	private void setViewerInput(String json) {
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 		browser.setText(HTML_PAGE);
@@ -490,12 +474,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-					browser.execute(
-							String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
-									TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
-					browser.execute(String.format("processGraph(%s, %s);", json, icicleViewActive));
-					Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
-				}
+				browser.execute(String.format("configureTooltipText('%s', '%s', '%s', '%s', '%s');", TABLE_COLUMN_COUNT,
+						TABLE_COLUMN_EVENT_TYPE, TOOLTIP_PACKAGE, TOOLTIP_SAMPLES, TOOLTIP_DESCRIPTION));
+				browser.execute(String.format("processGraph(%s, %s);", json, icicleViewActive));
+				Stream.of(exportActions).forEach((action) -> action.setEnabled(true));
+			}
 		});
 
 	}
@@ -563,13 +546,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private static Void handleModelBuildException(Throwable ex) {
-		if (!(ex.getCause() instanceof CancellationException)) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
-		}
-		return null;
-	}
-
 	private JSonModelBuilder toJSonModel(TraceNode root) {
 		if (root == null) {
 			return JSonModelBuilder.EMPTY;
@@ -586,7 +562,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return builder;
 	}
 
-	
 	private void render(JSonModelBuilder builder, TraceNode node) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
@@ -594,7 +569,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		renderChildren(builder, node);
 		builder.append("]}");
 	}
-	
+
 	private void renderChildren(JSonModelBuilder builder, TraceNode node) {
 
 		int i = 0;
@@ -606,7 +581,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			i++;
 		}
 		if (i < node.getChildren().size()) {
-			builder.setCanceled();
+			builder.setInvalid();
 		}
 	}
 
