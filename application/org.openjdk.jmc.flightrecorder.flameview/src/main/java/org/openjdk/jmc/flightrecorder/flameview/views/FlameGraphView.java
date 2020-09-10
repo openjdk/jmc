@@ -281,7 +281,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	/**
-	 * Container for created {@link TraceNode} and {@link StacktraceModel}
+	 * Container for created {@link TraceNode}, {@link StacktraceModel} and json string
 	 */
 	private static final class ModelsContainer {
 		private final TraceNode root;
@@ -303,8 +303,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		private boolean isReady(StacktraceModel m) {
-			return Thread.currentThread().isAlive() && root != null && model != null && json != null && root.isValid()
-					&& model.equals(m);
+			return root != null && model != null && json != null && model.equals(m);
 		}
 	}
 
