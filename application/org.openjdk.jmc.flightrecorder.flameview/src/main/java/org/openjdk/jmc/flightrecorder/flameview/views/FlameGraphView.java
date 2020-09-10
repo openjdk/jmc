@@ -303,7 +303,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		private boolean isReady(StacktraceModel m) {
-			return root != null && model != null && json != null && model.equals(m);
+			return Thread.currentThread().isAlive() && root != null && model != null && json != null && model.equals(m);
 		}
 	}
 
