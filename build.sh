@@ -12,7 +12,7 @@ function err_report() {
     err_log "$(date +%T) current working directory: $PWD"
 }
 
-function exit() {
+function exitTrap() {
     if [ -n "${JETTY_PID}" ]; then
         echo "$(date +%T) terminating jetty server"
         kill "${JETTY_PID}"
@@ -24,7 +24,7 @@ function err_log() {
 }
 
 trap 'err_report $LINENO' ERR
-trap 'exit' EXIT
+trap 'exitTrap' EXIT
 
 function printHelp() {
     echo "usage: call ./$(basename "$0") with the following options:"
@@ -33,6 +33,7 @@ function printHelp() {
         printf " \t%s\t%s\n" "--runUiTests" "to run the tests including UI tests"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
+        printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }
@@ -64,7 +65,7 @@ function packageJmc() {
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
     pushd releng/third-party 1> /dev/null || {
-        echo "directory releng/third-party not found"
+        err_log "directory releng/third-party not found"
         exit 1
     }
     echo "$(date +%T) building p2:site - logging output to ${p2SiteLog}"
@@ -82,11 +83,11 @@ function packageJmc() {
     echo "$(date +%T) jetty server up and running"
 
     popd 1> /dev/null || {
-        echo "could not go to project root directory"
+        err_log "could not go to project root directory"
         exit 1
     }
     pushd core 1> /dev/null || {
-        echo "directory core not found"
+        err_log "directory core not found"
         exit 1
     }
 
@@ -94,37 +95,65 @@ function packageJmc() {
     mvn clean install --log-file "${installLog}"
 
     popd 1> /dev/null || {
-        echo "could not go to project root directory"
+        err_log "could not go to project root directory"
         exit 1
     }
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
 
-    echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc"
+    if [[ "${OSTYPE}" =~ "linux"* ]]; then
+        echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc"
+    elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
+        echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc"
+    else
+        err_log "unknown OS type: \"${OSTYPE}\". Please check your package in ${BASEDIR}/products/org.openjdk.jmc/"
+    fi
 }
 
 function clean() {
     mvn clean
 
     pushd core 1> /dev/null || {
-        echo "directory core not found"
+        err_log "directory core not found"
         exit 1
     }
     mvn clean
     popd 1> /dev/null || {
-        echo "could not go to project root directory"
+        err_log "could not go to project root directory"
         exit 1
     }
 
     pushd releng/third-party 1> /dev/null || {
-        echo "directory releng/third-party not found"
+        err_log "directory releng/third-party not found"
         exit 1
     }
     mvn clean
     popd 1> /dev/null || {
-        echo "could not go to project root directory"
+        err_log "could not go to project root directory"
         exit 1
     }
+}
+
+function run() {
+    local BASEDIR
+    BASEDIR="$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)"
+
+    local path
+    if [[ "${OSTYPE}" =~ "linux"* ]]; then
+        path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK Mission Control/jmc"
+    elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
+        path="${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK Mission Control.app/Contents/MacOS/jmc"
+    else
+        err_log "unknown OS type: ${OSTYPE}"
+        exit 1
+    fi
+
+    if [ -f "${path}" ]; then
+        exec "${path}"
+    else
+        err_log "JMC not found in \"${path}\". Did you call --packageJmc before?"
+        exit 1
+    fi
 }
 
 function parseArgs() {
@@ -146,8 +175,11 @@ function parseArgs() {
             --clean)
                 clean
                 ;;
+            --run)
+                run
+                ;;
             *)
-                echo "unknown argument \"$1\""
+                err_log "unknown argument \"$1\""
                 printHelp
                 exit 1
                 ;;
@@ -156,4 +188,17 @@ function parseArgs() {
     done
 }
 
+function checkPreconditions() {
+    if ! command -v   mvn &> /dev/null ; then
+        err_log "It seems you do not have maven installed. Please ensure you have it installend and executable as \"mvn\"."
+        exit 1
+    fi
+
+    if ! command -v   java &> /dev/null ; then
+        err_log "It seems you do not have java installed. Please ensure you have it installend and executable as \"java\"."
+        exit 1
+    fi
+}
+
+checkPreconditions
 parseArgs "$@"
