@@ -102,11 +102,11 @@ function packageJmc() {
     mvn package --log-file "${packageLog}"
 
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
-        echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc"
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc\""
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
-        echo "You can now run jmc by calling ${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc"
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
     else
-        err_log "unknown OS type: \"${OSTYPE}\". Please check your package in ${BASEDIR}/products/org.openjdk.jmc/"
+        err_log "unknown OS type: \"${OSTYPE}\". Please check your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
     fi
 }
 
@@ -190,12 +190,12 @@ function parseArgs() {
 
 function checkPreconditions() {
     if ! command -v   mvn &> /dev/null ; then
-        err_log "It seems you do not have maven installed. Please ensure you have it installend and executable as \"mvn\"."
+        err_log "It seems you do not have maven installed. Please ensure you have it installed and executable as \"mvn\"."
         exit 1
     fi
 
     if ! command -v   java &> /dev/null ; then
-        err_log "It seems you do not have java installed. Please ensure you have it installend and executable as \"java\"."
+        err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
         exit 1
     fi
 }
