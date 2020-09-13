@@ -74,7 +74,7 @@ function packageJmc() {
     echo "$(date +%T) run jetty - logging output to ${jettyLog}"
     touch "${jettyLog}" # create file so that it exists already for tail below
     mvn jetty:run --log-file "${jettyLog}" &
-    JETTY_PID=$!
+    JETTY_PID=$(ps -o pid= --ppid $!)
 
     while [ "$(tail -n 1 "${jettyLog}")" != "[INFO] Started Jetty Server" ]; do
         echo "$(date +%T) waiting for jetty server to start"
