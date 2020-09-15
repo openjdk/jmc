@@ -135,7 +135,7 @@ public class VMOperationPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.VM_OPERATIONS_TOPIC};
+			return new String[] {JfrRuleTopics.VM_OPERATIONS};
 		}
 
 		@Override

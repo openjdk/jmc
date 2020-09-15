@@ -97,7 +97,7 @@ public class RecordingPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.RECORDING_TOPIC};
+			return new String[] {JfrRuleTopics.RECORDING};
 		}
 
 		@Override

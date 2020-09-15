@@ -67,6 +67,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final boolean allowToString;
 	private final boolean allowConverter;
 	private final boolean emitOnException;
+	private boolean matchFound;
 	private final List<Parameter> parameters;
 	private final ReturnValue returnValue;
 	private final List<Field> fields;
@@ -233,4 +234,13 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		}
 		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;
 	}
+
+	public void matchFound(boolean matched) {
+		this.matchFound = matched;
+	}
+
+	public boolean isMatchFound() {
+		return matchFound;
+	}
+
 }

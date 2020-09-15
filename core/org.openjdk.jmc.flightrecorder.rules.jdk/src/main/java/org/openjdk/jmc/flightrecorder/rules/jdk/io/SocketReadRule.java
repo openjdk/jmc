@@ -161,7 +161,7 @@ public class SocketReadRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.SOCKET_IO_TOPIC;
+		return JfrRuleTopics.SOCKET_IO;
 	}
 
 }

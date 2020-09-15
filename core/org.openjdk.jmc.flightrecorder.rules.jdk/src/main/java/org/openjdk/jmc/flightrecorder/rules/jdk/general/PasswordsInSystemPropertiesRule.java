@@ -112,6 +112,6 @@ public class PasswordsInSystemPropertiesRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.SYSTEM_PROPERTIES_TOPIC;
+		return JfrRuleTopics.SYSTEM_PROPERTIES;
 	}
 }

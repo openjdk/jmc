@@ -146,6 +146,6 @@ public class FileReadRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.FILE_IO_TOPIC;
+		return JfrRuleTopics.FILE_IO;
 	}
 }

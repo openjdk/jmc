@@ -38,6 +38,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -113,20 +114,22 @@ public class SWTColorToolkit {
 
 	public static ImageDescriptor createGradientThumbnail(RGB start, RGB end, boolean vertical) {
 		// FIXME: Could potentially do the same as for ColoredSquare and save this in the ImageRegistry
-		int size = THUMBNAIL_SIZE;
-		Image i = new Image(Display.getDefault(), size, size);
-		GC gc = new GC(i);
-		gc.setBackground(getColor(BG_COLOR));
-		gc.fillRectangle(0, 0, size - 1, size - 1);
-		gc.setForeground(getColor(start));
-		gc.setBackground(getColor(end));
-		gc.fillGradientRectangle(1, 1, size - 3, size - 3, vertical);
-		gc.setForeground(getColor(BORDER_COLOR));
-		gc.drawRectangle(1, 1, size - 3, size - 3);
-		gc.dispose();
-		ImageDescriptor id = ImageDescriptor.createFromImageDataProvider((zoom) -> i.getImageData(zoom));
-		i.dispose();
-		return id;
+		return ImageDescriptor.createFromImageDataProvider(zoom -> {
+			int size = THUMBNAIL_SIZE;
+			Image i = new Image(Display.getDefault(), size, size);
+			GC gc = new GC(i);
+			gc.setBackground(getColor(BG_COLOR));
+			gc.fillRectangle(0, 0, size - 1, size - 1);
+			gc.setForeground(getColor(start));
+			gc.setBackground(getColor(end));
+			gc.fillGradientRectangle(1, 1, size - 3, size - 3, vertical);
+			gc.setForeground(getColor(BORDER_COLOR));
+			gc.drawRectangle(1, 1, size - 3, size - 3);
+			gc.dispose();
+			ImageData imageData = i.getImageData(zoom);
+			i.dispose();
+			return imageData;
+		});
 	}
 
 	public static Color getColor(RGB rgb) {

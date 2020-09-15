@@ -44,6 +44,8 @@ import org.objectweb.asm.Opcodes;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.openjdk.jmc.agent.Agent;
+
 
 public class JFRNextClassVisitor extends ClassVisitor {
 	private final JFRTransformDescriptor transformDescriptor;
@@ -54,7 +56,7 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			InspectionClassLoader inspectionClassLoader) {
-		super(Opcodes.ASM5, cv);
+		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
@@ -74,7 +76,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM5, mv, access, name, desc);
+			transformDescriptor.matchFound(true);
+			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -84,8 +87,12 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		try {
 			reflectiveRegister(generateEventClass());
 		} catch (Exception e) {
-			Logger.getLogger(JFRNextClassVisitor.class.getName()).log(Level.SEVERE,
+			Agent.getLogger().log(Level.SEVERE,
 					"Failed to generate event class for " + transformDescriptor.toString(), e); //$NON-NLS-1$
+		}
+		if (!transformDescriptor.isMatchFound()) {
+			 Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
+			 + transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
 		super.visitEnd();
 	}

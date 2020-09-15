@@ -71,7 +71,7 @@ public class SystemPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.SYSTEM_INFORMATION_TOPIC};
+			return new String[] {JfrRuleTopics.SYSTEM_INFORMATION};
 		}
 
 		@Override
