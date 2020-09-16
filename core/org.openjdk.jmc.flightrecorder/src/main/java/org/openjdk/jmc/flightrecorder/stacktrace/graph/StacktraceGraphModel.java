@@ -124,6 +124,14 @@ public final class StacktraceGraphModel {
 		return nodes.values();
 	}
 
+	public IAttribute<IQuantity> getAttribute() {
+		return attribute;
+	}
+	
+	public boolean isEmpty() {
+		return nodes.isEmpty();
+	}
+
 	public IItemCollection getItems() {
 		return items;
 	}
@@ -245,15 +253,24 @@ public final class StacktraceGraphModel {
 		}
 		return maxValue;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("=== StackTraceModel ===\nNode Count:%d\nEdge Count:%d\nNodes: %s\nEdges: %s\n========================", nodes.size(), edges.size(), nodes.toString(), edges.toString());
+	}
 
 	private void buildModel() {
 		for (IItemIterable iterable : items) {
-			IMemberAccessor<IQuantity, IItem> accessor = null;
-			if (attribute != null) {
-				iterable.getType().getAccessor(attribute.getKey());
-			}
-			iterable.forEach((item) -> addItem(item, accessor));
+			iterable.forEach((item) -> addItem(item, getAccessor(iterable, attribute)));
 		}
+	}
+
+	private static IMemberAccessor<IQuantity, IItem> getAccessor(IItemIterable iterable, IAttribute<IQuantity> attr) {
+		IMemberAccessor<IQuantity, IItem> accessor = null;
+		if (attr != null) {
+			accessor = iterable.getType().getAccessor(attr.getKey());
+		}
+		return accessor;
 	}
 
 	private void addItem(IItem item, IMemberAccessor<IQuantity, IItem> accessor) {
