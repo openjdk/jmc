@@ -49,6 +49,7 @@ import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktra
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -93,19 +94,48 @@ public final class TraceTreeUtils {
 	 */
 	public static TraceNode createTree(final TraceNode root, final StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
-
-		final Branch[] branches = rootFork.getBranches();
-		int i = 0;
-		while (Thread.currentThread().isAlive() && root.isValid() && i < branches.length) {
-			addBranch(root, branches[i]);
-			i++;
-		}
-
-		if (i < branches.length) {
+		addFork(root, rootFork);
+		if(Thread.currentThread().isAlive() && root.isValid()) {
+			return root;
+		} else {
 			root.setInvalid();
+			return root;
 		}
-
-		return root;
+		
+	}
+	
+	private static class DescriptionContainer {
+		private final StringBuilder titleSb = new StringBuilder();
+		private final StringBuilder descSb = new StringBuilder();
+		private boolean valid = true;
+		
+		private DescriptionContainer() {
+			
+		}
+		
+		private void appendTitle(String s) {
+			titleSb.append(s);
+		}
+		
+		private String title() {
+			return titleSb.toString();
+		}
+		
+		private void appendDesc(String s) {
+			descSb.append(s);
+		}
+		
+		private String desc() {
+			return descSb.toString();
+		}
+		
+		private boolean isValid() {
+			return valid;
+		}
+		
+		private void setInvalid() {
+			valid = false;
+		}
 	}
 
 	/**
@@ -119,20 +149,25 @@ public final class TraceTreeUtils {
 	 */
 	public static TraceNode createRootWithDescription(IItemCollection items, int branchCount) {
 
-		StringBuilder titleSb = new StringBuilder();
-		StringBuilder descSb = new StringBuilder();
+		final DescriptionContainer descContainer = new DescriptionContainer();
 		AtomicInteger totalItemsSum = new AtomicInteger(0);
 
 		if (branchCount == 0) {
-			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
+			descContainer.appendTitle(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE));
 		} else {
 			Map<String, Integer> orderedEventTypeNameWithCount = eventTypeNameWithCountSorted(items, totalItemsSum);
 			String selectionText = createSelectionText(totalItemsSum.get(), orderedEventTypeNameWithCount.size());
-			titleSb.append(selectionText);
-			createNodeTitleAndDescription(titleSb, descSb, orderedEventTypeNameWithCount);
+			descContainer.appendTitle(selectionText);
+			createNodeTitleAndDescription(descContainer, orderedEventTypeNameWithCount);
 		}
 
-		return new TraceNode(titleSb.toString(), 0, descSb.toString());
+		if(Thread.currentThread().isAlive() && descContainer.isValid()) {
+			return new TraceNode(descContainer.title(), 0, descContainer.desc()); 
+		} else {
+			TraceNode invalidTraceNode = TraceNode.EMPTY;
+			invalidTraceNode.setInvalid();
+			return invalidTraceNode;
+		}
 	}
 
 	/**
@@ -173,15 +208,22 @@ public final class TraceTreeUtils {
 			currentNode = newNode;
 			i++;
 		}
-		if (i < frames.length) {
+		if (!Thread.currentThread().isAlive() || i < frames.length) {
 			root.setInvalid();
 		}
 		addFork(currentNode, branch.getEndFork());
 	}
 
 	private static void addFork(TraceNode node, Fork fork) {
-		for (Branch branch : fork.getBranches()) {
-			addBranch(node, branch);
+		final Branch[] branches = fork.getBranches();
+		int i = 0;
+		
+		while (Thread.currentThread().isAlive() && node.isValid() && i < branches.length ) {
+			addBranch(node, branches[i]);
+			i++;
+		}
+		if(!Thread.currentThread().isAlive() || i < branches.length) {
+			node.setInvalid();
 		}
 	}
 
@@ -227,45 +269,54 @@ public final class TraceTreeUtils {
 	}
 
 	private static void createNodeTitleAndDescription(
-		StringBuilder titleSb, StringBuilder descSb, Map<String, Integer> orderedItemCountByType) {
+		DescriptionContainer descContainer, Map<String, Integer> orderedItemCountByType) {
 
-		int i = 0;
+		int rootEventsCount = 0;
 		long restEventCount = 0;
 		boolean writeTitle = true;
 		int maxEventsInTile = orderedItemCountByType.size() > DEFAULT_ROOT_TITLE_MAX_EVENTS
 				? DEFAULT_ROOT_TITLE_MAX_EVENTS : orderedItemCountByType.size() - 1;
 
-		for (Map.Entry<String, Integer> e : orderedItemCountByType.entrySet()) {
+		int i = 0;
+		Iterator<Map.Entry<String, Integer>> it = orderedItemCountByType.entrySet().iterator();
+		while(Thread.currentThread().isAlive() && it.hasNext()) {
+			Map.Entry<String, Integer> e = it.next();
 			if (writeTitle) {
 				String eventType = getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
 						String.valueOf(e.getValue()));
-				titleSb.append(eventType);
-				if (i < maxEventsInTile) {
-					titleSb.append(SELECT_EVENT_DELIMITER);
+				descContainer.appendTitle(eventType);
+				if (rootEventsCount < maxEventsInTile) {
+					descContainer.appendTitle(SELECT_EVENT_DELIMITER);
 				} else {
 					writeTitle = false;
 				}
 			}
-			if (i < DEFAULT_ROOT_EVENT_MAX) {
+			if (rootEventsCount < DEFAULT_ROOT_EVENT_MAX) {
 				String tableEvent = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN,
 						String.valueOf(e.getValue()), e.getKey());
-				descSb.append(tableEvent);
+				descContainer.appendDesc(tableEvent);
 			} else {
 				restEventCount = Long.sum(restEventCount, e.getValue());
 			}
+			rootEventsCount++;
 			i++;
 		}
+		
+		
+		if(!Thread.currentThread().isAlive() || i < orderedItemCountByType.size()) {
+			descContainer.setInvalid();
+		} else {
+			if (restEventCount > 0) {
+				String restEventCountText = String.valueOf(restEventCount);
+				String restItemCountText = String.valueOf(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX);
+				String tableEventRest = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
+						restEventCountText, restItemCountText);
+				descContainer.appendDesc(tableEventRest);
+			}
 
-		if (restEventCount > 0) {
-			String restEventCountText = String.valueOf(restEventCount);
-			String restItemCountText = String.valueOf(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX);
-			String tableEventRest = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
-					restEventCountText, restItemCountText);
-			descSb.append(tableEventRest);
-		}
-
-		if (maxEventsInTile < orderedItemCountByType.size() - 1) {
-			titleSb.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); // $NON-NLS-1$
+			if (maxEventsInTile < orderedItemCountByType.size() - 1) {
+				descContainer.appendTitle(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); // $NON-NLS-1$
+			}
 		}
 	}
 
