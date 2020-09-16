@@ -415,16 +415,16 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		modelCalculationFuture = getModelPreparer(currentItems, true);
 	}
-	
+
 	private StacktraceModel createStacktraceModel(IItemCollection items) {
 		return new StacktraceModel(threadRootAtTop, frameSeparator, items);
 	}
 
 	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches) {
 
-		
 		final Callable<Void> modelPreparerTask = () -> {
-			StacktraceModel model =  createStacktraceModel(items);;
+			StacktraceModel model = createStacktraceModel(items);
+			;
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
 				Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
@@ -432,17 +432,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			}
-			
+
 			// reduce the pressure on ui during a scroll, ensure movement is final
 			Thread.sleep(200);
-			if(items.equals(currentItems)) {
+			if (items.equals(currentItems)) {
 				TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
 				if (Thread.currentThread().isAlive() && root.isValid()) {
 					TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 					JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 
 					if (Thread.currentThread().isAlive() && traceNode.isValid() && jsonModelBuilder.isValid()) {
-						ModelsContainer modelContainer = new ModelsContainer(items, traceNode, model, jsonModelBuilder.build());
+						ModelsContainer modelContainer = new ModelsContainer(items, traceNode, model,
+								jsonModelBuilder.build());
 						DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
 					}
 				}
@@ -548,17 +549,17 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		builder.append(rootNodeStart);
 		renderChildren(builder, root);
 		builder.append("]}");
-		if(Thread.currentThread().isAlive() && builder.isValid()) {
+		if (Thread.currentThread().isAlive() && builder.isValid()) {
 			return builder;
 		} else {
 			builder.setInvalid();
 			return builder;
 		}
-		
+
 	}
 
 	private void render(JSonModelBuilder builder, TraceNode node) {
-		if(Thread.currentThread().isAlive() && builder.isValid()) {
+		if (Thread.currentThread().isAlive() && builder.isValid()) {
 			String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 					: createJsonTraceNode(node);
 			builder.append(start);
@@ -567,7 +568,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		} else {
 			builder.setInvalid();
 		}
-		
+
 	}
 
 	private void renderChildren(JSonModelBuilder builder, TraceNode node) {

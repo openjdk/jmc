@@ -95,44 +95,44 @@ public final class TraceTreeUtils {
 	public static TraceNode createTree(final TraceNode root, final StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
 		addFork(root, rootFork);
-		if(Thread.currentThread().isAlive() && root.isValid()) {
+		if (Thread.currentThread().isAlive() && root.isValid()) {
 			return root;
 		} else {
 			root.setInvalid();
 			return root;
 		}
-		
+
 	}
-	
+
 	private static class DescriptionContainer {
 		private final StringBuilder titleSb = new StringBuilder();
 		private final StringBuilder descSb = new StringBuilder();
 		private boolean valid = true;
-		
+
 		private DescriptionContainer() {
-			
+
 		}
-		
+
 		private void appendTitle(String s) {
 			titleSb.append(s);
 		}
-		
+
 		private String title() {
 			return titleSb.toString();
 		}
-		
+
 		private void appendDesc(String s) {
 			descSb.append(s);
 		}
-		
+
 		private String desc() {
 			return descSb.toString();
 		}
-		
+
 		private boolean isValid() {
 			return valid;
 		}
-		
+
 		private void setInvalid() {
 			valid = false;
 		}
@@ -161,8 +161,8 @@ public final class TraceTreeUtils {
 			createNodeTitleAndDescription(descContainer, orderedEventTypeNameWithCount);
 		}
 
-		if(Thread.currentThread().isAlive() && descContainer.isValid()) {
-			return new TraceNode(descContainer.title(), 0, descContainer.desc()); 
+		if (Thread.currentThread().isAlive() && descContainer.isValid()) {
+			return new TraceNode(descContainer.title(), 0, descContainer.desc());
 		} else {
 			TraceNode invalidTraceNode = TraceNode.EMPTY;
 			invalidTraceNode.setInvalid();
@@ -217,12 +217,12 @@ public final class TraceTreeUtils {
 	private static void addFork(TraceNode node, Fork fork) {
 		final Branch[] branches = fork.getBranches();
 		int i = 0;
-		
-		while (Thread.currentThread().isAlive() && node.isValid() && i < branches.length ) {
+
+		while (Thread.currentThread().isAlive() && node.isValid() && i < branches.length) {
 			addBranch(node, branches[i]);
 			i++;
 		}
-		if(!Thread.currentThread().isAlive() || i < branches.length) {
+		if (!Thread.currentThread().isAlive() || i < branches.length) {
 			node.setInvalid();
 		}
 	}
@@ -279,7 +279,7 @@ public final class TraceTreeUtils {
 
 		int i = 0;
 		Iterator<Map.Entry<String, Integer>> it = orderedItemCountByType.entrySet().iterator();
-		while(Thread.currentThread().isAlive() && it.hasNext()) {
+		while (Thread.currentThread().isAlive() && it.hasNext()) {
 			Map.Entry<String, Integer> e = it.next();
 			if (writeTitle) {
 				String eventType = getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
@@ -301,9 +301,8 @@ public final class TraceTreeUtils {
 			rootEventsCount++;
 			i++;
 		}
-		
-		
-		if(!Thread.currentThread().isAlive() || i < orderedItemCountByType.size()) {
+
+		if (!Thread.currentThread().isAlive() || i < orderedItemCountByType.size()) {
 			descContainer.setInvalid();
 		} else {
 			if (restEventCount > 0) {
