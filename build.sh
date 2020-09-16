@@ -15,7 +15,7 @@ function err_report() {
 function exitTrap() {
     if [ -n "${JETTY_PID}" ]; then
         echo "$(date +%T) terminating jetty server"
-        kill "${JETTY_PID}"
+        pkill -P "${JETTY_PID}"
     fi
 }
 
@@ -74,7 +74,7 @@ function packageJmc() {
     echo "$(date +%T) run jetty - logging output to ${jettyLog}"
     touch "${jettyLog}" # create file so that it exists already for tail below
     mvn jetty:run --log-file "${jettyLog}" &
-    JETTY_PID=$(ps -o pid= --ppid $!)
+    JETTY_PID=$!
 
     while [ "$(tail -n 1 "${jettyLog}")" != "[INFO] Started Jetty Server" ]; do
         echo "$(date +%T) waiting for jetty server to start"
