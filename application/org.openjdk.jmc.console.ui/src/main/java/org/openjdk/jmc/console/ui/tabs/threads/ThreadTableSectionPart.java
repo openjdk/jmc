@@ -178,7 +178,8 @@ public class ThreadTableSectionPart extends MCSectionPart implements Pollable, I
 				ThreadInfoCompositeSupport.IS_DAEMON).description(Messages.IS_DAEMON_DESCRIPTION_TEXT).build();
 
 		List<IColumn> columns = Arrays.asList(name, blockedCount, blockedTime, lockName, lockOwnerId, lockOwnerName,
-				threadId, threadState, waitCount, waitTime, isInNative, isSuspended, isDeadlocked, isDaemon, cpuUsage, alloc);
+				threadId, threadState, waitCount, waitTime, isInNative, isSuspended, isDeadlocked, isDaemon, cpuUsage,
+				alloc);
 		return ColumnManager.build(viewer, columns, TableSettings.forState(MementoToolkit.asState(state)));
 
 	}
