@@ -63,6 +63,7 @@ public class ThreadInfoCompositeSupport {
 	private static final String STACK_TRACE = "stackTrace"; //$NON-NLS-1$
 	private static final String SUSPENDED = "suspended"; //$NON-NLS-1$
 	private static final String IN_NATIVE = "inNative"; //$NON-NLS-1$
+	private static final String DAEMON = "daemon"; //$NON-NLS-1$
 
 	private static final String CLASS_NAME = "className"; //$NON-NLS-1$
 	private static final String METHOD_NAME = "methodName"; //$NON-NLS-1$
@@ -205,6 +206,8 @@ public class ThreadInfoCompositeSupport {
 			LOCK_OWNER_NAME);
 
 	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_IN_NATIVE = new Getter(IN_NATIVE);
+
+	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_DAEMON = new Getter(DAEMON);
 
 	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_SUSPENDED = new Getter(SUSPENDED);
 
