@@ -76,7 +76,7 @@ function packageJmc() {
     mvn jetty:run --log-file "${jettyLog}" &
     JETTY_PID=$!
 
-    while [ "$(tail -n 1 "${jettyLog}")" != "[INFO] Started Jetty Server" ]; do
+    while ! grep -q "^\[INFO\] Started Jetty Server$" "${jettyLog}"; do
         echo "$(date +%T) waiting for jetty server to start"
         sleep 1
     done
