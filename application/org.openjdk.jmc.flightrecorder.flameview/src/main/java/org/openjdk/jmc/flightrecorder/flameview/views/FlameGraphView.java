@@ -423,19 +423,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches) {
 
 		final Callable<Void> modelPreparerTask = () -> {
-			StacktraceModel model = createStacktraceModel(items);
-			;
-			Fork rootFork = model.getRootFork();
-			if (materializeSelectedBranches) {
-				Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
-				if (selectedBranch != null) {
-					selectedBranch.getEndFork();
-				}
-			}
-
-			// reduce the pressure on ui during a scroll, ensure movement is final
+			// reduce the pressure on ui during a scrolling, ensure movement is final
 			Thread.sleep(200);
 			if (items.equals(currentItems)) {
+				StacktraceModel model = createStacktraceModel(items);
+				Fork rootFork = model.getRootFork();
+				if (materializeSelectedBranches) {
+					Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
+					if (selectedBranch != null) {
+						selectedBranch.getEndFork();
+					}
+				}
+
 				TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
 				if (Thread.currentThread().isAlive() && root.isValid()) {
 					TraceNode traceNode = TraceTreeUtils.createTree(root, model);
