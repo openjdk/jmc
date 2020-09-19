@@ -91,7 +91,7 @@ function packageJmc() {
         exit 1
     }
 
-    echo "$(date +%T) installing core artfacts - logging output to ${installLog}"
+    echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
     mvn clean install --log-file "${installLog}"
 
     popd 1> /dev/null || {
