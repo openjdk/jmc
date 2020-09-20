@@ -167,11 +167,11 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private SashForm container;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
-	private volatile IItemCollection currentItems;
-	private Future<Void> modelCalculationFuture;
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
+	private Future<Void> modelCalculationFuture;
+	private volatile IItemCollection currentItems;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -209,7 +209,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
 			if (newValue != threadRootAtTop) {
 				threadRootAtTop = newValue;
-				rebuildModel();
+				rebuildModel(currentItems);
 			}
 		}
 	}
@@ -279,37 +279,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	/**
-	 * JSonModelBuilder holds the calculated json string, can be canceled
-	 */
-	private static class JSonModelBuilder {
-		private final StringBuilder builder = new StringBuilder();
-		private boolean valid = true;
-
-		private JSonModelBuilder() {
-		}
-
-		private JSonModelBuilder(String json) {
-			this.builder.append(json);
-		}
-
-		private void append(String s) {
-			this.builder.append(s);
-		}
-
-		private String build() {
-			return builder.toString();
-		}
-
-		private boolean isValid() {
-			return valid;
-		}
-
-		private void setInvalid() {
-			this.valid = false;
-		}
-	}
-
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -371,24 +340,20 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
 			if (items == null) {
-				setItems(ItemCollectionToolkit.build(Stream.empty()));
+				rebuildModel(ItemCollectionToolkit.build(Stream.empty()));
 			} else if (!items.equals(currentItems)) {
-				setItems(items);
+				rebuildModel(items);
 			}
 		}
 	}
 
-	private void setItems(IItemCollection items) {
-		currentItems = items;
-		rebuildModel();
-	}
-
-	private void rebuildModel() {
+	private void rebuildModel(IItemCollection items) {
 		if (modelCalculationFuture != null) {
 			modelCalculationFuture.cancel(true);
 		}
 
-		modelCalculationFuture = getModelPreparer(currentItems, true);
+		modelCalculationFuture = getModelPreparer(items, true);
+		currentItems = items;
 	}
 
 	private StacktraceModel createStacktraceModel(IItemCollection items) {
@@ -400,25 +365,23 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		final Callable<Void> modelPreparerTask = () -> {
 			// reduce the pressure on displayThread during a scrolling, ensure movement is final, seems there could be visibility issue
 			Thread.sleep(200);
-			if (items.equals(currentItems)) {
-				StacktraceModel model = createStacktraceModel(items);
-				Fork rootFork = model.getRootFork();
-				if (materializeSelectedBranches) {
-					Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
-					if (selectedBranch != null) {
-						selectedBranch.getEndFork();
-					}
+			StacktraceModel model = createStacktraceModel(items);
+			Fork rootFork = model.getRootFork();
+			if (materializeSelectedBranches) {
+				Branch selectedBranch = StacktraceModel.getLastSelectedBranch(rootFork);
+				if (selectedBranch != null) {
+					selectedBranch.getEndFork();
 				}
+			}
 
-				TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
-				if (Thread.currentThread().isAlive() && root.isValid()) {
-					TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-					JSonModelBuilder jsonModelBuilder = toJSonModel(root);
+			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
+			if (Thread.currentThread().isAlive()) {
+				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+				StringBuilder jsonModelBuilder = toJSonModel(traceNode);
 
-					if (Thread.currentThread().isAlive() && traceNode.isValid() && jsonModelBuilder.isValid()) {
-						DisplayToolkit.inDisplayThread()
-								.execute(() -> this.processModel(items, jsonModelBuilder.build()));
-					}
+				if (Thread.currentThread().isAlive()) {
+					DisplayToolkit.inDisplayThread()
+							.execute(() -> this.processModel(items, jsonModelBuilder.toString()));
 				}
 			}
 			return null;
@@ -516,35 +479,26 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private JSonModelBuilder toJSonModel(TraceNode root) {
-		JSonModelBuilder builder = new JSonModelBuilder();
+	private StringBuilder toJSonModel(TraceNode root) {
+		StringBuilder builder = new StringBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
 		renderChildren(builder, root);
 		builder.append("]}");
-		if (Thread.currentThread().isAlive() && builder.isValid()) {
-			return builder;
-		} else {
-			builder.setInvalid();
-			return builder;
-		}
-
+		return builder;
 	}
 
-	private void render(JSonModelBuilder builder, TraceNode node) {
-		if (Thread.currentThread().isAlive() && builder.isValid()) {
+	private void render(StringBuilder builder, TraceNode node) {
+		if (Thread.currentThread().isAlive()) {
 			String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 					: createJsonTraceNode(node);
 			builder.append(start);
 			renderChildren(builder, node);
 			builder.append("]}");
-		} else {
-			builder.setInvalid();
 		}
-
 	}
 
-	private void renderChildren(JSonModelBuilder builder, TraceNode node) {
+	private void renderChildren(StringBuilder builder, TraceNode node) {
 
 		int i = 0;
 		while (Thread.currentThread().isAlive() && i < node.getChildren().size()) {
@@ -553,9 +507,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				builder.append(",");
 			}
 			i++;
-		}
-		if (i < node.getChildren().size()) {
-			builder.setInvalid();
 		}
 	}
 

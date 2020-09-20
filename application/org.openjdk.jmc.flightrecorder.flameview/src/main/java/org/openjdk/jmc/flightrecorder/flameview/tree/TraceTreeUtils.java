@@ -95,19 +95,20 @@ public final class TraceTreeUtils {
 	public static TraceNode createTree(final TraceNode root, final StacktraceModel model) {
 		Fork rootFork = model.getRootFork();
 		addFork(root, rootFork);
-		if (Thread.currentThread().isAlive() && root.isValid()) {
+		if (Thread.currentThread().isAlive()) {
 			return root;
 		} else {
-			root.setInvalid();
-			return root;
+			return TraceNode.EMPTY;
 		}
 
 	}
 
+	/**
+	 * DescriptionContainer for the TraceNode model (title, content)
+	 */
 	private static class DescriptionContainer {
 		private final StringBuilder titleSb = new StringBuilder();
 		private final StringBuilder descSb = new StringBuilder();
-		private boolean valid = true;
 
 		private DescriptionContainer() {
 
@@ -127,14 +128,6 @@ public final class TraceTreeUtils {
 
 		private String desc() {
 			return descSb.toString();
-		}
-
-		private boolean isValid() {
-			return valid;
-		}
-
-		private void setInvalid() {
-			valid = false;
 		}
 	}
 
@@ -161,12 +154,10 @@ public final class TraceTreeUtils {
 			createNodeTitleAndDescription(descContainer, orderedEventTypeNameWithCount);
 		}
 
-		if (Thread.currentThread().isAlive() && descContainer.isValid()) {
+		if (Thread.currentThread().isAlive()) {
 			return new TraceNode(descContainer.title(), 0, descContainer.desc());
 		} else {
-			TraceNode invalidTraceNode = TraceNode.EMPTY;
-			invalidTraceNode.setInvalid();
-			return invalidTraceNode;
+			return TraceNode.EMPTY;
 		}
 	}
 
@@ -201,16 +192,14 @@ public final class TraceTreeUtils {
 
 		final StacktraceFrame[] frames = branch.getTailFrames();
 		int i = 0;
-		while (Thread.currentThread().isAlive() && root.isValid() && i < frames.length) {
+		while (Thread.currentThread().isAlive() && i < frames.length) {
 			final StacktraceFrame frame = frames[i];
 			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 			i++;
 		}
-		if (i < frames.length) {
-			root.setInvalid();
-		}
+
 		addFork(currentNode, branch.getEndFork());
 	}
 
@@ -218,12 +207,9 @@ public final class TraceTreeUtils {
 		final Branch[] branches = fork.getBranches();
 		int i = 0;
 
-		while (Thread.currentThread().isAlive() && node.isValid() && i < branches.length) {
+		while (Thread.currentThread().isAlive() && i < branches.length) {
 			addBranch(node, branches[i]);
 			i++;
-		}
-		if (i < branches.length) {
-			node.setInvalid();
 		}
 	}
 
@@ -302,9 +288,7 @@ public final class TraceTreeUtils {
 			i++;
 		}
 
-		if (i < orderedItemCountByType.size()) {
-			descContainer.setInvalid();
-		} else {
+		if (i == orderedItemCountByType.size()) {
 			if (restEventCount > 0) {
 				String restEventCountText = String.valueOf(restEventCount);
 				String restItemCountText = String.valueOf(orderedItemCountByType.size() - DEFAULT_ROOT_EVENT_MAX);
