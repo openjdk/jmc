@@ -280,31 +280,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	/**
-	 * Container for created {@link TraceNode}, {@link StacktraceModel} and json string
-	 */
-	private static final class ModelsContainer {
-		private final IItemCollection items;
-		private final TraceNode root;
-		private final StacktraceModel model;
-		private final String json;
-
-		private ModelsContainer(IItemCollection items, TraceNode root, StacktraceModel model, String json) {
-			this.items = items;
-			this.root = root;
-			this.model = model;
-			this.json = json;
-		}
-
-		private String json() {
-			return json;
-		}
-
-		private boolean isReady(IItemCollection m) {
-			return items != null && root != null && model != null && json != null && items.equals(m);
-		}
-	}
-
-	/**
 	 * JSonModelBuilder holds the calculated json string, can be canceled
 	 */
 	private static class JSonModelBuilder {
@@ -423,7 +398,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private Future<Void> getModelPreparer(final IItemCollection items, final boolean materializeSelectedBranches) {
 
 		final Callable<Void> modelPreparerTask = () -> {
-			// reduce the pressure on ui during a scrolling, ensure movement is final
+			// reduce the pressure on displayThread during a scrolling, ensure movement is final, seems there could be visibility issue
 			Thread.sleep(200);
 			if (items.equals(currentItems)) {
 				StacktraceModel model = createStacktraceModel(items);
@@ -441,9 +416,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 					JSonModelBuilder jsonModelBuilder = toJSonModel(root);
 
 					if (Thread.currentThread().isAlive() && traceNode.isValid() && jsonModelBuilder.isValid()) {
-						ModelsContainer modelContainer = new ModelsContainer(items, traceNode, model,
-								jsonModelBuilder.build());
-						DisplayToolkit.inDisplayThread().execute(() -> this.setModel(modelContainer));
+						DisplayToolkit.inDisplayThread()
+								.execute(() -> this.processModel(items, jsonModelBuilder.build()));
 					}
 				}
 			}
@@ -454,9 +428,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	}
 
-	private void setModel(ModelsContainer container) {
-		if (container.isReady(currentItems) && !browser.isDisposed()) {
-			setViewerInput(container.json());
+	private void processModel(final IItemCollection items, final String json) {
+		if (items.equals(currentItems) && !browser.isDisposed()) {
+			setViewerInput(json);
 		}
 	}
 
@@ -580,7 +554,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 			i++;
 		}
-		if (!Thread.currentThread().isAlive() || i < node.getChildren().size()) {
+		if (i < node.getChildren().size()) {
 			builder.setInvalid();
 		}
 	}

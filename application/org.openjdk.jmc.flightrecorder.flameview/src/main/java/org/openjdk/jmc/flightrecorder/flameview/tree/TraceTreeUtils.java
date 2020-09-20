@@ -208,7 +208,7 @@ public final class TraceTreeUtils {
 			currentNode = newNode;
 			i++;
 		}
-		if (!Thread.currentThread().isAlive() || i < frames.length) {
+		if (i < frames.length) {
 			root.setInvalid();
 		}
 		addFork(currentNode, branch.getEndFork());
@@ -222,7 +222,7 @@ public final class TraceTreeUtils {
 			addBranch(node, branches[i]);
 			i++;
 		}
-		if (!Thread.currentThread().isAlive() || i < branches.length) {
+		if (i < branches.length) {
 			node.setInvalid();
 		}
 	}
@@ -302,7 +302,7 @@ public final class TraceTreeUtils {
 			i++;
 		}
 
-		if (!Thread.currentThread().isAlive() || i < orderedItemCountByType.size()) {
+		if (i < orderedItemCountByType.size()) {
 			descContainer.setInvalid();
 		} else {
 			if (restEventCount > 0) {
