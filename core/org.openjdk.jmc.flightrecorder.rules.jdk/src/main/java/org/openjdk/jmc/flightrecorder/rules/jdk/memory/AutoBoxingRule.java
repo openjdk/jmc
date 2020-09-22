@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
