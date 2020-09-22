@@ -93,14 +93,10 @@ public final class TraceTreeUtils {
 	 * @return the root
 	 */
 	public static TraceNode createTree(final TraceNode root, final StacktraceModel model) {
+
 		Fork rootFork = model.getRootFork();
 		addFork(root, rootFork);
-		if (Thread.currentThread().isAlive()) {
-			return root;
-		} else {
-			return TraceNode.EMPTY;
-		}
-
+		return root;
 	}
 
 	/**
@@ -157,7 +153,7 @@ public final class TraceTreeUtils {
 		if (Thread.currentThread().isAlive()) {
 			return new TraceNode(descContainer.title(), 0, descContainer.desc());
 		} else {
-			return TraceNode.EMPTY;
+			return new TraceNode(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE), 0, null);
 		}
 	}
 
