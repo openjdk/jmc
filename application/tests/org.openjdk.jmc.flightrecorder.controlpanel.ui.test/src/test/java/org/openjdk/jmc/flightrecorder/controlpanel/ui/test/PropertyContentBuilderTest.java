@@ -84,8 +84,10 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	@Test
 	public void testCategoryRootsSame() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("same", true, true);
-		assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
-				"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"), propertyRoots, "root");
+		assertNodes(
+				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
+						"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"),
+				propertyRoots, "root");
 	}
 
 	@Test
