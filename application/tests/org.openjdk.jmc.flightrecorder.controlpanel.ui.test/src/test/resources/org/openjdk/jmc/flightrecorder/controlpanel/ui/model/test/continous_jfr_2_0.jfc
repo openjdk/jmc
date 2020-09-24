@@ -7,560 +7,560 @@
 
 <configuration version="2.0" label="Continuous" description="Low overhead configuration safe for continuous use in production environments, typically less than 1 % overhead." provider="Oracle">
 
-    <event name="com.oracle.jdk.ThreadAllocationStatistics">
+    <event name="jdk.ThreadAllocationStatistics">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ClassLoadingStatistics">
+    <event name="jdk.ClassLoadingStatistics">
       <setting name="enabled">true</setting>
       <setting name="period">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ClassLoaderStatistics">
+    <event name="jdk.ClassLoaderStatistics">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaThreadStatistics">
+    <event name="jdk.JavaThreadStatistics">
       <setting name="enabled">true</setting>
       <setting name="period">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ThreadStart">
+    <event name="jdk.ThreadStart">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ThreadEnd">
+    <event name="jdk.ThreadEnd">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ThreadSleep">
-      <setting name="enabled">true</setting>
-      <setting name="stackTrace">true</setting>
-      <setting name="threshold" control="synchronization-threshold">20 ms</setting>
-    </event>
-
-    <event name="com.oracle.jdk.ThreadPark">
+    <event name="jdk.ThreadSleep">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="synchronization-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaMonitorEnter">
+    <event name="jdk.ThreadPark">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="synchronization-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaMonitorWait">
+    <event name="jdk.JavaMonitorEnter">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="synchronization-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaMonitorInflate">
+    <event name="jdk.JavaMonitorWait">
+      <setting name="enabled">true</setting>
+      <setting name="stackTrace">true</setting>
+      <setting name="threshold" control="synchronization-threshold">20 ms</setting>
+    </event>
+
+    <event name="jdk.JavaMonitorInflate">
       <setting name="enabled">false</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="synchronization-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ReservedStackActivation">
+    <event name="jdk.ReservedStackActivation">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ClassLoad">
+    <event name="jdk.ClassLoad">
       <setting name="enabled" control="class-loading-enabled">false</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ClassDefine">
+    <event name="jdk.ClassDefine">
       <setting name="enabled" control="class-loading-enabled">false</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ClassUnload">
+    <event name="jdk.ClassUnload">
       <setting name="enabled" control="class-loading-enabled">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.JVMInformation">
+    <event name="jdk.JVMInformation">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.InitialSystemProperty">
+    <event name="jdk.InitialSystemProperty">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ExecutionSample">
+    <event name="jdk.ExecutionSample">
       <setting name="enabled" control="method-sampling-enabled">true</setting>
       <setting name="period" control="method-sampling-interval">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointBegin">
+    <event name="jdk.SafepointBegin">
       <setting name="enabled">true</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointStateSynchronization">
+    <event name="jdk.SafepointStateSynchronization">
       <setting name="enabled">false</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointWaitBlocked">
+    <event name="jdk.SafepointWaitBlocked">
       <setting name="enabled">false</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointCleanup">
+    <event name="jdk.SafepointCleanup">
       <setting name="enabled">false</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointCleanupTask">
+    <event name="jdk.SafepointCleanupTask">
       <setting name="enabled">false</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SafepointEnd">
+    <event name="jdk.SafepointEnd">
       <setting name="enabled">false</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ExecuteVMOperation">
+    <event name="jdk.ExecuteVMOperation">
       <setting name="enabled">true</setting>
       <setting name="threshold">10 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ThreadDump">
+    <event name="jdk.ThreadDump">
       <setting name="enabled" control="thread-dump-enabled">true</setting>
       <setting name="period" control="thread-dump-interval">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.IntFlag">
+    <event name="jdk.IntFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.UnsignedIntFlag">
+    <event name="jdk.UnsignedIntFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.LongFlag">
+    <event name="jdk.LongFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.UnsignedLongFlag">
+    <event name="jdk.UnsignedLongFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.DoubleFlag">
+    <event name="jdk.DoubleFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.BooleanFlag">
+    <event name="jdk.BooleanFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.StringFlag">
+    <event name="jdk.StringFlag">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.IntFlagChanged">
+    <event name="jdk.IntFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.UnsignedIntFlagChanged">
+    <event name="jdk.UnsignedIntFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.LongFlagChanged">
+    <event name="jdk.LongFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.UnsignedLongFlagChanged">
+    <event name="jdk.UnsignedLongFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.DoubleFlagChanged">
+    <event name="jdk.DoubleFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.BooleanFlagChanged">
+    <event name="jdk.BooleanFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.StringFlagChanged">
+    <event name="jdk.StringFlagChanged">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ObjectCount">
+    <event name="jdk.ObjectCount">
       <setting name="enabled" control="memory-profiling-enabled-all">false</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCConfiguration">
+    <event name="jdk.GCConfiguration">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCHeapConfiguration">
+    <event name="jdk.GCHeapConfiguration">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.YoungGenerationConfiguration">
+    <event name="jdk.YoungGenerationConfiguration">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCTLABConfiguration">
+    <event name="jdk.GCTLABConfiguration">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCSurvivorConfiguration">
+    <event name="jdk.GCSurvivorConfiguration">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ObjectCountAfterGC">
+    <event name="jdk.ObjectCountAfterGC">
       <setting name="enabled">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCHeapSummary">
+    <event name="jdk.GCHeapSummary">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.PSHeapSummary">
+    <event name="jdk.PSHeapSummary">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1HeapSummary">
+    <event name="jdk.G1HeapSummary">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.MetaspaceSummary">
+    <event name="jdk.MetaspaceSummary">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.MetaspaceGCThreshold">
+    <event name="jdk.MetaspaceGCThreshold">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.MetaspaceAllocationFailure">
-      <setting name="enabled" control="gc-enabled-normal">true</setting>
-      <setting name="stackTrace">true</setting>
-    </event>
-
-    <event name="com.oracle.jdk.MetaspaceOOM">
+    <event name="jdk.MetaspaceAllocationFailure">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.MetaspaceChunkFreeListSummary">
+    <event name="jdk.MetaspaceOOM">
+      <setting name="enabled" control="gc-enabled-normal">true</setting>
+      <setting name="stackTrace">true</setting>
+    </event>
+
+    <event name="jdk.MetaspaceChunkFreeListSummary">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.GarbageCollection">
-      <setting name="enabled" control="gc-enabled-normal">true</setting>
-      <setting name="threshold">0 ms</setting>
-    </event>
-
-    <event name="com.oracle.jdk.ParallelOldGarbageCollection">
-      <setting name="enabled" control="gc-enabled-normal">true</setting>
-      <setting name="threshold">0 ms</setting>
-    </event>
-
-    <event name="com.oracle.jdk.YoungGarbageCollection">
+    <event name="jdk.GarbageCollection">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.OldGarbageCollection">
+    <event name="jdk.ParallelOldGarbageCollection">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1GarbageCollection">
+    <event name="jdk.YoungGarbageCollection">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCPhasePause">
+    <event name="jdk.OldGarbageCollection">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCPhasePauseLevel1">
+    <event name="jdk.G1GarbageCollection">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCPhasePauseLevel2">
+    <event name="jdk.GCPhasePause">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCPhasePauseLevel3">
+    <event name="jdk.GCPhasePauseLevel1">
+      <setting name="enabled" control="gc-enabled-normal">true</setting>
+      <setting name="threshold">0 ms</setting>
+    </event>
+
+    <event name="jdk.GCPhasePauseLevel2">
+      <setting name="enabled" control="gc-enabled-normal">true</setting>
+      <setting name="threshold">0 ms</setting>
+    </event>
+
+    <event name="jdk.GCPhasePauseLevel3">
       <setting name="enabled" control="gc-enabled-all">false</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCPhaseConcurrent">
+    <event name="jdk.GCPhaseConcurrent">
       <setting name="enabled" control="gc-enabled-all">true</setting>
       <setting name="threshold">0 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.GCReferenceStatistics">
+    <event name="jdk.GCReferenceStatistics">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.PromotionFailed">
+    <event name="jdk.PromotionFailed">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.EvacuationFailed">
+    <event name="jdk.EvacuationFailed">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.EvacuationInformation">
+    <event name="jdk.EvacuationInformation">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1MMU">
+    <event name="jdk.G1MMU">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1EvacuationYoungStatistics">
+    <event name="jdk.G1EvacuationYoungStatistics">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1EvacuationOldStatistics">
+    <event name="jdk.G1EvacuationOldStatistics">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1BasicIHOP">
+    <event name="jdk.G1BasicIHOP">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1AdaptiveIHOP">
+    <event name="jdk.G1AdaptiveIHOP">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.PromoteObjectInNewPLAB">
+    <event name="jdk.PromoteObjectInNewPLAB">
       <setting name="enabled" control="memory-profiling-enabled-medium">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.PromoteObjectOutsidePLAB">
+    <event name="jdk.PromoteObjectOutsidePLAB">
       <setting name="enabled" control="memory-profiling-enabled-medium">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.ConcurrentModeFailure">
+    <event name="jdk.ConcurrentModeFailure">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.AllocationRequiringGC">
+    <event name="jdk.AllocationRequiringGC">
       <setting name="enabled" control="gc-enabled-all">false</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.TenuringDistribution">
+    <event name="jdk.TenuringDistribution">
       <setting name="enabled" control="gc-enabled-normal">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1HeapRegionInformation">
+    <event name="jdk.G1HeapRegionInformation">
       <setting name="enabled" control="gc-enabled-all">false</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.G1HeapRegionTypeChange">
+    <event name="jdk.G1HeapRegionTypeChange">
       <setting name="enabled" control="gc-enabled-all">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.CompilerConfiguration">
+    <event name="jdk.CompilerConfiguration">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.CompilerStatistics">
+    <event name="jdk.CompilerStatistics">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.Compilation">
+    <event name="jdk.Compilation">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="threshold" control="compiler-compilation-threshold">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.CompilerPhase">
+    <event name="jdk.CompilerPhase">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="threshold" control="compiler-phase-threshold">60 s</setting>
     </event>
 
-    <event name="com.oracle.jdk.CompilationFailure">
+    <event name="jdk.CompilationFailure">
       <setting name="enabled" control="compiler-enabled-failure">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.CompilerInlining">
+    <event name="jdk.CompilerInlining">
       <setting name="enabled" control="compiler-enabled-failure">false</setting>
     </event>
 
-    <event name="com.oracle.jdk.CodeSweeperConfiguration">
+    <event name="jdk.CodeSweeperConfiguration">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.CodeSweeperStatistics">
+    <event name="jdk.CodeSweeperStatistics">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.SweepCodeCache">
+    <event name="jdk.SweepCodeCache">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="threshold" control="compiler-sweeper-threshold">100 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.CodeCacheConfiguration">
+    <event name="jdk.CodeCacheConfiguration">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.CodeCacheStatistics">
+    <event name="jdk.CodeCacheStatistics">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.CodeCacheFull">
+    <event name="jdk.CodeCacheFull">
       <setting name="enabled" control="compiler-enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.OSInformation">
+    <event name="jdk.OSInformation">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.CPUInformation">
+    <event name="jdk.CPUInformation">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ThreadContextSwitchRate">
+    <event name="jdk.ThreadContextSwitchRate">
       <setting name="enabled" control="compiler-enabled">true</setting>
       <setting name="period">10 s</setting>
     </event>
 
-    <event name="com.oracle.jdk.CPULoad">
+    <event name="jdk.CPULoad">
       <setting name="enabled">true</setting>
       <setting name="period">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.CPUTimeStampCounter">
+    <event name="jdk.CPUTimeStampCounter">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.SystemProcess">
+    <event name="jdk.SystemProcess">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.InitialEnvironmentVariable">
+    <event name="jdk.InitialEnvironmentVariable">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.PhysicalMemory">
+    <event name="jdk.PhysicalMemory">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ObjectAllocationInNewTLAB">
+    <event name="jdk.ObjectAllocationInNewTLAB">
       <setting name="enabled" control="memory-profiling-enabled-medium">false</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ObjectAllocationOutsideTLAB">
+    <event name="jdk.ObjectAllocationOutsideTLAB">
       <setting name="enabled" control="memory-profiling-enabled-medium">false</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.NativeLibrary">
+    <event name="jdk.NativeLibrary">
       <setting name="enabled">true</setting>
       <setting name="period">everyChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ModuleRequire">
+    <event name="jdk.ModuleRequire">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.ModuleExport">
+    <event name="jdk.ModuleExport">
       <setting name="enabled">true</setting>
       <setting name="period">endChunk</setting>
     </event>
 
-    <event name="com.oracle.jdk.FileRead">
+    <event name="jdk.FileRead">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="file-io-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.FileWrite">
+    <event name="jdk.FileWrite">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="file-io-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SocketRead">
+    <event name="jdk.SocketRead">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="socket-io-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.SocketWrite">
+    <event name="jdk.SocketWrite">
       <setting name="enabled">true</setting>
       <setting name="stackTrace">true</setting>
       <setting name="threshold" control="socket-io-threshold">20 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaExceptionThrow">
+    <event name="jdk.JavaExceptionThrow">
       <setting name="enabled" control="enable-exceptions">false</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.JavaErrorThrow">
+    <event name="jdk.JavaErrorThrow">
       <setting name="enabled" control="enable-errors">true</setting>
       <setting name="stackTrace">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ExceptionStatistics">
+    <event name="jdk.ExceptionStatistics">
       <setting name="enabled">true</setting>
       <setting name="period">1000 ms</setting>
     </event>
 
-    <event name="com.oracle.jdk.ActiveRecording">
+    <event name="jdk.ActiveRecording">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.ActiveSetting">
+    <event name="jdk.ActiveSetting">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.DataLoss">
+    <event name="jdk.DataLoss">
       <setting name="enabled">true</setting>
     </event>
 
-    <event name="com.oracle.jdk.DumpReason">
+    <event name="jdk.DumpReason">
       <setting name="enabled">true</setting>
     </event>
 

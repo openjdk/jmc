@@ -47,18 +47,27 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.openjdk.jmc.common.test.MCTestCase;
+import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
+import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
+import org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle;
+import org.openjdk.jmc.rjmx.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
 import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
 import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
 import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
+import org.openjdk.jmc.ui.common.jvm.Connectable;
+import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 /**
  */
@@ -220,7 +229,18 @@ public class RjmxTestCase extends MCTestCase {
 	 */
 	private static IConnectionHandle createConnectionHandle(IConnectionDescriptor descriptor)
 			throws IOException, FailedLoginException, ConnectionException {
-		return IServerHandle.create(descriptor).connect("Test");
+		RJMXConnection connection = new RJMXConnection(descriptor, createDefaultServerDesciptor(), null);
+		connection.connect();
+		return new DefaultConnectionHandle(connection, "Test", null);
+	}
+
+	private static IServerDescriptor createDefaultServerDesciptor() {
+		String jvmName = System.getProperty("java.vm.name");
+		// Assume hooking up to same JVM version as running the tests...
+		JVMDescriptor jvmDescriptor = new JVMDescriptor(System.getProperty("java.vm.version"),
+				JVMType.getJVMType(jvmName), null, "", "", jvmName, System.getProperty("java.vm.vendor"), null, false,
+				Connectable.MGMNT_AGENT_STARTED);
+		return new ServerDescriptor(null, "Test", jvmDescriptor);
 	}
 
 	/**

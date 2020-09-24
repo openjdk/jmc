@@ -71,7 +71,7 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 	public DefaultConnectionHandle(RJMXConnection connection, String description, IConnectionListener[] listeners) {
 		this.connection = connection;
 		this.description = description;
-		this.listeners = listeners;
+		this.listeners = listeners == null ? new IConnectionListener[0] : listeners;
 		registerDefaultServices();
 	}
 
