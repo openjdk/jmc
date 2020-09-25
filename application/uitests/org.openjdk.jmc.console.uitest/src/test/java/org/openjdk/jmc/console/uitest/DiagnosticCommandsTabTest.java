@@ -165,8 +165,9 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 		commandTable.select("VM.version");
 		executeButton.click();
 		String result = resultTabFolder.getText();
-		Assert.assertTrue("HotSpot", patternMatcher(result, "HotSpot"));
-		Assert.assertTrue("VM version", patternMatcher(result, "VM version"));
+		boolean hsOpenJDKCheck = patternMatcher(result, "HotSpot") || patternMatcher(result, "OpenJDK");
+		Assert.assertTrue("Could not find HotSpot or OpenJDK: " + result, hsOpenJDKCheck);
+		Assert.assertTrue("Could not find VM version: " + result, patternMatcher(result, "VM version"));
 	}
 
 	@Test
@@ -209,13 +210,7 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 		result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
 
-		String expectedOutput;
-		if (ConnectionHelper.is9u0EAorLater(TEST_CONNECTION)) {
-			expectedOutput = "Recording: recording=\\d+ name=\"Recording-" + recordingIdentifier
-					+ "\".* \\(running\\).*";
-		} else {
-			expectedOutput = "Recording: recording=" + recordingIdentifier + " name=.* \\(running\\).*";
-		}
+		String expectedOutput = "Recording \\d+:.*name=" + recordingIdentifier + ".* \\(running\\).*";
 
 		Assert.assertTrue(
 				"Output from JFR.check diagnostic command" + " is not matching expected pattern. Actual output was: '"
@@ -253,12 +248,12 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 		sleep(500);
 		result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
-		String expectedOutput = "Recording: recording=.* name=\"" + recordingName + "\"";
+		String expectedOutput = "Recording [\\d]+:.*" + recordingName + ".*";
 		Assert.assertTrue("Output from JFR.check (with name) diagnostic command"
 				+ " is not matching expected pattern. Actual output was: '" + result + "'. Expected output was: '"
 				+ expectedOutput + '\'', patternMatcher(result, expectedOutput));
 
-		String recordingIdPattern = "Recording: recording=(\\d+) name=\"" + recordingName + "\".*";
+		String recordingIdPattern = "Recording (\\d+): .*" + recordingName + ".*";
 		Pattern pattern = Pattern.compile(recordingIdPattern, Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(result);
 		Assert.assertTrue(
@@ -314,7 +309,7 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 				commands.add(line);
 			}
 		}
-		assertSaneNumberOfHelpCommands(commands, 8, 40);
+		assertSaneNumberOfHelpCommands(commands, 8, 50);
 		assertDefiniteCommandNames(commands);
 		assertSameCommands(golden, commands);
 	}
