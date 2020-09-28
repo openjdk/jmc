@@ -343,7 +343,7 @@ target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc
 And here is an example for Windows x64:
 
 ```bash
-target\products\org.openjdk.jmc\win32\win32\x86_64\jmc.exe
+"target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc"
 ```
 
 ## Using the Built JMC Update Site in Eclipse
