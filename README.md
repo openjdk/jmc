@@ -337,7 +337,7 @@ target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Co
 Here is an example for Linux:
 
 ```bash
-target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc
+target/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc
 ```
 
 And here is an example for Windows x64:
