@@ -40,12 +40,12 @@ import java.util.Properties;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXServiceURL;
-import javax.security.auth.login.FailedLoginException;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
+import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.test.MCTestCase;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
@@ -97,6 +97,7 @@ public class RjmxTestCase extends MCTestCase {
 	public final static String DEFAULT_HOST = "localhost";
 
 	protected String m_host;
+	protected RJMXConnection m_connection;
 	protected IConnectionHandle m_connectionHandle;
 	protected IConnectionDescriptor m_connectionDescriptor;
 
@@ -187,15 +188,21 @@ public class RjmxTestCase extends MCTestCase {
 			if (mbeanServer != null) {
 				return createDefaultServerDesciptor(mbeanServer);
 			}
+		} finally {
+			IOToolkit.closeSilently(rjmxConnection);
 		}
 		throw new IOException("Could not derive the server descriptor for " + descriptor.toString());
 	}
 
 	protected static boolean probe(IConnectionDescriptor descriptor) {
 		long start = System.currentTimeMillis();
+		IConnectionHandle handle = null;
+		RJMXConnection connection = null;
 		try {
 			System.out.println("Probing Service URL " + descriptor.createJMXServiceURL() + " ...");
-			IConnectionHandle handle = createConnectionHandle(descriptor);
+			connection = new RJMXConnection(descriptor, createDefaultServerDesciptor(descriptor), null);
+			connection.connect();
+			handle = new DefaultConnectionHandle(connection, "Test", null);
 			long up = System.currentTimeMillis();
 			System.out.println("... connected in " + (up - start) + " ms ...");
 			// Just in case we fail ...
@@ -206,6 +213,8 @@ public class RjmxTestCase extends MCTestCase {
 			return true;
 		} catch (Exception e) {
 			long fail = System.currentTimeMillis();
+			IOToolkit.closeSilently(handle);
+			IOToolkit.closeSilently(connection);
 			System.out.println("... failed in " + (fail - start) + " ms.");
 			return false;
 		}
@@ -259,10 +268,12 @@ public class RjmxTestCase extends MCTestCase {
 	public static void getServerProperties(IConnectionDescriptor connDesc, Properties props, String prefix)
 			throws Exception {
 		System.out.println("Connecting to " + connDesc.createJMXServiceURL() + " ...");
-		IConnectionHandle connectionHandle = createConnectionHandle(connDesc);
+		RJMXConnection connection = new RJMXConnection(connDesc, createDefaultServerDesciptor(connDesc), null);
+		IConnectionHandle connectionHandle =  new DefaultConnectionHandle(connection, "Get Properties", null);
 		getServerProperties(connectionHandle, props, prefix);
 		System.out.println("Disconnecting ...");
-		connectionHandle.close();
+		IOToolkit.closeSilently(connectionHandle);
+		IOToolkit.closeSilently(connection);
 	}
 
 	/**
@@ -272,23 +283,10 @@ public class RjmxTestCase extends MCTestCase {
 	public synchronized void mcTestCaseBefore() throws Exception {
 		m_connectionDescriptor = getTestConnectionDescriptor();
 		m_host = ConnectionToolkit.getHostName(m_connectionDescriptor.createJMXServiceURL());
-		m_connectionHandle = createConnectionHandle(m_connectionDescriptor);
+		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor), null);
+		m_connection.connect();
+		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null);
 		Assert.assertTrue(m_connectionHandle.isConnected());
-	}
-
-	/**
-	 * Quick'n'Dirty way to create a {@link IConnectionHandle}. Will have a server descriptor
-	 * matching the connection.
-	 *
-	 * @return an {@link IConnectionHandle}
-	 * @throws FailedLoginException
-	 * @throws ConnectionException
-	 */
-	private static IConnectionHandle createConnectionHandle(IConnectionDescriptor descriptor)
-			throws IOException, FailedLoginException, ConnectionException {
-		RJMXConnection connection = new RJMXConnection(descriptor, createDefaultServerDesciptor(descriptor), null);
-		connection.connect();
-		return new DefaultConnectionHandle(connection, "Test", null);
 	}
 
 	/**
@@ -299,6 +297,10 @@ public class RjmxTestCase extends MCTestCase {
 		if (m_connectionHandle != null) {
 			m_connectionHandle.close();
 			m_connectionHandle = null;
+			if (m_connection != null) {
+				m_connection.close();
+				m_connection = null;
+			}
 		}
 	}
 
