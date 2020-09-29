@@ -198,4 +198,6 @@ public final class JdkTypeIDs {
 	public static final String MODULE_REQUIRE = PREFIX + "ModuleRequire";
 
 	public static final String NATIVE_LIBRARY = PREFIX + "NativeLibrary";
+	
+	public static final String HEAP_DUMP = PREFIX + "HeapDump";
 }
