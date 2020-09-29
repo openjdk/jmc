@@ -269,7 +269,7 @@ public class RjmxTestCase extends MCTestCase {
 			throws Exception {
 		System.out.println("Connecting to " + connDesc.createJMXServiceURL() + " ...");
 		RJMXConnection connection = new RJMXConnection(connDesc, createDefaultServerDesciptor(connDesc), null);
-		IConnectionHandle connectionHandle =  new DefaultConnectionHandle(connection, "Get Properties", null);
+		IConnectionHandle connectionHandle = new DefaultConnectionHandle(connection, "Get Properties", null);
 		getServerProperties(connectionHandle, props, prefix);
 		System.out.println("Disconnecting ...");
 		IOToolkit.closeSilently(connectionHandle);
@@ -283,7 +283,8 @@ public class RjmxTestCase extends MCTestCase {
 	public synchronized void mcTestCaseBefore() throws Exception {
 		m_connectionDescriptor = getTestConnectionDescriptor();
 		m_host = ConnectionToolkit.getHostName(m_connectionDescriptor.createJMXServiceURL());
-		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor), null);
+		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor),
+				null);
 		m_connection.connect();
 		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null);
 		Assert.assertTrue(m_connectionHandle.isConnected());

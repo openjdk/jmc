@@ -85,7 +85,7 @@ public class TestNotification extends AbstractSyntheticNotification {
 	public boolean hasResolvedDependencies(MBeanServerConnection connection) {
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "TestNotification " + notificationId + " - " + getMessage();
