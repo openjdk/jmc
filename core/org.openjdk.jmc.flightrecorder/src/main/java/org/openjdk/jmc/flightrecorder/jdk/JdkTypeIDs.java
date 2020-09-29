@@ -200,4 +200,6 @@ public final class JdkTypeIDs {
 	public static final String NATIVE_LIBRARY = PREFIX + "NativeLibrary";
 
 	public static final String HEAP_DUMP = PREFIX + "HeapDump";
+	
+	public static final String PROCESS_START = PREFIX + "ProcessStart";
 }

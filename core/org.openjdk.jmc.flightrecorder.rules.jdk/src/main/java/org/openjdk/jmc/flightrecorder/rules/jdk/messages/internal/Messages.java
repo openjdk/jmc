@@ -474,6 +474,9 @@ public class Messages {
 	public static final String PasswordsInSystemPropertiesRule_TEXT_OK = "PasswordsInSystemPropertiesRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING = "Preference_SHORT_RECORDING"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING_LONG = "Preference_SHORT_RECORDING_LONG"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_RULE_NAME = "ProcessStartedRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_INFO = "ProcessStartedRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_OK = "ProcessStartedRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_FINAL_REFERENCES = "ReferenceStatisticsType_FINAL_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_PHANTOM_REFERENCES = "ReferenceStatisticsType_PHANTOM_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_SOFT_REFERENCES = "ReferenceStatisticsType_SOFT_REFERENCES"; //$NON-NLS-1$
