@@ -43,6 +43,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 import javax.management.AttributeNotFoundException;
@@ -92,7 +93,7 @@ import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
  */
 public class RJMXConnection implements Closeable, IMBeanHelperService {
 
-	public final static String KEY_SOCKET_FACTORY = "com.sun.jndi.rmi.factory.socket"; //$NON-NLS-1$
+	public static final String KEY_SOCKET_FACTORY = "com.sun.jndi.rmi.factory.socket"; //$NON-NLS-1$
 
 	/**
 	 * The default port JMX
@@ -105,11 +106,12 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	 */
 	private static final long VALUE_RECALIBRATION_INTERVAL = 120000;
 	private static final long REMOTE_START_TIME_UNDEFINED = -1;
+	private static final AtomicInteger CONNECTION_COUNTER = new AtomicInteger(0);
 
 	// The ConnectionDescriptor used to create this RJMXConnection
 	private final IConnectionDescriptor m_connectionDescriptor;
-
 	private final IServerDescriptor m_serverDescriptor;
+	private final int m_connectionId = CONNECTION_COUNTER.getAndIncrement();
 
 	// The MBean server connection used for all local and remote communication.
 	private volatile MCMBeanServerConnection m_server;
@@ -216,10 +218,11 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	public void close() {
 		synchronized (connectionStateLock) {
 			if (isConnected()) {
-				m_server.dispose();
-				tryRemovingListener();
-				clearCollections();
+				MCMBeanServerConnection tmpServer = m_server;
 				m_server = null;
+				tryRemovingListener(tmpServer);
+				tmpServer.dispose();
+				clearCollections();
 				if (m_jmxc != null) {
 					try {
 						m_jmxc.close();
@@ -241,9 +244,11 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 		clearCache();
 	}
 
-	private void tryRemovingListener() {
+	private void tryRemovingListener(MCMBeanServerConnection tmpServer) {
 		try {
-			ensureConnected().removeNotificationListener(MBeanServerDelegate.DELEGATE_NAME, m_registrationListener);
+			if (tmpServer != null) {
+				tmpServer.removeNotificationListener(MBeanServerDelegate.DELEGATE_NAME, m_registrationListener);
+			}
 		} catch (Exception e) {
 			RJMXPlugin.getDefault().getLogger().log(Level.WARNING,
 					"Failed to remove unregistration listener! Lost connection?", e); //$NON-NLS-1$
@@ -268,6 +273,159 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 			}
 			return new HashSet<>(m_cachedMBeanNames);
 		}
+	}
+
+	@Override
+	public HashMap<ObjectName, MBeanInfo> getMBeanInfos() throws IOException {
+		synchronized (m_cachedInfos) {
+			initializeMBeanInfos();
+			return new HashMap<>(m_cachedInfos);
+		}
+	}
+
+	@Override
+	public MBeanInfo getMBeanInfo(ObjectName mbean)
+			throws InstanceNotFoundException, IntrospectionException, ReflectionException, IOException {
+		synchronized (m_cachedInfos) {
+			MBeanInfo mbeanInfo = m_cachedInfos.get(mbean);
+			if (mbeanInfo == null) {
+				MBeanServerConnection server = ensureConnected();
+				mbeanInfo = server.getMBeanInfo(mbean);
+				if (mbeanInfo != null) {
+					m_cachedInfos.put(mbean, mbeanInfo);
+				}
+			}
+			return mbeanInfo;
+		}
+	}
+
+	@Override
+	public Object getAttributeValue(MRI attribute) throws AttributeNotFoundException, MBeanException, IOException,
+			InstanceNotFoundException, ReflectionException {
+		try {
+			MBeanServerConnection server = ensureConnected();
+			return AttributeValueToolkit.getAttribute(server, attribute);
+		} catch (JMRuntimeException e) {
+			throw new MBeanException(e, e.getMessage());
+		}
+	}
+
+	public boolean connect() throws ConnectionException {
+		JVMDescriptor jvmInfo = getServerDescriptor().getJvmInfo();
+		if (jvmInfo != null && jvmInfo.getJavaVersion() != null
+				&& !new JavaVersion(jvmInfo.getJavaVersion()).isGreaterOrEqualThan(JavaVersionSupport.JDK_6)) {
+			throw new ConnectionException("Too low JDK Version. JDK 1.6 or higher is supported."); //$NON-NLS-1$
+		}
+		synchronized (connectionStateLock) {
+			if (isConnected()) {
+				return false;
+			}
+			JMXServiceURL url;
+			try {
+				url = m_connectionDescriptor.createJMXServiceURL();
+			} catch (IOException e1) {
+				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), null, e1);
+			}
+
+			try {
+				// Use same convention as Sun. localhost:0 means "VM, monitor thyself!"
+				String hostName = ConnectionToolkit.getHostName(url);
+				if (hostName != null && (hostName.equals("localhost")) //$NON-NLS-1$
+						&& ConnectionToolkit.getPort(url) == 0) {
+					m_server = new MCMBeanServerConnection(ManagementFactory.getPlatformMBeanServer());
+				} else {
+					establishConnection(url, m_connectionDescriptor.getEnvironment());
+				}
+				tryToAddMBeanNotificationListener();
+				m_remoteStartTime = fetchServerStartTime();
+				return true;
+			} catch (Exception e) {
+				m_server = null;
+				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), url, e);
+			}
+		}
+	}
+
+	@Override
+	public long getApproximateServerTime(long localTime) {
+		long startTime = System.currentTimeMillis();
+		if ((startTime - m_lastRecalibration) > VALUE_RECALIBRATION_INTERVAL
+				&& m_remoteStartTime != REMOTE_START_TIME_UNDEFINED) {
+			try {
+				/*
+				 * FIXME: JMC-4270 - Server time approximation is not reliable. Since JDK-6523160,
+				 * getUptime can no longer be used to derive the current server time. Find some
+				 * other way to do this.
+				 */
+				long uptime = ConnectionToolkit.getRuntimeBean(ensureConnected()).getUptime();
+				long returnTime = System.currentTimeMillis();
+				long localTimeEstimate = (startTime + returnTime) / 2;
+				m_serverOffset = m_remoteStartTime + uptime - localTimeEstimate;
+				m_lastRecalibration = returnTime;
+			} catch (Exception e) {
+				RJMXPlugin.getDefault().getLogger().log(Level.SEVERE, "Could not recalibrate server offset", e); //$NON-NLS-1$
+			}
+		}
+		return localTime + m_serverOffset;
+	}
+
+	public void clearCache() {
+		synchronized (m_cachedInfos) {
+			m_cachedInfos.clear();
+			m_cachedMBeanNames.clear();
+			m_hasInitializedAllMBeans = false;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "RJMX Connection " + m_connectionId + ": " + m_serverDescriptor.getDisplayName(); //$NON-NLS-1$
+	}
+
+	@Override
+	public void removeMBeanServerChangeListener(IMBeanServerChangeListener listener) {
+		m_mbeanListeners.remove(listener);
+	}
+
+	@Override
+	public void addMBeanServerChangeListener(IMBeanServerChangeListener listener) {
+		m_mbeanListeners.add(listener);
+	}
+
+	@Override
+	public Map<MRI, Map<String, Object>> getMBeanMetadata(ObjectName mbean) {
+		return m_mbeanDataProvider.getMBeanData(mbean);
+	}
+
+	/**
+	 * Returns the IOperations available for the specified MBean.
+	 *
+	 * @param mbean
+	 *            the MBean for which to return the information.
+	 * @return the operations that can be invoked on this mbean.
+	 * @throws Exception
+	 *             if the connection failed or some other problem occurred when trying create
+	 *             operations.
+	 */
+	public Collection<IOperation> getOperations(ObjectName mbean) throws Exception {
+		MBeanServerConnection connection = ensureConnected();
+		return MBeanOperationWrapper.createOperations(connection, mbean,
+				connection.getMBeanInfo(mbean).getOperations());
+	}
+
+	IMRIService getMRIService() {
+		return m_mbeanDataProvider;
+	}
+
+	/**
+	 * Returns the MBeanServerConnection. Yes, this breaks abstraction a bit, and should only be
+	 * used by the MBeanBrowser. Everybody else should be using subscriptions anyway.
+	 *
+	 * @return the MBeanServerConnection currently in use by this connection. May be null if none is
+	 *         currently in use.
+	 */
+	MBeanServerConnection getMBeanServer() {
+		return m_server;
 	}
 
 	/**
@@ -372,77 +530,6 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 		}
 	}
 
-	@Override
-	public HashMap<ObjectName, MBeanInfo> getMBeanInfos() throws IOException {
-		synchronized (m_cachedInfos) {
-			initializeMBeanInfos();
-			return new HashMap<>(m_cachedInfos);
-		}
-	}
-
-	@Override
-	public MBeanInfo getMBeanInfo(ObjectName mbean)
-			throws InstanceNotFoundException, IntrospectionException, ReflectionException, IOException {
-		synchronized (m_cachedInfos) {
-			MBeanInfo mbeanInfo = m_cachedInfos.get(mbean);
-			if (mbeanInfo == null) {
-				MBeanServerConnection server = ensureConnected();
-				mbeanInfo = server.getMBeanInfo(mbean);
-				if (mbeanInfo != null) {
-					m_cachedInfos.put(mbean, mbeanInfo);
-				}
-			}
-			return mbeanInfo;
-		}
-	}
-
-	@Override
-	public Object getAttributeValue(MRI attribute) throws AttributeNotFoundException, MBeanException, IOException,
-			InstanceNotFoundException, ReflectionException {
-		try {
-			MBeanServerConnection server = ensureConnected();
-			return AttributeValueToolkit.getAttribute(server, attribute);
-		} catch (JMRuntimeException e) {
-			throw new MBeanException(e, e.getMessage());
-		}
-	}
-
-	public boolean connect() throws ConnectionException {
-		JVMDescriptor jvmInfo = getServerDescriptor().getJvmInfo();
-		if (jvmInfo != null && jvmInfo.getJavaVersion() != null
-				&& !new JavaVersion(jvmInfo.getJavaVersion()).isGreaterOrEqualThan(JavaVersionSupport.JDK_6)) {
-			throw new ConnectionException("Too low JDK Version. JDK 1.6 or higher is supported."); //$NON-NLS-1$
-		}
-		synchronized (connectionStateLock) {
-			if (isConnected()) {
-				return false;
-			}
-			JMXServiceURL url;
-			try {
-				url = m_connectionDescriptor.createJMXServiceURL();
-			} catch (IOException e1) {
-				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), null, e1);
-			}
-
-			try {
-				// Use same convention as Sun. localhost:0 means "VM, monitor thyself!"
-				String hostName = ConnectionToolkit.getHostName(url);
-				if (hostName != null && (hostName.equals("localhost")) //$NON-NLS-1$
-						&& ConnectionToolkit.getPort(url) == 0) {
-					m_server = new MCMBeanServerConnection(ManagementFactory.getPlatformMBeanServer());
-				} else {
-					establishConnection(url, m_connectionDescriptor.getEnvironment());
-				}
-				tryToAddMBeanNotificationListener();
-				m_remoteStartTime = fetchServerStartTime();
-				return true;
-			} catch (Exception e) {
-				m_server = null;
-				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), url, e);
-			}
-		}
-	}
-
 	private long fetchServerStartTime() throws IOException {
 		try {
 			return ConnectionToolkit.getRuntimeBean(ensureConnected()).getStartTime();
@@ -487,40 +574,6 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 		m_jmxc.connect(env);
 	}
 
-	@Override
-	public long getApproximateServerTime(long localTime) {
-		long startTime = System.currentTimeMillis();
-		if ((startTime - m_lastRecalibration) > VALUE_RECALIBRATION_INTERVAL
-				&& m_remoteStartTime != REMOTE_START_TIME_UNDEFINED) {
-			try {
-				/*
-				 * FIXME: JMC-4270 - Server time approximation is not reliable. Since JDK-6523160,
-				 * getUptime can no longer be used to derive the current server time. Find some
-				 * other way to do this.
-				 */
-				long uptime = ConnectionToolkit.getRuntimeBean(ensureConnected()).getUptime();
-				long returnTime = System.currentTimeMillis();
-				long localTimeEstimate = (startTime + returnTime) / 2;
-				m_serverOffset = m_remoteStartTime + uptime - localTimeEstimate;
-				m_lastRecalibration = returnTime;
-			} catch (Exception e) {
-				RJMXPlugin.getDefault().getLogger().log(Level.SEVERE, "Could not recalibrate server offset", e); //$NON-NLS-1$
-			}
-		}
-		return localTime + m_serverOffset;
-	}
-
-	/**
-	 * Returns the MBeanServerConnection. Yes, this breaks abstraction a bit, and should only be
-	 * used by the MBeanBrowser. Everybody else should be using subscriptions anyway.
-	 *
-	 * @return the MBeanServerConnection currently in use by this connection. May be null if none is
-	 *         currently in use.
-	 */
-	MBeanServerConnection getMBeanServer() {
-		return m_server;
-	}
-
 	/**
 	 * Ok, so this method may not be very useful, from a strict synchronization perspective, but at
 	 * least it is now done in ONE place.
@@ -535,54 +588,6 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 			throw new InvoluntaryDisconnectException("Server is disconnected!"); //$NON-NLS-1$
 		}
 		return server;
-	}
-
-	public void clearCache() {
-		synchronized (m_cachedInfos) {
-			m_cachedInfos.clear();
-			m_cachedMBeanNames.clear();
-			m_hasInitializedAllMBeans = false;
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "RJMX Connection: " + m_serverDescriptor.getDisplayName(); //$NON-NLS-1$
-	}
-
-	@Override
-	public void removeMBeanServerChangeListener(IMBeanServerChangeListener listener) {
-		m_mbeanListeners.remove(listener);
-	}
-
-	@Override
-	public void addMBeanServerChangeListener(IMBeanServerChangeListener listener) {
-		m_mbeanListeners.add(listener);
-	}
-
-	@Override
-	public Map<MRI, Map<String, Object>> getMBeanMetadata(ObjectName mbean) {
-		return m_mbeanDataProvider.getMBeanData(mbean);
-	}
-
-	/**
-	 * Returns the IOperations available for the specified MBean.
-	 *
-	 * @param mbean
-	 *            the MBean for which to return the information.
-	 * @return the operations that can be invoked on this mbean.
-	 * @throws Exception
-	 *             if the connection failed or some other problem occurred when trying create
-	 *             operations.
-	 */
-	public Collection<IOperation> getOperations(ObjectName mbean) throws Exception {
-		MBeanServerConnection connection = ensureConnected();
-		return MBeanOperationWrapper.createOperations(connection, mbean,
-				connection.getMBeanInfo(mbean).getOperations());
-	}
-
-	IMRIService getMRIService() {
-		return m_mbeanDataProvider;
 	}
 
 }

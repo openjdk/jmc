@@ -42,7 +42,6 @@ import java.util.List;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;

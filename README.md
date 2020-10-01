@@ -213,7 +213,7 @@ public class RunRulesOnFile {
 
 Prerequisites for building Mission Control:
 
-1. Install JDK 8, and make sure it is the JDK in use (java -version)
+1. Install JDK 11, and make sure it is the JDK in use (java -version)
 
 2. Install Maven (version 3.3.x. or above)
 
@@ -337,13 +337,13 @@ target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Co
 Here is an example for Linux:
 
 ```bash
-target/products/org.openjdk.jmc/linux/gtk/x86_64/jmc
+target/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc
 ```
 
 And here is an example for Windows x64:
 
 ```bash
-target\products\org.openjdk.jmc\win32\win32\x86_64\jmc.exe
+"target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc"
 ```
 
 ## Using the Built JMC Update Site in Eclipse
