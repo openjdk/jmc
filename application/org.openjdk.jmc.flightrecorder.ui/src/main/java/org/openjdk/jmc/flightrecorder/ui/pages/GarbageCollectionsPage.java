@@ -319,9 +319,9 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				columns.add(new ColumnBuilder(t.localizedName, "ReferenceStatisticsType-" + t.name(), //$NON-NLS-1$
 						o -> ((GC) o).getRefCount(t)).style(SWT.RIGHT).build());
 			}
-			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_BEFOREGC, "usedHeapBegoreGC", //$NON-NLS-1$
+			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_BEFORE_GC, "usedHeapBegoreGC", //$NON-NLS-1$
 					o -> ((GC) o).usedBeforeGC).style(SWT.RIGHT).build());
-			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_AFTERGC, "usedHeapAfterGC", //$NON-NLS-1$
+			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_AFTER_GC, "usedHeapAfterGC", //$NON-NLS-1$
 					o -> ((GC) o).usedAfterGC).style(SWT.RIGHT).build());
 			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_DELTA, "usedHeapDelta", //$NON-NLS-1$
 					o -> ((GC) o).usedDelta).style(SWT.RIGHT).build());
