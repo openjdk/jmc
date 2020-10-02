@@ -199,6 +199,8 @@ public class Messages extends NLS {
 	public static String GarbageCollectionsPage_ROW_PAUSE_PHASES;
 	public static String GarbageCollectionsPage_ROW_PAUSE_PHASES_DESC;
 	public static String GarbageCollectionsPage_TIMELINE_SELECTION;
+	public static String GarbageCollectionsPage_USED_HEAP_AFTER_GC;
+	public static String GarbageCollectionsPage_USED_HEAP_BEFORE_GC;
 	public static String GarbageCollectionsPage_USED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_USED_METASPACE_DELTA;
 	public static String HeapPage_LIVE_SIZE_OF_CLASS;
