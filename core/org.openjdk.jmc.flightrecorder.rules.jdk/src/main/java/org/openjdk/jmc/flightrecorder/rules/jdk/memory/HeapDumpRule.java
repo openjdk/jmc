@@ -37,7 +37,8 @@ public class HeapDumpRule implements IRule {
 		}
 		IQuantity heapDumpCount = heapDumpEvents.getAggregate(Aggregators.count());
 		String message = Messages.getString(Messages.HeapDumpRule_TEXT_INFO);
-		return new Result(this, 50, MessageFormat.format(message, heapDumpCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
+		return new Result(this, 50,
+				MessageFormat.format(message, heapDumpCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
 	}
 
 	@Override
