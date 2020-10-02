@@ -39,7 +39,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +62,6 @@ import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
 import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
-import org.openjdk.jmc.agent.test.util.TestToolkit;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class TestDefineEventProbes {
