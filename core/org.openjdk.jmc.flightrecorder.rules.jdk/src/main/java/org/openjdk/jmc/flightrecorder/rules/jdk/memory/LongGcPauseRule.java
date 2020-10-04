@@ -143,9 +143,9 @@ public class LongGcPauseRule implements IRule {
 	}
 
 	private static String getSemiRefsMessage(IItemCollection items) {
-		IQuantity aggregate = items
-				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.filter(Aggregators.max(JdkTypeIDs.GC_PAUSE_L1, JfrAttributes.DURATION),
-						ItemFilters.equals(JdkAttributes.GC_PHASE_NAME, "References"))); //$NON-NLS-1$
+		IQuantity aggregate = items.getAggregate((IAggregator<IQuantity, ?>) Aggregators.filter(
+				Aggregators.max(JdkTypeIDs.GC_PAUSE_L1, JfrAttributes.DURATION),
+				ItemFilters.equals(JdkAttributes.GC_PHASE_NAME, "References"))); //$NON-NLS-1$
 		if (aggregate == null) {
 			return null;
 		}
