@@ -6,10 +6,10 @@ echo "======== Starting p2 repo ==================="
 start /B cmd /C "mvn jetty:run"
 cd ..\..\core
 echo "======== Installing core ===================="
-call mvn install || EXIT /B 1
+call mvn install || EXIT /B 2
 echo "======== Running spotless for core =========="
-call mvn spotless:check || EXIT /B 1
+call mvn spotless:check || EXIT /B 3
 echo "======== Running spotless for application ==="
 cd ..
-call mvn -Puitests spotless:check || EXIT /B 1
+call mvn -Puitests spotless:check || EXIT /B 4
 echo "======== Finished ==========================="
