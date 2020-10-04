@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
@@ -126,7 +127,7 @@ public class IncreasingLiveSetRule implements IRule {
 			IQuantity postWarmupHeapSize = items
 					.apply(ItemFilters.and(JdkFilters.HEAP_SUMMARY_AFTER_GC,
 							ItemFilters.moreOrEqual(JfrAttributes.START_TIME, postWarmupTime)))
-					.getAggregate(JdkAggregators.first(JdkAttributes.HEAP_USED));
+					.getAggregate((IAggregator<IQuantity, ?>) JdkAggregators.first(JdkAttributes.HEAP_USED));
 			if (postWarmupHeapSize == null) {
 				return RulesToolkit.getTooFewEventsResult(this);
 			}
@@ -259,14 +260,14 @@ public class IncreasingLiveSetRule implements IRule {
 	private IQuantity getPostWarmupTime(IItemCollection items, IQuantity classesLoadedPercent) {
 		IItemCollection classLoadItems = items.apply(JdkFilters.CLASS_LOAD_STATISTICS);
 		IQuantity maxLoadedClasses = classLoadItems
-				.getAggregate(Aggregators.max(JdkAttributes.CLASSLOADER_LOADED_COUNT));
+				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.max(JdkAttributes.CLASSLOADER_LOADED_COUNT));
 		if (maxLoadedClasses == null) {
 			return null;
 		}
 		double doubleValue = classesLoadedPercent.doubleValueIn(PERCENT_UNITY);
 		IQuantity loadedClassesLimit = maxLoadedClasses.multiply(doubleValue);
 		return classLoadItems.apply(ItemFilters.more(JdkAttributes.CLASSLOADER_LOADED_COUNT, loadedClassesLimit))
-				.getAggregate(Aggregators.min(JfrAttributes.START_TIME));
+				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.min(JfrAttributes.START_TIME));
 	}
 
 	@Override

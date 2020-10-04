@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,6 +45,7 @@ import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -143,7 +144,7 @@ public class LongGcPauseRule implements IRule {
 
 	private static String getSemiRefsMessage(IItemCollection items) {
 		IQuantity aggregate = items
-				.getAggregate(Aggregators.filter(Aggregators.max(JdkTypeIDs.GC_PAUSE_L1, JfrAttributes.DURATION),
+				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.filter(Aggregators.max(JdkTypeIDs.GC_PAUSE_L1, JfrAttributes.DURATION),
 						ItemFilters.equals(JdkAttributes.GC_PHASE_NAME, "References"))); //$NON-NLS-1$
 		if (aggregate == null) {
 			return null;

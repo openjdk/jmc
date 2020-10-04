@@ -48,8 +48,8 @@ import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 
 /**
- * A Java 1.7 compatible collection of methods used to load binary JFR data into
- * {@link IItemCollection} implementations.
+ * A collection of methods used to load binary JFR data into {@link IItemCollection}
+ * implementations.
  */
 public class JfrLoaderToolkit {
 

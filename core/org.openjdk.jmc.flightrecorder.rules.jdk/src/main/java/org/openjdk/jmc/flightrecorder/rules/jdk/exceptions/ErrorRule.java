@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -116,8 +117,9 @@ public class ErrorRule implements IRule {
 			IItemFilter errorsExcludingExclude = ItemFilters.and(ItemFilters.type(JdkTypeIDs.ERRORS_THROWN),
 					ItemFilters.not(matchesExclude));
 			errorItems = errorItems.apply(errorsExcludingExclude);
-			excludedErrors = items.getAggregate(
-					Aggregators.filter(Aggregators.count(), ItemFilters.and(ItemFilters.type(JdkTypeIDs.ERRORS_THROWN),
+
+			excludedErrors = items.getAggregate((IAggregator<IQuantity, ?>) Aggregators.filter(Aggregators.count(),
+					ItemFilters.and(ItemFilters.type(JdkTypeIDs.ERRORS_THROWN),
 							ItemFilters.matches(JdkAttributes.EXCEPTION_THROWNCLASS_NAME, errorExcludeRegexp))));
 		}
 		IQuantity errorCount = errorItems.getAggregate(JdkAggregators.ERROR_COUNT);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -93,7 +93,8 @@ final class DefaultIItemResultSet implements IItemResultSet {
 				}
 			}
 		} else {
-			Set<?> aggregate = input.getAggregate(Aggregators.distinct(query.getGroupBy()));
+			IAggregator<?, ?> aggregator = Aggregators.distinct(query.getGroupBy());
+			Set<?> aggregate = input.getAggregate((IAggregator<Set<?>, ?>) aggregator);
 			if (aggregate != null) {
 				for (Object o : aggregate) {
 					IItemCollection rowCollection = input.apply(ItemFilters.equals((IAttribute) query.getGroupBy(), o));
@@ -101,8 +102,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 					int column = 0;
 					for (; column < attributes.size(); column++) {
 						// Optimization - it is too expensive to do aggregation for these. You simply
-						// get first non-null
-						// matching attribute - we're only using this for the group by today.
+						// get first non-null matching attribute - we're only using this for the group by today.
 						row[column] = getFirstNonNull(rowCollection, attributes.get(column));
 					}
 					for (int j = 0; j < aggregators.size(); j++) {
