@@ -69,7 +69,8 @@ public class ProcessStartedRule implements IRule {
 		}
 		IQuantity processStartedCount = processStartEvents.getAggregate(Aggregators.count());
 		String message = Messages.getString(Messages.ProcessStartedRule_TEXT_INFO);
-		return new Result(this, 50, MessageFormat.format(message, processStartedCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
+		return new Result(this, 50,
+				MessageFormat.format(message, processStartedCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
 	}
 
 	@Override
