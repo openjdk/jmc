@@ -4,7 +4,7 @@ Bundle-Name: Mission Control Flight Recorder Rules
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.rules.jdk;singleton:=true
 Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.openjdk.jmc.flightrecorder.rules.jdk.cpu;x-friends:="org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders,
  org.openjdk.jmc.flightrecorder.rules.jdk.exceptions;x-friends:="org.openjdk.jmc.flightrecorder.ui",

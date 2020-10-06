@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -55,9 +55,7 @@ import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 
 /**
- * Java 1.7 based implementation of {@link IItemCollection} using {@link IItemIterable} iterators.
- * This class is only intended to be used as an IItemCollection outside of the usage in
- * {@link JfrLoaderToolkit}.
+ * Implementation of {@link IItemCollection} using {@link IItemIterable} iterators.
  */
 class EventCollection implements IItemCollection {
 

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Flight Recorder Model Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder;singleton:=true
 Bundle-Version: 8.0.0.qualifier
