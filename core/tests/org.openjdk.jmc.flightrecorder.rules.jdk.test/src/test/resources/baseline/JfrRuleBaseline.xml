@@ -346,6 +346,13 @@
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -753,6 +760,13 @@
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
@@ -1164,6 +1178,13 @@
 <longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -1571,6 +1592,13 @@
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
@@ -1982,6 +2010,13 @@
 <longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -2391,6 +2426,13 @@
 <longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -2798,6 +2840,13 @@
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
 <longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>Information</severity>
+<score>50.0</score>
+<shortDescription>1 process(es) started.</shortDescription>
+<longDescription>1 process(es) started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
@@ -3210,6 +3259,13 @@
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>OK</severity>
 <score>0.0</score>
@@ -3617,6 +3673,13 @@
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
@@ -4028,6 +4091,13 @@
 <longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
+</rule>
+<rule>
 <id>SocketRead</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
@@ -4435,6 +4505,13 @@
 <score>0.11127751568911523</score>
 <shortDescription>0 % of the total allocation (1.88 MiB) is caused by conversion from primitive types to object types. The most common object type that primitives are converted into is 'java.lang.Integer'.</shortDescription>
 <longDescription>0 % of the total allocation (1.88 MiB) is caused by conversion from primitive types to object types.&lt;p&gt;The most common object type that primitives are converted into is 'java.lang.Integer', which causes 1.11 MiB to be allocated. The most common call site is 'weblogic.socket.NIOSocketMuxer$NIOOutputStream.initPool():887'.&lt;p&gt;Conversion from primitives to the corresponding object types can either be done explicitly, or be caused by autoboxing. If a considerable amount of the total allocation is caused by such conversions, consider changing the application source code to avoid this behavior. Look at the allocation stack traces to see which parts of the code to change. This rule finds the calls to the valueOf method for any of the eight object types that have primitive counterparts.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
@@ -4846,6 +4923,13 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
 <longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+</rule>
+<rule>
+<id>ProcessStarted</id>
+<severity>OK</severity>
+<score>0.0</score>
+<shortDescription>No process started.</shortDescription>
+<longDescription>No process started.</longDescription>
 </rule>
 <rule>
 <id>SocketRead</id>
