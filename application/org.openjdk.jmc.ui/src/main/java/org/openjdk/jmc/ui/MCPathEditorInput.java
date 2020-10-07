@@ -42,8 +42,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
-
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
+import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.ui.common.util.Environment.OSType;
 
 /**
  * Class for inputs that consists of a path
@@ -102,7 +103,19 @@ public class MCPathEditorInput implements IPathEditorInput, IPersistableElement 
 
 	@Override
 	public IPath getPath() {
-		return Path.fromOSString(m_file.getAbsolutePath());
+		String absPath = m_file.getAbsolutePath();
+		if (Environment.getOSType() == OSType.MAC) {
+			if (!m_file.isAbsolute()) {
+				String pwd = System.getenv().get("PWD");
+				if (pwd != null) {
+					File absFile = new File(pwd, m_file.getName());
+					if (absFile.exists()) {
+						absPath = absFile.getAbsolutePath();
+					}
+				}
+			}
+		}
+		return Path.fromOSString(absPath);
 	}
 
 	@Override
