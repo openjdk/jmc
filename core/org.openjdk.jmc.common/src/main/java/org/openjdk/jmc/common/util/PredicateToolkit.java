@@ -81,9 +81,8 @@ public class PredicateToolkit {
 	}
 
 	/**
-	 * Test if a predicate is guaranteed to always test to {@code true}. Note that if this
-	 * method returns {@code false}, then it only means that it is unknown what the predicate will
-	 * return.
+	 * Test if a predicate is guaranteed to always test to {@code true}. Note that if this method
+	 * returns {@code false}, then it only means that it is unknown what the predicate will return.
 	 *
 	 * @param p
 	 *            a predicate to test
@@ -94,9 +93,8 @@ public class PredicateToolkit {
 	}
 
 	/**
-	 * Test if a predicate is guaranteed to always test to {@code false}. Note that if this
-	 * method returns {@code false}, then it only means that it is unknown what the predicate will
-	 * return.
+	 * Test if a predicate is guaranteed to always test to {@code false}. Note that if this method
+	 * returns {@code false}, then it only means that it is unknown what the predicate will return.
 	 *
 	 * @param p
 	 *            a predicate to test
@@ -111,8 +109,7 @@ public class PredicateToolkit {
 	 *
 	 * @param predicates
 	 *            input predicates
-	 * @return a predicate that tests to {@code true} if all input predicates test to
-	 *         {@code true}
+	 * @return a predicate that tests to {@code true} if all input predicates test to {@code true}
 	 */
 	public static <T> Predicate<T> and(Collection<Predicate<T>> predicates) {
 		switch (predicates.size()) {
@@ -155,8 +152,8 @@ public class PredicateToolkit {
 	 *
 	 * @param predicates
 	 *            input predicates
-	 * @return a predicate that tests to {@code true} if at least one of the input predicates
-	 *         test to {@code true}
+	 * @return a predicate that tests to {@code true} if at least one of the input predicates test
+	 *         to {@code true}
 	 */
 	public static <T> Predicate<T> or(Collection<Predicate<T>> predicates) {
 		switch (predicates.size()) {
@@ -199,8 +196,8 @@ public class PredicateToolkit {
 	 *
 	 * @param predicate
 	 *            predicate to invert
-	 * @return a predicate that tests to {@code true} if the input predicate tests to
-	 *         {@code false} and vice versa
+	 * @return a predicate that tests to {@code true} if the input predicate tests to {@code false}
+	 *         and vice versa
 	 */
 	public static <T> Predicate<T> not(final Predicate<T> predicate) {
 		if (isTrueGuaranteed(predicate)) {
@@ -257,8 +254,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that tests to {@code true} if the value to check is strictly less
-	 *         than the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is strictly less than
+	 *         the limit value
 	 */
 	public static <T, M> Predicate<T> less(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
@@ -285,8 +282,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that tests to {@code true} if the value to check is less than or
-	 *         equal to the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is less than or equal to
+	 *         the limit value
 	 */
 	public static <T, M> Predicate<T> lessOrEqual(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
@@ -338,8 +335,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that tests to {@code true} if the value to check is strictly greater
-	 *         than the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is strictly greater than
+	 *         the limit value
 	 */
 	public static <T, M> Predicate<T> more(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
@@ -366,8 +363,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that tests to {@code true} if the value to check is greater than or
-	 *         equal to the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is greater than or equal
+	 *         to the limit value
 	 */
 	public static <T, M> Predicate<T> moreOrEqual(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
@@ -395,8 +392,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that tests to {@code true} if the range value to check intersects
-	 *         with the limit range
+	 * @return a predicate that tests to {@code true} if the range value to check intersects with
+	 *         the limit range
 	 */
 	public static <T, M extends Comparable<? super M>> Predicate<T> rangeIntersects(
 		final IMemberAccessor<? extends IRange<M>, T> rangeAccessor, final IRange<M> limit) {
@@ -428,8 +425,8 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that tests to {@code true} if the range value to check is contained
-	 *         in the limit range
+	 * @return a predicate that tests to {@code true} if the range value to check is contained in
+	 *         the limit range
 	 */
 	public static <T, M extends Comparable<? super M>> Predicate<T> rangeContained(
 		final IMemberAccessor<? extends IRange<M>, T> rangeAccessor, final IRange<M> limit) {
@@ -554,8 +551,7 @@ public class PredicateToolkit {
 	 *            object to compare against
 	 * @param <T>
 	 *            type of objects passed into the predicate
-	 * @return a predicate that tests to {@code true} if the value to check is the specified
-	 *         object
+	 * @return a predicate that tests to {@code true} if the value to check is the specified object
 	 */
 	public static <T> Predicate<T> is(final T item) {
 		return new Predicate<T>() {

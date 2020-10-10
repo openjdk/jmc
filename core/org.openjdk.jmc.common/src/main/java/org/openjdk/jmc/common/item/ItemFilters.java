@@ -394,8 +394,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected Predicate<IItem> getPredicate(
-			IMemberAccessor<? extends IRange<M>, IItem> accessor, IRange<M> limit) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends IRange<M>, IItem> accessor, IRange<M> limit) {
 			switch (kind) {
 			case RANGE_INTERSECTS:
 				return PredicateToolkit.rangeIntersects(accessor, limit);
