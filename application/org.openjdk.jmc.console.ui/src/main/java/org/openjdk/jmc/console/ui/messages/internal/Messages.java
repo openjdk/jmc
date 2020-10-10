@@ -97,6 +97,7 @@ public class Messages extends NLS {
 	public static String IS_SUSPENDED_DESCRIPTION_TEXT;
 	public static String IS_SUSPENDED_NAME_TEXT;
 	public static String IS_DAEMON_NAME_TEXT;
+	public static String IS_DAEMON_ERROR_VALUE;
 	public static String IS_DAEMON_DESCRIPTION_TEXT;
 	public static String LIBRARY_PATH_LABEL;
 	public static String LOCK_NAME_DESCRIPTION_TEXT;

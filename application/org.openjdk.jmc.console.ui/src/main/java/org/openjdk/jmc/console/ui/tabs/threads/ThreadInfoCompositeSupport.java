@@ -207,7 +207,15 @@ public class ThreadInfoCompositeSupport {
 
 	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_IN_NATIVE = new Getter(IN_NATIVE);
 
-	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_DAEMON = new Getter(DAEMON);
+	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_DAEMON = new IMemberAccessor<Object, ThreadInfoCompositeSupport>() {
+
+		@Override
+		public Object getMember(ThreadInfoCompositeSupport inObject) {
+			return inObject.compositeData.containsKey(DAEMON) ? inObject.compositeData.get(DAEMON)
+					: Messages.IS_DAEMON_ERROR_VALUE;
+		}
+
+	};
 
 	public static final IMemberAccessor<Object, ThreadInfoCompositeSupport> IS_SUSPENDED = new Getter(SUSPENDED);
 
