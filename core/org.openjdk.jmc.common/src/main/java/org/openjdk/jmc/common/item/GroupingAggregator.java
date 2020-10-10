@@ -37,8 +37,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.collection.EntryHashMap;
 import org.openjdk.jmc.common.collection.EntryHashMap.Entry;
 import org.openjdk.jmc.common.item.Aggregators.MergingAggregator;
@@ -137,10 +137,10 @@ public class GroupingAggregator {
 		private final IGroupsFinisher<V, K, G> groupsFinisher;
 		private final IAccessorFactory<K> keyField;
 		private final IItemConsumerFactory<G> consumerFactory;
-		private final IPredicate<IType<IItem>> acceptType;
+		private final Predicate<IType<IItem>> acceptType;
 
 		GroupingAggregatorImpl(String name, String description, IAccessorFactory<K> keyField,
-				IItemConsumerFactory<G> consumerFactory, IPredicate<IType<IItem>> acceptType,
+				IItemConsumerFactory<G> consumerFactory, Predicate<IType<IItem>> acceptType,
 				IGroupsFinisher<V, K, G> groupsFinisher) {
 			super(name, description, groupsFinisher.getValueType());
 			this.consumerFactory = consumerFactory;
@@ -151,7 +151,7 @@ public class GroupingAggregator {
 
 		@Override
 		public boolean acceptType(IType<IItem> type) {
-			return keyField.getAccessor(type) != null && acceptType.evaluate(type);
+			return keyField.getAccessor(type) != null && acceptType.test(type);
 		}
 
 		@Override
@@ -173,17 +173,17 @@ public class GroupingAggregator {
 
 	public static <V, K, C extends IItemConsumer<C>> IAggregator<V, ?> build(
 		String name, String description, IAccessorFactory<K> keyField, IItemConsumerFactory<C> groupAggregator,
-		IPredicate<IType<IItem>> acceptType, IGroupsFinisher<V, K, C> finisher) {
+		Predicate<IType<IItem>> acceptType, IGroupsFinisher<V, K, C> finisher) {
 		return new GroupingAggregatorImpl<>(name, description, keyField, groupAggregator, acceptType, finisher);
 	}
 
 	public static <V, K, C extends IItemConsumer<C>> IAggregator<V, ?> build(
 		String name, String description, IAccessorFactory<K> keyField, final IAggregator<?, C> a,
 		IGroupsFinisher<V, K, C> finisher) {
-		return build(name, description, keyField, a, new IPredicate<IType<IItem>>() {
+		return build(name, description, keyField, a, new Predicate<IType<IItem>>() {
 
 			@Override
-			public boolean evaluate(IType<IItem> o) {
+			public boolean test(IType<IItem> o) {
 				return a.acceptType(o);
 			}
 		}, finisher);
@@ -191,7 +191,7 @@ public class GroupingAggregator {
 
 	public static <K, C extends IItemConsumer<C>> IAggregator<Iterable<? extends GroupEntry<K, C>>, ?> build(
 		String name, String description, IAccessorFactory<K> keyField, IItemConsumerFactory<C> groupAggregator,
-		IPredicate<IType<IItem>> acceptType) {
+		Predicate<IType<IItem>> acceptType) {
 		return build(name, description, keyField, groupAggregator, acceptType,
 				new IGroupsFinisher<Iterable<? extends GroupEntry<K, C>>, K, C>() {
 

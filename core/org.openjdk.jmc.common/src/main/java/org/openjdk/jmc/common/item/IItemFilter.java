@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.common.item;
 
-import org.openjdk.jmc.common.IPredicate;
+import java.util.function.Predicate;
 
 /**
  * A filter supplies predicates for different types of items.
@@ -46,6 +46,6 @@ public interface IItemFilter {
 	 *            the item type to get a predicate for
 	 * @return a predicate to use for items of the supplied type
 	 */
-	IPredicate<IItem> getPredicate(IType<IItem> type);
+	Predicate<IItem> getPredicate(IType<IItem> type);
 
 }

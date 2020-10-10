@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IType;
@@ -54,9 +54,9 @@ public class TimeRangeThreadFilter implements IItemFilter {
 
 	private Map<IMCThread, Range> rangeMap;
 
-	private class TimeRangePredicate implements IPredicate<IItem> {
+	private class TimeRangePredicate implements Predicate<IItem> {
 		@Override
-		public boolean evaluate(IItem o) {
+		public boolean test(IItem o) {
 			IMCThread thread = RulesToolkit.getThread(o);
 
 			if (!rangeMap.containsKey(thread)) {
@@ -108,7 +108,7 @@ public class TimeRangeThreadFilter implements IItemFilter {
 	}
 
 	@Override
-	public IPredicate<IItem> getPredicate(IType<IItem> type) {
+	public Predicate<IItem> getPredicate(IType<IItem> type) {
 		return new TimeRangePredicate();
 	}
 

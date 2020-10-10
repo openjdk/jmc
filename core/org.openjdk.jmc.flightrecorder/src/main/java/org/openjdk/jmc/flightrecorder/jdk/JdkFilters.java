@@ -32,10 +32,11 @@
  */
 package org.openjdk.jmc.flightrecorder.jdk;
 
+import java.util.function.Predicate;
+
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCStackTrace;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
@@ -164,16 +165,16 @@ public final class JdkFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			final IMemberAccessor<?, IItem> accessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(type);
 			if (accessor == null) {
 				return PredicateToolkit.falsePredicate();
 			}
 
-			return new IPredicate<IItem>() {
+			return new Predicate<IItem>() {
 
 				@Override
-				public boolean evaluate(IItem o) {
+				public boolean test(IItem o) {
 					IMCStackTrace st = (IMCStackTrace) accessor.getMember(o);
 					if (st != null) {
 						for (IMCFrame frame : st.getFrames()) {

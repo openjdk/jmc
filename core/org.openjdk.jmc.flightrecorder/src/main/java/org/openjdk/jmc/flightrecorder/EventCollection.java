@@ -38,8 +38,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItem;
@@ -66,13 +66,13 @@ class EventCollection implements IItemCollection {
 			predicate = PredicateToolkit.truePredicate();
 		}
 
-		EventTypeEntry(EventArray events, IPredicate<IItem> predicate) {
+		EventTypeEntry(EventArray events, Predicate<IItem> predicate) {
 			this.events = events;
 			this.predicate = predicate;
 		}
 
 		final EventArray events;
-		final IPredicate<IItem> predicate;
+		final Predicate<IItem> predicate;
 
 		@Override
 		public IType<IItem> getType() {
@@ -104,8 +104,8 @@ class EventCollection implements IItemCollection {
 		}
 
 		@Override
-		public EventTypeEntry apply(IPredicate<IItem> filter) {
-			IPredicate<IItem> newPredicate = PredicateToolkit.and(Arrays.asList(filter, predicate));
+		public EventTypeEntry apply(Predicate<IItem> filter) {
+			Predicate<IItem> newPredicate = PredicateToolkit.and(Arrays.asList(filter, predicate));
 			return new EventTypeEntry(events, newPredicate);
 		}
 
@@ -146,7 +146,7 @@ class EventCollection implements IItemCollection {
 		return new EventCollection(newEntries, chunkRanges);
 	}
 
-	private static Iterator<IItem> buildIterator(IItem[] array, IPredicate<? super IItem> filter) {
+	private static Iterator<IItem> buildIterator(IItem[] array, Predicate<? super IItem> filter) {
 		if (isFiltered(filter)) {
 			return IteratorToolkit.filter(IteratorToolkit.of(array), filter);
 		} else {
@@ -154,7 +154,7 @@ class EventCollection implements IItemCollection {
 		}
 	}
 
-	private static boolean isFiltered(IPredicate<?> filter) {
+	private static boolean isFiltered(Predicate<?> filter) {
 		return filter != null && !PredicateToolkit.isTrueGuaranteed(filter);
 	}
 

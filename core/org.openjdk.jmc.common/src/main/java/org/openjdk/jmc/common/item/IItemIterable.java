@@ -33,8 +33,7 @@
 package org.openjdk.jmc.common.item;
 
 import java.util.Iterator;
-
-import org.openjdk.jmc.common.IPredicate;
+import java.util.function.Predicate;
 
 /**
  * A supplier of {@link Iterator} over {@link IItem} where all items are of the same type.
@@ -64,6 +63,6 @@ public interface IItemIterable extends Iterable<IItem> {
 	 *            the predicate to use when selecting items for the new collection
 	 * @return A new collection of items
 	 */
-	IItemIterable apply(IPredicate<IItem> predicate);
+	IItemIterable apply(Predicate<IItem> predicate);
 
 }

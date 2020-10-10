@@ -42,7 +42,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -70,13 +69,13 @@ public class StreamModel {
 	public IItemCollection getItems(IRange<IQuantity> range, IItemFilter filter) {
 		IItemIterable[] rangedStreams = Stream.of(eventsByType).map(ea -> {
 			IType<IItem> eventType = ea.getType();
-			IPredicate<IItem> predicate = filter.getPredicate(eventType);
+			Predicate<IItem> predicate = filter.getPredicate(eventType);
 			if (PredicateToolkit.isTrueGuaranteed(predicate)) {
 				return ItemIterableToolkit.build(itemSupplier(ea.getEvents(), eventType, range), eventType);
 			} else if (PredicateToolkit.isFalseGuaranteed(predicate)) {
 				return null;
 			} else {
-				return ItemIterableToolkit.build(itemSupplier(ea.getEvents(), eventType, range, predicate::evaluate),
+				return ItemIterableToolkit.build(itemSupplier(ea.getEvents(), eventType, range, predicate::test),
 						eventType);
 			}
 		}).filter(Objects::nonNull).toArray(IItemIterable[]::new);

@@ -50,12 +50,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RunnableFuture;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.collection.EntryHashMap;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.collection.MapToolkit;
@@ -276,13 +276,13 @@ public class RulesToolkit {
 		final Set<String> types = new HashSet<>(Arrays.asList(typeIds));
 		IItemFilter typeFilter = new IItemFilter() {
 			@Override
-			public IPredicate<IItem> getPredicate(IType<IItem> type) {
+			public Predicate<IItem> getPredicate(IType<IItem> type) {
 				final IMemberAccessor<LabeledIdentifier, IItem> ma = JdkAttributes.REC_SETTING_FOR.getAccessor(type);
 				if (ma != null) {
-					return new IPredicate<IItem>() {
+					return new Predicate<IItem>() {
 
 						@Override
-						public boolean evaluate(IItem o) {
+						public boolean test(IItem o) {
 							LabeledIdentifier eventType = ma.getMember(o);
 							return eventType != null && types.contains(eventType.getInterfaceId());
 						}
@@ -365,12 +365,12 @@ public class RulesToolkit {
 		IItemFilter f = new IItemFilter() {
 
 			@Override
-			public IPredicate<IItem> getPredicate(IType<IItem> type) {
+			public Predicate<IItem> getPredicate(IType<IItem> type) {
 				final IMemberAccessor<String, IItem> accessor = JdkAttributes.REC_SETTING_VALUE.getAccessor(type);
-				return new IPredicate<IItem>() {
+				return new Predicate<IItem>() {
 
 					@Override
-					public boolean evaluate(IItem o) {
+					public boolean test(IItem o) {
 						try {
 							String thresholdValue = accessor.getMember(o);
 							return parsePersistedJvmTimespan(thresholdValue).longValue() == 0L;

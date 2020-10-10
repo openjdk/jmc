@@ -34,8 +34,8 @@ package org.openjdk.jmc.common.test.mock.item;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
@@ -71,7 +71,7 @@ public class MockItemIterable<T> implements IItemIterable {
 	}
 
 	@Override
-	public IItemIterable apply(IPredicate<IItem> filter) {
+	public IItemIterable apply(Predicate<IItem> filter) {
 		// Filtering not supported in this implementation
 		return null;
 	}
