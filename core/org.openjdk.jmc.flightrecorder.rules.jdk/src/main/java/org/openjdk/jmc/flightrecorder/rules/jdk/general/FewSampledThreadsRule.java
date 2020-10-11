@@ -41,10 +41,10 @@ import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
 import java.text.MessageFormat;
+import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
 import org.openjdk.jmc.common.item.GroupingAggregator;
@@ -85,10 +85,10 @@ public class FewSampledThreadsRule extends AbstractRule {
 	private static final IAggregator<Iterable<? extends GroupEntry<IMCThread, CountConsumer>>, ?> SAMPLES_PER_THREAD = GroupingAggregator
 			.build(Messages.getString(Messages.FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD),
 					Messages.getString(Messages.FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD_DESC),
-					JfrAttributes.EVENT_THREAD, Aggregators.count(), new IPredicate<IType<IItem>>() {
+					JfrAttributes.EVENT_THREAD, Aggregators.count(), new Predicate<IType<IItem>>() {
 
 						@Override
-						public boolean evaluate(IType<IItem> type) {
+						public boolean test(IType<IItem> type) {
 							return type.getIdentifier().equals(JdkTypeIDs.EXECUTION_SAMPLE);
 						}
 					});

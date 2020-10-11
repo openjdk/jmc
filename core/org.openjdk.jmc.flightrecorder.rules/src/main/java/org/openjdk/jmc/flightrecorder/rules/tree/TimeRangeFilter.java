@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,7 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.tree;
 
-import org.openjdk.jmc.common.IPredicate;
+import java.util.function.Predicate;
+
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IType;
@@ -47,9 +48,9 @@ public class TimeRangeFilter implements IItemFilter {
 
 	private Range range;
 
-	private class TimeRangePredicate implements IPredicate<IItem> {
+	private class TimeRangePredicate implements Predicate<IItem> {
 		@Override
-		public boolean evaluate(IItem o) {
+		public boolean test(IItem o) {
 			if (intersects(o, range)) {
 				return true;
 			}
@@ -81,7 +82,7 @@ public class TimeRangeFilter implements IItemFilter {
 	}
 
 	@Override
-	public IPredicate<IItem> getPredicate(IType<IItem> type) {
+	public Predicate<IItem> getPredicate(IType<IItem> type) {
 		return new TimeRangePredicate();
 	}
 
