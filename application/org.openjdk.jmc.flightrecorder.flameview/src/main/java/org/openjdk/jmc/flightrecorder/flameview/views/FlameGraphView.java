@@ -350,17 +350,25 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void rebuildModel(IItemCollection items) {
 		if (modelCalculationFuture != null) {
-			if (modelCalculationFuture.isDone() || !modelCalculationFuture.cancel(true)) {
-				try {
-					modelCalculationFuture.get();
-				} catch (Throwable t) {
-					FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to rebuild flameview", t); //$NON-NLS-1$
+			if (modelCalculationFuture.isDone()) {
+				finishModelCalculationFuture(modelCalculationFuture);
+			} else {
+				if (!modelCalculationFuture.cancel(true)) {
+					finishModelCalculationFuture(modelCalculationFuture);
 				}
 			}
 		}
 
 		modelCalculationFuture = getModelPreparer(items, true);
 		currentItems = items;
+	}
+
+	private void finishModelCalculationFuture(Future<Void> f) {
+		try {
+			f.get();
+		} catch (Throwable t) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to rebuild flameview", t); //$NON-NLS-1$
+		}
 	}
 
 	private StacktraceModel createStacktraceModel(IItemCollection items) {
