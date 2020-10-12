@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -89,7 +89,7 @@ public class ChunkLoaderV1 implements IChunkLoader {
 				throw new CouldNotLoadRecordingException("Found event with invalid size (0)"); //$NON-NLS-1$
 			}
 			if (type != CONSTANT_POOL_EVENT_TYPE && type != ChunkMetadata.METADATA_EVENT_TYPE) {
-				manager.readEvent(type, input);
+				manager.readEvent(size, type, input);
 			}
 			index += size;
 		}
