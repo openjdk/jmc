@@ -24,6 +24,8 @@ jobs:
       run: ./scripts/runcoretests.sh
     - name: Run application tests
       run: ./scripts/runapptests.sh
+    - name: Run agent tests
+      run: ./scripts/runagenttests.sh
 
   mac:
     runs-on: 'macOS-latest'
@@ -46,6 +48,8 @@ jobs:
       run: ./scripts/runcoretests.sh
     - name: Run application tests
       run: ./scripts/runapptests.sh
+    - name: Run agent tests
+      run: ./scripts/runagenttests.sh
 
   win:
     runs-on: 'windows-latest'
@@ -70,4 +74,7 @@ jobs:
       shell: cmd
     - name: Run application tests
       run: .\scripts\runapptests.bat
+      shell: cmd
+    - name: Run agent tests
+      run: .\scripts\runagenttests.bat
       shell: cmd
