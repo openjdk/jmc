@@ -39,7 +39,7 @@ public class InstrumentMeConverter {
 		System.out.println("Int: " + gurka);
 		Thread.sleep(1000);
 	}
-	
+
 	public static void printGurkaToLong(Gurka gurka) throws InterruptedException {
 		System.out.println("Long: " + gurka);
 		Thread.sleep(1000);

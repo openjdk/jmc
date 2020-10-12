@@ -40,9 +40,9 @@ public interface AgentControllerMXBean {
 	 * Reverts all existing instrumentation and then defines a new set of event probes to transform.
 	 *
 	 * @param xmlDescription
-	 *           the XML snippet describing event probes to transform.
+	 *            the XML snippet describing event probes to transform.
 	 * @throws Exception
-	 *           thrown when an event probe's specified class can not be retransformed.
+	 *             thrown when an event probe's specified class can not be retransformed.
 	 */
 	public void defineEventProbes(String xmlDescription) throws Exception;
 

@@ -53,10 +53,13 @@ public final class AccessUtils {
 	/**
 	 * Like Class.getDeclaredField, but also gets fields declared by ancestors and interfaces.
 	 * 
-	 * @param clazz the class to lookup from
-	 * @param name the name of the field
+	 * @param clazz
+	 *            the class to lookup from
+	 * @param name
+	 *            the name of the field
 	 * @return the {@code Field} object for the specified field in this class
-	 * @throws NoSuchFieldException if a field with the specified name is not found.
+	 * @throws NoSuchFieldException
+	 *             if a field with the specified name is not found.
 	 */
 	public static Field getFieldOnHierarchy(Class<?> clazz, String name) throws NoSuchFieldException {
 		Queue<Class<?>> q = new LinkedList<>();
@@ -83,9 +86,12 @@ public final class AccessUtils {
 	/**
 	 * Checks whether a field can be accessed from a caller context.
 	 * 
-	 * @param targetClass the class being referenced
-	 * @param field the field being accessed
-	 * @param currentClass the caller class
+	 * @param targetClass
+	 *            the class being referenced
+	 * @param field
+	 *            the field being accessed
+	 * @param currentClass
+	 *            the caller class
 	 * @return whether the field is accessible from given context
 	 */
 	public static boolean isAccessible(Class<?> targetClass, Field field, Class<?> currentClass) {
@@ -102,14 +108,18 @@ public final class AccessUtils {
 	/**
 	 * Checks whether the field/method/inner class modifier allows access from a caller context
 	 * 
-	 * @param targetClass the class being referenced
-	 * @param memberClass the class declaring the field/method/inner class
-	 * @param currentClass the caller class
-	 * @param modifiers member access modifiers in bit flags as a integer
+	 * @param targetClass
+	 *            the class being referenced
+	 * @param memberClass
+	 *            the class declaring the field/method/inner class
+	 * @param currentClass
+	 *            the caller class
+	 * @param modifiers
+	 *            member access modifiers in bit flags as a integer
 	 * @return
 	 */
-	public static boolean verifyMemberAccess(Class<?> targetClass, Class<?> memberClass, Class<?> currentClass, 
-			int modifiers) {
+	public static boolean verifyMemberAccess(
+		Class<?> targetClass, Class<?> memberClass, Class<?> currentClass, int modifiers) {
 		if (currentClass == memberClass) {
 			return true;
 		}
@@ -183,12 +193,13 @@ public final class AccessUtils {
 	}
 
 	/**
-	 * Check whether the module has the class exported for the caller to access.
+	 * Check whether the module has the class exported for the caller to access. For Pre-9 Java
+	 * runtime, this function always returns <code>true</code>.
 	 * 
-	 * For Pre-9 Java runtime, this function always returns <code>true</code>.
-	 * 
-	 * @param targetClass the class being accessed
-	 * @param callerClass the caller class
+	 * @param targetClass
+	 *            the class being accessed
+	 * @param callerClass
+	 *            the caller class
 	 * @return whether the class is accessible
 	 */
 	public static boolean verifyModuleAccess(Class<?> targetClass, Class<?> callerClass) {
@@ -213,10 +224,13 @@ public final class AccessUtils {
 
 		String pkg = getPackageName(targetClass);
 		try {
-			Method isExportedMethod = targetModule.getClass()
-					.getDeclaredMethod("isExported", String.class, Class.forName("java.lang.Module"));
+			Method isExportedMethod = targetModule.getClass().getDeclaredMethod("isExported", String.class,
+					Class.forName("java.lang.Module"));
 			return (boolean) isExportedMethod.invoke(targetModule, pkg, callerModule);
-		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+		} catch (ClassNotFoundException
+				| NoSuchMethodException
+				| IllegalAccessException
+				| InvocationTargetException e) {
 			throw new RuntimeException(e); // this should not happen
 		}
 	}
@@ -224,19 +238,21 @@ public final class AccessUtils {
 	/**
 	 * polyfill for <code>Class.getPackageName(Class<?>)</code> for pre-9 Java.
 	 * 
-	 * @param clazz the class to lookup the package name against
+	 * @param clazz
+	 *            the class to lookup the package name against
 	 * @return the name of the package containing the class
 	 */
 	public static String getPackageName(Class<?> clazz) {
 		return clazz.getPackage().getName();
-		
+
 	}
 
 	/**
-	 * Polyfill for <code>Reflection.getClassAccessFlags(Class<?>)</code> as 
+	 * Polyfill for <code>Reflection.getClassAccessFlags(Class<?>)</code> as
 	 * <code>jdk.internal.reflect.Reflection</code> is not exported.
 	 * 
-	 * @param c the class being inspected
+	 * @param c
+	 *            the class being inspected
 	 * @return the access flags written to the class file
 	 */
 	public static int getClassAccessFlags(Class<?> c) {
@@ -246,8 +262,10 @@ public final class AccessUtils {
 	/**
 	 * Check whether the two classes exist in the same package
 	 * 
-	 * @param lhs the first class
-	 * @param rhs the second class
+	 * @param lhs
+	 *            the first class
+	 * @param rhs
+	 *            the second class
 	 * @return whether the given classes exist in the same package
 	 */
 	public static boolean isSameClassPackage(Class<?> lhs, Class<?> rhs) {
@@ -259,8 +277,10 @@ public final class AccessUtils {
 	/**
 	 * Check whether a class is a subclass of the other
 	 * 
-	 * @param queryClass the subclass
-	 * @param ofClass the superclass
+	 * @param queryClass
+	 *            the subclass
+	 * @param ofClass
+	 *            the superclass
 	 * @return whether it's a subclass-superclass relationship
 	 */
 	public static boolean isSubclassOf(Class<?> queryClass, Class<?> ofClass) {
@@ -274,12 +294,11 @@ public final class AccessUtils {
 	}
 
 	/**
-	 * Polyfill Class.getNestMembers() for pre-11 runtime. 
+	 * Polyfill Class.getNestMembers() for pre-11 runtime. This function does not fully respect the
+	 * definition of nesting from JVM's perspective. It's only used for validating access.
 	 * 
-	 * This function does not fully respect the definition of nesting from JVM's perspective. It's only used for 
-	 * validating access.
-	 * 
-	 * @param clazz the class to inspect against
+	 * @param clazz
+	 *            the class to inspect against
 	 * @return an array of all nest members
 	 */
 	public static Class<?>[] getNestMembers(Class<?> clazz) {
@@ -295,13 +314,13 @@ public final class AccessUtils {
 	}
 
 	/**
-	 * Polyfill Class.isNestMateOf() for pre-11 runtime.
+	 * Polyfill Class.isNestMateOf() for pre-11 runtime. This function does not fully respect the
+	 * definition of nesting from JVM's perspective. It's only used for validating access.
 	 * 
-	 * This function does not fully respect the definition of nesting from JVM's perspective. It's only used for
-	 * validating access.
-	 * 
-	 * @param lhs the first class
-	 * @param rhs the second class
+	 * @param lhs
+	 *            the first class
+	 * @param rhs
+	 *            the second class
 	 * @return whether the given classes are nestmates
 	 */
 	public static boolean areNestMates(Class<?> lhs, Class<?> rhs) {
@@ -309,12 +328,11 @@ public final class AccessUtils {
 	}
 
 	/**
-	 * Polyfill Class.getNestHost() for pre-11 runtime.
+	 * Polyfill Class.getNestHost() for pre-11 runtime. This function does not fully respect the
+	 * definition of nesting from JVM's perspective. It's only used for validating access.
 	 * 
-	 * This function does not fully respect the definition of nesting from JVM's perspective. It's only used for
-	 * validating access.
-	 * 
-	 * @param clazz the class the inspect against
+	 * @param clazz
+	 *            the class the inspect against
 	 * @return the nesthost of the class
 	 */
 	public static Class<?> getNestHost(Class<?> clazz) {

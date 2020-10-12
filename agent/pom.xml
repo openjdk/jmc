@@ -40,12 +40,13 @@
 	<artifactId>org.openjdk.jmc.agent</artifactId>
 	<packaging>jar</packaging>
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<asm.version>8.0.1</asm.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.version>1.26.0</spotless.version>
+		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<build>
 		<plugins>
@@ -242,6 +243,19 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<eclipse>
+	  						<file>${spotless.config.path}</file>
+	 						<version>4.8.0</version>
+ 						</eclipse>
+					</java>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
