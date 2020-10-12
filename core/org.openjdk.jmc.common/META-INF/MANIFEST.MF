@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Common Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.common;singleton:=true
 Bundle-Version: 8.0.0.qualifier

@@ -52,7 +52,6 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestIncorrectMethodDescriptor {
 	
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 	private static final String EVENT_ID = "demo.jfr.test6";
 	private static final String EVENT_NAME = "JFR Hello World Event 6 %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Hello World Event 6 %TEST_NAME%";
@@ -85,7 +84,7 @@ public class TestIncorrectMethodDescriptor {
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
 		
 		Transformer jfrTransformer = new Transformer(registry);
-		byte[] transformedClass = jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
+		jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
 				Type.getInternalName(InstrumentMe.class), InstrumentMe.class, null,
 				TestToolkit.getByteCode(InstrumentMe.class));
 		
@@ -104,7 +103,7 @@ public class TestIncorrectMethodDescriptor {
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
 		
 		Transformer jfrTransformer = new Transformer(registry);
-		byte[] transformedClass = jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
+		jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
 				Type.getInternalName(InstrumentMe.class), InstrumentMe.class, null,
 				TestToolkit.getByteCode(InstrumentMe.class));
 		

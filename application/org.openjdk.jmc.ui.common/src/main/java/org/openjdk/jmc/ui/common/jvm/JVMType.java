@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.ui.common.jvm;
 
+import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
+
 /**
  * Enum for the different JVMs.
  */
@@ -51,6 +53,22 @@ public enum JVMType {
 	/**
 	 * The JVM is some other JVM.
 	 */
-	OTHER
+	OTHER;
+
+	/**
+	 * Derive the {@link JVMType} from a jvm name, e.g. the system property java.vm.name.
+	 *
+	 * @param jvmName
+	 *            the jvm name to get the JVMType for.
+	 * @return the {@link JVMType} for the jvm name.
+	 */
+	public static JVMType getJVMType(String jvmName) {
+		if (JavaVMVersionToolkit.isJRockitJVMName(jvmName)) {
+			return JVMType.JROCKIT;
+		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
+			return JVMType.HOTSPOT;
+		}
+		return JVMType.OTHER;
+	}
 
 }

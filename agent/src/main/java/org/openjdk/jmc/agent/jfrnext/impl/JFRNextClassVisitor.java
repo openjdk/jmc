@@ -35,16 +35,15 @@ package org.openjdk.jmc.agent.jfrnext.impl;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
-import org.openjdk.jmc.agent.Agent;
 
 
 public class JFRNextClassVisitor extends ClassVisitor {

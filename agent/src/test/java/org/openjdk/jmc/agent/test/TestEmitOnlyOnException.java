@@ -53,7 +53,6 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestEmitOnlyOnException {
 	
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 	private static final String EVENT_ID = "demo.jfr.test";
 	private static final String EVENT_NAME = "JFR Emit on Exception Event %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Emit on Exception Event %TEST_NAME%";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,6 +42,7 @@ import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -90,7 +91,7 @@ public class ClassLoadingRule implements IRule {
 		IQuantity endTime = RulesToolkit.getLatestEndTime(events);
 		if (startTime != null && endTime != null) {
 			IQuantity totalTime = endTime.subtract(startTime);
-			IQuantity max = events.getAggregate(Aggregators.max(JfrAttributes.DURATION));
+			IQuantity max = events.getAggregate((IAggregator<IQuantity, ?>) Aggregators.max(JfrAttributes.DURATION));
 			IQuantity sum = events.getAggregate(Aggregators.sum(JfrAttributes.DURATION));
 			// FIXME: Consider using a score function instead of set value.
 			if ((max.compareTo(maxDurationLimit) > 0) || (sum.ratioTo(totalTime) > ratioOfTotalLimit.doubleValue())) {

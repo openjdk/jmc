@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,9 +66,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.forms.widgets.FormText;
-
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IStateful;
 import org.openjdk.jmc.common.IWritableState;
@@ -95,7 +94,7 @@ public class LaneEditor {
 
 	private static final IItemFilter TYPE_HAS_THREAD_AND_DURATION = new IItemFilter() {
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (DataPageToolkit.isTypeWithThreadAndDuration(type)) {
 				return PredicateToolkit.truePredicate();
 			}

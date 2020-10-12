@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,71 +31,46 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.rules.jdk.general;
-
-import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
-import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
+package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
-import org.openjdk.jmc.common.item.IAggregator;
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
-import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class BufferLostRule implements IRule {
-	private static final String BUFFER_LOST_RESULT_ID = "BufferLost"; //$NON-NLS-1$
+public class HeapDumpRule implements IRule {
+	private static final String HEAP_DUMP_RESULT_ID = "HeapDump"; //$NON-NLS-1$
 
-	public static final TypedPreference<IQuantity> WARNING_LIMIT = new TypedPreference<>("bufferlost.warning.limit", //$NON-NLS-1$
-			Messages.getString(Messages.BufferLostRuleFactory_CONFIG_WARN_LIMIT),
-			Messages.getString(Messages.BufferLostRuleFactory_CONFIG_WARN_LIMIT_LONG), NUMBER,
-			NUMBER_UNITY.quantity(1));
-
-	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT);
-
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		IQuantity limit = valueProvider.getPreferenceValue(WARNING_LIMIT);
-
-		/*
-		 * We don't believe JFR_DATA_LOST can be turned off, and recordings do not seem to have
-		 * enablement information on them, so no point in checking if it's enabled.
-		 */
-
-		IItemCollection filtered = items.apply(JdkFilters.JFR_DATA_LOST);
-		IQuantity startTime = filtered
-				.getAggregate((IAggregator<IQuantity, ?>) JdkAggregators.first(JfrAttributes.START_TIME));
-
-		if (startTime != null) {
-			IQuantity droppedCount = filtered.getAggregate(JdkAggregators.JFR_DATA_LOST_COUNT);
-			IQuantity droppedSize = filtered.getAggregate(JdkAggregators.FLR_DATA_LOST_SIZE);
-
-			String shortDescription = MessageFormat.format(Messages.BufferLostRuleFactory_TEXT_INFO,
-					droppedCount.displayUsing(IDisplayable.AUTO), droppedSize.displayUsing(IDisplayable.AUTO));
-			String longDescription = MessageFormat.format(
-					Messages.getString(Messages.BufferLostRuleFactory_TEXT_INFO_LONG),
-					droppedCount.displayUsing(IDisplayable.AUTO), droppedSize.displayUsing(IDisplayable.AUTO),
-					startTime.displayUsing(IDisplayable.AUTO));
-			return new Result(this, calculateScore(limit, droppedCount), shortDescription, longDescription,
-					JdkQueries.JFR_DATA_LOST);
+	protected Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
+		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_DUMP);
+		if (eventAvailability == EventAvailability.DISABLED) {
+			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.HEAP_DUMP);
 		}
-		return new Result(this, 0, Messages.getString(Messages.BufferLostRuleFactory_RULE_TEXT_OK));
+		IItemCollection heapDumpEvents = items.apply(ItemFilters.type(JdkTypeIDs.HEAP_DUMP));
+		if (!heapDumpEvents.hasItems()) {
+			return new Result(this, 0, Messages.getString(Messages.HeapDumpRule_TEXT_OK));
+		}
+		IQuantity heapDumpCount = heapDumpEvents.getAggregate(Aggregators.count());
+		String message = Messages.getString(Messages.HeapDumpRule_TEXT_INFO);
+		return new Result(this, 50,
+				MessageFormat.format(message, heapDumpCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
 	}
 
 	@Override
@@ -108,27 +84,24 @@ public class BufferLostRule implements IRule {
 		return evaluationTask;
 	}
 
-	private double calculateScore(IQuantity limit, IQuantity droppedCount) {
-		return RulesToolkit.mapExp100(limit.clampedLongValueIn(NUMBER_UNITY), droppedCount.longValue());
-	}
-
 	@Override
 	public Collection<TypedPreference<?>> getConfigurationAttributes() {
-		return CONFIG_ATTRIBUTES;
+		return Collections.emptyList();
 	}
 
 	@Override
 	public String getId() {
-		return BUFFER_LOST_RESULT_ID;
+		return HEAP_DUMP_RESULT_ID;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.getString(Messages.BufferLostRuleFactory_RULE_NAME);
+		return Messages.getString(Messages.HeapDumpRule_RULE_NAME);
 	}
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.RECORDING;
+		return JfrRuleTopics.HEAP;
 	}
+
 }

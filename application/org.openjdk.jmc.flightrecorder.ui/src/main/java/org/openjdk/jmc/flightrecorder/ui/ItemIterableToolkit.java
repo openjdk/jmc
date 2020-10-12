@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,12 +38,12 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
@@ -97,8 +97,8 @@ public class ItemIterableToolkit {
 		}
 
 		@Override
-		public IItemIterable apply(IPredicate<IItem> filter) {
-			return new StreamBackedItemIterable(() -> items.get().filter(filter::evaluate), getType());
+		public IItemIterable apply(Predicate<IItem> filter) {
+			return new StreamBackedItemIterable(() -> items.get().filter(filter::test), getType());
 		}
 	}
 
@@ -108,7 +108,7 @@ public class ItemIterableToolkit {
 
 	public static Stream<IItemIterable> filter(Stream<? extends IItemIterable> items, IItemFilter on) {
 		Function<IItemIterable, IItemIterable> streamMapper = itemStream -> {
-			IPredicate<IItem> predicate = on.getPredicate(itemStream.getType());
+			Predicate<IItem> predicate = on.getPredicate(itemStream.getType());
 			if (PredicateToolkit.isTrueGuaranteed(predicate)) {
 				return itemStream;
 			} else if (PredicateToolkit.isFalseGuaranteed(predicate)) {

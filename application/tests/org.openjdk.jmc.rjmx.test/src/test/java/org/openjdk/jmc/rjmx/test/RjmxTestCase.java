@@ -40,12 +40,12 @@ import java.util.Properties;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXServiceURL;
-import javax.security.auth.login.FailedLoginException;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
+import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.test.MCTestCase;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
@@ -53,12 +53,18 @@ import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.IServerHandle;
+import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
+import org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle;
+import org.openjdk.jmc.rjmx.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
 import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
 import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
 import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
+import org.openjdk.jmc.ui.common.jvm.Connectable;
+import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 /**
  */
@@ -91,6 +97,7 @@ public class RjmxTestCase extends MCTestCase {
 	public final static String DEFAULT_HOST = "localhost";
 
 	protected String m_host;
+	protected RJMXConnection m_connection;
 	protected IConnectionHandle m_connectionHandle;
 	protected IConnectionDescriptor m_connectionDescriptor;
 
@@ -126,11 +133,76 @@ public class RjmxTestCase extends MCTestCase {
 		return SHARED_DESCRIPTOR;
 	}
 
+	/**
+	 * Creates a server descriptor with information matching the currently running JVM.
+	 * 
+	 * @return the server descriptor.
+	 */
+	public static IServerDescriptor createDefaultServerDesciptor() {
+		String jvmName = System.getProperty("java.vm.name");
+		// Assume hooking up to same JVM version as running the tests...
+		JVMDescriptor jvmDescriptor = new JVMDescriptor(System.getProperty("java.vm.version"),
+				JVMType.getJVMType(jvmName), null, "", "", jvmName, System.getProperty("java.vm.vendor"), null, false,
+				Connectable.MGMNT_AGENT_STARTED);
+		return new ServerDescriptor(null, "Test", jvmDescriptor);
+	}
+
+	/**
+	 * Creates a server descriptor with information derived from the JVM with the provided
+	 * connection.
+	 * 
+	 * @param connection
+	 *            an active {@link MBeanServerConnection}.
+	 * @return the server descriptor.
+	 * @throws IOException
+	 */
+	public static IServerDescriptor createDefaultServerDesciptor(MBeanServerConnection connection) throws IOException {
+		Map<String, String> properties = ConnectionToolkit.getRuntimeBean(connection).getSystemProperties();
+		String jvmName = properties.get("java.vm.name");
+		// Assume hooking up to same JVM version as running the tests...
+		JVMDescriptor jvmDescriptor = new JVMDescriptor(properties.get("java.vm.version"), JVMType.getJVMType(jvmName),
+				null, "", "", jvmName, properties.get("java.vm.vendor"), null, false, Connectable.MGMNT_AGENT_STARTED);
+		return new ServerDescriptor(null, "Test", jvmDescriptor);
+	}
+
+	/**
+	 * Creates a server descriptor with information derived from the JVM described by the server
+	 * descriptor. Will connect temporarily to derive the information.
+	 * 
+	 * @param descriptor
+	 *            the descriptor defining the JVM to connect to.
+	 * @return the server descriptor, with information derived from the actual connection, or an
+	 *         {@link IOException} if one could not be derived.
+	 * @throws IOException
+	 */
+	public static IServerDescriptor createDefaultServerDesciptor(IConnectionDescriptor descriptor) throws IOException {
+		RJMXConnection rjmxConnection = new RJMXConnection(descriptor, RjmxTestCase.createDefaultServerDesciptor(),
+				null);
+		if (!rjmxConnection.connect()) {
+			rjmxConnection.close();
+			throw new IOException("Could not connect to " + descriptor);
+		}
+		try (DefaultConnectionHandle handle = new DefaultConnectionHandle(rjmxConnection, "derive server descriptor",
+				null)) {
+			MBeanServerConnection mbeanServer = handle.getServiceOrNull(MBeanServerConnection.class);
+			if (mbeanServer != null) {
+				return createDefaultServerDesciptor(mbeanServer);
+			}
+		} finally {
+			IOToolkit.closeSilently(rjmxConnection);
+		}
+		throw new IOException("Could not derive the server descriptor for " + descriptor.toString());
+	}
+
 	protected static boolean probe(IConnectionDescriptor descriptor) {
 		long start = System.currentTimeMillis();
+		IConnectionHandle handle = null;
+		RJMXConnection connection = null;
 		try {
 			System.out.println("Probing Service URL " + descriptor.createJMXServiceURL() + " ...");
-			IConnectionHandle handle = createConnectionHandle(descriptor);
+			connection = new RJMXConnection(descriptor, createDefaultServerDesciptor(descriptor), null);
+			connection.connect();
+			handle = new DefaultConnectionHandle(connection, "Test", null);
 			long up = System.currentTimeMillis();
 			System.out.println("... connected in " + (up - start) + " ms ...");
 			// Just in case we fail ...
@@ -141,6 +213,8 @@ public class RjmxTestCase extends MCTestCase {
 			return true;
 		} catch (Exception e) {
 			long fail = System.currentTimeMillis();
+			IOToolkit.closeSilently(handle);
+			IOToolkit.closeSilently(connection);
 			System.out.println("... failed in " + (fail - start) + " ms.");
 			return false;
 		}
@@ -194,10 +268,12 @@ public class RjmxTestCase extends MCTestCase {
 	public static void getServerProperties(IConnectionDescriptor connDesc, Properties props, String prefix)
 			throws Exception {
 		System.out.println("Connecting to " + connDesc.createJMXServiceURL() + " ...");
-		IConnectionHandle connectionHandle = createConnectionHandle(connDesc);
+		RJMXConnection connection = new RJMXConnection(connDesc, createDefaultServerDesciptor(connDesc), null);
+		IConnectionHandle connectionHandle = new DefaultConnectionHandle(connection, "Get Properties", null);
 		getServerProperties(connectionHandle, props, prefix);
 		System.out.println("Disconnecting ...");
-		connectionHandle.close();
+		IOToolkit.closeSilently(connectionHandle);
+		IOToolkit.closeSilently(connection);
 	}
 
 	/**
@@ -207,20 +283,11 @@ public class RjmxTestCase extends MCTestCase {
 	public synchronized void mcTestCaseBefore() throws Exception {
 		m_connectionDescriptor = getTestConnectionDescriptor();
 		m_host = ConnectionToolkit.getHostName(m_connectionDescriptor.createJMXServiceURL());
-		m_connectionHandle = createConnectionHandle(m_connectionDescriptor);
+		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor),
+				null);
+		m_connection.connect();
+		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null);
 		Assert.assertTrue(m_connectionHandle.isConnected());
-	}
-
-	/**
-	 * Quick'n'Dirty way to create a {@link IConnectionHandle}.
-	 *
-	 * @return an {@link IConnectionHandle}
-	 * @throws FailedLoginException
-	 * @throws ConnectionException
-	 */
-	private static IConnectionHandle createConnectionHandle(IConnectionDescriptor descriptor)
-			throws IOException, FailedLoginException, ConnectionException {
-		return IServerHandle.create(descriptor).connect("Test");
 	}
 
 	/**
@@ -231,6 +298,10 @@ public class RjmxTestCase extends MCTestCase {
 		if (m_connectionHandle != null) {
 			m_connectionHandle.close();
 			m_connectionHandle = null;
+			if (m_connection != null) {
+				m_connection.close();
+				m_connection = null;
+			}
 		}
 	}
 

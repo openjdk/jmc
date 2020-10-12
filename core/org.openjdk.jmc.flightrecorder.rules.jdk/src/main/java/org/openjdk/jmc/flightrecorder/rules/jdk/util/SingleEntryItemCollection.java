@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,8 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -102,7 +102,7 @@ final class SingleEntryItemCollection implements IItemCollection {
 		}
 
 		@Override
-		public IItemIterable apply(IPredicate<IItem> predicate) {
+		public IItemIterable apply(Predicate<IItem> predicate) {
 			return null;
 		}
 	};
@@ -167,8 +167,8 @@ final class SingleEntryItemCollection implements IItemCollection {
 		}
 
 		@Override
-		public IItemIterable apply(IPredicate<IItem> predicate) {
-			if (predicate.evaluate(itemList.get(0))) {
+		public IItemIterable apply(Predicate<IItem> predicate) {
+			if (predicate.test(itemList.get(0))) {
 				return this;
 			}
 			return NULLITERABLE;
@@ -191,7 +191,7 @@ final class SingleEntryItemCollection implements IItemCollection {
 	@SuppressWarnings("unchecked")
 	@Override
 	public IItemCollection apply(IItemFilter filter) {
-		return filter.getPredicate((IType<IItem>) item.getType()).evaluate(item) ? this : NULLCOLLECTION;
+		return filter.getPredicate((IType<IItem>) item.getType()).test(item) ? this : NULLCOLLECTION;
 	}
 
 	@Override

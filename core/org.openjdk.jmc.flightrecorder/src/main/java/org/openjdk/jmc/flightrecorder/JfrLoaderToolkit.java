@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,15 +42,14 @@ import java.util.List;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 
 /**
- * A Java 1.7 compatible collection of methods used to load binary JFR data into
- * {@link IItemCollection} implementations.
+ * A collection of methods used to load binary JFR data into {@link IItemCollection}
+ * implementations.
  */
 public class JfrLoaderToolkit {
 

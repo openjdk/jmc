@@ -34,6 +34,7 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -83,8 +84,10 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	@Test
 	public void testCategoryRootsSame() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("same", true, true);
-		assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
-				"IN_BOTH", "Flight Recorder", "IN_BOTH"), propertyRoots, "root");
+		assertNodes(
+				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
+						"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"),
+				propertyRoots, "root");
 	}
 
 	@Test
@@ -98,8 +101,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 			break;
 		case V2:
 			assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH",
-					"Operating System", "IN_BOTH", "Flight Recorder", "IN_BOTH", "com", "IN_CONFIGURATION"),
-					propertyRoots, "root");
+					"Operating System", "IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH",
+					"org", "IN_CONFIGURATION"), propertyRoots, "root");
 			break;
 		}
 	}
@@ -107,23 +110,28 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	@Test
 	public void testLessBeforeServerMetadataPush() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("less", false, true);
-		assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
-				"IN_BOTH", "Flight Recorder", "IN_SERVER"), propertyRoots, "root");
+		assertNodes(
+				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
+						"IN_BOTH", "Java Development Kit", "IN_SERVER", "Flight Recorder", "IN_SERVER"),
+				propertyRoots, "root");
 	}
 
 	@Test
 	public void testLessAfterServerMetadataPush() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("less", true, true);
-		assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
-				"IN_BOTH", "Flight Recorder", "IN_BOTH"), propertyRoots, "root");
+		assertNodes(
+				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
+						"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"),
+				propertyRoots, "root");
 	}
 
 	@Test
 	public void testDiffWithPush() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("diff", true, true);
-		FolderNode javaApplication = (FolderNode) propertyRoots.get(0);
+		FolderNode javaApplication = find("Java Application", propertyRoots);
 		IEventTypeID threadAllocationID = null;
 		IEventTypeID classLoadingStatisticsID = null;
+		assertNotNull(javaApplication);
 		assertEquals("Java Application", javaApplication.getName());
 		FolderNode javaStatistics = javaApplication.getFolder("Statistics", PathElementKind.IN_BOTH);
 
@@ -146,12 +154,22 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertOptions(classLoadingStatistics, Arrays.asList("Period", "IN_BOTH", "Enabled", "IN_BOTH")); // "enabledButWrongForTest", "IN_CONFIGURATION"
 	}
 
+	private FolderNode find(String name, List<? extends PathElement> propertyRoots) {
+		for (PathElement element : propertyRoots) {
+			if (name.equals(element.getName())) {
+				return (FolderNode) element;
+			}
+		}
+		return null;
+	}
+
 	@Test
 	public void testDiffNoPush() throws Exception {
 		List<? extends PathElement> propertyRoots = buildPropertyContent("diff", false, true);
-		FolderNode javaApplication = (FolderNode) propertyRoots.get(0);
+		FolderNode javaApplication = find("Java Application", propertyRoots);
 		IEventTypeID threadAllocationID = null;
 		IEventTypeID classLoadingStatisticsID = null;
+		assertNotNull(javaApplication);
 		assertEquals("Java Application", javaApplication.getName());
 		FolderNode javaStatistics = javaApplication.getFolder("Statistics", PathElementKind.IN_BOTH);
 
@@ -178,14 +196,15 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	public void testCategoryOffline() throws Exception {
 		assumeTrue(SchemaVersion.V2.equals(version));
 		List<? extends PathElement> propertyRoots = buildPropertyContent("custom", false, false);
-		assertNodes(Arrays.asList("SMX", "IN_CONFIGURATION", "com", "IN_CONFIGURATION"), propertyRoots, "root");
+		assertNodes(Arrays.asList("SMX", "IN_CONFIGURATION", "jdk", "IN_CONFIGURATION"), propertyRoots, "root");
 	}
 
 	@Test
 	public void testCustomSettingsLabelsOffline() throws Exception {
 		assumeTrue(SchemaVersion.V2.equals(version));
 		List<? extends PathElement> propertyRoots = buildPropertyContent("custom", false, false);
-		FolderNode smxCategory = (FolderNode) propertyRoots.get(0);
+		FolderNode smxCategory = find("SMX", propertyRoots);
+		assertNotNull(smxCategory);
 		assertEquals("SMX", smxCategory.getName());
 		EventNode smxTransaction = smxCategory.getEvent(v2("org.openjdk.jmc.smx.Transaction"),
 				PathElementKind.IN_CONFIGURATION);
@@ -200,7 +219,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	public void testCustomSettingsLabelDefaultsOffline() throws Exception {
 		assumeTrue(SchemaVersion.V2.equals(version));
 		List<? extends PathElement> propertyRoots = buildPropertyContent("custom_no_labels", false, false);
-		FolderNode smxCategory = (FolderNode) propertyRoots.get(0);
+		FolderNode smxCategory = find("SMX", propertyRoots);
+		assertNotNull(smxCategory);
 		assertEquals("SMX", smxCategory.getName());
 		EventNode smxTransaction = smxCategory.getEvent(v2("org.openjdk.jmc.smx.Transaction"),
 				PathElementKind.IN_CONFIGURATION);
@@ -216,7 +236,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		EventConfigurationModel configModel = buildUiModel("same", true, true);
 
 		List<? extends PathElement> propertyRoots = PropertyContentBuilder.build(configModel);
-		FolderNode javaApplicationNode = (FolderNode) propertyRoots.get(0);
+		FolderNode javaApplicationNode = find("Java Application", propertyRoots);
+		assertNotNull(javaApplicationNode);
 		assertEquals("Expected first folder node to be ", "Java Application", javaApplicationNode.getName());
 		Collection<PropertyKey> optionKeys = EventConfigurationPart.findProperties(javaApplicationNode).keySet();
 		List<String> props = optionKeys.stream().map(p -> p.getLabel()).collect(Collectors.toList());
@@ -228,7 +249,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 	public void testCustomTwoEventsWithSameOptionIdDifferentContentTypes() throws Exception {
 		assumeTrue(SchemaVersion.V2.equals(version));
 		EventConfigurationModel configModel = buildUiModel("custom", false, false);
-		FolderNode smxCategory = (FolderNode) PropertyContentBuilder.build(configModel).get(0);
+		FolderNode smxCategory = find("SMX", PropertyContentBuilder.build(configModel));
 		assertEquals("SMX", smxCategory.getName());
 
 		Collection<PropertyKey> keyProperties = EventConfigurationPart.findProperties(smxCategory).keySet();

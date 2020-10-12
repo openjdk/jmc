@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,9 +37,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.PersistableItemFilter.Kind;
 import org.openjdk.jmc.common.unit.ContentType;
@@ -74,7 +74,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			return PredicateToolkit.not(filter.getPredicate(type));
 		}
 	}
@@ -107,8 +107,8 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
-			List<IPredicate<IItem>> predicates = new ArrayList<>(filters.length);
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
+			List<Predicate<IItem>> predicates = new ArrayList<>(filters.length);
 			for (IItemFilter f : filters) {
 				predicates.add(f.getPredicate(type));
 			}
@@ -127,7 +127,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			IMemberAccessor<? extends M, IItem> accessor = attribute.getAccessor(type);
 			if (accessor != null) {
 				return PredicateToolkit.memberOf(accessor, values);
@@ -145,7 +145,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (types.contains(type.getIdentifier())) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -175,7 +175,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (typeId.equals(type.getIdentifier())) {
 				return PredicateToolkit.truePredicate();
 			} else {
@@ -203,7 +203,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			Pattern typeMatch = PredicateToolkit.getValidPattern(typeMatchString);
 			if (typeMatch.matcher(type.getIdentifier()).matches()) {
 				return PredicateToolkit.truePredicate();
@@ -270,7 +270,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			IMemberAccessor<? extends M, IItem> accessor = attribute.getAccessor(type);
 			if (accessor != null) {
 				return getPredicate(accessor, value);
@@ -278,7 +278,7 @@ public class ItemFilters {
 			return PredicateToolkit.falsePredicate();
 		}
 
-		protected abstract IPredicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value);
+		protected abstract Predicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value);
 
 		@Override
 		public String toString() {
@@ -292,7 +292,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (attribute.getAccessor(type) != null) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -306,7 +306,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (attribute.getAccessor(type) == null) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -320,7 +320,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value) {
 			return PredicateToolkit.equals(accessor, value);
 		}
 	}
@@ -331,7 +331,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M value) {
 			return PredicateToolkit.notEquals(accessor, value);
 		}
 	}
@@ -342,7 +342,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			IMemberAccessor<M, IItem> accessor = attribute.getAccessor(type);
 			if (accessor != null) {
 				return PredicateToolkit.equals(accessor, null);
@@ -357,7 +357,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			IMemberAccessor<M, IItem> accessor = attribute.getAccessor(type);
 			if (accessor != null) {
 				return PredicateToolkit.notEquals(accessor, null);
@@ -372,7 +372,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M limit) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends M, IItem> accessor, M limit) {
 			switch (kind) {
 			case MORE:
 				return PredicateToolkit.more(accessor, limit);
@@ -394,8 +394,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(
-			IMemberAccessor<? extends IRange<M>, IItem> accessor, IRange<M> limit) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends IRange<M>, IItem> accessor, IRange<M> limit) {
 			switch (kind) {
 			case RANGE_INTERSECTS:
 				return PredicateToolkit.rangeIntersects(accessor, limit);
@@ -430,7 +429,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
 			if (regexp.isEmpty()) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -444,7 +443,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String regexp) {
 			if (regexp.isEmpty()) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -458,7 +457,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
 			return PredicateToolkit.contains(accessor, substring);
 		}
 	}
@@ -469,7 +468,7 @@ public class ItemFilters {
 		}
 
 		@Override
-		protected IPredicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
 			return PredicateToolkit.not(PredicateToolkit.contains(accessor, substring));
 		}
 	}
@@ -483,22 +482,22 @@ public class ItemFilters {
 		}
 
 		// Instance creation optimization
-		private final static IPredicate<IItem> ALWAYSTRUE = new IPredicate<IItem>() {
+		private final static Predicate<IItem> ALWAYSTRUE = new Predicate<IItem>() {
 			@Override
-			public boolean evaluate(IItem o) {
+			public boolean test(IItem o) {
 				return true;
 			}
 		};
 
-		private final static IPredicate<IItem> ALWAYSFALSE = new IPredicate<IItem>() {
+		private final static Predicate<IItem> ALWAYSFALSE = new Predicate<IItem>() {
 			@Override
-			public boolean evaluate(IItem o) {
+			public boolean test(IItem o) {
 				return false;
 			}
 		};
 
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			return value ? ALWAYSTRUE : ALWAYSFALSE;
 		}
 	}
