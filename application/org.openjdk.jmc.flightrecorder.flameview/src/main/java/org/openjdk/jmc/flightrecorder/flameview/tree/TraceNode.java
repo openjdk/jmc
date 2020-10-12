@@ -99,8 +99,9 @@ public class TraceNode {
 		} else if (!name.equals(other.name))
 			return false;
 		if (packageName == null) {
-			if (other.packageName != null)
+			if (other.packageName != null) {
 				return false;
+			}
 		} else if (!packageName.equals(other.packageName))
 			return false;
 		if (value != other.value)
