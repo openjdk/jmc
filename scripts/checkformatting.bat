@@ -11,6 +11,7 @@ echo "======== Running spotless for core =========="
 call mvn spotless:check || EXIT /B 3
 cd ..
 echo "======== Running spotless for agent =========="
+cd agent
 call mvn spotless:check || EXIT /B 4
 cd ..
 echo "======== Running spotless for application ==="
