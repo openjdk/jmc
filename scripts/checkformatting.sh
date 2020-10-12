@@ -18,7 +18,6 @@ cd agent
 sh -c "mvn spotless:check"
 cd ..
 echo "======== Running spotless for application ==="
-cd ..
 sh -c "mvn -Puitests spotless:check"
 echo "======== Finished ==========================="
 
