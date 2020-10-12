@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.test;
 
-
 import java.io.IOException;
 
 import org.junit.Assert;

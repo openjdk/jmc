@@ -91,8 +91,8 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return <code>true</code> of it is a JRockit, <code>false</code> if it isn't or if was not possible
-	 *         to tell.
+	 * @return <code>true</code> of it is a JRockit, <code>false</code> if it isn't or if was not
+	 *         possible to tell.
 	 */
 	public static boolean isJRockitJVMName(String vmName) {
 		if (vmName == null) {
@@ -106,8 +106,8 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return <code>true</code> if it is a HotSpot, <code>false</code> if it isn't or if was not possible
-	 *         to tell.
+	 * @return <code>true</code> if it is a HotSpot, <code>false</code> if it isn't or if was not
+	 *         possible to tell.
 	 */
 	public static boolean isHotspotJVMName(String vmName) {
 		if (vmName == null) {
