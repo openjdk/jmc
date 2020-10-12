@@ -47,7 +47,7 @@ import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 public class MissingMetadataTest {
 
 	@Test
-	public void testStartTime() throws IOException, CouldNotLoadRecordingException {
+	public void testSkipEventWithMissingMetadata() throws IOException, CouldNotLoadRecordingException {
 		IItemCollection noEvents = RecordingToolkit.getNamedRecording("hs_err_jdk-16.jfr");
 		IQuantity expected = noEvents.getAggregate(Aggregators.count());
 		Assert.assertEquals("Recording should not contain any events", expected.longValue(), 0L);
