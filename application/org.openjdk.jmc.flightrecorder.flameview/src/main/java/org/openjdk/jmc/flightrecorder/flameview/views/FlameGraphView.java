@@ -60,9 +60,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -160,7 +161,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				jsFlameviewColoring);
 	}
 
-	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
+	private static final ScheduledExecutorService MODEL_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
@@ -349,7 +350,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void rebuildModel(IItemCollection items) {
 		if (modelCalculationFuture != null) {
-			modelCalculationFuture.cancel(true);
+			if (modelCalculationFuture.isDone() || !modelCalculationFuture.cancel(true)) {
+				try {
+					modelCalculationFuture.get();
+				} catch (Throwable t) {
+					FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to rebuild flameview", t); //$NON-NLS-1$
+				}
+			}
 		}
 
 		modelCalculationFuture = getModelPreparer(items, true);
@@ -364,7 +371,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		final Callable<Void> modelPreparerTask = () -> {
 			// reduce the pressure on displayThread during a scrolling, ensure movement is final, seems there could be visibility issue
-			Thread.sleep(200);
+			Thread.sleep(100);
 			StacktraceModel model = createStacktraceModel(items);
 			Fork rootFork = model.getRootFork();
 			if (materializeSelectedBranches) {
@@ -375,19 +382,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, rootFork.getBranchCount());
-			if (Thread.currentThread().isAlive()) {
-				TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-				StringBuilder jsonModelBuilder = toJSonModel(traceNode);
+			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+			StringBuilder jsonModelBuilder = toJSonModel(traceNode);
+			DisplayToolkit.inDisplayThread().execute(() -> this.processModel(items, jsonModelBuilder.toString()));
 
-				if (Thread.currentThread().isAlive()) {
-					DisplayToolkit.inDisplayThread()
-							.execute(() -> this.processModel(items, jsonModelBuilder.toString()));
-				}
-			}
 			return null;
 		};
 
-		return MODEL_EXECUTOR.submit(modelPreparerTask);
+		return MODEL_EXECUTOR.schedule(modelPreparerTask, 100, TimeUnit.MICROSECONDS);
 
 	}
 
@@ -489,19 +491,16 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private void render(StringBuilder builder, TraceNode node) {
-		if (Thread.currentThread().isAlive()) {
-			String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
-					: createJsonTraceNode(node);
-			builder.append(start);
-			renderChildren(builder, node);
-			builder.append("]}");
-		}
+		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
+				: createJsonTraceNode(node);
+		builder.append(start);
+		renderChildren(builder, node);
+		builder.append("]}");
 	}
 
 	private void renderChildren(StringBuilder builder, TraceNode node) {
-
 		int i = 0;
-		while (Thread.currentThread().isAlive() && i < node.getChildren().size()) {
+		while (i < node.getChildren().size()) {
 			render(builder, node.getChildren().get(i));
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");

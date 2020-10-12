@@ -150,11 +150,7 @@ public final class TraceTreeUtils {
 			createNodeTitleAndDescription(descContainer, orderedEventTypeNameWithCount);
 		}
 
-		if (Thread.currentThread().isAlive()) {
-			return new TraceNode(descContainer.title(), 0, descContainer.desc());
-		} else {
-			return new TraceNode(getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE), 0, null);
-		}
+		return new TraceNode(descContainer.title(), 0, descContainer.desc());
 	}
 
 	/**
@@ -188,22 +184,23 @@ public final class TraceTreeUtils {
 
 		final StacktraceFrame[] frames = branch.getTailFrames();
 		int i = 0;
-		while (Thread.currentThread().isAlive() && i < frames.length) {
+		while (i < frames.length) {
 			final StacktraceFrame frame = frames[i];
 			TraceNode newNode = getTraceNodeByStacktraceFrame(frame);
 			currentNode.addChild(newNode);
 			currentNode = newNode;
 			i++;
 		}
-
-		addFork(currentNode, branch.getEndFork());
+		if (i == frames.length) {
+			addFork(currentNode, branch.getEndFork());
+		}
 	}
 
 	private static void addFork(TraceNode node, Fork fork) {
 		final Branch[] branches = fork.getBranches();
 		int i = 0;
 
-		while (Thread.currentThread().isAlive() && i < branches.length) {
+		while (i < branches.length) {
 			addBranch(node, branches[i]);
 			i++;
 		}
@@ -261,7 +258,7 @@ public final class TraceTreeUtils {
 
 		int i = 0;
 		Iterator<Map.Entry<String, Integer>> it = orderedItemCountByType.entrySet().iterator();
-		while (Thread.currentThread().isAlive() && it.hasNext()) {
+		while (it.hasNext()) {
 			Map.Entry<String, Integer> e = it.next();
 			if (writeTitle) {
 				String eventType = getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, e.getKey(),
