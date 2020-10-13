@@ -397,7 +397,7 @@ class TypeManager {
 		}
 	}
 
-	void readEvent(int eventSize, long typeId, IDataInput input) throws InvalidJfrFileException, IOException {
+	void readEvent(long typeId, IDataInput input) throws InvalidJfrFileException, IOException {
 		EventTypeEntry entry = eventTypes.get(typeId);
 		if (entry == null) {
 			// We don't need to do anything here, as the chunk loader will skip to the next event for us.
