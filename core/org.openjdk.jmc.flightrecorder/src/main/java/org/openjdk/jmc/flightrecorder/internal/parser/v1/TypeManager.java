@@ -77,7 +77,6 @@ import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.Reflective
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.StringReader;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.StructReader;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.TicksTimestampReader;
-import org.openjdk.jmc.flightrecorder.internal.util.DataInputToolkit;
 import org.openjdk.jmc.flightrecorder.internal.util.JfrInternalConstants;
 import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.parser.IEventSink;
@@ -401,9 +400,9 @@ class TypeManager {
 	void readEvent(int eventSize, long typeId, IDataInput input) throws InvalidJfrFileException, IOException {
 		EventTypeEntry entry = eventTypes.get(typeId);
 		if (entry == null) {
+			// We don't need to do anything here, as the chunk loader will skip to the next event for us.
 			Logger.getLogger(getClass().getName()).log(Level.WARNING,
 					"Event type with id " + typeId + " was not declared"); //$NON-NLS-1$ //$NON-NLS-2$
-			skipEvent(eventSize, input);
 		} else {
 			entry.readEvent(input);
 		}
@@ -473,14 +472,6 @@ class TypeManager {
 			reader = new PoolReader(fieldType.constants, reader.getContentType());
 		}
 		return f.isArray() ? new ArrayReader(reader, header) : reader;
-	}
-
-	private static void skipEvent(int size, IDataInput input) throws IOException {
-		// We've read the size of the event (int) and the type (long) so far
-		for (int i = 0; i < size - DataInputToolkit.INTEGER_SIZE - DataInputToolkit.LONG_SIZE; i++) {
-			// This should be very uncommon...
-			input.readByte();
-		}
 	}
 
 	private static String buildLabel(String id, AnnotatedElement element) {
