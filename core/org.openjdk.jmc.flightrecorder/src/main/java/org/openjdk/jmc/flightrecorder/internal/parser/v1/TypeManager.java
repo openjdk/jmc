@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.unit.ContentType;
@@ -398,9 +400,12 @@ class TypeManager {
 	void readEvent(long typeId, IDataInput input) throws InvalidJfrFileException, IOException {
 		EventTypeEntry entry = eventTypes.get(typeId);
 		if (entry == null) {
-			throw new InvalidJfrFileException("Event type with id " + typeId + " was not declared"); //$NON-NLS-1$ //$NON-NLS-2$
+			// We don't need to do anything here, as the chunk loader will skip to the next event for us.
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,
+					"Event type with id " + typeId + " was not declared"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			entry.readEvent(input);
 		}
-		entry.readEvent(input);
 	}
 
 	void readConstants(long typeId, IDataInput input, int constantCount) throws InvalidJfrFileException, IOException {
