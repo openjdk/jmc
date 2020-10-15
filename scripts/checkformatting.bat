@@ -9,7 +9,11 @@ echo "======== Installing core ===================="
 call mvn install || EXIT /B 2
 echo "======== Running spotless for core =========="
 call mvn spotless:check || EXIT /B 3
-echo "======== Running spotless for application ==="
 cd ..
-call mvn -Puitests spotless:check || EXIT /B 4
+echo "======== Running spotless for agent =========="
+cd agent
+call mvn spotless:check || EXIT /B 4
+cd ..
+echo "======== Running spotless for application ==="
+call mvn -Puitests spotless:check || EXIT /B 5
 echo "======== Finished ==========================="

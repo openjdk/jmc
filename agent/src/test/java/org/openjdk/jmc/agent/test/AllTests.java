@@ -38,7 +38,9 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.openjdk.jmc.agent.converters.test.TestConverterTransforms;
 
 @RunWith(Suite.class)
-@SuiteClasses({TestDefaultTransformRegistry.class, TestUtils.class, TestJFRTransformer.class, TestConverterTransforms.class, TestProbeDefinitionValidation.class, TestCompressedFrameTransformation.class, TestEmitOnlyOnException.class})
+@SuiteClasses({TestDefaultTransformRegistry.class, TestUtils.class, TestJFRTransformer.class,
+		TestConverterTransforms.class, TestProbeDefinitionValidation.class, TestCompressedFrameTransformation.class,
+		TestEmitOnlyOnException.class})
 
 public class AllTests {
 }

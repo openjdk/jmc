@@ -46,22 +46,14 @@ public class TestRetrieveEventProbes {
 
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 
-	private static final String XML_TEST_DESCRIPTION = "<jfragent>"
-			+ "<events>"
-			+ "<event id=\"demo.jfr.test1\">"
+	private static final String XML_TEST_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"demo.jfr.test1\">"
 			+ "<name>JFR Hello World Event 1 </name>"
 			+ "<description>Defined in the xml file and added by the agent.</description>"
-			+ "<path>demo/jfrhelloworldevent1</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>"
-			+ "<method>"
-			+ "<name>printHelloWorldJFR1</name>"
-			+ "<descriptor>()V</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "</events>"
+			+ "<path>demo/jfrhelloworldevent1</path>" + "<stacktrace>true</stacktrace>"
+			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>" + "<method>" + "<name>printHelloWorldJFR1</name>"
+			+ "<descriptor>()V</descriptor>" + "</method>" + "<location>WRAP</location>" + "</event>" + "</events>"
 			+ "</jfragent>";
+
 	@Test
 	public void testRetrieveEventProbes() throws Exception {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),

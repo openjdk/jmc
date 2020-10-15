@@ -93,8 +93,8 @@
   					<configuration>
     					<java>
       						<eclipse>
-        						<file>${spotless.config.path}</file>
-        						<version>4.8.0</version>
+        							<file>${spotless.config.path}</file>
+        							<version>4.8.0</version>
       						</eclipse>
     					</java>
   					</configuration>

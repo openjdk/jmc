@@ -70,7 +70,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api, 
+	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api,
 			MethodVisitor mv, int access, String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
@@ -99,7 +99,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
 
 			visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
-			
+
 			// Simply rethrow. Event commits are instrumented by onMethodExit()
 			shouldInstrumentThrow = true;
 			visitInsn(ATHROW);
@@ -145,7 +145,8 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			ReferenceChain refChain = field.resolveReferenceChain(inspectionClass).normalize();
 
 			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
-				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + field.getExpression());
+				throw new IllegalSyntaxException(
+						"Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
 			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
@@ -229,7 +230,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 				new Object[] {eventType.getInternalName(), eventType.getInternalName(), eventType.getInternalName(),
 						TypeUtils.getFrameVerificationType(type)});
 	}
-	
+
 	private void writeAttribute(Attribute param, Type type) {
 		if (TypeUtils.shouldStringify(type)) {
 			TypeUtils.stringify(mv);

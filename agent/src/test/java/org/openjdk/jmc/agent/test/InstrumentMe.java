@@ -47,12 +47,12 @@ public class InstrumentMe {
 
 	public final String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.instanceStringField";
 
-	public static class MyPojo { 
+	public static class MyPojo {
 		public String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.MyPojo.instanceStringField";
 		public static String STATIC_STRING_FIELD = "org.openjdk.jmc.agent.test.InstrumentMe.MyPojo.STATIC_STRING_FIELD";
 	}
-	
-	public class MyInnerClass extends InstrumentMe{
+
+	public class MyInnerClass extends InstrumentMe {
 		@SuppressWarnings("unused")
 		private final String innerClassField = "org.openjdk.jmc.agent.test.InstrumentMe.MyInnerClass.innerClassField";
 
@@ -258,12 +258,14 @@ public class InstrumentMe {
 	}
 
 	public static void printHelloWorldJFR12() throws InterruptedException {
-		System.out.println("#SJFR12. Capturing 'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and 'STATIC_OBJECT_FIELD.instanceStringField'"); //$NON-NLS-1$
+		System.out.println(
+				"#SJFR12. Capturing 'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and 'STATIC_OBJECT_FIELD.instanceStringField'"); //$NON-NLS-1$
 		Thread.sleep(1000);
 	}
 
 	public static void printHelloWorldJFR13() throws InterruptedException {
-		System.out.println("#SJFR13. Capturing 'STATIC_NULL_FIELD.STATIC_STRING_FIELD' and 'STATIC_NULL_FIELD.instanceStringField'"); //$NON-NLS-1$
+		System.out.println(
+				"#SJFR13. Capturing 'STATIC_NULL_FIELD.STATIC_STRING_FIELD' and 'STATIC_NULL_FIELD.instanceStringField'"); //$NON-NLS-1$
 		Thread.sleep(1000);
 	}
 
@@ -365,7 +367,7 @@ public class InstrumentMe {
 		System.out.println("#IJFR11. Capturing instance field 'instanceStringField'"); //$NON-NLS-1$
 		Thread.sleep(1000);
 	}
-	
+
 	public void printInstanceHelloWorldJFR12() throws InterruptedException {
 		System.out.println("#IJFR12. Capturing fields from nested class 'InstrumentMe.MyInnerClass'"); //$NON-NLS-1$
 		new MyInnerClass().instrumentationPoint();

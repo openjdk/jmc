@@ -75,22 +75,11 @@ public class TestDefineEventProbes {
 	private static final String METHOD_NAME = "printHelloWorldJFR6";
 	private static final String METHOD_DESCRIPTOR = "()D";
 
-	private static final String XML_DESCRIPTION = "<jfragent>"
-			+ "<events>"
-			+ "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>"
-			+ "<description>" + EVENT_DESCRIPTION + "</description>"
-			+ "<path>" + EVENT_PATH + "</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>"
-			+ "<name>" + METHOD_NAME + "</name>"
-			+ "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "</events>"
-			+ "</jfragent>";
+	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
+			+ "<name>" + EVENT_NAME + "</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
+			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
+			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
 
 	@Test
 	public void testDefineEventProbes() throws Exception {
@@ -130,14 +119,15 @@ public class TestDefineEventProbes {
 		attributes.put("name", EVENT_NAME);
 		attributes.put("description", EVENT_DESCRIPTION);
 		ReturnValue retVal = new ReturnValue(null, "", null, null, null);
-		JFRTransformDescriptor eventTd = new JFRTransformDescriptor(EVENT_ID, TypeUtils.getInternalName(EVENT_CLASS_NAME),
-				method, attributes, new ArrayList<Parameter>(), retVal, new ArrayList<Field>());
+		JFRTransformDescriptor eventTd = new JFRTransformDescriptor(EVENT_ID,
+				TypeUtils.getInternalName(EVENT_CLASS_NAME), method, attributes, new ArrayList<Parameter>(), retVal,
+				new ArrayList<Field>());
 
 		ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
 			@Override
-			public MethodVisitor visitMethod(int access, String name, String desc, String signature,
-					String[] exceptions) {
+			public MethodVisitor visitMethod(
+				int access, String name, String desc, String signature, String[] exceptions) {
 				MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 				if (!name.equals("<init>")) {
 					return mv;
@@ -166,7 +156,7 @@ public class TestDefineEventProbes {
 				ClassLoader.getSystemClassLoader(), null);
 	}
 
-	private void doDefineEventProbes(String xmlDescription) throws Exception  {
+	private void doDefineEventProbes(String xmlDescription) throws Exception {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 		mbean.defineEventProbes(xmlDescription);
@@ -175,7 +165,7 @@ public class TestDefineEventProbes {
 	public void test() {
 		//Dummy method for instrumentation
 	}
-	
+
 	public void dumpByteCode(byte[] transformedClass) throws IOException {
 		// If we've asked for verbose information, we write the generated class
 		// and also dump the registry contents to stdout.

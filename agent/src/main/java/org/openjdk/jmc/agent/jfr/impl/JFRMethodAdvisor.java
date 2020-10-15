@@ -69,7 +69,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api, 
+	protected JFRMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api,
 			MethodVisitor mv, int access, String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
@@ -82,17 +82,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow(); // don't instrument inner throws if rethrow is enabled
 	}
 
-    @Override
-    public void visitCode() {
+	@Override
+	public void visitCode() {
 		super.visitCode();
 
 		if (transformDescriptor.isUseRethrow()) {
 			visitLabel(tryBegin);
 		}
-    }
+	}
 
-    @Override
-    public void visitEnd() {
+	@Override
+	public void visitEnd() {
 		if (transformDescriptor.isUseRethrow()) {
 			visitLabel(tryEnd);
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
@@ -105,7 +105,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		}
 
 		super.visitEnd();
-    }
+	}
 
 	@Override
 	protected void onMethodEnter() {
@@ -134,7 +134,8 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			ReferenceChain refChain = field.resolveReferenceChain(inspectionClass).normalize();
 
 			if (!refChain.isStatic() && Modifier.isStatic(getAccess())) {
-				throw new IllegalSyntaxException("Illegal non-static reference from a static context: " + field.getExpression());
+				throw new IllegalSyntaxException(
+						"Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
 			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {

@@ -82,7 +82,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 	// Global override section
 	private static final String XML_ELEMENT_CONFIGURATION = "config"; //$NON-NLS-1$
-	
+
 	// Logging
 	private static final Logger logger = Logger.getLogger("DefaultTransformRegistry");
 
@@ -155,7 +155,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				QName element = streamReader.getName();
 				if (XML_ELEMENT_NAME_EVENT.equals(element.getLocalPart())) {
 					TransformDescriptor td = parseTransformData(streamReader, globalDefaults);
-					if (validate(registry,td)) {
+					if (validate(registry, td)) {
 						add(registry, td);
 					}
 					continue;
@@ -197,7 +197,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 		List<TransformDescriptor> transformDataList = registry.getTransformData(td.getClassName());
 		if (transformDataList != null) {
-			String tdEventClassName = ((JFRTransformDescriptor)td).getEventClassName();
+			String tdEventClassName = ((JFRTransformDescriptor) td).getEventClassName();
 			for (TransformDescriptor tdListEntry : transformDataList) {
 				String existingName = ((JFRTransformDescriptor) tdListEntry).getEventClassName();
 				if (existingName.equals(tdEventClassName)) {
@@ -248,7 +248,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			streamReader.next();
 		}
 		transfer(globalDefaults, values);
-		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, parameters, returnValue[0], fields); //$NON-NLS-1$
+		return TransformDescriptor.create(id, TypeUtils.getInternalName(values.get("class")), method, values, //$NON-NLS-1$
+				parameters, returnValue[0], fields);
 	}
 
 	private static void transfer(HashMap<String, String> globalDefaults, Map<String, String> values) {
@@ -412,8 +413,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new ReturnValue(name, description, contentType, relationKey, converterClassName);
 	}
 
-	private static Method parseMethod(XMLStreamReader streamReader, List<Parameter> parameters, ReturnValue[] returnValue)
-			throws XMLStreamException {
+	private static Method parseMethod(
+		XMLStreamReader streamReader, List<Parameter> parameters, ReturnValue[] returnValue) throws XMLStreamException {
 		streamReader.next();
 		String name = null;
 		String descriptor = null;
@@ -481,7 +482,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	}
 
 	public Set<String> modify(String xmlDescription) {
-		try  {
+		try {
 			validateProbeDefinition(xmlDescription);
 
 			StringReader reader = new StringReader(xmlDescription);
@@ -495,10 +496,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 					QName element = streamReader.getName();
 					if (XML_ELEMENT_NAME_EVENT.equals(element.getLocalPart())) {
 						TransformDescriptor td = parseTransformData(streamReader, globalDefaults);
-						if(modifiedClasses.add(td.getClassName())) {
+						if (modifiedClasses.add(td.getClassName())) {
 							transformData.remove(td.getClassName());
 						}
-						if (validate(this,td)) {
+						if (validate(this, td)) {
 							add(this, td);
 						}
 						continue;
