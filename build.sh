@@ -29,8 +29,8 @@ trap 'exitTrap' EXIT
 function printHelp() {
     echo "usage: call ./$(basename "$0") with the following options:"
     {
-        printf " \t%s\t%s\n" "--runTests" "to run the tests"
-        printf " \t%s\t%s\n" "--runUiTests" "to run the tests including UI tests"
+        printf " \t%s\t%s\n" "--test" "to run the tests"
+        printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
