@@ -15,7 +15,7 @@ function err_report() {
 function exitTrap() {
     if [ -n "${JETTY_PID}" ]; then
         echo "$(date +%T) terminating jetty server"
-        pkill -P "${JETTY_PID}"
+        kill "${JETTY_PID}"
     fi
 }
 
@@ -80,7 +80,7 @@ function packageJmc() {
         echo "$(date +%T) waiting for jetty server to start"
         sleep 1
     done
-    echo "$(date +%T) jetty server up and running"
+    echo "$(date +%T) jetty server up and running on pid ${JETTY_PID}"
 
     popd 1> /dev/null || {
         err_log "could not go to project root directory"
