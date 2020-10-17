@@ -220,8 +220,8 @@ Prerequisites for building Mission Control:
 On Linux you can use the build.sh script to build JMC:
 ```
 usage: call ./build.sh with the following options:
-   --runTests    to run the tests
-   --runUiTests  to run the tests including UI tests
+   --test        to run the tests
+   --testUi      to run the tests including UI tests
    --packageJmc  to package JMC
    --clean       to run maven clean
 ```
