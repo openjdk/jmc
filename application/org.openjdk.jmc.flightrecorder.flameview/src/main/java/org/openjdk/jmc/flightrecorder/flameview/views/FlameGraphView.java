@@ -160,7 +160,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private Browser browser;
 	private SashForm container;
-	private TraceNode currentRoot;
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
@@ -169,8 +168,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private volatile ModelState modelState;
-	
-	
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -191,7 +188,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 	}
-	
+
 	private enum ModelState {
 		INIT, CALCULATION, READY, NONE
 	}
@@ -358,23 +355,23 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				finishModelCalculationFuture(modelCalculationFuture);
 			}
 		}
-		
+
 		Callable<Void> modelPreparerTask = getModelPreparerTask(items);
 		modelCalculationFuture = MODEL_EXECUTOR.submit(modelPreparerTask);
 		this.currentItems = items;
 		this.modelState = ModelState.INIT;
 	}
-	
+
 	private void finishModelCalculationFuture(Future<Void> f) {
 		try {
 			f.get();
 		} catch (CancellationException t) {
 			//noop
-		} catch (InterruptedException | ExecutionException e) {			
+		} catch (InterruptedException | ExecutionException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Flameview build has failed", e); //$NON-NLS-1$
 		}
 	}
-	
+
 	private Callable<Void> getModelPreparerTask(final IItemCollection items) {
 		return () -> {
 			this.modelState = ModelState.CALCULATION;
@@ -390,13 +387,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			return null;
 		};
 	}
-	
+
 	private void setModel(final IItemCollection items, final String json) {
 		if (ModelState.READY.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
 			setViewerInput(json);
 		}
 	}
-	
+
 	private void setViewerInput(String json) {
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 		browser.setText(HTML_PAGE);
