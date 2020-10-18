@@ -478,7 +478,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			fos.write(bytes);
 			fos.close();
 		} catch (CancellationException e) {
-			// noop
+			// noop : model calculation can be canceled when is still running
 		} catch (InterruptedException | ExecutionException | IOException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
 		}
