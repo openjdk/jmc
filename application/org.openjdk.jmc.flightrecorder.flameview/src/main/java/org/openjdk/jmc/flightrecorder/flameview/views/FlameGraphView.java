@@ -209,7 +209,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
 			if (newValue != threadRootAtTop) {
 				threadRootAtTop = newValue;
-				rebuildModel(currentItems);
+				triggerRebuildTask(currentItems);
 			}
 		}
 	}
@@ -340,14 +340,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
 			if (items == null) {
-				rebuildModel(ItemCollectionToolkit.build(Stream.empty()));
+				triggerRebuildTask(ItemCollectionToolkit.build(Stream.empty()));
 			} else if (!items.equals(currentItems)) {
-				rebuildModel(items);
+				triggerRebuildTask(items);
 			}
 		}
 	}
 
-	private void rebuildModel(IItemCollection items) {
+	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
 		if (modelCalculationFuture != null) {
 			modelCalculationFuture.cancel(true);
@@ -379,10 +379,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			StringBuilder jsonModelBuilder = toJSonModel(traceNode);
+			String jsonModel = toJSonModel(traceNode).toString();
 
 			this.modelState = ModelState.READY;
-			DisplayToolkit.inDisplayThread().execute(() -> this.setModel(items, jsonModelBuilder.toString()));
+			DisplayToolkit.inDisplayThread().execute(() -> this.setModel(items, jsonModel));
 
 			return null;
 		};
@@ -478,7 +478,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			fos.write(bytes);
 			fos.close();
 		} catch (CancellationException e) {
-			// noop : model calculation can be canceled when is still running
+			// noop : model calculation is canceled when is still running
 		} catch (InterruptedException | ExecutionException | IOException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
 		}
