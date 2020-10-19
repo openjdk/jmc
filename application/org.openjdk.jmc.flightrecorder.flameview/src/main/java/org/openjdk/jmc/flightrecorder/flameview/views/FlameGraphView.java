@@ -163,11 +163,12 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private GroupByAction[] groupByActions;
 	private GroupByFlameviewAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
-	private Future<Void> modelCalculationFuture;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
-	private volatile ModelState modelState;
+	private ModelState modelState = ModelState.NONE;
+	private ModelRebuildCallable modelRebuildCalculation;
+	private Future<Void> modelCalculationFuture;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -190,7 +191,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ModelState {
-		INIT, CALCULATION, READY, NONE
+		INIT, CALCULATION, READY, ABORTED, NONE;
 	}
 
 	private class GroupByAction extends Action {
@@ -350,42 +351,47 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
 		if (modelCalculationFuture != null) {
+			modelRebuildCalculation.setInvalid();
 			modelCalculationFuture.cancel(true);
-			if (modelCalculationFuture.isDone()) {
-				finishModelCalculationFuture(modelCalculationFuture);
-			}
 		}
 
-		Callable<Void> modelPreparerTask = getModelPreparerTask(items);
-		modelCalculationFuture = MODEL_EXECUTOR.submit(modelPreparerTask);
-		this.currentItems = items;
-		this.modelState = ModelState.INIT;
+		modelState = ModelState.INIT;
+		currentItems = items;
+		modelRebuildCalculation = new ModelRebuildCallable(this, items);
+		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCalculation);
 	}
 
-	private void finishModelCalculationFuture(Future<Void> f) {
-		try {
-			f.get();
-		} catch (CancellationException t) {
-			//noop
-		} catch (InterruptedException | ExecutionException e) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Flameview build has failed", e); //$NON-NLS-1$
+	private static class ModelRebuildCallable implements Callable<Void> {
+
+		private volatile boolean invalid;
+		private FlameGraphView view;
+		private IItemCollection items;
+
+		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
+			this.invalid = false;
+			this.view = view;
+			this.items = items;
 		}
-	}
 
-	private Callable<Void> getModelPreparerTask(final IItemCollection items) {
-		return () -> {
-			this.modelState = ModelState.CALCULATION;
-			StacktraceModel model = new StacktraceModel(threadRootAtTop, frameSeparator, items);
+		private void setInvalid() {
+			this.invalid = true;
+		}
 
+		@Override
+		public Void call() throws Exception {
+			view.modelState = ModelState.CALCULATION;
+			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			String jsonModel = toJSonModel(traceNode).toString();
-
-			this.modelState = ModelState.READY;
-			DisplayToolkit.inDisplayThread().execute(() -> this.setModel(items, jsonModel));
-
+			String jsonModel = view.toJSonModel(traceNode).toString();
+			if (invalid) {
+				view.modelState = ModelState.ABORTED;
+				return null;
+			}
+			view.modelState = ModelState.READY;
+			DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
 			return null;
-		};
+		}
 	}
 
 	private void setModel(final IItemCollection items, final String json) {
