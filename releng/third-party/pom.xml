@@ -84,7 +84,7 @@
 									</instructions>
 								</artifact>
 								<artifact>
-									<id>org.hdrhistogram:HdrHistogram:2.1.11</id>
+									<id>org.hdrhistogram:HdrHistogram:2.1.12</id>
 								</artifact>
 								<artifact>
 									<id>org.adoptopenjdk:jemmy-awt-input:2.0.0</id>
