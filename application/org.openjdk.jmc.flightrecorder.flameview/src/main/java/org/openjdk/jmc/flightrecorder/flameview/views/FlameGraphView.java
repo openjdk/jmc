@@ -279,6 +279,39 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 	}
+	
+	private static class ModelRebuildCallable implements Callable<Void> {
+
+		private volatile boolean invalid;
+		private FlameGraphView view;
+		private IItemCollection items;
+
+		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
+			this.invalid = false;
+			this.view = view;
+			this.items = items;
+		}
+
+		private void setInvalid() {
+			this.invalid = true;
+		}
+
+		@Override
+		public Void call() throws Exception {
+			view.modelState = ModelState.CALCULATION;
+			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
+			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
+			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+			String jsonModel = view.toJSonModel(traceNode).toString();
+			if (invalid) {
+				view.modelState = ModelState.ABORTED;
+				return null;
+			}
+			view.modelState = ModelState.READY;
+			DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
+			return null;
+		}
+	}
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -359,39 +392,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		currentItems = items;
 		modelRebuildCalllable = new ModelRebuildCallable(this, items);
 		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCalllable);
-	}
-
-	private static class ModelRebuildCallable implements Callable<Void> {
-
-		private volatile boolean invalid;
-		private FlameGraphView view;
-		private IItemCollection items;
-
-		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
-			this.invalid = false;
-			this.view = view;
-			this.items = items;
-		}
-
-		private void setInvalid() {
-			this.invalid = true;
-		}
-
-		@Override
-		public Void call() throws Exception {
-			view.modelState = ModelState.CALCULATION;
-			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
-			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
-			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			String jsonModel = view.toJSonModel(traceNode).toString();
-			if (invalid) {
-				view.modelState = ModelState.ABORTED;
-				return null;
-			}
-			view.modelState = ModelState.READY;
-			DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
-			return null;
-		}
 	}
 
 	private void setModel(final IItemCollection items, final String json) {
