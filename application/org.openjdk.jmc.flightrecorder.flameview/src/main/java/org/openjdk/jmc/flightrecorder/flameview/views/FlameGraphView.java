@@ -187,7 +187,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
 		}
-
 	}
 
 	private enum ModelState {
@@ -282,9 +281,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static class ModelRebuildCallable implements Callable<Void> {
 
-		private volatile boolean isInvalid;
 		private FlameGraphView view;
 		private IItemCollection items;
+		private volatile boolean isInvalid;
 
 		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
 			this.view = view;
@@ -300,14 +299,23 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			view.modelState = ModelState.CALCULATION;
 			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
+			if(isInvalid) {
+				return abort();
+			}
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			String jsonModel = view.toJSonModel(traceNode).toString();
-			if (isInvalid) {
-				view.modelState = ModelState.ABORTED;
+			String jsonModel = view.toJSonModel(traceNode, isInvalid).toString();
+			if(isInvalid) {
+				return abort();
+			} else {
+				view.modelState = ModelState.READY;
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
 				return null;
 			}
-			view.modelState = ModelState.READY;
-			DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
+			
+		}
+		
+		private Void abort() {
+			view.modelState = ModelState.ABORTED;
 			return null;
 		}
 	}
@@ -489,29 +497,31 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private StringBuilder toJSonModel(TraceNode root) {
+	private StringBuilder toJSonModel(TraceNode root, boolean isInvalid) {
 		StringBuilder builder = new StringBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
-		renderChildren(builder, root);
+		renderChildren(builder, root, isInvalid);
 		builder.append("]}");
 		return builder;
 	}
 
-	private static void render(StringBuilder builder, TraceNode node) {
+	private static void render(StringBuilder builder, TraceNode node, boolean isInvalid) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
-		renderChildren(builder, node);
+		renderChildren(builder, node, isInvalid);
 		builder.append("]}");
 	}
 
-	private static void renderChildren(StringBuilder builder, TraceNode node) {
-		for (int i = 0; i < node.getChildren().size(); i++) {
-			render(builder, node.getChildren().get(i));
+	private static void renderChildren(StringBuilder builder, TraceNode node, boolean isInvalid) {
+		int i = 0;
+		while (i < node.getChildren().size() && !isInvalid) {
+			render(builder, node.getChildren().get(i), isInvalid);
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
 			}
+			i++;
 		}
 	}
 
