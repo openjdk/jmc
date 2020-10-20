@@ -299,21 +299,21 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			view.modelState = ModelState.CALCULATION;
 			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
-			if(isInvalid) {
+			if (isInvalid) {
 				return abort();
 			}
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 			String jsonModel = view.toJSonModel(traceNode, isInvalid).toString();
-			if(isInvalid) {
+			if (isInvalid) {
 				return abort();
 			} else {
 				view.modelState = ModelState.READY;
 				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
 				return null;
 			}
-			
+
 		}
-		
+
 		private Void abort() {
 			view.modelState = ModelState.ABORTED;
 			return null;
