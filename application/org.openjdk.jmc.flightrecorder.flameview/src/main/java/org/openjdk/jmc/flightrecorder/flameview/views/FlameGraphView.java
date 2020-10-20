@@ -282,18 +282,17 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static class ModelRebuildCallable implements Callable<Void> {
 
-		private volatile boolean invalid;
+		private volatile boolean isInvalid;
 		private FlameGraphView view;
 		private IItemCollection items;
 
 		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
-			this.invalid = false;
 			this.view = view;
 			this.items = items;
 		}
 
 		private void setInvalid() {
-			this.invalid = true;
+			this.isInvalid = true;
 		}
 
 		@Override
@@ -303,7 +302,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
 			String jsonModel = view.toJSonModel(traceNode).toString();
-			if (invalid) {
+			if (isInvalid) {
 				view.modelState = ModelState.ABORTED;
 				return null;
 			}
