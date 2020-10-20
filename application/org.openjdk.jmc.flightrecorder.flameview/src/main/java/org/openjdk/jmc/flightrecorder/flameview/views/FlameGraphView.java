@@ -167,7 +167,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private ModelState modelState = ModelState.NONE;
-	private ModelRebuildCallable modelRebuildCalculation;
+	private ModelRebuildCallable modelRebuildCalllable;
 	private Future<Void> modelCalculationFuture;
 
 	private enum GroupActionType {
@@ -351,14 +351,14 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
 		if (modelCalculationFuture != null) {
-			modelRebuildCalculation.setInvalid();
+			modelRebuildCalllable.setInvalid();
 			modelCalculationFuture.cancel(true);
 		}
 
 		modelState = ModelState.INIT;
 		currentItems = items;
-		modelRebuildCalculation = new ModelRebuildCallable(this, items);
-		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCalculation);
+		modelRebuildCalllable = new ModelRebuildCallable(this, items);
+		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCalllable);
 	}
 
 	private static class ModelRebuildCallable implements Callable<Void> {
