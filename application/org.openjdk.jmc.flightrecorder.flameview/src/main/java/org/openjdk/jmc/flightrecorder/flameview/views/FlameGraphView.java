@@ -279,7 +279,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			}
 		}
 	}
-	
+
 	private static class ModelRebuildCallable implements Callable<Void> {
 
 		private volatile boolean invalid;
