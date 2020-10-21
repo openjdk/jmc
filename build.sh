@@ -6,6 +6,7 @@ set -o pipefail # If any command in a pipeline fails, that return code will be u
 PROGNAME=$(basename "$0")
 
 JETTY_PID=""
+BASEDIR=""
 
 function err_report() {
     err_log "$(date +%T) ${PROGNAME}: Error on line $1"
@@ -19,50 +20,11 @@ function exitTrap() {
     fi
 }
 
-function err_log() {
-    echo "$@" >&2
-}
-
-trap 'err_report $LINENO' ERR
-trap 'exitTrap' EXIT
-
-function printHelp() {
-    echo "usage: call ./$(basename "$0") with the following options:"
-    {
-        printf " \t%s\t%s\n" "--test" "to run the tests"
-        printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
-        printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
-        printf " \t%s\t%s\n" "--clean" "to run maven clean"
-        printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
-        printf " \t%s\t%s\n" "--help" "to show this help dialog"
-    } | column -ts $'\t'
-}
-
-if [ $# -eq 0 ]; then
-    printHelp
-    exit 0
-fi
-
-function runTests() {
-    mvn verify
-}
-
-function runUiTests() {
-    mvn verify -P uitests
-}
-
-function packageJmc() {
-    local timestamp
-    timestamp="$(date +%Y%m%d%H%M%S)"
-    local BASEDIR
-    BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
-
-    mkdir -p "${BASEDIR}" # just in case clean was called before
-
+function startJetty() {
+    local timestamp="$(date +%Y%m%d%H%M%S)"
     local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
     local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
     local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
-    local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
     pushd releng/third-party 1> /dev/null || {
         err_log "directory releng/third-party not found"
@@ -98,6 +60,47 @@ function packageJmc() {
         err_log "could not go to project root directory"
         exit 1
     }
+}
+
+function err_log() {
+    echo "$@" >&2
+}
+
+trap 'err_report $LINENO' ERR
+trap 'exitTrap' EXIT
+
+function printHelp() {
+    echo "usage: call ./$(basename "$0") with the following options:"
+    {
+        printf " \t%s\t%s\n" "--test" "to run the tests"
+        printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
+        printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
+        printf " \t%s\t%s\n" "--clean" "to run maven clean"
+        printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
+        printf " \t%s\t%s\n" "--help" "to show this help dialog"
+    } | column -ts $'\t'
+}
+
+if [ $# -eq 0 ]; then
+    printHelp
+    exit 0
+fi
+
+function runTests() {
+    echo "$(date +%T) running tests"
+    mvn verify
+}
+
+function runUiTests() {
+    startJetty
+    echo "$(date +%T) running UI tests"
+    mvn verify -P uitests
+}
+
+function packageJmc() {
+    startJetty
+    local packageLog="${BASEDIR}/build_$(date +%Y%m%d%H%M%S).4.package.log"
+
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
 
@@ -111,6 +114,7 @@ function packageJmc() {
 }
 
 function clean() {
+    echo "$(date +%T) running clean up"
     mvn clean
 
     pushd core 1> /dev/null || {
@@ -135,9 +139,6 @@ function clean() {
 }
 
 function run() {
-    local BASEDIR
-    BASEDIR="$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)"
-
     local path
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
         path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK Mission Control/jmc"
@@ -198,6 +199,9 @@ function checkPreconditions() {
         err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
         exit 1
     fi
+
+    BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
+    mkdir -p "${BASEDIR}" # just in case clean was called before
 }
 
 checkPreconditions
