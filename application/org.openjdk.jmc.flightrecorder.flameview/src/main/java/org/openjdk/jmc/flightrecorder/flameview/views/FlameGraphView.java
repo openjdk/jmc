@@ -303,7 +303,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				return abort();
 			}
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			String jsonModel = view.toJSonModel(traceNode, isInvalid).toString();
+			String jsonModel = view.toJSonModel(traceNode, this).toString();
 			if (isInvalid) {
 				return abort();
 			} else {
@@ -311,7 +311,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
 				return null;
 			}
-
 		}
 
 		private Void abort() {
@@ -497,27 +496,27 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private StringBuilder toJSonModel(TraceNode root, boolean isInvalid) {
+	private StringBuilder toJSonModel(TraceNode root, ModelRebuildCallable rebuildCallable) {
 		StringBuilder builder = new StringBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
-		renderChildren(builder, root, isInvalid);
+		renderChildren(builder, root, rebuildCallable);
 		builder.append("]}");
 		return builder;
 	}
 
-	private static void render(StringBuilder builder, TraceNode node, boolean isInvalid) {
+	private static void render(StringBuilder builder, TraceNode node, ModelRebuildCallable rebuildCallable) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
-		renderChildren(builder, node, isInvalid);
+		renderChildren(builder, node, rebuildCallable);
 		builder.append("]}");
 	}
 
-	private static void renderChildren(StringBuilder builder, TraceNode node, boolean isInvalid) {
+	private static void renderChildren(StringBuilder builder, TraceNode node, ModelRebuildCallable rebuildCallable) {
 		int i = 0;
-		while (i < node.getChildren().size() && !isInvalid) {
-			render(builder, node.getChildren().get(i), isInvalid);
+		while (i < node.getChildren().size() && !rebuildCallable.isInvalid) {
+			render(builder, node.getChildren().get(i), rebuildCallable);
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
 			}
