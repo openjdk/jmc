@@ -55,14 +55,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Base64;
-import java.util.concurrent.Callable;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,7 +155,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				jsFlameviewColoring);
 	}
 
-	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
+	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER);
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
@@ -167,8 +168,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private ModelState modelState = ModelState.NONE;
-	private ModelRebuildCallable modelRebuildCallable;
-	private Future<Void> modelCalculationFuture;
+	private int activeModelRebuildThread;
+	private List<ModelRebuildRunable> modelRebuildRunnableList = new ArrayList<ModelRebuildRunable>(
+			MODEL_EXECUTOR_THREADS_NUMBER);
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -190,7 +192,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum ModelState {
-		INIT, CALCULATION, READY, ABORTED, NONE;
+		NOT_STARTED, STARTED, FINISHED, NONE;
 	}
 
 	private class GroupByAction extends Action {
@@ -279,13 +281,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private static class ModelRebuildCallable implements Callable<Void> {
+	private static class ModelRebuildRunable implements Runnable {
 
 		private FlameGraphView view;
 		private IItemCollection items;
 		private volatile boolean isInvalid;
 
-		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
+		private ModelRebuildRunable(FlameGraphView view, IItemCollection items) {
 			this.view = view;
 			this.items = items;
 		}
@@ -295,27 +297,24 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		@Override
-		public Void call() throws Exception {
-			view.modelState = ModelState.CALCULATION;
+		public void run() {
+			view.modelState = ModelState.STARTED;
 			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
 			if (isInvalid) {
-				return abort();
+				return;
 			}
 			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+			if (isInvalid) {
+				return;
+			}
 			String jsonModel = view.toJSonModel(traceNode, this).toString();
 			if (isInvalid) {
-				return abort();
+				return;
 			} else {
-				view.modelState = ModelState.READY;
+				view.modelState = ModelState.FINISHED;
 				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
-				return null;
 			}
-		}
-
-		private Void abort() {
-			view.modelState = ModelState.ABORTED;
-			return null;
 		}
 	}
 
@@ -389,19 +388,21 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
-		if (modelCalculationFuture != null) {
-			modelRebuildCallable.setInvalid();
-			modelCalculationFuture.cancel(true);
+		if (!modelRebuildRunnableList.isEmpty()) {
+			modelRebuildRunnableList.get(activeModelRebuildThread).setInvalid();
+			activeModelRebuildThread = ++activeModelRebuildThread % MODEL_EXECUTOR_THREADS_NUMBER;
 		}
 
-		modelState = ModelState.INIT;
 		currentItems = items;
-		modelRebuildCallable = new ModelRebuildCallable(this, items);
-		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCallable);
+		modelState = ModelState.NOT_STARTED;
+		modelRebuildRunnableList.add(activeModelRebuildThread, new ModelRebuildRunable(this, items));
+		if (!modelRebuildRunnableList.get(activeModelRebuildThread).isInvalid) {
+			MODEL_EXECUTOR.execute(modelRebuildRunnableList.get(activeModelRebuildThread));
+		}
 	}
 
 	private void setModel(final IItemCollection items, final String json) {
-		if (ModelState.READY.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
+		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
 			setViewerInput(json);
 		}
 	}
@@ -496,7 +497,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private StringBuilder toJSonModel(TraceNode root, ModelRebuildCallable rebuildCallable) {
+	private StringBuilder toJSonModel(TraceNode root, ModelRebuildRunable rebuildCallable) {
 		StringBuilder builder = new StringBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
@@ -505,7 +506,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		return builder;
 	}
 
-	private static void render(StringBuilder builder, TraceNode node, ModelRebuildCallable rebuildCallable) {
+	private static void render(StringBuilder builder, TraceNode node, ModelRebuildRunable rebuildCallable) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
@@ -513,7 +514,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		builder.append("]}");
 	}
 
-	private static void renderChildren(StringBuilder builder, TraceNode node, ModelRebuildCallable rebuildCallable) {
+	private static void renderChildren(StringBuilder builder, TraceNode node, ModelRebuildRunable rebuildCallable) {
 		int i = 0;
 		while (i < node.getChildren().size() && !rebuildCallable.isInvalid) {
 			render(builder, node.getChildren().get(i), rebuildCallable);
