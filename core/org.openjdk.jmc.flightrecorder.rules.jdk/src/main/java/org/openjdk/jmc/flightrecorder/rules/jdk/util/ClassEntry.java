@@ -32,32 +32,39 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.util;
 
+import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCType;
+import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 
-public final class ClassEntry implements Comparable<ClassEntry> {
+public final class ClassEntry implements Comparable<ClassEntry>, IDisplayable {
+	
+	public static final ContentType<ClassEntry> CLASS_ENTRY = UnitLookup.createSyntheticContentType("classEntry"); //$NON-NLS-1$
+	
 	private final IMCType type;
-	private final int count;
+	private final IQuantity count;
 
-	public ClassEntry(IMCType type, int count) {
+	public ClassEntry(IMCType type, IQuantity count) {
 		this.type = type;
 		this.count = count;
 	}
 
 	@Override
 	public int compareTo(ClassEntry o) {
-		return o.getCount() - getCount();
+		return count.compareTo(o.count);
 	}
 
 	@Override
 	public String toString() {
-		return getType().getFullName() + " (" + getCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		return getType().getFullName() + " (" + getCount().displayUsing(IDisplayable.AUTO) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public IMCType getType() {
 		return type;
 	}
 
-	public int getCount() {
+	public IQuantity getCount() {
 		return count;
 	}
 
@@ -65,7 +72,7 @@ public final class ClassEntry implements Comparable<ClassEntry> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + count;
+		result = prime * result + count.clampedIntFloorIn(UnitLookup.NUMBER_UNITY);
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -93,5 +100,10 @@ public final class ClassEntry implements Comparable<ClassEntry> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String displayUsing(String formatHint) {
+		return toString();
 	}
 }

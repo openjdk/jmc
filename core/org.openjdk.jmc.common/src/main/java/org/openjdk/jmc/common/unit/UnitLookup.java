@@ -265,7 +265,7 @@ final public class UnitLookup {
 		return Logger.getLogger("org.openjdk.jmc.common.unit");
 	}
 
-	private static <T> ContentType<T> createSyntheticContentType(String id) {
+	public static <T> ContentType<T> createSyntheticContentType(String id) {
 		ContentType<T> contentType = new ContentType<>(id);
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Default"));
 		return contentType;

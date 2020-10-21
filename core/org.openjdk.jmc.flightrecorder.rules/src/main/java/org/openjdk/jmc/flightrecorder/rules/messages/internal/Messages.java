@@ -62,6 +62,8 @@ public class Messages {
 	public static final String Severity_NOT_APPLICABLE = "Severity_NOT_APPLICABLE"; //$NON-NLS-1$
 	public static final String Severity_OK = "Severity_OK"; //$NON-NLS-1$
 	public static final String Severity_WARNING = "Severity_WARNING"; //$NON-NLS-1$
+	public static final String TypedResult_SCORE_NAME = "TypedResult_SCORE_NAME"; //$NON-NLS-1$
+	public static final String TypedResult_SCORE_DESCRIPTION = "TypedResult_SCORE_DESCRIPTION"; //$NON-NLS-1$
 
 	private Messages() {
 	}

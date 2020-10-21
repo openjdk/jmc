@@ -34,6 +34,8 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -45,17 +47,29 @@ import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class DebugNonSafepointsRule implements IRule {
+public class DebugNonSafepointsRule implements IRule2 {
+	
 	private static final String DEBUG_NON_SAFEPOINTS_RESULT_ID = "DebugNonSafepoints"; //$NON-NLS-1$
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
+	
+	static {
+		REQUIRED_EVENTS.put(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE);
+	}
+	
 	// FIXME: JMC-4617 - Merge with OptionsCheckRule?
-
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		boolean dnsEnabled = null != RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-XX\\:\\+DebugNonSafepoints", false); //$NON-NLS-1$
 		boolean dnsDisabled = null != RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
@@ -63,38 +77,39 @@ public class DebugNonSafepointsRule implements IRule {
 
 		JavaVersion javaVersion = RulesToolkit.getJavaSpecVersion(items);
 		if (javaVersion == null) {
-			return RulesToolkit.getNotApplicableResult(this,
-					Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSummary(Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION))
+					.setSeverity(Severity.NA)
+					.build();
 		}
 
 		boolean implicitlyEnabled = javaVersion
 				.isGreaterOrEqualThan(JavaVersionSupport.DEBUG_NON_SAFEPOINTS_IMPLICITLY_ENABLED);
 		if (!implicitlyEnabled) {
 			if (dnsDisabled) {
-				String shortMessage = Messages.getString(Messages.DebugNonSafepointsRule_DISABLED_TEXT_INFO);
-				String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-						+ Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_TEXT_INFO_LONG);
-				return new Result(this, 25, shortMessage, longMessage);
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_DISABLED_RESULT_SUMMARY))
+						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
+						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SOLUTION))
+						.build();
 			} else if (!dnsEnabled) {
-				String shortMessage = Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_TEXT_INFO);
-				String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-						+ Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_TEXT_INFO_LONG);
-				return new Result(this, 50, shortMessage, longMessage);
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SUMMARY))
+						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
+						.setSolution(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SOLUTION))
+						.build();
 			}
-			return new Result(this, 0, Messages.getString(Messages.DebugNonSafepointsRule_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_TEXT_OK))
+					.build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.DebugNonSafepointsRule_IMPLICIT_TEXT_OK));
-	}
-
-	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
-			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
-			}
-		});
-		return evaluationTask;
+		return ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_IMPLICIT_TEXT_OK))
+				.build();
 	}
 
 	@Override
@@ -115,5 +130,27 @@ public class DebugNonSafepointsRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items,
+			final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
+			@Override
+			public IResult call() throws Exception {
+				return getResult(items, preferenceValueProvider, dependencyResults);
+			}
+		});
+		return evaluationTask;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return Collections.emptyList();
 	}
 }

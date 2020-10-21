@@ -1,5 +1,7 @@
 package org.openjdk.jmc.flightrecorder.rules;
 
+import java.util.Collection;
+
 public interface IResultValueProvider {
 
 	/**
@@ -11,5 +13,7 @@ public interface IResultValueProvider {
 	 */
 	<T> T getResultValue(TypedResult<T> result);
 	
-	<T> T getResultByIdentifier(String identifier);
+	<T> Collection<T> getResultValue(TypedCollectionResult<T> result);
+
+	TypedResult<?> getResultByIdentifier(String identifier);
 }

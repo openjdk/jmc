@@ -15,9 +15,9 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
 public class RuleRegistry2 {
-	
+
 	private static final Collection<IRule2> RULES;
-	
+
 	static {
 		RULES = new ArrayList<>();
 		ServiceLoader<IRule2> ruleLoader = ServiceLoader.load(IRule2.class, IRule2.class.getClassLoader());
@@ -43,13 +43,13 @@ public class RuleRegistry2 {
 			RULES.add(rule);
 		}
 	}
-	
+
 	private RuleRegistry2() {
 		throw new InstantiationError();
 	}
-	
+
 	public static Collection<IRule2> getRules() {
 		return RULES;
 	}
-	
+
 }

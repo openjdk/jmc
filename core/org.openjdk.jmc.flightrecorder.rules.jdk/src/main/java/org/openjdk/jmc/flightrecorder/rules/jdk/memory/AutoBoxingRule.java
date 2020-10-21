@@ -33,9 +33,13 @@
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.IPredicate;
@@ -51,17 +55,20 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
-import org.owasp.encoder.Encode;
 
 /**
  * Rule that checks how much of the total allocation is caused by possible primitive to object
@@ -118,24 +125,28 @@ public class AutoBoxingRule extends AbstractRule {
 			Messages.getString(Messages.AutoboxingRule_AUTOBOXING_RATIO_WARNING_LIMIT_DESC), UnitLookup.PERCENTAGE,
 			UnitLookup.PERCENT.quantity(80));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED).addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.AVAILABLE).build();
+	
+	public static final TypedResult<IMCType> LARGEST_ALLOCATED_TYPE = new TypedResult<>("largestAllocatedType", "Largest Allocated Type", "The type allocated the most.", UnitLookup.CLASS, IMCType.class);  //$NON-NLS-1$
+	public static final TypedResult<IMCFrame> SECOND_FRAME_MOST_ALLOCATED = new TypedResult<>("secondFrameMostAllocated", "Most Common Call Site", "The most common frame calling into a boxing method.", UnitLookup.STACKTRACE_FRAME, IMCFrame.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> BOXED_ALLOCATION_SIZE = new TypedResult<>("boxedAllocationSize", "Boxed Allocation Size", "The size of all allocations caused by boxing.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> LARGEST_ALLOCATED_BY_TYPE = new TypedResult<>("largestAllocatedByType", "Allocation by Type", "The amount allocated by boxing the most boxed type.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> BOXED_ALLOCATION_RATIO = new TypedResult<>("boxedAllocationRatio", "Boxed Allocation Ratio", "The percentage of all allocations caused by boxing.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LARGEST_ALLOCATED_TYPE, LARGEST_ALLOCATED_BY_TYPE, SECOND_FRAME_MOST_ALLOCATED, BOXED_ALLOCATION_SIZE);
+	
 	public AutoBoxingRule() {
-		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP_TOPIC, AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
+		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS); //$NON-NLS-1$
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability allocAvail = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (allocAvail != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, allocAvail, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-					JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
-
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		double autoboxingRatioInfoLimit = vp.getPreferenceValue(AUTOBOXING_RATIO_INFO_LIMIT).doubleValue();
 		double autoboxingRatioWarningLimit = vp.getPreferenceValue(AUTOBOXING_RATIO_WARNING_LIMIT).doubleValue();
 
-		// FIXME: Should add a check for allocation pressure later, but keeping the rule very simplistic as a first step.
+		// FIXME: Should add a dependency on a rule checking allocation pressure later, but keeping the rule very simplistic as a first step.
 		IItemCollection allocationItems = items.apply(JdkFilters.ALLOC_ALL);
 		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
 		StacktraceModel model = new StacktraceModel(false, sep, allocationItems);
@@ -143,7 +154,7 @@ public class AutoBoxingRule extends AbstractRule {
 		IQuantity sizeOfAllBoxedAllocations = UnitLookup.BYTE.quantity(0);
 		IQuantity largestAllocatedByType = UnitLookup.BYTE.quantity(0);
 		IMCType largestAllocatedType = null;
-		String secondFrameFromMostAllocated = ""; //$NON-NLS-1$
+		IMCFrame secondFrameFromMostAllocated = null;
 		for (StacktraceFrame stacktraceFrame : model.getRootFork().getFirstFrames()) {
 			IMCMethod method = stacktraceFrame.getFrame().getMethod();
 			if (IS_AUTOBOXED_PREDICATE.evaluate(method)) {
@@ -163,14 +174,16 @@ public class AutoBoxingRule extends AbstractRule {
 					} else if (firstBranch.getEndFork().getBranchCount() > 0) {
 						secondFrame = firstBranch.getEndFork().getBranch(0).getFirstFrame();
 					}
-					secondFrameFromMostAllocated = StacktraceFormatToolkit.formatFrame(secondFrame.getFrame(), sep,
-							false, false, true, true, true, false);
+					secondFrameFromMostAllocated = secondFrame.getFrame();
 				}
 				allocationSizeByType.put(method.getType(), total);
 			}
 		}
 		if (allocationSizeByType.size() == 0) {
-			return new Result(this, 0, Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING));
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING))
+					.build();
 		}
 		IQuantity totalAllocationSize = allocationItems.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
 		double possibleAutoboxingRatio = sizeOfAllBoxedAllocations.ratioTo(totalAllocationSize) * 100;
@@ -182,20 +195,25 @@ public class AutoBoxingRule extends AbstractRule {
 		String mostAllocatedTypeInfo = ""; //$NON-NLS-1$
 		String mostAllocatedTypeInfoLong = ""; //$NON-NLS-1$
 		if (largestAllocatedType != null) {
-			String fullName = Encode.forHtml(largestAllocatedType.getFullName());
-			mostAllocatedTypeInfo = " " + MessageFormat //$NON-NLS-1$
-					.format(Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE), fullName);
-			mostAllocatedTypeInfoLong = "<p>" //$NON-NLS-1$
-					+ MessageFormat.format(Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE_LONG),
-							fullName, largestAllocatedByType.displayUsing(IDisplayable.AUTO),
-							secondFrameFromMostAllocated);
+			mostAllocatedTypeInfo = " " + Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE); //$NON-NLS-1$
+			mostAllocatedTypeInfoLong = "\n" //$NON-NLS-1$
+					+ Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE_LONG);
 		}
 
 		String shortIntro = MessageFormat.format(Messages.getString(Messages.AutoboxingRule_RESULT_AUTOBOXING_RATIO),
 				Math.round(possibleAutoboxingRatio), sizeOfAllBoxedAllocations.displayUsing(IDisplayable.AUTO));
 		String shortMessage = shortIntro + mostAllocatedTypeInfo;
-		String longMessage = shortIntro + mostAllocatedTypeInfoLong + "<p>" //$NON-NLS-1$
+		String longMessage = mostAllocatedTypeInfoLong + "\n" //$NON-NLS-1$
 				+ Messages.getString(Messages.AutoboxingRule_RESULT_LONG);
-		return new Result(this, score, shortMessage, longMessage);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(shortMessage)
+				.setExplanation(longMessage)
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(LARGEST_ALLOCATED_BY_TYPE, largestAllocatedByType)
+				.addResult(LARGEST_ALLOCATED_TYPE, largestAllocatedType)
+				.addResult(SECOND_FRAME_MOST_ALLOCATED, secondFrameFromMostAllocated)
+				.addResult(BOXED_ALLOCATION_SIZE, totalAllocationSize)
+				.build();
 	}
 }

@@ -32,14 +32,12 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders;
 
-import org.openjdk.jmc.common.IDisplayable;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openjdk.jmc.common.IMCMethod;
-import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
-import org.owasp.encoder.Encode;
 
 /**
  * Helper class for dealing with stack traces.
@@ -56,32 +54,19 @@ public class StacktraceDataProvider {
 	 *            the total amount of frames in the root branch
 	 * @return an HTML representation of a stack trace
 	 */
-	public static String getRelevantTraceHtmlList(Branch branch, int rootItems) {
+	public static List<IMCMethod> getRelevantTraceHtmlList(Branch branch, int rootItems) {
 		double threshold = rootItems / 5d;
+		List<IMCMethod> frames = new ArrayList<>();
 		if (branch.getFirstFrame().getItemCount() >= threshold) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("<ul>"); //$NON-NLS-1$
-			builder.append("<li>"); //$NON-NLS-1$
 			IMCMethod firstMethod = branch.getFirstFrame().getFrame().getMethod();
-			IQuantity firstFramePercent = UnitLookup.PERCENT_UNITY
-					.quantity(branch.getFirstFrame().getItemCount() / (double) rootItems);
-			builder.append(Encode
-					.forHtml(FormatToolkit.getHumanReadable(firstMethod, false, false, true, false, true, false)));
-			builder.append(" ("); //$NON-NLS-1$
-			builder.append(firstFramePercent.displayUsing(IDisplayable.AUTO));
-			builder.append(")</li>"); //$NON-NLS-1$
+			frames.add(firstMethod);
 			StacktraceFrame[] tailFrames = branch.getTailFrames();
 			for (int i = 0; i < tailFrames.length && i < MAX_TAIL_FRAMES; i++) {
 				StacktraceFrame stacktraceFrame = tailFrames[i];
-				builder.append("<li>"); //$NON-NLS-1$
 				IMCMethod method = stacktraceFrame.getFrame().getMethod();
-				builder.append(
-						Encode.forHtml(FormatToolkit.getHumanReadable(method, false, false, true, false, true, false)));
-				builder.append("</li>"); //$NON-NLS-1$
+				frames.add(method);
 			}
-			builder.append("</ul>"); //$NON-NLS-1$
-			return builder.toString();
 		}
-		return null;
+		return frames;
 	}
 }

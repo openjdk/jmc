@@ -32,67 +32,91 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
-import static org.openjdk.jmc.common.item.Attribute.attr;
-
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
-import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.owasp.encoder.Encode;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class FlightRecordingSupportRule implements IRule {
+public class FlightRecordingSupportRule implements IRule2 {
 
 	private static final String RESULT_ID = "FlightRecordingSupport"; //$NON-NLS-1$
 
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
+	
+	public static final TypedResult<String> JDK_VERSION = new TypedResult<>("jdkVersion", "JDK Version", "The version of the JDK that produced the recording.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(JDK_VERSION);
+	
 	// JavaVersionSupport defines JDK_7_U_40 as U 12, instead of explicitly using U12 where warranted.
 	// So, for now we define our own, real U_40.
 	private static final JavaVersion JDK_7_U_40 = new JavaVersion(7, 0, 40);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_INFO);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_INFO);
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		String jvmVersion = items
+				.getAggregate(Aggregators.distinctAsString(JdkTypeIDs.VM_INFO, JdkAttributes.JVM_VERSION));
+		if (jvmVersion != null) {
+			JavaVersion usedVersion = RulesToolkit.getJavaVersion(jvmVersion);
+			
+			if (usedVersion == null) {
+				return RulesToolkit.getNotApplicableResult(this, valueProvider, Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
+			}
+			
+			if (!usedVersion.isGreaterOrEqualThan(JDK_7_U_40)) {
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.WARNING)
+						.addResult(JDK_VERSION, jvmVersion)
+						.setSummary(Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_SHORT))
+						.setExplanation(Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_LONG))
+						.build();
+			}
+			
+			if (usedVersion.isEarlyAccess()) {
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.WARNING)
+						.addResult(JDK_VERSION, jvmVersion)
+						.setSummary(Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_SHORT))
+						.setExplanation(Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_LONG))
+						.build();
+			}
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK))
+					.build();
+		} else {
+			return RulesToolkit.getNotApplicableResult(this, valueProvider,
+					Messages.getString(Messages.FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT));
 		}
-
-		Result versionResult = getVersionResult(items);
-		Result timeConversionResult = getTimeConversionResult(items);
-
-		double versionScore = versionResult.getScore();
-		double timeConversionScore = timeConversionResult.getScore();
-
-		if (versionScore > 0 || timeConversionScore > 0) {
-			return versionResult.getScore() > timeConversionResult.getScore() ? versionResult : timeConversionResult;
-		}
-		// If no rule reported a warning or error, return the rule with the lowest score,
-		// meaning it was NotApplicable, Failed or Ignored.
-		return versionScore < timeConversionScore ? versionResult : timeConversionResult;
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -118,65 +142,13 @@ public class FlightRecordingSupportRule implements IRule {
 		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
 	}
 
-	private Result getVersionResult(String versionString) {
-		JavaVersion usedVersion = RulesToolkit.getJavaVersion(versionString);
-
-		if (usedVersion == null) {
-			return RulesToolkit.getNotApplicableResult(this,
-					Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
-		}
-
-		if (!usedVersion.isGreaterOrEqualThan(JDK_7_U_40)) {
-			return new Result(this, 100,
-					Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_SHORT),
-					MessageFormat.format(
-							Messages.getString(Messages.FlightRecordingSupportRule_UNSUPPORTED_TEXT_WARN_LONG),
-							Encode.forHtml(versionString)));
-		}
-
-		if (usedVersion.isEarlyAccess()) {
-			return new Result(this, 80, Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_SHORT),
-					MessageFormat.format(Messages.getString(Messages.FlightRecordingSupportRule_EA_TEXT_WARN_LONG),
-							Encode.forHtml(versionString)));
-		}
-
-		return new Result(this, 0, Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK));
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
 	}
 
-	private Result getVersionResult(IItemCollection items) {
-		String jvmVersion = items
-				.getAggregate(Aggregators.distinctAsString(JdkTypeIDs.VM_INFO, JdkAttributes.JVM_VERSION));
-		if (jvmVersion != null) {
-			return getVersionResult(jvmVersion);
-		} else {
-			return RulesToolkit.getNotApplicableResult(this,
-					Messages.getString(Messages.FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT));
-		}
-	}
-
-	private Result getTimeConversionResult(IItemCollection items) {
-		EventAvailability eventAvailability;
-		eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.TIME_CONVERSION);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.TIME_CONVERSION);
-		}
-
-		// Check time conversion error
-		IItemCollection timeConversionItems = items.apply(JdkFilters.TIME_CONVERSION);
-		IQuantity conversionFactor = timeConversionItems
-				.getAggregate(Aggregators.max(attr("fastTimeConversionAdjustments", null, //$NON-NLS-1$
-						UnitLookup.NUMBER)));
-		Boolean fastTimeEnabled = timeConversionItems
-				.getAggregate(Aggregators.and(JdkTypeIDs.TIME_CONVERSION, attr("fastTimeEnabled", null, //$NON-NLS-1$
-						UnitLookup.FLAG)));
-		if (conversionFactor != null && fastTimeEnabled) {
-			if (conversionFactor.longValue() != 0) {
-				String shortMessage = Messages.getString(Messages.FasttimeRule_TEXT_WARN);
-				String longMessage = shortMessage + " " + Messages.getString(Messages.FasttimeRule_TEXT_WARN_LONG); //$NON-NLS-1$
-				return new Result(this, 100, shortMessage, longMessage);
-			}
-		}
-
-		return new Result(this, 0, Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK));
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

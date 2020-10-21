@@ -36,6 +36,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -52,14 +53,21 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
 import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public final class BiasedLockingRevocationPauseRule implements IRule {
+public final class BiasedLockingRevocationPauseRule implements IRule2 {
 
 	public static final TypedPreference<IQuantity> INFO_LIMIT = new TypedPreference<>(
 			"vm.biasedrevocationpause.info.limit", //$NON-NLS-1$
@@ -69,39 +77,43 @@ public final class BiasedLockingRevocationPauseRule implements IRule {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(INFO_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_OPERATIONS);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_OPERATIONS);
-		}
-
+	public static final TypedResult<IQuantity> REVOCATION_TIME = new TypedResult<>("revocationTime", "Revocation Time", "Time spent revoking biased locks.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, REVOCATION_TIME);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemCollection revocationEvents = items.apply(
 				ItemFilters.and(JdkFilters.VM_OPERATIONS, ItemFilters.matches(JdkAttributes.OPERATION, "RevokeBias"))); //$NON-NLS-1$
 		if (!revocationEvents.hasItems()) {
-			return new Result(this, 0, Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.BiasedLockingRevocationPauseRule_TEXT_OK)
+					.build();
 		}
 		IQuantity timeSpentRevoking = revocationEvents.hasItems()
 				? revocationEvents.getAggregate(Aggregators.sum(JfrAttributes.DURATION))
 				: UnitLookup.MILLISECOND.quantity(0);
-		double mappedDuration = RulesToolkit.mapExp100Y(timeSpentRevoking.doubleValueIn(UnitLookup.MILLISECOND),
+		double score = RulesToolkit.mapExp100Y(timeSpentRevoking.doubleValueIn(UnitLookup.MILLISECOND),
 				valueProvider.getPreferenceValue(INFO_LIMIT).doubleValueIn(UnitLookup.MILLISECOND), 25);
-		String shortMessage = MessageFormat.format(
-				Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_MESSAGE),
-				timeSpentRevoking.displayUsing(IDisplayable.AUTO));
-		String longMessage = shortMessage;
-		if (mappedDuration >= 25) {
-			longMessage = longMessage + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_INFO_LONG);
+		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.get(score))
+				.setSummary(Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_MESSAGE))
+				.addResult(REVOCATION_TIME, timeSpentRevoking)
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score));
+		if (score >= 25) {
+			builder.setExplanation(Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_INFO_LONG));
 		}
-		return new Result(this, mappedDuration, shortMessage, longMessage);
+		return builder.build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -125,6 +137,16 @@ public final class BiasedLockingRevocationPauseRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.VM_OPERATIONS_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }

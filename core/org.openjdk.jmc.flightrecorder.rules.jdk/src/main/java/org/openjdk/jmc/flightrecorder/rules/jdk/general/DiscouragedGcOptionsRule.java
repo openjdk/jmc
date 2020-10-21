@@ -32,14 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.BinaryPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -48,27 +48,35 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.CollectorType;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class DiscouragedGcOptionsRule implements IRule {
+public class DiscouragedGcOptionsRule implements IRule2 {
 	private static final IQuantity LARGE_HEAP = UnitLookup.MEMORY.getUnit(BinaryPrefix.GIBI).quantity(4);
 	private static final IQuantity HW_THREADS_FOR_MULTI_CPU = UnitLookup.NUMBER_UNITY.quantity(4);
 	private static final IQuantity ONE = UnitLookup.NUMBER_UNITY.quantity(1);
 
 	private static final String GC_OPTIONS_RESULT_ID = "GcOptions"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CPU_INFORMATION);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CPU_INFORMATION);
-		}
-
+	public static final TypedResult<IQuantity> HARDWARE_THREADS = new TypedResult<>("hwThreads", JdkAggregators.MIN_HW_THREADS, UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> PARALLEL_GC_THREADS = new TypedResult<>("parallelGcThreads", JdkAggregators.PARALLEL_GC_THREAD_COUNT_MAX, UnitLookup.NUMBER, IQuantity.class);  //$NON-NLS-1$
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
+	
+	static {
+		REQUIRED_EVENTS.put(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE);
+	}
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity parallelGCThreads = items.getAggregate(JdkAggregators.PARALLEL_GC_THREAD_COUNT_MAX);
 		IQuantity minHwThreads = items.getAggregate(JdkAggregators.MIN_HW_THREADS);
 		CollectorType oc = CollectorType.getOldCollectorType(items);
@@ -77,35 +85,48 @@ public class DiscouragedGcOptionsRule implements IRule {
 				IQuantity maxHeapSize = items.getAggregate(JdkAggregators.HEAP_CONF_MAX_SIZE);
 				if (minHwThreads.compareTo(HW_THREADS_FOR_MULTI_CPU) >= 0 && maxHeapSize != null
 						&& maxHeapSize.compareTo(LARGE_HEAP) > 0) {
-					return new Result(this, 50, Messages.getString(Messages.SerialGcOnMultiCpuRuleFactory_TEXT_INFO),
-							Messages.getString(Messages.SerialGcOnMultiCpuRuleFactory_TEXT_INFO_LONG));
+					return ResultBuilder.createFor(this, valueProvider)
+							.setSeverity(Severity.INFO)
+							.setSummary(Messages.getString(Messages.SerialGcOnMultiCpuRuleFactory_TEXT_INFO))
+							.setExplanation(Messages.getString(Messages.SerialGcOnMultiCpuRuleFactory_TEXT_INFO_LONG))
+							.build();
 				}
 			} else if (minHwThreads.compareTo(ONE) == 0 && oc == CollectorType.PARALLEL_OLD) {
-				return new Result(this, 50, Messages.getString(Messages.ParallelOnSingleCpuRuleFactory_TEXT_INFO),
-						Messages.getString(Messages.ParallelOnSingleCpuRuleFactory_TEXT_INFO_LONG));
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.ParallelOnSingleCpuRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.ParallelOnSingleCpuRuleFactory_TEXT_INFO_LONG))
+						.build();
 			} else if (parallelGCThreads.compareTo(minHwThreads) > 0) {
-				String message = MessageFormat.format(
-						Messages.getString(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO), parallelGCThreads,
-						minHwThreads.displayUsing(IDisplayable.AUTO));
-				String longMessage = message + " " //$NON-NLS-1$
-						+ Messages.getString(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG);
-				return new Result(this, 50, message, longMessage);
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.INFO)
+						.addResult(HARDWARE_THREADS, minHwThreads)
+						.addResult(PARALLEL_GC_THREADS, parallelGCThreads)
+						.setSummary(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO)
+						.setExplanation(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG)
+						.build();
 			} else if (parallelGCThreads.compareTo(ONE) == 0
 					&& (oc == CollectorType.PARALLEL_OLD || oc == CollectorType.G1_OLD)) {
-				return new Result(this, 50, Messages.getString(Messages.ParGcFewThreadsRuleFactory_TEXT_INFO),
-						Messages.getString(Messages.ParGcFewThreadsRuleFactory_TEXT_INFO_LONG));
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.ParGcFewThreadsRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.ParGcFewThreadsRuleFactory_TEXT_INFO_LONG))
+						.build();
 			}
-			return new Result(this, 0, Messages.getString(Messages.DiscouragedGcOptionsRule_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.DiscouragedGcOptionsRule_TEXT_OK))
+					.build();
 		}
-		return RulesToolkit.getTooFewEventsResult(this);
+		return RulesToolkit.getTooFewEventsResult(this, valueProvider);
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -129,5 +150,15 @@ public class DiscouragedGcOptionsRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return null;
 	}
 }

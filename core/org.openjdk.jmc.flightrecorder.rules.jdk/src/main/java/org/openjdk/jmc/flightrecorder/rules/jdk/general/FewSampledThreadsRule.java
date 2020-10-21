@@ -40,9 +40,8 @@ import static org.openjdk.jmc.common.unit.UnitLookup.SECOND;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.Aggregators;
@@ -56,22 +55,26 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.Pair;
-import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowValueFunction;
 
@@ -79,8 +82,6 @@ import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnordered
  */
 // FIXME: Could possible be merged into the HighJvmCpuRule
 public class FewSampledThreadsRule extends AbstractRule {
-
-	private static final String NEW_PARAGRAPH = "<p>"; //$NON-NLS-1$
 
 	private static final IAggregator<Iterable<? extends GroupEntry<IMCThread, CountConsumer>>, ?> SAMPLES_PER_THREAD = GroupingAggregator
 			.build(Messages.getString(Messages.FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD),
@@ -120,42 +121,19 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 	public FewSampledThreadsRule() {
 		super("FewSampledThreads", Messages.getString(Messages.FewSampledThreadsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT,
-				SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD);
+				JfrRuleTopics.JAVA_APPLICATION_TOPIC, 
+				Arrays.<TypedPreference<?>> asList(SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT, SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD), 
+				Arrays.<TypedResult<?>> asList(TypedResult.SCORE), 
+				RequiredEventsBuilder.create()
+					.addEventType(JdkTypeIDs.RECORDING_SETTING, EventAvailability.AVAILABLE)
+					.addEventType(JdkTypeIDs.EXECUTION_SAMPLE, EventAvailability.AVAILABLE)
+					.addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build());
 	}
 
+	public static final TypedResult<IQuantity> TOTAL_SAMPLES = new TypedResult<>("totalSamples", "Total Samples", "The total number of execution samples.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-
-		Result availabilityResult = checkAvailability(items);
-		if (availabilityResult != null) {
-			return availabilityResult;
-		}
-
-		// Do rule calculations
-		Result ruleResult = calculateResult(items, vp);
-
-		// Add information about short recordings and extra event types
-		String longDescription = ruleResult.getLongDescription();
-		longDescription = longDescription != null ? longDescription : ""; //$NON-NLS-1$
-		double score = ruleResult.getScore();
-
-		String shortRecordingInfo = RulesToolkit.getShortRecordingInfo(items,
-				vp.getPreferenceValue(SHORT_RECORDING_LIMIT));
-		if (shortRecordingInfo != null) {
-			longDescription += NEW_PARAGRAPH + shortRecordingInfo;
-			score = score > 0 ? score / 2 : score;
-		}
-
-		String extraTypesInfo = getExtraTypesInfo(items);
-		if (extraTypesInfo != null) {
-			longDescription += NEW_PARAGRAPH + extraTypesInfo;
-		}
-
-		return new Result(this, score, ruleResult.getShortDescription(), longDescription, ruleResult.getItemQuery());
-	}
-
-	private Result calculateResult(IItemCollection items, IPreferenceValueProvider vp) {
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
 		double sampledThreadRatioLimit = vp.getPreferenceValue(SAMPLED_THREADS_RATIO_LIMIT).doubleValueIn(NUMBER_UNITY);
 		IQuantity minCpuRatio = vp.getPreferenceValue(MIN_CPU_RATIO_LIMIT);
 		IQuantity windowSize = vp.getPreferenceValue(CPU_WINDOW_SIZE);
@@ -176,7 +154,7 @@ public class FewSampledThreadsRule extends AbstractRule {
 		}
 
 		// Was the application using CPU, or was it just idling
-		Result idleResult = getIdleResult(items, minCpuRatio, windowSize, sampledThreads);
+		IResult idleResult = getIdleResult(items, minCpuRatio, windowSize, sampledThreads, vp);
 		if (idleResult != null) {
 			return idleResult;
 		}
@@ -186,37 +164,44 @@ public class FewSampledThreadsRule extends AbstractRule {
 		IQuantity totalNumberOfSamples = items
 				.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE)));
 		if (totalNumberOfSamples.compareTo(minSampleCount) < 0) {
-			return new Result(this, Result.NOT_APPLICABLE,
-					MessageFormat.format(Messages.getString(Messages.FewSampledThreadsRule_TEXT_NOT_ENOUGH_SAMPLES),
-							totalNumberOfSamples.displayUsing(IDisplayable.AUTO),
-							minSampleCount.displayUsing(IDisplayable.AUTO)));
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.NA)
+					.addResult(TOTAL_SAMPLES, totalNumberOfSamples)
+					.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_NOT_ENOUGH_SAMPLES))
+					.build();
 		}
 
 		// Are there more sampled threads than cores?
-		long hwThreads = getHardwareThreads(items).longValue();
-		if (threadsWithEnoughSamples >= hwThreads) {
-			String shortDescription = Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK);
-			String longDescription = shortDescription + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK_LONG);
-			return new Result(this, 0, shortDescription, longDescription);
+		IQuantity hwThreads = getHardwareThreads(items);
+		if (threadsWithEnoughSamples >= hwThreads.longValue()) {
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK))
+					.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK_LONG))
+					.build();
 		}
 
 		// FIXME: Alter calculation to able to name/describe pref value better...
-		double sampledThreadRatio = ((double) threadsWithEnoughSamples) / hwThreads;
+		double sampledThreadRatio = ((double) threadsWithEnoughSamples) / hwThreads.longValue();
 		double score = RulesToolkit.mapExp74(1 - sampledThreadRatio, sampledThreadRatioLimit);
-
-		String shortDescription = Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO);
-		String longDescription = shortDescription + "<p>" //$NON-NLS-1$
-				+ MessageFormat.format(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO_LONG),
-						minSampleCountPerThread, threadsWithEnoughSamples, hwThreads);
-		return new Result(this, score, shortDescription, longDescription, JdkQueries.EXECUTION_SAMPLE);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.addResult(THREADS_WITH_ENOUGH_SAMPLES, UnitLookup.NUMBER_UNITY.quantity(threadsWithEnoughSamples))
+				.addResult(HW_THREADS, hwThreads)
+				.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO))
+				.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO_LONG))
+				.build();
 	}
-
-	private Result getIdleResult(
-		IItemCollection items, IQuantity minCpuRatio, IQuantity windowSize, int sampledThreads) {
+	
+	public static final TypedResult<IQuantity> HW_THREADS = new TypedResult<>("hwThreads", "Hardware Threads", "The number of hardware threads available.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> THREADS_WITH_ENOUGH_SAMPLES = new TypedResult<>("threadsWithEnoughSamples", "Threads With Enough Samples", "The number of threads that had enough samples.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IRange<IQuantity>> MAX_WINDOW = new TypedResult<>("maxWindow", "Max Window", "The window where the maximum JVM CPU usage was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> JVM_USAGE = new TypedResult<>("jvmUsage", "JVM CPU Usage", "The amount of CPU used by the JVM.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private IResult getIdleResult(IItemCollection items, IQuantity minCpuRatio, IQuantity windowSize, int sampledThreads, IPreferenceValueProvider vp) {
 		IItemCollection cpuItems = getCpuItems(items);
 		Pair<IQuantity, IRange<IQuantity>> jvmUsageMaxWindow = SlidingWindowToolkit.slidingWindowUnorderedMinMaxValue(
-				cpuItems, windowSize, evaluationTask, new IUnorderedWindowValueFunction<IQuantity>() {
+				cpuItems, windowSize, evaluationTask.get(), new IUnorderedWindowValueFunction<IQuantity>() {
 
 					@Override
 					public IQuantity getValue(IItemCollection items, IQuantity startTime, IQuantity endTime) {
@@ -236,46 +221,14 @@ public class FewSampledThreadsRule extends AbstractRule {
 			IQuantity cpuRatio = PERCENT.quantity(jvmUsage.ratioTo(maxCpuForSampledThreads) * 100);
 
 			if (cpuRatio.compareTo(minCpuRatio) < 0) {
-				String shortDescription = MessageFormat.format(
-						Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE), jvmUsage,
-						jvmUsageMaxWindow.right.getExtent().displayUsing(IDisplayable.AUTO),
-						jvmUsageMaxWindow.right.getStart().displayUsing(IDisplayable.AUTO));
-				String longDescription = shortDescription + "<p>" //$NON-NLS-1$
-						+ Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE_LONG);
-				return new Result(this, 0, shortDescription, longDescription);
+				return ResultBuilder.createFor(this, vp)
+						.setSeverity(Severity.OK)
+						.addResult(MAX_WINDOW, jvmUsageMaxWindow.right)
+						.addResult(JVM_USAGE, jvmUsage)
+						.setSummary(Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE))
+						.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE_LONG))
+						.build();
 			}
-		}
-		return null;
-	}
-
-	private Result checkAvailability(IItemCollection items) {
-		// Check event availability
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.RECORDING_SETTING,
-				JdkTypeIDs.EXECUTION_SAMPLE, JdkTypeIDs.CPU_INFORMATION);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.RECORDING_SETTING,
-					JdkTypeIDs.EXECUTION_SAMPLE, JdkTypeIDs.CPU_INFORMATION);
-		}
-		IItemCollection cpuItems = getCpuItems(items);
-		IType<IItem> cpuLoadType = RulesToolkit.getType(cpuItems, JdkTypeIDs.CPU_LOAD);
-		if (!cpuLoadType.hasAttribute(JdkAttributes.JVM_USER)) {
-			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_USER);
-		}
-
-		IQuantity hwThreadsQ = getHardwareThreads(items);
-		if (hwThreadsQ == null) {
-			return RulesToolkit.getTooFewEventsResult(this);
-		}
-		return null;
-	}
-
-	private static String getExtraTypesInfo(IItemCollection items) {
-		String[] extraTypes = new String[] {JdkTypeIDs.CPU_LOAD};
-		EventAvailability extraEventAvailability = RulesToolkit.getEventAvailability(items, extraTypes);
-		if (!(extraEventAvailability == EventAvailability.AVAILABLE
-				|| extraEventAvailability == EventAvailability.ENABLED)) {
-			return MessageFormat.format(Messages.getString(Messages.ApplicationHaltsRule_EXTRA_EVENT_TYPES),
-					StringToolkit.join(extraTypes, ", ")); //$NON-NLS-1$
 		}
 		return null;
 	}

@@ -37,7 +37,10 @@ import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.openjdk.jmc.common.IDisplayable;
@@ -58,12 +61,17 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowVisitor;
 
@@ -73,7 +81,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnordered
  */
 public class GcFreedRatioRule extends AbstractRule {
 
-	private static final String NEW_PARAGRAPH = "<p>"; //$NON-NLS-1$
+	private static final String NEW_PARAGRAPH = "\n"; //$NON-NLS-1$
 	private static final String SPACE = " "; //$NON-NLS-1$
 
 	private static final TypedPreference<IQuantity> GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT = new TypedPreference<>(
@@ -90,28 +98,26 @@ public class GcFreedRatioRule extends AbstractRule {
 			Messages.getString(Messages.GcFreedRatioRule_FEW_GCS_LIMIT_DESC), UnitLookup.NUMBER,
 			UnitLookup.NUMBER_UNITY.quantity(10));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT);
+
+	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", "Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", "The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
+			.build();
+	
 	public GcFreedRatioRule() {
 		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, //$NON-NLS-1$
-				GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT, SHORT_RECORDING_LIMIT);
+				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, );
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-
-		EventAvailability heapSummaryAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_SUMMARY);
-		if (!(heapSummaryAvailability == EventAvailability.ENABLED
-				|| heapSummaryAvailability == EventAvailability.AVAILABLE)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, heapSummaryAvailability,
-					JdkTypeIDs.HEAP_SUMMARY);
-		}
-		String recommendedEventTypesInfo = null;
-		EventAvailability allocAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (!(allocAvailability == EventAvailability.ENABLED || allocAvailability == EventAvailability.AVAILABLE)) {
-			recommendedEventTypesInfo = RulesToolkit.getEnabledEventTypesRecommendation(items,
-					JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
-
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		double infoLimit = vp.getPreferenceValue(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT).doubleValue();
 		IQuantity windowSize = vp.getPreferenceValue(WINDOW_SIZE);
 		IQuantity slideSize = windowSize.getUnit().quantity(windowSize.ratioTo(windowSize.getUnit().quantity(2)));
@@ -120,10 +126,11 @@ public class GcFreedRatioRule extends AbstractRule {
 
 		IQuantity heapSummaryCount = items.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.HEAP_SUMMARY)));
 		if (heapSummaryCount.compareTo(fewGcsLimit) < 0) {
-			return new Result(this, 0,
-					MessageFormat.format(Messages.getString(Messages.GcFreedRatioRule_RESULT_FEW_GCS),
-							heapSummaryCount.displayUsing(IDisplayable.AUTO),
-							fewGcsLimit.displayUsing(IDisplayable.AUTO)));
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.GcFreedRatioRule_RESULT_FEW_GCS))
+					.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount)
+					.build();
 		}
 
 		// Do the rule calculations

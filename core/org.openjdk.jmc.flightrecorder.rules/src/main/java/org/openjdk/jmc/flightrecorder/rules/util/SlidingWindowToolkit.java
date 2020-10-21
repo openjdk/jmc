@@ -49,7 +49,7 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 
 /**
  * Utility functions and interfaces for doing sliding window calculations.
@@ -232,7 +232,7 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static Pair<IQuantity, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, final FutureTask<Result> cancellationSupplier,
+		IItemCollection items, IQuantity windowSize, final FutureTask<IResult> cancellationSupplier,
 		final IUnorderedWindowValueFunction<IQuantity> valueFunction, boolean max, boolean includeIntersecting) {
 		IQuantity slideSize = windowSize.getUnit().quantity(windowSize.ratioTo(windowSize.getUnit().quantity(2)));
 
@@ -262,7 +262,7 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static Pair<IQuantity, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<Result> cancellationSupplier,
+		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<IResult> cancellationSupplier,
 		final IUnorderedWindowValueFunction<IQuantity> valueFunction, boolean max, boolean includeIntersecting) {
 		return slidingWindowUnorderedMinMaxValue(items, windowSize, slideSize, cancellationSupplier, valueFunction,
 				QUANTITY_COMPARATOR, max, includeIntersecting);
@@ -298,7 +298,7 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static <V> Pair<V, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, final FutureTask<Result> cancellationSupplier,
+		IItemCollection items, IQuantity windowSize, final FutureTask<IResult> cancellationSupplier,
 		final IUnorderedWindowValueFunction<V> valueFunction, final Comparator<V> valueComparator, boolean max,
 		boolean includeIntersecting) {
 		IQuantity slideSize = windowSize.getUnit().quantity(windowSize.ratioTo(windowSize.getUnit().quantity(2)));
@@ -330,7 +330,7 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static <V> Pair<V, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<Result> cancellationSupplier,
+		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<IResult> cancellationSupplier,
 		final IUnorderedWindowValueFunction<V> valueFunction, final Comparator<V> valueComparator, boolean max,
 		boolean includeIntersecting) {
 

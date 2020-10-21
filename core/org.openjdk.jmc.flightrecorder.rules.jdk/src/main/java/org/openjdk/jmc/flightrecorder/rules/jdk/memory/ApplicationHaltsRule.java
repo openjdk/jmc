@@ -33,9 +33,11 @@
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -46,13 +48,18 @@ import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.HaltsProvider;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.HaltsProvider.ApplicationHaltsInfoHolder;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 
 public class ApplicationHaltsRule extends AbstractRule {
@@ -70,19 +77,24 @@ public class ApplicationHaltsRule extends AbstractRule {
 			Messages.getString(Messages.ApplicationHaltsRule_HALTS_WINDOW_SIZE_DESC), UnitLookup.TIMESPAN,
 			UnitLookup.SECOND.quantity(60));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
+	
+	public static final TypedResult<IRange<IQuantity>> HALTS_WINDOW = new TypedResult<>("applicationsHaltsWindow", "Halts Window", "The window during which the most application halts were detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> HALTS_RATIO = new TypedResult<>("applicationHaltsRatio", "Halts Ratio", "The percent of time spent halted.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> NON_GC_HALTS_RATIO = new TypedResult<>("nonGcApplicationHaltsRatio", "Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, HALTS_RATIO, HALTS_WINDOW, NON_GC_HALTS_RATIO);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
+	
 	public ApplicationHaltsRule() {
 		super("ApplicationHalts", Messages.getString(Messages.ApplicationHaltsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
+				JfrRuleTopics.JAVA_APPLICATION_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		String[] requiredTypes = new String[] {JdkTypeIDs.GC_PAUSE, JdkTypeIDs.VM_OPERATIONS};
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		String[] extraTypes = new String[] {JdkTypeIDs.SAFEPOINT_BEGIN};
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, requiredTypes);
-		if (!(eventAvailability == EventAvailability.AVAILABLE || eventAvailability == EventAvailability.ENABLED)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, requiredTypes);
-		}
 		String extraTypesInfo = null;
 		EventAvailability extraEventAvailability = RulesToolkit.getEventAvailability(items, extraTypes);
 		if (!(extraEventAvailability == EventAvailability.AVAILABLE
@@ -98,31 +110,34 @@ public class ApplicationHaltsRule extends AbstractRule {
 		ApplicationHaltsInfoHolder haltsRatios = HaltsProvider.calculateApplicationHaltsRatio(items);
 
 		Pair<ApplicationHaltsInfoHolder, IRange<IQuantity>> haltsWindowRatio = SlidingWindowToolkit
-				.slidingWindowUnorderedMinMaxValue(items, windowSize, evaluationTask,
+				.slidingWindowUnorderedMinMaxValue(items, windowSize, evaluationTask.get(),
 						HaltsProvider.applicationHaltsRatioFunction(), applicationHaltsComparator(), true, true);
 		IQuantity haltsTotalWindowRatio = haltsWindowRatio.left.getTotalHaltsRatio();
 		IQuantity nonGcHaltsToTotalRatio = haltsWindowRatio.left.getNonGcHaltsToTotalRatio();
 
 		double score = RulesToolkit.mapExp100(haltsTotalWindowRatio.doubleValue(), infoLimit.doubleValue(),
 				warningLimit.doubleValue());
-		String startTimeString = haltsWindowRatio.right.getStart().displayUsing(IDisplayable.AUTO);
-		String durationString = haltsWindowRatio.right.getExtent().displayUsing(IDisplayable.AUTO);
-		String longDescription = MessageFormat.format(Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT_LONG),
-				haltsTotalWindowRatio, durationString, startTimeString, nonGcHaltsToTotalRatio,
-				haltsRatios.getTotalHaltsRatio(), haltsRatios.getNonGcHaltsToTotalRatio());
+		String longDescription = Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT_LONG);
 		String shortDescription;
 
 		if (score >= 25) {
 			shortDescription = Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT);
-			longDescription += "<p>" + Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT_RECOMMENDATION); //$NON-NLS-1$
+			longDescription += "\n" + Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT_RECOMMENDATION); //$NON-NLS-1$
 		} else {
 			shortDescription = Messages.getString(Messages.ApplicationHaltsRule_RULE_TEXT_OK);
 		}
 		if (extraTypesInfo != null) {
-			longDescription += "<p>" + extraTypesInfo; //$NON-NLS-1$
+			longDescription += "\n" + extraTypesInfo; //$NON-NLS-1$
 		}
-		longDescription = shortDescription + "<p>" + longDescription; //$NON-NLS-1$
-		return new Result(this, score, shortDescription, longDescription);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(shortDescription)
+				.setExplanation(longDescription)
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(HALTS_RATIO, haltsTotalWindowRatio)
+				.addResult(HALTS_WINDOW, haltsWindowRatio.right)
+				.addResult(NON_GC_HALTS_RATIO, nonGcHaltsToTotalRatio)
+				.build();
 	}
 
 	private static Comparator<ApplicationHaltsInfoHolder> applicationHaltsComparator() {

@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -42,45 +43,50 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.owasp.encoder.Encode;
 
-public class RecordingSettingsRule implements IRule {
+public class RecordingSettingsRule implements IRule2 {
 	private static final String RECORDING_SETTINGS_RESULT_ID = "OverAggressiveRecordingSetting"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.SYSTEM_PROPERTIES);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.SYSTEM_PROPERTIES);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
 
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		// TODO: We might want to re-write this rule entirely to provide more detailed TypedResults
 		String names = RulesToolkit.getTypesWithZeroThreshold(items, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.MONITOR_ENTER);
 		if (names != null && names.length() > 0) {
 			String eventsWithoutThreshold = names.trim();
-			return new Result(this, 50,
-					MessageFormat.format(
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.INFO)
+					.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO))
+					.setExplanation(MessageFormat.format(
 							Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO),
-							Encode.forHtml(eventsWithoutThreshold)),
-					Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO_LONG),
-					JdkQueries.RECORDING_SETTINGS);
+							Encode.forHtml(eventsWithoutThreshold)))
+					.build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_RULE_TEXT_OK));
+		return ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_RULE_TEXT_OK))
+				.build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -104,5 +110,15 @@ public class RecordingSettingsRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.RECORDING_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return Collections.emptyList();
 	}
 }

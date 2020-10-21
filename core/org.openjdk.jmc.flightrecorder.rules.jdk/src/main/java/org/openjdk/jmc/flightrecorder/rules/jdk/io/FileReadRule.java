@@ -32,15 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.io;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -51,18 +50,21 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.owasp.encoder.Encode;
 
-public class FileReadRule implements IRule {
+public class FileReadRule implements IRule2 {
 
 	public static final TypedPreference<IQuantity> READ_WARNING_LIMIT = new TypedPreference<>(
 			"io.file.read.warning.limit", //$NON-NLS-1$
@@ -74,12 +76,15 @@ public class FileReadRule implements IRule {
 			.<TypedPreference<?>> asList(READ_WARNING_LIMIT);
 	private static final String RESULT_ID = "FileRead"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.FILE_READ);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.FILE_READ);
-		}
-
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.FILE_READ, EventAvailability.ENABLED).build();
+	
+	public static final TypedResult<IQuantity> LONGEST_READ_AMOUNT = new TypedResult<>("longestReadAmount", "Longest Read (Amount)", "The amount read for the longest file read.", UnitLookup.MEMORY, IQuantity.class);  //$NON-NLS-1$
+	public static final TypedResult<IQuantity> LONGEST_READ_TIME = new TypedResult<>("longestReadTime", "Longest Read (Time)", "The longest time it took to perform a file read.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<String> LONGEST_READ_PATH = new TypedResult<>("longestReadPath", "Longest Read (Path)", "The path of the file read that took the lognest time.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_READ_AMOUNT, LONGEST_READ_PATH, LONGEST_READ_TIME);
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
 		IQuantity warningLimit = vp.getPreferenceValue(READ_WARNING_LIMIT);
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 
@@ -88,27 +93,34 @@ public class FileReadRule implements IRule {
 
 		// Aggregate of all file read events - if null, then we had no events
 		if (longestEvent == null) {
-			return new Result(this, 0, Messages.getString(Messages.FileReadRuleFactory_TEXT_NO_EVENTS), null,
-					JdkQueries.FILE_READ);
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.FileReadRuleFactory_TEXT_NO_EVENTS))
+					.build();
 		}
 		IQuantity longestDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		String peakDuration = longestDuration.displayUsing(IDisplayable.AUTO);
 		double score = RulesToolkit.mapExp100(longestDuration.doubleValueIn(UnitLookup.SECOND),
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
-		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
+		Severity severity = Severity.get(score);
+		if (severity == Severity.WARNING || severity == Severity.INFO) {
 			String fileName = sanitizeFileName(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH));
-			String amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_READ)
-					.displayUsing(IDisplayable.AUTO);
-			return new Result(this, score,
-					MessageFormat.format(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN), peakDuration),
-					MessageFormat.format(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN_LONG), peakDuration,
-							fileName, amountRead),
-					JdkQueries.FILE_READ);
+			IQuantity amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_READ);
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(severity)
+					.setSummary(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN_LONG))
+					.addResult(LONGEST_READ_AMOUNT, amountRead)
+					.addResult(LONGEST_READ_TIME, longestDuration)
+					.addResult(LONGEST_READ_PATH, fileName)
+					.build();
 		}
-		return new Result(this, score,
-				MessageFormat.format(Messages.getString(Messages.FileReadRuleFactory_TEXT_OK), peakDuration), null,
-				JdkQueries.FILE_READ);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(severity)
+				.setSummary(Messages.getString(Messages.FileReadRuleFactory_TEXT_OK))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(LONGEST_READ_TIME, longestDuration)
+				.build();
 	}
 
 	static String sanitizeFileName(String fileName) {
@@ -119,11 +131,11 @@ public class FileReadRule implements IRule {
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -147,5 +159,15 @@ public class FileReadRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.FILE_IO_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

@@ -79,4 +79,5 @@ public enum Severity {
 		}
 		return Severity.NA;
 	}
+	
 }

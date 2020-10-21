@@ -87,9 +87,13 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
 import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.tree.Range;
 import org.openjdk.jmc.flightrecorder.rules.tree.TimeRangeFilter;
@@ -187,6 +191,30 @@ public class RulesToolkit {
 		}
 	}
 
+	public static class RequiredEventsBuilder {
+		private Map<String, EventAvailability> requiredEvents;
+		
+		private RequiredEventsBuilder() {
+			requiredEvents = new HashMap<>();
+		}
+		
+		public static RequiredEventsBuilder create() {
+			return new RequiredEventsBuilder();
+		}
+		
+		public RequiredEventsBuilder addEventType(String typeId, EventAvailability availability) {
+			if (requiredEvents.containsKey(typeId)) {
+				throw new IllegalArgumentException("Already specified " + availability + " for " + typeId); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			requiredEvents.put(typeId, availability);
+			return this;
+		}
+		
+		public Map<String, EventAvailability> build() {
+			return Collections.unmodifiableMap(requiredEvents);
+		}
+	}
+	
 	/**
 	 * @return a least squares approximation of the increase in memory over the given time period,
 	 *         in mebibytes/second
@@ -517,66 +545,6 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Returns a proper result for the availability problem. The result will be a "Not Applicable"
-	 * result and the text provided will be based upon the assumption that the provided
-	 * EventAvailability is the availability that makes it impossible to evaluate the rule.
-	 *
-	 * @param rule
-	 *            the rule for which this result will be generated
-	 * @param items
-	 *            the items for which the availability was tested
-	 * @param eventAvailability
-	 *            the availability making the rule N/A
-	 * @param typeIds
-	 *            the types for which the availability was tested
-	 * @return the result for the provided availability problem
-	 */
-	public static Result getEventAvailabilityResult(
-		IRule rule, IItemCollection items, EventAvailability eventAvailability, String ... typeIds) {
-		switch (eventAvailability) {
-		case ENABLED:
-		case NONE:
-			String requiredEventsTypeNames = getEventTypeNames(items, typeIds);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS),
-							requiredEventsTypeNames),
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS_LONG),
-							rule.getName(), requiredEventsTypeNames));
-		case DISABLED:
-			String disabledEventTypeNames = getDisabledEventTypeNames(items, typeIds);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE),
-							disabledEventTypeNames),
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_LONG),
-							rule.getName(), disabledEventTypeNames));
-		case UNKNOWN:
-			// Can't get type names if the event type is unavailable
-			List<String> quotedTypeIds = new ArrayList<>();
-			for (String typeId : typeIds) {
-				quotedTypeIds.add("'" + typeId + "'"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			Collections.sort(quotedTypeIds);
-			String unavailableTypeNames = StringToolkit.join(quotedTypeIds, ", "); //$NON-NLS-1$
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE),
-							rule.getName(), unavailableTypeNames),
-					MessageFormat.format(
-							Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE_LONG),
-							rule.getName(), unavailableTypeNames));
-		case AVAILABLE:
-			String availableEventTypeNames = getEventTypeNames(items, typeIds);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(
-							Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE),
-							availableEventTypeNames),
-					MessageFormat.format(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE_LONG,
-							rule.getName(), availableEventTypeNames));
-		default:
-			throw new IllegalArgumentException("Unsupported event availability: " + eventAvailability); //$NON-NLS-1$
-		}
-	}
-
-	/**
 	 * Creates a {@link Result} object for the given {@link IRule} object representing a result
 	 * where there are too few events to properly evaluate a rule.
 	 *
@@ -585,8 +553,8 @@ public class RulesToolkit {
 	 * @return an object describing that the rule could not be evaluated due to there not being
 	 *         enough data
 	 */
-	public static Result getTooFewEventsResult(IRule rule) {
-		return getNotApplicableResult(rule, Messages.getString(Messages.RulesToolkit_TOO_FEW_EVENTS));
+	public static IResult getTooFewEventsResult(IRule2 rule, IPreferenceValueProvider vp) {
+		return getNotApplicableResult(rule, vp, Messages.getString(Messages.RulesToolkit_TOO_FEW_EVENTS));
 	}
 
 	/**
@@ -599,8 +567,8 @@ public class RulesToolkit {
 	 *            the description of the result
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	public static Result getNotApplicableResult(IRule rule, String message) {
-		return getNotApplicableResult(rule, message, null);
+	public static IResult getNotApplicableResult(IRule2 rule, IPreferenceValueProvider vp, String message) {
+		return getNotApplicableResult(rule, vp, message, null);
 	}
 
 	/**
@@ -616,24 +584,12 @@ public class RulesToolkit {
 	 *            could not be evaluated
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	private static Result getNotApplicableResult(IRule rule, String shortMessage, String longMessage) {
-		return new Result(rule, Result.NOT_APPLICABLE, shortMessage, longMessage);
-	}
-
-	/**
-	 * Creates a {@link Result} object describing that at least one of the specified event types
-	 * must be present in the rule's input.
-	 *
-	 * @param rule
-	 *            the rule to create a {@link Result} object for
-	 * @param typeIds
-	 *            the ids of the event types required for this rule
-	 * @return an object representing a not applicable result due to not missing event types
-	 */
-	public static Result getRuleRequiresAtLeastOneEventTypeResult(IRule rule, String ... typeIds) {
-		return getNotApplicableResult(rule,
-				MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_SOME_EVENTS),
-						rule.getName(), StringToolkit.join(typeIds, ", "))); //$NON-NLS-1$
+	private static IResult getNotApplicableResult(IRule2 rule, IPreferenceValueProvider vp, String shortMessage, String longMessage) {
+		return ResultBuilder.createFor(rule, vp)
+				.setSeverity(Severity.NA)
+				.setSummary(shortMessage)
+				.setExplanation(longMessage)
+				.build();
 	}
 
 	/**
@@ -953,10 +909,6 @@ public class RulesToolkit {
 		return getEventTypeNames(items.apply(createEnablementFilter(false, typeIds)));
 	}
 
-	private static String getEventTypeNames(IItemCollection items, String ... typeIds) {
-		return getEventTypeNames(items.apply(getSettingsFilter(REC_SETTING_NAME_ENABLED, typeIds)));
-	}
-
 	private static String getEventTypeNames(IItemCollection items) {
 		IAggregator<Set<String>, ?> distinct = Aggregators.distinct("", TYPE_NAME_ACCESSOR_FACTORY); //$NON-NLS-1$
 		Set<String> names = items.getAggregate(distinct);
@@ -1037,8 +989,8 @@ public class RulesToolkit {
 	 *            the attribute that is missing
 	 * @return an object that represents the not applicable result due to the missing attribute
 	 */
-	public static Result getMissingAttributeResult(IRule rule, IType<IItem> type, IAttribute<?> attribute) {
-		return getNotApplicableResult(rule,
+	public static IResult getMissingAttributeResult(IRule2 rule, IType<IItem> type, IAttribute<?> attribute, IPreferenceValueProvider vp) {
+		return getNotApplicableResult(rule, vp,
 				MessageFormat.format(Messages.getString(Messages.RulesToolkit_ATTRIBUTE_NOT_FOUND),
 						attribute.getIdentifier(), type.getIdentifier()),
 				MessageFormat.format(Messages.getString(Messages.RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG),

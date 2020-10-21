@@ -69,7 +69,7 @@ public class ContentType<T> implements IType<T> {
 		m_localizedName = localizedName;
 	}
 
-	protected void addFormatter(DisplayFormatter<T> formatter) {
+	public void addFormatter(DisplayFormatter<T> formatter) {
 		// FIXME: Disallow formatters with the same identifier.
 		m_formatters.add(formatter);
 	}

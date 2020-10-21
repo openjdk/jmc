@@ -32,15 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.io;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -51,17 +50,20 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class SocketWriteRule implements IRule {
+public class SocketWriteRule implements IRule2 {
 
 	private static final String RESULT_ID = "SocketWrite"; //$NON-NLS-1$
 
@@ -79,55 +81,65 @@ public class SocketWriteRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(WRITE_INFO_LIMIT, WRITE_WARNING_LIMIT);
 
+	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", "Longest Write (Amount)", "The amount read for the longest socket write.", UnitLookup.MEMORY, IQuantity.class);  //$NON-NLS-1$
+	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", "Longest Write (Time)", "The longest time it took to perform a socket write.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<String> LONGEST_WRITE_ADDRESS = new TypedResult<>("longestWriteHost", "Longest Write (Host)", "The remote host of the socket write that took the longest time.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_WRITE_ADDRESS, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_TIME);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SOCKET_WRITE, EventAvailability.AVAILABLE).build();
+	
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider vp) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return evaluate(items, vp.getPreferenceValue(WRITE_INFO_LIMIT),
-						vp.getPreferenceValue(WRITE_WARNING_LIMIT));
+			public IResult call() throws Exception {
+				return evaluate(items, vp, rp);
 			}
 		});
 		return evaluationTask;
 	}
 
-	private Result evaluate(IItemCollection items, IQuantity infoLimit, IQuantity warningLimit) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.SOCKET_WRITE);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.SOCKET_WRITE);
-		}
-
+	private IResult evaluate(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
+		IQuantity infoLimit = vp.getPreferenceValue(WRITE_INFO_LIMIT);
+		IQuantity warningLimit = vp.getPreferenceValue(WRITE_WARNING_LIMIT);
 		IItem longestEvent = items.apply(JdkFilters.NO_RMI_SOCKET_WRITE)
 				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		// We had events, but all got filtered out - say ok, duration 0. Perhaps say "no matching" or something similar.
 		if (longestEvent == null) {
-			String shortMessage = Messages.getString(Messages.SocketWriteRuleFactory_TEXT_NO_EVENTS);
-			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE);
-			return new Result(this, 0, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_WRITE);
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_NO_EVENTS))
+					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
+					.build();
 		}
 
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		String peakDuration = maxDuration.displayUsing(IDisplayable.AUTO);
 		double score = RulesToolkit.mapExp100(maxDuration.doubleValueIn(UnitLookup.SECOND),
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
-		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
+		Severity severity = Severity.get(score);
+		if (severity == Severity.WARNING || severity == Severity.INFO) {
 			String address = SocketReadRule
 					.sanitizeAddress(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS));
-			String amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_WRITTEN)
-					.displayUsing(IDisplayable.AUTO);
-			String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN),
-					peakDuration);
-			String longMessage = MessageFormat.format(
-					Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG), peakDuration, address,
-					amountWritten) + " " + Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE); //$NON-NLS-1$
-			return new Result(this, score, shortMessage, longMessage);
+			IQuantity amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_WRITTEN);
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(severity)
+					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG) + " " + Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE)) //$NON-NLS-1$
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(LONGEST_WRITE_ADDRESS, address)
+					.addResult(LONGEST_WRITE_AMOUNT, amountWritten)
+					.addResult(LONGEST_WRITE_TIME, maxDuration)
+					.build();
 		}
-		String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_OK),
-				peakDuration);
-		String longMessage = shortMessage + "<p>" + Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE); //$NON-NLS-1$
-		return new Result(this, score, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_WRITE);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(severity)
+				.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_OK))
+				.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(LONGEST_WRITE_TIME, maxDuration)
+				.build();
 	}
 
 	@Override
@@ -148,5 +160,15 @@ public class SocketWriteRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.SOCKET_IO_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }
