@@ -254,7 +254,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			this.imageDescriptor = imageDescriptor;
 			this.disabledImageDescriptor = disabledImageDescriptor;
 		}
-
 	}
 
 	private class ExportAction extends Action {
