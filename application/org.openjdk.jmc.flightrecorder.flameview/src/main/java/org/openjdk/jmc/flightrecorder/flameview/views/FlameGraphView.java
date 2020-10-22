@@ -389,7 +389,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		// Release old model calculation before building a new
 		if (!modelRebuildRunnableList.isEmpty()) {
 			modelRebuildRunnableList.get(activeModelRebuildThread).setInvalid();
-			activeModelRebuildThread = ++activeModelRebuildThread % MODEL_EXECUTOR_THREADS_NUMBER;
+			activeModelRebuildThread = (activeModelRebuildThread + 1) % MODEL_EXECUTOR_THREADS_NUMBER;
 		}
 
 		currentItems = items;
