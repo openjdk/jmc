@@ -58,12 +58,10 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -102,6 +100,9 @@ public class GcFreedRatioRule extends AbstractRule {
 
 	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", "Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
 	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", "The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond", "GC Freed Per Second", "The amount of memory freed per second.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window", "The window where the most amount of memory freed occurred.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset", "The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
 	
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
 	
@@ -113,7 +114,7 @@ public class GcFreedRatioRule extends AbstractRule {
 	
 	public GcFreedRatioRule() {
 		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, //$NON-NLS-1$
-				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, );
+				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
@@ -163,11 +164,17 @@ public class GcFreedRatioRule extends AbstractRule {
 			// Halving score for short recordings
 			score = score > 0 ? score / 2 : score;
 		}
-		if (recommendedEventTypesInfo != null) {
-			longDescription += NEW_PARAGRAPH + recommendedEventTypesInfo;
-		}
-
-		return new Result(this, score, shortDescription, longDescription, JdkQueries.HEAP_SUMMARY);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(shortDescription)
+				.setExplanation(longDescription)
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(GC_FREED_RATIO, maxFreedGcInfo.freedPerSecondToLivesetRatio)
+				.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount)
+				.addResult(GC_WINDOW, maxFreedGcInfo.range)
+				.addResult(AVERAGE_LIVESET, maxFreedGcInfo.averageLiveset)
+				.addResult(GC_FREED_PER_SECOND, maxFreedGcInfo.freedPerSecond)
+				.build();
 	}
 
 	private GcInfoHolder getMaxFreedWindow(final IItemCollection allItems, IQuantity windowSize, IQuantity slideSize) {
@@ -279,7 +286,7 @@ public class GcFreedRatioRule extends AbstractRule {
 
 			@Override
 			public boolean shouldContinue() {
-				return !evaluationTask.isCancelled();
+				return !evaluationTask.get().isCancelled();
 			}
 
 		}, allItems, windowSize, slideSize);

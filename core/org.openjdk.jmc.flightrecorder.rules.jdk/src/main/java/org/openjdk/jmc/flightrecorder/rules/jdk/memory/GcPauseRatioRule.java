@@ -32,9 +32,10 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -44,12 +45,17 @@ import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.HaltsProvider;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 
 public class GcPauseRatioRule extends AbstractRule {
@@ -67,19 +73,21 @@ public class GcPauseRatioRule extends AbstractRule {
 			Messages.getString(Messages.GcPauseRatioRule_WINDOW_SIZE_DESC), UnitLookup.TIMESPAN,
 			UnitLookup.SECOND.quantity(60));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(INFO_LIMIT, WARNING_LIMIT, WINDOW_SIZE);
+	
+	public static final TypedResult<IQuantity> GC_PAUSE_RATIO = new TypedResult<>("gcPauseRatio", "GC Pause Ratio", "The percent of time spent in GC.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IRange<IQuantity>> WINDOW = new TypedResult<>("gcPauseWindow", "GC Pause Window", "The window reported for the gc pause ratio.", UnitLookup.TIMERANGE); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> GC_PAUSE_RATIO_WINDOW = new TypedResult<>("gcPauseRatioWindow", "GC Pause Ratio (Window)", "The gc pause ratio in the reported window.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).build();
+	
 	public GcPauseRatioRule() {
 		super("GcPauseRatio", Messages.getString(Messages.GcPauseRatioRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, INFO_LIMIT, WARNING_LIMIT, WINDOW_SIZE);
+				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, CONFIGURATION_ATTRIBUTES, null, REQUIRED_EVENTS);
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		String[] requiredTypes = new String[] {JdkTypeIDs.GC_PAUSE};
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, requiredTypes);
-		if (!(eventAvailability == EventAvailability.AVAILABLE || eventAvailability == EventAvailability.ENABLED)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, requiredTypes);
-		}
-
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity infoLimit = vp.getPreferenceValue(INFO_LIMIT);
 		IQuantity warningLimit = vp.getPreferenceValue(WARNING_LIMIT);
 		IQuantity windowSize = vp.getPreferenceValue(WINDOW_SIZE);
@@ -87,24 +95,20 @@ public class GcPauseRatioRule extends AbstractRule {
 		IQuantity haltsTotalRatio = HaltsProvider.calculateGcPauseRatio(items);
 
 		Pair<IQuantity, IRange<IQuantity>> haltsWindowRatio = SlidingWindowToolkit.slidingWindowUnorderedMinMaxValue(
-				items, windowSize, evaluationTask, HaltsProvider.gcHaltsRatioFunction(), true, true);
+				items, windowSize, evaluationTask.get(), HaltsProvider.gcHaltsRatioFunction(), true, true);
 
 		double score = RulesToolkit.mapExp100(haltsWindowRatio.left.doubleValue(), infoLimit.doubleValue(),
 				warningLimit.doubleValue());
-
-		String startTimeString = haltsWindowRatio.right.getStart().displayUsing(IDisplayable.AUTO);
-		String durationString = haltsWindowRatio.right.getExtent().displayUsing(IDisplayable.AUTO);
-		String longDescription = MessageFormat.format(Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_LONG),
-				haltsWindowRatio.left, durationString, startTimeString, haltsTotalRatio);
-
-		String shortDescription;
-		if (score >= 25) {
-			shortDescription = Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT);
-			longDescription += "<p>" + Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_RECOMMENDATION); //$NON-NLS-1$
-		} else {
-			shortDescription = Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_OK);
-		}
-		longDescription = shortDescription + "<p>" + longDescription; //$NON-NLS-1$
-		return new Result(this, score, shortDescription, longDescription);
+		String shortDescription = score >= 25 ? Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT) : Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_OK);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(shortDescription)
+				.setExplanation(Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_LONG))
+				.setSolution(Messages.getString(Messages.GcPauseRatioRule_RULE_TEXT_RECOMMENDATION))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(GC_PAUSE_RATIO, haltsTotalRatio)
+				.addResult(WINDOW, haltsWindowRatio.right)
+				.addResult(GC_PAUSE_RATIO_WINDOW, haltsWindowRatio.left)
+				.build();
 	}
 }

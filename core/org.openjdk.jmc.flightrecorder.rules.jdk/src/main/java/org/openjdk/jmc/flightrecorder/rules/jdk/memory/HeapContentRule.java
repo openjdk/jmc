@@ -32,9 +32,11 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -50,16 +52,20 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class HeapContentRule implements IRule {
+public class HeapContentRule implements IRule2 {
 
 	private static final IAggregator<IQuantity, ?> HEAP_CONTENT_SCORE_AGGREGATOR = GroupingAggregator.build(
 			Messages.getString(Messages.HeapContentRule_AGGR_CLASS_SCORE), null, JdkAttributes.OBJECT_CLASS,
@@ -83,33 +89,40 @@ public class HeapContentRule implements IRule {
 
 	private static final String RESULT_ID = "HeapContent"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJECT_COUNT);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.OBJECT_COUNT);
-		}
-
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.OBJECT_COUNT, EventAvailability.ENABLED)
+			.build();
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity aggregate = items.getAggregate(HEAP_CONTENT_SCORE_AGGREGATOR);
 		// FIXME: Configuration attribute instead of hard coded 0.75 warning limit
 		double score = aggregate == null ? 0 : RulesToolkit.mapExp100(aggregate.doubleValue(), 0.75);
 		// FIXME: Construct a more informative message, not use a hard limit. Include a description of the aggregate.
 		// As the samples come at different points in time, it's not very obvious what this aggregate represents.
 		if (score >= 25) {
-			String shortMessage = Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO);
-			String longMessage = shortMessage + " " //$NON-NLS-1$
-					+ Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO_LONG);
-			return new Result(this, score, shortMessage, longMessage, JdkQueries.OBJECT_COUNT);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO))
+					.setExplanation(Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO_LONG))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.build();
 		} else {
-			return new Result(this, score, Messages.getString(Messages.HeapContentRuleFactory_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.HeapContentRuleFactory_TEXT_OK))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -133,5 +146,15 @@ public class HeapContentRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.HEAP_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }
