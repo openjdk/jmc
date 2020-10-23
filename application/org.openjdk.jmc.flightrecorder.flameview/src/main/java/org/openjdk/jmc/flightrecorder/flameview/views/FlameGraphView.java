@@ -55,9 +55,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -168,9 +166,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private ModelState modelState = ModelState.NONE;
-	private int activeModelRebuildThread;
-	private List<ModelRebuildRunable> modelRebuildRunnableList = new ArrayList<ModelRebuildRunable>(
-			MODEL_EXECUTOR_THREADS_NUMBER);
+	private ModelRebuildRunable modelRebuildRunnable;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -387,16 +383,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
-		if (!modelRebuildRunnableList.isEmpty()) {
-			modelRebuildRunnableList.get(activeModelRebuildThread).setInvalid();
-			activeModelRebuildThread = (activeModelRebuildThread + 1) % MODEL_EXECUTOR_THREADS_NUMBER;
+		if (modelRebuildRunnable != null) {
+			modelRebuildRunnable.setInvalid();
 		}
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnableList.add(activeModelRebuildThread, new ModelRebuildRunable(this, items));
-		if (!modelRebuildRunnableList.get(activeModelRebuildThread).isInvalid) {
-			MODEL_EXECUTOR.execute(modelRebuildRunnableList.get(activeModelRebuildThread));
+		modelRebuildRunnable = new ModelRebuildRunable(this, items);
+		if (!modelRebuildRunnable.isInvalid) {
+			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
 	}
 
