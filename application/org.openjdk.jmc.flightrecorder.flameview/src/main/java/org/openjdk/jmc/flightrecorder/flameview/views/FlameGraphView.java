@@ -61,6 +61,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -154,7 +156,18 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
-	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER);
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
+			new ThreadFactory() {
+				private ThreadGroup group = new ThreadGroup("FlameGraphModelCalculationGroup");
+				private AtomicInteger counter = new AtomicInteger();
+
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread t = new Thread(group, r, "FlameGraphModelCalculation-" + counter.getAndIncrement());
+					t.setDaemon(true);
+					return t;
+				}
+			});
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
