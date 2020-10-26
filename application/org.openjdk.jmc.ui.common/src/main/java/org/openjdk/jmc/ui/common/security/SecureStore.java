@@ -62,7 +62,7 @@ public class SecureStore {
 	private static final String XML_ELEMENT_KEYS = "secureStoreKeys"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_CIPHER = "secureStoreCipher"; //$NON-NLS-1$
 	private static final String[] PREFERRED_CIPHERS = new String[] {"PBEWithHmacSHA512AndAES_256", //$NON-NLS-1$
-			"PBEWithHmacSHA512AndAES_128", "PBEWithSHA1AndDESede"}; //$NON-NLS-1$ //$NON-NLS-2$
+			"PBEWithHmacSHA512AndAES_128"}; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String SEP = "_"; //$NON-NLS-1$
 	private DecryptedStorage storage;
 	private String pwd;
