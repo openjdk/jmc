@@ -116,7 +116,7 @@ public class QuantityKindProposal {
 
 	private QuantityKindProposal(Control control, IControlContentAdapter contentAdapter) {
 		this.adapter = new ContentProposalAdapter(control, contentAdapter, EMPTY_PROPOSAL, null, null);
-		adapter.setPopupSize(new Point(150, 300));
+		adapter.setPopupSize(new Point(150, 120));
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		decorator = ControlDecorationToolkit.createContentProposalDecorator(control);
 	}
