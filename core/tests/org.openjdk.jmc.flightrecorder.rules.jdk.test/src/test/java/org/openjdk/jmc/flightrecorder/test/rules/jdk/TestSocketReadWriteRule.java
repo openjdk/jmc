@@ -53,13 +53,13 @@ public class TestSocketReadWriteRule {
 	@Test
 	public void testReadRule() {
 		testSocketRule(JdkTypeIDs.SOCKET_READ, new SocketReadRule(),
-				"The longest recorded socket read took 5 s to read 4 KiB from the host at 123.45.67.78. Average time of recorded IO: 4.500 s. Total time of recoded IO: 13.500 s. Total time of recoded IO for the host 123.45.67.78: 9.500 s. Note that there are some socket read patterns with high duration reads that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication and MQ series."); //$NON-NLS-1$
+				"The longest recorded socket read took 5 s to read 4 KiB from the host at 123.45.67.78. Average time of recorded IO: 4.500 s. Total time of recorded IO: 13.500 s. Total time of recorded IO for the host 123.45.67.78: 9.500 s. Note that there are some socket read patterns with high duration reads that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication and MQ series."); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testWriteRule() {
 		testSocketRule(JdkTypeIDs.SOCKET_WRITE, new SocketWriteRule(),
-				"The longest recorded socket write took 5 s to write 4 KiB to the host at 123.45.67.78. Average time of recroded IO: 4.500 s. Total time of recorded IO: 13.500 s. Total time of recorded IO for the host 123.45.67.78: 9.500 s. Note that there are some socket write patterns with high duration writes that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication."); //$NON-NLS-1$
+				"The longest recorded socket write took 5 s to write 4 KiB to the host at 123.45.67.78. Average time of recorded IO: 4.500 s. Total time of recorded IO: 13.500 s. Total time of recorded IO for the host 123.45.67.78: 9.500 s. Note that there are some socket write patterns with high duration writes that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication."); //$NON-NLS-1$
 	}
 
 	private void testSocketRule(String eventType, IRule rule, String expectedLongDesc) {

@@ -59,7 +59,7 @@ public class TestFileReadWriteRule {
 	@Test
 	public void testWriteRule() {
 		testFileRule(JdkTypeIDs.FILE_WRITE, new FileWriteRule(),
-				"The longest recorded file write took 5 s to write 4 KiB to /user/dir/file1.dat. Average time of recorded IO: 4.500 s. Total time of recoded IO: 13.500 s. Total time of recoded IO for the file /user/dir/file1.dat: 9.500 s."); //$NON-NLS-1$
+				"The longest recorded file write took 5 s to write 4 KiB to /user/dir/file1.dat. Average time of recorded IO: 4.500 s. Total time of recorded IO: 13.500 s. Total time of recorded IO for the file /user/dir/file1.dat: 9.500 s."); //$NON-NLS-1$
 	}
 
 	private void testFileRule(String eventType, IRule rule, String expectedLongDesc) {
