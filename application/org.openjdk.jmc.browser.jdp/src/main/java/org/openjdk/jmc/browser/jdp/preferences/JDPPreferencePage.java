@@ -32,15 +32,23 @@
  */
 package org.openjdk.jmc.browser.jdp.preferences;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import org.openjdk.jmc.browser.jdp.JDPPlugin;
 
 public class JDPPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+	private StringFieldEditor jdpAddress;
+	private IntegerFieldEditor jdpPort;
+	private IntegerFieldEditor heartBeatTimeout;
 
 	public JDPPreferencePage() {
 		super(GRID);
@@ -50,17 +58,50 @@ public class JDPPreferencePage extends FieldEditorPreferencePage implements IWor
 
 	@Override
 	public void createFieldEditors() {
-		addField(new StringFieldEditor(PreferenceConstants.PROPERTY_KEY_JDP_ADDRESS,
-				Messages.JDPPreferencePage_CAPTION_MULTICAST_ADDRESS, getFieldEditorParent()));
-		addField(new IntegerFieldEditor(PreferenceConstants.PROPERTY_KEY_JDP_PORT,
-				Messages.JDPPreferencePage_CAPTION_MULTICAST_PORT, getFieldEditorParent()));
-		addField(new IntegerFieldEditor(PreferenceConstants.PROPERTY_KEY_HEART_BEAT_TIMEOUT,
-				Messages.JDPPreferencePage_CAPTION_MAX_HEART_BEAT_TIMEOUT, getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY,
+				Messages.JDPPreferencePage_JDP_PREFERENCES_ENABLE_AUTO_DISCOVERY, getFieldEditorParent()));
+		jdpAddress = new StringFieldEditor(PreferenceConstants.PROPERTY_KEY_JDP_ADDRESS,
+				Messages.JDPPreferencePage_CAPTION_MULTICAST_ADDRESS, getFieldEditorParent());
+		addField(jdpAddress);
+		jdpPort = new IntegerFieldEditor(PreferenceConstants.PROPERTY_KEY_JDP_PORT,
+				Messages.JDPPreferencePage_CAPTION_MULTICAST_PORT, getFieldEditorParent());
+		addField(jdpPort);
+		heartBeatTimeout = new IntegerFieldEditor(PreferenceConstants.PROPERTY_KEY_HEART_BEAT_TIMEOUT,
+				Messages.JDPPreferencePage_CAPTION_MAX_HEART_BEAT_TIMEOUT, getFieldEditorParent());
+		addField(heartBeatTimeout);
+
+		enableJdpFields(isJdpAutoDiscoveryEnabled());
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
 
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getProperty().equals(FieldEditor.VALUE)) {
+			FieldEditor editor = (FieldEditor) event.getSource();
+			if (PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY.equals(editor.getPreferenceName())) {
+				if ((boolean) event.getNewValue()) {
+					MessageDialog.openWarning(getShell(),
+							Messages.JDPPreferencePage_JDP_PREFERENCES_ENABLE_WARNING_TITLE,
+							Messages.JDPPreferencePage_JDP_PREFERENCES_ENABLE_WARNING_INFO);
+				}
+				enableJdpFields((boolean) event.getNewValue());
+			}
+		}
+		super.propertyChange(event);
+	}
+
+	private boolean isJdpAutoDiscoveryEnabled() {
+		return JDPPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
+	}
+
+	private void enableJdpFields(boolean enable) {
+		jdpAddress.setEnabled(enable, getFieldEditorParent());
+		jdpPort.setEnabled(enable, getFieldEditorParent());
+		heartBeatTimeout.setEnabled(enable, getFieldEditorParent());
 	}
 
 }
