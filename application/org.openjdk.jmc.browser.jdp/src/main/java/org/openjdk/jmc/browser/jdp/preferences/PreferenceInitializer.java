@@ -49,5 +49,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.PROPERTY_KEY_JDP_PORT, Configuration.DEFAULT_MULTICAST_PORT);
 		store.setDefault(PreferenceConstants.PROPERTY_KEY_HEART_BEAT_TIMEOUT,
 				Configuration.DEFAULT_MAX_HEART_BEAT_TIMEOUT / 1000);
+		store.setDefault(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY, Configuration.DEFAULT_JDP_ENABLE_AUTO_DISCOVERY);
 	}
 }

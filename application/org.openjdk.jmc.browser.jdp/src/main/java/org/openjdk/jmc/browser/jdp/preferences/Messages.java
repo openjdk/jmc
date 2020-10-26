@@ -41,6 +41,9 @@ public class Messages extends NLS {
 	public static String JDPPreferencePage_CAPTION_MULTICAST_ADDRESS;
 	public static String JDPPreferencePage_CAPTION_MULTICAST_PORT;
 	public static String JDPPreferencePage_JDP_PREFERENCES_DESCRIPTION;
+	public static String JDPPreferencePage_JDP_PREFERENCES_ENABLE_AUTO_DISCOVERY;
+	public static String JDPPreferencePage_JDP_PREFERENCES_ENABLE_WARNING_TITLE;
+	public static String JDPPreferencePage_JDP_PREFERENCES_ENABLE_WARNING_INFO;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

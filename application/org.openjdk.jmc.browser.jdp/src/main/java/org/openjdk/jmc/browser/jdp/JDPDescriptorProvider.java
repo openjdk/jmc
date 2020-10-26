@@ -168,10 +168,14 @@ public class JDPDescriptorProvider extends AbstractDescriptorProvider implements
 		return JDPPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.PROPERTY_KEY_JDP_PORT);
 	}
 
+	private boolean isJdpAutoDiscoveryEnabled() {
+		return JDPPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
+	}
+
 	@Override
 	public void addDescriptorListener(IDescriptorListener l) {
 		synchronized (m_descriptorListeners) {
-			if (m_descriptorListeners.size() == 0) {
+			if (m_descriptorListeners.size() == 0 && isJdpAutoDiscoveryEnabled()) {
 				super.addDescriptorListener(l);
 				startClient();
 				return;
@@ -187,7 +191,9 @@ public class JDPDescriptorProvider extends AbstractDescriptorProvider implements
 
 	private synchronized void restartJDPClient() {
 		shutDownClient();
-		startClient();
+		if (isJdpAutoDiscoveryEnabled()) {
+			startClient();
+		}
 	}
 
 }
