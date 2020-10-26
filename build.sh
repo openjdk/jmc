@@ -6,6 +6,7 @@ set -o pipefail # If any command in a pipeline fails, that return code will be u
 PROGNAME=$(basename "$0")
 
 JETTY_PID=""
+BASEDIR=""
 
 function err_report() {
     err_log "$(date +%T) ${PROGNAME}: Error on line $1"
@@ -15,8 +16,50 @@ function err_report() {
 function exitTrap() {
     if [ -n "${JETTY_PID}" ]; then
         echo "$(date +%T) terminating jetty server"
-        pkill -P "${JETTY_PID}"
+        kill "${JETTY_PID}"
     fi
+}
+
+function startJetty() {
+    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
+    local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
+    local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
+
+    pushd releng/third-party 1> /dev/null || {
+        err_log "directory releng/third-party not found"
+        exit 1
+    }
+    echo "$(date +%T) building p2:site - logging output to ${p2SiteLog}"
+    mvn p2:site --log-file "${p2SiteLog}"
+
+    echo "$(date +%T) run jetty - logging output to ${jettyLog}"
+    touch "${jettyLog}" # create file so that it exists already for tail below
+    mvn jetty:run --log-file "${jettyLog}" &
+    JETTY_PID=$!
+
+    while ! grep -q "^\[INFO\] Started Jetty Server$" "${jettyLog}"; do
+        echo "$(date +%T) waiting for jetty server to start"
+        sleep 1
+    done
+    echo "$(date +%T) jetty server up and running on pid ${JETTY_PID}"
+
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
+    pushd core 1> /dev/null || {
+        err_log "directory core not found"
+        exit 1
+    }
+
+    echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
+    mvn clean install --log-file "${installLog}"
+
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
 }
 
 function err_log() {
@@ -44,60 +87,20 @@ if [ $# -eq 0 ]; then
 fi
 
 function runTests() {
+    echo "$(date +%T) running tests"
     mvn verify
 }
 
 function runUiTests() {
+    startJetty
+    echo "$(date +%T) running UI tests"
     mvn verify -P uitests
 }
 
 function packageJmc() {
-    local timestamp
-    timestamp="$(date +%Y%m%d%H%M%S)"
-    local BASEDIR
-    BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
+    startJetty
+    local packageLog="${BASEDIR}/build_$(date +%Y%m%d%H%M%S).4.package.log"
 
-    mkdir -p "${BASEDIR}" # just in case clean was called before
-
-    local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
-    local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
-    local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
-    local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
-
-    pushd releng/third-party 1> /dev/null || {
-        err_log "directory releng/third-party not found"
-        exit 1
-    }
-    echo "$(date +%T) building p2:site - logging output to ${p2SiteLog}"
-    mvn p2:site --log-file "${p2SiteLog}"
-
-    echo "$(date +%T) run jetty - logging output to ${jettyLog}"
-    touch "${jettyLog}" # create file so that it exists already for tail below
-    mvn jetty:run --log-file "${jettyLog}" &
-    JETTY_PID=$!
-
-    while ! grep -q "^\[INFO\] Started Jetty Server$" "${jettyLog}"; do
-        echo "$(date +%T) waiting for jetty server to start"
-        sleep 1
-    done
-    echo "$(date +%T) jetty server up and running"
-
-    popd 1> /dev/null || {
-        err_log "could not go to project root directory"
-        exit 1
-    }
-    pushd core 1> /dev/null || {
-        err_log "directory core not found"
-        exit 1
-    }
-
-    echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
-    mvn clean install --log-file "${installLog}"
-
-    popd 1> /dev/null || {
-        err_log "could not go to project root directory"
-        exit 1
-    }
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
 
@@ -111,6 +114,7 @@ function packageJmc() {
 }
 
 function clean() {
+    echo "$(date +%T) running clean up"
     mvn clean
 
     pushd core 1> /dev/null || {
@@ -135,9 +139,6 @@ function clean() {
 }
 
 function run() {
-    local BASEDIR
-    BASEDIR="$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)"
-
     local path
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
         path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK Mission Control/jmc"
@@ -198,6 +199,9 @@ function checkPreconditions() {
         err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
         exit 1
     fi
+
+    BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
+    mkdir -p "${BASEDIR}" # just in case clean was called before
 }
 
 checkPreconditions
