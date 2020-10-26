@@ -193,6 +193,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private ColumnViewer viewer;
 	private boolean treeLayout;
 	private boolean reducedTree;
+	private IAction reducedTreeAction;
 	private boolean threadRootAtTop;
 	private IItemCollection itemsToShow;
 	private MethodFormatter methodFormatter;
@@ -361,6 +362,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	};
 
+	private void updateReducedTreeOption() {
+		reducedTreeAction.setEnabled(treeLayout);
+		reducedTreeAction.setChecked(reducedTree);
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -370,10 +376,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		treeLayout = StateToolkit.readBoolean(state, TREE_LAYOUT_KEY, false);
 		reducedTree = StateToolkit.readBoolean(state, REDUCED_TREE_KEY, true);
 
-		IAction reducedTreeAction = ActionToolkit.checkAction(this::setReducedTree,
-				Messages.STACKTRACE_VIEW_REDUCE_TREE_DEPTH, null);
-		reducedTreeAction.setChecked(reducedTree);
-		IAction treeAction = ActionToolkit.checkAction(this::setTreeLayout, Messages.STACKTRACE_VIEW_SHOW_AS_TREE,
+		reducedTreeAction = ActionToolkit.checkAction(this::setReducedTree, Messages.STACKTRACE_VIEW_REDUCE_TREE_DEPTH,
+				null);
+		updateReducedTreeOption();
+
+		IAction treeAction = ActionToolkit.checkAction(this::setTreeLayout, Messages.STACKTRACE_VIEW_TREE_VIEW,
 				CoreImages.TREE_MODE);
 		treeAction.setChecked(treeLayout);
 		layoutActions = new IAction[] {treeAction, reducedTreeAction};
@@ -438,11 +445,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (viewer instanceof TreeViewer) {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
+		rebuildViewer();
 	}
 
 	// See JMC-6787
 	@SuppressWarnings("deprecation")
 	private void rebuildViewer() {
+		updateReducedTreeOption();
 		boolean hasFocus = viewer.getControl().isFocusControl();
 		ISelection oldSelection = viewer.getSelection();
 		Fork oldInput = (Fork) viewer.getInput();
@@ -458,7 +467,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			Display.getCurrent().asyncExec(() -> {
 				if (!viewer.getControl().isDisposed()) {
 					setViewerInput(oldInput);
-					if (reducedTree && oldInput != null) {
+					if (!reducedTree && oldInput != null) {
 						Branch selectedBranch = getLastSelectedBranch(oldInput);
 						if (selectedBranch != null) {
 							viewer.getControl().setRedraw(false);
