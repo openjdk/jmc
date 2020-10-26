@@ -51,13 +51,13 @@ public class TestPermissionChecks {
 		boolean exceptionThrown = false;
 		try {
 			doDefineEventProbes("");
-		} catch(SecurityException e) {
+		} catch (SecurityException e) {
 			exceptionThrown = true;
 		}
 		assertTrue(exceptionThrown);
 	}
 
-	private void doDefineEventProbes(String xmlDescription) throws Exception  {
+	private void doDefineEventProbes(String xmlDescription) throws Exception {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 		mbean.defineEventProbes(xmlDescription);

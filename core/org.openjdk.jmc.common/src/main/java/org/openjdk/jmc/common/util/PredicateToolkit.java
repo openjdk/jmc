@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,73 +36,71 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.RangeMatchPolicy;
 import org.openjdk.jmc.common.unit.IRange;
 
 /**
- * Toolkit used to create instances of {@link IPredicate} matching various criteria.
+ * Toolkit used to create instances of {@link Predicate} matching various criteria.
  */
 public class PredicateToolkit {
 
-	private static final IPredicate<Object> FALSE = new IPredicate<Object>() {
+	private static final Predicate<Object> FALSE = new Predicate<Object>() {
 		@Override
-		public boolean evaluate(Object o) {
+		public boolean test(Object o) {
 			return false;
 		}
 	};
-	private static final IPredicate<Object> TRUE = new IPredicate<Object>() {
+	private static final Predicate<Object> TRUE = new Predicate<Object>() {
 		@Override
-		public boolean evaluate(Object o) {
+		public boolean test(Object o) {
 			return true;
 		}
 	};
 
 	/**
-	 * @return a predicate that always will evaluate to {@code true}
+	 * @return a predicate that always will test to {@code true}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IPredicate<T> truePredicate() {
-		return (IPredicate<T>) TRUE;
+	public static <T> Predicate<T> truePredicate() {
+		return (Predicate<T>) TRUE;
 	}
 
 	/**
-	 * @return a predicate that always will evaluate to {@code false}
+	 * @return a predicate that always will test to {@code false}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IPredicate<T> falsePredicate() {
-		return (IPredicate<T>) FALSE;
+	public static <T> Predicate<T> falsePredicate() {
+		return (Predicate<T>) FALSE;
 	}
 
 	/**
-	 * Test if a predicate is guaranteed to always evaluate to {@code true}. Note that if this
-	 * method returns {@code false}, then it only means that it is unknown what the predicate will
-	 * return.
+	 * Test if a predicate is guaranteed to always test to {@code true}. Note that if this method
+	 * returns {@code false}, then it only means that it is unknown what the predicate will return.
 	 *
 	 * @param p
 	 *            a predicate to test
-	 * @return {@code true} if the predicate is guaranteed to evaluate to {@code true}
+	 * @return {@code true} if the predicate is guaranteed to test to {@code true}
 	 */
-	public static boolean isTrueGuaranteed(IPredicate<?> p) {
+	public static boolean isTrueGuaranteed(Predicate<?> p) {
 		return p == TRUE;
 	}
 
 	/**
-	 * Test if a predicate is guaranteed to always evaluate to {@code false}. Note that if this
-	 * method returns {@code false}, then it only means that it is unknown what the predicate will
-	 * return.
+	 * Test if a predicate is guaranteed to always test to {@code false}. Note that if this method
+	 * returns {@code false}, then it only means that it is unknown what the predicate will return.
 	 *
 	 * @param p
 	 *            a predicate to test
-	 * @return {@code true} if the predicate is guaranteed to evaluate to {@code false}
+	 * @return {@code true} if the predicate is guaranteed to test to {@code false}
 	 */
-	public static boolean isFalseGuaranteed(IPredicate<?> p) {
+	public static boolean isFalseGuaranteed(Predicate<?> p) {
 		return p == FALSE;
 	}
 
@@ -111,18 +109,17 @@ public class PredicateToolkit {
 	 *
 	 * @param predicates
 	 *            input predicates
-	 * @return a predicate that evaluates to {@code true} if all input predicates evaluate to
-	 *         {@code true}
+	 * @return a predicate that tests to {@code true} if all input predicates test to {@code true}
 	 */
-	public static <T> IPredicate<T> and(Collection<IPredicate<T>> predicates) {
+	public static <T> Predicate<T> and(Collection<Predicate<T>> predicates) {
 		switch (predicates.size()) {
 		case 0:
 			return truePredicate();
 		case 1:
 			return predicates.iterator().next();
 		default:
-			final List<IPredicate<T>> nonTrivialPredicates = new ArrayList<>(predicates.size());
-			for (IPredicate<T> p : predicates) {
+			final List<Predicate<T>> nonTrivialPredicates = new ArrayList<>(predicates.size());
+			for (Predicate<T> p : predicates) {
 				if (isFalseGuaranteed(p)) {
 					return p;
 				} else if (!isTrueGuaranteed(p)) {
@@ -134,12 +131,12 @@ public class PredicateToolkit {
 			} else if (nonTrivialPredicates.size() == 1) {
 				return nonTrivialPredicates.get(0); // A single predicate is not TRUE or FALSE
 			} else {
-				return new IPredicate<T>() {
+				return new Predicate<T>() {
 
 					@Override
-					public boolean evaluate(T o) {
-						for (IPredicate<T> ex : nonTrivialPredicates) {
-							if (!ex.evaluate(o)) {
+					public boolean test(T o) {
+						for (Predicate<T> ex : nonTrivialPredicates) {
+							if (!ex.test(o)) {
 								return false;
 							}
 						}
@@ -155,18 +152,18 @@ public class PredicateToolkit {
 	 *
 	 * @param predicates
 	 *            input predicates
-	 * @return a predicate that evaluates to {@code true} if at least one of the input predicates
-	 *         evaluate to {@code true}
+	 * @return a predicate that tests to {@code true} if at least one of the input predicates test
+	 *         to {@code true}
 	 */
-	public static <T> IPredicate<T> or(Collection<IPredicate<T>> predicates) {
+	public static <T> Predicate<T> or(Collection<Predicate<T>> predicates) {
 		switch (predicates.size()) {
 		case 0:
 			return falsePredicate();
 		case 1:
 			return predicates.iterator().next();
 		default:
-			final List<IPredicate<T>> nonTrivialPredicates = new ArrayList<>(predicates.size());
-			for (IPredicate<T> p : predicates) {
+			final List<Predicate<T>> nonTrivialPredicates = new ArrayList<>(predicates.size());
+			for (Predicate<T> p : predicates) {
 				if (isTrueGuaranteed(p)) {
 					return p;
 				} else if (!isFalseGuaranteed(p)) {
@@ -178,12 +175,12 @@ public class PredicateToolkit {
 			} else if (nonTrivialPredicates.size() == 1) {
 				return nonTrivialPredicates.get(0); // A single predicate is not TRUE or FALSE
 			} else {
-				return new IPredicate<T>() {
+				return new Predicate<T>() {
 
 					@Override
-					public boolean evaluate(T o) {
-						for (IPredicate<T> ex : nonTrivialPredicates) {
-							if (ex.evaluate(o)) {
+					public boolean test(T o) {
+						for (Predicate<T> ex : nonTrivialPredicates) {
+							if (ex.test(o)) {
 								return true;
 							}
 						}
@@ -199,20 +196,20 @@ public class PredicateToolkit {
 	 *
 	 * @param predicate
 	 *            predicate to invert
-	 * @return a predicate that evaluates to {@code true} if the input predicate evaluates to
-	 *         {@code false} and vice versa
+	 * @return a predicate that tests to {@code true} if the input predicate tests to {@code false}
+	 *         and vice versa
 	 */
-	public static <T> IPredicate<T> not(final IPredicate<T> predicate) {
+	public static <T> Predicate<T> not(final Predicate<T> predicate) {
 		if (isTrueGuaranteed(predicate)) {
 			return falsePredicate();
 		} else if (isFalseGuaranteed(predicate)) {
 			return truePredicate();
 		} else {
-			return new IPredicate<T>() {
+			return new Predicate<T>() {
 
 				@Override
-				public boolean evaluate(T o) {
-					return !predicate.evaluate(o);
+				public boolean test(T o) {
+					return !predicate.test(o);
 				}
 			};
 		}
@@ -229,15 +226,15 @@ public class PredicateToolkit {
 	 * @param limit
 	 *            value to compare against
 	 * @param orEqual
-	 *            if {@code true}, evaluate values that are equal to the limit to {@code true}
+	 *            if {@code true}, test values that are equal to the limit to {@code true}
 	 * @param <T>
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is less than, or
+	 * @return a predicate that tests to {@code true} if the value to check is less than, or
 	 *         optionally equal to, the limit value
 	 */
-	public static <T, M> IPredicate<T> less(
+	public static <T, M> Predicate<T> less(
 		IMemberAccessor<? extends M, T> valueAccessor, Comparable<? super M> limit, boolean orEqual) {
 		// NOTE: Compiler could do constant propagation to achieve the same from more condensed code, but this is more readable.
 		return orEqual ? lessOrEqual(valueAccessor, limit) : less(valueAccessor, limit);
@@ -257,14 +254,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is strictly less
-	 *         than the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is strictly less than
+	 *         the limit value
 	 */
-	public static <T, M> IPredicate<T> less(
+	public static <T, M> Predicate<T> less(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				M value = valueAccessor.getMember(o);
 				return (value != null) && (limit.compareTo(value) > 0);
 			}
@@ -285,14 +282,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is less than or
-	 *         equal to the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is less than or equal to
+	 *         the limit value
 	 */
-	public static <T, M> IPredicate<T> lessOrEqual(
+	public static <T, M> Predicate<T> lessOrEqual(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				M value = valueAccessor.getMember(o);
 				return (value != null) && (limit.compareTo(value) >= 0);
 			}
@@ -310,15 +307,15 @@ public class PredicateToolkit {
 	 * @param limit
 	 *            value to compare against
 	 * @param orEqual
-	 *            if {@code true}, evaluate values that are equal to the limit to {@code true}
+	 *            if {@code true}, test values that are equal to the limit to {@code true}
 	 * @param <T>
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is greater than, or
+	 * @return a predicate that tests to {@code true} if the value to check is greater than, or
 	 *         optionally equal to, the limit value
 	 */
-	public static <T, M> IPredicate<T> more(
+	public static <T, M> Predicate<T> more(
 		IMemberAccessor<? extends M, T> valueAccessor, Comparable<? super M> limit, boolean orEqual) {
 		// NOTE: Compiler could do constant propagation to achieve the same from more condensed code, but this is more readable.
 		return orEqual ? moreOrEqual(valueAccessor, limit) : more(valueAccessor, limit);
@@ -338,14 +335,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is strictly greater
-	 *         than the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is strictly greater than
+	 *         the limit value
 	 */
-	public static <T, M> IPredicate<T> more(
+	public static <T, M> Predicate<T> more(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				M value = valueAccessor.getMember(o);
 				return (value != null) && (limit.compareTo(value) < 0);
 			}
@@ -366,14 +363,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the value that is compared
-	 * @return a predicate that evaluates to {@code true} if the value to check is greater than or
-	 *         equal to the limit value
+	 * @return a predicate that tests to {@code true} if the value to check is greater than or equal
+	 *         to the limit value
 	 */
-	public static <T, M> IPredicate<T> moreOrEqual(
+	public static <T, M> Predicate<T> moreOrEqual(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Comparable<? super M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				M value = valueAccessor.getMember(o);
 				return (value != null) && (limit.compareTo(value) <= 0);
 			}
@@ -395,14 +392,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that evaluates to {@code true} if the range value to check intersects
-	 *         with the limit range
+	 * @return a predicate that tests to {@code true} if the range value to check intersects with
+	 *         the limit range
 	 */
-	public static <T, M extends Comparable<? super M>> IPredicate<T> rangeIntersects(
+	public static <T, M extends Comparable<? super M>> Predicate<T> rangeIntersects(
 		final IMemberAccessor<? extends IRange<M>, T> rangeAccessor, final IRange<M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				IRange<M> value = rangeAccessor.getMember(o);
 				if (value != null) {
 					return (value.getStart().compareTo(limit.getEnd()) <= 0)
@@ -428,25 +425,25 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that evaluates to {@code true} if the range value to check is contained
-	 *         in the limit range
+	 * @return a predicate that tests to {@code true} if the range value to check is contained in
+	 *         the limit range
 	 */
-	public static <T, M extends Comparable<? super M>> IPredicate<T> rangeContained(
+	public static <T, M extends Comparable<? super M>> Predicate<T> rangeContained(
 		final IMemberAccessor<? extends IRange<M>, T> rangeAccessor, final IRange<M> limit) {
 		// Optimize the point limit case although not strictly needed when the limit range is treated as closed.
 		if (limit.isPoint()) {
 			final M point = limit.getStart();
-			return new IPredicate<T>() {
+			return new Predicate<T>() {
 				@Override
-				public boolean evaluate(T o) {
+				public boolean test(T o) {
 					IRange<M> value = rangeAccessor.getMember(o);
 					return (value != null) && value.isPoint() && (point.compareTo(value.getStart()) == 0);
 				}
 			};
 		} else {
-			return new IPredicate<T>() {
+			return new Predicate<T>() {
 				@Override
-				public boolean evaluate(T o) {
+				public boolean test(T o) {
 					IRange<M> value = rangeAccessor.getMember(o);
 					if (value != null) {
 						return (value.getStart().compareTo(limit.getStart()) >= 0)
@@ -473,14 +470,14 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that evaluates to {@code true} if the center point of the range value to
+	 * @return a predicate that tests to {@code true} if the center point of the range value to
 	 *         check is contained in the limit range
 	 */
-	public static <T, M extends Comparable<? super M>> IPredicate<T> centerContained(
+	public static <T, M extends Comparable<? super M>> Predicate<T> centerContained(
 		final IMemberAccessor<? extends IRange<M>, T> rangeAccessor, final IRange<M> limit) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				IRange<M> value = rangeAccessor.getMember(o);
 				if (value != null) {
 					M center = value.getCenter();
@@ -503,14 +500,14 @@ public class PredicateToolkit {
 	 *            object to compare against
 	 * @param <T>
 	 *            type of objects passed into the predicate
-	 * @return a predicate that evaluates to {@code true} if the value to check is equal to the
+	 * @return a predicate that tests to {@code true} if the value to check is equal to the
 	 *         specified object
 	 */
-	public static <T> IPredicate<T> equals(final IMemberAccessor<?, T> valueAccessor, final Object item) {
-		return new IPredicate<T>() {
+	public static <T> Predicate<T> equals(final IMemberAccessor<?, T> valueAccessor, final Object item) {
+		return new Predicate<T>() {
 
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				Object value = valueAccessor.getMember(o);
 				return item == null ? value == null : item.equals(value);
 			}
@@ -529,14 +526,14 @@ public class PredicateToolkit {
 	 *            object to compare against
 	 * @param <T>
 	 *            type of objects passed into the predicate
-	 * @return a predicate that evaluates to {@code true} if the value to check is not equal to the
+	 * @return a predicate that tests to {@code true} if the value to check is not equal to the
 	 *         specified object
 	 */
-	public static <T> IPredicate<T> notEquals(final IMemberAccessor<?, T> valueAccessor, final Object item) {
-		return new IPredicate<T>() {
+	public static <T> Predicate<T> notEquals(final IMemberAccessor<?, T> valueAccessor, final Object item) {
+		return new Predicate<T>() {
 
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				Object value = valueAccessor.getMember(o);
 				return item == null ? value != null : !item.equals(value);
 			}
@@ -554,14 +551,13 @@ public class PredicateToolkit {
 	 *            object to compare against
 	 * @param <T>
 	 *            type of objects passed into the predicate
-	 * @return a predicate that evaluates to {@code true} if the value to check is the specified
-	 *         object
+	 * @return a predicate that tests to {@code true} if the value to check is the specified object
 	 */
-	public static <T> IPredicate<T> is(final T item) {
-		return new IPredicate<T>() {
+	public static <T> Predicate<T> is(final T item) {
+		return new Predicate<T>() {
 
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				return o == item;
 			}
 		};
@@ -581,15 +577,15 @@ public class PredicateToolkit {
 	 *            type of objects passed into the predicate
 	 * @param <M>
 	 *            type of the range value that is compared
-	 * @return a predicate that evaluates to {@code true} if the object to check is included in the
+	 * @return a predicate that tests to {@code true} if the object to check is included in the
 	 *         specified set
 	 */
-	public static <T, M> IPredicate<T> memberOf(
+	public static <T, M> Predicate<T> memberOf(
 		final IMemberAccessor<? extends M, T> valueAccessor, final Set<? extends M> items) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				M value = valueAccessor.getMember(o);
 				return items.contains(value);
 			}
@@ -608,14 +604,14 @@ public class PredicateToolkit {
 	 *            the regular expression to match
 	 * @param <T>
 	 *            type of objects passed into the predicate
-	 * @return a predicate that evaluates to {@code true} if the string value matches the regular
+	 * @return a predicate that tests to {@code true} if the string value matches the regular
 	 *         expression
 	 */
-	public static <T> IPredicate<T> matches(final IMemberAccessor<? extends String, T> valueAccessor, String regexp) {
+	public static <T> Predicate<T> matches(final IMemberAccessor<? extends String, T> valueAccessor, String regexp) {
 		final Pattern pattern = getValidPattern(regexp);
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				String value = valueAccessor.getMember(o);
 				return value == null ? false : pattern.matcher(value).matches();
 			}
@@ -632,13 +628,13 @@ public class PredicateToolkit {
 	 *            string accessor used to get the value to check from the input type
 	 * @param substring
 	 *            the substring to look for
-	 * @return a predicate that evaluates to {@code true} if the string value contains the substring
+	 * @return a predicate that tests to {@code true} if the string value contains the substring
 	 */
-	public static <T> IPredicate<T> contains(
+	public static <T> Predicate<T> contains(
 		final IMemberAccessor<? extends String, T> valueAccessor, final String substring) {
-		return new IPredicate<T>() {
+		return new Predicate<T>() {
 			@Override
-			public boolean evaluate(T o) {
+			public boolean test(T o) {
 				String value = valueAccessor.getMember(o);
 				return value == null ? false : value.contains(substring);
 			}

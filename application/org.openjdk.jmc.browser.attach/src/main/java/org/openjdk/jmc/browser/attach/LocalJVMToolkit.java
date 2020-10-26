@@ -212,7 +212,7 @@ public class LocalJVMToolkit {
 							StringMonitor sm = (StringMonitor) mvm.findByName("java.property.java.vm.name"); //$NON-NLS-1$
 							if (sm != null) {
 								jvmName = sm.stringValue();
-								type = getJVMType(sm.stringValue());
+								type = JVMType.getJVMType(sm.stringValue());
 							}
 
 							sm = (StringMonitor) mvm.findByName("java.property.java.version"); //$NON-NLS-1$
@@ -313,15 +313,6 @@ public class LocalJVMToolkit {
 		return jvmArch;
 	}
 
-	private static JVMType getJVMType(String jvmName) {
-		if (JavaVMVersionToolkit.isJRockitJVMName(jvmName)) {
-			return JVMType.JROCKIT;
-		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
-			return JVMType.HOTSPOT;
-		}
-		return JVMType.OTHER;
-	}
-
 	private static boolean isDebug(String stringValue) {
 		return stringValue.toUpperCase().contains("DEBUG"); //$NON-NLS-1$
 	}
@@ -390,7 +381,7 @@ public class LocalJVMToolkit {
 						}
 						if (props != null) {
 							jvmName = props.getProperty("java.vm.name"); //$NON-NLS-1$
-							jvmType = getJVMType(jvmName);
+							jvmType = JVMType.getJVMType(jvmName);
 							version = props.getProperty("java.version"); //$NON-NLS-1$
 							jvmVersion = props.getProperty("java.vm.version"); //$NON-NLS-1$
 							jvmVendor = props.getProperty("java.vm.vendor");

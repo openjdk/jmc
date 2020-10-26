@@ -72,7 +72,7 @@ public interface TransformRegistry {
 	 * Set the current configuration that will be instrumented
 	 *
 	 * @param xmlDescription
-	 *           an XML snippet describing the current configuration
+	 *            an XML snippet describing the current configuration
 	 */
 	void setCurrentConfiguration(String xmlDescription);
 
@@ -80,8 +80,7 @@ public interface TransformRegistry {
 	 * Modifies class information in the registry according to the xml description.
 	 *
 	 * @param xmlDescription
-	 *           an XML snippet describing the wanted modifications.
-	 *
+	 *            an XML snippet describing the wanted modifications.
 	 * @return a set of class names associated with modified {@link TransformDescriptor}s.
 	 */
 	Set<String> modify(String xmlDescription);
@@ -95,13 +94,15 @@ public interface TransformRegistry {
 
 	/**
 	 * Signify classes are or are not being reverted to their pre instrumentation versions.
+	 * 
 	 * @param shouldRevert
-	 *           true if class instrumentation should be reverted, false otherwise.
+	 *            true if class instrumentation should be reverted, false otherwise.
 	 */
 	void setRevertInstrumentation(boolean shouldRevert);
 
 	/**
 	 * Determines if classes should be reverted to their pre instrumentation versions.
+	 * 
 	 * @return true, if classes should be reverted and false otherwise.
 	 */
 	boolean isRevertIntrumentation();

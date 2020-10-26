@@ -38,18 +38,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A ReferenceChain instance presents a field reference expression.
- * 
- * eg. <code>OuterClass.this.field.STATIC_FIELD</code> is a reference chain consisting elements: a qualified-this 
- * reference and two field reference (<code>field</code> and <code>STATIC_FIELD</code>).
- * 
+ * A ReferenceChain instance presents a field reference expression. eg.
+ * <code>OuterClass.this.field.STATIC_FIELD</code> is a reference chain consisting elements: a
+ * qualified-this reference and two field reference (<code>field</code> and
+ * <code>STATIC_FIELD</code>).
  */
 public final class ReferenceChain {
 	private final Class<?> callerClass;
 	private final List<ReferenceChainElement> references;
 
 	/**
-	 * @param callerClass the caller class making this reference
+	 * @param callerClass
+	 *            the caller class making this reference
 	 */
 	public ReferenceChain(Class<?> callerClass) {
 		this.callerClass = callerClass;
@@ -71,8 +71,8 @@ public final class ReferenceChain {
 	}
 
 	/**
-	 * Reduces the reference chain to prepend "this" or qualified-this references if necessary, and short-circuits on
-	 * static references
+	 * Reduces the reference chain to prepend "this" or qualified-this references if necessary, and
+	 * short-circuits on static references
 	 * 
 	 * @return the normalized reference chain
 	 */
@@ -116,7 +116,9 @@ public final class ReferenceChain {
 
 	/**
 	 * Appends a ReferenceChainElement to the chain
-	 * @param ref ReferenceChainElement to be appended
+	 * 
+	 * @param ref
+	 *            ReferenceChainElement to be appended
 	 */
 	public void append(ReferenceChainElement ref) {
 		references.add(ref);

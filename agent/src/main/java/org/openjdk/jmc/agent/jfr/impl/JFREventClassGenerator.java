@@ -82,7 +82,8 @@ public class JFREventClassGenerator {
 		return cw.toByteArray();
 	}
 
-	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined) throws IllegalSyntaxException {
+	private static void generateAttributeFields(ClassWriter cw, JFRTransformDescriptor td, Class<?> classBeingRedefined)
+			throws IllegalSyntaxException {
 		Type[] args = Type.getArgumentTypes(td.getMethod().getSignature());
 		for (Parameter param : td.getParameters()) {
 			createField(cw, td, param, args[param.getIndex()]);
@@ -128,8 +129,8 @@ public class JFREventClassGenerator {
 		ReturnValue returnValue = td.getReturnValue();
 		if (!td.isAllowedFieldType(type)) {
 			Logger.getLogger(JFREventClassGenerator.class.getName())
-					.warning("Skipped generating field in event class for return value " + returnValue + " and type " + type //$NON-NLS-1$ //$NON-NLS-2$
-							+ " because of configuration settings!"); //$NON-NLS-1$
+					.warning("Skipped generating field in event class for return value " + returnValue + " and type " //$NON-NLS-1$//$NON-NLS-2$
+							+ type + " because of configuration settings!"); //$NON-NLS-1$
 			return;
 		}
 

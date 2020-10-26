@@ -59,10 +59,8 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		this.protectionDomain = protectionDomain;
 
 		try {
-			this.inspectionClass =
-					classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined :
-							inspectionClassLoader
-									.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
+			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
+					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e); // This should not happen
 		}
@@ -90,7 +88,7 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		}
 		if (!transformDescriptor.isMatchFound()) {
 			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
-					 + transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
+					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
 
 		super.visitEnd();

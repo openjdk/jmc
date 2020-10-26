@@ -39,8 +39,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.openjdk.jmc.ui.CoreImages;
 
 class TreemapAction extends Action {
-	private static final String ICON_RESET = "reset.gif"; //$NON-NLS-1$
-
 	private final TreemapActionType actionType;
 	private Runnable runnable = () -> {
 	};

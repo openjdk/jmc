@@ -33,16 +33,16 @@
  */
 package org.openjdk.jmc.joverflow.ui.swt.events;
 
-import org.eclipse.swt.internal.SWTEventListener;
-import org.openjdk.jmc.joverflow.ui.swt.Treemap;
-
+import java.util.EventListener;
 import java.util.function.Consumer;
+
+import org.openjdk.jmc.joverflow.ui.swt.Treemap;
 
 /**
  * Classes which implement this interface provide methods that deal with setting new item as top for
  * a treemap.
  */
-public interface TreemapListener extends SWTEventListener {
+public interface TreemapListener extends EventListener {
 
 	/**
 	 * Sent when a treemap becomes the new top.

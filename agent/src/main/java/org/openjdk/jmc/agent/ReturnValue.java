@@ -47,7 +47,8 @@ public final class ReturnValue implements Attribute {
 	private final String relationKey;
 	private final String converterClassName;
 
-	public ReturnValue(String name, String description, String contentType, String relationKey, String converterClassName) {
+	public ReturnValue(String name, String description, String contentType, String relationKey,
+			String converterClassName) {
 		this.name = name == null ? "Return Value" : name;
 		this.description = description;
 		this.contentType = contentType;

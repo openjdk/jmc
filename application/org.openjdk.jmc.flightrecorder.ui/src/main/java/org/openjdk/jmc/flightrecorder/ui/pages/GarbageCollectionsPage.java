@@ -198,6 +198,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		IQuantity sumOfPauses;
 		IQuantity startTime;
 		IQuantity endTime;
+		IQuantity usedBeforeGC;
+		IQuantity usedAfterGC;
 		IQuantity usedDelta;
 		IQuantity committedDelta;
 		IQuantity usedMetaspaceDelta;
@@ -207,6 +209,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			this.type = type;
 			this.gcItem = gcItem;
 			referenceStatisticsData = new Object[REF_TYPE.length];
+			usedBeforeGC = UnitLookup.BYTE.quantity(0);
+			usedAfterGC = UnitLookup.BYTE.quantity(0);
 			usedDelta = UnitLookup.BYTE.quantity(0);
 			committedDelta = UnitLookup.BYTE.quantity(0);
 			usedMetaspaceDelta = UnitLookup.BYTE.quantity(0);
@@ -315,6 +319,10 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				columns.add(new ColumnBuilder(t.localizedName, "ReferenceStatisticsType-" + t.name(), //$NON-NLS-1$
 						o -> ((GC) o).getRefCount(t)).style(SWT.RIGHT).build());
 			}
+			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_BEFORE_GC, "usedHeapBegoreGC", //$NON-NLS-1$
+					o -> ((GC) o).usedBeforeGC).style(SWT.RIGHT).build());
+			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_AFTER_GC, "usedHeapAfterGC", //$NON-NLS-1$
+					o -> ((GC) o).usedAfterGC).style(SWT.RIGHT).build());
 			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_USED_HEAP_DELTA, "usedHeapDelta", //$NON-NLS-1$
 					o -> ((GC) o).usedDelta).style(SWT.RIGHT).build());
 			columns.add(new ColumnBuilder(Messages.GarbageCollectionsPage_COMMITTED_HEAP_DELTA, "committedHeapDelta", //$NON-NLS-1$
@@ -654,10 +662,12 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 					if (gc != null) {
 						String when = gcWhenAccessor.getMember(item);
 						if ("Before GC".equals(when)) { //$NON-NLS-1$
-							gc.usedDelta = gc.usedDelta.subtract(usedHeapAccessor.getMember(item));
+							gc.usedBeforeGC = usedHeapAccessor.getMember(item);
+							gc.usedDelta = gc.usedDelta.subtract(gc.usedBeforeGC);
 							gc.committedDelta = gc.committedDelta.subtract(committedHeapAccessor.getMember(item));
 						} else {
-							gc.usedDelta = gc.usedDelta.add(usedHeapAccessor.getMember(item));
+							gc.usedAfterGC = usedHeapAccessor.getMember(item);
+							gc.usedDelta = gc.usedDelta.add(gc.usedAfterGC);
 							gc.committedDelta = gc.committedDelta.add(committedHeapAccessor.getMember(item));
 						}
 					}

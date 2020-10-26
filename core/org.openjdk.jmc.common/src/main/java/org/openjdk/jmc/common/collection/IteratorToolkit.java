@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,8 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import org.openjdk.jmc.common.IPredicate;
+import java.util.function.Predicate;
 
 /**
  * Various methods that work with iterators.
@@ -73,10 +72,8 @@ public class IteratorToolkit {
 	 * @return a new iterator that will never produce null values
 	 */
 	public static <T> Iterator<T> skipNulls(Iterator<T> itr) {
-		return filter(itr, new IPredicate<T>() {
-
-			@Override
-			public boolean evaluate(T o) {
+		return filter(itr, new Predicate<T>() {
+			public boolean test(T o) {
 				return o != null;
 			}
 		});
@@ -93,14 +90,14 @@ public class IteratorToolkit {
 	 *            filter predicate
 	 * @return a new iterator that only contains values where the filter evaluates to true
 	 */
-	public static <T> Iterator<T> filter(final Iterator<T> itr, final IPredicate<? super T> filter) {
+	public static <T> Iterator<T> filter(final Iterator<T> itr, final Predicate<? super T> filter) {
 		return new AbstractIterator<T>() {
 
 			@Override
 			protected T findNext() {
 				while (itr.hasNext()) {
 					T object = itr.next();
-					if (filter.evaluate(object)) {
+					if (filter.test(object)) {
 						return object;
 					}
 				}

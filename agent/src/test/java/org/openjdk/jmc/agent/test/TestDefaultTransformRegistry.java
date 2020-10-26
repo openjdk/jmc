@@ -55,20 +55,14 @@ public class TestDefaultTransformRegistry {
 	private static final String XML_EVENT_DESCRIPTION = "<event id=\"demo.jfr.test1\">"
 			+ "<name>JFR Hello World Event 1 %TEST_NAME% </name>"
 			+ "<description>Defined in the xml file and added by the agent.</description>"
-			+ "<path>demo/jfrhelloworldevent1</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>"
-			+ "<method>"
-			+ "<name>printHelloWorldJFR1</name>"
-			+ "<descriptor>()V</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>";
-	
+			+ "<path>demo/jfrhelloworldevent1</path>" + "<stacktrace>true</stacktrace>"
+			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>" + "<method>" + "<name>printHelloWorldJFR1</name>"
+			+ "<descriptor>()V</descriptor>" + "</method>" + "<location>WRAP</location>" + "</event>";
+
 	public static String getTemplate() throws IOException {
 		return TestToolkit.readTemplate(TestDefaultTransformRegistry.class, TestToolkit.DEFAULT_TEMPLATE_NAME);
 	}
-	
+
 	@Test
 	public void testHasPendingTransforms() throws XMLStreamException, IOException {
 		TransformRegistry registry = DefaultTransformRegistry
@@ -137,12 +131,12 @@ public class TestDefaultTransformRegistry {
 
 	@Test
 	public void testClearAllTransformData() throws XMLStreamException, IOException {
-		TransformRegistry registry = DefaultTransformRegistry
-				.from(TestToolkit.getProbesXMLFromTemplate(getXMLDescription(XML_EVENT_DESCRIPTION), "clearAllTransformData")); //$NON-NLS-1$
+		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit
+				.getProbesXMLFromTemplate(getXMLDescription(XML_EVENT_DESCRIPTION), "clearAllTransformData")); //$NON-NLS-1$
 		assertNotNull(registry);
 		Set<String> classesCleared = registry.clearAllTransformData();
 		assertTrue(classesCleared.size() == 1);
-		assertEquals(classesCleared.iterator().next(),Type.getInternalName(InstrumentMe.class));
+		assertEquals(classesCleared.iterator().next(), Type.getInternalName(InstrumentMe.class));
 		assertNull(registry.getTransformData(Type.getInternalName(InstrumentMe.class)));
 	}
 
