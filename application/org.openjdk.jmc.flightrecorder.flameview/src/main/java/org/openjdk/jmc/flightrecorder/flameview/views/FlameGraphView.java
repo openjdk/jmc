@@ -56,13 +56,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Base64;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,7 +155,19 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				jsFlameviewColoring);
 	}
 
-	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
+	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
+			new ThreadFactory() {
+				private ThreadGroup group = new ThreadGroup("FlameGraphModelCalculationGroup");
+				private AtomicInteger counter = new AtomicInteger();
+
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread t = new Thread(group, r, "FlameGraphModelCalculation-" + counter.getAndIncrement());
+					t.setDaemon(true);
+					return t;
+				}
+			});
 	private FrameSeparator frameSeparator;
 
 	private Browser browser;
@@ -167,8 +179,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private ModelState modelState = ModelState.NONE;
-	private ModelRebuildCallable modelRebuildCallable;
-	private Future<Void> modelCalculationFuture;
+	private ModelRebuildRunnable modelRebuildRunnable;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -187,11 +198,10 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
 		}
-
 	}
 
 	private enum ModelState {
-		INIT, CALCULATION, READY, ABORTED, NONE;
+		NOT_STARTED, STARTED, FINISHED, NONE;
 	}
 
 	private class GroupByAction extends Action {
@@ -253,7 +263,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			this.imageDescriptor = imageDescriptor;
 			this.disabledImageDescriptor = disabledImageDescriptor;
 		}
-
 	}
 
 	private class ExportAction extends Action {
@@ -280,13 +289,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private static class ModelRebuildCallable implements Callable<Void> {
+	private static class ModelRebuildRunnable implements Runnable {
 
-		private volatile boolean isInvalid;
 		private FlameGraphView view;
 		private IItemCollection items;
+		private volatile boolean isInvalid;
 
-		private ModelRebuildCallable(FlameGraphView view, IItemCollection items) {
+		private ModelRebuildRunnable(FlameGraphView view, IItemCollection items) {
 			this.view = view;
 			this.items = items;
 		}
@@ -296,19 +305,24 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 
 		@Override
-		public Void call() throws Exception {
-			view.modelState = ModelState.CALCULATION;
+		public void run() {
+			view.modelState = ModelState.STARTED;
 			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
 			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
-			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
-			String jsonModel = view.toJSonModel(traceNode).toString();
 			if (isInvalid) {
-				view.modelState = ModelState.ABORTED;
-				return null;
+				return;
 			}
-			view.modelState = ModelState.READY;
-			DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
-			return null;
+			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+			if (isInvalid) {
+				return;
+			}
+			String jsonModel = view.toJSonModel(traceNode, this).toString();
+			if (isInvalid) {
+				return;
+			} else {
+				view.modelState = ModelState.FINISHED;
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
+			}
 		}
 	}
 
@@ -382,19 +396,20 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
-		if (modelCalculationFuture != null) {
-			modelRebuildCallable.setInvalid();
-			modelCalculationFuture.cancel(true);
+		if (modelRebuildRunnable != null) {
+			modelRebuildRunnable.setInvalid();
 		}
 
-		modelState = ModelState.INIT;
 		currentItems = items;
-		modelRebuildCallable = new ModelRebuildCallable(this, items);
-		modelCalculationFuture = MODEL_EXECUTOR.submit(modelRebuildCallable);
+		modelState = ModelState.NOT_STARTED;
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
+		if (!modelRebuildRunnable.isInvalid) {
+			MODEL_EXECUTOR.execute(modelRebuildRunnable);
+		}
 	}
 
 	private void setModel(final IItemCollection items, final String json) {
-		if (ModelState.READY.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
+		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
 			setViewerInput(json);
 		}
 	}
@@ -489,29 +504,31 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private StringBuilder toJSonModel(TraceNode root) {
+	private StringBuilder toJSonModel(TraceNode root, ModelRebuildRunnable rebuildCallable) {
 		StringBuilder builder = new StringBuilder();
 		String rootNodeStart = createJsonRootTraceNode(root);
 		builder.append(rootNodeStart);
-		renderChildren(builder, root);
+		renderChildren(builder, root, rebuildCallable);
 		builder.append("]}");
 		return builder;
 	}
 
-	private static void render(StringBuilder builder, TraceNode node) {
+	private static void render(StringBuilder builder, TraceNode node, ModelRebuildRunnable rebuildCallable) {
 		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
 				: createJsonTraceNode(node);
 		builder.append(start);
-		renderChildren(builder, node);
+		renderChildren(builder, node, rebuildCallable);
 		builder.append("]}");
 	}
 
-	private static void renderChildren(StringBuilder builder, TraceNode node) {
-		for (int i = 0; i < node.getChildren().size(); i++) {
-			render(builder, node.getChildren().get(i));
+	private static void renderChildren(StringBuilder builder, TraceNode node, ModelRebuildRunnable rebuildCallable) {
+		int i = 0;
+		while (i < node.getChildren().size() && !rebuildCallable.isInvalid) {
+			render(builder, node.getChildren().get(i), rebuildCallable);
 			if (i < node.getChildren().size() - 1) {
 				builder.append(",");
 			}
+			i++;
 		}
 	}
 
