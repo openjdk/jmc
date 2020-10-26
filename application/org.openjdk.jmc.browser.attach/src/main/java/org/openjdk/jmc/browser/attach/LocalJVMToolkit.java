@@ -373,6 +373,13 @@ public class LocalJVMToolkit {
 						// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
 						Properties props = null;
 						try {
+							try {
+								// try to force finish init the attached JVM
+								// to ensure properties are correctly populated 
+								((HotSpotVirtualMachine) vm).startLocalManagementAgent();
+							} catch (Exception ex) {
+								// swallow exceptions
+							}
 							props = vm.getSystemProperties();
 						} catch (IOException e) {
 							BrowserAttachPlugin.getPluginLogger().log(Level.FINER,
