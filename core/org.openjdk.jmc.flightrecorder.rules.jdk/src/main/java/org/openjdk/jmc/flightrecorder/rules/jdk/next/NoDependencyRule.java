@@ -59,7 +59,7 @@ public class NoDependencyRule implements IRule2 {
 			public IResult call() throws Exception {
 				// Here we do some calculations
 				IQuantity bytes = UnitLookup.GIBIBYTE.quantity(2);
-				return ResultBuilder.createFor(NoDependencyRule.this).setSeverity(Severity.OK)
+				return ResultBuilder.createFor(NoDependencyRule.this, preferenceValueProvider).setSeverity(Severity.OK)
 						.setSummary("No dependencies for this rule").setExplanation("There are bytes in the heap!!!")
 						.setSolution("Don't allocate things!").addResult(FOUND_BYTES, bytes).build();
 			}

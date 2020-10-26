@@ -32,16 +32,16 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.cpu;
 
-import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_NS;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
-import java.text.MessageFormat;
-
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.KindOfQuantity;
+import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
@@ -50,13 +50,18 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanLimit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class CompareCpuRule extends AbstractRule {
 	public static final TypedPreference<IQuantity> OTHER_CPU_WARNING_LIMIT = new TypedPreference<>(
@@ -69,25 +74,31 @@ public class CompareCpuRule extends AbstractRule {
 			Messages.getString(Messages.CompareCpuRule_INFO_LIMIT_LONG), UnitLookup.PERCENTAGE,
 			UnitLookup.PERCENT.quantity(20));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(OTHER_CPU_INFO_LIMIT, OTHER_CPU_WARNING_LIMIT);
+	
+	public static final TypedResult<IQuantity> AVERAGE_CPU_LOAD = new TypedResult<>("avgCpuLoad", "Average CPU Load", "The average CPU load detected.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IRange<IQuantity>> AVERAGE_CPU_LOAD_WINDOW = new TypedResult<>("avgCpuLoadWindow", "Average CPU Load Window", "The window during which the high CPU load was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE)
+			.build();
+	
 	public CompareCpuRule() {
 		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES_TOPIC, //$NON-NLS-1$
-				OTHER_CPU_INFO_LIMIT, OTHER_CPU_WARNING_LIMIT);
+				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CPU_LOAD);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CPU_LOAD);
-		}
-
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		double warningLimit = vp.getPreferenceValue(OTHER_CPU_WARNING_LIMIT).doubleValue() / 100;
 		double infoLimit = vp.getPreferenceValue(OTHER_CPU_INFO_LIMIT).doubleValue() / 100;
 
 		IItemCollection cpuItems = items.apply(JdkFilters.CPU_LOAD);
 		IType<IItem> cpuLoadType = RulesToolkit.getType(cpuItems, JdkTypeIDs.CPU_LOAD);
 		if (!cpuLoadType.hasAttribute(JdkAttributes.JVM_TOTAL)) {
-			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_TOTAL);
+			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_TOTAL, vp);
 		}
 		// FIXME: Could consider using the infoLimit for the span instead?
 		SpanLimit maxOtherCpu = SpanToolkit.getMaxSpanLimit(cpuItems, JdkAttributes.OTHER_CPU, JfrAttributes.END_TIME,
@@ -96,22 +107,23 @@ public class CompareCpuRule extends AbstractRule {
 				JfrAttributes.END_TIME, warningLimit);
 
 		if (maxOtherCpu == null || maxOtherCpuRatio == null) {
-			return RulesToolkit.getNotApplicableResult(this,
-					Messages.getString(Messages.CompareCpuRule_TEXT_TOO_FEW_SAMPLES));
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.CompareCpuRule_TEXT_TOO_FEW_SAMPLES))
+					.build();
 		}
 
 		double score = RulesToolkit.mapExp100(maxOtherCpuRatio.value, infoLimit, warningLimit);
 
-		String startTime = KindOfQuantity.format(maxOtherCpu.start, EPOCH_NS);
-		String duration = KindOfQuantity.format(maxOtherCpu.end - maxOtherCpu.start, UnitLookup.NANOSECOND);
-		String otherCpuMaxValueString = UnitLookup.PERCENT.quantity(Math.round(maxOtherCpu.value * 100))
-				.displayUsing(IDisplayable.AUTO);
-		String message = MessageFormat.format(Messages.getString(Messages.CompareCpuRule_TEXT_MESSAGE), duration,
-				startTime, otherCpuMaxValueString);
-		String longMessage = null;
-		if (score >= 25) {
-			longMessage = message + "<p>" + Messages.getString(Messages.CompareCpuRule_TEXT_INFO_LONG); //$NON-NLS-1$
-		}
-		return new Result(this, score, message, longMessage, null);
+		IRange<IQuantity> cpuLoadWindow = QuantityRange.createWithEnd(UnitLookup.EPOCH_NS.quantity(maxOtherCpu.start), UnitLookup.EPOCH_NS.quantity(maxOtherCpu.end));
+		IQuantity otherCpuMaxValue = UnitLookup.PERCENT.quantity(Math.round(maxOtherCpu.value * 100));
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(Messages.getString(Messages.CompareCpuRule_TEXT_MESSAGE))
+				.setExplanation(Messages.getString(Messages.CompareCpuRule_TEXT_INFO_LONG))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(AVERAGE_CPU_LOAD, otherCpuMaxValue)
+				.addResult(AVERAGE_CPU_LOAD_WINDOW, cpuLoadWindow)
+				.build();
 	}
 }

@@ -34,31 +34,34 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
-import static org.openjdk.jmc.common.unit.UnitLookup.PERCENT_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class SystemGcRule implements IRule {
+public class SystemGcRule implements IRule2 {
 	private static final String SYSTEM_GC_RESULT_ID = "SystemGc"; //$NON-NLS-1$
 	public static final TypedPreference<IQuantity> SYSTEM_GC_RATIO_LIMIT = new TypedPreference<>("systemgc.ratio.limit", //$NON-NLS-1$
 			Messages.getString(Messages.SystemGcRule_CONFIG_WARNING_LIMIT),
@@ -67,35 +70,43 @@ public class SystemGcRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(SYSTEM_GC_RATIO_LIMIT);
 
+	public static final TypedResult<IQuantity> SYSTEM_GC_RATIO = new TypedResult<>("systemGcRatio", "System GC Ratio", "The ratio of all GCs caused by System.gc() calls to all GCs.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, SYSTEM_GC_RATIO);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
+			.build();
+	
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items,
-						JdkTypeIDs.GARBAGE_COLLECTION);
-				if (eventAvailability != EventAvailability.AVAILABLE) {
-					return RulesToolkit.getEventAvailabilityResult(SystemGcRule.this, items, eventAvailability,
-							JdkTypeIDs.GARBAGE_COLLECTION);
-				}
-				GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
-				return getSystemGcResult(aggregate.getSystemGcCount(), aggregate.getGcCount(),
-						valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT));
+			public IResult call() throws Exception {
+				return getSystemGcResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
 	}
 
-	private Result getSystemGcResult(double systemGcCount, double totalCcCount, IQuantity limit) {
-		if (systemGcCount > 0) {
-			double systemGcRatio = systemGcCount / totalCcCount;
+	private IResult getSystemGcResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
+		IQuantity limit = valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT);
+		if (aggregate.getSystemGcCount() > 0) {
+			double systemGcRatio = aggregate.getSystemGcCount() / aggregate.getGcCount();
 			double score = RulesToolkit.mapExp100(systemGcRatio, limit.doubleValue());
-			String text = MessageFormat.format(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO),
-					PERCENT_UNITY.quantity(systemGcRatio).displayUsing(IDisplayable.AUTO));
-			String longText = text + " " + Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO_LONG); //$NON-NLS-1$
-			return new Result(this, score, text, longText, JdkQueries.GARBAGE_COLLECTION);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO))
+					.setExplanation(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO_LONG))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(SYSTEM_GC_RATIO, UnitLookup.PERCENT_UNITY.quantity(systemGcRatio))
+					.build();
 		} else {
-			return new Result(this, 0, Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK))
+					.build();
 		}
 	}
 
@@ -117,5 +128,15 @@ public class SystemGcRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.GARBAGE_COLLECTION_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

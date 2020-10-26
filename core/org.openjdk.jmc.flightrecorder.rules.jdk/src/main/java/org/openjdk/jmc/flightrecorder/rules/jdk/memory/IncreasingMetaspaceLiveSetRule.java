@@ -32,9 +32,11 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -46,31 +48,36 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class IncreasingMetaspaceLiveSetRule implements IRule {
+public class IncreasingMetaspaceLiveSetRule implements IRule2 {
 
 	private static final String RESULT_ID = "IncreasingMetaSpaceLiveSet"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.METASPACE_SUMMARY);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.METASPACE_SUMMARY);
-		}
-
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.METASPACE_SUMMARY, EventAvailability.ENABLED)
+			.build();
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter afterFilter = ItemFilters.and(JdkFilters.METASPACE_SUMMARY_AFTER_GC, JdkFilters.AFTER_GC);
 		Iterator<? extends IItemIterable> allAfterItems = items.apply(afterFilter).iterator();
 		if (allAfterItems.hasNext()) {
@@ -84,24 +91,31 @@ public class IncreasingMetaspaceLiveSetRule implements IRule {
 			double score = RulesToolkit.mapExp100(leastSquare, 0.75);
 			// FIXME: Should construct a message using leastSquare, not use a hard limit
 			if (score >= 25) {
-				String shortMessage = Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO);
-				String longMessage = shortMessage + " " //$NON-NLS-1$
-						+ Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG);
-				return new Result(this, score, shortMessage, longMessage, JdkQueries.METASPACE_SUMMARY_AFTER_GC);
+				return ResultBuilder.createFor(this, valueProvider)
+						.setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.build();
 			}
-			return new Result(this, score, Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK),
-					null, JdkQueries.METASPACE_SUMMARY_AFTER_GC);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK), null,
-				JdkQueries.METASPACE_SUMMARY_AFTER_GC);
+		return ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK))
+				.build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -125,5 +139,15 @@ public class IncreasingMetaspaceLiveSetRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.GARBAGE_COLLECTION_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

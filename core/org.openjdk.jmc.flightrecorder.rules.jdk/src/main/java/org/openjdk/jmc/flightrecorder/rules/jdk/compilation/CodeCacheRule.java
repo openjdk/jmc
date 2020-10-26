@@ -32,12 +32,12 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.compilation;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -48,25 +48,30 @@ import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class CodeCacheRule implements IRule {
+public class CodeCacheRule implements IRule2 {
 
 	public static final String CODE_CACHE_RESULT_ID = "CodeCache"; //$NON-NLS-1$
 
@@ -85,7 +90,14 @@ public class CodeCacheRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(CODE_CACHE_SIZE_INFO_PERCENT, CODE_CACHE_SIZE_WARN_PERCENT);
 
-	private static class CodeHeapData implements Comparable<CodeHeapData> {
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
+			.addEventType(JdkTypeIDs.CODE_CACHE_CONFIG, EventAvailability.AVAILABLE)
+			.addEventType(JdkTypeIDs.CODE_CACHE_STATISTICS, EventAvailability.AVAILABLE)
+			.addEventType(JdkTypeIDs.CODE_CACHE_FULL, EventAvailability.AVAILABLE)
+			.build();
+
+	private static class CodeHeapData implements Comparable<CodeHeapData>, IDisplayable {
 		private String name;
 		private IQuantity ratio;
 
@@ -94,8 +106,12 @@ public class CodeCacheRule implements IRule {
 			this.ratio = ratio;
 		}
 
-		IQuantity getRatio() {
+		public IQuantity getRatio() {
 			return ratio;
+		}
+		
+		public String getName() {
+			return name;
 		}
 
 		@Override
@@ -121,51 +137,53 @@ public class CodeCacheRule implements IRule {
 			}
 			return false;
 		}
+
+		@Override
+		public String displayUsing(String formatHint) {
+			return name + "(" + ratio.displayUsing(formatHint) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
+	
+	public static final ContentType<CodeHeapData> CODE_HEAP = UnitLookup.createSyntheticContentType("codeHeapData"); //$NON-NLS-1$
+	
+	public static final TypedResult<IQuantity> CODE_CACHE_FREE_RATIO = new TypedResult<>("codeCacheFreeRatio", "Code Cache Free Ratio", "The percentage of the code cache that was free.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final TypedCollectionResult<CodeHeapData> CODE_HEAPS = new TypedCollectionResult<>("codeHeaps", "Code Heaps", "The code heaps in the JVM.", CODE_HEAP, CodeHeapData.class); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, CODE_CACHE_FREE_RATIO);
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
 	}
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CODE_CACHE_FULL,
-				JdkTypeIDs.VM_INFO, JdkTypeIDs.CODE_CACHE_STATISTICS, JdkTypeIDs.CODE_CACHE_CONFIG);
-		if (eventAvailability != EventAvailability.ENABLED && eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CODE_CACHE_FULL,
-					JdkTypeIDs.VM_INFO, JdkTypeIDs.CODE_CACHE_STATISTICS, JdkTypeIDs.CODE_CACHE_CONFIG);
-		}
-		eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CODE_CACHE_CONFIG);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.CODE_CACHE_CONFIG);
-		}
-
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// Check if this is an early unsupported recording
 		IItemCollection ccItems = items.apply(JdkFilters.CODE_CACHE_CONFIGURATION);
 		IType<IItem> ccType = RulesToolkit.getType(ccItems, JdkTypeIDs.CODE_CACHE_CONFIG);
 		IQuantity ccFullCount = items.getAggregate(JdkAggregators.CODE_CACHE_FULL_COUNT);
 		if (ccFullCount != null && ccFullCount.doubleValue() > 0) {
-			String shortDescription = Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN);
-			String longDescription = shortDescription + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN_LONG) + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE);
-			return new Result(this, 100, shortDescription, longDescription, JdkQueries.CODE_CACHE_FULL);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.WARNING)
+					.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN_LONG))
+					.setSolution(Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE))
+					.build();
 		}
 		IQuantity infoPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_INFO_PERCENT);
 		IQuantity warningPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_WARN_PERCENT);
 		double allocationRatioScore = 0;
 		String shortDescription = null;
 		String longDescription = null;
+		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider);
 		if (hasSegmentedCodeCache(items)) {
 			if (!ccType.hasAttribute(JdkAttributes.PROFILED_SIZE)) {
-				return RulesToolkit.getMissingAttributeResult(this, ccType, JdkAttributes.PROFILED_SIZE);
+				return RulesToolkit.getMissingAttributeResult(this, ccType, JdkAttributes.PROFILED_SIZE, valueProvider);
 			}
 			IQuantity profiledAggregate = items
 					.getAggregate(Aggregators.filter(Aggregators.min(JdkAttributes.UNALLOCATED),
@@ -198,20 +216,17 @@ public class CodeCacheRule implements IRule {
 			addIfHalfFull(nonNMethodsRatio, heaps, NON_NMETHODS_NAME);
 			IQuantity worstRatio;
 			Collections.sort(heaps);
+			builder.addResult(CODE_HEAPS, heaps);
 			if (heaps.size() > 0) {
 				if (heaps.size() > 1) {
-					shortDescription = MessageFormat.format(
-							Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAPS_SHORT_DESCRIPTION),
-							StringToolkit.join(heaps, ",")); //$NON-NLS-1$
+					builder.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAPS_SHORT_DESCRIPTION));
 				} else {
-					shortDescription = MessageFormat.format(
-							Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAP_SHORT_DESCRIPTION),
-							heaps.get(0));
+					builder.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAP_SHORT_DESCRIPTION));
 				}
-				longDescription = shortDescription + " " //$NON-NLS-1$
-						+ Messages.getString(Messages.CodeCacheRuleFactory_WARN_LONG_DESCRIPTION) + "<p>" //$NON-NLS-1$
-						+ Messages.getString(Messages.CodeCacheRuleFactory_DEFAULT_LONG_DESCRIPTION) + "<p>" //$NON-NLS-1$
+				longDescription = Messages.getString(Messages.CodeCacheRuleFactory_WARN_LONG_DESCRIPTION) + "\n" //$NON-NLS-1$
+						+ Messages.getString(Messages.CodeCacheRuleFactory_DEFAULT_LONG_DESCRIPTION) + "\n" //$NON-NLS-1$
 						+ Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE);
+				builder.setExplanation(longDescription);
 				worstRatio = heaps.get(0).getRatio();
 			} else {
 				/*
@@ -228,7 +243,7 @@ public class CodeCacheRule implements IRule {
 					warningPreferenceValue.doubleValueIn(UnitLookup.PERCENT));
 		} else {
 			if (!ccType.hasAttribute(JdkAttributes.RESERVED_SIZE)) {
-				return RulesToolkit.getMissingAttributeResult(this, ccType, JdkAttributes.RESERVED_SIZE);
+				return RulesToolkit.getMissingAttributeResult(this, ccType, JdkAttributes.RESERVED_SIZE, valueProvider);
 			}
 			IQuantity codeCacheReserved = items
 					.getAggregate(Aggregators.min(JdkTypeIDs.CODE_CACHE_CONFIG, JdkAttributes.RESERVED_SIZE));
@@ -240,18 +255,24 @@ public class CodeCacheRule implements IRule {
 					100 - unallocatedCodeCachePercent.doubleValueIn(UnitLookup.PERCENT),
 					infoPreferenceValue.doubleValueIn(UnitLookup.PERCENT),
 					warningPreferenceValue.doubleValueIn(UnitLookup.PERCENT));
-			shortDescription = MessageFormat.format(Messages.getString(Messages.CodeCacheRuleFactory_JDK8_TEXT_WARN),
-					unallocatedCodeCachePercent.displayUsing(IDisplayable.AUTO));
-			longDescription = shortDescription + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.CodeCacheRuleFactory_DEFAULT_LONG_DESCRIPTION) + "<p>" //$NON-NLS-1$
+			builder.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_JDK8_TEXT_WARN))
+					.addResult(CODE_CACHE_FREE_RATIO, unallocatedCodeCachePercent);
+			longDescription = Messages.getString(Messages.CodeCacheRuleFactory_DEFAULT_LONG_DESCRIPTION) + "\n" //$NON-NLS-1$
 					+ Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE);
+			builder.setExplanation(longDescription);
 		}
 		if (allocationRatioScore >= 25) {
 			// FIXME: Include configured value of code cache size in long description
-			return new Result(this, allocationRatioScore, shortDescription, longDescription);
+			return builder.setSeverity(Severity.get(allocationRatioScore))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore))
+					.build();
 		}
 		// FIXME: Show calculated free value also in ok text
-		return new Result(this, allocationRatioScore, Messages.getString(Messages.CodeCacheRuleFactory_TEXT_OK));
+		return builder
+				.setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_OK))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore))
+				.build();
 	}
 
 	private boolean hasSegmentedCodeCache(IItemCollection items) {
@@ -287,5 +308,15 @@ public class CodeCacheRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.CODE_CACHE_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

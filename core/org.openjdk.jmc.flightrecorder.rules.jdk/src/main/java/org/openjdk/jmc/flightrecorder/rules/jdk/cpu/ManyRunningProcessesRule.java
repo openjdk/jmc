@@ -35,31 +35,36 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.cpu;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class ManyRunningProcessesRule implements IRule {
+public class ManyRunningProcessesRule implements IRule2 {
 	private static final String MANY_RUNNING_PROCESSES_RESULT_ID = "ManyRunningProcesses"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> OTHER_PROCESSES_INFO_LIMIT = new TypedPreference<>(
@@ -70,33 +75,39 @@ public class ManyRunningProcessesRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(OTHER_PROCESSES_INFO_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.PROCESSES);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.PROCESSES);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.PROCESSES, EventAvailability.AVAILABLE)
+			.build();
+	
+	public static final TypedResult<IQuantity> COMPETING_PROCESS_COUNT = new TypedResult<>("competingProcessCount", "Competing Process Count", "The number of other processes running at the same time on the same system.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> COMPETING_PROCESS_TIME = new TypedResult<>("competingProcessTime", "Competing Process Time", "The timestamp when the number of competing processes was at the maximum.", UnitLookup.TIMESTAMP, IQuantity.class); //$NON-NLS-1$
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(COMPETING_PROCESS_COUNT, COMPETING_PROCESS_TIME);
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		// FIXME: Can we really be sure that 'concurrent' events have the exact same timestamp?
 		List<IntEntry<IQuantity>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.PROCESSES),
 				JfrAttributes.END_TIME);
 		IntEntry<IQuantity> maxNumberProcesses = entries.get(entries.size() - 1);
 		double score = RulesToolkit.mapExp74(maxNumberProcesses.getValue(),
 				vp.getPreferenceValue(OTHER_PROCESSES_INFO_LIMIT).clampedFloorIn(NUMBER_UNITY));
-		String shortMessage = MessageFormat.format(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO),
-				maxNumberProcesses.getValue(), maxNumberProcesses.getKey().displayUsing(IDisplayable.AUTO));
-		String longMessage = MessageFormat.format(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO_LONG),
-				maxNumberProcesses.getValue(), maxNumberProcesses.getKey().displayUsing(IDisplayable.AUTO));
-		if (score >= 25) {
-			longMessage = longMessage + " " + Messages.getString(Messages.ManyRunningProcessesRule_TEXT_RECOMMENDATION); //$NON-NLS-1$
-		}
-		return new Result(this, score, shortMessage, longMessage);
+		return ResultBuilder.createFor(this, vp)
+				.setSeverity(Severity.get(score))
+				.setSummary(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO))
+				.setExplanation(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO_LONG))
+				.setSolution(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_RECOMMENDATION))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(COMPETING_PROCESS_COUNT, UnitLookup.NUMBER_UNITY.quantity(maxNumberProcesses.getValue()))
+				.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey())
+				.build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -120,5 +131,15 @@ public class ManyRunningProcessesRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.PROCESSES_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

@@ -55,13 +55,13 @@ public class OneDependencyRule implements IRule2 {
 				// Here we look up an earlier result
 				IQuantity resultValue = dependencyResults.getResultValue(NoDependencyRule.FOUND_BYTES);
 				if (resultValue != null) {
-					return ResultBuilder.createFor(OneDependencyRule.this).setSeverity(Severity.INFO)
+					return ResultBuilder.createFor(OneDependencyRule.this, preferenceValueProvider).setSeverity(Severity.INFO)
 							.setSummary("We found {foundBytes} earlier!")
 							.setExplanation(MessageFormat.format("A dependency for this rule found '{'{0}'}'",
 									NoDependencyRule.FOUND_BYTES.getIdentifier()))
 							.setSolution("Fix the earlier issue, it might be important").build();
 				} else {
-					return ResultBuilder.createFor(OneDependencyRule.this).setSeverity(Severity.OK)
+					return ResultBuilder.createFor(OneDependencyRule.this, preferenceValueProvider).setSeverity(Severity.OK)
 							.setSummary("We didn't find any bytes earlier!")
 							.setExplanation("A dependency for this rule did not find anything").build();
 				}

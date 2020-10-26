@@ -32,14 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -47,61 +47,66 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class TlabAllocationRatioRule implements IRule {
+public class TlabAllocationRatioRule implements IRule2 {
 
 	private static final String RESULT_ID = "TlabAllocationRatio"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-					JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
-
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
+			.build();
+	
+	public static final TypedResult<IQuantity> OUTSIDE_TLAB_RATIO = new TypedResult<>("outsideTlabRatio", "Allocation Outside TLAB Ratio", "The percentage of all allocations occurring outside TLABs.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
+	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, OUTSIDE_TLAB_RATIO);
+	
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity insideSum = items.getAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
 		IQuantity outsideSum = items.getAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
-
 		if (outsideSum == null) {
-			return new Result(this, 0, Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_OK_NO_OUTSIDE));
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_OK_NO_OUTSIDE))
+					.build();
 		} else if (insideSum == null) {
-			String shortMessage = Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO_ONLY_OUTSIDE);
-			String longMessage = Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO_ONLY_OUTSIDE_LONG)
-					+ "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_RECOMMEND_LESS_ALLOCATION);
-			return new Result(this, 100, shortMessage, longMessage);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.WARNING)
+					.setSummary(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO_ONLY_OUTSIDE))
+					.setExplanation(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO_ONLY_OUTSIDE_LONG))
+					.setSolution(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_RECOMMEND_LESS_ALLOCATION))
+					.build();
 		}
-
 		IQuantity totalSum = insideSum.add(outsideSum);
-
 		double rawRatio = outsideSum.ratioTo(totalSum);
 		// FIXME: Configuration attribute instead of hard coded 0.2 for info limit
 		double score = RulesToolkit.mapExp74(rawRatio, 0.2);
-		String shortMessage = MessageFormat.format(
-				Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO),
-				UnitLookup.PERCENT_UNITY.quantity(rawRatio).displayUsing(IDisplayable.AUTO));
-		String longMessage = shortMessage;
-		if (score >= 25) {
-			longMessage = longMessage + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_RECOMMEND_LESS_ALLOCATION);
-		}
-		return new Result(this, score, shortMessage, longMessage);
+		return ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.get(score))
+				.setSummary(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_INFO))
+				.setSolution(Messages.getString(Messages.TlabAllocationRatioRuleFactory_TEXT_RECOMMEND_LESS_ALLOCATION))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(OUTSIDE_TLAB_RATIO, UnitLookup.PERCENT_UNITY.quantity(rawRatio))
+				.build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -125,6 +130,16 @@ public class TlabAllocationRatioRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.TLAB_TOPIC;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }
