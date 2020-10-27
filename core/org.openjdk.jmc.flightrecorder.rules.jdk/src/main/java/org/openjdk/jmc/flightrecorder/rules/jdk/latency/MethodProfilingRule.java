@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -354,8 +354,8 @@ public class MethodProfilingRule implements IRule {
 								resultPair.right, resultPair.left.left, resultPair.left.right, windowRange));
 					}
 				} else {
-					Set<IQuantity> settingTimes = items.apply(settingsFilter)
-							.getAggregate(Aggregators.distinct(JfrAttributes.START_TIME));
+					Set<IQuantity> settingTimes = items.apply(settingsFilter).getAggregate(
+							(IAggregator<Set<IQuantity>, ?>) Aggregators.distinct(JfrAttributes.START_TIME));
 					IQuantity start = startTime;
 					List<Pair<Pair<IQuantity, IQuantity>, IMCStackTrace>> scores = new ArrayList<>(settingTimes.size());
 					for (IQuantity settingTime : settingTimes) {
@@ -568,7 +568,7 @@ public class MethodProfilingRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.METHOD_PROFILING_TOPIC;
+		return JfrRuleTopics.METHOD_PROFILING;
 	}
 
 }

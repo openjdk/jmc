@@ -129,7 +129,7 @@ public class ExceptionsPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.EXCEPTIONS_TOPIC};
+			return new String[] {JfrRuleTopics.EXCEPTIONS};
 		}
 
 		@Override

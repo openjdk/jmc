@@ -41,8 +41,7 @@ public class TestProbeDefinitionValidation {
 				+ "                        <relationkey>http://project.company.com/relation_id/parameter#0</relationkey>\n"
 				+ "                        <converter>com.company.project.MyConverter</converter>\n"
 				+ "                    </parameter>\n" + "                </parameters>\n"
-				+ "                <returnvalue>\n"
-				+ "                    <name>returnValue</name>\n"
+				+ "                <returnvalue>\n" + "                    <name>returnValue</name>\n"
 				+ "                    <description>the return value</description>\n"
 				+ "                    <contenttype>None</contenttype>\n"
 				+ "                    <relationkey>http://project.company.com/relation_id/parameter#0</relationkey>\n"
@@ -81,9 +80,10 @@ public class TestProbeDefinitionValidation {
 				+ "    </method>\n" //
 				+ "</event>";
 
-		for (String clazz : Arrays
-				.asList("MyClass", "pkg_name.MyClass", "com.company.project.MyClass", "MyClass$MyInnerClass")) {
-			DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, clazz) + GLOBAL_POSTFIX);
+		for (String clazz : Arrays.asList("MyClass", "pkg_name.MyClass", "com.company.project.MyClass",
+				"MyClass$MyInnerClass")) {
+			DefaultTransformRegistry
+					.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, clazz) + GLOBAL_POSTFIX);
 		}
 	}
 
@@ -129,7 +129,8 @@ public class TestProbeDefinitionValidation {
 				"(Ljava/lang/String;)V", "(Ljava/lang/String;J)I", //
 				"([Lcom/company/project/MyClass;)V", "([[Lcom/company/project/MyClass;)V", //
 				"()[D", "()[[D")) {
-			DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, descriptor) + GLOBAL_POSTFIX);
+			DefaultTransformRegistry
+					.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, descriptor) + GLOBAL_POSTFIX);
 		}
 	}
 
@@ -177,9 +178,10 @@ public class TestProbeDefinitionValidation {
 				+ "    </fields>" //
 				+ "</event>";
 
-		for (String expression : Arrays
-				.asList("this", "this.field", "MyClass.this.field", "field", "super.field", "STATIC_FIELD")) {
-			DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, expression) + GLOBAL_POSTFIX);
+		for (String expression : Arrays.asList("this", "this.field", "MyClass.this.field", "field", "super.field",
+				"STATIC_FIELD")) {
+			DefaultTransformRegistry
+					.validateProbeDefinition(GLOBAL_PREFIX + MessageFormat.format(probe, expression) + GLOBAL_POSTFIX);
 		}
 	}
 }

@@ -44,7 +44,7 @@ import java.util.Random;
 
 public final class TestToolkit {
 	public static String DEFAULT_TEMPLATE_NAME = "jfrprobes_template.xml";
-	
+
 	public static final Random RND = new Random();
 
 	private TestToolkit() {

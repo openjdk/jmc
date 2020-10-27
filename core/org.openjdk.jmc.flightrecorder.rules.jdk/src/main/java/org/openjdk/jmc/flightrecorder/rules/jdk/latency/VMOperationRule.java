@@ -221,6 +221,6 @@ public class VMOperationRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.VM_OPERATIONS_TOPIC;
+		return JfrRuleTopics.VM_OPERATIONS;
 	}
 }

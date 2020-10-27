@@ -40,11 +40,10 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
-import org.openjdk.jmc.agent.Agent;
-
 
 public class JFRNextClassVisitor extends ClassVisitor {
 	private final JFRTransformDescriptor transformDescriptor;
@@ -61,10 +60,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		this.protectionDomain = protectionDomain;
 
 		try {
-			this.inspectionClass =
-					classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined :
-							inspectionClassLoader
-									.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
+			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
+					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e); // This should not happen
 		}
@@ -86,12 +83,12 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		try {
 			reflectiveRegister(generateEventClass());
 		} catch (Exception e) {
-			Agent.getLogger().log(Level.SEVERE,
-					"Failed to generate event class for " + transformDescriptor.toString(), e); //$NON-NLS-1$
+			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
+					e);
 		}
 		if (!transformDescriptor.isMatchFound()) {
-			 Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
-			 + transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
+			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
+					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
 		super.visitEnd();
 	}

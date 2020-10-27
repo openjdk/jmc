@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,10 +41,10 @@ import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
 import java.text.MessageFormat;
+import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.CountConsumer;
 import org.openjdk.jmc.common.item.GroupingAggregator;
@@ -85,10 +85,10 @@ public class FewSampledThreadsRule extends AbstractRule {
 	private static final IAggregator<Iterable<? extends GroupEntry<IMCThread, CountConsumer>>, ?> SAMPLES_PER_THREAD = GroupingAggregator
 			.build(Messages.getString(Messages.FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD),
 					Messages.getString(Messages.FewSampledThreadsRule_AGGR_SAMPLES_PER_THREAD_DESC),
-					JfrAttributes.EVENT_THREAD, Aggregators.count(), new IPredicate<IType<IItem>>() {
+					JfrAttributes.EVENT_THREAD, Aggregators.count(), new Predicate<IType<IItem>>() {
 
 						@Override
-						public boolean evaluate(IType<IItem> type) {
+						public boolean test(IType<IItem> type) {
 							return type.getIdentifier().equals(JdkTypeIDs.EXECUTION_SAMPLE);
 						}
 					});
@@ -120,8 +120,8 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 	public FewSampledThreadsRule() {
 		super("FewSampledThreads", Messages.getString(Messages.FewSampledThreadsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT,
-				SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD);
+				JfrRuleTopics.JAVA_APPLICATION, SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT, SHORT_RECORDING_LIMIT,
+				CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD);
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 			// How much cpu could max be used if this is a single threaded application (not counting the JVM threads though...)
 			IQuantity cores = items.apply(ItemFilters.type(JdkTypeIDs.CPU_INFORMATION))
-					.getAggregate(Aggregators.max(JdkAttributes.NUMBER_OF_CORES));
+					.getAggregate((IAggregator<IQuantity, ?>) Aggregators.max(JdkAttributes.NUMBER_OF_CORES));
 			IQuantity maxSingleThreadedCpu = PERCENT.quantity(100 / cores.doubleValue());
 
 			IQuantity maxCpuForSampledThreads = PERCENT
@@ -286,6 +286,6 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 	private static IQuantity getHardwareThreads(IItemCollection items) {
 		return items.apply(ItemFilters.type(JdkTypeIDs.CPU_INFORMATION))
-				.getAggregate(Aggregators.max(JdkAttributes.HW_THREADS));
+				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.max(JdkAttributes.HW_THREADS));
 	}
 }

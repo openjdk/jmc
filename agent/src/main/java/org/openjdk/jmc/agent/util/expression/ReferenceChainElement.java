@@ -52,7 +52,6 @@ public interface ReferenceChainElement {
 	// the type of the class/interface which the reference is to
 	Type getReferencedType();
 
-
 	// if this reference is static
 	boolean isStatic();
 
@@ -165,9 +164,8 @@ public interface ReferenceChainElement {
 			while (!enclosingClass.equals(c.getEnclosingClass())) {
 				Class<?> enclosing = c.getEnclosingClass();
 				if (enclosing == null) {
-					throw new IllegalArgumentException(
-							String.format("%s is not an enclosing class of %s", enclosingClass.getName(),
-									innerClass.getName()));
+					throw new IllegalArgumentException(String.format("%s is not an enclosing class of %s",
+							enclosingClass.getName(), innerClass.getName()));
 				}
 
 				d++;

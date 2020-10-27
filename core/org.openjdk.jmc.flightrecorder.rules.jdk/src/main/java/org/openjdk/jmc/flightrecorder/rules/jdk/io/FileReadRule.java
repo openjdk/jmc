@@ -44,6 +44,7 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -83,8 +84,8 @@ public class FileReadRule implements IRule {
 		IQuantity warningLimit = vp.getPreferenceValue(READ_WARNING_LIMIT);
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 
-		IItem longestEvent = items.apply(JdkFilters.FILE_READ)
-				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
+		IItemCollection fileReadEvents = items.apply(JdkFilters.FILE_READ);
+		IItem longestEvent = fileReadEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
 		// Aggregate of all file read events - if null, then we had no events
 		if (longestEvent == null) {
@@ -97,13 +98,25 @@ public class FileReadRule implements IRule {
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String fileName = sanitizeFileName(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH));
+			String longestIOPath = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH);
+			String fileName = sanitizeFileName(longestIOPath);
 			String amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_READ)
+					.displayUsing(IDisplayable.AUTO);
+			String avgDuration = fileReadEvents
+					.getAggregate(Aggregators.avg(JdkTypeIDs.FILE_READ, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			String totalDuration = fileReadEvents
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_READ, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			IItemCollection eventsFromLongestIOPath = fileReadEvents
+					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, longestIOPath));
+			String totalLongestIOPath = eventsFromLongestIOPath
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_READ, JfrAttributes.DURATION))
 					.displayUsing(IDisplayable.AUTO);
 			return new Result(this, score,
 					MessageFormat.format(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN), peakDuration),
 					MessageFormat.format(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN_LONG), peakDuration,
-							fileName, amountRead),
+							fileName, amountRead, avgDuration, totalDuration, totalLongestIOPath),
 					JdkQueries.FILE_READ);
 		}
 		return new Result(this, score,
@@ -146,6 +159,6 @@ public class FileReadRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.FILE_IO_TOPIC;
+		return JfrRuleTopics.FILE_IO;
 	}
 }

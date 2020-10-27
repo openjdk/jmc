@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -124,8 +125,8 @@ public final class BiasedLockingRevocationRule implements IRule {
 		IItemCollection revokedClassesEvents = revokationEvents
 				.apply(ItemFilters.and(ItemFilters.hasAttribute(JdkAttributes.BIASED_REVOCATION_CLASS),
 						ItemFilters.equals(JdkAttributes.BIASED_REVOCATION_DISABLE_BIASING, Boolean.TRUE)));
-		Set<IMCType> revokedTypes = filter(filteredTypes,
-				revokedClassesEvents.getAggregate(Aggregators.distinct(JdkAttributes.BIASED_REVOCATION_CLASS)));
+		Set<IMCType> revokedTypes = filter(filteredTypes, revokedClassesEvents.getAggregate(
+				(IAggregator<Set<IMCType>, ?>) Aggregators.distinct(JdkAttributes.BIASED_REVOCATION_CLASS)));
 
 		StringBuilder shortMessage = new StringBuilder();
 		StringBuilder longMessage = new StringBuilder();
@@ -320,6 +321,6 @@ public final class BiasedLockingRevocationRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.BIASED_LOCKING_TOPIC;
+		return JfrRuleTopics.BIASED_LOCKING;
 	}
 }

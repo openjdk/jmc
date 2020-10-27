@@ -51,8 +51,7 @@ import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestIncorrectMethodDescriptor {
-	
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
+
 	private static final String EVENT_ID = "demo.jfr.test6";
 	private static final String EVENT_NAME = "JFR Hello World Event 6 %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Hello World Event 6 %TEST_NAME%";
@@ -62,56 +61,43 @@ public class TestIncorrectMethodDescriptor {
 	private static final String CORRECT_METHOD_DESCRIPTOR = "()D";
 	private static final String INCORRECT_METHOD_DESCRIPTOR = "()Z";
 
-	private static final String XML_DESCRIPTION = "<jfragent>"
-			+ "<events>"
-			+ "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>"
-			+ "<description>" + EVENT_DESCRIPTION + "</description>"
-			+ "<path>" + EVENT_PATH + "</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>"
-			+ "<name>" + METHOD_NAME + "</name>"
-			+ "<descriptor>" + CORRECT_METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "</events>"
-			+ "</jfragent>";
-	
+	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
+			+ "<name>" + EVENT_NAME + "</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
+			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + CORRECT_METHOD_DESCRIPTOR
+			+ "</descriptor>" + "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+
 	@Test
 	public void testCorrectMethodDescriptor() throws Exception {
-		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(XML_DESCRIPTION.getBytes()));
+		TransformRegistry registry = DefaultTransformRegistry
+				.from(new ByteArrayInputStream(XML_DESCRIPTION.getBytes()));
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
-		
+
 		Transformer jfrTransformer = new Transformer(registry);
-		byte[] transformedClass = jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
-				Type.getInternalName(InstrumentMe.class), InstrumentMe.class, null,
-				TestToolkit.getByteCode(InstrumentMe.class));
-		
+		jfrTransformer.transform(InstrumentMe.class.getClassLoader(), Type.getInternalName(InstrumentMe.class),
+				InstrumentMe.class, null, TestToolkit.getByteCode(InstrumentMe.class));
+
 		List<TransformDescriptor> descriptors = registry.getTransformData(Type.getInternalName(InstrumentMe.class));
 		assertEquals(descriptors.size(), 1);
-		
-		JFRTransformDescriptor descriptor = (JFRTransformDescriptor)descriptors.get(0);
+
+		JFRTransformDescriptor descriptor = (JFRTransformDescriptor) descriptors.get(0);
 		assertTrue(descriptor.isMatchFound());
 	}
-	
+
 	@Test
 	public void testIncorrectMethodDescriptor() throws Exception {
-		TransformRegistry registry = DefaultTransformRegistry.from(
-				new ByteArrayInputStream(XML_DESCRIPTION.replace(CORRECT_METHOD_DESCRIPTOR, INCORRECT_METHOD_DESCRIPTOR)
-						.getBytes()));
+		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(
+				XML_DESCRIPTION.replace(CORRECT_METHOD_DESCRIPTOR, INCORRECT_METHOD_DESCRIPTOR).getBytes()));
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
-		
+
 		Transformer jfrTransformer = new Transformer(registry);
-		byte[] transformedClass = jfrTransformer.transform(InstrumentMe.class.getClassLoader(),
-				Type.getInternalName(InstrumentMe.class), InstrumentMe.class, null,
-				TestToolkit.getByteCode(InstrumentMe.class));
-		
+		jfrTransformer.transform(InstrumentMe.class.getClassLoader(), Type.getInternalName(InstrumentMe.class),
+				InstrumentMe.class, null, TestToolkit.getByteCode(InstrumentMe.class));
+
 		List<TransformDescriptor> descriptors = registry.getTransformData(Type.getInternalName(InstrumentMe.class));
 		assertEquals(descriptors.size(), 1);
-		JFRTransformDescriptor descriptor = (JFRTransformDescriptor)descriptors.get(0);
-		
+		JFRTransformDescriptor descriptor = (JFRTransformDescriptor) descriptors.get(0);
+
 		assertFalse(descriptor.isMatchFound());
 	}
 

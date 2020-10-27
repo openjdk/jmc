@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,6 +40,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -70,13 +71,13 @@ public class ManagementAgentRule implements IRule {
 
 		Set<String> portStr = properties
 				.apply(ItemFilters.equals(JdkAttributes.ENVIRONMENT_KEY, "com.sun.management.jmxremote.port")) //$NON-NLS-1$
-				.getAggregate(Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
 		Set<String> authStr = properties
 				.apply(ItemFilters.equals(JdkAttributes.ENVIRONMENT_KEY, "com.sun.management.jmxremote.authenticate")) //$NON-NLS-1$
-				.getAggregate(Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
 		Set<String> sslStr = properties
 				.apply(ItemFilters.equals(JdkAttributes.ENVIRONMENT_KEY, "com.sun.management.jmxremote.ssl")) //$NON-NLS-1$
-				.getAggregate(Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
 
 		if (size(portStr) > 1 || size(authStr) > 1 || size(sslStr) > 1) {
 			return new Result(this, 50, Messages.getString(Messages.ManagementAgentRule_TEXT_INFO),
@@ -138,6 +139,6 @@ public class ManagementAgentRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 }

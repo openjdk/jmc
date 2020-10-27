@@ -97,7 +97,7 @@ public class JVMInformationPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.JVM_INFORMATION_TOPIC};
+			return new String[] {JfrRuleTopics.JVM_INFORMATION};
 		}
 
 		@Override

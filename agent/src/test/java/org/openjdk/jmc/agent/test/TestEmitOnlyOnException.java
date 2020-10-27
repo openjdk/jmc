@@ -52,8 +52,7 @@ import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestEmitOnlyOnException {
-	
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
+
 	private static final String EVENT_ID = "demo.jfr.test";
 	private static final String EVENT_NAME = "JFR Emit on Exception Event %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Emit on Exception Event %TEST_NAME%";
@@ -62,57 +61,37 @@ public class TestEmitOnlyOnException {
 	private static final String METHOD_NAME = "testWithException";
 	private static final String METHOD_NAME_2 = "testWithoutException";
 	private static final String METHOD_DESCRIPTOR = "()V";
-	
-	private static final String XML_DESCRIPTION = "<jfragent>"
-			+ "<config>"
-			+ "<emitonexception>true</emitonexception>"
-			+ "</config>"
-			+ "<events>"
-			+ "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>"
-			+ "<description>" + EVENT_DESCRIPTION + "</description>"
-			+ "<path>" + EVENT_PATH + "</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>"
-			+ "<name>" + METHOD_NAME + "</name>"
-			+ "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "<event id=\"" + EVENT_ID + "2" + "\">"
-			+ "<name>" + EVENT_NAME + "2" + "</name>"
-			+ "<description>" + EVENT_DESCRIPTION + "2" + "</description>"
-			+ "<path>" + EVENT_PATH + "</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>"
-			+ "<name>" + METHOD_NAME_2 + "</name>"
-			+ "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "</events>"
-			+ "</jfragent>";
-	
+
+	private static final String XML_DESCRIPTION = "<jfragent>" + "<config>" + "<emitonexception>true</emitonexception>"
+			+ "</config>" + "<events>" + "<event id=\"" + EVENT_ID + "\">" + "<name>" + EVENT_NAME + "</name>"
+			+ "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>" + EVENT_PATH + "</path>"
+			+ "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>" + "<name>"
+			+ METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
+			+ "<location>WRAP</location>" + "</event>" + "<event id=\"" + EVENT_ID + "2" + "\">" + "<name>" + EVENT_NAME
+			+ "2" + "</name>" + "<description>" + EVENT_DESCRIPTION + "2" + "</description>" + "<path>" + EVENT_PATH
+			+ "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>"
+			+ "<name>" + METHOD_NAME_2 + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
+			+ "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+
 	@Test
 	public void testEmitOnException() throws Exception {
 		TestDummy t = new TestDummy();
-		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(XML_DESCRIPTION.getBytes())); //$NON-NLS-1$
+		TransformRegistry registry = DefaultTransformRegistry
+				.from(new ByteArrayInputStream(XML_DESCRIPTION.getBytes())); //$NON-NLS-1$
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(TestDummy.class)));
-		
+
 		Transformer jfrTransformer = new Transformer(registry);
 		byte[] transformedClass = jfrTransformer.transform(TestDummy.class.getClassLoader(),
-		Type.getInternalName(TestDummy.class), TestDummy.class, null,
-		TestToolkit.getByteCode(TestDummy.class));
-	
-		assertNotNull(transformedClass);	
+				Type.getInternalName(TestDummy.class), TestDummy.class, null, TestToolkit.getByteCode(TestDummy.class));
+
+		assertNotNull(transformedClass);
 		try {
 			t.testWithoutException();
 			t.testWithException();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 	}
-	
+
 	public void dumpByteCode(byte[] transformedClass) throws IOException {
 		// If we've asked for verbose information, we write the generated class
 		// and also dump the registry contents to stdout.

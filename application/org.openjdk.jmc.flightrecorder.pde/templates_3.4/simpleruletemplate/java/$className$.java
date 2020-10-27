@@ -124,6 +124,6 @@ public class $className$ implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.ENVIRONMENT_VARIABLES_TOPIC;
+		return JfrRuleTopics.ENVIRONMENT_VARIABLES;
 	}
 }

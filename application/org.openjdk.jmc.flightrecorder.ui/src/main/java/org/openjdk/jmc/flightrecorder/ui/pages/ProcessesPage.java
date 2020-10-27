@@ -102,7 +102,7 @@ public class ProcessesPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.PROCESSES_TOPIC};
+			return new String[] {JfrRuleTopics.PROCESSES};
 		}
 
 		@Override

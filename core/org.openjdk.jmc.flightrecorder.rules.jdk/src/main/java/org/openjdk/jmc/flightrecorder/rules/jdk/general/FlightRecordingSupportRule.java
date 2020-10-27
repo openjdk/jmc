@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,6 +42,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -115,7 +116,7 @@ public class FlightRecordingSupportRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 
 	private Result getVersionResult(String versionString) {
@@ -164,7 +165,7 @@ public class FlightRecordingSupportRule implements IRule {
 		// Check time conversion error
 		IItemCollection timeConversionItems = items.apply(JdkFilters.TIME_CONVERSION);
 		IQuantity conversionFactor = timeConversionItems
-				.getAggregate(Aggregators.max(attr("fastTimeConversionAdjustments", null, //$NON-NLS-1$
+				.getAggregate((IAggregator<IQuantity, ?>) Aggregators.max(attr("fastTimeConversionAdjustments", null, //$NON-NLS-1$
 						UnitLookup.NUMBER)));
 		Boolean fastTimeEnabled = timeConversionItems
 				.getAggregate(Aggregators.and(JdkTypeIDs.TIME_CONVERSION, attr("fastTimeEnabled", null, //$NON-NLS-1$

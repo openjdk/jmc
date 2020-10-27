@@ -77,6 +77,10 @@ public class OfflineEventOptionsTest {
 		protected final IEventTypeID validTypeID;
 		protected final IEventTypeID invalidTypeID;
 
+		public Common() {
+			this(SchemaVersion.V2);
+		}
+
 		protected Common(SchemaVersion version) {
 			defaults = ConfigurationToolkit.getEventOptions(version);
 			mutable = defaults.emptyWithSameConstraints();

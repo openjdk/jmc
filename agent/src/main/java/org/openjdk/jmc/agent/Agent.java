@@ -102,8 +102,8 @@ public class Agent {
 	 */
 	public static void initializeAgent(InputStream configuration, Instrumentation instrumentation)
 			throws XMLStreamException {
-		TransformRegistry registry =
-				configuration != null ? DefaultTransformRegistry.from(configuration) : DefaultTransformRegistry.empty();
+		TransformRegistry registry = configuration != null ? DefaultTransformRegistry.from(configuration)
+				: DefaultTransformRegistry.empty();
 		instrumentation.addTransformer(new Transformer(registry), true);
 		AgentManagementFactory.createAndRegisterAgentControllerMBean(instrumentation, registry);
 		if (loadedDynamically) {

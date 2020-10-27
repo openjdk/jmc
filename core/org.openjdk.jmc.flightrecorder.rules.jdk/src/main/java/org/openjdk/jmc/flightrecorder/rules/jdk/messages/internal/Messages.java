@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -296,6 +296,9 @@ public class Messages {
 	public static final String HeapContentRuleFactory_TEXT_INFO_LONG = "HeapContentRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String HeapContentRuleFactory_TEXT_OK = "HeapContentRuleFactory_TEXT_OK"; //$NON-NLS-1$
 	public static final String HeapContentRule_AGGR_CLASS_SCORE = "HeapContentRule_AGGR_CLASS_SCORE"; //$NON-NLS-1$
+	public static final String HeapDumpRule_RULE_NAME = "HeapDumpRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String HeapDumpRule_TEXT_INFO = "HeapDumpRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String HeapDumpRule_TEXT_OK = "HeapDumpRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_RULE_NAME = "HeapInspectionGcRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_TEXT_INFO = "HeapInspectionGcRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_TEXT_INFO_LONG = "HeapInspectionGcRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
@@ -471,6 +474,9 @@ public class Messages {
 	public static final String PasswordsInSystemPropertiesRule_TEXT_OK = "PasswordsInSystemPropertiesRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING = "Preference_SHORT_RECORDING"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING_LONG = "Preference_SHORT_RECORDING_LONG"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_RULE_NAME = "ProcessStartedRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_INFO = "ProcessStartedRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_OK = "ProcessStartedRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_FINAL_REFERENCES = "ReferenceStatisticsType_FINAL_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_PHANTOM_REFERENCES = "ReferenceStatisticsType_PHANTOM_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_SOFT_REFERENCES = "ReferenceStatisticsType_SOFT_REFERENCES"; //$NON-NLS-1$

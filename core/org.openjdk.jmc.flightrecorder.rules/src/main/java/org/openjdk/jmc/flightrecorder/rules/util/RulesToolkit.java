@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,18 +50,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RunnableFuture;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.collection.EntryHashMap;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.collection.MapToolkit;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAccessorFactory;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -237,8 +238,9 @@ public class RulesToolkit {
 	public static String findMatches(
 		String typeId, IItemCollection items, IAttribute<String> attribute, String match, boolean ignoreCase) {
 		String regexp = ".*(" + (ignoreCase ? "?i:" : "") + match + ").*"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		return items.getAggregate(Aggregators.filter(Aggregators.distinctAsString(typeId, attribute),
-				ItemFilters.and(ItemFilters.type(typeId), ItemFilters.matches(attribute, regexp))));
+		return items.getAggregate(
+				(IAggregator<String, ?>) Aggregators.filter(Aggregators.distinctAsString(typeId, attribute),
+						ItemFilters.and(ItemFilters.type(typeId), ItemFilters.matches(attribute, regexp))));
 	}
 
 	/**
@@ -274,13 +276,13 @@ public class RulesToolkit {
 		final Set<String> types = new HashSet<>(Arrays.asList(typeIds));
 		IItemFilter typeFilter = new IItemFilter() {
 			@Override
-			public IPredicate<IItem> getPredicate(IType<IItem> type) {
+			public Predicate<IItem> getPredicate(IType<IItem> type) {
 				final IMemberAccessor<LabeledIdentifier, IItem> ma = JdkAttributes.REC_SETTING_FOR.getAccessor(type);
 				if (ma != null) {
-					return new IPredicate<IItem>() {
+					return new Predicate<IItem>() {
 
 						@Override
-						public boolean evaluate(IItem o) {
+						public boolean test(IItem o) {
 							LabeledIdentifier eventType = ma.getMember(o);
 							return eventType != null && types.contains(eventType.getInterfaceId());
 						}
@@ -363,12 +365,12 @@ public class RulesToolkit {
 		IItemFilter f = new IItemFilter() {
 
 			@Override
-			public IPredicate<IItem> getPredicate(IType<IItem> type) {
+			public Predicate<IItem> getPredicate(IType<IItem> type) {
 				final IMemberAccessor<String, IItem> accessor = JdkAttributes.REC_SETTING_VALUE.getAccessor(type);
-				return new IPredicate<IItem>() {
+				return new Predicate<IItem>() {
 
 					@Override
-					public boolean evaluate(IItem o) {
+					public boolean test(IItem o) {
 						try {
 							String thresholdValue = accessor.getMember(o);
 							return parsePersistedJvmTimespan(thresholdValue).longValue() == 0L;
@@ -659,7 +661,7 @@ public class RulesToolkit {
 		IItemCollection versionProperties = items.apply(ItemFilters.and(JdkFilters.SYSTEM_PROPERTIES,
 				ItemFilters.equals(JdkAttributes.ENVIRONMENT_KEY, "java.vm.specification.version"))); //$NON-NLS-1$
 		Set<String> vmSpecificationVersions = versionProperties
-				.getAggregate(Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
 		if (vmSpecificationVersions != null && vmSpecificationVersions.size() >= 1) {
 			return new JavaVersion(vmSpecificationVersions.iterator().next());
 		}
@@ -940,7 +942,8 @@ public class RulesToolkit {
 
 	private static Set<String> getPeriodSettings(IItemCollection items, String ... typeIds) {
 		IItemFilter filter = getSettingsFilter(REC_SETTING_NAME_PERIOD, typeIds);
-		return items.apply(filter).getAggregate(Aggregators.distinct(JdkAttributes.REC_SETTING_VALUE));
+		return items.apply(filter)
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.REC_SETTING_VALUE));
 	}
 
 	/*
@@ -955,7 +958,8 @@ public class RulesToolkit {
 	}
 
 	private static String getEventTypeNames(IItemCollection items) {
-		Set<String> names = items.getAggregate(Aggregators.distinct("", TYPE_NAME_ACCESSOR_FACTORY)); //$NON-NLS-1$
+		Set<String> names = items
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct("", TYPE_NAME_ACCESSOR_FACTORY)); //$NON-NLS-1$
 		if (names == null) {
 			return null;
 		}
@@ -1294,7 +1298,8 @@ public class RulesToolkit {
 		IItemFilter stringFlagsFilter = ItemFilters.type(JdkTypeIDs.STRING_FLAG);
 		IItemFilter optionsFilter = ItemFilters.matches(JdkAttributes.FLAG_NAME, "FlightRecorderOptions"); //$NON-NLS-1$
 		IItemCollection optionsFlag = items.apply(ItemFilters.and(stringFlagsFilter, optionsFilter));
-		Set<String> optionsValues = optionsFlag.getAggregate(Aggregators.distinct(JdkAttributes.FLAG_VALUE_TEXT));
+		Set<String> optionsValues = optionsFlag
+				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.FLAG_VALUE_TEXT));
 		if (optionsValues != null && optionsValues.size() > 0) {
 			String optionsValue = optionsValues.iterator().next();
 			String[] allOptions = optionsValue.split(","); //$NON-NLS-1$

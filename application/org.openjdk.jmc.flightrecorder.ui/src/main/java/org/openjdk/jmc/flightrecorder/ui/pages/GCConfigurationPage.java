@@ -75,7 +75,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.GC_CONFIGURATION_TOPIC};
+			return new String[] {JfrRuleTopics.GC_CONFIGURATION};
 		}
 
 		@Override

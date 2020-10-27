@@ -44,6 +44,7 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -97,8 +98,8 @@ public class SocketWriteRule implements IRule {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.SOCKET_WRITE);
 		}
 
-		IItem longestEvent = items.apply(JdkFilters.NO_RMI_SOCKET_WRITE)
-				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
+		IItemCollection writeItems = items.apply(JdkFilters.NO_RMI_SOCKET_WRITE);
+		IItem longestEvent = writeItems.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		// We had events, but all got filtered out - say ok, duration 0. Perhaps say "no matching" or something similar.
 		if (longestEvent == null) {
 			String shortMessage = Messages.getString(Messages.SocketWriteRuleFactory_TEXT_NO_EVENTS);
@@ -113,15 +114,27 @@ public class SocketWriteRule implements IRule {
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String address = SocketReadRule
-					.sanitizeAddress(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS));
+			String longestIOAddress = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS);
+			String address = SocketReadRule.sanitizeAddress(longestIOAddress);
 			String amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_WRITTEN)
+					.displayUsing(IDisplayable.AUTO);
+			String avgDuration = writeItems
+					.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			String totalDuration = writeItems
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			IItemCollection eventsFromLongestAddress = writeItems
+					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, longestIOAddress));
+			String totalLongestIOAddress = eventsFromLongestAddress
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION))
 					.displayUsing(IDisplayable.AUTO);
 			String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN),
 					peakDuration);
 			String longMessage = MessageFormat.format(
 					Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG), peakDuration, address,
-					amountWritten) + " " + Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE); //$NON-NLS-1$
+					amountWritten, avgDuration, totalDuration, totalLongestIOAddress) + " " //$NON-NLS-1$
+					+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE);
 			return new Result(this, score, shortMessage, longMessage);
 		}
 		String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_OK),
@@ -147,6 +160,6 @@ public class SocketWriteRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.SOCKET_IO_TOPIC;
+		return JfrRuleTopics.SOCKET_IO;
 	}
 }

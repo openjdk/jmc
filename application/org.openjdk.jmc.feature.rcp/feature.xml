@@ -88,7 +88,6 @@
       <import plugin="org.eclipse.ui.intro"/>
       <import plugin="org.eclipse.ui.net"/>
       <import plugin="org.eclipse.equinox.event"/>
-      <import plugin="javax.el"/>
       <import plugin="org.eclipse.equinox.p2.director.app"/>
    </requires>
 

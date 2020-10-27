@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -107,7 +108,7 @@ public class StringDeduplicationRule extends AbstractRule {
 
 	public StringDeduplicationRule() {
 		super("StringDeduplication", Messages.getString(Messages.StringDeduplicationRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP_TOPIC, STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT,
+				JfrRuleTopics.HEAP, STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT,
 				STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT, STRING_ARRAY_ALLOCATION_FRAMES);
 	}
 
@@ -212,7 +213,8 @@ public class StringDeduplicationRule extends AbstractRule {
 		double stringMaxRatio = 0;
 
 		// Check the string internal array ratio for each set of ObjectCount events = each gc.
-		Set<IQuantity> gcIds = objectCountItems.getAggregate(Aggregators.distinct(JdkAttributes.GC_ID));
+		Set<IQuantity> gcIds = objectCountItems
+				.getAggregate((IAggregator<Set<IQuantity>, ?>) Aggregators.distinct(JdkAttributes.GC_ID));
 		for (IQuantity gcId : gcIds) {
 			IItemCollection livesetForGc = objectCountItems.apply(ItemFilters.equals(JdkAttributes.GC_ID, gcId));
 			IItemCollection stringObjectCountItems = livesetForGc.apply(STRING_FILTER);
