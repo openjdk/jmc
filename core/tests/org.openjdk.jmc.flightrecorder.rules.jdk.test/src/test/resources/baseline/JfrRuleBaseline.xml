@@ -4525,7 +4525,7 @@
 <severity>Information</severity>
 <score>28.486599569171002</score>
 <shortDescription>There are long socket write pauses in this recording (the longest is 349.745 ms).</shortDescription>
-<longDescription>The longest recorded socket write took 349.745 ms to write 81 B to the host at 10.161.190.213. Note that there are some socket write patterns with high duration writes that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication.</longDescription>
+<longDescription>The longest recorded socket write took 349.745 ms to write 81 B to the host at 10.161.190.213. Average time of recorded IO: 37.121 ms. Total time of recorded IO: 1.077 s. Total time of recorded IO for the host 10.161.190.213: 398.835 ms. Note that there are some socket write patterns with high duration writes that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
