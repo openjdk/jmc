@@ -35,7 +35,6 @@ package org.openjdk.jmc.agent.jfrnext.impl;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -105,12 +104,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	}
 
 	private Class<?> generateEventClass() throws Exception {
-		try {
-			return Class.forName(TypeUtils.getCanonicalName(transformDescriptor.getEventClassName()));
-		} catch (ClassNotFoundException e) {
-			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
-			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
-					definingClassLoader, protectionDomain);
-		}
+		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
+		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
+				definingClassLoader, protectionDomain);
 	}
 }
