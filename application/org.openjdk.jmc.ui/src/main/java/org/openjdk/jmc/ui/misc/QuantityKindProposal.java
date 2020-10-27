@@ -57,13 +57,8 @@ import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 
 public class QuantityKindProposal {
-	private static final int POPUP_ROW_HEIGHT = 15;
-	private static final int POPUP_MAX_ELEMENTS = 12;
-	private static final int POPUP_MIN_ELEMENTS = 0;
-	private static final int POPUP_MAX_HEIGHT = POPUP_MAX_ELEMENTS * POPUP_ROW_HEIGHT;
-	private static final int POPUP_MAX_WIDTH = 200;
-	private static final IContentProposalProvider EMPTY_PROPOSAL = new SimpleContentProposalProvider(
-			new String[POPUP_MIN_ELEMENTS]);
+	private static final IContentProposalProvider EMPTY_PROPOSAL = new SimpleContentProposalProvider(new String[0]);
+	private static final Point POPUP_SIZE = new Point(200, 120);
 
 	// Note: this class has a natural ordering that is inconsistent with equals.
 	static class Proposal extends ContentProposal implements Comparable<Proposal> {
@@ -122,6 +117,7 @@ public class QuantityKindProposal {
 
 	private QuantityKindProposal(Control control, IControlContentAdapter contentAdapter) {
 		this.adapter = new ContentProposalAdapter(control, contentAdapter, EMPTY_PROPOSAL, null, null);
+		adapter.setPopupSize(POPUP_SIZE);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		decorator = ControlDecorationToolkit.createContentProposalDecorator(control);
 	}
@@ -134,11 +130,9 @@ public class QuantityKindProposal {
 		if (kind instanceof LinearKindOfQuantity) {
 			LinearQuantityProposalProvider provider = new LinearQuantityProposalProvider((LinearKindOfQuantity) kind);
 			adapter.setContentProposalProvider(provider);
-			adapterConfigurePopupHeight(provider.units.size());
 			updateDecorator(provider.units);
 		} else {
 			adapter.setContentProposalProvider(EMPTY_PROPOSAL);
-			adapterConfigurePopupHeight(POPUP_MIN_ELEMENTS);
 			updateDecorator(Collections.<IUnit> emptyList());
 		}
 		return this;
@@ -204,14 +198,5 @@ public class QuantityKindProposal {
 
 	public void removeContentProposalListener(IContentProposalListener2 listener) {
 		adapter.removeContentProposalListener(listener);
-	}
-
-	private void adapterConfigurePopupHeight(int itemsSize) {
-		if (itemsSize > POPUP_MAX_ELEMENTS) {
-			adapter.setPopupSize(new Point(POPUP_MAX_WIDTH, POPUP_MAX_HEIGHT));
-		} else {
-			int popupHeight = itemsSize * POPUP_ROW_HEIGHT;
-			adapter.setPopupSize(new Point(POPUP_MAX_WIDTH, popupHeight));
-		}
 	}
 }
