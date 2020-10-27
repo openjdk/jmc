@@ -58,6 +58,7 @@ import org.openjdk.jmc.common.unit.QuantityConversionException;
 
 public class QuantityKindProposal {
 	private static final IContentProposalProvider EMPTY_PROPOSAL = new SimpleContentProposalProvider(new String[0]);
+	private static final Point POPUP_SIZE = new Point(200, 120);
 
 	// Note: this class has a natural ordering that is inconsistent with equals.
 	static class Proposal extends ContentProposal implements Comparable<Proposal> {
@@ -116,7 +117,7 @@ public class QuantityKindProposal {
 
 	private QuantityKindProposal(Control control, IControlContentAdapter contentAdapter) {
 		this.adapter = new ContentProposalAdapter(control, contentAdapter, EMPTY_PROPOSAL, null, null);
-		adapter.setPopupSize(new Point(150, 300));
+		adapter.setPopupSize(POPUP_SIZE);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		decorator = ControlDecorationToolkit.createContentProposalDecorator(control);
 	}
