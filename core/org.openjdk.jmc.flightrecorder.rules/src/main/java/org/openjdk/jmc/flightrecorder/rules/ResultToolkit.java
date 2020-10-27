@@ -21,6 +21,9 @@ public class ResultToolkit {
 	 * @return a message populated with the formatted result values
 	 */
 	public static String populateMessage(IResult result, String string) {
+		if (string == null) {
+			return string;
+		}
 		String s = string;
 		Matcher matcher = TEMPLATE_PATTERN.matcher(s);
 		while (matcher.find()) {

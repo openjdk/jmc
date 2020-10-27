@@ -83,11 +83,11 @@ public class RulesHtmlToolkit {
 		} else if (result.getSeverity() == Severity.OK) {
 			return "ok"; //$NON-NLS-1$
 		} else if (result.getSeverity() == Severity.NA) {
-			if (result.getResult(FAILED)) {
+			if (Boolean.TRUE.equals(result.getResult(FAILED))) {
 				return "error"; //$NON-NLS-1$
-			} else if (result.getResult(IN_PROGRESS)) {
+			} else if (Boolean.TRUE.equals(result.getResult(IN_PROGRESS))) {
 				return "progress"; //$NON-NLS-1$
-			} else if (result.getResult(IGNORED)) {
+			} else if (Boolean.TRUE.equals(result.getResult(IGNORED))) {
 				return "ignore"; //$NON-NLS-1$
 			}
 			return "na"; //$NON-NLS-1$

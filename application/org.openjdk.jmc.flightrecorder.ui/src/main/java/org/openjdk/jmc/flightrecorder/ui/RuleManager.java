@@ -57,6 +57,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.IState;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
@@ -250,7 +251,10 @@ public class RuleManager {
 	}
 
 	public DoubleStream getScoreStream(String ... topics) {
-		return getResults(topics).parallelStream().mapToDouble(r -> r.getResult(TypedResult.SCORE).doubleValue());
+		return getResults(topics).parallelStream().mapToDouble(r -> {
+			IQuantity score = r.getResult(TypedResult.SCORE);
+			return score == null ? r.getSeverity().getLimit() : score.doubleValue();
+		});
 	}
 
 	public Collection<IRule> getRules(String ... topics) {

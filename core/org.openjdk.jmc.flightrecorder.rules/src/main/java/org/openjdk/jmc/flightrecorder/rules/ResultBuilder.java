@@ -27,7 +27,7 @@ public class ResultBuilder {
 		Result(Severity severity, IRule rule, String summary, String explanation, String solution,
 				Collection<IRecordingSetting> suggestedRecordingSettings, Map<TypedResult<?>, Object> resultMap,
 				Map<TypedResult<?>, Collection<?>> collectionResultMap, Map<TypedPreference<?>, Object> preferenceMap) {
-			this.severity = severity;
+			this.severity = severity == null ? Severity.NA : severity;
 			this.rule = rule;
 			this.summary = summary;
 			this.explanation = explanation;
