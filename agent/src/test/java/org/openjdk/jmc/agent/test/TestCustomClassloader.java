@@ -60,15 +60,14 @@ import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 /***
- * JMC-6895
- * 
- * When the agent instruments a class being loaded by a custom classloader, it will first instrument it in
- * the AppClassloader. Since the agent then checks on future retransforms if the class is already there, it will 
- * use this version when it is called from the custom ClassLoader's loadClass chain. When invoking the instrumented method
- * the old pre-instrumented method will be run instead.
+ * JMC-6895 When the agent instruments a class being loaded by a custom classloader, it will first
+ * instrument it in the AppClassloader. Since the agent then checks on future retransforms if the
+ * class is already there, it will use this version when it is called from the custom ClassLoader's
+ * loadClass chain. When invoking the instrumented method the old pre-instrumented method will be
+ * run instead.
  */
 public class TestCustomClassloader {
-	
+
 	private static Logger logger = Logger.getLogger(TestCustomClassloader.class.getName());
 
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
@@ -80,38 +79,28 @@ public class TestCustomClassloader {
 	private static final String METHOD_NAME = "testWithoutException";
 	private static final String METHOD_DESCRIPTOR = "()V";
 
-	private static final String XML_DESCRIPTION = "<jfragent>"
-			+ "<events>"
-			+ "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>"
-			+ "<description>" + EVENT_DESCRIPTION + "</description>"
-			+ "<path>" + EVENT_PATH + "</path>"
-			+ "<stacktrace>true</stacktrace>"
-			+ "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>"
-			+ "<name>" + METHOD_NAME + "</name>"
-			+ "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>"
-			+ "<location>WRAP</location>"
-			+ "</event>"
-			+ "</events>"
-			+ "</jfragent>";
-	
+	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
+			+ "<name>" + EVENT_NAME + "</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
+			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
+			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+
 	@Test
 	public void testCorrectMethodDescriptor() throws Exception {
 		try {
 			ClassLoader c = new CustomClassLoader();
 			Class reproducer = c.loadClass(TestDummy.class.getName());
-			for(int i = 0; i < 10; i++) {
-				reproducer.getDeclaredMethod("testWithoutException").invoke(reproducer.getDeclaredConstructor().newInstance());
+			for (int i = 0; i < 10; i++) {
+				reproducer.getDeclaredMethod("testWithoutException")
+						.invoke(reproducer.getDeclaredConstructor().newInstance());
 			}
 		} catch (ClassNotFoundException e) {
 			logger.severe("===================================" + e.toString());
 			Assert.fail();
 		}
 	}
-	
-	private void doDefineEventProbes(String xmlDescription) throws Exception  {
+
+	private void doDefineEventProbes(String xmlDescription) throws Exception {
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 		mbean.defineEventProbes(xmlDescription);

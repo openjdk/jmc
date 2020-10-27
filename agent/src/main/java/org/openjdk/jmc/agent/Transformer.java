@@ -60,7 +60,7 @@ public class Transformer implements ClassFileTransformer {
 	public byte[] transform(
 		ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 		byte[] classfileBuffer) throws IllegalClassFormatException {
-		
+
 		// We need a class instance for reflective inspection, so create a InspectionClassLoader if the class if not yet 
 		// loaded.
 		return doTransforms(registry.getTransformData(className), classfileBuffer, loader, classBeingRedefined,
@@ -71,10 +71,10 @@ public class Transformer implements ClassFileTransformer {
 		List<TransformDescriptor> transformDataList, byte[] classfileBuffer, ClassLoader definingClassLoader,
 		Class<?> classBeingRedefined, ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
 		for (TransformDescriptor td : transformDataList) {
-				// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
-				classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined,
-						protectionDomain, inspectionClassLoader);
-				td.setPendingTransforms(false);
+			// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
+			classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined,
+					protectionDomain, inspectionClassLoader);
+			td.setPendingTransforms(false);
 		}
 		return classfileBuffer;
 	}
