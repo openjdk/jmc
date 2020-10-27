@@ -52,11 +52,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
-import org.openjdk.jmc.flightrecorder.rules.Result;
-import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.ui.DataPageDescriptor;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -72,10 +72,10 @@ import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
 class ResultTableUi {
 
-	private static class ScoreLabelProvider extends TypedLabelProvider<Result> {
+	private static class ScoreLabelProvider extends TypedLabelProvider<IResult> {
 		private final Map<ImageDescriptor, Image> images = new HashMap<>();
 
-		private ScoreLabelProvider(Class<Result> elementClass) {
+		private ScoreLabelProvider(Class<IResult> elementClass) {
 			super(elementClass);
 		}
 
@@ -90,8 +90,8 @@ class ResultTableUi {
 		}
 
 		@Override
-		protected Image getImageTyped(Result result) {
-			switch (Severity.get(result.getScore())) {
+		protected Image getImageTyped(IResult IResult) {
+			switch (IResult.getSeverity()) {
 			case WARNING:
 				return image(ResultOverview.ICON_WARNING);
 			case INFO:
@@ -105,14 +105,13 @@ class ResultTableUi {
 		}
 
 		@Override
-		public String getTextTyped(Result result) {
-			return Long.toString(Math.round(result.getScore()));
+		public String getTextTyped(IResult IResult) {
+			return IResult.getSeverity().getLocalizedName();
 		}
 
 		@Override
-		protected String getToolTipTextTyped(Result result) {
-			return MessageFormat.format(Messages.ResultTableUi_SCORE_TOOLTIP,
-					Severity.get(result.getScore()).getLocalizedName(), result.getScore());
+		protected String getToolTipTextTyped(IResult IResult) {
+			return MessageFormat.format(Messages.ResultTableUi_SCORE_TOOLTIP, IResult.getSeverity());
 		}
 
 		@Override
@@ -128,8 +127,14 @@ class ResultTableUi {
 	private static class ScoreComparator implements Comparator<Object> {
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (o1 instanceof Result && o2 instanceof Result) {
-				return Double.compare(((Result) o1).getScore(), ((Result) o2).getScore());
+			if (o1 instanceof IResult && o2 instanceof IResult) {
+				IResult r1 = (IResult) o1;
+				IResult r2 = (IResult) o2;
+				IQuantity score1 = r1.getResult(TypedResult.SCORE);
+				IQuantity score2 = r2.getResult(TypedResult.SCORE);
+				double s1 = score1 == null ? r1.getSeverity().getLimit() : score1.doubleValue();
+				double s2 = score2 == null ? r2.getSeverity().getLimit() : score2.doubleValue();
+				return Double.compare(s1, s2);
 			}
 			return 0;
 		}
@@ -138,14 +143,14 @@ class ResultTableUi {
 	static final String TABLE_PREF_ROOT = "table"; //$NON-NLS-1$
 
 	private final ColumnManager columnsManager;
-	private Map<Result, DataPageDescriptor> resultMap;
+	private Map<IResult, DataPageDescriptor> resultMap;
 	private final IPageContainer editor;
 
 	private TableViewer viewer;
 	private IDoubleClickListener listener;
 
 	public ResultTableUi(Form parent, FormToolkit toolkit, IPageContainer editor, IState state,
-			Map<Result, DataPageDescriptor> resultMap) {
+			Map<IResult, DataPageDescriptor> resultMap) {
 		this.editor = editor;
 		this.resultMap = resultMap;
 
@@ -173,12 +178,12 @@ class ResultTableUi {
 		ColumnsFilter.addFilterControl(filterComposite, toolkit, columnsManager);
 	}
 
-	private IDoubleClickListener navigateListener(IPageContainer editor, Map<Result, DataPageDescriptor> resultMap) {
+	private IDoubleClickListener navigateListener(IPageContainer editor, Map<IResult, DataPageDescriptor> resultMap) {
 		return event -> {
 			if (event.getSelection() instanceof StructuredSelection) {
 				StructuredSelection selection = (StructuredSelection) event.getSelection();
 				if (!selection.isEmpty()) {
-					if (selection.getFirstElement() instanceof Result) {
+					if (selection.getFirstElement() instanceof IResult) {
 						DataPageDescriptor page = resultMap.get(selection.getFirstElement());
 						if (page != null) {
 							editor.navigateTo(page);
@@ -189,7 +194,7 @@ class ResultTableUi {
 		};
 	}
 
-	void updateInput(Map<Result, DataPageDescriptor> resultMap) {
+	void updateInput(Map<IResult, DataPageDescriptor> resultMap) {
 		this.resultMap = resultMap;
 		viewer.setInput(resultMap.keySet().toArray());
 		updateListener();
@@ -203,40 +208,47 @@ class ResultTableUi {
 
 	private List<IColumn> createColumns() {
 		IColumn scoreColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_SCORE, "score", //$NON-NLS-1$
-				new ScoreLabelProvider(Result.class)).comparator(new ScoreComparator()).build();
+				new ScoreLabelProvider(IResult.class)).comparator(new ScoreComparator()).build();
 		IColumn nameColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_RULE_NAME, "name", //$NON-NLS-1$
-				new TypedLabelProvider<Result>(Result.class) {
+				new TypedLabelProvider<IResult>(IResult.class) {
 					@Override
-					public String getTextTyped(Result result) {
-						return result.getRule().getName();
+					public String getTextTyped(IResult IResult) {
+						return IResult.getRule().getName();
 					}
 				}).build();
-		IColumn shortDescColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_SHORT_DESCRIPTION, "shortDesc", //$NON-NLS-1$
-				new TypedLabelProvider<Result>(Result.class) {
+		IColumn summaryColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_SUMMARY, "summary", //$NON-NLS-1$
+				new TypedLabelProvider<IResult>(IResult.class) {
 					@Override
-					public String getTextTyped(Result result) {
-						return result.getShortDescription();
+					public String getTextTyped(IResult IResult) {
+						return IResult.getSummary();
 					}
 				}).build();
-		IColumn longDescColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_LONG_DESCRIPTION, "longDesc", //$NON-NLS-1$
-				new TypedLabelProvider<Result>(Result.class) {
+		IColumn explanationColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_EXPLANATION, "explanation", //$NON-NLS-1$
+				new TypedLabelProvider<IResult>(IResult.class) {
 					@Override
-					public String getTextTyped(Result result) {
-						return result.getLongDescription();
+					public String getTextTyped(IResult IResult) {
+						return IResult.getExplanation();
+					}
+				}).build();
+		IColumn solutionColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_SOLUTION, "solution", //$NON-NLS-1$
+				new TypedLabelProvider<IResult>(IResult.class) {
+					@Override
+					public String getTextTyped(IResult IResult) {
+						return IResult.getSolution();
 					}
 				}).build();
 		IColumn idColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_RESULT_ID, "id", //$NON-NLS-1$
-				new TypedLabelProvider<Result>(Result.class) {
+				new TypedLabelProvider<IResult>(IResult.class) {
 					@Override
-					public String getTextTyped(Result result) {
-						return result.getRule().getId();
+					public String getTextTyped(IResult IResult) {
+						return IResult.getRule().getId();
 					}
 				}).build();
 		IColumn pageColumn = new ColumnBuilder(Messages.ResultOverview_COLUMN_PAGE, "page", //$NON-NLS-1$
-				new TypedLabelProvider<Result>(Result.class) {
+				new TypedLabelProvider<IResult>(IResult.class) {
 					@Override
-					public String getTextTyped(Result result) {
-						DataPageDescriptor page = resultMap.get(result);
+					public String getTextTyped(IResult IResult) {
+						DataPageDescriptor page = resultMap.get(IResult);
 						if (page == null) {
 							return null;
 						}
@@ -244,7 +256,8 @@ class ResultTableUi {
 					}
 				}).comparator(new PageComparator()).build();
 
-		return Arrays.asList(scoreColumn, nameColumn, shortDescColumn, longDescColumn, idColumn, pageColumn);
+		return Arrays.asList(scoreColumn, nameColumn, summaryColumn, explanationColumn, solutionColumn, idColumn,
+				pageColumn);
 	}
 
 	public void saveTo(IWritableState state) {
@@ -254,7 +267,7 @@ class ResultTableUi {
 	private class PageComparator implements Comparator<Object> {
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (o1 instanceof Result && o2 instanceof Result) {
+			if (o1 instanceof IResult && o2 instanceof IResult) {
 				DataPageDescriptor p1 = resultMap.get(o1);
 				DataPageDescriptor p2 = resultMap.get(o2);
 				if (p1 != null && p2 != null) {

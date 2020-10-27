@@ -50,7 +50,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -61,17 +61,21 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class PasswordsInSystemPropertiesRule implements IRule2 {
+public class PasswordsInSystemPropertiesRule implements IRule {
 
 	private static final String PWD_RESULT_ID = "PasswordsInSystemProperties"; //$NON-NLS-1$
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<String>("suspiciousSystemProperties", "Passwords", "Suspected passwords in system properties.", UnitLookup.PLAIN_TEXT, String.class);
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
+
+	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<String>(
+			"suspiciousSystemProperties", "Passwords", "Suspected passwords in system properties.",
+			UnitLookup.PLAIN_TEXT, String.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(PASSWORDS);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// FIXME: Should extract set of property names instead of joined string
 		String pwds = RulesToolkit.findMatches(JdkTypeIDs.SYSTEM_PROPERTIES, items, JdkAttributes.ENVIRONMENT_KEY,
 				PasswordsInArgumentsRule.PASSWORD_MATCH_STRING, true);
@@ -81,22 +85,20 @@ public class PasswordsInSystemPropertiesRule implements IRule2 {
 			for (String prop : props) {
 				passwords.add(prop);
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.WARNING)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO_LONG))
 					.setSolution(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_SOLUTION))
-					.addResult(PASSWORDS, passwords)
-					.build();
+					.addResult(PASSWORDS, passwords).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

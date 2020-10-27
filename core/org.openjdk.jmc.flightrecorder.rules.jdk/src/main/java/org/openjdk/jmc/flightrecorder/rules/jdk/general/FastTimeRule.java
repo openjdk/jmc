@@ -19,7 +19,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -28,10 +28,11 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class FastTimeRule implements IRule2 {
+public class FastTimeRule implements IRule {
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.TIME_CONVERSION, EventAvailability.AVAILABLE).build();
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.TIME_CONVERSION, EventAvailability.AVAILABLE).build();
+
 	@Override
 	public String getId() {
 		return "FastTimeRule"; //$NON-NLS-1$
@@ -52,7 +53,8 @@ public class FastTimeRule implements IRule2 {
 		return REQUIRED_EVENTS;
 	}
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider preferences, IResultValueProvider results) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider preferences, IResultValueProvider results) {
 		// Check time conversion error
 		IItemCollection timeConversionItems = items.apply(JdkFilters.TIME_CONVERSION);
 		IQuantity conversionFactor = timeConversionItems
@@ -63,26 +65,23 @@ public class FastTimeRule implements IRule2 {
 						UnitLookup.FLAG)));
 		if (conversionFactor != null && fastTimeEnabled) {
 			if (conversionFactor.longValue() != 0) {
-				return ResultBuilder.createFor(this, preferences)
-						.setSeverity(Severity.WARNING)
+				return ResultBuilder.createFor(this, preferences).setSeverity(Severity.WARNING)
 						.setSummary(Messages.getString(Messages.FasttimeRule_TEXT_WARN))
-						.setExplanation(Messages.getString(Messages.FasttimeRule_TEXT_WARN_LONG))
-						.build();
+						.setExplanation(Messages.getString(Messages.FasttimeRule_TEXT_WARN_LONG)).build();
 			}
 		}
-		return ResultBuilder.createFor(this, preferences)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, preferences).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.FlightRecordingSupportRule_TEXT_OK)).build();
 	}
-	
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items,
-			final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
 		return new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
-				return getResult(items, preferenceValueProvider, dependencyResults); 
+				return getResult(items, preferenceValueProvider, dependencyResults);
 			}
 		});
 	}

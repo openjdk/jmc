@@ -49,7 +49,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -58,18 +58,19 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class DebugNonSafepointsRule implements IRule2 {
-	
+public class DebugNonSafepointsRule implements IRule {
+
 	private static final String DEBUG_NON_SAFEPOINTS_RESULT_ID = "DebugNonSafepoints"; //$NON-NLS-1$
-	
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
-	
+
 	static {
 		REQUIRED_EVENTS.put(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE);
 	}
-	
+
 	// FIXME: JMC-4617 - Merge with OptionsCheckRule?
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		boolean dnsEnabled = null != RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-XX\\:\\+DebugNonSafepoints", false); //$NON-NLS-1$
 		boolean dnsDisabled = null != RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
@@ -79,37 +80,32 @@ public class DebugNonSafepointsRule implements IRule2 {
 		if (javaVersion == null) {
 			return ResultBuilder.createFor(this, valueProvider)
 					.setSummary(Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION))
-					.setSeverity(Severity.NA)
-					.build();
+					.setSeverity(Severity.NA).build();
 		}
 
 		boolean implicitlyEnabled = javaVersion
 				.isGreaterOrEqualThan(JavaVersionSupport.DEBUG_NON_SAFEPOINTS_IMPLICITLY_ENABLED);
 		if (!implicitlyEnabled) {
 			if (dnsDisabled) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.INFO)
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 						.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_DISABLED_RESULT_SUMMARY))
-						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
+						.setExplanation(
+								Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
 						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SOLUTION))
 						.build();
 			} else if (!dnsEnabled) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.INFO)
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 						.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SUMMARY))
-						.setExplanation(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
+						.setExplanation(
+								Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_EXPLANATION))
 						.setSolution(Messages.getString(Messages.DebugNonSafepointsRule_NOT_ENABLED_RESULT_SOLUTION))
 						.build();
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_TEXT_OK))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_TEXT_OK)).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_IMPLICIT_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.DebugNonSafepointsRule_IMPLICIT_TEXT_OK)).build();
 	}
 
 	@Override
@@ -138,8 +134,9 @@ public class DebugNonSafepointsRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items,
-			final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

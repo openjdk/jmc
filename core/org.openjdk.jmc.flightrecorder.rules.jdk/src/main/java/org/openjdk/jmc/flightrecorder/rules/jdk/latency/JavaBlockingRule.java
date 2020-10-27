@@ -60,7 +60,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -71,7 +71,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class JavaBlockingRule implements IRule2 {
+public class JavaBlockingRule implements IRule {
 
 	public static final TypedPreference<String> EXCLUDED_THREADS_REGEXP = new TypedPreference<>("thread.exclude.regexp", //$NON-NLS-1$
 			Messages.getString(Messages.JavaBlockingRule_CONFIG_EXCLUDED_THREADS),
@@ -91,17 +91,26 @@ public class JavaBlockingRule implements IRule2 {
 
 	private static final String RESULT_ID = "JavaBlocking"; //$NON-NLS-1$
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.MONITOR_ENTER, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedResult<IQuantity> TOTAL_BLOCKED_TIME = new TypedResult<>("totalBlockedTime", "Total Blocked Time", "The total amount of time blocked.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> MOST_BLOCKED_TIME = new TypedResult<>("mostBlockedTime", "Most Blocked (Time)", "The amount of time blocked.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> MOST_BLOCKED_COUNT = new TypedResult<>("mostBlockedCount", "Most Blocked (Count)", "The amount of blocks.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IMCType> MOST_BLOCKED_CLASS = new TypedResult<>("mostBlockedClass", "Most Blocked Class", "The class that was blocked the most.", UnitLookup.CLASS, IMCType.class); //$NON-NLS-1$
-	public static final TypedResult<IMCThread> MOST_BLOCKED_THREAD = new TypedResult<>("mostBlockedThread", "Most Blocked Thread", "The thread that was blocked the most.", UnitLookup.THREAD, IMCThread.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, TOTAL_BLOCKED_TIME, MOST_BLOCKED_CLASS, MOST_BLOCKED_THREAD, MOST_BLOCKED_TIME, MOST_BLOCKED_COUNT);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.MONITOR_ENTER, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IQuantity> TOTAL_BLOCKED_TIME = new TypedResult<>("totalBlockedTime", //$NON-NLS-1$
+			"Total Blocked Time", "The total amount of time blocked.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> MOST_BLOCKED_TIME = new TypedResult<>("mostBlockedTime", //$NON-NLS-1$
+			"Most Blocked (Time)", "The amount of time blocked.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> MOST_BLOCKED_COUNT = new TypedResult<>("mostBlockedCount", //$NON-NLS-1$
+			"Most Blocked (Count)", "The amount of blocks.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IMCType> MOST_BLOCKED_CLASS = new TypedResult<>("mostBlockedClass", //$NON-NLS-1$
+			"Most Blocked Class", "The class that was blocked the most.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<IMCThread> MOST_BLOCKED_THREAD = new TypedResult<>("mostBlockedThread", //$NON-NLS-1$
+			"Most Blocked Thread", "The thread that was blocked the most.", UnitLookup.THREAD, IMCThread.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, TOTAL_BLOCKED_TIME, MOST_BLOCKED_CLASS, MOST_BLOCKED_THREAD, MOST_BLOCKED_TIME,
+			MOST_BLOCKED_COUNT);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String threadExcludeRegexp = valueProvider.getPreferenceValue(EXCLUDED_THREADS_REGEXP);
 		items = items.apply(ItemFilters.notMatches(JdkAttributes.EVENT_THREAD_NAME, threadExcludeRegexp));
 
@@ -113,10 +122,8 @@ public class JavaBlockingRule implements IRule2 {
 
 		IQuantity byThread = items.getAggregate(MONITOR_BALANCE_BY_THREAD);
 		if (byInstance == null || byThread == null) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.JavaBlockingRule_TEXT_OK))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.JavaBlockingRule_TEXT_OK)).build();
 		}
 		IQuantity totalWait = items.getAggregate(Aggregators.sum(JdkTypeIDs.MONITOR_ENTER, JfrAttributes.DURATION));
 		IQuantity waitRatio = UnitLookup.NUMBER_UNITY.quantity(totalWait.ratioTo(recordingTime));
@@ -130,17 +137,13 @@ public class JavaBlockingRule implements IRule2 {
 
 		double weightedValue = RulesToolkit.mapExp100(waitRatio.doubleValue() * balanceScore, 1);
 		if (weightedValue < 25) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(weightedValue))
-					.setSummary(Messages.getString(Messages.JavaBlockingRule_TEXT_MESSAGE))
-					.setExplanation(excludeText)
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(weightedValue))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(weightedValue))
+					.setSummary(Messages.getString(Messages.JavaBlockingRule_TEXT_MESSAGE)).setExplanation(excludeText)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(weightedValue)).build();
 		}
 
 		// Significant blocking detected - do more calculations
-		ResultBuilder result = ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.get(weightedValue))
+		ResultBuilder result = ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(weightedValue))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(weightedValue))
 				.addResult(TOTAL_BLOCKED_TIME, totalWait)
 				.setSummary(Messages.getString(Messages.JavaBlockingRule_TEXT_INFO));
@@ -173,7 +176,9 @@ public class JavaBlockingRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

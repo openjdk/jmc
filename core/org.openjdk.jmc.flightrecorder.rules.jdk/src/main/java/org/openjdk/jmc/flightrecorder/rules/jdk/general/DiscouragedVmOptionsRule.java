@@ -46,7 +46,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -55,53 +55,50 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class DiscouragedVmOptionsRule implements IRule2 {
+public class DiscouragedVmOptionsRule implements IRule {
 	private static final String DISCOURAGED_VM_OPTIONS_RESULT_ID = "DiscouragedVmOptions"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS;
-	
+
 	static {
 		REQUIRED_EVENTS = RequiredEventsBuilder.create()
-				.addEventType(JdkTypeIDs.BOOLEAN_FLAG, EventAvailability.AVAILABLE)
-				.build();
+				.addEventType(JdkTypeIDs.BOOLEAN_FLAG, EventAvailability.AVAILABLE).build();
 	}
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		Boolean unlockExperimentalVMOptions = items.getAggregate(JdkAggregators.UNLOCK_EXPERIMENTAL_VM_OPTIONS);
 		Boolean ignoreUnrecognizedVMOptions = items.getAggregate(JdkAggregators.IGNORE_UNRECOGNIZED_VM_OPTIONS);
 
 		if (unlockExperimentalVMOptions != null && ignoreUnrecognizedVMOptions != null && unlockExperimentalVMOptions
 				&& ignoreUnrecognizedVMOptions) {
-			String longMessage = Messages.getString(Messages.UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO_LONG) + " " //$NON-NLS-1$
+			String longMessage = Messages.getString(Messages.UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO_LONG)
+					+ " " //$NON-NLS-1$
 					+ Messages.getString(Messages.IgnoreUnrecognizedVMOptionsRuleFactory_TEXT_INFO_LONG);
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.INFO)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.DiscouragedVmOptionsRule_BOTH_EXPERIMENTAL_AND_IGNORE))
-					.setExplanation(longMessage)
-					.build();
+					.setExplanation(longMessage).build();
 		} else if (ignoreUnrecognizedVMOptions != null && ignoreUnrecognizedVMOptions) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.INFO)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.IgnoreUnrecognizedVMOptionsRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.IgnoreUnrecognizedVMOptionsRuleFactory_TEXT_INFO_LONG))
 					.build();
 
 		} else if (unlockExperimentalVMOptions != null && unlockExperimentalVMOptions) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.INFO)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.UnlockExperimentalVMOptionsRuleFactory_TEXT_INFO_LONG))
 					.build();
 		} else {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.DiscouragedVmOptionsRule_TEXT_OK))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.DiscouragedVmOptionsRule_TEXT_OK)).build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultValueProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultValueProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

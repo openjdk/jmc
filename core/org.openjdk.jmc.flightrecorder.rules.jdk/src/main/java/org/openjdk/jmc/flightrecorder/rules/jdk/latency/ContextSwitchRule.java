@@ -56,7 +56,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -66,7 +66,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class ContextSwitchRule implements IRule2 {
+public class ContextSwitchRule implements IRule {
 
 	public static final TypedPreference<IQuantity> CONTEXT_SWITCH_WARNING_LIMIT = new TypedPreference<>(
 			"contextswitch.warning.limit", //$NON-NLS-1$
@@ -82,13 +82,16 @@ public class ContextSwitchRule implements IRule2 {
 	private static final IAggregator<IQuantity, ?> MAX_BLOCKS = GroupingAggregator.buildMax(
 			Messages.getString(Messages.ContextSwitchRule_AGGR_MAX_BLOCKS), null, JdkAttributes.MONITOR_ADDRESS,
 			JdkAggregators.TOTAL_BLOCKED_COUNT);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.CONTEXT_SWITCH_RATE, EventAvailability.AVAILABLE).build();
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CONTEXT_SWITCH_RATE, EventAvailability.AVAILABLE).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -99,7 +102,8 @@ public class ContextSwitchRule implements IRule2 {
 	}
 
 	private IResult evaluate(IItemCollection items, IPreferenceValueProvider vp) {
-		long switchRateLimit = vp.getPreferenceValue(CONTEXT_SWITCH_WARNING_LIMIT).clampedLongValueIn(UnitLookup.NUMBER_UNITY);
+		long switchRateLimit = vp.getPreferenceValue(CONTEXT_SWITCH_WARNING_LIMIT)
+				.clampedLongValueIn(UnitLookup.NUMBER_UNITY);
 		long switchRate = calculateSwitchRate(items);
 		if (switchRate == -1) {
 			return RulesToolkit.getTooFewEventsResult(this, vp);
@@ -117,12 +121,8 @@ public class ContextSwitchRule implements IRule2 {
 			text = Messages.getString(Messages.ContextSwitchRuleFactory_TEXT_INFO);
 			longText = Messages.getString(Messages.ContextSwitchRuleFactory_TEXT_INFO_LONG);
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(text)
-				.setExplanation(longText)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(text)
+				.setExplanation(longText).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 	}
 
 	private static long calculateSwitchRate(IItemCollection switchItems) {

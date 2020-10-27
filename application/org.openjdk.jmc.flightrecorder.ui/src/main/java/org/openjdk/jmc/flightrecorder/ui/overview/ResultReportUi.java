@@ -66,9 +66,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.HtmlResultGroup;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.HtmlResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.RulesHtmlToolkit;
@@ -175,7 +178,7 @@ public class ResultReportUi {
 		}
 
 		@Override
-		public Collection<Result> getResults(Collection<String> topics) {
+		public Collection<IResult> getResults(Collection<String> topics) {
 			return editor.getRuleManager().getResults(topics);
 		}
 	}
@@ -315,8 +318,8 @@ public class ResultReportUi {
 			try {
 				// FIXME: Avoid implicit dependency on HTML/javascript template. Generate script in RulesHtmlToolkit instead
 				browser.evaluate(String.format("overview.showOk(%b);", showOk)); //$NON-NLS-1$
-				boolean allOk = editor.getRuleManager().getScoreStream(topics.toArray(new String[topics.size()]))
-						.allMatch(d -> d > RulesHtmlToolkit.IN_PROGRESS && d < Severity.INFO.getLimit()) && !showOk;
+				boolean allOk = editor.getRuleManager()
+						.getMaxSeverity(topics.toArray(new String[topics.size()])) == Severity.OK;
 				browser.evaluate(String.format("overview.allOk(%b);", allOk)); //$NON-NLS-1$
 			} catch (SWTException swte) {
 				String html = RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor),
@@ -333,7 +336,7 @@ public class ResultReportUi {
 
 	private ConcurrentLinkedQueue<String> commandQueue = new ConcurrentLinkedQueue<>();
 	private Collection<String> topics = RulesToolkit.getAllTopics();
-	private Collection<Result> results;
+	private Collection<IResult> results;
 
 	private Runnable cmdExecRunnable = () -> {
 		if (browser.isDisposed()) {
@@ -370,12 +373,12 @@ public class ResultReportUi {
 		// FIXME: Avoid implicit dependency on HTML/javascript template. Generate script in RulesHtmlToolkit instead
 		StringBuilder script = new StringBuilder();
 
-		Result result = editor.getRuleManager().getResult(rule);
+		IResult result = editor.getRuleManager().getResult(rule);
 		if (result == null) {
 			return;
 		}
 
-		long score = Math.round(result.getScore());
+		IQuantity score = result.getResult(TypedResult.SCORE);
 		String adjustedHtml = adjustAnchorFollowAction(RulesHtmlToolkit.getDescription(result));
 		String quoteEscape = adjustedHtml.replaceAll("\\\"", "\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
 		String description = quoteEscape.replaceAll("\n", "</br>"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -384,8 +387,7 @@ public class ResultReportUi {
 
 		String[] topicsArray = topics.toArray(new String[topics.size()]);
 		if (!isSinglePage) {
-			boolean allOk = editor.getRuleManager().getScoreStream(topicsArray)
-					.allMatch(d -> d > RulesHtmlToolkit.IN_PROGRESS && d < Severity.INFO.getLimit()) && !showOk;
+			boolean allOk = editor.getRuleManager().getMaxSeverity(topicsArray) == Severity.OK;
 			script.append(String.format("overview.allOk(%b);", allOk)); //$NON-NLS-1$
 		}
 		boolean allIgnored = editor.getRuleManager().getScoreStream(topicsArray).allMatch(d -> d == Result.IGNORE);
@@ -401,7 +403,7 @@ public class ResultReportUi {
 		DisplayToolkit.safeAsyncExec(cmdExecRunnable);
 	}
 
-	public void setResults(Collection<Result> results) {
+	public void setResults(Collection<IResult> results) {
 		this.results = results;
 	}
 

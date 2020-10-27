@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
-
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.overview.ResultReportUi;
@@ -124,7 +124,7 @@ public class ResultPage extends Page {
 		report.createHtmlOverview(browser, editor, null);
 	}
 
-	public void updateRule(Result result) {
+	public void updateRule(IResult result) {
 		if (topics.contains(result.getRule().getTopic())) {
 			report.updateRule(result.getRule());
 		}

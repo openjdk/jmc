@@ -50,7 +50,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -61,16 +61,20 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class PasswordsInEnvironmentRule implements IRule2 {
+public class PasswordsInEnvironmentRule implements IRule {
 	private static final String PWD_RESULT_ID = "PasswordsInEnvironment"; //$NON-NLS-1$
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.ENVIRONMENT_VARIABLE, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<>("suspiciousEnvironmentVariables", "Passwords", "Suspected passwords in environment variables.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ENVIRONMENT_VARIABLE, EventAvailability.AVAILABLE).build();
+
+	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<>(
+			"suspiciousEnvironmentVariables", "Passwords", "Suspected passwords in environment variables.", //$NON-NLS-1$
+			UnitLookup.PLAIN_TEXT, String.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(PASSWORDS);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// FIXME: Should extract set of variable names instead of joined string
 		String pwds = RulesToolkit.findMatches(JdkTypeIDs.ENVIRONMENT_VARIABLE, items, JdkAttributes.ENVIRONMENT_KEY,
 				PasswordsInArgumentsRule.PASSWORD_MATCH_STRING, true);
@@ -80,21 +84,19 @@ public class PasswordsInEnvironmentRule implements IRule2 {
 			for (String env : envs) {
 				passwords.add(env);
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.WARNING)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG))
-					.addResult(PASSWORDS, passwords)
-					.build();
+					.addResult(PASSWORDS, passwords).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

@@ -56,7 +56,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -68,7 +68,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class ExceptionRule implements IRule2 {
+public class ExceptionRule implements IRule {
 
 	private static final String RESULT_ID = "Exceptions"; //$NON-NLS-1$
 
@@ -84,14 +84,17 @@ public class ExceptionRule implements IRule2 {
 			.<TypedPreference<?>> asList(EXCEPTIONS_INFO_LIMIT, EXCEPTIONS_WARNING_LIMIT);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.THROWABLES_STATISTICS, EventAvailability.AVAILABLE)
-			.build();
-	
-	public static final TypedResult<IQuantity> EXCEPTION_RATE = new TypedResult<>("exceptionsRate", "Exception Rate", "The rate of exceptions thrown per minute.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IRange<IQuantity>> EXCEPTION_WINDOW = new TypedResult<>("exceptionsWindow", "Exception Window", "The window during which the highest exception rate was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW);
-	
+			.addEventType(JdkTypeIDs.THROWABLES_STATISTICS, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IQuantity> EXCEPTION_RATE = new TypedResult<>("exceptionsRate", "Exception Rate", //$NON-NLS-1$
+			"The rate of exceptions thrown per minute.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> EXCEPTION_WINDOW = new TypedResult<>("exceptionsWindow", //$NON-NLS-1$
+			"Exception Window", "The window during which the highest exception rate was detected.",
+			UnitLookup.TIMERANGE);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW);
+
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		long infoLimit = vp.getPreferenceValue(EXCEPTIONS_INFO_LIMIT).clampedLongValueIn(NUMBER_UNITY);
 		long warningLimit = vp.getPreferenceValue(EXCEPTIONS_WARNING_LIMIT).clampedLongValueIn(NUMBER_UNITY);
@@ -103,21 +106,23 @@ public class ExceptionRule implements IRule2 {
 			double duration = (maxExceptionPeriod.end - maxExceptionPeriod.start) / 1000000000.0;
 			double exPerSec = maxExceptionPeriod.mass / duration;
 			double score = RulesToolkit.mapExp100(exPerSec, infoLimit, warningLimit);
-			IRange<IQuantity> window = QuantityRange.createWithEnd(UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.start), UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.end));
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(score))
+			IRange<IQuantity> window = QuantityRange.createWithEnd(
+					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.start),
+					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.end));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE))
 					.setExplanation(Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(EXCEPTION_RATE, UnitLookup.NUMBER_UNITY.quantity(exPerSec))
-					.addResult(EXCEPTION_WINDOW, window)
-					.build();
+					.addResult(EXCEPTION_WINDOW, window).build();
 		}
 		return RulesToolkit.getTooFewEventsResult(this, vp);
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

@@ -18,13 +18,13 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class NoDependencyRule implements IRule2 {
+public class NoDependencyRule implements IRule {
 
 	public static TypedResult<IQuantity> FOUND_BYTES = new TypedResult<IQuantity>("foundBytes", "Found Bytes",
 			"Some bytes we found", UnitLookup.MEMORY, IQuantity.class);

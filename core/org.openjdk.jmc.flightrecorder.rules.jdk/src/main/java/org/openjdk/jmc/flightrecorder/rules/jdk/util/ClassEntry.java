@@ -39,9 +39,9 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 
 public final class ClassEntry implements Comparable<ClassEntry>, IDisplayable {
-	
+
 	public static final ContentType<ClassEntry> CLASS_ENTRY = UnitLookup.createSyntheticContentType("classEntry"); //$NON-NLS-1$
-	
+
 	private final IMCType type;
 	private final IQuantity count;
 

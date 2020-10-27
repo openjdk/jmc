@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface DependsOn {
 
-	public Class<? extends IRule2> value();
+	public Class<? extends IRule> value();
 
 	public Severity severity() default Severity.OK;
 

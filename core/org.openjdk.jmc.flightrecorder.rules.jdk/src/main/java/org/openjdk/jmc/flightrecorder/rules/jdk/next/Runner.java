@@ -22,7 +22,8 @@ import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry2;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -41,13 +42,15 @@ public class Runner {
 			collectionResultMap = new HashMap<>();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T getResultValue(TypedResult<T> key) {
 			Object result = resultMap.get(key);
+			if (key.getResultClass() == null) {
+				return (T) result;
+			}
 			return key.getResultClass().cast(result);
 		}
-		
-		
 
 		@Override
 		public TypedResult<?> getResultByIdentifier(String identifier) {
@@ -63,12 +66,12 @@ public class Runner {
 			}
 			return null;
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> Collection<T> getResultValue(TypedCollectionResult<T> result) {
 			Collection<?> collection = collectionResultMap.get(result);
-				if (collection != null) {
+			if (collection != null) {
 				Collection<T> results = new ArrayList<>(collection.size());
 				for (Object object : collection) {
 					Class<T> resultClass = result.getResultClass();
@@ -80,27 +83,27 @@ public class Runner {
 		}
 
 	}
-	
+
 	private static class PreferenceProvider implements IPreferenceValueProvider {
 
 		@Override
 		public <T> T getPreferenceValue(TypedPreference<T> preference) {
 			return preference.getDefaultValue();
 		}
-		
+
 	}
 
 	private static void printResult(IResult result, IResultValueProvider resultProvider) {
 		String summary = result.getSummary();
 		String explanation = result.getExplanation();
 		String solution = result.getSolution();
-		
+
 		if (summary != null)
-			summary = formatString(result, summary, resultProvider);
+			summary = ResultToolkit.populateMessage(result, summary);
 		if (explanation != null)
-			explanation = formatString(result, explanation, resultProvider);
+			explanation = ResultToolkit.populateMessage(result, explanation);
 		if (solution != null)
-			solution = formatString(result, solution, resultProvider);
+			solution = ResultToolkit.populateMessage(result, solution);
 
 		System.out.println("=========="); //$NON-NLS-1$
 		System.out.println("Rule: " + result.getRule().getName()); //$NON-NLS-1$
@@ -127,10 +130,14 @@ public class Runner {
 						s = s.replace(group, joined);
 					} else {
 						Object typedResultInstance = resultProvider.getResultValue(typedResult);
-						if (typedResultInstance instanceof IQuantity) {
-							s = s.replace(group, ((IQuantity) typedResultInstance).displayUsing(IDisplayable.AUTO));
+						if (typedResultInstance != null) {
+							if (typedResultInstance instanceof IQuantity) {
+								s = s.replace(group, ((IQuantity) typedResultInstance).displayUsing(IDisplayable.AUTO));
+							} else {
+								s = s.replace(group, typedResultInstance.toString());
+							}
 						} else {
-							s = s.replace(group, typedResultInstance.toString());
+							System.err.println("In: " + string + ", " + group + " is null"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 				}
@@ -148,7 +155,7 @@ public class Runner {
 	}
 
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
-		Collection<IRule2> rules2 = RuleRegistry2.getRules();
+		Collection<IRule> rules2 = RuleRegistry2.getRules();
 		IItemCollection events = null;
 		if (args.length > 0) {
 			events = JfrLoaderToolkit.loadEvents(new File(args[0]));
@@ -156,21 +163,23 @@ public class Runner {
 		ResultProvider resultProvider = new ResultProvider();
 		PreferenceProvider prefProvider = new PreferenceProvider();
 		System.out.println("Running Rules"); //$NON-NLS-1$
-		for (IRule2 rule : rules2) {
+		for (IRule rule : rules2) {
 			RunnableFuture<IResult> ruleFuture = rule.createEvaluation(events, prefProvider, resultProvider);
 			try {
 				System.out.println("Running " + rule.getName()); //$NON-NLS-1$
 				ruleFuture.run();
 				IResult result = ruleFuture.get();
-				for (TypedResult<?> typedResult : rule.getResults()) {
-					if (typedResult instanceof TypedCollectionResult<?>) {
-						TypedCollectionResult<?> typedCollectionResult = (TypedCollectionResult<?>) typedResult;
-						Collection<?> result2 = result.getResult(typedCollectionResult);
-						resultProvider.collectionResultMap.put(typedCollectionResult, result2);
-					} else {
-						resultProvider.resultMap.put(typedResult, result.getResult(typedResult));
+				if (rule.getResults() != null) {
+					for (TypedResult<?> typedResult : rule.getResults()) {
+						if (typedResult instanceof TypedCollectionResult<?>) {
+							TypedCollectionResult<?> typedCollectionResult = (TypedCollectionResult<?>) typedResult;
+							Collection<?> result2 = result.getResult(typedCollectionResult);
+							resultProvider.collectionResultMap.put(typedCollectionResult, result2);
+						} else {
+							resultProvider.resultMap.put(typedResult, result.getResult(typedResult));
+						}
+	
 					}
-					
 				}
 				printResult(result, resultProvider);
 			} catch (InterruptedException | ExecutionException e) {

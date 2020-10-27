@@ -46,7 +46,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 /**
  * Abstract base class for rules, supplying some boiler plate code.
  */
-public abstract class AbstractRule implements IRule2 {
+public abstract class AbstractRule implements IRule {
 	protected final ThreadLocal<FutureTask<IResult>> evaluationTask;
 
 	private final String id;
@@ -55,21 +55,24 @@ public abstract class AbstractRule implements IRule2 {
 	private final Collection<TypedPreference<?>> configAttributes;
 	private final Collection<TypedResult<?>> resultAttributes;
 	private final Map<String, EventAvailability> requiredEvents;
-	
-	public AbstractRule(String id, String name, String topic, Collection<TypedPreference<?>> configAttributes, Collection<TypedResult<?>> resultAttributes, Map<String, EventAvailability> requiredEvents) {
+
+	public AbstractRule(String id, String name, String topic, Collection<TypedPreference<?>> configAttributes,
+			Collection<TypedResult<?>> resultAttributes, Map<String, EventAvailability> requiredEvents) {
 		this.id = id;
 		this.name = name;
 		this.topic = topic;
 		this.configAttributes = configAttributes;
 		this.resultAttributes = resultAttributes;
 		this.requiredEvents = requiredEvents;
-		evaluationTask = new ThreadLocal<>();	
+		evaluationTask = new ThreadLocal<>();
 	}
 
 	protected abstract IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp);
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -99,12 +102,12 @@ public abstract class AbstractRule implements IRule2 {
 	public String getTopic() {
 		return topic;
 	}
-	
+
 	@Override
 	public Collection<TypedResult<?>> getResults() {
 		return resultAttributes;
 	}
-	
+
 	@Override
 	public Map<String, EventAvailability> getRequiredEvents() {
 		return requiredEvents;

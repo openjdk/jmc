@@ -54,7 +54,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -64,7 +64,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class ManyRunningProcessesRule implements IRule2 {
+public class ManyRunningProcessesRule implements IRule {
 	private static final String MANY_RUNNING_PROCESSES_RESULT_ID = "ManyRunningProcesses"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> OTHER_PROCESSES_INFO_LIMIT = new TypedPreference<>(
@@ -76,14 +76,18 @@ public class ManyRunningProcessesRule implements IRule2 {
 			.<TypedPreference<?>> asList(OTHER_PROCESSES_INFO_LIMIT);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.PROCESSES, EventAvailability.AVAILABLE)
-			.build();
-	
-	public static final TypedResult<IQuantity> COMPETING_PROCESS_COUNT = new TypedResult<>("competingProcessCount", "Competing Process Count", "The number of other processes running at the same time on the same system.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> COMPETING_PROCESS_TIME = new TypedResult<>("competingProcessTime", "Competing Process Time", "The timestamp when the number of competing processes was at the maximum.", UnitLookup.TIMESTAMP, IQuantity.class); //$NON-NLS-1$
+			.addEventType(JdkTypeIDs.PROCESSES, EventAvailability.AVAILABLE).build();
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(COMPETING_PROCESS_COUNT, COMPETING_PROCESS_TIME);
-	
+	public static final TypedResult<IQuantity> COMPETING_PROCESS_COUNT = new TypedResult<>("competingProcessCount", //$NON-NLS-1$
+			"Competing Process Count", "The number of other processes running at the same time on the same system.",
+			UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> COMPETING_PROCESS_TIME = new TypedResult<>("competingProcessTime", //$NON-NLS-1$
+			"Competing Process Time", "The timestamp when the number of competing processes was at the maximum.",
+			UnitLookup.TIMESTAMP, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(COMPETING_PROCESS_COUNT, COMPETING_PROCESS_TIME);
+
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		// FIXME: Can we really be sure that 'concurrent' events have the exact same timestamp?
 		List<IntEntry<IQuantity>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.PROCESSES),
@@ -91,19 +95,19 @@ public class ManyRunningProcessesRule implements IRule2 {
 		IntEntry<IQuantity> maxNumberProcesses = entries.get(entries.size() - 1);
 		double score = RulesToolkit.mapExp74(maxNumberProcesses.getValue(),
 				vp.getPreferenceValue(OTHER_PROCESSES_INFO_LIMIT).clampedFloorIn(NUMBER_UNITY));
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO))
 				.setExplanation(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO_LONG))
 				.setSolution(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_RECOMMENDATION))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(COMPETING_PROCESS_COUNT, UnitLookup.NUMBER_UNITY.quantity(maxNumberProcesses.getValue()))
-				.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey())
-				.build();
+				.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey()).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

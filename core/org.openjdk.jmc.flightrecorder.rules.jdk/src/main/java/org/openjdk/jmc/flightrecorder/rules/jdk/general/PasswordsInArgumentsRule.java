@@ -52,7 +52,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -63,19 +63,22 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class PasswordsInArgumentsRule implements IRule2 {
+public class PasswordsInArgumentsRule implements IRule {
 	static final String PASSWORD_MATCH_STRING = "PASSW"; //$NON-NLS-1$
 	public static final Pattern PASSWORD_PATTERN = Pattern.compile("(?i:" + PASSWORD_MATCH_STRING + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final String PWD_RESULT_ID = "PasswordsInArguments"; //$NON-NLS-1$
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<>("suspiciousJavaArgs", "Passwords", "Potential passwords found in command line arguments.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
+
+	public static final TypedCollectionResult<String> PASSWORDS = new TypedCollectionResult<>("suspiciousJavaArgs", //$NON-NLS-1$
+			"Passwords", "Potential passwords found in command line arguments.", UnitLookup.PLAIN_TEXT, String.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(PASSWORDS);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String pwds = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
 				PASSWORD_MATCH_STRING, true);
 		if (pwds != null && pwds.length() > 0) {
@@ -91,22 +94,20 @@ public class PasswordsInArgumentsRule implements IRule2 {
 					}
 				}
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.WARNING)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG))
 					.setSolution(Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_SOLUTION))
-					.addResult(PASSWORDS, passwords)
-					.build();
+					.addResult(PASSWORDS, passwords).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.PasswordsInArgsRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.PasswordsInArgsRule_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

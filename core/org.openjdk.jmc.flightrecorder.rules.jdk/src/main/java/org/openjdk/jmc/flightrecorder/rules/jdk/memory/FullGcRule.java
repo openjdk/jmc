@@ -59,7 +59,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -68,11 +68,13 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class FullGcRule implements IRule2 {
+public class FullGcRule implements IRule {
 	private static final String FULL_GC_RESULT_ID = "FullGc"; //$NON-NLS-1$
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		return new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -92,16 +94,12 @@ public class FullGcRule implements IRule2 {
 				}
 
 				if (fullGCs > 0) {
-					return ResultBuilder.createFor(FullGcRule.this, valueProvider)
-							.setSeverity(Severity.WARNING)
+					return ResultBuilder.createFor(FullGcRule.this, valueProvider).setSeverity(Severity.WARNING)
 							.setSummary(Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_TITLE))
-							.setExplanation(Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC))
-							.build();
+							.setExplanation(Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC)).build();
 				} else {
-					return ResultBuilder.createFor(FullGcRule.this, valueProvider)
-							.setSeverity(Severity.OK)
-							.setSummary(Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED))
-							.build();
+					return ResultBuilder.createFor(FullGcRule.this, valueProvider).setSeverity(Severity.OK)
+							.setSummary(Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED)).build();
 				}
 			}
 		});

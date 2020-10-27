@@ -96,18 +96,24 @@ public class ErrorRule extends AbstractRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(
 			ERROR_INFO_LIMIT, ERROR_WARNING_LIMIT, EXCLUDED_ERRORS_REGEXP, ERROR_WINDOW_SIZE);
 
-	public static final TypedResult<IRange<IQuantity>> ERROR_WINDOW = new TypedResult<>("errorWindow", "Error Window", "The window during which the rule detected the most errors.", UnitLookup.TIMERANGE);  //$NON-NLS-1$
-	public static final TypedResult<IQuantity> ERROR_RATE = new TypedResult<>("errorRate", "Error Rate", "The rate of errors created.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> ERROR_COUNT = new TypedResult<>("errorCount", "Error Count", "The total amount of errors created.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IMCType> MOST_COMMON_ERROR = new TypedResult<>("mostCommonError", "Most Common Error", "The most common error thrown.", UnitLookup.CLASS, IMCType.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", "Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IRange<IQuantity>> ERROR_WINDOW = new TypedResult<>("errorWindow", "Error Window", //$NON-NLS-1$
+			"The window during which the rule detected the most errors.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> ERROR_RATE = new TypedResult<>("errorRate", "Error Rate", //$NON-NLS-1$
+			"The rate of errors created.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> ERROR_COUNT = new TypedResult<>("errorCount", "Error Count", //$NON-NLS-1$
+			"The total amount of errors created.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IMCType> MOST_COMMON_ERROR = new TypedResult<>("mostCommonError", //$NON-NLS-1$
+			"Most Common Error", "The most common error thrown.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
+			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
+			IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, ERROR_COUNT, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR, MOST_COMMON_ERROR_COUNT);
-	
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, ERROR_COUNT, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR, MOST_COMMON_ERROR_COUNT);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE)
-			.build();
-	
+			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();
+
 	@Override
 	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		long warnLimit = vp.getPreferenceValue(ERROR_WARNING_LIMIT).clampedLongValueIn(NUMBER_UNITY);
@@ -168,25 +174,19 @@ public class ErrorRule extends AbstractRule {
 						Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO), errorExcludeRegexp,
 						excludedErrors);
 			}
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN))
-					.setExplanation(longMessage)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(ERROR_COUNT, errorCount)
-					.addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
-					.addResult(ERROR_RATE, maxErrorsPerMinute.left)
-					.addResult(MOST_COMMON_ERROR, mostCommonError)
-					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown))
-					.build();
+					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
+					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
+					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.ErrorRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.ErrorRule_TEXT_OK)).build();
 	}
 
 	public ErrorRule() {
-		super(RESULT_ID, Messages.getString(Messages.ErrorRule_RULE_NAME), JfrRuleTopics.EXCEPTIONS_TOPIC, CONFIG_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+		super(RESULT_ID, Messages.getString(Messages.ErrorRule_RULE_NAME), JfrRuleTopics.EXCEPTIONS_TOPIC,
+				CONFIG_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 }

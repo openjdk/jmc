@@ -39,6 +39,7 @@ import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
@@ -83,10 +84,11 @@ import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -241,13 +243,14 @@ public class TestRulesWithJfr {
 
 			for (IRule rule : RuleRegistry.getRules()) {
 				try {
-					RunnableFuture<Result> future = rule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
+					RunnableFuture<IResult> future = rule.createEvaluation(events,
+							IPreferenceValueProvider.DEFAULT_VALUES, null);
 					future.run();
-					Result result = future.get();
+					IResult result = future.get();
 //					for (Result result : results) {
-					if (minSeverity == null || Severity.get(result.getScore()).compareTo(minSeverity) >= 0) {
+					if (minSeverity == null || result.getSeverity().compareTo(minSeverity) >= 0) {
 						ItemSet itemSet = null;
-						IItemQuery itemQuery = result.getItemQuery();
+						IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);
 						if (verbose && itemQuery != null && !itemQuery.getAttributes().isEmpty()) {
 							itemSet = new ItemSet();
 							IItemCollection resultEvents = events.apply(itemQuery.getFilter());
@@ -275,8 +278,8 @@ public class TestRulesWithJfr {
 							}
 						}
 						RuleResult ruleResult = new RuleResult(String.valueOf(result.getRule().getId()),
-								Severity.get(result.getScore()).getLocalizedName(), String.valueOf(result.getScore()),
-								result.getShortDescription(), result.getLongDescription(), itemSet);
+								result.getSeverity().getLocalizedName(), result.getSummary(), result.getExplanation(),
+								result.getSolution(), itemSet, Collections.emptyList());
 						report.put(String.valueOf(result.getRule().getId()), ruleResult);
 //						}
 					}
@@ -505,18 +508,18 @@ public class TestRulesWithJfr {
 	private static class RuleResult {
 		private String id;
 		private String severity;
-		private String score;
-		private String shortDescription;
-		private String longDescription;
+		private String summary;
+		private String solution;
+		private String explanation;
 		private ItemSet itemset;
 
-		public RuleResult(String id, String severity, String score, String shortDescription, String longDescription,
-				ItemSet itemset) {
+		public RuleResult(String id, String severity, String summary, String explanation, String solution,
+				ItemSet itemset, Collection<Object> results) {
 			this.id = id;
 			this.severity = severity;
-			this.score = score;
-			this.shortDescription = shortDescription;
-			this.longDescription = longDescription;
+			this.summary = summary;
+			this.solution = solution;
+			this.explanation = explanation;
 			this.itemset = itemset;
 		}
 
@@ -526,38 +529,26 @@ public class TestRulesWithJfr {
 
 		public boolean compareAndLog(Object other) {
 			RuleResult otherRule = (RuleResult) other;
-			boolean scoreEquals = Objects.equals(score, otherRule.score);
-			if (!scoreEquals) {
-				// determine if this is just a rounding error
-				scoreEquals = (Math.abs(Float.valueOf(score) - Float.valueOf(otherRule.score)) < 0.0000000000001f)
-						? true : false;
-				if (scoreEquals) {
-					// apparently a rounding issue. Print it out for informational purposes
-					System.out
-							.println("Rule \"" + id + "\": Encountered rounding issue for score when comparing values "
-									+ score + " and " + otherRule.score);
-				}
-			}
 			boolean itemSetEquality = compareAndLogItemSets(other);
-			boolean ruleEquality = Objects.equals(severity, otherRule.severity) && scoreEquals
-					&& Objects.equals(shortDescription, otherRule.shortDescription)
-					&& Objects.equals(longDescription, otherRule.longDescription);
+			boolean ruleEquality = Objects.equals(severity, otherRule.severity)
+					&& Objects.equals(summary, otherRule.summary) && Objects.equals(explanation, otherRule.explanation)
+					&& Objects.equals(solution, otherRule.solution);
 			if (!ruleEquality) {
 				if (!Objects.equals(severity, otherRule.severity)) {
 					DetailsTracker.log("\n    Severity mismatch: \"" + severity + "\" was not equal to \""
 							+ otherRule.severity + "\". ");
 				}
-				if (!scoreEquals) {
-					DetailsTracker.log(
-							"\n    Score mismatch: \"" + score + "\" was not equal to \"" + otherRule.score + "\". ");
+				if (!Objects.equals(summary, otherRule.summary)) {
+					DetailsTracker.log("\n    Summary mismatch: \"" + summary + "\" was not equal to \""
+							+ otherRule.summary + "\". ");
 				}
-				if (!Objects.equals(shortDescription, otherRule.shortDescription)) {
-					DetailsTracker.log("\n    Message mismatch: \"" + shortDescription + "\" was not equal to \""
-							+ otherRule.shortDescription + "\". ");
+				if (!Objects.equals(solution, otherRule.solution)) {
+					DetailsTracker.log("\n    Solution mismatch: \"" + solution + "\" was not equal to \""
+							+ otherRule.solution + "\". ");
 				}
-				if (!Objects.equals(longDescription, otherRule.longDescription)) {
-					DetailsTracker.log("\n    Description mismatch: \"" + longDescription + "\" was not equal to \""
-							+ otherRule.longDescription + "\". ");
+				if (!Objects.equals(explanation, otherRule.explanation)) {
+					DetailsTracker.log("\n    Explanation mismatch: \"" + explanation + "\" was not equal to \""
+							+ otherRule.explanation + "\". ");
 				}
 			}
 			if (!(itemSetEquality && ruleEquality)) {
@@ -590,10 +581,14 @@ public class TestRulesWithJfr {
 			parent.appendChild(ruleNode);
 			ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "id", id));
 			ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "severity", severity));
-			ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "score", score));
-			ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "shortDescription", shortDescription));
-			if (longDescription != null) {
-				ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "longDescription", longDescription));
+			if (summary != null) {
+				ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "summary", summary));
+			}
+			if (explanation != null) {
+				ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "explanation", explanation));
+			}
+			if (solution != null) {
+				ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "solution", solution));
 			}
 			if (itemset != null) {
 				itemset.toXml(ruleNode);
@@ -602,20 +597,25 @@ public class TestRulesWithJfr {
 
 		public static RuleResult fromXml(Node node) {
 			RuleResult rule = null;
-			List<String> longDescriptions = getNodeValues("./longDescription", node);
-			String longDescription = null;
-			if (longDescriptions != null && longDescriptions.size() == 1) {
-				longDescription = longDescriptions.get(0);
-			}
+			String summary = getOptional(getNodeValues("./summary", node));
+			String explanation = getOptional(getNodeValues("./explanation", node));
+			String solution = getOptional(getNodeValues("./solution", node));
 			NodeList items = getNodeSet("./itemset", node);
 			ItemSet itemset = null;
 			if (items != null && items.getLength() == 1) {
 				itemset = ItemSet.fromXml(items.item(0));
 			}
-			rule = new RuleResult(getNodeValues("./id", node).get(0), getNodeValues("./severity", node).get(0),
-					getNodeValues("./score", node).get(0), getNodeValues("./shortDescription", node).get(0),
-					longDescription, itemset);
+			rule = new RuleResult(getNodeValues("./id", node).get(0), getNodeValues("./severity", node).get(0), summary,
+					explanation, solution, itemset, Collections.emptyList());
 			return rule;
+		}
+
+		private static String getOptional(List<String> optionalMessage) {
+			String message = null;
+			if (optionalMessage != null && optionalMessage.size() == 1) {
+				message = optionalMessage.get(0);
+			}
+			return message;
 		}
 	}
 

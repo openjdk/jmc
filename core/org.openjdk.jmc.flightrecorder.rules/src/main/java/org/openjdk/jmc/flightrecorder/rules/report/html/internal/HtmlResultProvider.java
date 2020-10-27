@@ -34,6 +34,7 @@ package org.openjdk.jmc.flightrecorder.rules.report.html.internal;
 
 import java.util.Collection;
 
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 
 /**
@@ -46,5 +47,5 @@ public interface HtmlResultProvider {
 	 *            wildcard topics like the empty string.
 	 * @return a collection with all known results associated with the provided topics
 	 */
-	Collection<Result> getResults(Collection<String> topics);
+	Collection<IResult> getResults(Collection<String> topics);
 }

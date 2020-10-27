@@ -34,7 +34,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -49,11 +49,11 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class ClassLeakingRule implements IRule2 {
+public class ClassLeakingRule implements IRule {
 
 	private static final String RESULT_ID = "ClassLeak"; //$NON-NLS-1$
 	private static final String COUNT_AGGREGATOR_ID = "count"; //$NON-NLS-1$
-	
+
 	public static final TypedPreference<IQuantity> WARNING_LIMIT = new TypedPreference<>("classLeaking.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.ClassLeakingRule_CONFIG_WARNING_LIMIT),
 			Messages.getString(Messages.ClassLeakingRule_CONFIG_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(25));
@@ -65,20 +65,30 @@ public class ClassLeakingRule implements IRule2 {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
 			MAX_NUMBER_OF_CLASSES_TO_REPORT);
-	
-	public static final TypedCollectionResult<ClassEntry> LOADED_CLASSES = new TypedCollectionResult<>("loadedClasses", Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_NAME), Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_DESCRIPTION), ClassEntry.CLASS_ENTRY, ClassEntry.class); //$NON-NLS-1$
-	public static final TypedResult<IMCType> MOST_LOADED_CLASS = new TypedResult<>("mostLoadedClass", Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_NAME), Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_DESCRIPTION), UnitLookup.CLASS, IMCType.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> MOST_LOADED_CLASS_TIMES = new TypedResult<>("mostLoadedClassTimes", Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_NAME), Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_DESCRIPTION), UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	
-	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LOADED_CLASSES, MOST_LOADED_CLASS, MOST_LOADED_CLASS_TIMES);
-	
+
+	public static final TypedCollectionResult<ClassEntry> LOADED_CLASSES = new TypedCollectionResult<>("loadedClasses", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_DESCRIPTION), ClassEntry.CLASS_ENTRY,
+			ClassEntry.class);
+	public static final TypedResult<IMCType> MOST_LOADED_CLASS = new TypedResult<>("mostLoadedClass", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_DESCRIPTION), UnitLookup.CLASS,
+			IMCType.class);
+	public static final TypedResult<IQuantity> MOST_LOADED_CLASS_TIMES = new TypedResult<>("mostLoadedClassTimes", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_DESCRIPTION), UnitLookup.NUMBER,
+			IQuantity.class);
+
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			LOADED_CLASSES, MOST_LOADED_CLASS, MOST_LOADED_CLASS_TIMES);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
-	
+
 	static {
 		REQUIRED_EVENTS.put(JdkTypeIDs.CLASS_LOAD, EventAvailability.AVAILABLE);
 		REQUIRED_EVENTS.put(JdkTypeIDs.CLASS_UNLOAD, EventAvailability.AVAILABLE);
 	}
-	
+
 	@Override
 	public String getId() {
 		return RESULT_ID;
@@ -99,7 +109,8 @@ public class ClassLeakingRule implements IRule2 {
 		return REQUIRED_EVENTS;
 	}
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults) {
 		int warningLimit = (int) valueProvider.getPreferenceValue(WARNING_LIMIT).longValue();
 
 		ItemQueryBuilder queryLoad = ItemQueryBuilder.fromWhere(JdkFilters.CLASS_LOAD);
@@ -131,77 +142,73 @@ public class ClassLeakingRule implements IRule2 {
 			}
 			double maxScore = RulesToolkit.mapExp100(maxCount, warningLimit) * 0.75;
 			ClassEntry worst = entries.get(0);
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(maxScore))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(maxScore))
 					.setSummary(Messages.getString(Messages.ClassLeakingRule_RESULT_SUMMARY))
 					.setExplanation(Messages.getString(Messages.ClassLeakingRule_RESULT_EXPLANATION))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(maxScore))
-					.addResult(LOADED_CLASSES, entriesOverLimit)
-					.addResult(MOST_LOADED_CLASS, worst.getType())
-					.addResult(MOST_LOADED_CLASS_TIMES, worst.getCount())
-					.build();
+					.addResult(LOADED_CLASSES, entriesOverLimit).addResult(MOST_LOADED_CLASS, worst.getType())
+					.addResult(MOST_LOADED_CLASS_TIMES, worst.getCount()).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.ClassLeakingRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.ClassLeakingRule_TEXT_OK)).build();
 	}
-	
+
 	private static IItemFilter createClassAttributeFilter(
-			IAttribute<IMCType> attribute, Map<String, ClassEntry> entries) {
-			List<IItemFilter> allowedClasses = new ArrayList<>();
-			for (ClassEntry entry : entries.values()) {
-				allowedClasses.add(ItemFilters.equals(attribute, entry.getType()));
-			}
-			return ItemFilters.or(allowedClasses.toArray(new IItemFilter[0]));
+		IAttribute<IMCType> attribute, Map<String, ClassEntry> entries) {
+		List<IItemFilter> allowedClasses = new ArrayList<>();
+		for (ClassEntry entry : entries.values()) {
+			allowedClasses.add(ItemFilters.equals(attribute, entry.getType()));
 		}
+		return ItemFilters.or(allowedClasses.toArray(new IItemFilter[0]));
+	}
 
-		private Map<String, ClassEntry> diff(Map<String, ClassEntry> entriesLoad, Map<String, ClassEntry> entriesUnload) {
-			// Found no corresponding unloads, so short cutting this...
-			if (entriesUnload.isEmpty()) {
-				return entriesLoad;
-			}
-			Map<String, ClassEntry> diffMap = new HashMap<>(entriesLoad.size());
-			for (Entry<String, ClassEntry> mapEntryLoad : entriesLoad.entrySet()) {
-				ClassEntry classEntryUnload = entriesUnload.get(mapEntryLoad.getKey());
-				if (classEntryUnload != null) {
-					diffMap.put(mapEntryLoad.getKey(), new ClassEntry(mapEntryLoad.getValue().getType(),
-							mapEntryLoad.getValue().getCount().subtract(classEntryUnload.getCount())));
-				} else {
-					diffMap.put(mapEntryLoad.getKey(), mapEntryLoad.getValue());
-				}
-			}
-			return diffMap;
+	private Map<String, ClassEntry> diff(Map<String, ClassEntry> entriesLoad, Map<String, ClassEntry> entriesUnload) {
+		// Found no corresponding unloads, so short cutting this...
+		if (entriesUnload.isEmpty()) {
+			return entriesLoad;
 		}
+		Map<String, ClassEntry> diffMap = new HashMap<>(entriesLoad.size());
+		for (Entry<String, ClassEntry> mapEntryLoad : entriesLoad.entrySet()) {
+			ClassEntry classEntryUnload = entriesUnload.get(mapEntryLoad.getKey());
+			if (classEntryUnload != null) {
+				diffMap.put(mapEntryLoad.getKey(), new ClassEntry(mapEntryLoad.getValue().getType(),
+						mapEntryLoad.getValue().getCount().subtract(classEntryUnload.getCount())));
+			} else {
+				diffMap.put(mapEntryLoad.getKey(), mapEntryLoad.getValue());
+			}
+		}
+		return diffMap;
+	}
 
-		private Map<String, ClassEntry> extractClassEntriesFromQuery(IItemCollection items, IItemQuery query) {
-			Map<String, ClassEntry> entries = new HashMap<>();
-			IItemResultSet resultSet = new ItemResultSetFactory().createResultSet(items, query);
-			ColumnInfo countColumn = resultSet.getColumnMetadata().get(COUNT_AGGREGATOR_ID); // $NON-NLS-1$
-			ColumnInfo classColumn = resultSet.getColumnMetadata().get(query.getGroupBy().getIdentifier());
+	private Map<String, ClassEntry> extractClassEntriesFromQuery(IItemCollection items, IItemQuery query) {
+		Map<String, ClassEntry> entries = new HashMap<>();
+		IItemResultSet resultSet = new ItemResultSetFactory().createResultSet(items, query);
+		ColumnInfo countColumn = resultSet.getColumnMetadata().get(COUNT_AGGREGATOR_ID); // $NON-NLS-1$
+		ColumnInfo classColumn = resultSet.getColumnMetadata().get(query.getGroupBy().getIdentifier());
 
-			while (resultSet.next()) {
-				IQuantity countObject;
-				try {
-					countObject = (IQuantity) resultSet.getValue(countColumn.getColumn());
-					if (countObject != null) {
-						IMCType type = (IMCType) resultSet.getValue(classColumn.getColumn());
-						if (type != null) {
-							ClassEntry entry = new ClassEntry(type, countObject);
-							entries.put(entry.getType().getFullName(), entry);
-						}
+		while (resultSet.next()) {
+			IQuantity countObject;
+			try {
+				countObject = (IQuantity) resultSet.getValue(countColumn.getColumn());
+				if (countObject != null) {
+					IMCType type = (IMCType) resultSet.getValue(classColumn.getColumn());
+					if (type != null) {
+						ClassEntry entry = new ClassEntry(type, countObject);
+						entries.put(entry.getType().getFullName(), entry);
 					}
-				} catch (ItemResultSetException e) {
-					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Failed to extract class entries from query!", //$NON-NLS-1$
-							e);
 				}
+			} catch (ItemResultSetException e) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Failed to extract class entries from query!", //$NON-NLS-1$
+						e);
 			}
-			return entries;
 		}
-	
+		return entries;
+	}
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items,
-			final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

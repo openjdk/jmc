@@ -47,12 +47,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.owasp.encoder.Encode;
 
 public class RulesHtmlToolkit {
+
+	public static final TypedResult<Boolean> FAILED = new TypedResult<>("failed", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final TypedResult<Boolean> IN_PROGRESS = new TypedResult<>("inProgress", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final TypedResult<Boolean> IGNORED = new TypedResult<>("ignored", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	static {
 		RULE_TEMPLATE = readFromFile("rule_result.html"); //$NON-NLS-1$
@@ -67,30 +75,25 @@ public class RulesHtmlToolkit {
 	 *            result value
 	 * @return CSS type
 	 */
-	private static String getType(double value) {
-		if (value >= 75) {
+	private static String getType(IResult result) {
+		if (result.getSeverity() == Severity.WARNING) {
 			return "warning"; //$NON-NLS-1$
-		} else if (value >= 25) {
+		} else if (result.getSeverity() == Severity.INFO) {
 			return "info"; //$NON-NLS-1$
-		} else if (value >= 0) {
+		} else if (result.getSeverity() == Severity.OK) {
 			return "ok"; //$NON-NLS-1$
-		} else if (value == Result.NOT_APPLICABLE) {
+		} else if (result.getSeverity() == Severity.NA) {
+			if (result.getResult(FAILED)) {
+				return "error"; //$NON-NLS-1$
+			} else if (result.getResult(IN_PROGRESS)) {
+				return "progress"; //$NON-NLS-1$
+			} else if (result.getResult(IGNORED)) {
+				return "ignore"; //$NON-NLS-1$
+			}
 			return "na"; //$NON-NLS-1$
-		} else if (value == Result.IGNORE) {
-			return "ignore"; //$NON-NLS-1$
-		} else if (value == IN_PROGRESS) {
-			return "progress"; //$NON-NLS-1$
-		} else if (value == Result.FAILED) {
-			return "error"; //$NON-NLS-1$
 		}
 		return "error"; //$NON-NLS-1$
 	}
-
-	/**
-	 * Constant used to indicate rule evaluation in progress. A result with score set to this value
-	 * will be rendered in a special way by the HTML report.
-	 */
-	public static final double IN_PROGRESS = -200;
 
 	private static final String RULE_TEMPLATE;
 	private static final String TEMPLATE;
@@ -150,10 +153,10 @@ public class RulesHtmlToolkit {
 				Messages.getString(Messages.RULES_ALL_IGNORED_MESSAGE));
 	}
 
-	private static String createRuleHtml(Result result, boolean expanded, int margin) throws IOException {
+	private static String createRuleHtml(IResult result, boolean expanded, int margin) throws IOException {
 		String description = getDescription(result);
-		return createRuleHtml(result.getRule().getId(), result.getScore(), result.getRule().getName(), description,
-				expanded, margin, result.getRule().getTopic());
+		return createRuleHtml(result.getRule().getId(), result.getRule().getName(), description, expanded, margin,
+				result.getRule().getTopic(), result);
 	}
 
 	/**
@@ -176,8 +179,9 @@ public class RulesHtmlToolkit {
 	 * @return an html string representing the given result parameters
 	 */
 	private static String createRuleHtml(
-		String id, double value, String title, String description, Boolean expanded, int margin, String uuid) {
-		value = Math.round(value);
+		String id, String title, String description, Boolean expanded, int margin, String uuid, IResult result) {
+		IQuantity score = result.getResult(TypedResult.SCORE);
+		double value = Math.round(score == null ? result.getSeverity().getLimit() : score.doubleValue());
 		StringBuilder sb = new StringBuilder(RULE_TEMPLATE);
 		String clazz, button;
 		if (expanded) {
@@ -187,10 +191,11 @@ public class RulesHtmlToolkit {
 			clazz = "hidden"; //$NON-NLS-1$
 			button = "+"; //$NON-NLS-1$
 		}
-		String displayScore = Double.compare(IN_PROGRESS, value) == 0 ? "none" : "inline block"; //$NON-NLS-1$ //$NON-NLS-2$
-		String displayProgress = Double.compare(IN_PROGRESS, value) == 0 ? "inline block" : "none"; //$NON-NLS-1$ //$NON-NLS-2$
+		boolean isInProgress = result.getResult(IN_PROGRESS);
+		String displayScore = isInProgress ? "none" : "inline block"; //$NON-NLS-1$ //$NON-NLS-2$
+		String displayProgress = isInProgress ? "inline block" : "none"; //$NON-NLS-1$ //$NON-NLS-2$
 		return MessageFormat.format(sb.toString(), Encode.forHtml(id + uuid), (value == -1) ? "N/A" : value, //$NON-NLS-1$
-				Encode.forHtml(title), description, getType(value), margin, clazz, button, displayScore,
+				Encode.forHtml(title), description, getType(result), margin, clazz, button, displayScore,
 				displayProgress, id);
 	}
 
@@ -206,30 +211,33 @@ public class RulesHtmlToolkit {
 	}
 
 	// FIXME: Make private and instead add a method for creating javascript updates
-	public static String getDescription(Result result) {
-		String description = "<div class=\"shortDescription\">" + result.getShortDescription() + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
-		description += (result.getLongDescription() != null)
-				? "<div class=\"longDescription\">" + result.getLongDescription() + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String getDescription(IResult result) {
+		String summary = ResultToolkit.populateMessage(result, result.getSummary());
+		String explanation = ResultToolkit.populateMessage(result, result.getExplanation());
+		String solution = ResultToolkit.populateMessage(result, result.getSolution());
+		String description = "<div class=\"shortDescription\">" + summary + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
+		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return description;
 	}
 
-	private static final Comparator<Result> RESULT_RULEID_COMPARATOR = new Comparator<Result>() {
+	private static final Comparator<IResult> RESULT_RULEID_COMPARATOR = new Comparator<IResult>() {
 
 		@Override
-		public int compare(Result r1, Result r2) {
+		public int compare(IResult r1, IResult r2) {
 			return r1.getRule().getId().compareTo(r2.getRule().getId());
 		}
 	};
 
-	private static final Comparator<Result> RESULT_SCORE_COMPARATOR = new Comparator<Result>() {
+	private static final Comparator<IResult> RESULT_SCORE_COMPARATOR = new Comparator<IResult>() {
 
 		@Override
-		public int compare(Result r1, Result r2) {
-			return (int) (r2.getScore() - r1.getScore());
+		public int compare(IResult r1, IResult r2) {
+			return r1.getSeverity().compareTo(r2.getSeverity());
 		}
 	};
 
-	public static String generateSinglePageHtml(Collection<Result> results) throws IOException {
+	public static String generateSinglePageHtml(Collection<IResult> results) throws IOException {
 		if (results == null) {
 			return ""; //$NON-NLS-1$
 		}
@@ -237,15 +245,15 @@ public class RulesHtmlToolkit {
 		html.append(getAllIgnoredTemplate());
 		html.append(START_DIV);
 		html.append("<section id=\"sec\">"); //$NON-NLS-1$
-		List<Result> resultList = new ArrayList<>(results);
+		List<IResult> resultList = new ArrayList<>(results);
 		Collections.sort(resultList, RESULT_SCORE_COMPARATOR);
-		if (results.size() == 0 || !RulesHtmlToolkit.containsUnignoredResults(results)) {
+		if (results.size() == 0) {
 			html.append("<p style=\"font-size: 1.1em;\">"); //$NON-NLS-1$
 			html.append(Messages.getString(Messages.ResultOverview_NO_RESULTS_FOR_PAGE));
 			html.append("</p>"); //$NON-NLS-1$
 		} else {
-			for (Result result : resultList) {
-				boolean expand = Severity.get(result.getScore()).compareTo(Severity.INFO) >= 0;
+			for (IResult result : resultList) {
+				boolean expand = result.getSeverity().compareTo(Severity.INFO) >= 0;
 				html.append(createRuleHtml(result, expand, 0));
 			}
 		}
@@ -267,7 +275,7 @@ public class RulesHtmlToolkit {
 		div.append(START_DIV);
 		Set<String> displayed = new HashSet<>();
 		for (HtmlResultGroup dpd : descriptors) {
-			Collection<Result> headResults = editor.getResults(dpd.getTopics());
+			Collection<IResult> headResults = editor.getResults(dpd.getTopics());
 			if (!dpd.hasChildren() && headResults.size() == 0) {
 				continue;
 			}
@@ -279,13 +287,13 @@ public class RulesHtmlToolkit {
 			}
 			div.append(END_DIV); // ends the <div> group tag opened by the .createSubHeading call
 			div.append("</section>"); //$NON-NLS-1$
-			for (Result headResult : headResults) {
+			for (IResult headResult : headResults) {
 				displayed.add(headResult.getRule().getTopic());
 			}
 		}
 		Collection<String> topics = RulesToolkit.getAllTopics();
 		Collection<String> unusedTopics = new HashSet<>();
-		for (Result result : editor.getResults(topics)) {
+		for (IResult result : editor.getResults(topics)) {
 			if (!displayed.contains(result.getRule().getTopic())) {
 				unusedTopics.add(result.getRule().getTopic());
 			}
@@ -309,26 +317,16 @@ public class RulesHtmlToolkit {
 		return div;
 	}
 
-	private static boolean containsUnignoredResults(Collection<Result> results) {
-		for (Result result : results) {
-			if (result.getScore() != Result.IGNORE) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private static String generateSubPageHTML(
 		HtmlResultProvider editor, HtmlResultGroup parent, int margin, Set<String> displayed,
 		HashMap<String, Boolean> resultExpandedStates) {
 		StringBuilder html = new StringBuilder();
 		List<HtmlResultGroup> children = parent.getChildren();
 		StringBuilder results = new StringBuilder();
-		List<Result> sortResults = RulesHtmlToolkit.sortResults(editor.getResults(parent.getTopics()));
-		for (Result result : sortResults) {
-			results.append(createRuleHtml(result.getRule().getId(), result.getScore(), result.getRule().getName(),
-					getDescription(result), RulesHtmlToolkit.isExpanded(resultExpandedStates, result), margin + 10,
-					parent.getId())); // $NON-NLS-1$
+		List<IResult> sortResults = RulesHtmlToolkit.sortResults(editor.getResults(parent.getTopics()));
+		for (IResult result : sortResults) {
+			results.append(createRuleHtml(result.getRule().getId(), result.getRule().getName(), getDescription(result),
+					RulesHtmlToolkit.isExpanded(resultExpandedStates, result), margin + 10, parent.getId(), result)); // $NON-NLS-1$
 			displayed.add(result.getRule().getTopic());
 		}
 		for (HtmlResultGroup child : children) {
@@ -344,25 +342,25 @@ public class RulesHtmlToolkit {
 	}
 
 	private static void generateTitleAndResults(
-		String subHeading, String uuid, Collection<Result> results, HashMap<String, Boolean> resultExpandedStates,
+		String subHeading, String uuid, Collection<IResult> results, HashMap<String, Boolean> resultExpandedStates,
 		StringBuilder div) {
-		List<Result> headResults = RulesHtmlToolkit.sortResults(results);
+		List<IResult> headResults = RulesHtmlToolkit.sortResults(results);
 		div.append(subHeading); // $NON-NLS-1$
 		if (headResults != null) {
-			for (Result result : headResults) {
-				div.append(createRuleHtml(result.getRule().getId(), result.getScore(), result.getRule().getName(),
-						getDescription(result), RulesHtmlToolkit.isExpanded(resultExpandedStates, result), 10, uuid));
+			for (IResult result : headResults) {
+				div.append(createRuleHtml(result.getRule().getId(), result.getRule().getName(), getDescription(result),
+						RulesHtmlToolkit.isExpanded(resultExpandedStates, result), 10, uuid, result));
 			}
 		}
 	}
 
-	private static Boolean isExpanded(HashMap<String, Boolean> resultExpandedStates, Result result) {
+	private static Boolean isExpanded(HashMap<String, Boolean> resultExpandedStates, IResult result) {
 		Boolean isExpanded = resultExpandedStates.get(result.getRule().getId());
 		return isExpanded != null ? isExpanded : Boolean.FALSE;
 	}
 
-	private static List<Result> sortResults(Collection<Result> results) {
-		List<Result> sorted = new ArrayList<>(results);
+	private static List<IResult> sortResults(Collection<IResult> results) {
+		List<IResult> sorted = new ArrayList<>(results);
 		Collections.sort(sorted, RESULT_RULEID_COMPARATOR);
 		return sorted;
 	}

@@ -113,24 +113,29 @@ public class StringDeduplicationRule extends AbstractRule {
 	// FIXME: Does it make more sense to have individual liveset/allocation ratio limit and heap usage limits?
 	// FIXME: Add a physical memory limit
 
-	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(STRING_ARRAY_ALLOCATION_FRAMES, STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT,
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(
+			STRING_ARRAY_ALLOCATION_FRAMES, STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT,
 			STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT);
-	
-	public static final TypedResult<IQuantity> HEAP_USAGE = new TypedResult<>("heapUsage", "Heap Usage Ratio", "The percentage of the heap used.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> STRING_HEAP_RATIO = new TypedResult<>("stringHeapRatio", "String Usage", "The percent of the heap used for String objects.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<String> INTERNAL_STRING_TYPE = new TypedResult<>("stringType", "Internal String Type", "The internal type used to represent Strings.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
+	public static final TypedResult<IQuantity> HEAP_USAGE = new TypedResult<>("heapUsage", "Heap Usage Ratio", //$NON-NLS-1$
+			"The percentage of the heap used.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> STRING_HEAP_RATIO = new TypedResult<>("stringHeapRatio", "String Usage", //$NON-NLS-1$
+			"The percent of the heap used for String objects.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<String> INTERNAL_STRING_TYPE = new TypedResult<>("stringType", //$NON-NLS-1$
+			"Internal String Type", "The internal type used to represent Strings.", UnitLookup.PLAIN_TEXT,
+			String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.OBJECT_COUNT, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.AVAILABLE)
-			.build();
-	
+			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.AVAILABLE).build();
+
 	public StringDeduplicationRule() {
 		super("StringDeduplication", Messages.getString(Messages.StringDeduplicationRule_RULE_NAME), //$NON-NLS-1$
 				JfrRuleTopics.HEAP_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
@@ -140,10 +145,8 @@ public class StringDeduplicationRule extends AbstractRule {
 	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		JavaVersion javaVersion = RulesToolkit.getJavaVersion(items);
 		if (javaVersion == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.NA)
-					.setSummary(Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION))
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION)).build();
 		}
 
 		String stringInternalArrayType = "byte[]"; //$NON-NLS-1$
@@ -162,9 +165,9 @@ public class StringDeduplicationRule extends AbstractRule {
 
 		Boolean useStringDeduplication = items.getAggregate(JdkAggregators.USE_STRING_DEDUPLICATION);
 		if (Boolean.TRUE.equals(useStringDeduplication)) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.StringDeduplicationRule_RESULT_USE_STRING_DEDUPLICATION_ENABLED))
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages
+							.getString(Messages.StringDeduplicationRule_RESULT_USE_STRING_DEDUPLICATION_ENABLED))
 					.build();
 		}
 
@@ -264,7 +267,8 @@ public class StringDeduplicationRule extends AbstractRule {
 				}
 			}
 		}
-		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO) + NEW_LINE + heapInfo;
+		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO)
+				+ NEW_LINE + heapInfo;
 		double scoreBase = stringMaxRatio + (stringMaxRatio * heapUsedRatio / 100);
 		double score = RulesToolkit.mapExp74(scoreBase, stringLivesetRatioAndHeapUsageLimit.doubleValue());
 
@@ -278,15 +282,11 @@ public class StringDeduplicationRule extends AbstractRule {
 
 		String shortMessage = description + " " + recommendation; //$NON-NLS-1$
 		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(shortMessage)
-				.setExplanation(longMessage)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(HEAP_USAGE, UnitLookup.PERCENT_UNITY.quantity(heapUsedRatio))
 				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringMaxRatio))
-				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType)
-				.build();
+				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}
 
 	private IResult getAllocationRatioResult(
@@ -309,10 +309,8 @@ public class StringDeduplicationRule extends AbstractRule {
 		IQuantity stringInternalArraySizeBasedOnStacktrace = stringInternalArrayAllocItems
 				.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
 		if (stringInternalArraySizeBasedOnStacktrace == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.NA)
-					.setSummary(Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS))
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS)).build();
 			// FIXME: Check if the stacktrace attribute is enabled
 		}
 		double stringAllocationRatioBasedOnStacktrace = stringInternalArraySizeBasedOnStacktrace.ratioTo(totalSize)
@@ -320,7 +318,8 @@ public class StringDeduplicationRule extends AbstractRule {
 		double scoreBase = stringAllocationRatioBasedOnStacktrace
 				+ (stringAllocationRatioBasedOnStacktrace * heapUsedRatio / 100);
 		double score = RulesToolkit.mapExp74(scoreBase, stringAllocationRatioLimit.doubleValue());
-		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO) + NEW_LINE + heapInfo;
+		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO)
+				+ NEW_LINE + heapInfo;
 
 		String recommendation;
 		if (stringAllocationRatioBasedOnStacktrace > stringAllocationRatioLimit.doubleValue()) {
@@ -332,15 +331,11 @@ public class StringDeduplicationRule extends AbstractRule {
 
 		String shortMessage = description + " " + recommendation; //$NON-NLS-1$
 		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(shortMessage)
-				.setExplanation(longMessage)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(HEAP_USAGE, UnitLookup.PERCENT_UNITY.quantity(heapUsedRatio))
 				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringAllocationRatioBasedOnStacktrace))
-				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType)
-				.build();
+				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}
 
 	private IItemFilter getAllocationFramesFilter(String allocationFramesString) {

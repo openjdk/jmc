@@ -51,7 +51,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -63,24 +63,29 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class HighGcRule implements IRule2 {
+public class HighGcRule implements IRule {
 
 	private static final String RESULT_ID = "HighGc"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED)
-			.build();
-	
-	public static final TypedResult<IRange<IQuantity>> PAUSE_CLUSTER = new TypedResult<>("pauseCluster", "Pause Cluster", "The time in which a cluster of pauses was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> PAUSE_TIME = new TypedResult<>("pauseTime", "Pause Time Ratio", "The percent of the cluster spent paused.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	public static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, PAUSE_CLUSTER, PAUSE_TIME);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IRange<IQuantity>> PAUSE_CLUSTER = new TypedResult<>("pauseCluster", //$NON-NLS-1$
+			"Pause Cluster", "The time in which a cluster of pauses was detected.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> PAUSE_TIME = new TypedResult<>("pauseTime", "Pause Time Ratio", //$NON-NLS-1$
+			"The percent of the cluster spent paused.", UnitLookup.PERCENTAGE, IQuantity.class);
+
+	public static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			PAUSE_CLUSTER, PAUSE_TIME);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		SpanSquare longestGcCluster = calculateLongestGcCluster(items.apply(JdkFilters.GC_PAUSE));
 		if (longestGcCluster != null) {
 			long sumPauseNanos = longestGcCluster.mass;
-			IRange<IQuantity> cluster = QuantityRange.createWithEnd(UnitLookup.EPOCH_NS.quantity(longestGcCluster.start), UnitLookup.EPOCH_NS.quantity(longestGcCluster.end));
+			IRange<IQuantity> cluster = QuantityRange.createWithEnd(
+					UnitLookup.EPOCH_NS.quantity(longestGcCluster.start),
+					UnitLookup.EPOCH_NS.quantity(longestGcCluster.end));
 			long durationNanos = longestGcCluster.end - longestGcCluster.start;
 			IQuantity pausePercent = UnitLookup.PERCENT_UNITY.quantity(sumPauseNanos / (double) durationNanos);
 			// FIXME: Configuration attribute instead of hard coded 1 second => score 90
@@ -93,19 +98,13 @@ public class HighGcRule implements IRule2 {
 						+ RulesToolkit.getEnabledEventTypesRecommendation(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
 								JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO))
-					.setExplanation(longMessage)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO)).setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(PAUSE_CLUSTER, cluster)
-					.addResult(PAUSE_TIME, pausePercent)
-					.build();
+					.addResult(PAUSE_CLUSTER, cluster).addResult(PAUSE_TIME, pausePercent).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_OK)).build();
 	}
 
 	private static SpanSquare calculateLongestGcCluster(IItemCollection items) {
@@ -113,7 +112,9 @@ public class HighGcRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

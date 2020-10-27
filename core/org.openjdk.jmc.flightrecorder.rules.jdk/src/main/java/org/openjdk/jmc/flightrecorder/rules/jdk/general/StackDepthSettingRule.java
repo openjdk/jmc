@@ -60,7 +60,7 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -70,45 +70,54 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class StackDepthSettingRule implements IRule2 {
-	
+public class StackDepthSettingRule implements IRule {
+
 	public static class StackDepthTruncationData implements IDisplayable {
-		
+
 		private final IQuantity percentTruncated;
 		private final String type;
-		
+
 		public StackDepthTruncationData(String type, IQuantity percentTruncated) {
 			this.type = type;
 			this.percentTruncated = percentTruncated;
 		}
-		
+
 		public IQuantity getPercentTruncated() {
 			return percentTruncated;
 		}
-		
+
 		public String getType() {
 			return type;
 		}
 
 		@Override
 		public String displayUsing(String formatHint) {
-			return MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE), type, percentTruncated.displayUsing(formatHint)); 
+			return MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE), type,
+					percentTruncated.displayUsing(formatHint));
 		}
-		
+
 	}
-	
-	public static final ContentType<StackDepthTruncationData> TRUNCATION_DATA = UnitLookup.createSyntheticContentType("truncationData"); //$NON-NLS-1$
-	
-	public static final TypedCollectionResult<StackDepthTruncationData> TRUNCATED_TRACES = new TypedCollectionResult<>("truncatedTraces", "Truncated Traces", "The types that had truncated stacktraces.", TRUNCATION_DATA, StackDepthTruncationData.class); //$NON-NLS-1$
-	public static final TypedResult<String> STACK_DEPTH = new TypedResult<>("stackdepth", "Stackdepth", "The maximum stack depth before the trace is truncated.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> TRUNCATION_RATIO = new TypedResult<>("truncationRatio", "Truncation Ratio", "The percentage of stacktraces that were truncated.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, TRUNCATED_TRACES);
-	
+
+	public static final ContentType<StackDepthTruncationData> TRUNCATION_DATA = UnitLookup
+			.createSyntheticContentType("truncationData"); //$NON-NLS-1$
+
+	public static final TypedCollectionResult<StackDepthTruncationData> TRUNCATED_TRACES = new TypedCollectionResult<>(
+			"truncatedTraces", "Truncated Traces", "The types that had truncated stacktraces.", TRUNCATION_DATA, //$NON-NLS-1$
+			StackDepthTruncationData.class);
+	public static final TypedResult<String> STACK_DEPTH = new TypedResult<>("stackdepth", "Stackdepth", //$NON-NLS-1$
+			"The maximum stack depth before the trace is truncated.", UnitLookup.PLAIN_TEXT, String.class);
+	public static final TypedResult<IQuantity> TRUNCATION_RATIO = new TypedResult<>("truncationRatio", //$NON-NLS-1$
+			"Truncation Ratio", "The percentage of stacktraces that were truncated.", UnitLookup.PERCENTAGE,
+			IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, TRUNCATED_TRACES);
+
 	private static final int DEFAULT_STACK_DEPTH = 64;
 	private static final String STACKDEPTH_SETTING_RESULT_ID = "StackdepthSetting"; //$NON-NLS-1$
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter stackTracesFilter = ItemFilters.hasAttribute(JfrAttributes.EVENT_STACKTRACE);
 		Map<String, Long> truncatedTracesByType = new HashMap<>();
 		Map<String, Long> tracesByType = new HashMap<>();
@@ -144,34 +153,31 @@ public class StackDepthSettingRule implements IRule2 {
 				Long value = truncatedTracesByType.get(type);
 				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY
 						.quantity((double) value / (double) tracesByType.get(type));
-				truncationData.add(new StackDepthTruncationData(type,  percentTruncated));
+				truncationData.add(new StackDepthTruncationData(type, percentTruncated));
 			}
 
 			double truncatedTracesRatio = truncatedTraces / (double) totalTraces;
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
 			String explanation = MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG),
-							stackDepthValue == null ? DEFAULT_STACK_DEPTH : stackDepthValue,
-							stackDepthValue == null
-									? Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG_DEFAULT) + " " //$NON-NLS-1$
-									: ""); //$NON-NLS-1$
+					stackDepthValue == null ? DEFAULT_STACK_DEPTH : stackDepthValue,
+					stackDepthValue == null
+							? Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG_DEFAULT) + " " //$NON-NLS-1$
+							: ""); //$NON-NLS-1$
 			double score = RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25);
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO))
-					.setExplanation(explanation)
-					.addResult(STACK_DEPTH, stackDepthValue)
+					.setExplanation(explanation).addResult(STACK_DEPTH, stackDepthValue)
 					.addResult(TRUNCATED_TRACES, truncationData)
-					.addResult(TRUNCATION_RATIO, UnitLookup.PERCENT_UNITY.quantity(truncatedTracesRatio))
-					.build();
+					.addResult(TRUNCATION_RATIO, UnitLookup.PERCENT_UNITY.quantity(truncatedTracesRatio)).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

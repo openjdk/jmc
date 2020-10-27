@@ -62,35 +62,32 @@ public class FatalErrorRule extends AbstractRule {
 	private static final String INFO_REASON = "No remaining non-daemon Java threads"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.VM_SHUTDOWN, EventAvailability.AVAILABLE)
-			.build();
-	
+			.addEventType(JdkTypeIDs.VM_SHUTDOWN, EventAvailability.AVAILABLE).build();
+
 	public FatalErrorRule() {
-		super(RESULT_ID, Messages.getString(Messages.FatalErrorRule_RULE_NAME), JfrRuleTopics.JVM_INFORMATION_TOPIC, Collections.<TypedPreference<?>> emptyList(), Collections.<TypedResult<?>> emptyList(), REQUIRED_EVENTS);
+		super(RESULT_ID, Messages.getString(Messages.FatalErrorRule_RULE_NAME), JfrRuleTopics.JVM_INFORMATION_TOPIC,
+				Collections.<TypedPreference<?>> emptyList(), Collections.<TypedResult<?>> emptyList(),
+				REQUIRED_EVENTS);
 	}
-	
+
 	@Override
-	protected IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	protected IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter shutdownFilter = ItemFilters.type(JdkTypeIDs.VM_SHUTDOWN);
 		IItemCollection shutdownItems = items.apply(shutdownFilter);
 
 		if (shutdownItems.hasItems()) {
 			// Check the type of VM Shutdown, if it was a VM Error we should report it.
 			if (shutdownItems.apply(ItemFilters.contains(JdkAttributes.SHUTDOWN_REASON, ERROR_REASON)).hasItems()) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.WARNING)
-						.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_WARN))
-						.build();
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
+						.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_WARN)).build();
 			} else if (shutdownItems.apply(ItemFilters.contains(JdkAttributes.SHUTDOWN_REASON, INFO_REASON))
 					.hasItems()) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.INFO)
-						.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_INFO))
-						.build();
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_INFO)).build();
 			}
 		}
 		return ResultBuilder.createFor(this, valueProvider)
-				.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_OK))
-				.build();
+				.setSummary(Messages.getString(Messages.FatalErrorRule_TEXT_OK)).build();
 	}
 }

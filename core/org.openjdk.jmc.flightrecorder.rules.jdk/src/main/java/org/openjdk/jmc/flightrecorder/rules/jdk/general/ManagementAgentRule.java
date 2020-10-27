@@ -50,7 +50,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -59,13 +59,15 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class ManagementAgentRule implements IRule2 {
+public class ManagementAgentRule implements IRule {
 
 	private static final String RESULT_ID = "ManagementAgent"; //$NON-NLS-1$
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 
 		// FIXME: Move the filter inside the aggregate.
 		IItemCollection properties = items.apply(JdkFilters.SYSTEM_PROPERTIES);
@@ -81,11 +83,9 @@ public class ManagementAgentRule implements IRule2 {
 				.getAggregate(Aggregators.distinct(JdkAttributes.ENVIRONMENT_VALUE));
 
 		if (size(portStr) > 1 || size(authStr) > 1 || size(sslStr) > 1) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.INFO)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.ManagementAgentRule_TEXT_INFO))
-					.setSummary(Messages.getString(Messages.ManagementAgentRule_TEXT_INFO_LONG))
-					.build();
+					.setSummary(Messages.getString(Messages.ManagementAgentRule_TEXT_INFO_LONG)).build();
 		}
 		if (size(portStr) > 0) {
 			// Default is true.
@@ -100,19 +100,21 @@ public class ManagementAgentRule implements IRule2 {
 				} else if (!auth) {
 					builder = builder.setSeverity(Severity.WARNING)
 							.setSummary(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_WARN_AUTH_DISABLED))
-							.setExplanation(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_WARN_AUTH_DISABLED_LONG));
+							.setExplanation(Messages
+									.getString(Messages.ManagmentAgentRuleFactory_TEXT_WARN_AUTH_DISABLED_LONG));
 				} else if (!ssl) {
 					builder = builder.setSeverity(Severity.INFO)
 							.setSummary(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_INFO_SSL_DISABLED))
-							.setExplanation(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_INFO_SSL_DISABLED_LONG));
+							.setExplanation(
+									Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_INFO_SSL_DISABLED_LONG));
 				}
-				return builder.setSolution(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_WARN_CONFIGURE_GUIDE)).build();
+				return builder
+						.setSolution(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_WARN_CONFIGURE_GUIDE))
+						.build();
 			}
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.ManagmentAgentRuleFactory_TEXT_OK)).build();
 	}
 
 	private static int size(Collection<?> set) {
@@ -120,7 +122,9 @@ public class ManagementAgentRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

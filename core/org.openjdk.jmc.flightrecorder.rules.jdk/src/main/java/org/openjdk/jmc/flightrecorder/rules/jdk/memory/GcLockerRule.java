@@ -56,7 +56,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
@@ -67,7 +67,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class GcLockerRule implements IRule2 {
+public class GcLockerRule implements IRule {
 	private static final String GC_LOCKER_RESULT_ID = "GcLocker"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> GC_LOCKER_RATIO_LIMIT = new TypedPreference<>("gc.locker.info.limit", //$NON-NLS-1$
@@ -76,13 +76,17 @@ public class GcLockerRule implements IRule2 {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(GC_LOCKER_RATIO_LIMIT);
 
-	public static final TypedResult<IQuantity> GC_LOCKER_RATIO = new TypedResult<>("gcLockerRatio", "GC Locker Ratio", "Ratio of GC locker caused GCs to total GCs.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, GC_LOCKER_RATIO);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	public static final TypedResult<IQuantity> GC_LOCKER_RATIO = new TypedResult<>("gcLockerRatio", "GC Locker Ratio", //$NON-NLS-1$
+			"Ratio of GC locker caused GCs to total GCs.", UnitLookup.PERCENTAGE, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, GC_LOCKER_RATIO);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
 		if (aggregate != null) {
 			int gcLockers = aggregate.getGcLockers();
@@ -91,29 +95,25 @@ public class GcLockerRule implements IRule2 {
 				IQuantity limit = valueProvider.getPreferenceValue(GC_LOCKER_RATIO_LIMIT);
 				double ratio = gcLockers / gcCount;
 				double score = RulesToolkit.mapExp74(ratio, limit.doubleValue());
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.get(score))
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO))
 						.setExplanation(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO_LONG))
 						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-						.addResult(GC_LOCKER_RATIO, UnitLookup.PERCENT_UNITY.quantity(ratio))
-						.build();
+						.addResult(GC_LOCKER_RATIO, UnitLookup.PERCENT_UNITY.quantity(ratio)).build();
 			} else {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.OK)
-						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK))
-						.build();
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK)).build();
 			}
 		} else {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.NA)
-					.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

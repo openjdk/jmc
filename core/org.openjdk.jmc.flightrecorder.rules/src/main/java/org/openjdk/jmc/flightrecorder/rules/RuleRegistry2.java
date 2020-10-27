@@ -16,30 +16,30 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 
 public class RuleRegistry2 {
 
-	private static final Collection<IRule2> RULES;
+	private static final Collection<IRule> RULES;
 
 	static {
 		RULES = new ArrayList<>();
-		ServiceLoader<IRule2> ruleLoader = ServiceLoader.load(IRule2.class, IRule2.class.getClassLoader());
-		Set<IRule2> rules = new HashSet<>();
-		Iterator<IRule2> ruleIter = ruleLoader.iterator();
-		Map<Class<? extends IRule2>, IRule2> rulesByClass = new HashMap<>();
-		Graph<IRule2, DefaultEdge> ruleDependencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+		ServiceLoader<IRule> ruleLoader = ServiceLoader.load(IRule.class, IRule.class.getClassLoader());
+		Set<IRule> rules = new HashSet<>();
+		Iterator<IRule> ruleIter = ruleLoader.iterator();
+		Map<Class<? extends IRule>, IRule> rulesByClass = new HashMap<>();
+		Graph<IRule, DefaultEdge> ruleDependencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
 		while (ruleIter.hasNext()) {
-			IRule2 next = ruleIter.next();
+			IRule next = ruleIter.next();
 			rules.add(next);
 			ruleDependencyGraph.addVertex(next);
 			rulesByClass.put(next.getClass(), next);
 		}
-		for (IRule2 rule : rules) {
+		for (IRule rule : rules) {
 			DependsOn[] dependencies = rule.getClass().getAnnotationsByType(DependsOn.class);
 			for (DependsOn dependency : dependencies) {
 				ruleDependencyGraph.addEdge(rulesByClass.get(dependency.value()), rule);
 			}
 		}
-		TopologicalOrderIterator<IRule2, DefaultEdge> iterator = new TopologicalOrderIterator<>(ruleDependencyGraph);
+		TopologicalOrderIterator<IRule, DefaultEdge> iterator = new TopologicalOrderIterator<>(ruleDependencyGraph);
 		while (iterator.hasNext()) {
-			IRule2 rule = iterator.next();
+			IRule rule = iterator.next();
 			RULES.add(rule);
 		}
 	}
@@ -48,7 +48,7 @@ public class RuleRegistry2 {
 		throw new InstantiationError();
 	}
 
-	public static Collection<IRule2> getRules() {
+	public static Collection<IRule> getRules() {
 		return RULES;
 	}
 

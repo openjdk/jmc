@@ -53,7 +53,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -63,22 +63,30 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class FileWriteRule implements IRule2 {
+public class FileWriteRule implements IRule {
 
 	public static final TypedPreference<IQuantity> WRITE_WARNING_LIMIT = new TypedPreference<>(
 			"io.file.write.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.FileWriteRule_CONFIG_WARNING_LIMIT),
 			Messages.getString(Messages.FileWriteRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
 			UnitLookup.MILLISECOND.quantity(4000));
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.FILE_WRITE, EventAvailability.ENABLED).build();
-	
-	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", "Longest Write (Amount)", "The amount read for the longest file write.", UnitLookup.MEMORY, IQuantity.class);  //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", "Longest Write (Time)", "The longest time it took to perform a file write.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<String> LONGEST_WRITE_PATH = new TypedResult<>("longestWritePath", "Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_PATH, LONGEST_WRITE_TIME);
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.FILE_WRITE, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", //$NON-NLS-1$
+			"Longest Write (Amount)", "The amount read for the longest file write.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", //$NON-NLS-1$
+			"Longest Write (Time)", "The longest time it took to perform a file write.", UnitLookup.TIMESPAN,
+			IQuantity.class);
+	public static final TypedResult<String> LONGEST_WRITE_PATH = new TypedResult<>("longestWritePath", //$NON-NLS-1$
+			"Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT,
+			String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_PATH, LONGEST_WRITE_TIME);
+
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(WRITE_WARNING_LIMIT);
 	private static final String RESULT_ID = "FileWrite"; //$NON-NLS-1$
@@ -92,10 +100,8 @@ public class FileWriteRule implements IRule2 {
 
 		// Aggregate of all file write events - if null, then we had no events
 		if (longestEvent == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_NO_EVENTS))
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_NO_EVENTS)).build();
 		}
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
 		double score = RulesToolkit.mapExp100(maxDuration.doubleValueIn(UnitLookup.SECOND),
@@ -105,25 +111,22 @@ public class FileWriteRule implements IRule2 {
 		if (severity == Severity.WARNING || severity == Severity.INFO) {
 			IQuantity amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_WRITTEN);
 			String fileName = FileReadRule.sanitizeFileName(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH));
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(severity)
+			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(LONGEST_WRITE_AMOUNT, amountWritten)
-					.addResult(LONGEST_WRITE_TIME, maxDuration)
-					.addResult(LONGEST_WRITE_PATH, fileName)
-					.build();
+					.addResult(LONGEST_WRITE_AMOUNT, amountWritten).addResult(LONGEST_WRITE_TIME, maxDuration)
+					.addResult(LONGEST_WRITE_PATH, fileName).build();
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(severity)
+		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_OK))
-				.addResult(LONGEST_WRITE_AMOUNT, maxDuration)
-				.build();
+				.addResult(LONGEST_WRITE_AMOUNT, maxDuration).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

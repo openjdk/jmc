@@ -57,7 +57,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -67,17 +67,18 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class IncreasingMetaspaceLiveSetRule implements IRule2 {
+public class IncreasingMetaspaceLiveSetRule implements IRule {
 
 	private static final String RESULT_ID = "IncreasingMetaSpaceLiveSet"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.METASPACE_SUMMARY, EventAvailability.ENABLED)
-			.build();
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.METASPACE_SUMMARY, EventAvailability.ENABLED).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter afterFilter = ItemFilters.and(JdkFilters.METASPACE_SUMMARY_AFTER_GC, JdkFilters.AFTER_GC);
 		Iterator<? extends IItemIterable> allAfterItems = items.apply(afterFilter).iterator();
 		if (allAfterItems.hasNext()) {
@@ -91,27 +92,24 @@ public class IncreasingMetaspaceLiveSetRule implements IRule2 {
 			double score = RulesToolkit.mapExp100(leastSquare, 0.75);
 			// FIXME: Should construct a message using leastSquare, not use a hard limit
 			if (score >= 25) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.get(score))
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 						.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO))
-						.setExplanation(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG))
-						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-						.build();
+						.setExplanation(
+								Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 			}
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

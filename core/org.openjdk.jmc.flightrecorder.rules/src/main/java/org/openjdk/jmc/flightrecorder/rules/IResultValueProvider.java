@@ -12,7 +12,7 @@ public interface IResultValueProvider {
 	 * @return the result value
 	 */
 	<T> T getResultValue(TypedResult<T> result);
-	
+
 	<T> Collection<T> getResultValue(TypedCollectionResult<T> result);
 
 	TypedResult<?> getResultByIdentifier(String identifier);

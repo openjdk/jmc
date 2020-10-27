@@ -121,19 +121,21 @@ public class FewSampledThreadsRule extends AbstractRule {
 
 	public FewSampledThreadsRule() {
 		super("FewSampledThreads", Messages.getString(Messages.FewSampledThreadsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, 
-				Arrays.<TypedPreference<?>> asList(SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT, SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD), 
-				Arrays.<TypedResult<?>> asList(TypedResult.SCORE), 
-				RequiredEventsBuilder.create()
-					.addEventType(JdkTypeIDs.RECORDING_SETTING, EventAvailability.AVAILABLE)
-					.addEventType(JdkTypeIDs.EXECUTION_SAMPLE, EventAvailability.AVAILABLE)
-					.addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build());
+				JfrRuleTopics.JAVA_APPLICATION_TOPIC,
+				Arrays.<TypedPreference<?>> asList(SAMPLED_THREADS_RATIO_LIMIT, MIN_CPU_RATIO_LIMIT,
+						SHORT_RECORDING_LIMIT, CPU_WINDOW_SIZE, MIN_SAMPLE_COUNT, MIN_SAMPLE_COUNT_PER_THREAD),
+				Arrays.<TypedResult<?>> asList(TypedResult.SCORE),
+				RequiredEventsBuilder.create().addEventType(JdkTypeIDs.RECORDING_SETTING, EventAvailability.AVAILABLE)
+						.addEventType(JdkTypeIDs.EXECUTION_SAMPLE, EventAvailability.AVAILABLE)
+						.addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build());
 	}
 
-	public static final TypedResult<IQuantity> TOTAL_SAMPLES = new TypedResult<>("totalSamples", "Total Samples", "The total number of execution samples.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	
+	public static final TypedResult<IQuantity> TOTAL_SAMPLES = new TypedResult<>("totalSamples", "Total Samples", //$NON-NLS-1$
+			"The total number of execution samples.", UnitLookup.NUMBER, IQuantity.class);
+
 	@Override
-	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
+	protected IResult getResult(
+		IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
 		double sampledThreadRatioLimit = vp.getPreferenceValue(SAMPLED_THREADS_RATIO_LIMIT).doubleValueIn(NUMBER_UNITY);
 		IQuantity minCpuRatio = vp.getPreferenceValue(MIN_CPU_RATIO_LIMIT);
 		IQuantity windowSize = vp.getPreferenceValue(CPU_WINDOW_SIZE);
@@ -164,41 +166,42 @@ public class FewSampledThreadsRule extends AbstractRule {
 		IQuantity totalNumberOfSamples = items
 				.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE)));
 		if (totalNumberOfSamples.compareTo(minSampleCount) < 0) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.NA)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
 					.addResult(TOTAL_SAMPLES, totalNumberOfSamples)
-					.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_NOT_ENOUGH_SAMPLES))
-					.build();
+					.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_NOT_ENOUGH_SAMPLES)).build();
 		}
 
 		// Are there more sampled threads than cores?
 		IQuantity hwThreads = getHardwareThreads(items);
 		if (threadsWithEnoughSamples >= hwThreads.longValue()) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK))
-					.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK_LONG))
-					.build();
+					.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_OK_LONG)).build();
 		}
 
 		// FIXME: Alter calculation to able to name/describe pref value better...
 		double sampledThreadRatio = ((double) threadsWithEnoughSamples) / hwThreads.longValue();
 		double score = RulesToolkit.mapExp74(1 - sampledThreadRatio, sampledThreadRatioLimit);
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 				.addResult(THREADS_WITH_ENOUGH_SAMPLES, UnitLookup.NUMBER_UNITY.quantity(threadsWithEnoughSamples))
 				.addResult(HW_THREADS, hwThreads)
 				.setSummary(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO))
-				.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO_LONG))
-				.build();
+				.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_TEXT_INFO_LONG)).build();
 	}
-	
-	public static final TypedResult<IQuantity> HW_THREADS = new TypedResult<>("hwThreads", "Hardware Threads", "The number of hardware threads available.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> THREADS_WITH_ENOUGH_SAMPLES = new TypedResult<>("threadsWithEnoughSamples", "Threads With Enough Samples", "The number of threads that had enough samples.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IRange<IQuantity>> MAX_WINDOW = new TypedResult<>("maxWindow", "Max Window", "The window where the maximum JVM CPU usage was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> JVM_USAGE = new TypedResult<>("jvmUsage", "JVM CPU Usage", "The amount of CPU used by the JVM.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private IResult getIdleResult(IItemCollection items, IQuantity minCpuRatio, IQuantity windowSize, int sampledThreads, IPreferenceValueProvider vp) {
+
+	public static final TypedResult<IQuantity> HW_THREADS = new TypedResult<>("hwThreads", "Hardware Threads", //$NON-NLS-1$
+			"The number of hardware threads available.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> THREADS_WITH_ENOUGH_SAMPLES = new TypedResult<>(
+			"threadsWithEnoughSamples", "Threads With Enough Samples", "The number of threads that had enough samples.", //$NON-NLS-1$
+			UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> MAX_WINDOW = new TypedResult<>("maxWindow", "Max Window", //$NON-NLS-1$
+			"The window where the maximum JVM CPU usage was detected.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> JVM_USAGE = new TypedResult<>("jvmUsage", "JVM CPU Usage", //$NON-NLS-1$
+			"The amount of CPU used by the JVM.", UnitLookup.PERCENTAGE, IQuantity.class);
+
+	private IResult getIdleResult(
+		IItemCollection items, IQuantity minCpuRatio, IQuantity windowSize, int sampledThreads,
+		IPreferenceValueProvider vp) {
 		IItemCollection cpuItems = getCpuItems(items);
 		Pair<IQuantity, IRange<IQuantity>> jvmUsageMaxWindow = SlidingWindowToolkit.slidingWindowUnorderedMinMaxValue(
 				cpuItems, windowSize, evaluationTask.get(), new IUnorderedWindowValueFunction<IQuantity>() {
@@ -221,10 +224,8 @@ public class FewSampledThreadsRule extends AbstractRule {
 			IQuantity cpuRatio = PERCENT.quantity(jvmUsage.ratioTo(maxCpuForSampledThreads) * 100);
 
 			if (cpuRatio.compareTo(minCpuRatio) < 0) {
-				return ResultBuilder.createFor(this, vp)
-						.setSeverity(Severity.OK)
-						.addResult(MAX_WINDOW, jvmUsageMaxWindow.right)
-						.addResult(JVM_USAGE, jvmUsage)
+				return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+						.addResult(MAX_WINDOW, jvmUsageMaxWindow.right).addResult(JVM_USAGE, jvmUsage)
 						.setSummary(Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE))
 						.setExplanation(Messages.getString(Messages.FewSampledThreadsRule_APPLICATION_IDLE_LONG))
 						.build();

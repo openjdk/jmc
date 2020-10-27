@@ -54,7 +54,7 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -63,7 +63,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class DMSIncidentRule implements IRule2 {
+public class DMSIncidentRule implements IRule {
 
 	private static final String RESULT_ID = "DMSIncident"; //$NON-NLS-1$
 	private static final String DMS_PATH = "http://www.oracle.com/dms/dfw/dms/dfw/DFW_Incident/DFW_Incident_state"; //$NON-NLS-1$
@@ -77,38 +77,39 @@ public class DMSIncidentRule implements IRule2 {
 			Messages.getString(Messages.DMSIncidentRule_CONFIG_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(1));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT);
 
-	public static final TypedResult<IQuantity> DMS_INCIDENTS = new TypedResult<>("dmsIncidentCount", INCIDENTS_COUNT, UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	
-	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, DMS_INCIDENTS);
-	
+	public static final TypedResult<IQuantity> DMS_INCIDENTS = new TypedResult<>("dmsIncidentCount", INCIDENTS_COUNT, //$NON-NLS-1$
+			UnitLookup.NUMBER, IQuantity.class);
+
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			DMS_INCIDENTS);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS;
-	
+
 	static {
 		// Not getting any is good, but only if the event was not unavailable or disabled
 		REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(DMS_PATH, EventAvailability.ENABLED).build();
 	}
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity limit = valueProvider.getPreferenceValue(WARNING_LIMIT);
 		IQuantity incidents = items.getAggregate(INCIDENTS_COUNT);
 		if (incidents != null && incidents.compareTo(limit) >= 0) {
 			double score = RulesToolkit.mapExp100(incidents.doubleValue(), limit.doubleValueIn(incidents.getUnit()));
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(DMS_INCIDENTS, incidents)
 					.setSummary(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN))
-					.setExplanation(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN_LONG))
-					.build();
+					.setExplanation(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN_LONG)).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSolution(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSolution(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

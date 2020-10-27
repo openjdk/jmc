@@ -89,7 +89,6 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
@@ -193,15 +192,15 @@ public class RulesToolkit {
 
 	public static class RequiredEventsBuilder {
 		private Map<String, EventAvailability> requiredEvents;
-		
+
 		private RequiredEventsBuilder() {
 			requiredEvents = new HashMap<>();
 		}
-		
+
 		public static RequiredEventsBuilder create() {
 			return new RequiredEventsBuilder();
 		}
-		
+
 		public RequiredEventsBuilder addEventType(String typeId, EventAvailability availability) {
 			if (requiredEvents.containsKey(typeId)) {
 				throw new IllegalArgumentException("Already specified " + availability + " for " + typeId); //$NON-NLS-1$ //$NON-NLS-2$
@@ -209,12 +208,12 @@ public class RulesToolkit {
 			requiredEvents.put(typeId, availability);
 			return this;
 		}
-		
+
 		public Map<String, EventAvailability> build() {
 			return Collections.unmodifiableMap(requiredEvents);
 		}
 	}
-	
+
 	/**
 	 * @return a least squares approximation of the increase in memory over the given time period,
 	 *         in mebibytes/second
@@ -553,7 +552,7 @@ public class RulesToolkit {
 	 * @return an object describing that the rule could not be evaluated due to there not being
 	 *         enough data
 	 */
-	public static IResult getTooFewEventsResult(IRule2 rule, IPreferenceValueProvider vp) {
+	public static IResult getTooFewEventsResult(IRule rule, IPreferenceValueProvider vp) {
 		return getNotApplicableResult(rule, vp, Messages.getString(Messages.RulesToolkit_TOO_FEW_EVENTS));
 	}
 
@@ -567,7 +566,7 @@ public class RulesToolkit {
 	 *            the description of the result
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	public static IResult getNotApplicableResult(IRule2 rule, IPreferenceValueProvider vp, String message) {
+	public static IResult getNotApplicableResult(IRule rule, IPreferenceValueProvider vp, String message) {
 		return getNotApplicableResult(rule, vp, message, null);
 	}
 
@@ -584,12 +583,10 @@ public class RulesToolkit {
 	 *            could not be evaluated
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	private static IResult getNotApplicableResult(IRule2 rule, IPreferenceValueProvider vp, String shortMessage, String longMessage) {
-		return ResultBuilder.createFor(rule, vp)
-				.setSeverity(Severity.NA)
-				.setSummary(shortMessage)
-				.setExplanation(longMessage)
-				.build();
+	private static IResult getNotApplicableResult(
+		IRule rule, IPreferenceValueProvider vp, String shortMessage, String longMessage) {
+		return ResultBuilder.createFor(rule, vp).setSeverity(Severity.NA).setSummary(shortMessage)
+				.setExplanation(longMessage).build();
 	}
 
 	/**
@@ -989,7 +986,8 @@ public class RulesToolkit {
 	 *            the attribute that is missing
 	 * @return an object that represents the not applicable result due to the missing attribute
 	 */
-	public static IResult getMissingAttributeResult(IRule2 rule, IType<IItem> type, IAttribute<?> attribute, IPreferenceValueProvider vp) {
+	public static IResult getMissingAttributeResult(
+		IRule rule, IType<IItem> type, IAttribute<?> attribute, IPreferenceValueProvider vp) {
 		return getNotApplicableResult(rule, vp,
 				MessageFormat.format(Messages.getString(Messages.RulesToolkit_ATTRIBUTE_NOT_FOUND),
 						attribute.getIdentifier(), type.getIdentifier()),
@@ -1165,7 +1163,7 @@ public class RulesToolkit {
 	 *            available processors will be used.
 	 * @return a map from rules to result futures
 	 */
-	public static Map<IRule, Future<Result>> evaluateParallel(
+	public static Map<IRule, Future<IResult>> evaluateParallel(
 		Collection<IRule> rules, IItemCollection items, IPreferenceValueProvider preferences, int nThreads) {
 		if (preferences == null) {
 			preferences = IPreferenceValueProvider.DEFAULT_VALUES;
@@ -1173,10 +1171,10 @@ public class RulesToolkit {
 		if (nThreads < 1) {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
-		Map<IRule, Future<Result>> resultFutures = new HashMap<>();
-		Queue<RunnableFuture<Result>> futureQueue = new ConcurrentLinkedQueue<>();
+		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
+		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
 		for (IRule rule : rules) {
-			RunnableFuture<Result> resultFuture = rule.evaluate(items, preferences);
+			RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
 			resultFutures.put(rule, resultFuture);
 			futureQueue.add(resultFuture);
 		}
@@ -1189,15 +1187,15 @@ public class RulesToolkit {
 	}
 
 	private static class RuleEvaluator implements Runnable {
-		private Queue<RunnableFuture<Result>> futureQueue;
+		private Queue<RunnableFuture<IResult>> futureQueue;
 
-		public RuleEvaluator(Queue<RunnableFuture<Result>> futureQueue) {
+		public RuleEvaluator(Queue<RunnableFuture<IResult>> futureQueue) {
 			this.futureQueue = futureQueue;
 		}
 
 		@Override
 		public void run() {
-			RunnableFuture<Result> resultFuture;
+			RunnableFuture<IResult> resultFuture;
 			while ((resultFuture = futureQueue.poll()) != null) {
 				resultFuture.run();
 			}

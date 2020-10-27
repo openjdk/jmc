@@ -20,7 +20,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -29,7 +29,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class ClassLoadingRule implements IRule2 {
+public class ClassLoadingRule implements IRule {
 
 	private static final String RESULT_ID = "ClassLoading"; //$NON-NLS-1$
 
@@ -45,18 +45,21 @@ public class ClassLoadingRule implements IRule2 {
 			UnitLookup.NUMBER_UNITY.quantity(0.10));
 
 	public static final TypedResult<IQuantity> LONGEST_CLASS_LOAD = new TypedResult<>("longestClassLoad", //$NON-NLS-1$
-			Messages.getString(Messages.ClassLoadingRule_RESULT_LONGEST_LOAD_NAME), Messages.getString(Messages.ClassLoadingRule_RESULT_LONGEST_LOAD_DESCRIPTION), UnitLookup.TIMESPAN,
+			Messages.getString(Messages.ClassLoadingRule_RESULT_LONGEST_LOAD_NAME),
+			Messages.getString(Messages.ClassLoadingRule_RESULT_LONGEST_LOAD_DESCRIPTION), UnitLookup.TIMESPAN,
 			IQuantity.class);
 	public static final TypedResult<IQuantity> TOTAL_CLASS_LOAD_TIME = new TypedResult<>("totalClassLoadTime", //$NON-NLS-1$
-			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_TIME_NAME), Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_TIME_DESCRIPTION), UnitLookup.TIMESPAN,
+			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_TIME_NAME),
+			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_TIME_DESCRIPTION), UnitLookup.TIMESPAN,
 			IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_CLASS_LOAD_COUNT = new TypedResult<>(
-			"totalClassLoadCount", Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_NAME), Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_DESCRIPTION), UnitLookup.TIMESPAN, //$NON-NLS-1$
-			IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_CLASS_LOAD_COUNT = new TypedResult<>("totalClassLoadCount", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_NAME),
+			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_DESCRIPTION), UnitLookup.TIMESPAN, IQuantity.class);
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(MAX_DURATION_LIMIT, RATIO_OF_TOTAL_LIMIT);
-	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_CLASS_LOAD, TOTAL_CLASS_LOAD_COUNT, TOTAL_CLASS_LOAD_TIME);
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			LONGEST_CLASS_LOAD, TOTAL_CLASS_LOAD_COUNT, TOTAL_CLASS_LOAD_TIME);
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS;
 
 	static {
@@ -105,8 +108,7 @@ public class ClassLoadingRule implements IRule2 {
 						.addResult(TOTAL_CLASS_LOAD_COUNT, totalLoadedClasses)
 						.addResult(TOTAL_CLASS_LOAD_TIME, sumTimeLoadedClasses)
 						.setSummary(Messages.getString(Messages.ClassLoadingRule_RESULT_SUMMARY))
-						.setExplanation(Messages.getString(Messages.ClassLoadingRule_RESULT_EXPLANATION))
-						.build();
+						.setExplanation(Messages.getString(Messages.ClassLoadingRule_RESULT_EXPLANATION)).build();
 			}
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)

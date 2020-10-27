@@ -72,7 +72,7 @@ import org.openjdk.jmc.flightrecorder.memleak.ReferenceTreeModel;
 import org.openjdk.jmc.flightrecorder.memleak.ReferenceTreeObject;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -83,7 +83,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class IncreasingLiveSetRule implements IRule2 {
+public class IncreasingLiveSetRule implements IRule {
 
 	/**
 	 * Defines the relative amount of live set increase per second that corresponds to a rule score
@@ -109,20 +109,31 @@ public class IncreasingLiveSetRule implements IRule2 {
 			.<TypedPreference<?>> asList(CLASSES_LOADED_PERCENT, RELEVANCE_THRESHOLD, YOUNG_COLLECTION_THRESHOLD);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED)
-			.build();
-	
-	public static final ContentType<ReferenceTreeObject> REFERENCE_TREE_OBJECT = UnitLookup.createSyntheticContentType("referenceTreeObject"); //$NON-NLS-1$
-	
-	public static final TypedResult<IQuantity> LIVESET_INCREASE = new TypedResult<>("livesetIncrease", "Liveset Increase", "The speed of the liveset increase per second.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> TIME_AFTER_JVM_START = new TypedResult<>("timeAfterJvmStart", "Time After JVM Start", "The time since the JVM was started.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LEAK_CANDIDATE_COUNT = new TypedResult<>("leakCandidateCount", "Leak Candidate Count", "The number of leak candidates detected.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedCollectionResult<ReferenceTreeObject> LEAK_CANDIDATES = new TypedCollectionResult<>("leakCandidate", "Leak Candidates", "The leak candidates detected.", REFERENCE_TREE_OBJECT, ReferenceTreeObject.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> POST_WARMUP_TIME = new TypedResult<>("postWarmupTime", "Post Warmup Time", "The time after which the rule assumes that long lived objects aren't supposed to be allocated.", UnitLookup.TIMESTAMP, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LIVESET_INCREASE, TIME_AFTER_JVM_START, LEAK_CANDIDATE_COUNT, LEAK_CANDIDATES, POST_WARMUP_TIME);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED).build();
+
+	public static final ContentType<ReferenceTreeObject> REFERENCE_TREE_OBJECT = UnitLookup
+			.createSyntheticContentType("referenceTreeObject"); //$NON-NLS-1$
+
+	public static final TypedResult<IQuantity> LIVESET_INCREASE = new TypedResult<>("livesetIncrease", //$NON-NLS-1$
+			"Liveset Increase", "The speed of the liveset increase per second.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IQuantity> TIME_AFTER_JVM_START = new TypedResult<>("timeAfterJvmStart", //$NON-NLS-1$
+			"Time After JVM Start", "The time since the JVM was started.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LEAK_CANDIDATE_COUNT = new TypedResult<>("leakCandidateCount", //$NON-NLS-1$
+			"Leak Candidate Count", "The number of leak candidates detected.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedCollectionResult<ReferenceTreeObject> LEAK_CANDIDATES = new TypedCollectionResult<>(
+			"leakCandidate", "Leak Candidates", "The leak candidates detected.", REFERENCE_TREE_OBJECT, //$NON-NLS-1$
+			ReferenceTreeObject.class);
+	public static final TypedResult<IQuantity> POST_WARMUP_TIME = new TypedResult<>("postWarmupTime", //$NON-NLS-1$
+			"Post Warmup Time",
+			"The time after which the rule assumes that long lived objects aren't supposed to be allocated.",
+			UnitLookup.TIMESTAMP, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LIVESET_INCREASE, TIME_AFTER_JVM_START, LEAK_CANDIDATE_COUNT, LEAK_CANDIDATES,
+			POST_WARMUP_TIME);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity postWarmupTime = getPostWarmupTime(items, valueProvider.getPreferenceValue(CLASSES_LOADED_PERCENT));
 		Iterator<? extends IItemIterable> allAfterItems = items.apply(JdkFilters.HEAP_SUMMARY_AFTER_GC).iterator();
 		double score = 0;
@@ -171,19 +182,15 @@ public class IncreasingLiveSetRule implements IRule2 {
 				.subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
 		if (ea == EventAvailability.DISABLED || ea == EventAvailability.UNKNOWN) {
 			if (score >= 25) {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.get(score))
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 						.setSummary(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO))
 						.setExplanation(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO_LONG))
 						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 						.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
-						.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart)
-						.build();
+						.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart).build();
 			} else {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.OK)
-						.setSummary(Messages.getString(Messages.IncreasingLiveSetRule_TEXT_OK))
-						.build();
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.IncreasingLiveSetRule_TEXT_OK)).build();
 			}
 		}
 
@@ -215,8 +222,7 @@ public class IncreasingLiveSetRule implements IRule2 {
 					.setExplanation(Messages.getString(Messages.IncreasingLiveSetRule_TEXT_INFO_LONG))
 					.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
 					.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart)
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(calculateBalanceScore))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(calculateBalanceScore)).build();
 		}
 
 		List<ReferenceTreeObject> leakCandidates = tree.getLeakCandidates(
@@ -266,26 +272,21 @@ public class IncreasingLiveSetRule implements IRule2 {
 //				descriptionBuilder.append("</li>"); //$NON-NLS-1$
 //			}
 //			descriptionBuilder.append("</ul>"); //$NON-NLS-1$
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO))
 					.setExplanation(descriptionBuilder.toString())
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart)
 					.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
 					.addResult(LEAK_CANDIDATE_COUNT, UnitLookup.NUMBER_UNITY.quantity(leakCandidates.size()))
-					.addResult(LEAK_CANDIDATES, leakCandidates)
-					.build();
+					.addResult(LEAK_CANDIDATES, leakCandidates).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.get(score))
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO))
 				.setExplanation(Messages.getString(Messages.IncreasingLiveSetRule_TEXT_INFO_NO_CANDIDATES))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
-				.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart)
-				.addResult(POST_WARMUP_TIME, postWarmupTime)
-				.build();
+				.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart).addResult(POST_WARMUP_TIME, postWarmupTime).build();
 	}
 
 	private IQuantity getPostWarmupTime(IItemCollection items, IQuantity classesLoadedPercent) {
@@ -302,7 +303,9 @@ public class IncreasingLiveSetRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

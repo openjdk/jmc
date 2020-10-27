@@ -77,16 +77,24 @@ public class ApplicationHaltsRule extends AbstractRule {
 			Messages.getString(Messages.ApplicationHaltsRule_HALTS_WINDOW_SIZE_DESC), UnitLookup.TIMESPAN,
 			UnitLookup.SECOND.quantity(60));
 
-	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
-	
-	public static final TypedResult<IRange<IQuantity>> HALTS_WINDOW = new TypedResult<>("applicationsHaltsWindow", "Halts Window", "The window during which the most application halts were detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> HALTS_RATIO = new TypedResult<>("applicationHaltsRatio", "Halts Ratio", "The percent of time spent halted.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> NON_GC_HALTS_RATIO = new TypedResult<>("nonGcApplicationHaltsRatio", "Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, HALTS_RATIO, HALTS_WINDOW, NON_GC_HALTS_RATIO);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
-	
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(APP_HALTS_INFO_LIMIT, APP_HALTS_WARNING_LIMIT, WINDOW_SIZE);
+
+	public static final TypedResult<IRange<IQuantity>> HALTS_WINDOW = new TypedResult<>("applicationsHaltsWindow", //$NON-NLS-1$
+			"Halts Window", "The window during which the most application halts were detected.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> HALTS_RATIO = new TypedResult<>("applicationHaltsRatio", "Halts Ratio", //$NON-NLS-1$
+			"The percent of time spent halted.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> NON_GC_HALTS_RATIO = new TypedResult<>("nonGcApplicationHaltsRatio", //$NON-NLS-1$
+			"Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection.",
+			UnitLookup.PERCENTAGE, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, HALTS_RATIO, HALTS_WINDOW, NON_GC_HALTS_RATIO);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
+
 	public ApplicationHaltsRule() {
 		super("ApplicationHalts", Messages.getString(Messages.ApplicationHaltsRule_RULE_NAME), //$NON-NLS-1$
 				JfrRuleTopics.JAVA_APPLICATION_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
@@ -129,15 +137,10 @@ public class ApplicationHaltsRule extends AbstractRule {
 		if (extraTypesInfo != null) {
 			longDescription += "\n" + extraTypesInfo; //$NON-NLS-1$
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(shortDescription)
-				.setExplanation(longDescription)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(HALTS_RATIO, haltsTotalWindowRatio)
-				.addResult(HALTS_WINDOW, haltsWindowRatio.right)
-				.addResult(NON_GC_HALTS_RATIO, nonGcHaltsToTotalRatio)
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortDescription)
+				.setExplanation(longDescription).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(HALTS_RATIO, haltsTotalWindowRatio).addResult(HALTS_WINDOW, haltsWindowRatio.right)
+				.addResult(NON_GC_HALTS_RATIO, nonGcHaltsToTotalRatio).build();
 	}
 
 	private static Comparator<ApplicationHaltsInfoHolder> applicationHaltsComparator() {

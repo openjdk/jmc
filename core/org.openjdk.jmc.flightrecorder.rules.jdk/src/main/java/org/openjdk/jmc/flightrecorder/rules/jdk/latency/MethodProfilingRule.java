@@ -83,7 +83,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -101,7 +101,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnordered
  * Rule that calculates the top method balance in a sliding window throughout the recording with a
  * relevance calculated by the ratio of samples to maximum samples for that period.
  */
-public class MethodProfilingRule implements IRule2 {
+public class MethodProfilingRule implements IRule {
 
 	/**
 	 * Constant value of the maximum number of samples the JVM attempts per sampling period.
@@ -151,8 +151,9 @@ public class MethodProfilingRule implements IRule2 {
 		}
 	}
 
-	public static final ContentType<MethodProfilingWindowResult> METHOD_PROFILING_WINDOW_RESULT = UnitLookup.createSyntheticContentType("methodProfilingWindowResult"); //$NON-NLS-1$
-	
+	public static final ContentType<MethodProfilingWindowResult> METHOD_PROFILING_WINDOW_RESULT = UnitLookup
+			.createSyntheticContentType("methodProfilingWindowResult"); //$NON-NLS-1$
+
 	public static class MethodProfilingWindowResult implements IDisplayable {
 		private final IMCMethod method;
 		private final IMCStackTrace path;
@@ -197,14 +198,28 @@ public class MethodProfilingRule implements IRule2 {
 		}
 
 	}
-	
-	public static final TypedResult<IMCMethod> MOST_INTERESTING_METHOD = new TypedResult<>("mostInterestingMethod", "Most Interesting Method", "The method that, if optimized, would likely have the most impact on CPU usage.", UnitLookup.METHOD, IMCMethod.class); //$NON-NLS-1$
-	public static final TypedResult<IMCStackTrace> MOST_INTERESTING_STACKTRACE = new TypedResult<>("mostInterestingStackTrace", "Most Interesting Stack Trace", "The most common stack trace amongst the available samples.", UnitLookup.STACKTRACE, IMCStackTrace.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> RATIO_OF_ALL_POSSIBLE_SAMPLES = new TypedResult<>("ratioOfAllPossibleSamples", "Ratio of All Possible Samples", "The ratio between the most interestint methods samples and all possible samples.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> RATIO_OF_ACTUAL_SAMPLES = new TypedResult<>("ratioOfSamples", "Ratio of Samples", "The ratio between the most interestint methods samples and all available samples.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IRange<IQuantity>> MOST_INTERESTING_WINDOW = new TypedResult<>("mostInterestingWindow", "Most Interesting Time Window", "The time window in which the most interesting samples were found.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	public static final TypedCollectionResult<MethodProfilingWindowResult> INTERESTING_METHODS = new TypedCollectionResult<>("interestingMethods", "Interesting Methods", "Methods that, if optimized, would likely have the decent impact on CPU usage.", METHOD_PROFILING_WINDOW_RESULT, MethodProfilingWindowResult.class);
-	
+
+	public static final TypedResult<IMCMethod> MOST_INTERESTING_METHOD = new TypedResult<>("mostInterestingMethod", //$NON-NLS-1$
+			"Most Interesting Method", "The method that, if optimized, would likely have the most impact on CPU usage.",
+			UnitLookup.METHOD, IMCMethod.class);
+	public static final TypedResult<IMCStackTrace> MOST_INTERESTING_STACKTRACE = new TypedResult<>(
+			"mostInterestingStackTrace", "Most Interesting Stack Trace", //$NON-NLS-1$
+			"The most common stack trace amongst the available samples.", UnitLookup.STACKTRACE, IMCStackTrace.class);
+	public static final TypedResult<IQuantity> RATIO_OF_ALL_POSSIBLE_SAMPLES = new TypedResult<>(
+			"ratioOfAllPossibleSamples", "Ratio of All Possible Samples", //$NON-NLS-1$
+			"The ratio between the most interestint methods samples and all possible samples.", UnitLookup.PERCENTAGE,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> RATIO_OF_ACTUAL_SAMPLES = new TypedResult<>("ratioOfSamples", //$NON-NLS-1$
+			"Ratio of Samples", "The ratio between the most interestint methods samples and all available samples.",
+			UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> MOST_INTERESTING_WINDOW = new TypedResult<>(
+			"mostInterestingWindow", "Most Interesting Time Window", //$NON-NLS-1$
+			"The time window in which the most interesting samples were found.", UnitLookup.TIMERANGE);
+	public static final TypedCollectionResult<MethodProfilingWindowResult> INTERESTING_METHODS = new TypedCollectionResult<>(
+			"interestingMethods", "Interesting Methods",
+			"Methods that, if optimized, would likely have the decent impact on CPU usage.",
+			METHOD_PROFILING_WINDOW_RESULT, MethodProfilingWindowResult.class);
+
 	private static final String RESULT_ID = "MethodProfiling"; //$NON-NLS-1$
 	public static final TypedPreference<IQuantity> WINDOW_SIZE = new TypedPreference<>(
 			"method.profiling.evaluation.window.size", //$NON-NLS-1$
@@ -220,7 +235,8 @@ public class MethodProfilingRule implements IRule2 {
 			EXCLUDED_PACKAGE_REGEXP);
 
 	/**
-	 * Private {@linkplain Callable} implementation specifically used to avoid storing the FutureTask as a field.
+	 * Private {@linkplain Callable} implementation specifically used to avoid storing the
+	 * FutureTask as a field.
 	 */
 	private class MethodProfilingCallable implements Callable<IResult> {
 		private FutureTask<IResult> evaluationTask = null;
@@ -228,7 +244,8 @@ public class MethodProfilingRule implements IRule2 {
 		private final IPreferenceValueProvider valueProvider;
 		private final IResultValueProvider resultProvider;
 
-		private MethodProfilingCallable(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		private MethodProfilingCallable(IItemCollection items, IPreferenceValueProvider valueProvider,
+				IResultValueProvider resultProvider) {
 			this.items = items;
 			this.valueProvider = valueProvider;
 			this.resultProvider = resultProvider;
@@ -243,13 +260,19 @@ public class MethodProfilingRule implements IRule2 {
 			evaluationTask = task;
 		}
 	}
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, MOST_INTERESTING_WINDOW, MOST_INTERESTING_METHOD, MOST_INTERESTING_STACKTRACE, RATIO_OF_ACTUAL_SAMPLES, RATIO_OF_ALL_POSSIBLE_SAMPLES, INTERESTING_METHODS);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.EXECUTION_SAMPLE, EventAvailability.ENABLED).addEventType(JdkTypeIDs.RECORDING_SETTING, EventAvailability.AVAILABLE).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, MOST_INTERESTING_WINDOW, MOST_INTERESTING_METHOD, MOST_INTERESTING_STACKTRACE,
+			RATIO_OF_ACTUAL_SAMPLES, RATIO_OF_ALL_POSSIBLE_SAMPLES, INTERESTING_METHODS);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.EXECUTION_SAMPLE, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.RECORDING_SETTING, EventAvailability.AVAILABLE).build();
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		MethodProfilingCallable callable = new MethodProfilingCallable(items, valueProvider, resultProvider);
 		FutureTask<IResult> evaluationTask = new FutureTask<>(callable);
 		callable.setTask(evaluationTask);
@@ -257,7 +280,8 @@ public class MethodProfilingRule implements IRule2 {
 	}
 
 	private IResult getResult(
-		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider, FutureTask<IResult> evaluationTask) {
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider,
+		FutureTask<IResult> evaluationTask) {
 		PeriodRangeMap settings = new PeriodRangeMap();
 		IItemFilter settingsFilter = RulesToolkit.getSettingsFilter(RulesToolkit.REC_SETTING_NAME_PERIOD,
 				JdkTypeIDs.EXECUTION_SAMPLE);
@@ -287,23 +311,18 @@ public class MethodProfilingRule implements IRule2 {
 		Map<IMCStackTrace, MethodProfilingWindowResult> percentByMethod = interestingMethods.right;
 		MethodProfilingWindowResult mostInterestingResult = interestingMethods.left;
 		if (mostInterestingResult == null) { // Couldn't find any interesting methods
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.HotMethodsRuleFactory_TEXT_OK))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.HotMethodsRuleFactory_TEXT_OK)).build();
 		}
 		double mappedScore = performSigmoidMap(
 				mostInterestingResult.getRatioOfAllPossibleSamples().doubleValueIn(UnitLookup.PERCENT_UNITY));
 
 		if (mappedScore < 25) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(mappedScore))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(mappedScore))
 					.setSummary(Messages.getString(Messages.HotMethodsRuleFactory_TEXT_OK))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(mappedScore))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(mappedScore)).build();
 		} else {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(mappedScore))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(mappedScore))
 					.setSummary(Messages.getString(Messages.HotMethodsRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.HotMethodsRuleFactory_TEXT_INFO_LONG))
 					.addResult(MOST_INTERESTING_METHOD, mostInterestingResult.getMethod())
@@ -311,8 +330,7 @@ public class MethodProfilingRule implements IRule2 {
 					.addResult(MOST_INTERESTING_WINDOW, mostInterestingResult.getWindow())
 					.addResult(RATIO_OF_ACTUAL_SAMPLES, mostInterestingResult.getRatioOfActualSamples())
 					.addResult(RATIO_OF_ALL_POSSIBLE_SAMPLES, mostInterestingResult.getRatioOfAllPossibleSamples())
-					.addResult(INTERESTING_METHODS, percentByMethod.values())
-					.build();
+					.addResult(INTERESTING_METHODS, percentByMethod.values()).build();
 		}
 	}
 
@@ -330,7 +348,8 @@ public class MethodProfilingRule implements IRule2 {
 				if (result.getPath() != null && performSigmoidMap(
 						result.getRatioOfAllPossibleSamples().doubleValueIn(UnitLookup.PERCENT_UNITY)) >= 25) {
 					MethodProfilingWindowResult r = percentByMethod.get(result.getPath());
-					if (r == null || result.getRatioOfAllPossibleSamples().compareTo(r.getRatioOfAllPossibleSamples()) > 0) {
+					if (r == null
+							|| result.getRatioOfAllPossibleSamples().compareTo(r.getRatioOfAllPossibleSamples()) > 0) {
 						percentByMethod.put(result.getPath(), result);
 					}
 				}

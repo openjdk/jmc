@@ -15,7 +15,7 @@ public class ResultBuilder {
 	private static class Result implements IResult {
 
 		private final Severity severity;
-		private final IRule2 rule;
+		private final IRule rule;
 		private final String summary;
 		private final String explanation;
 		private final String solution;
@@ -23,9 +23,10 @@ public class ResultBuilder {
 		private final Map<TypedResult<?>, Object> resultMap;
 		private final Map<TypedResult<?>, Collection<?>> collectionResultMap;
 		private final Map<TypedPreference<?>, Object> preferenceMap;
-		
-		Result(Severity severity, IRule2 rule, String summary, String explanation, String solution,
-				Collection<IRecordingSetting> suggestedRecordingSettings, Map<TypedResult<?>, Object> resultMap, Map<TypedResult<?>, Collection<?>> collectionResultMap, Map<TypedPreference<?>, Object> preferenceMap) {
+
+		Result(Severity severity, IRule rule, String summary, String explanation, String solution,
+				Collection<IRecordingSetting> suggestedRecordingSettings, Map<TypedResult<?>, Object> resultMap,
+				Map<TypedResult<?>, Collection<?>> collectionResultMap, Map<TypedPreference<?>, Object> preferenceMap) {
 			this.severity = severity;
 			this.rule = rule;
 			this.summary = summary;
@@ -43,7 +44,7 @@ public class ResultBuilder {
 		}
 
 		@Override
-		public IRule2 getRule() {
+		public IRule getRule() {
 			return rule;
 		}
 
@@ -66,17 +67,21 @@ public class ResultBuilder {
 		public Collection<IRecordingSetting> suggestRecordingSettings() {
 			return suggestedRecordingSettings;
 		}
-		
+
+		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T getResult(TypedResult<T> key) {
 			Object result = resultMap.get(key);
+			if (key.getResultClass() == null) {
+				return (T) result;
+			}
 			return key.getResultClass().cast(result);
 		}
 
 		@Override
 		public <T> Collection<T> getResult(TypedCollectionResult<T> key) {
 			Collection<?> collection = collectionResultMap.get(key);
-				if (collection != null) {
+			if (collection != null) {
 				Collection<T> results = new ArrayList<>(collection.size());
 				for (Object object : collection) {
 					results.add(key.getResultClass().cast(object));
@@ -94,7 +99,7 @@ public class ResultBuilder {
 	}
 
 	private Severity severity;
-	private IRule2 rule;
+	private IRule rule;
 	private String summary;
 	private String explanation;
 	private String solution;
@@ -103,11 +108,11 @@ public class ResultBuilder {
 	private Map<TypedResult<?>, Collection<?>> collectionResultMap;
 	private Map<TypedPreference<?>, Object> preferenceMap;
 
-	public static ResultBuilder createFor(IRule2 rule, IPreferenceValueProvider preferenceProvider) {
+	public static ResultBuilder createFor(IRule rule, IPreferenceValueProvider preferenceProvider) {
 		return new ResultBuilder(rule, preferenceProvider);
 	}
 
-	private ResultBuilder(IRule2 rule, IPreferenceValueProvider preferenceProvider) {
+	private ResultBuilder(IRule rule, IPreferenceValueProvider preferenceProvider) {
 		this.rule = rule;
 		suggestedRecordingSettings = new HashSet<>();
 		resultMap = new HashMap<>();
@@ -147,13 +152,14 @@ public class ResultBuilder {
 		collectionResultMap.put(type, results);
 		return this;
 	}
-	
+
 	public <T> ResultBuilder addResult(TypedResult<T> type, T result) {
 		resultMap.put(type, result);
 		return this;
 	}
 
 	public IResult build() {
-		return new Result(severity, rule, summary, explanation, solution, suggestedRecordingSettings, resultMap, collectionResultMap, preferenceMap);
+		return new Result(severity, rule, summary, explanation, solution, suggestedRecordingSettings, resultMap,
+				collectionResultMap, preferenceMap);
 	}
 }

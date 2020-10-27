@@ -49,7 +49,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -59,21 +59,25 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class LowOnPhysicalMemoryRule implements IRule2 {
+public class LowOnPhysicalMemoryRule implements IRule {
 
 	private static final String RESULT_ID = "LowOnPhysicalMemory"; //$NON-NLS-1$
-	
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.OS_MEMORY_SUMMARY, EventAvailability.ENABLED)
-			.build();
-	
-	public static final TypedResult<IQuantity> USED_MEMORY_RATIO = new TypedResult<>("usedMemoryRatio", "Used Memory Ratio", "The percentage of used physical memory.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> TOTAL_MEMORY = new TypedResult<>("totalMemory", JdkAggregators.MIN_TOTAL_MEMORY, UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> MAX_USED_MEMORY = new TypedResult<>("maxUsedMemory", JdkAggregators.MAX_USED_MEMORY, UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	
-	private Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, USED_MEMORY_RATIO, TOTAL_MEMORY, MAX_USED_MEMORY);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.OS_MEMORY_SUMMARY, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> USED_MEMORY_RATIO = new TypedResult<>("usedMemoryRatio", //$NON-NLS-1$
+			"Used Memory Ratio", "The percentage of used physical memory.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_MEMORY = new TypedResult<>("totalMemory", //$NON-NLS-1$
+			JdkAggregators.MIN_TOTAL_MEMORY, UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IQuantity> MAX_USED_MEMORY = new TypedResult<>("maxUsedMemory", //$NON-NLS-1$
+			JdkAggregators.MAX_USED_MEMORY, UnitLookup.MEMORY, IQuantity.class);
+
+	private Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			USED_MEMORY_RATIO, TOTAL_MEMORY, MAX_USED_MEMORY);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity total = items.getAggregate(JdkAggregators.MIN_TOTAL_MEMORY);
 		IQuantity used = items.getAggregate(JdkAggregators.MAX_USED_MEMORY);
 
@@ -85,24 +89,21 @@ public class LowOnPhysicalMemoryRule implements IRule2 {
 		// double unsafeUse = (used - (total * safeUsage)) / (total * (1 - safeUsage));
 		double score = RulesToolkit.mapExp100(usage - safeUsage, 0, warningLimit - safeUsage);
 		if (score > 0) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(USED_MEMORY_RATIO, UnitLookup.PERCENT_UNITY.quantity(usage))
-					.addResult(TOTAL_MEMORY, total)
-					.addResult(MAX_USED_MEMORY, used)
-					.build();
+					.addResult(TOTAL_MEMORY, total).addResult(MAX_USED_MEMORY, used).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.io.IOToolkit;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.ui.DataPageDescriptor;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
@@ -235,7 +236,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		form.getToolBarManager().add(reportAction);
 		form.getToolBarManager().add(tableAction);
 		form.getToolBarManager().update(true);
-		Consumer<Result> listener = result -> updateRule(result);
+		Consumer<IResult> listener = result -> updateRule(result);
 		editor.getRuleManager().addResultListener(listener);
 		form.addDisposeListener(de -> editor.getRuleManager().removeResultListener(listener));
 		return redisplay();
@@ -250,7 +251,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 
 	private volatile boolean isUpdated = false;
 
-	public void updateRule(Result result) {
+	public void updateRule(IResult result) {
 		if (displayReport && report != null) {
 			report.updateRule(result.getRule());
 		} else if (table != null) {
@@ -288,16 +289,16 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		}
 		if (!displayReport) {
 			setVisibleActions(false);
-			Map<Result, DataPageDescriptor> map = createResultMap();
+			Map<IResult, DataPageDescriptor> map = createResultMap();
 			table = new ResultTableUi(form, toolkit, editor, loadedState, map);
 		}
 		return this;
 	}
 
-	private Map<Result, DataPageDescriptor> createResultMap() {
-		Map<Result, DataPageDescriptor> map = new HashMap<>();
+	private Map<IResult, DataPageDescriptor> createResultMap() {
+		Map<IResult, DataPageDescriptor> map = new HashMap<>();
 		FlightRecorderUI.getDefault().getPageManager().getAllPages().forEach(page -> {
-			for (Result result : editor.getRuleManager().getResults(page.getTopics())) {
+			for (IResult result : editor.getRuleManager().getResults(page.getTopics())) {
 				map.put(result, page);
 			}
 		});
@@ -305,7 +306,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 				.flatMap(dpd -> Stream.of(dpd.getTopics()))
 				.anyMatch(t -> RuleManager.UNMAPPED_REMAINDER_TOPIC.equals(t));
 		if (!hasRemainderBucket) {
-			for (Result result : editor.getRuleManager().getUnmappedResults()) {
+			for (IResult result : editor.getRuleManager().getUnmappedResults()) {
 				map.put(result, null);
 			}
 		}

@@ -60,7 +60,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -71,7 +71,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class CodeCacheRule implements IRule2 {
+public class CodeCacheRule implements IRule {
 
 	public static final String CODE_CACHE_RESULT_ID = "CodeCache"; //$NON-NLS-1$
 
@@ -94,8 +94,7 @@ public class CodeCacheRule implements IRule2 {
 			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.CODE_CACHE_CONFIG, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.CODE_CACHE_STATISTICS, EventAvailability.AVAILABLE)
-			.addEventType(JdkTypeIDs.CODE_CACHE_FULL, EventAvailability.AVAILABLE)
-			.build();
+			.addEventType(JdkTypeIDs.CODE_CACHE_FULL, EventAvailability.AVAILABLE).build();
 
 	private static class CodeHeapData implements Comparable<CodeHeapData>, IDisplayable {
 		private String name;
@@ -109,7 +108,7 @@ public class CodeCacheRule implements IRule2 {
 		public IQuantity getRatio() {
 			return ratio;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
@@ -143,16 +142,22 @@ public class CodeCacheRule implements IRule2 {
 			return name + "(" + ratio.displayUsing(formatHint) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	public static final ContentType<CodeHeapData> CODE_HEAP = UnitLookup.createSyntheticContentType("codeHeapData"); //$NON-NLS-1$
-	
-	public static final TypedResult<IQuantity> CODE_CACHE_FREE_RATIO = new TypedResult<>("codeCacheFreeRatio", "Code Cache Free Ratio", "The percentage of the code cache that was free.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	public static final TypedCollectionResult<CodeHeapData> CODE_HEAPS = new TypedCollectionResult<>("codeHeaps", "Code Heaps", "The code heaps in the JVM.", CODE_HEAP, CodeHeapData.class); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, CODE_CACHE_FREE_RATIO);
+
+	public static final TypedResult<IQuantity> CODE_CACHE_FREE_RATIO = new TypedResult<>("codeCacheFreeRatio", //$NON-NLS-1$
+			"Code Cache Free Ratio", "The percentage of the code cache that was free.", UnitLookup.PERCENTAGE, //$NON-NLS-1$//$NON-NLS-2$
+			IQuantity.class);
+	public static final TypedCollectionResult<CodeHeapData> CODE_HEAPS = new TypedCollectionResult<>("codeHeaps", //$NON-NLS-1$
+			"Code Heaps", "The code heaps in the JVM.", CODE_HEAP, CodeHeapData.class); //$NON-NLS-1$ //$NON-NLS-2$
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, CODE_CACHE_FREE_RATIO);
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -162,18 +167,17 @@ public class CodeCacheRule implements IRule2 {
 		return evaluationTask;
 	}
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// Check if this is an early unsupported recording
 		IItemCollection ccItems = items.apply(JdkFilters.CODE_CACHE_CONFIGURATION);
 		IType<IItem> ccType = RulesToolkit.getType(ccItems, JdkTypeIDs.CODE_CACHE_CONFIG);
 		IQuantity ccFullCount = items.getAggregate(JdkAggregators.CODE_CACHE_FULL_COUNT);
 		if (ccFullCount != null && ccFullCount.doubleValue() > 0) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.WARNING)
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN_LONG))
-					.setSolution(Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE))
-					.build();
+					.setSolution(Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE)).build();
 		}
 		IQuantity infoPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_INFO_PERCENT);
 		IQuantity warningPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_WARN_PERCENT);
@@ -219,9 +223,11 @@ public class CodeCacheRule implements IRule2 {
 			builder.addResult(CODE_HEAPS, heaps);
 			if (heaps.size() > 0) {
 				if (heaps.size() > 1) {
-					builder.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAPS_SHORT_DESCRIPTION));
+					builder.setSummary(
+							Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAPS_SHORT_DESCRIPTION));
 				} else {
-					builder.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAP_SHORT_DESCRIPTION));
+					builder.setSummary(
+							Messages.getString(Messages.CodeCacheRuleFactory_WARN_SEGMENTED_HEAP_SHORT_DESCRIPTION));
 				}
 				longDescription = Messages.getString(Messages.CodeCacheRuleFactory_WARN_LONG_DESCRIPTION) + "\n" //$NON-NLS-1$
 						+ Messages.getString(Messages.CodeCacheRuleFactory_DEFAULT_LONG_DESCRIPTION) + "\n" //$NON-NLS-1$
@@ -264,15 +270,11 @@ public class CodeCacheRule implements IRule2 {
 		if (allocationRatioScore >= 25) {
 			// FIXME: Include configured value of code cache size in long description
 			return builder.setSeverity(Severity.get(allocationRatioScore))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore)).build();
 		}
 		// FIXME: Show calculated free value also in ok text
-		return builder
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_OK))
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore))
-				.build();
+		return builder.setSeverity(Severity.OK).setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_OK))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(allocationRatioScore)).build();
 	}
 
 	private boolean hasSegmentedCodeCache(IItemCollection items) {

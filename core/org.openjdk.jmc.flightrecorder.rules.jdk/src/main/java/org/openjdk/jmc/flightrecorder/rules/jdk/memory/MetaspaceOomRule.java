@@ -49,7 +49,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -59,39 +59,39 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class MetaspaceOomRule implements IRule2 {
+public class MetaspaceOomRule implements IRule {
 
 	private static final String RESULT_ID = "MetaspaceOom"; //$NON-NLS-1$
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.METASPACE_OOM, EventAvailability.ENABLED)
-			.build();
-	
-	public static final TypedResult<IQuantity> OOM_EVENTS = new TypedResult<>("oomCount", JdkAggregators.METASPACE_OOM_COUNT, UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, OOM_EVENTS);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.METASPACE_OOM, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> OOM_EVENTS = new TypedResult<>("oomCount", //$NON-NLS-1$
+			JdkAggregators.METASPACE_OOM_COUNT, UnitLookup.NUMBER, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, OOM_EVENTS);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity oomCount = items.getAggregate(JdkAggregators.METASPACE_OOM_COUNT);
 		if (oomCount != null && oomCount.doubleValue() > 0) {
 			// FIXME: Configuration attribute instead of hard coded 1 as warning limit
 			double score = RulesToolkit.mapExp100(oomCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY), 1);
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(OOM_EVENTS, oomCount)
-					.build();
+					.addResult(OOM_EVENTS, oomCount).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

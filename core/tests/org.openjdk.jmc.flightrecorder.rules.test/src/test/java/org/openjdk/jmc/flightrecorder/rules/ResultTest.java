@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.rules;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.RunnableFuture;
 
 import org.junit.Rule;
@@ -44,6 +45,7 @@ import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemQueryBuilder;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 @SuppressWarnings("nls")
 public class ResultTest {
@@ -51,7 +53,8 @@ public class ResultTest {
 	private static class TestRule implements IRule {
 
 		@Override
-		public RunnableFuture<Result> evaluate(IItemCollection items, IPreferenceValueProvider valueProvider) {
+		public RunnableFuture<IResult> createEvaluation(
+			IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 			return null;
 		}
 
@@ -72,6 +75,16 @@ public class ResultTest {
 
 		@Override
 		public String getTopic() {
+			return null;
+		}
+
+		@Override
+		public Map<String, EventAvailability> getRequiredEvents() {
+			return null;
+		}
+
+		@Override
+		public Collection<TypedResult<?>> getResults() {
 			return null;
 		}
 

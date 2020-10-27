@@ -55,7 +55,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -65,7 +65,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class HeapContentRule implements IRule2 {
+public class HeapContentRule implements IRule {
 
 	private static final IAggregator<IQuantity, ?> HEAP_CONTENT_SCORE_AGGREGATOR = GroupingAggregator.build(
 			Messages.getString(Messages.HeapContentRule_AGGR_CLASS_SCORE), null, JdkAttributes.OBJECT_CLASS,
@@ -90,35 +90,34 @@ public class HeapContentRule implements IRule2 {
 	private static final String RESULT_ID = "HeapContent"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.OBJECT_COUNT, EventAvailability.ENABLED)
-			.build();
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.OBJECT_COUNT, EventAvailability.ENABLED).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity aggregate = items.getAggregate(HEAP_CONTENT_SCORE_AGGREGATOR);
 		// FIXME: Configuration attribute instead of hard coded 0.75 warning limit
 		double score = aggregate == null ? 0 : RulesToolkit.mapExp100(aggregate.doubleValue(), 0.75);
 		// FIXME: Construct a more informative message, not use a hard limit. Include a description of the aggregate.
 		// As the samples come at different points in time, it's not very obvious what this aggregate represents.
 		if (score >= 25) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.HeapContentRuleFactory_TEXT_INFO_LONG))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 		} else {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.HeapContentRuleFactory_TEXT_OK))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.build();
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

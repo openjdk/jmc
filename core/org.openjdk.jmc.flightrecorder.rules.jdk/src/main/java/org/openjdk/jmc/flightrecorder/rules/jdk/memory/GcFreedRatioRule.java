@@ -96,22 +96,28 @@ public class GcFreedRatioRule extends AbstractRule {
 			Messages.getString(Messages.GcFreedRatioRule_FEW_GCS_LIMIT_DESC), UnitLookup.NUMBER,
 			UnitLookup.NUMBER_UNITY.quantity(10));
 
-	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT);
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT);
 
-	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", "Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", "The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond", "GC Freed Per Second", "The amount of memory freed per second.", UnitLookup.MEMORY, IQuantity.class);
-	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window", "The window where the most amount of memory freed occurred.", UnitLookup.TIMERANGE);
-	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset", "The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
+	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", //$NON-NLS-1$
+			"Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", //$NON-NLS-1$
+			"The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond",
+			"GC Freed Per Second", "The amount of memory freed per second.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window",
+			"The window where the most amount of memory freed occurred.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset",
+			"The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
-			.build();
-	
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
+
 	public GcFreedRatioRule() {
 		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, //$NON-NLS-1$
 				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
@@ -127,11 +133,9 @@ public class GcFreedRatioRule extends AbstractRule {
 
 		IQuantity heapSummaryCount = items.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.HEAP_SUMMARY)));
 		if (heapSummaryCount.compareTo(fewGcsLimit) < 0) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.GcFreedRatioRule_RESULT_FEW_GCS))
-					.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount)
-					.build();
+					.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount).build();
 		}
 
 		// Do the rule calculations
@@ -164,17 +168,12 @@ public class GcFreedRatioRule extends AbstractRule {
 			// Halving score for short recordings
 			score = score > 0 ? score / 2 : score;
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(shortDescription)
-				.setExplanation(longDescription)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortDescription)
+				.setExplanation(longDescription).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(GC_FREED_RATIO, maxFreedGcInfo.freedPerSecondToLivesetRatio)
-				.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount)
-				.addResult(GC_WINDOW, maxFreedGcInfo.range)
+				.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount).addResult(GC_WINDOW, maxFreedGcInfo.range)
 				.addResult(AVERAGE_LIVESET, maxFreedGcInfo.averageLiveset)
-				.addResult(GC_FREED_PER_SECOND, maxFreedGcInfo.freedPerSecond)
-				.build();
+				.addResult(GC_FREED_PER_SECOND, maxFreedGcInfo.freedPerSecond).build();
 	}
 
 	private GcInfoHolder getMaxFreedWindow(final IItemCollection allItems, IQuantity windowSize, IQuantity slideSize) {

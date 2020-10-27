@@ -56,7 +56,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -66,7 +66,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class LongGcPauseRule implements IRule2 {
+public class LongGcPauseRule implements IRule {
 
 	private static final String RESULT_ID = "LongGcPause"; //$NON-NLS-1$
 
@@ -82,15 +82,18 @@ public class LongGcPauseRule implements IRule2 {
 			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.HEAP_CONF, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.GC_PAUSE_L1, EventAvailability.ENABLED)
-			.build();
-	
-	public static final TypedResult<IQuantity> LONGEST_PAUSE = new TypedResult<>("longestPause", "Longest GC Pause", "The longest detected GC pause.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LIVE_SET = new TypedResult<>("liveset", "Liveset", "The detected liveset.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> HEAP_SIZE = new TypedResult<>("heapSize", "Heap Size", "The detected heap size.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_PAUSE, LIVE_SET, HEAP_SIZE);
-	
+			.addEventType(JdkTypeIDs.GC_PAUSE_L1, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> LONGEST_PAUSE = new TypedResult<>("longestPause", "Longest GC Pause", //$NON-NLS-1$
+			"The longest detected GC pause.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LIVE_SET = new TypedResult<>("liveset", "Liveset", //$NON-NLS-1$
+			"The detected liveset.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IQuantity> HEAP_SIZE = new TypedResult<>("heapSize", "Heap Size", //$NON-NLS-1$
+			"The detected heap size.", UnitLookup.MEMORY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_PAUSE, LIVE_SET, HEAP_SIZE);
+
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity maxPause = items.getAggregate(JdkAggregators.LONGEST_GC_PAUSE);
 		if (maxPause != null) {
@@ -104,24 +107,21 @@ public class LongGcPauseRule implements IRule2 {
 				longMessage = appendMessage(longMessage, getSemiRefsMessage(items));
 				longMessage = appendMessage(longMessage, getCollectorMessage(items));
 			}
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(gcPauseScore))
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(gcPauseScore))
 					.setSummary(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_INFO))
 					.setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(gcPauseScore))
-					.addResult(LIVE_SET, liveSet)
-					.addResult(HEAP_SIZE, maxMx)
-					.addResult(LONGEST_PAUSE, maxPause)
+					.addResult(LIVE_SET, liveSet).addResult(HEAP_SIZE, maxMx).addResult(LONGEST_PAUSE, maxPause)
 					.build();
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

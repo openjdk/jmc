@@ -52,7 +52,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
@@ -63,16 +63,17 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class GcStallRule implements IRule2 {
+public class GcStallRule implements IRule {
 	private static final String GC_STALL_RESULT_ID = "GcStall"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED)
-			.build();
-	
+			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED).build();
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -80,14 +81,12 @@ public class GcStallRule implements IRule2 {
 				if (aggregate.foundNonRequestedSerialOldGc()) {
 					CollectorType oldCollectorType = CollectorType.getOldCollectorType(items);
 					if (oldCollectorType == CollectorType.CMS) {
-						return ResultBuilder.createFor(GcStallRule.this, valueProvider)
-								.setSeverity(Severity.WARNING)
+						return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.WARNING)
 								.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS))
 								.setExplanation(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS_LONG))
 								.build();
 					} else if (oldCollectorType == CollectorType.G1_OLD) {
-						return ResultBuilder.createFor(GcStallRule.this, valueProvider)
-								.setSeverity(Severity.WARNING)
+						return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.WARNING)
 								.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1))
 								.setExplanation(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1_LONG))
 								.build();
@@ -95,16 +94,13 @@ public class GcStallRule implements IRule2 {
 				}
 				IQuantity c = items.getAggregate(Aggregators.count(null, null, JdkFilters.CONCURRENT_MODE_FAILURE));
 				if (c != null && c.clampedLongValueIn(NUMBER_UNITY) > 0) {
-					return ResultBuilder.createFor(GcStallRule.this, valueProvider)
-							.setSeverity(Severity.WARNING)
+					return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.WARNING)
 							.setSummary(Messages.getString(Messages.ConcurrentFailedRuleFactory_TEXT_WARN))
 							.setExplanation(Messages.getString(Messages.ConcurrentFailedRuleFactory_TEXT_WARN_LONG))
 							.build();
 				}
-				return ResultBuilder.createFor(GcStallRule.this, valueProvider)
-						.setSeverity(Severity.OK)
-						.setSummary(Messages.getString(Messages.GcStallRule_TEXT_OK))
-						.build();
+				return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.GcStallRule_TEXT_OK)).build();
 			}
 		});
 		return evaluationTask;

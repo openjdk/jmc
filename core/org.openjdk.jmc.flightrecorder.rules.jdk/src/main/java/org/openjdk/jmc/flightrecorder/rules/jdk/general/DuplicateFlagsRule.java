@@ -25,7 +25,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -34,19 +34,19 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class DuplicateFlagsRule implements IRule2 {
+public class DuplicateFlagsRule implements IRule {
 
 	public static class DuplicateFlags implements IDisplayable {
 		private final Collection<List<String>> duplicates;
-		
+
 		private DuplicateFlags() {
 			duplicates = new ArrayList<>();
 		}
-		
+
 		private void addDuplicates(List<String> duplicates) {
 			this.duplicates.add(duplicates);
 		}
-		
+
 		@Override
 		public String displayUsing(String formatHint) {
 			StringBuilder sb = new StringBuilder();
@@ -66,22 +66,30 @@ public class DuplicateFlagsRule implements IRule2 {
 			return sb.toString();
 		}
 	}
-	
+
 	private static final String RESULT_ID = "DuplicateFlags"; //$NON-NLS-1$
-	
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
-	
-	private static final ContentType<DuplicateFlags> DUPLICATE_FLAGS = UnitLookup.createSyntheticContentType("duplicateFlags"); //$NON-NLS-1$
-	
-	public static final TypedResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedResult<>("duplicatedFlags", Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_NAME), Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_DESCRIPTION), DUPLICATE_FLAGS, DuplicateFlags.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> TOTAL_DUPLICATED_FLAGS = new TypedResult<>("totalDuplicatedFlags", Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_NAME), Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_DESCRIPTION), UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	
-	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(DUPLICATED_FLAGS, TOTAL_DUPLICATED_FLAGS);
-	
+
+	private static final ContentType<DuplicateFlags> DUPLICATE_FLAGS = UnitLookup
+			.createSyntheticContentType("duplicateFlags"); //$NON-NLS-1$
+
+	public static final TypedResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedResult<>("duplicatedFlags", //$NON-NLS-1$
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_NAME),
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_DESCRIPTION), DUPLICATE_FLAGS,
+			DuplicateFlags.class);
+	public static final TypedResult<IQuantity> TOTAL_DUPLICATED_FLAGS = new TypedResult<>("totalDuplicatedFlags", //$NON-NLS-1$
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_NAME),
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_DESCRIPTION),
+			UnitLookup.NUMBER, IQuantity.class);
+
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(DUPLICATED_FLAGS,
+			TOTAL_DUPLICATED_FLAGS);
+
 	static {
 		REQUIRED_EVENTS.put(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE);
 	}
-	
+
 	@Override
 	public String getId() {
 		return RESULT_ID;
@@ -103,8 +111,9 @@ public class DuplicateFlagsRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items,
-			final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -113,7 +122,7 @@ public class DuplicateFlagsRule implements IRule2 {
 		});
 		return evaluationTask;
 	}
-	
+
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IItemCollection jvmInfoItems = items.apply(JdkFilters.VM_INFO);
 
@@ -125,19 +134,15 @@ public class DuplicateFlagsRule implements IRule2 {
 				duplicateFlags.addDuplicates(dupe);
 			}
 			if (!JvmInternalsDataProvider.checkDuplicates(args.iterator().next()).isEmpty()) {
-				return ResultBuilder.createFor(this, vp)
-						.addResult(DUPLICATED_FLAGS, duplicateFlags)
+				return ResultBuilder.createFor(this, vp).addResult(DUPLICATED_FLAGS, duplicateFlags)
 						.setSeverity(Severity.INFO)
 						.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY))
 						.setExplanation(Messages.getString(Messages.DuplicateFlagsRule_RESULT_EXPLANATION))
-						.setSolution(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SOLUTION))
-						.build();
+						.setSolution(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SOLUTION)).build();
 			}
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY_OK))
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY_OK)).build();
 	}
 
 	@Override

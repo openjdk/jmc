@@ -8,7 +8,7 @@ public interface IResult {
 
 	Severity getSeverity();
 
-	IRule2 getRule();
+	IRule getRule();
 
 	String getSummary();
 
@@ -19,8 +19,8 @@ public interface IResult {
 	Collection<IRecordingSetting> suggestRecordingSettings();
 
 	<T> Collection<T> getResult(TypedCollectionResult<T> result);
-	
+
 	<T> T getPreference(TypedPreference<T> preference);
-	
+
 	<T> T getResult(TypedResult<T> result);
 }

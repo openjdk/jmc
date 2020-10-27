@@ -27,7 +27,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -37,7 +37,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class LuceneVersionRule implements IRule2 {
+public class LuceneVersionRule implements IRule {
 
 	private static final String RESULT_ID = "LuceneVersion"; //$NON-NLS-1$
 
@@ -47,13 +47,15 @@ public class LuceneVersionRule implements IRule2 {
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.EXCEPTIONS_THROWN, EventAvailability.ENABLED)
-			.build();
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
+			.addEventType(JdkTypeIDs.EXCEPTIONS_THROWN, EventAvailability.ENABLED).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		return new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -72,26 +74,21 @@ public class LuceneVersionRule implements IRule2 {
 		// Lucene post 7.1.0 still creates a LookaheadSuccess error, but only on class load
 		if (lookaheadSuccessErrors.longValue() > 1) {
 			double score = RulesToolkit.mapExp100(lookaheadSuccessErrors.longValue(), 2, 20);
-			ResultBuilder builder = ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(score))
+			ResultBuilder builder = ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score));
 			switch (consumerType) {
 			case ELASTIC_SEARCH:
 				return builder.setSummary(Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_ES))
-						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_ES))
-						.build();
+						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_ES)).build();
 			case SOLR:
 				return builder.setSummary(Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_SOLR))
-						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_SOLR))
-						.build();
+						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_SOLR)).build();
 			default:
 				return builder.setSummary(Messages.getString(Messages.LuceneVersionRule_SHORT_DESCRIPTION_LUCENE))
-						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_LUCENE))
-						.build();
+						.setExplanation(Messages.getString(Messages.LuceneVersionRule_LONG_DESCRIPTION_LUCENE)).build();
 			}
 		} else if (lookaheadSuccessErrors.longValue() == 1) {
-			ResultBuilder builder = ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK);
+			ResultBuilder builder = ResultBuilder.createFor(this, vp).setSeverity(Severity.OK);
 			switch (consumerType) {
 			case ELASTIC_SEARCH:
 				return builder.setSummary(Messages.getString(Messages.LuceneVersionRule_OK_TEXT_ES)).build();
@@ -101,10 +98,8 @@ public class LuceneVersionRule implements IRule2 {
 				return builder.setSummary(Messages.getString(Messages.LuceneVersionRule_OK_TEXT_LUCENE)).build();
 			}
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.NA)
-				.setSummary(Messages.getString(Messages.LuceneVersionRule_NA_TEXT))
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+				.setSummary(Messages.getString(Messages.LuceneVersionRule_NA_TEXT)).build();
 	}
 
 	private LuceneConsumer isElasticSearch(IItemCollection items) {

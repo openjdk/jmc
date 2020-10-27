@@ -122,7 +122,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
@@ -717,7 +717,7 @@ public class DataPageToolkit {
 		private String[] topics;
 		private final IPageContainer pageContainer;
 		private volatile Severity maxSeverity;
-		private final List<Consumer<Result>> listeners = new ArrayList<>();
+		private final List<Consumer<IResult>> listeners = new ArrayList<>();
 
 		ShowResultAction(String title, int style, ImageDescriptor icon, Supplier<String> tooltip,
 				IPageContainer pageContainer, String ... topics) {
@@ -728,8 +728,8 @@ public class DataPageToolkit {
 			this.pageContainer = pageContainer;
 			maxSeverity = pageContainer.getRuleManager().getMaxSeverity(topics);
 			for (String topic : topics) {
-				Consumer<Result> listener = result -> {
-					Severity severity = Severity.get(result.getScore());
+				Consumer<IResult> listener = result -> {
+					Severity severity = result.getSeverity();
 					if (severity.compareTo(maxSeverity) > 0) {
 						maxSeverity = severity;
 						setImageDescriptor(getResultIcon(maxSeverity));

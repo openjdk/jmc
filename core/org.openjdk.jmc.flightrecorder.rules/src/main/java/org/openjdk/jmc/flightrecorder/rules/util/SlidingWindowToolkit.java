@@ -262,8 +262,9 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static Pair<IQuantity, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<IResult> cancellationSupplier,
-		final IUnorderedWindowValueFunction<IQuantity> valueFunction, boolean max, boolean includeIntersecting) {
+		IItemCollection items, IQuantity windowSize, IQuantity slideSize,
+		final FutureTask<IResult> cancellationSupplier, final IUnorderedWindowValueFunction<IQuantity> valueFunction,
+		boolean max, boolean includeIntersecting) {
 		return slidingWindowUnorderedMinMaxValue(items, windowSize, slideSize, cancellationSupplier, valueFunction,
 				QUANTITY_COMPARATOR, max, includeIntersecting);
 	}
@@ -330,9 +331,9 @@ public class SlidingWindowToolkit {
 	 * @return min/max window value and range
 	 */
 	public static <V> Pair<V, IRange<IQuantity>> slidingWindowUnorderedMinMaxValue(
-		IItemCollection items, IQuantity windowSize, IQuantity slideSize, final FutureTask<IResult> cancellationSupplier,
-		final IUnorderedWindowValueFunction<V> valueFunction, final Comparator<V> valueComparator, boolean max,
-		boolean includeIntersecting) {
+		IItemCollection items, IQuantity windowSize, IQuantity slideSize,
+		final FutureTask<IResult> cancellationSupplier, final IUnorderedWindowValueFunction<V> valueFunction,
+		final Comparator<V> valueComparator, boolean max, boolean includeIntersecting) {
 
 		final List<Pair<V, IRange<IQuantity>>> valueList = new ArrayList<>();
 

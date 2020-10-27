@@ -51,7 +51,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -60,17 +60,17 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class CompressedOopsRule implements IRule2 {
+public class CompressedOopsRule implements IRule {
 
 	private static final String RESULT_ID = "CompressedOops"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.BOOLEAN_FLAG, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.ULONG_FLAG, EventAvailability.AVAILABLE)
-			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
-			.build();
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		Boolean compressedOops = items
 				.getAggregate(Aggregators.or(JdkTypeIDs.HEAP_CONF, JdkAttributes.HEAP_USE_COMPRESSED_OOPS));
 		IQuantity mx = items.getAggregate(JdkAggregators.LARGEST_MAX_HEAP_SIZE_FROM_FLAG);
@@ -79,8 +79,7 @@ public class CompressedOopsRule implements IRule2 {
 			if (vmName.toUpperCase().contains("64-BIT")) { //$NON-NLS-1$
 				if (mx.compareTo(UnitLookup.NUMBER.getUnit(BinaryPrefix.GIBI).quantity(32)) > 0) {
 					if (!compressedOops) {
-						return ResultBuilder.createFor(this, valueProvider)
-								.setSeverity(Severity.INFO)
+						return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 								.setSummary(Messages.getString(Messages.CompressedOopsRuleFactory_TEXT_INFO))
 								.setExplanation(Messages.getString(Messages.CompressedOopsRuleFactory_TEXT_INFO_LONG))
 								.build();
@@ -88,14 +87,14 @@ public class CompressedOopsRule implements IRule2 {
 				}
 			}
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.CompressedOopsRuleFactory_TEXT_OK))
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.CompressedOopsRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

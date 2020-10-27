@@ -56,7 +56,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
@@ -67,7 +67,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public final class BiasedLockingRevocationPauseRule implements IRule2 {
+public final class BiasedLockingRevocationPauseRule implements IRule {
 
 	public static final TypedPreference<IQuantity> INFO_LIMIT = new TypedPreference<>(
 			"vm.biasedrevocationpause.info.limit", //$NON-NLS-1$
@@ -77,28 +77,29 @@ public final class BiasedLockingRevocationPauseRule implements IRule2 {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(INFO_LIMIT);
 
-	public static final TypedResult<IQuantity> REVOCATION_TIME = new TypedResult<>("revocationTime", "Revocation Time", "Time spent revoking biased locks.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, REVOCATION_TIME);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	public static final TypedResult<IQuantity> REVOCATION_TIME = new TypedResult<>("revocationTime", "Revocation Time", //$NON-NLS-1$
+			"Time spent revoking biased locks.", UnitLookup.TIMESPAN, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, REVOCATION_TIME);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemCollection revocationEvents = items.apply(
 				ItemFilters.and(JdkFilters.VM_OPERATIONS, ItemFilters.matches(JdkAttributes.OPERATION, "RevokeBias"))); //$NON-NLS-1$
 		if (!revocationEvents.hasItems()) {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.BiasedLockingRevocationPauseRule_TEXT_OK)
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.BiasedLockingRevocationPauseRule_TEXT_OK).build();
 		}
 		IQuantity timeSpentRevoking = revocationEvents.hasItems()
 				? revocationEvents.getAggregate(Aggregators.sum(JfrAttributes.DURATION))
 				: UnitLookup.MILLISECOND.quantity(0);
 		double score = RulesToolkit.mapExp100Y(timeSpentRevoking.doubleValueIn(UnitLookup.MILLISECOND),
 				valueProvider.getPreferenceValue(INFO_LIMIT).doubleValueIn(UnitLookup.MILLISECOND), 25);
-		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.get(score))
+		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_MESSAGE))
 				.addResult(REVOCATION_TIME, timeSpentRevoking)
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score));
@@ -109,7 +110,9 @@ public final class BiasedLockingRevocationPauseRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

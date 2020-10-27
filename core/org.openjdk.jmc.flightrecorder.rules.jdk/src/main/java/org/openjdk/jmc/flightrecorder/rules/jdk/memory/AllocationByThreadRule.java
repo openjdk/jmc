@@ -55,7 +55,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -71,20 +71,25 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 
-public class AllocationByThreadRule implements IRule2 {
+public class AllocationByThreadRule implements IRule {
 	private static final String THREAD_RESULT_ID = "Allocations.thread"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
-			.build();
-	
-	public static final TypedResult<IMCThread> MOST_ALLOCATING_THREAD = new TypedResult<>("mostAllocatingThread", "Most Allocating Thread", "The thread that allocated the most.", UnitLookup.THREAD, IMCThread.class); //$NON-NLS-1$
-	public static final TypedCollectionResult<IMCMethod> ALLOCATION_FRAMES = new TypedCollectionResult<>("allocationFrames", "Allocation Frames", "The most interesting frames leading to the most commonly allocated type.", UnitLookup.METHOD, IMCMethod.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, MOST_ALLOCATING_THREAD, ALLOCATION_FRAMES);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IMCThread> MOST_ALLOCATING_THREAD = new TypedResult<>("mostAllocatingThread", //$NON-NLS-1$
+			"Most Allocating Thread", "The thread that allocated the most.", UnitLookup.THREAD, IMCThread.class);
+	public static final TypedCollectionResult<IMCMethod> ALLOCATION_FRAMES = new TypedCollectionResult<>(
+			"allocationFrames", "Allocation Frames", //$NON-NLS-1$
+			"The most interesting frames leading to the most commonly allocated type.", UnitLookup.METHOD,
+			IMCMethod.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, MOST_ALLOCATING_THREAD, ALLOCATION_FRAMES);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		List<IntEntry<IMCThread>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
 				JfrAttributes.EVENT_THREAD);
 		double balance = RulesToolkit.calculateBalanceScore(entries);
@@ -98,19 +103,20 @@ public class AllocationByThreadRule implements IRule2 {
 		StacktraceModel stacktraceModel = new StacktraceModel(false,
 				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
 		Fork rootFork = stacktraceModel.getRootFork();
-		List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0), rootFork.getItemsInFork());
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.get(score))
+		List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0),
+				rootFork.getItemsInFork());
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE))
 				.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
-				.addResult(ALLOCATION_FRAMES, mostRelevantFrames)
-				.build();
+				.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

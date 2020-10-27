@@ -55,7 +55,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -64,7 +64,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class DumpReasonRule implements IRule2 {
+public class DumpReasonRule implements IRule {
 	private static final String DUMP_REASON_RESULT_ID = "DumpReason"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> CRASH_SCORE = new TypedPreference<>("crash.score", //$NON-NLS-1$
@@ -79,18 +79,23 @@ public class DumpReasonRule implements IRule2 {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(CRASH_SCORE,
 			COREDUMP_SCORE, OOM_SCORE);
-	
-	public static final TypedResult<String> DUMP_REASON = new TypedResult<>("dumpReason", JdkAttributes.DUMP_REASON.getName(), JdkAttributes.DUMP_REASON.getDescription(), UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	
-	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, DUMP_REASON);
-	
+
+	public static final TypedResult<String> DUMP_REASON = new TypedResult<>("dumpReason", //$NON-NLS-1$
+			JdkAttributes.DUMP_REASON.getName(), JdkAttributes.DUMP_REASON.getDescription(), UnitLookup.PLAIN_TEXT,
+			String.class);
+
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			DUMP_REASON);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS;
-	
+
 	static {
-		REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.DUMP_REASON, EventAvailability.AVAILABLE).build();
+		REQUIRED_EVENTS = RequiredEventsBuilder.create()
+				.addEventType(JdkTypeIDs.DUMP_REASON, EventAvailability.AVAILABLE).build();
 	}
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String eventType = JdkTypeIDs.DUMP_REASON;
 		IQuantity crashScore = valueProvider.getPreferenceValue(CRASH_SCORE);
 		IQuantity coredumpScore = valueProvider.getPreferenceValue(COREDUMP_SCORE);
@@ -106,32 +111,28 @@ public class DumpReasonRule implements IRule2 {
 		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider)
 				.setSummary(Messages.getString(Messages.DumpReasonRule_TEXT_INFO));
 		if (reasonsLower.contains("crash")) { //$NON-NLS-1$
-			return builder.setSeverity(Severity.get(crashScore.doubleValue()))
-					.addResult(TypedResult.SCORE, crashScore)
-					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_CRASH))
-					.build();
+			return builder.setSeverity(Severity.get(crashScore.doubleValue())).addResult(TypedResult.SCORE, crashScore)
+					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_CRASH)).build();
 		} else if (reasonsLower.contains("core dump")) { //$NON-NLS-1$
 			return builder.setSeverity(Severity.get(coredumpScore.doubleValue()))
 					.addResult(TypedResult.SCORE, coredumpScore)
-					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_COREDUMP))
-					.build();
+					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_COREDUMP)).build();
 		} else if (reasonsLower.contains("out of memory")) { //$NON-NLS-1$
-			return builder.setSeverity(Severity.get(oomScore.doubleValue()))
-					.addResult(TypedResult.SCORE, oomScore)
-					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_OOM))
-					.build();
+			return builder.setSeverity(Severity.get(oomScore.doubleValue())).addResult(TypedResult.SCORE, oomScore)
+					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_OOM)).build();
 		} else {
 			// FIXME: When all recordings have DumpReasons, we will be more sure of if an unknown reason is good or bad.
 			return builder.setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.DumpReasonRule_TEXT_INFO_UNKNOWN))
-				.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_UNKNOWN))
-				.addResult(DUMP_REASON, reasons)
-				.build();
+					.setSummary(Messages.getString(Messages.DumpReasonRule_TEXT_INFO_UNKNOWN))
+					.setExplanation(Messages.getString(Messages.DumpReasonRule_TEXT_LONG_UNKNOWN))
+					.addResult(DUMP_REASON, reasons).build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

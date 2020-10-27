@@ -59,7 +59,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -69,7 +69,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class VMOperationRule implements IRule2 {
+public class VMOperationRule implements IRule {
 
 	private static final String RESULT_ID = "VMOperations"; //$NON-NLS-1$
 	private static final double MAX_SECONDS_BETWEEN_EVENTS = 0.01;
@@ -81,17 +81,30 @@ public class VMOperationRule implements IRule2 {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT);
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
-	
-	public static final TypedResult<IQuantity> LONGEST_OPERATION_DURATION = new TypedResult<>("longestOperationDuration", "Longest Operation Duration", "The duration of the longest running VM operation.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<String> LONGEST_OPERATION = new TypedResult<>("longestOperation", "Longest Operation", "The type of vm operation that took longest to complete.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	public static final TypedResult<IMCThread> LONGEST_OPERATION_CALLER = new TypedResult<>("longestOperationCaller", "Longest Operation Caller", "The thread that initiated the vm operation took the longest to complete.", UnitLookup.THREAD, IMCThread.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LONGEST_OPERATION_START_TIME = new TypedResult<>("longestOperationStartTime", "Longest Operation Start", "The time the vm operation that took the longest to complete was started.", UnitLookup.TIMESTAMP, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_OPERATION_DURATION, LONGEST_OPERATION, LONGEST_OPERATION_CALLER, LONGEST_OPERATION_START_TIME);
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_OPERATIONS, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> LONGEST_OPERATION_DURATION = new TypedResult<>(
+			"longestOperationDuration", "Longest Operation Duration", //$NON-NLS-1$
+			"The duration of the longest running VM operation.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<String> LONGEST_OPERATION = new TypedResult<>("longestOperation", //$NON-NLS-1$
+			"Longest Operation", "The type of vm operation that took longest to complete.", UnitLookup.PLAIN_TEXT,
+			String.class);
+	public static final TypedResult<IMCThread> LONGEST_OPERATION_CALLER = new TypedResult<>("longestOperationCaller", //$NON-NLS-1$
+			"Longest Operation Caller", "The thread that initiated the vm operation took the longest to complete.",
+			UnitLookup.THREAD, IMCThread.class);
+	public static final TypedResult<IQuantity> LONGEST_OPERATION_START_TIME = new TypedResult<>(
+			"longestOperationStartTime", "Longest Operation Start", //$NON-NLS-1$
+			"The time the vm operation that took the longest to complete was started.", UnitLookup.TIMESTAMP,
+			IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_OPERATION_DURATION, LONGEST_OPERATION, LONGEST_OPERATION_CALLER,
+			LONGEST_OPERATION_START_TIME);
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -109,11 +122,9 @@ public class VMOperationRule implements IRule2 {
 				items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
 		IItem startingEvent = longestEventInfo.left;
 		if (startingEvent == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK))
-					.addResult(LONGEST_OPERATION_DURATION, UnitLookup.SECOND.quantity(0))
-					.build();
+					.addResult(LONGEST_OPERATION_DURATION, UnitLookup.SECOND.quantity(0)).build();
 		}
 		IQuantity longestOperationStart = getStartTime(startingEvent);
 		IQuantity longestDuration = longestEventInfo.right;
@@ -130,26 +141,17 @@ public class VMOperationRule implements IRule2 {
 					: Messages.VMOperationRuleFactory_TEXT_WARN_LONG;
 			String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION
 					: Messages.VMOperationRuleFactory_TEXT_WARN;
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(score))
-					.setSummary(shortMessage)
-					.setExplanation(longMessage)
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(LONGEST_OPERATION, operation)
-					.addResult(LONGEST_OPERATION_CALLER, caller)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+					.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(LONGEST_OPERATION, operation).addResult(LONGEST_OPERATION_CALLER, caller)
 					.addResult(LONGEST_OPERATION_DURATION, longestDuration)
-					.addResult(LONGEST_OPERATION_START_TIME, longestOperationStart)
-					.build();
+					.addResult(LONGEST_OPERATION_START_TIME, longestOperationStart).build();
 		}
 		String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION
 				: Messages.VMOperationRuleFactory_TEXT_OK;
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.setSummary(shortMessage)
-				.addResult(LONGEST_OPERATION, operation)
-				.addResult(LONGEST_OPERATION_DURATION, longestDuration)
-				.build();
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).setSummary(shortMessage)
+				.addResult(LONGEST_OPERATION, operation).addResult(LONGEST_OPERATION_DURATION, longestDuration).build();
 	}
 
 	private Pair<IItem, IQuantity> findLongestEventInfo(IItemCollection items) {

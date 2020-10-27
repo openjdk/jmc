@@ -54,7 +54,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -64,7 +64,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class SocketReadRule implements IRule2 {
+public class SocketReadRule implements IRule {
 
 	private static final String RESULT_ID = "SocketRead"; //$NON-NLS-1$
 
@@ -77,20 +77,29 @@ public class SocketReadRule implements IRule2 {
 			Messages.getString(Messages.SocketReadRule_CONFIG_WARNING_LIMIT),
 			Messages.getString(Messages.SocketReadRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
 			UnitLookup.MILLISECOND.quantity(2000));
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SOCKET_READ, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedResult<IQuantity> LONGEST_READ_AMOUNT = new TypedResult<>("longestReadAmount", "Longest Read (Amount)", "The amount read for the longest socket read.", UnitLookup.MEMORY, IQuantity.class);  //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LONGEST_READ_TIME = new TypedResult<>("longestReadTime", "Longest Read (Time)", "The longest time it took to perform a socket read.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<String> LONGEST_READ_ADDRESS = new TypedResult<>("longestReadHost", "Longest Read (Host)", "The remote host of the socket read that took the longest time.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_READ_ADDRESS, LONGEST_READ_AMOUNT, LONGEST_READ_TIME);
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.SOCKET_READ, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IQuantity> LONGEST_READ_AMOUNT = new TypedResult<>("longestReadAmount", //$NON-NLS-1$
+			"Longest Read (Amount)", "The amount read for the longest socket read.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_READ_TIME = new TypedResult<>("longestReadTime", //$NON-NLS-1$
+			"Longest Read (Time)", "The longest time it took to perform a socket read.", UnitLookup.TIMESPAN,
+			IQuantity.class);
+	public static final TypedResult<String> LONGEST_READ_ADDRESS = new TypedResult<>("longestReadHost", //$NON-NLS-1$
+			"Longest Read (Host)", "The remote host of the socket read that took the longest time.",
+			UnitLookup.PLAIN_TEXT, String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_READ_ADDRESS, LONGEST_READ_AMOUNT, LONGEST_READ_TIME);
+
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(READ_INFO_LIMIT, READ_WARNING_LIMIT);
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -113,11 +122,9 @@ public class SocketReadRule implements IRule2 {
 		IItem longestEvent = readItems.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		// Had events, but all got filtered out - say ok, duration 0. We could possibly say "no matching" or something similar.
 		if (longestEvent == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.SocketReadRuleFactory_TEXT_NO_EVENTS)
-					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
-					.build();
+					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE)).build();
 		}
 
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
@@ -131,22 +138,17 @@ public class SocketReadRule implements IRule2 {
 				address = Messages.getString(Messages.General_UNKNOWN_ADDRESS);
 			}
 			IQuantity amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_READ);
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(severity)
+			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN))
-					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG) + " " + Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE)) //$NON-NLS-1$
-					.addResult(LONGEST_READ_ADDRESS, address)
-					.addResult(LONGEST_READ_AMOUNT, amountRead)
-					.addResult(LONGEST_READ_TIME, maxDuration)
-					.build();
+					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
+							+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE)).addResult(LONGEST_READ_ADDRESS, address).addResult(LONGEST_READ_AMOUNT, amountRead)
+					.addResult(LONGEST_READ_TIME, maxDuration).build();
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(severity)
+		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_OK))
 				.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(LONGEST_READ_TIME, maxDuration)
-				.build();
+				.addResult(LONGEST_READ_TIME, maxDuration).build();
 	}
 
 	@Override

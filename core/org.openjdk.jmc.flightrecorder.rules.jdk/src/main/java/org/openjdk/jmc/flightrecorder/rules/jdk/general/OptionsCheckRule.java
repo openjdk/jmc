@@ -58,7 +58,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
@@ -78,7 +78,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuil
  * </ul>
  * Warn for any detected options that do not fulfill these criteria.
  */
-public class OptionsCheckRule implements IRule2 {
+public class OptionsCheckRule implements IRule {
 
 	private static class DeprecatedOption {
 		private final String name;
@@ -366,8 +366,9 @@ public class OptionsCheckRule implements IRule2 {
 			new DeprecatedOption("incgc", JavaVersionSupport.JDK_8, null, JavaVersionSupport.JDK_9),
 			new DeprecatedOption("run", JavaVersionSupport.JDK_8, null, JavaVersionSupport.JDK_9)};
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
+
 	private static void checkOptions(
 		String optionList, JavaVersion usedVersion, List<String> undocumentedList, List<OptionWarning> deprecatedList,
 		List<OptionWarning> notRecommendedList, Set<String> acceptedOptions) {
@@ -477,7 +478,9 @@ public class OptionsCheckRule implements IRule2 {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -486,16 +489,25 @@ public class OptionsCheckRule implements IRule2 {
 		});
 		return evaluationTask;
 	}
-	
-	private static final ContentType<OptionWarning> OPTION_WARNING = UnitLookup.createSyntheticContentType("optionWarning");  //$NON-NLS-1$
-	
-	public static final TypedCollectionResult<String> UNDOCUMENTED_OPTIONS = new TypedCollectionResult<>("undocumentedOptions", "Undocumented JVN Options", "JVM options that aren't documented.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	public static final TypedCollectionResult<OptionWarning> DEPRECATED_OPTIONS = new TypedCollectionResult<>("deprecatedOptions", "Deprecated Options", "JVM options that are deprecated.", OPTION_WARNING, OptionWarning.class); //$NON-NLS-1$
-	public static final TypedCollectionResult<OptionWarning> NOT_RECOMMENDED_OPTIONS = new TypedCollectionResult<>("notRecommendedOptions", "Not Recommended Options", "JVM options that aren't recommended.", OPTION_WARNING, OptionWarning.class); //$NON-NLS-1$
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(UNDOCUMENTED_OPTIONS, DEPRECATED_OPTIONS, NOT_RECOMMENDED_OPTIONS);
-	
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private static final ContentType<OptionWarning> OPTION_WARNING = UnitLookup
+			.createSyntheticContentType("optionWarning"); //$NON-NLS-1$
+
+	public static final TypedCollectionResult<String> UNDOCUMENTED_OPTIONS = new TypedCollectionResult<>(
+			"undocumentedOptions", "Undocumented JVN Options", "JVM options that aren't documented.", //$NON-NLS-1$
+			UnitLookup.PLAIN_TEXT, String.class);
+	public static final TypedCollectionResult<OptionWarning> DEPRECATED_OPTIONS = new TypedCollectionResult<>(
+			"deprecatedOptions", "Deprecated Options", "JVM options that are deprecated.", OPTION_WARNING, //$NON-NLS-1$
+			OptionWarning.class);
+	public static final TypedCollectionResult<OptionWarning> NOT_RECOMMENDED_OPTIONS = new TypedCollectionResult<>(
+			"notRecommendedOptions", "Not Recommended Options", "JVM options that aren't recommended.", OPTION_WARNING, //$NON-NLS-1$
+			OptionWarning.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(UNDOCUMENTED_OPTIONS, DEPRECATED_OPTIONS, NOT_RECOMMENDED_OPTIONS);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String optionList = items.getAggregate(JdkAggregators.JVM_ARGUMENTS);
 		if (optionList != null) {
 			JavaVersion usedVersion = RulesToolkit.getJavaVersion(items);
@@ -550,22 +562,17 @@ public class OptionsCheckRule implements IRule2 {
 
 			if (problemFound) {
 				String shortMessage = composeShortMessage(undocumentedList, deprecatedList, notRecommendedList);
-				return ResultBuilder.createFor(this, valueProvider)
-						.addResult(UNDOCUMENTED_OPTIONS, undocumentedList)
+				return ResultBuilder.createFor(this, valueProvider).addResult(UNDOCUMENTED_OPTIONS, undocumentedList)
 						.addResult(NOT_RECOMMENDED_OPTIONS, notRecommendedList)
-						.addResult(DEPRECATED_OPTIONS, deprecatedList)
-						.setSeverity(Severity.get(combinedScore))
-						.setSummary(shortMessage)
-						.setExplanation(sb.toString())
-						.build();
+						.addResult(DEPRECATED_OPTIONS, deprecatedList).setSeverity(Severity.get(combinedScore))
+						.setSummary(shortMessage).setExplanation(sb.toString()).build();
 			} else {
-				return ResultBuilder.createFor(this, valueProvider)
-						.setSeverity(Severity.OK)
-						.setSummary(Messages.OptionsCheckRule_TEXT_OK)
-						.build();
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.OptionsCheckRule_TEXT_OK).build();
 			}
 		} else {
-			return RulesToolkit.getNotApplicableResult(this, valueProvider, Messages.getString(Messages.OptionsCheckRule_TEXT_NA));
+			return RulesToolkit.getNotApplicableResult(this, valueProvider,
+					Messages.getString(Messages.OptionsCheckRule_TEXT_NA));
 		}
 	}
 

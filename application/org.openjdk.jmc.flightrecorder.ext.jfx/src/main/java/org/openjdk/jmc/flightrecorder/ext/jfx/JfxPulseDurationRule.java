@@ -55,14 +55,14 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ext.jfx.JfxVersionUtil.JavaFxEventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
-public class JfxPulseDurationRule implements IRule2 {
+public class JfxPulseDurationRule implements IRule {
 	private static final String RESULT_ID = "pulseDuration"; //$NON-NLS-1$
 
 	/*
@@ -78,20 +78,23 @@ public class JfxPulseDurationRule implements IRule2 {
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(CONFIG_TARGET_FRAME_RATE);
-	
-	public static final TypedResult<IQuantity> SLOW_PHASES = new TypedResult<>("slowPhaseRatio", "Slow Phase Ratio", "Percentage of JFX phases that were slow to render.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> TARGET_TIME = new TypedResult<>("targetTime", "Target Time", "The target time to render each frame.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> RENDER_TARGET = new TypedResult<>("renderTarget", "Render Target", "The target rendering frequency.", UnitLookup.FREQUENCY, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
 
-	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	public static final TypedResult<IQuantity> SLOW_PHASES = new TypedResult<>("slowPhaseRatio", "Slow Phase Ratio", //$NON-NLS-1$
+			"Percentage of JFX phases that were slow to render.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> TARGET_TIME = new TypedResult<>("targetTime", "Target Time", //$NON-NLS-1$
+			"The target time to render each frame.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> RENDER_TARGET = new TypedResult<>("renderTarget", "Render Target", //$NON-NLS-1$
+			"The target rendering frequency.", UnitLookup.FREQUENCY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		JavaFxEventAvailability availability = JfxVersionUtil.getAvailability(items);
 		if (availability == JavaFxEventAvailability.None) {
 			// Could possibly check the JVM version for better suggestions here, but not very important
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.NA)
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA).build();
 		}
 		IQuantity targetFramerate = valueProvider.getPreferenceValue(CONFIG_TARGET_FRAME_RATE);
 		ITypedQuantity<LinearUnit> targetPhaseTime = UnitLookup.MILLISECOND
@@ -106,24 +109,21 @@ public class JfxPulseDurationRule implements IRule2 {
 			double ratioOfLongPhases = longPhases.ratioTo(allPhases);
 			double mappedScore = RulesToolkit.mapExp100(ratioOfLongPhases, 0.05, 0.5);
 			mappedScore = mappedScore < 1 ? 1 : mappedScore;
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(mappedScore))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(mappedScore))
 					.setSummary(Messages.JfxPulseDurationRule_WARNING)
 					.setExplanation(Messages.JfxPulseDurationRule_WARNING_LONG)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(mappedScore))
 					.addResult(SLOW_PHASES, UnitLookup.PERCENT_UNITY.quantity(ratioOfLongPhases))
-					.addResult(TARGET_TIME, targetPhaseTime)
-					.addResult(RENDER_TARGET, targetFramerate)
-					.build();
+					.addResult(TARGET_TIME, targetPhaseTime).addResult(RENDER_TARGET, targetFramerate).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.OK)
-				.setSummary(Messages.JfxPulseDurationRule_OK)
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.JfxPulseDurationRule_OK).build();
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {

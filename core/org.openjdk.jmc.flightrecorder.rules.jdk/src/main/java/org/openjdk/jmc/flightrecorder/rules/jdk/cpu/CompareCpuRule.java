@@ -74,17 +74,20 @@ public class CompareCpuRule extends AbstractRule {
 			Messages.getString(Messages.CompareCpuRule_INFO_LIMIT_LONG), UnitLookup.PERCENTAGE,
 			UnitLookup.PERCENT.quantity(20));
 
-	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(OTHER_CPU_INFO_LIMIT, OTHER_CPU_WARNING_LIMIT);
-	
-	public static final TypedResult<IQuantity> AVERAGE_CPU_LOAD = new TypedResult<>("avgCpuLoad", "Average CPU Load", "The average CPU load detected.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IRange<IQuantity>> AVERAGE_CPU_LOAD_WINDOW = new TypedResult<>("avgCpuLoadWindow", "Average CPU Load Window", "The window during which the high CPU load was detected.", UnitLookup.TIMERANGE); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE);
-	
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(OTHER_CPU_INFO_LIMIT, OTHER_CPU_WARNING_LIMIT);
+
+	public static final TypedResult<IQuantity> AVERAGE_CPU_LOAD = new TypedResult<>("avgCpuLoad", "Average CPU Load", //$NON-NLS-1$
+			"The average CPU load detected.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> AVERAGE_CPU_LOAD_WINDOW = new TypedResult<>("avgCpuLoadWindow", //$NON-NLS-1$
+			"Average CPU Load Window", "The window during which the high CPU load was detected.", UnitLookup.TIMERANGE);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE)
-			.build();
-	
+			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE).build();
+
 	public CompareCpuRule() {
 		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES_TOPIC, //$NON-NLS-1$
 				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
@@ -107,23 +110,20 @@ public class CompareCpuRule extends AbstractRule {
 				JfrAttributes.END_TIME, warningLimit);
 
 		if (maxOtherCpu == null || maxOtherCpuRatio == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.NA)
-					.setSummary(Messages.getString(Messages.CompareCpuRule_TEXT_TOO_FEW_SAMPLES))
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.CompareCpuRule_TEXT_TOO_FEW_SAMPLES)).build();
 		}
 
 		double score = RulesToolkit.mapExp100(maxOtherCpuRatio.value, infoLimit, warningLimit);
 
-		IRange<IQuantity> cpuLoadWindow = QuantityRange.createWithEnd(UnitLookup.EPOCH_NS.quantity(maxOtherCpu.start), UnitLookup.EPOCH_NS.quantity(maxOtherCpu.end));
+		IRange<IQuantity> cpuLoadWindow = QuantityRange.createWithEnd(UnitLookup.EPOCH_NS.quantity(maxOtherCpu.start),
+				UnitLookup.EPOCH_NS.quantity(maxOtherCpu.end));
 		IQuantity otherCpuMaxValue = UnitLookup.PERCENT.quantity(Math.round(maxOtherCpu.value * 100));
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.CompareCpuRule_TEXT_MESSAGE))
 				.setExplanation(Messages.getString(Messages.CompareCpuRule_TEXT_INFO_LONG))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(AVERAGE_CPU_LOAD, otherCpuMaxValue)
-				.addResult(AVERAGE_CPU_LOAD_WINDOW, cpuLoadWindow)
+				.addResult(AVERAGE_CPU_LOAD, otherCpuMaxValue).addResult(AVERAGE_CPU_LOAD_WINDOW, cpuLoadWindow)
 				.build();
 	}
 }

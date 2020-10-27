@@ -51,7 +51,7 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -61,7 +61,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class SystemGcRule implements IRule2 {
+public class SystemGcRule implements IRule {
 	private static final String SYSTEM_GC_RESULT_ID = "SystemGc"; //$NON-NLS-1$
 	public static final TypedPreference<IQuantity> SYSTEM_GC_RATIO_LIMIT = new TypedPreference<>("systemgc.ratio.limit", //$NON-NLS-1$
 			Messages.getString(Messages.SystemGcRule_CONFIG_WARNING_LIMIT),
@@ -70,16 +70,19 @@ public class SystemGcRule implements IRule2 {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(SYSTEM_GC_RATIO_LIMIT);
 
-	public static final TypedResult<IQuantity> SYSTEM_GC_RATIO = new TypedResult<>("systemGcRatio", "System GC Ratio", "The ratio of all GCs caused by System.gc() calls to all GCs.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, SYSTEM_GC_RATIO);
-	
+	public static final TypedResult<IQuantity> SYSTEM_GC_RATIO = new TypedResult<>("systemGcRatio", "System GC Ratio", //$NON-NLS-1$
+			"The ratio of all GCs caused by System.gc() calls to all GCs.", UnitLookup.PERCENTAGE, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, SYSTEM_GC_RATIO);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
-			.build();
-	
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -89,24 +92,21 @@ public class SystemGcRule implements IRule2 {
 		return evaluationTask;
 	}
 
-	private IResult getSystemGcResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+	private IResult getSystemGcResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
 		IQuantity limit = valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT);
 		if (aggregate.getSystemGcCount() > 0) {
 			double systemGcRatio = aggregate.getSystemGcCount() / aggregate.getGcCount();
 			double score = RulesToolkit.mapExp100(systemGcRatio, limit.doubleValue());
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO))
 					.setExplanation(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(SYSTEM_GC_RATIO, UnitLookup.PERCENT_UNITY.quantity(systemGcRatio))
-					.build();
+					.addResult(SYSTEM_GC_RATIO, UnitLookup.PERCENT_UNITY.quantity(systemGcRatio)).build();
 		} else {
-			return ResultBuilder.createFor(this, valueProvider)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK))
-					.build();
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK)).build();
 		}
 	}
 

@@ -53,7 +53,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -63,7 +63,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class SocketWriteRule implements IRule2 {
+public class SocketWriteRule implements IRule {
 
 	private static final String RESULT_ID = "SocketWrite"; //$NON-NLS-1$
 
@@ -81,16 +81,25 @@ public class SocketWriteRule implements IRule2 {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(WRITE_INFO_LIMIT, WRITE_WARNING_LIMIT);
 
-	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", "Longest Write (Amount)", "The amount read for the longest socket write.", UnitLookup.MEMORY, IQuantity.class);  //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", "Longest Write (Time)", "The longest time it took to perform a socket write.", UnitLookup.TIMESPAN, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<String> LONGEST_WRITE_ADDRESS = new TypedResult<>("longestWriteHost", "Longest Write (Host)", "The remote host of the socket write that took the longest time.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_WRITE_ADDRESS, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_TIME);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.SOCKET_WRITE, EventAvailability.AVAILABLE).build();
-	
+	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", //$NON-NLS-1$
+			"Longest Write (Amount)", "The amount read for the longest socket write.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", //$NON-NLS-1$
+			"Longest Write (Time)", "The longest time it took to perform a socket write.", UnitLookup.TIMESPAN,
+			IQuantity.class);
+	public static final TypedResult<String> LONGEST_WRITE_ADDRESS = new TypedResult<>("longestWriteHost", //$NON-NLS-1$
+			"Longest Write (Host)", "The remote host of the socket write that took the longest time.",
+			UnitLookup.PLAIN_TEXT, String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_WRITE_ADDRESS, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_TIME);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.SOCKET_WRITE, EventAvailability.AVAILABLE).build();
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -107,11 +116,9 @@ public class SocketWriteRule implements IRule2 {
 				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		// We had events, but all got filtered out - say ok, duration 0. Perhaps say "no matching" or something similar.
 		if (longestEvent == null) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_NO_EVENTS))
-					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
-					.build();
+					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE)).build();
 		}
 
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
@@ -123,23 +130,18 @@ public class SocketWriteRule implements IRule2 {
 			String address = SocketReadRule
 					.sanitizeAddress(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS));
 			IQuantity amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_WRITTEN);
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(severity)
+			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN))
-					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG) + " " + Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE)) //$NON-NLS-1$
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(LONGEST_WRITE_ADDRESS, address)
-					.addResult(LONGEST_WRITE_AMOUNT, amountWritten)
-					.addResult(LONGEST_WRITE_TIME, maxDuration)
-					.build();
+					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
+							+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE)).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(LONGEST_WRITE_ADDRESS, address).addResult(LONGEST_WRITE_AMOUNT, amountWritten)
+					.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 		}
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(severity)
+		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_OK))
 				.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(LONGEST_WRITE_TIME, maxDuration)
-				.build();
+				.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 	}
 
 	@Override

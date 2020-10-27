@@ -54,7 +54,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.IRule2;
+import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
@@ -65,7 +65,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class HeapInspectionRule implements IRule2 {
+public class HeapInspectionRule implements IRule {
 	private static final String HEAP_INSPECTION_RESULT_ID = "HeapInspectionGc"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> HEAP_INSPECTION_LIMIT = new TypedPreference<>(
@@ -75,16 +75,19 @@ public class HeapInspectionRule implements IRule2 {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(HEAP_INSPECTION_LIMIT);
 
-	public static final TypedResult<IQuantity> OBJECT_COUNT_GCS = new TypedResult<>("objectCountGCs", "Object Count GCs", "The number of heap inspection GCs.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, OBJECT_COUNT_GCS);
-	
+	public static final TypedResult<IQuantity> OBJECT_COUNT_GCS = new TypedResult<>("objectCountGCs", //$NON-NLS-1$
+			"Object Count GCs", "The number of heap inspection GCs.", UnitLookup.NUMBER, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, OBJECT_COUNT_GCS);
+
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
-			.build();
-	
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
@@ -94,7 +97,8 @@ public class HeapInspectionRule implements IRule2 {
 		return evaluationTask;
 	}
 
-	private IResult getHeapInspectionResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
+	private IResult getHeapInspectionResult(
+		IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity limit = vp.getPreferenceValue(HEAP_INSPECTION_LIMIT);
 		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
 		if (aggregate.getObjectCountGCs() > 0) {
@@ -103,19 +107,15 @@ public class HeapInspectionRule implements IRule2 {
 			if (RulesToolkit.isEventsEnabled(items, JdkTypeIDs.OBJECT_COUNT)) {
 				longMessage += "\n" + Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG_JFR); //$NON-NLS-1$
 			}
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.get(score))
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO))
-					.setExplanation(longMessage)
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(OBJECT_COUNT_GCS, UnitLookup.NUMBER_UNITY.quantity(aggregate.getObjectCountGCs()))
 					.build();
 		} else {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK))
-					.setExplanation(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK_LONG))
-					.build();
+					.setExplanation(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK_LONG)).build();
 		}
 	}
 

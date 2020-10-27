@@ -125,20 +125,35 @@ public class AutoBoxingRule extends AbstractRule {
 			Messages.getString(Messages.AutoboxingRule_AUTOBOXING_RATIO_WARNING_LIMIT_DESC), UnitLookup.PERCENTAGE,
 			UnitLookup.PERCENT.quantity(80));
 
-	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
-	
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED).addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.AVAILABLE).build();
-	
-	public static final TypedResult<IMCType> LARGEST_ALLOCATED_TYPE = new TypedResult<>("largestAllocatedType", "Largest Allocated Type", "The type allocated the most.", UnitLookup.CLASS, IMCType.class);  //$NON-NLS-1$
-	public static final TypedResult<IMCFrame> SECOND_FRAME_MOST_ALLOCATED = new TypedResult<>("secondFrameMostAllocated", "Most Common Call Site", "The most common frame calling into a boxing method.", UnitLookup.STACKTRACE_FRAME, IMCFrame.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> BOXED_ALLOCATION_SIZE = new TypedResult<>("boxedAllocationSize", "Boxed Allocation Size", "The size of all allocations caused by boxing.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> LARGEST_ALLOCATED_BY_TYPE = new TypedResult<>("largestAllocatedByType", "Allocation by Type", "The amount allocated by boxing the most boxed type.", UnitLookup.MEMORY, IQuantity.class); //$NON-NLS-1$
-	public static final TypedResult<IQuantity> BOXED_ALLOCATION_RATIO = new TypedResult<>("boxedAllocationRatio", "Boxed Allocation Ratio", "The percentage of all allocations caused by boxing.", UnitLookup.PERCENTAGE, IQuantity.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, LARGEST_ALLOCATED_TYPE, LARGEST_ALLOCATED_BY_TYPE, SECOND_FRAME_MOST_ALLOCATED, BOXED_ALLOCATION_SIZE);
-	
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IMCType> LARGEST_ALLOCATED_TYPE = new TypedResult<>("largestAllocatedType", //$NON-NLS-1$
+			"Largest Allocated Type", "The type allocated the most.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<IMCFrame> SECOND_FRAME_MOST_ALLOCATED = new TypedResult<>(
+			"secondFrameMostAllocated", "Most Common Call Site", "The most common frame calling into a boxing method.", //$NON-NLS-1$
+			UnitLookup.STACKTRACE_FRAME, IMCFrame.class);
+	public static final TypedResult<IQuantity> BOXED_ALLOCATION_SIZE = new TypedResult<>("boxedAllocationSize", //$NON-NLS-1$
+			"Boxed Allocation Size", "The size of all allocations caused by boxing.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LARGEST_ALLOCATED_BY_TYPE = new TypedResult<>("largestAllocatedByType", //$NON-NLS-1$
+			"Allocation by Type", "The amount allocated by boxing the most boxed type.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> BOXED_ALLOCATION_RATIO = new TypedResult<>("boxedAllocationRatio", //$NON-NLS-1$
+			"Boxed Allocation Ratio", "The percentage of all allocations caused by boxing.", UnitLookup.PERCENTAGE,
+			IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LARGEST_ALLOCATED_TYPE, LARGEST_ALLOCATED_BY_TYPE, SECOND_FRAME_MOST_ALLOCATED,
+			BOXED_ALLOCATION_SIZE);
+
 	public AutoBoxingRule() {
-		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), JfrRuleTopics.HEAP_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS); //$NON-NLS-1$
+		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
+				JfrRuleTopics.HEAP_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
@@ -180,10 +195,8 @@ public class AutoBoxingRule extends AbstractRule {
 			}
 		}
 		if (allocationSizeByType.size() == 0) {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING))
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING)).build();
 		}
 		IQuantity totalAllocationSize = allocationItems.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
 		double possibleAutoboxingRatio = sizeOfAllBoxedAllocations.ratioTo(totalAllocationSize) * 100;
@@ -205,15 +218,11 @@ public class AutoBoxingRule extends AbstractRule {
 		String shortMessage = shortIntro + mostAllocatedTypeInfo;
 		String longMessage = mostAllocatedTypeInfoLong + "\n" //$NON-NLS-1$
 				+ Messages.getString(Messages.AutoboxingRule_RESULT_LONG);
-		return ResultBuilder.createFor(this, vp)
-				.setSeverity(Severity.get(score))
-				.setSummary(shortMessage)
-				.setExplanation(longMessage)
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(LARGEST_ALLOCATED_BY_TYPE, largestAllocatedByType)
 				.addResult(LARGEST_ALLOCATED_TYPE, largestAllocatedType)
 				.addResult(SECOND_FRAME_MOST_ALLOCATED, secondFrameFromMostAllocated)
-				.addResult(BOXED_ALLOCATION_SIZE, totalAllocationSize)
-				.build();
+				.addResult(BOXED_ALLOCATION_SIZE, totalAllocationSize).build();
 	}
 }
