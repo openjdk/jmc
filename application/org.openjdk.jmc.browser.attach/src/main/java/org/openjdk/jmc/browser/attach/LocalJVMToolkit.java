@@ -375,7 +375,8 @@ public class LocalJVMToolkit {
 						try {
 							try {
 								// try to force finish init the attached JVM
-								// to ensure properties are correctly populated 
+								// to ensure properties are correctly populated
+								// see JMC-4454 for details
 								((HotSpotVirtualMachine) vm).startLocalManagementAgent();
 							} catch (Exception ex) {
 								// swallow exceptions
