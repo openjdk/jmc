@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -315,12 +315,6 @@ public class FlavorSelector implements SelectionStoreListener {
 			resetButton.setText(Messages.FlavorSelector_BUTTON_TIMERANGE_CLEAR);
 			resetButton.setToolTipText(Messages.FlavorSelector_BUTTON_TIMERANGE_CLEAR_TOOLTIP);
 			resetButton.addListener(SWT.Selection, e -> on.accept(false));
-			resetButton.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					on.accept(false);
-				}
-			});
 			resetButton.setLayoutData(GridDataFactory.swtDefaults().create());
 			showButton.addListener(SWT.Selection, e -> on.accept(true));
 		});
@@ -374,10 +368,9 @@ public class FlavorSelector implements SelectionStoreListener {
 	}
 
 	public void enableSelection() {
-		boolean enabled = true;
-		pageContainer.getSelectionStore().setCurrentActive(enabled);
-		selectionCombo.getCombo().setEnabled(enabled);
-		flavorCombo.getCombo().setEnabled(enabled);
+		pageContainer.getSelectionStore().setCurrentActive(true);
+		selectionCombo.getCombo().setEnabled(true);
+		flavorCombo.getCombo().setEnabled(true);
 		// FIXME: Make sure not to call useFlavor twice during initialization.
 //		IItemStreamFlavor flavor = null;
 //		if (enabled) {
@@ -391,15 +384,14 @@ public class FlavorSelector implements SelectionStoreListener {
 	}
 
 	private IItemStreamFlavor getSelectedFlavor() {
-		IItemStreamFlavor flavor = null;
 		ISelection s = flavorCombo.getSelection();
 		if (s instanceof IStructuredSelection) {
 			Object obj = ((IStructuredSelection) s).getFirstElement();
 			if (obj instanceof IItemStreamFlavor) {
-				flavor = (IItemStreamFlavor) obj;
+				return (IItemStreamFlavor) obj;
 			}
 		}
-		return flavor;
+		return null;
 	}
 
 	private static final class SelectionComboContentProvider implements IStructuredContentProvider {

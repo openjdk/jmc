@@ -78,7 +78,7 @@ public class DropdownLaneFilter extends Composite {
 			@Override
 			public void handleEvent(Event e) {
 				/*
-				 * Windows: works IFF the menu item that is toggled is also highlight. e.g, if the
+				 * Windows: works IF the menu item that is toggled is also highlight. e.g, if the
 				 * user wanted to toggle the Java Compiler lanes, then it's not enough to just click
 				 * the checkbox - the Java Compiler menu item must be highlighted at the time of
 				 * toggling
