@@ -209,6 +209,7 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 		chartCanvas.clickContextMenuItem(RESET_CHART);
 
+		chartCanvas = MCChartCanvas.getChartCanvas();
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
 	}
@@ -238,6 +239,7 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		chartCanvas.clickContextMenuItem(RESET_CHART);
 
 		// Verify the menu item isEnabled values are back to their default values
+		chartCanvas = MCChartCanvas.getChartCanvas();
 		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 	}
