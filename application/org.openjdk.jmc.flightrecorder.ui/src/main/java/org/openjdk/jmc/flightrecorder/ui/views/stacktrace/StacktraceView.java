@@ -445,7 +445,6 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (viewer instanceof TreeViewer) {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
-		rebuildViewer();
 	}
 
 	// See JMC-6787
@@ -467,7 +466,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			Display.getCurrent().asyncExec(() -> {
 				if (!viewer.getControl().isDisposed()) {
 					setViewerInput(oldInput);
-					if (!reducedTree && oldInput != null) {
+					if (reducedTree && oldInput != null) {
 						Branch selectedBranch = getLastSelectedBranch(oldInput);
 						if (selectedBranch != null) {
 							viewer.getControl().setRedraw(false);
