@@ -52,7 +52,7 @@ public final class AccessUtils {
 
 	/**
 	 * Like Class.getDeclaredField, but also gets fields declared by ancestors and interfaces.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class to lookup from
 	 * @param name
@@ -85,7 +85,7 @@ public final class AccessUtils {
 
 	/**
 	 * Checks whether a field can be accessed from a caller context.
-	 * 
+	 *
 	 * @param targetClass
 	 *            the class being referenced
 	 * @param field
@@ -107,7 +107,7 @@ public final class AccessUtils {
 
 	/**
 	 * Checks whether the field/method/inner class modifier allows access from a caller context
-	 * 
+	 *
 	 * @param targetClass
 	 *            the class being referenced
 	 * @param memberClass
@@ -195,7 +195,7 @@ public final class AccessUtils {
 	/**
 	 * Check whether the module has the class exported for the caller to access. For Pre-9 Java
 	 * runtime, this function always returns <code>true</code>.
-	 * 
+	 *
 	 * @param targetClass
 	 *            the class being accessed
 	 * @param callerClass
@@ -203,8 +203,7 @@ public final class AccessUtils {
 	 * @return whether the class is accessible
 	 */
 	public static boolean verifyModuleAccess(Class<?> targetClass, Class<?> callerClass) {
-		String version = System.getProperty("java.version");
-		if (Integer.parseInt(version.substring(0, version.indexOf("."))) < 9) {
+		if (isPreJava9()) {
 			return true; // There is no module for pre-java 9
 		}
 
@@ -235,9 +234,18 @@ public final class AccessUtils {
 		}
 	}
 
+	private static boolean isPreJava9() {
+		try {
+			Class.forName("java.lang.Module");
+			return false;
+		} catch (ClassNotFoundException e) {
+			return true;
+		}
+	}
+
 	/**
 	 * polyfill for <code>Class.getPackageName(Class<?>)</code> for pre-9 Java.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class to lookup the package name against
 	 * @return the name of the package containing the class
@@ -250,7 +258,7 @@ public final class AccessUtils {
 	/**
 	 * Polyfill for <code>Reflection.getClassAccessFlags(Class<?>)</code> as
 	 * <code>jdk.internal.reflect.Reflection</code> is not exported.
-	 * 
+	 *
 	 * @param c
 	 *            the class being inspected
 	 * @return the access flags written to the class file
@@ -261,7 +269,7 @@ public final class AccessUtils {
 
 	/**
 	 * Check whether the two classes exist in the same package
-	 * 
+	 *
 	 * @param lhs
 	 *            the first class
 	 * @param rhs
@@ -276,7 +284,7 @@ public final class AccessUtils {
 
 	/**
 	 * Check whether a class is a subclass of the other
-	 * 
+	 *
 	 * @param queryClass
 	 *            the subclass
 	 * @param ofClass
@@ -296,7 +304,7 @@ public final class AccessUtils {
 	/**
 	 * Polyfill Class.getNestMembers() for pre-11 runtime. This function does not fully respect the
 	 * definition of nesting from JVM's perspective. It's only used for validating access.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class to inspect against
 	 * @return an array of all nest members
@@ -316,7 +324,7 @@ public final class AccessUtils {
 	/**
 	 * Polyfill Class.isNestMateOf() for pre-11 runtime. This function does not fully respect the
 	 * definition of nesting from JVM's perspective. It's only used for validating access.
-	 * 
+	 *
 	 * @param lhs
 	 *            the first class
 	 * @param rhs
@@ -330,7 +338,7 @@ public final class AccessUtils {
 	/**
 	 * Polyfill Class.getNestHost() for pre-11 runtime. This function does not fully respect the
 	 * definition of nesting from JVM's perspective. It's only used for validating access.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class the inspect against
 	 * @return the nesthost of the class
