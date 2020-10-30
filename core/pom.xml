@@ -99,6 +99,31 @@
     					</java>
   					</configuration>
 				</plugin>
+				<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/license</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/../license</directory>
+									<includes>
+										<include>LICENSE.txt</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
