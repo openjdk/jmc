@@ -34,28 +34,15 @@
 
 package org.openjdk.jmc.agent.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.management.JMX;
 import javax.management.ObjectName;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.Type;
-import org.openjdk.jmc.agent.TransformDescriptor;
-import org.openjdk.jmc.agent.TransformRegistry;
-import org.openjdk.jmc.agent.Transformer;
-import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
@@ -138,11 +125,11 @@ public class TestCustomClassloader {
 		@Override
 		protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 			try {
-				ClassLoader.getPlatformClassLoader().loadClass(name);
+				ClassLoader.getSystemClassLoader().loadClass(name);
 			} catch (Exception e) {
 				logger.severe("Exception thrown: " + e.toString());
 			}
-			return ClassLoader.getPlatformClassLoader().loadClass(name);
+			return ClassLoader.getSystemClassLoader().loadClass(name);
 		}
 	}
 }

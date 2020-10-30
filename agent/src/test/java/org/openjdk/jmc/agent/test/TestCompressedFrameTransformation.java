@@ -1,5 +1,9 @@
 package org.openjdk.jmc.agent.test;
 
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -9,21 +13,18 @@ import org.openjdk.jmc.agent.TransformRegistry;
 import org.openjdk.jmc.agent.Transformer;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TestCompressedFrameTransformation implements Opcodes {
 
 	private static final String XML_EVENT_DESCRIPTION = "<jfragent>" //
-			+ "<events>" // 
-			+ "<event id=\"test.compressed.frame.transformation\">" // 
-			+ "<name>Test Compressed Frame Transformation</name>" //
+			+ "<events>" //
+			+ "<event id=\"test.compressed.frame.transformation\">" //
+			+ "<name>Test Compressed Frame Transformation {0}</name>" //
 			+ "<description>agent instrumentation should be compatible with compressed frame types</description>" //
 			+ "<path>test/frames</path>" //
 			+ "<class>Target</class>" //
 			+ "<method>" //
 			+ "<name>echo</name>" //
-			+ "<descriptor>(I)I</descriptor>" // 
+			+ "<descriptor>(I)I</descriptor>" //
 			+ "</method>" //
 			+ "</event>" //
 			+ "</events>" //
@@ -85,13 +86,15 @@ public class TestCompressedFrameTransformation implements Opcodes {
 	private void testCompressedFrameNoVerificationError(int frameType) throws Exception {
 		TestClassLoader tcl = new TestClassLoader(TestCompressedFrameTransformation.class.getClassLoader());
 		byte[] classBuffer = generateClassBuffer(frameType);
+		tcl.putClassBuffer("Target", classBuffer);
 
 		TransformRegistry registry = DefaultTransformRegistry.empty();
 		Transformer transformer = new Transformer(registry);
 
-		registry.modify(XML_EVENT_DESCRIPTION);
+		registry.modify(MessageFormat.format(XML_EVENT_DESCRIPTION, frameType));
 		classBuffer = transformer.transform(tcl, "Target", null, null, classBuffer);
 
+		tcl = new TestClassLoader(TestCompressedFrameTransformation.class.getClassLoader());
 		tcl.putClassBuffer("Target", classBuffer);
 		tcl.loadClass("Target");
 

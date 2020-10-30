@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.agent.util;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -50,6 +52,7 @@ import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
  * Helper methods for doing transforms.
  */
 public final class TypeUtils {
+
 	private static final String NULL_REFERENCE_STRING = "null"; //$NON-NLS-1$
 	/**
 	 * The internal name of this class.
@@ -61,16 +64,7 @@ public final class TypeUtils {
 
 	public static final Object STRING_INTERNAL_NAME = "java/lang/String"; //$NON-NLS-1$
 
-	private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
-	private final static String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
-
-	private static final Object UNSAFE;
-	private static final Method UNSAFE_DEFINE_CLASS_METHOD;
-
-	static {
-		UNSAFE = getUnsafe();
-		UNSAFE_DEFINE_CLASS_METHOD = getUnsafeDefineClassMethod(UNSAFE);
-	}
+	private static final ClassDefiner CLASS_DEFINER = ClassDefiner.getInstance();
 
 	/**
 	 * The file extension for java source files (.java).
@@ -120,12 +114,13 @@ public final class TypeUtils {
 	}
 
 	public static Class<?> defineClass(
-		String eventClassName, byte[] eventClass, int i, int length, ClassLoader definingClassLoader,
-		ProtectionDomain protectionDomain) {
+		Class<?> introspectedClass, String eventClassName, byte[] eventClass, int i, int length,
+		ClassLoader definingClassLoader, ProtectionDomain protectionDomain) {
+
 		try {
-			return (Class<?>) UNSAFE_DEFINE_CLASS_METHOD.invoke(UNSAFE, eventClassName, eventClass, i, length,
+			return CLASS_DEFINER.defineClass(introspectedClass, eventClassName, eventClass, i, length,
 					definingClassLoader, protectionDomain);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | LinkageError e) {
 			Agent.getLogger().log(Level.SEVERE, "Failed to dynamically define the class " + eventClassName, e); //$NON-NLS-1$
 		}
 		return null;
@@ -238,7 +233,7 @@ public final class TypeUtils {
 	/**
 	 * Converts a canonical class name into the internal form (binary name). eg.
 	 * <code>com.company.project</code> converts into <code>com/company/project</code>
-	 * 
+	 *
 	 * @param className
 	 *            the canonical class name
 	 * @return the internal form
@@ -250,7 +245,7 @@ public final class TypeUtils {
 	/**
 	 * Converts a internal class name (binary name) into the canonical form. ie.
 	 * <code>com/company/project</code> converts into <code>com.company.project</code>
-	 * 
+	 *
 	 * @param binaryName
 	 *            the internal class name
 	 * @return in canonical form
@@ -262,7 +257,7 @@ public final class TypeUtils {
 	/**
 	 * Returns the constant loading instruction that pushes a zero value of the given type onto the
 	 * operand stack. A null reference is pushed if the given type is an object or an array.
-	 * 
+	 *
 	 * @param type
 	 *            the type of the operand
 	 * @return the instruction
@@ -295,7 +290,7 @@ public final class TypeUtils {
 	/**
 	 * Returns a array element for ASM's <code>MethodVisitor.visitFrame()</code> method used for
 	 * frame verification of a given type.
-	 * 
+	 *
 	 * @param type
 	 *            the type of the element on the operand stack or in the local variable table
 	 * @return a array element for <code>MethodVisitor.visitFrame()</code>'s parameter
@@ -349,38 +344,90 @@ public final class TypeUtils {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, INAME, "box", desc, false); //$NON-NLS-1$
 	}
 
-	private static Object getUnsafe() {
-		// Lovely, but this seems to be the only way
-		Class<?> unsafeClass = getUnsafeClass();
-		try {
-			Field f = unsafeClass.getDeclaredField("theUnsafe"); //$NON-NLS-1$
-			f.setAccessible(true);
-			return f.get(null);
-		} catch (Exception e) {
-			Logger.getLogger(JFRUtils.class.getName()).log(Level.SEVERE, "Could not access Unsafe!", e); //$NON-NLS-1$
+	private interface ClassDefiner {
+
+		static ClassDefiner getInstance() {
+			if (VersionUtils.getFeatureVersion() < 11) {
+				return new LegacyClassDefiner();
+			} else {
+				return new LookupClassDefiner();
+			}
 		}
-		return null;
+
+		Class<?> defineClass(
+			Class<?> introspectedClass, String eventClassName, byte[] eventClass, int i, int length,
+			ClassLoader definingClassLoader, ProtectionDomain protectionDomain)
+				throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+
 	}
 
-	private static Method getUnsafeDefineClassMethod(Object unsafe) {
-		try {
-			return unsafe.getClass().getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class,
-					ClassLoader.class, ProtectionDomain.class);
-		} catch (NoSuchMethodException | SecurityException e) {
-			System.out.println(
-					"Could not find, or access, any defineClass method. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
-			e.printStackTrace();
-			System.out.flush();
-			System.exit(3);
+	private static class LookupClassDefiner implements ClassDefiner {
+
+		private LookupClassDefiner() {
 		}
-		return null;
+
+		@Override
+		public Class<?> defineClass(
+			Class<?> introspectedClass, String eventClassName, byte[] eventClass, int i, int length,
+			ClassLoader definingClassLoader, ProtectionDomain protectionDomain) throws IllegalAccessException {
+
+			Lookup lookup = MethodHandles.privateLookupIn(introspectedClass, MethodHandles.lookup());
+			return lookup.defineClass(eventClass);
+		}
 	}
 
-	private static Class<?> getUnsafeClass() {
-		Class<?> clazz = null;
-		try {
-			clazz = Class.forName(UNSAFE_JDK_11_CLASS);
-		} catch (ClassNotFoundException e) {
+	private static class LegacyClassDefiner implements ClassDefiner {
+
+		private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
+
+		private final Object unsafe;
+		private final Method unsafeDefineClassMethod;
+
+		private LegacyClassDefiner() {
+			unsafe = getUnsafe();
+			unsafeDefineClassMethod = getUnsafeDefineClassMethod(unsafe);
+		}
+
+		@Override
+		public Class<?> defineClass(
+			Class<?> introspectedClass, String eventClassName, byte[] eventClass, int i, int length,
+			ClassLoader definingClassLoader, ProtectionDomain protectionDomain)
+				throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+			return (Class<?>) unsafeDefineClassMethod.invoke(unsafe, eventClassName, eventClass, i, length,
+					definingClassLoader, protectionDomain);
+		}
+
+		private static Object getUnsafe() {
+			// Lovely, but this seems to be the only way
+			Class<?> unsafeClass = getUnsafeClass();
+			try {
+				Field f = unsafeClass.getDeclaredField("theUnsafe"); //$NON-NLS-1$
+				f.setAccessible(true);
+				return f.get(null);
+			} catch (Exception e) {
+				Logger.getLogger(JFRUtils.class.getName()).log(Level.SEVERE, "Could not access Unsafe!", e); //$NON-NLS-1$
+			}
+			return null;
+		}
+
+		private static Method getUnsafeDefineClassMethod(Object unsafe) {
+			try {
+				return unsafe.getClass().getDeclaredMethod("defineClass", String.class, byte[].class, int.class,
+						int.class, ClassLoader.class, ProtectionDomain.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				System.out.println(
+						"Could not find, or access, any defineClass method. The agent will not work. If on JDK 11, try adding  --add-exports java.base/jdk.internal.misc=ALL-UNNAMED"); //$NON-NLS-1$
+				e.printStackTrace();
+				System.out.flush();
+				System.exit(3);
+			}
+			return null;
+		}
+
+		private static Class<?> getUnsafeClass() {
+			Class<?> clazz = null;
+
 			try {
 				clazz = Class.forName(UNSAFE_JDK_7_CLASS);
 			} catch (ClassNotFoundException e1) {
@@ -390,7 +437,8 @@ public final class TypeUtils {
 				System.out.flush();
 				System.exit(2);
 			}
+
+			return clazz;
 		}
-		return clazz;
 	}
 }
