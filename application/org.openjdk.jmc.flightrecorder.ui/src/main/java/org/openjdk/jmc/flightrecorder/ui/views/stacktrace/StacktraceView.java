@@ -446,7 +446,6 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (viewer instanceof TreeViewer) {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
-		rebuildViewer();
 		updateReducedTreeOption();
 	}
 
