@@ -63,7 +63,7 @@ findstr "[INFO] Started Jetty Server" %JETTY_LOG%
 if not %ERRORLEVEL% == 0 goto :wait_jetty
 echo %time% jetty server up and running
 echo %time% installing core artifacts - logging output to %INSTALL_LOG%
-call mvn -f core\pom.xml clean install -DskipTests=true --log-file "%INSTALL_LOG%"
+call mvn -f core\pom.xml clean install --log-file "%INSTALL_LOG%"
 if not %ERRORLEVEL% == 0 (
 	call :killJetty %1
 	echo installing core artifacts failed!
