@@ -438,6 +438,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void setTreeLayout(boolean treeLayout) {
 		this.treeLayout = treeLayout;
 		rebuildViewer();
+		updateReducedTreeOption();
 	}
 
 	private void setReducedTree(boolean reducedTree) {
@@ -445,12 +446,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (viewer instanceof TreeViewer) {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
+		rebuildViewer();
+		updateReducedTreeOption();
 	}
 
 	// See JMC-6787
 	@SuppressWarnings("deprecation")
 	private void rebuildViewer() {
-		updateReducedTreeOption();
 		boolean hasFocus = viewer.getControl().isFocusControl();
 		ISelection oldSelection = viewer.getSelection();
 		Fork oldInput = (Fork) viewer.getInput();
