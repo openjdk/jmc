@@ -2912,6 +2912,7 @@
 <longDescription>The Biased Locking Revocation Pauses rule requires that the following event types are enabled: 'VM Operation'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 </report>
+
 <report>
 <file>parallel-gc_cpu.jfr</file>
 <rule>
@@ -4278,8 +4279,8 @@
 <id>Errors</id>
 <severity>OK</severity>
 <score>14.166666666666668</score>
-<shortDescription>The program generated an average of 17 errors per minute during 9/24/2015 12:08:14 PM – 12:09:14 PM.</shortDescription>
-<longDescription>The program generated an average of 17 errors per minute during 9/24/2015 12:08:14 PM – 12:09:14 PM. 17 errors were thrown in total.&lt;p&gt;The most common error was 'java.lang.NoSuchMethodError', which was thrown 13 times.&lt;p&gt;Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: '(com.sun.el.parser.ELParser\$LookaheadSuccess)'.</longDescription>
+<shortDescription>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14 AM – 10:09:14 AM.</shortDescription>
+<longDescription>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14 AM – 10:09:14 AM. 17 errors were thrown in total.&lt;p&gt;The most common error was 'java.lang.NoSuchMethodError', which was thrown 13 times.&lt;p&gt;Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: '(com.sun.el.parser.ELParser\$LookaheadSuccess)'.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
