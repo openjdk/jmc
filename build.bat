@@ -43,12 +43,11 @@ echo unknown argument %1
 goto print_usage
 
 :startJetty
-@REM based on US format of %date%: Fri 10/30/2020
-SET DATE_STR=%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%
-SET TIME_STR=%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%
-SET P2_SITE_LOG=%cd%\build_%DATE_STR%_%TIME_STR%.1.p2_site.log
-SET JETTY_LOG=%cd%\build_%DATE_STR%_%TIME_STR%.2.jetty.log
-SET INSTALL_LOG=%cd%\build_%DATE_STR%_%TIME_STR%.3.install.log
+for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
+set TIMESTAMP=%LOCALDATETIME:~0,14%
+set P2_SITE_LOG=%cd%\build_%TIMESTAMP%.1.p2_site.log
+set JETTY_LOG=%cd%\build_%TIMESTAMP%.2.jetty.log
+set INSTALL_LOG=%cd%\build_%TIMESTAMP%.3.install.log
 echo %time% building p2:site - logging output to %P2_SITE_LOG%
 call mvn -f releng\third-party\pom.xml p2:site --log-file "%P2_SITE_LOG%"
 if not %ERRORLEVEL% == 0 (
@@ -64,8 +63,9 @@ findstr "[INFO] Started Jetty Server" %JETTY_LOG%
 if not %ERRORLEVEL% == 0 goto :wait_jetty
 echo %time% jetty server up and running
 echo %time% installing core artifacts - logging output to %INSTALL_LOG%
-call mvn -f core\pom.xml clean install --log-file "%INSTALL_LOG%"
+call mvn -f core\pom.xml clean install -DskipTests=true --log-file "%INSTALL_LOG%"
 if not %ERRORLEVEL% == 0 (
+	call :killJetty %1
 	echo installing core artifacts failed!
 	exit /B 1
 )
@@ -75,7 +75,7 @@ exit /B 0
 @REM tasklist gives us the pid, and using unique id on window title to filter the list
 :killJetty
 echo kill jetty
-for /F "tokens=2 delims=," %%R IN ('tasklist /FI "Windowtitle eq %1" /NH /FO csv') do (
+for /F "tokens=2 delims=," %%R in ('tasklist /FI "Windowtitle eq %1" /NH /FO csv') do (
 	taskkill /PID %%R
 )
 exit /B 0
@@ -88,7 +88,7 @@ goto end
 :testUi
 @REM generate a unique id for window title
 @REM allow to filter uniquely to get PID associated later
-SET JETTY_TITLE=jmc-jetty-%time%
+set JETTY_TITLE=jmc-jetty-%time%
 call :startJetty %JETTY_TITLE%
 if not %ERRORLEVEL% == 0 (
 	exit /B 1
@@ -101,18 +101,17 @@ goto end
 :packageJmc
 @REM generate a unique id for window title
 @REM allow to filter uniquely to get PID associated later
-SET JETTY_TITLE=jmc-jetty-%time%
+set JETTY_TITLE=jmc-jetty-%time%
 call :startJetty %JETTY_TITLE%
 if not %ERRORLEVEL% == 0 (
 	exit /B 1
 )
-@REM based on US format of %date%: Fri 10/30/2020
-SET DATE_STR=%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%
-SET TIME_STR=%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%
-SET PACKAGE_LOG=%cd%\build_%DATE_STR%_%TIME_STR%.4.package.log
+for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
+set TIMESTAMP=%LOCALDATETIME:~0,14%
+set PACKAGE_LOG=%cd%\build_%TIMESTAMP%.4.package.log
 echo %time% packaging jmc - logging output to %PACKAGE_LOG%
 call mvn package --log-file "%PACKAGE_LOG%"
-echo You can now run jmc by calling "%0 --run" or "%cd%\target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc.exe"
+if %ERRORLEVEL% == 0 echo You can now run jmc by calling "%0 --run" or "%cd%\target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc.exe"
 call :killJetty %JETTY_TITLE%
 goto end
 
@@ -128,7 +127,7 @@ cd ..\..
 goto end
 
 :run
-SET JMC_EXE=%cd%\target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc.exe
+set JMC_EXE=%cd%\target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc.exe
 if exist "%JMC_EXE%" (
 	start /B cmd /c "%JMC_EXE%"
 ) else (
