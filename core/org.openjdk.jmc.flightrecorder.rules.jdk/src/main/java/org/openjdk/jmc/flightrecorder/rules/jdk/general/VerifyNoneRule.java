@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.Callable;
@@ -62,9 +63,17 @@ public class VerifyNoneRule implements IRule {
 
 		String verifyNone = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-Xverify:none", false); //$NON-NLS-1$
+		if (verifyNone == null) {
+			verifyNone = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
+					"\\-Xverify:none", false); //$NON-NLS-1$
+		}
 		// FIXME: Possibly not needed, seems to be translated to -Xverify:none.
 		String noVerify = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-noverify*", false); //$NON-NLS-1$
+		if (noVerify == null) {
+			noVerify = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS, "\\-noverify*", //$NON-NLS-1$
+					false);
+		}
 		if (verifyNone != null || noVerify != null) {
 			// FIXME: Improve check, possibly make it configurable for the user?
 			String wls = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
@@ -73,8 +82,10 @@ public class VerifyNoneRule implements IRule {
 				return new Result(this, 1, Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO),
 						Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO_LONG));
 			}
-			return new Result(this, 100, Messages.getString(Messages.VerifyNoneRule_TEXT_INFO),
-					Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG));
+			String argument = verifyNone != null ? verifyNone : noVerify;
+			String longDescription = MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG),
+					argument);
+			return new Result(this, 100, Messages.getString(Messages.VerifyNoneRule_TEXT_INFO), longDescription);
 		}
 		return new Result(this, 0, Messages.getString(Messages.VerifyNoneRule_TEXT_OK));
 	}
