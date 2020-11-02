@@ -37,19 +37,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Base64;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -76,14 +71,12 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
-import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class GraphView extends ViewPart implements ISelectionListener {
-	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
-	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.graphview"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
 		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
@@ -105,36 +98,81 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
 		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
-		String jsFlameviewColoring = fileContent(jsFlameviewName);
+		String jsFlameviewColoring = loadStringFromFile(jsFlameviewName);
 
 		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
 
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts,
 		// %3 - Search Icon Base64, %4 - 3rd party scripts, %5 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
 				jsFlameviewColoring);
 	}
 
-	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(1);
-	private FrameSeparator frameSeparator;
+	private enum ModelState {
+		NOT_STARTED, STARTED, FINISHED, NONE;
+	}
+	
+	private static class ModelRebuildRunnable implements Runnable {
+		private final GraphView view;
+		private final FrameSeparator separator;
+		private IItemCollection items;
+		private volatile boolean isInvalid;
+
+		private ModelRebuildRunnable(GraphView view, FrameSeparator separator, IItemCollection items) {
+			this.view = view;
+			this.items = items;
+			this.separator = separator;
+		}
+
+		private void setInvalid() {
+			this.isInvalid = true;
+		}
+
+		@Override
+		public void run() {
+			view.modelState = ModelState.STARTED;
+			if (isInvalid) {
+				return;
+			}
+			// Add support for selected attribute later...
+			StacktraceGraphModel model = new StacktraceGraphModel(separator, items, null);
+			if (isInvalid) {
+				return;
+			}
+			String json = GraphView.toJSon(model);
+			if (isInvalid) {
+				return;
+			} else {
+				view.modelState = ModelState.FINISHED;
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, json));
+			}
+		}
+	}
+
+	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
+			new ThreadFactory() {
+				private ThreadGroup group = new ThreadGroup("GraphModelCalculationGroup");
+				private AtomicInteger counter = new AtomicInteger();
+
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread t = new Thread(group, r, "GraphModelCalculation-" + counter.getAndIncrement());
+					t.setDaemon(true);
+					return t;
+				}
+			});	private FrameSeparator frameSeparator;
 
 	private Browser browser;
 	private SashForm container;
 	private IItemCollection currentItems;
-	private volatile CompletableFuture<StacktraceGraphModel> currentModelCalculator;
-	private volatile StacktraceGraphModel model;
-
+	private volatile ModelState modelState = ModelState.NONE;
+	private ModelRebuildRunnable modelRebuildRunnable;
+	
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-
-		// methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
-		IMenuManager siteMenu = site.getActionBars().getMenuManager();
-		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
-		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
-		// addOptions(siteMenu);
-		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -170,43 +208,36 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-			setItems(AdapterUtil.getAdapter(first, IItemCollection.class));
+			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
+			if (items == null) {
+				triggerRebuildTask(ItemCollectionToolkit.build(Stream.empty()));
+			} else if (!items.equals(currentItems)) {
+				triggerRebuildTask(items);
+			}
 		}
 	}
 
-	private void setItems(IItemCollection items) {
-		if (items != null) {
-			currentItems = items;
-			rebuildModel(items);
+
+	private void triggerRebuildTask(IItemCollection items) {
+		// Release old model calculation before building a new
+		if (modelRebuildRunnable != null) {
+			modelRebuildRunnable.setInvalid();
+		}
+
+		currentItems = items;
+		modelState = ModelState.NOT_STARTED;
+		modelRebuildRunnable = new ModelRebuildRunnable(this, frameSeparator, items);
+		if (!modelRebuildRunnable.isInvalid) {
+			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
 	}
 
-	private void rebuildModel(IItemCollection items) {
-		// Release old model before building the new
-		if (currentModelCalculator != null) {
-			currentModelCalculator.cancel(true);
-		}
-		currentModelCalculator = getModelGenerator(items, frameSeparator);
-		currentModelCalculator.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
-				.exceptionally(GraphView::handleModelBuildException);
-	}
-
-	private CompletableFuture<StacktraceGraphModel> getModelGenerator(
-		final IItemCollection items, final FrameSeparator separator) {
-		return CompletableFuture.supplyAsync(() -> {
-			StacktraceGraphModel model = new StacktraceGraphModel(frameSeparator, items, null);
-			return model;
-		}, MODEL_EXECUTOR);
-	}
-
-	private void setModel(StacktraceGraphModel model) {
-		if (!browser.isDisposed() && !model.equals(model)) {
-			this.model = model;
-			setViewerInput(model);
+	private void setModel(final IItemCollection items, final String json) {
+		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
+			setViewerInput(json);
 		}
 	}
-
-	private void setViewerInput(StacktraceGraphModel model) {
+	private void setViewerInput(String model) {
 		browser.setText(HTML_PAGE);
 		browser.addListener(SWT.Resize, event -> {
 			browser.execute("resizeFlameGraph();");
@@ -216,16 +247,9 @@ public class GraphView extends ViewPart implements ISelectionListener {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("processGraph(%s);", toJSon(model)));
+				browser.execute(String.format("processGraph(%s);", model));
 			}
 		});
-	}
-
-	private static Void handleModelBuildException(Throwable ex) {
-		if (!(ex.getCause() instanceof CancellationException)) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
-		}
-		return null;
 	}
 
 	private static String toJSon(StacktraceGraphModel model) {
@@ -243,11 +267,11 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
-			return Stream.of(libs).map(GraphView::fileContent).collect(Collectors.joining("\n"));
+			return Stream.of(libs).map(GraphView::loadStringFromFile).collect(Collectors.joining("\n"));
 		}
 	}
 
-	private static String fileContent(String fileName) {
+	private static String loadStringFromFile(String fileName) {
 		try {
 			return StringToolkit.readString(GraphView.class.getClassLoader().getResourceAsStream(fileName));
 		} catch (IOException e) {
@@ -255,10 +279,6 @@ public class GraphView extends ViewPart implements ISelectionListener {
 					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
 			return "";
 		}
-	}
-
-	private static ImageDescriptor getImageDescriptor(String iconName) {
-		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
 	}
 
 	private static String getIconBase64(String iconName) {
