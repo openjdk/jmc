@@ -45,6 +45,7 @@ import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -120,13 +121,24 @@ public class SocketReadRule implements IRule {
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String address = sanitizeAddress(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS));
+			String longestIOAddress = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS);
+			String address = sanitizeAddress(longestIOAddress);
 			String amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_READ)
+					.displayUsing(IDisplayable.AUTO);
+			String avgDuration = readItems.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			String totalDuration = readItems
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			IItemCollection eventsFromLongestAddress = readItems
+					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, longestIOAddress));
+			String totalLongestIOAddress = eventsFromLongestAddress
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
 					.displayUsing(IDisplayable.AUTO);
 			String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN),
 					maxDuration.displayUsing(IDisplayable.AUTO));
 			String longMessage = MessageFormat.format(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG),
-					peakDuration, address, amountRead) + " " //$NON-NLS-1$
+					peakDuration, address, amountRead, avgDuration, totalDuration, totalLongestIOAddress) + " " //$NON-NLS-1$
 					+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE);
 			return new Result(this, score, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_READ);
 		}

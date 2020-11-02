@@ -111,6 +111,7 @@
 						-XX:+FlightRecorder</argLine>
 					<excludes>
 						<exclude>TestDefineEventProbes.java</exclude>
+						<exclude>TestCustomClassloader.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 						<exclude>TestRetrieveEventProbes.java</exclude>
@@ -146,6 +147,19 @@
 								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
 								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
 							<includes>TestDefineEventProbes.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-custom-classloader</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestCustomClassloader.java</includes>
 						</configuration>
 					</execution>
 					<execution>

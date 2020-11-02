@@ -44,6 +44,7 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -81,8 +82,8 @@ public class FileWriteRule implements IRule {
 		if (eventAvailability != EventAvailability.AVAILABLE) {
 			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.FILE_WRITE);
 		}
-		IItem longestEvent = items.apply(JdkFilters.FILE_WRITE)
-				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
+		IItemCollection fileWriteEvents = items.apply(JdkFilters.FILE_WRITE);
+		IItem longestEvent = fileWriteEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
 		// Aggregate of all file write events - if null, then we had no events
 		if (longestEvent == null) {
@@ -95,13 +96,25 @@ public class FileWriteRule implements IRule {
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
+			String longestIOPath = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH);
+			String fileName = FileReadRule.sanitizeFileName(longestIOPath);
 			String amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_WRITTEN)
 					.displayUsing(IDisplayable.AUTO);
-			String fileName = FileReadRule.sanitizeFileName(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH));
+			String avgDuration = fileWriteEvents
+					.getAggregate(Aggregators.avg(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			String totalDuration = fileWriteEvents
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
+			IItemCollection eventsFromLongestIOPath = fileWriteEvents
+					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, longestIOPath));
+			String totalLongestIOPath = eventsFromLongestIOPath
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
+					.displayUsing(IDisplayable.AUTO);
 			return new Result(this, score,
 					MessageFormat.format(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN), peakDuration),
 					MessageFormat.format(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN_LONG), peakDuration,
-							fileName, amountWritten),
+							fileName, amountWritten, avgDuration, totalDuration, totalLongestIOPath),
 					JdkQueries.FILE_WRITE);
 		}
 		return new Result(this, score,
