@@ -1577,7 +1577,7 @@
 <severity>Warning</severity>
 <score>100.0</score>
 <shortDescription>The environment variables in the recording may contain passwords.</shortDescription>
-<longDescription>The following suspicious environment variables were found in this recording: &lt;ul&gt;&lt;li&gt;P4PASSWD&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;They may contain passwords. If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial Environment Variable' event.</longDescription>
+<longDescription>The following suspicious environment variables were found in this recording: &lt;ul&gt;&lt;li&gt;P4PASSWD&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;They may contain passwords. If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial Environment Variable' event. The following regular expression was used to exclude strings from this rule: '(passworld|passwise)'.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
