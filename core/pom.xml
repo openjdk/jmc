@@ -37,15 +37,52 @@
 	<artifactId>missioncontrol.core</artifactId>
 	<version>8.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
+	<description>JDK Mission Control is an advanced set of tools that enables
+		efficient and detailed analysis of the extensive of data collected by
+		JDK Flight Recorder. The tool chain enables developers and
+		administrators to collect and analyze data from Java applications
+		running locally or deployed in production environments.
+	</description>
+	<url>http://jdk.java.net/jmc</url>
+	<licenses>
+		<license>
+			<name>Universal Permissive License Version 1.0</name>
+			<url>http://oss.oracle.com/licenses/upl</url>
+			<distribution>repo</distribution>
+			<comments>Copyright (c) 2018, 2020, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+		</license>
+	</licenses>
+	<organization>
+		<name>Oracle</name>
+		<url>https://www.oracle.com</url>
+	</organization>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+	</issueManagement>
+	<mailingLists>
+		<mailingList>
+			<name>jmc dev</name>
+			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+		</mailingList>
+	</mailingLists>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
-		<maven.bundle.plugin.version>3.5.1</maven.bundle.plugin.version>
-		<spotless.version>1.26.0</spotless.version>
+		<maven.jar.version>3.2.0</maven.jar.version>
+		<maven.bundle.version>5.1.1</maven.bundle.version>
+		<spotless.version>2.5.0</spotless.version>
+		<maven.directory.version>0.3.1</maven.directory.version>
+		<maven.resources.version>3.2.0</maven.resources.version>
+		<maven.source.version>3.2.1</maven.source.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<nexus.staging.version>1.6.8</nexus.staging.version>
+		<maven.gpg.version>1.6</maven.gpg.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
@@ -58,7 +95,6 @@
 		<module>tests</module>
 		<module>coverage</module>
 	</modules>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>jmc-publish-snapshot</id>
@@ -70,8 +106,9 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>${maven.jar.version}</version>
 					<configuration>
 						<archive>
 							<manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
@@ -81,7 +118,7 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${maven.bundle.plugin.version}</version>
+					<version>${maven.bundle.version}</version>
 					<configuration>
 						<manifestLocation>${manifest-location}</manifestLocation>
 					</configuration>
@@ -102,7 +139,7 @@
 				<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>${maven.resources.version}</version>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
@@ -111,12 +148,13 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/classes/license</outputDirectory>
+							<outputDirectory>${project.build.directory}/classes</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.basedir}/../license</directory>
+									<directory>${rootDir}/license</directory>
 									<includes>
 										<include>LICENSE.txt</include>
+										<include>THIRD_PARTY_LICENSES.txt</include>
 									</includes>
 								</resource>
 							</resources>
@@ -128,9 +166,26 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
+				<groupId>org.commonjava.maven.plugins</groupId>
+				<artifactId>directory-maven-plugin</artifactId>
+				<version>${maven.directory.version}</version>
+				<executions>
+					<execution>
+						<id>directories</id>
+						<goals>
+							<goal>highest-basedir</goal>
+						</goals>
+						<phase>initialize</phase>
+						<configuration>
+							<property>rootDir</property>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>${maven.source.version}</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -143,7 +198,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -165,7 +220,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
+				<version>${nexus.staging.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>jmc-publish-snapshot</serverId>
@@ -175,7 +230,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
+				<version>${maven.gpg.version}</version>
 				<executions>
 					<execution>
 						<id>gpg-sign</id>

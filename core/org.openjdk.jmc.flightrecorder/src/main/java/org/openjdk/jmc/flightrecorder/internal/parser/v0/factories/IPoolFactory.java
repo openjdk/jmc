@@ -43,8 +43,6 @@ public interface IPoolFactory<T> {
 	 *
 	 * @param identifier
 	 *            the identifier that is used to look up the object
-	 * @param the
-	 *            object that would normally be returned from the pool
 	 * @return the replacement object that will be used instead
 	 */
 	T createObject(long identifier, Object o);
