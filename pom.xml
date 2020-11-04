@@ -85,7 +85,7 @@
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<spotless.version>2.5.0</spotless.version>
 		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotbugs.version>4.0.4</spotbugs.version>
+		<spotbugs.version>4.1.4</spotbugs.version>
 		<buildId>${user.name}</buildId>
 		<!-- The version of the JDK embedded. When not embedding a JDK (this is 
 			usually the case), leave this empty. If embedding a JDK, include a comma 
