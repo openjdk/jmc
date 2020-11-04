@@ -51,6 +51,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
+			<comments>Copyright (c) 2018, 2020, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -79,10 +80,10 @@
 		<tycho.version>2.0.0</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
-		<maven.directory.version>0.2</maven.directory.version>
+		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
-		<maven.resources.version>3.0.2</maven.resources.version>
-		<spotless.version>1.26.0</spotless.version>
+		<maven.resources.version>3.2.0</maven.resources.version>
+		<spotless.version>2.5.0</spotless.version>
 		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<spotbugs.version>4.1.4</spotbugs.version>
 		<buildId>${user.name}</buildId>

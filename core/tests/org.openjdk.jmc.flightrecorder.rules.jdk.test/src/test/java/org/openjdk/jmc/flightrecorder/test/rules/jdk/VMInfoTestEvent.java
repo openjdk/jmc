@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +11,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -30,17 +31,33 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.flightrecorder.test.rules.jdk;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-import org.openjdk.jmc.agent.converters.test.TestConverterTransforms;
+import org.openjdk.jmc.common.item.IAccessorKey;
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.util.MemberAccessorToolkit;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 
-@RunWith(Suite.class)
-@SuiteClasses({TestDefaultTransformRegistry.class, TestUtils.class, TestJFRTransformer.class,
-		TestConverterTransforms.class, TestProbeDefinitionValidation.class, TestCompressedFrameTransformation.class,
-		TestEmitOnlyOnException.class})
+public class VMInfoTestEvent extends TestEvent {
+	private final String jvmArguments;
+	private final String javaArguments;
 
-public class AllTests {
+	public VMInfoTestEvent(String jvmArguments, String javaArguments) {
+		super(JdkTypeIDs.VM_INFO);
+		this.jvmArguments = jvmArguments;
+		this.javaArguments = javaArguments;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
+		if ("jvmArguments".equals(attribute.getIdentifier())) {
+			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(jvmArguments);
+		}
+		if ("javaArguments".equals(attribute.getIdentifier())) {
+			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(javaArguments);
+		}
+		return null;
+	}
 }
