@@ -764,12 +764,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			String frameFraction = UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount)
 					.displayUsing(IDisplayable.AUTO);
 			StringBuilder sb = new StringBuilder("<form>"); //$NON-NLS-1$
-			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'>"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.stackTraceMessage(itemCount, totalCount, frameFraction));
-			sb.append("</li>"); //$NON-NLS-1$
-			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'>"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("</span></li>"); //$NON-NLS-1$
+			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.siblingMessage(itemsInSiblings, parentFork.getBranchCount() - 1));
-			sb.append("</li>"); //$NON-NLS-1$
+			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("</form>"); //$NON-NLS-1$
 			return sb.toString();
 		}
