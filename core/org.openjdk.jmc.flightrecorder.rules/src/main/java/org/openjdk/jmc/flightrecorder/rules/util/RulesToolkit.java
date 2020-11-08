@@ -533,22 +533,28 @@ public class RulesToolkit {
 	 */
 	public static Result getEventAvailabilityResult(
 		IRule rule, IItemCollection items, EventAvailability eventAvailability, String ... typeIds) {
+		JavaVersion javaVersion;
+		String link;
 		switch (eventAvailability) {
 		case ENABLED:
 		case NONE:
 			String requiredEventsTypeNames = getEventTypeNames(items, typeIds);
+			javaVersion = RulesToolkit.getJavaSpecVersion(items);
+			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
 			return getNotApplicableResult(rule,
 					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS),
 							requiredEventsTypeNames),
 					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS_LONG),
-							rule.getName(), requiredEventsTypeNames));
+							rule.getName(), requiredEventsTypeNames, link));
 		case DISABLED:
 			String disabledEventTypeNames = getDisabledEventTypeNames(items, typeIds);
+			javaVersion = RulesToolkit.getJavaSpecVersion(items);
+			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
 			return getNotApplicableResult(rule,
 					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE),
 							disabledEventTypeNames),
 					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_LONG),
-							rule.getName(), disabledEventTypeNames));
+							rule.getName(), disabledEventTypeNames, link));
 		case UNKNOWN:
 			// Can't get type names if the event type is unavailable
 			List<String> quotedTypeIds = new ArrayList<>();
@@ -565,12 +571,14 @@ public class RulesToolkit {
 							rule.getName(), unavailableTypeNames));
 		case AVAILABLE:
 			String availableEventTypeNames = getEventTypeNames(items, typeIds);
+			javaVersion = RulesToolkit.getJavaSpecVersion(items);
+			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
 			return getNotApplicableResult(rule,
 					MessageFormat.format(
 							Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE),
 							availableEventTypeNames),
 					MessageFormat.format(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE_LONG,
-							rule.getName(), availableEventTypeNames));
+							rule.getName(), availableEventTypeNames, link));
 		default:
 			throw new IllegalArgumentException("Unsupported event availability: " + eventAvailability); //$NON-NLS-1$
 		}
@@ -1006,6 +1014,29 @@ public class RulesToolkit {
 			}
 		}
 		return null;
+	}
+
+	static String getJavaCommandHelpLink(JavaVersion javaVersion) {
+		if (javaVersion != null) {
+			int major = javaVersion.getMajorVersion();
+			switch (major) {
+			case 8:
+				return "https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"; //$NON-NLS-1$
+			case 9:
+			case 10:
+				return "https://docs.oracle.com/javase/" + major + "/tools/java.htm#JSWOR624";
+			case 11:
+			case 12:
+				return "https://docs.oracle.com/en/java/javase/" + major
+						+ "/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE";
+			case 13:
+			case 14:
+			case 15:
+				return "https://docs.oracle.com/en/java/javase/" + major + "/docs/specs/man/java.html";
+			}
+		}
+		// by default use version 8
+		return "https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"; //$NON-NLS-1$
 	}
 
 	/**
