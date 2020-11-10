@@ -242,6 +242,31 @@ public abstract class QuantityRange<U extends TypedUnit<U>> implements IRange<IQ
 		return minEnd.compareTo(maxStart) >= 0 ? createWithEnd(maxStart, minEnd) : null;
 	}
 
+	public static IRange<IQuantity> union(IRange<IQuantity> a, IRange<IQuantity> b) {
+		IQuantity minStart;
+		IQuantity maxStart;
+		if (a.getStart().compareTo(b.getStart()) < 0) {
+			minStart = a.getStart();
+			maxStart = b.getStart();
+		} else {
+			minStart = b.getStart();
+			maxStart = a.getStart();
+		}
+		IQuantity maxEnd;
+		IQuantity minEnd;
+		if (a.getEnd().compareTo(b.getEnd()) < 0) {
+			minEnd = a.getEnd();
+			maxEnd = b.getEnd();
+		} else {
+			minEnd = b.getEnd();
+			maxEnd = a.getEnd();
+		}
+		if (minEnd.compareTo(maxStart) < 0) { // if disjoint, no union
+			return null;
+		}
+		return createWithEnd(minStart, maxEnd);
+	}
+
 	@Override
 	public ITypedQuantity<U> getStart() {
 		return start;

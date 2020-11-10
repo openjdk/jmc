@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,22 +31,33 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.internal.parser.v0.factories;
+package org.openjdk.jmc.flightrecorder.test.rules.jdk;
 
-import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.item.IAccessorKey;
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.util.MemberAccessorToolkit;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 
-/**
- * Interface for factories that can drop in a custom object instead of the value in a thread pool.
- */
-public interface IPoolFactory<T> {
-	/**
-	 * Creates a replacement object for a value in a pool
-	 *
-	 * @param identifier
-	 *            the identifier that is used to look up the object
-	 * @return the replacement object that will be used instead
-	 */
-	T createObject(long identifier, Object o);
+public class VMInfoTestEvent extends TestEvent {
+	private final String jvmArguments;
+	private final String javaArguments;
 
-	ContentType<T> getContentType();
+	public VMInfoTestEvent(String jvmArguments, String javaArguments) {
+		super(JdkTypeIDs.VM_INFO);
+		this.jvmArguments = jvmArguments;
+		this.javaArguments = javaArguments;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
+		if ("jvmArguments".equals(attribute.getIdentifier())) {
+			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(jvmArguments);
+		}
+		if ("javaArguments".equals(attribute.getIdentifier())) {
+			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(javaArguments);
+		}
+		return null;
+	}
 }
