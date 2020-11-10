@@ -92,16 +92,22 @@ public class ManyRunningProcessesRule implements IRule {
 		// FIXME: Can we really be sure that 'concurrent' events have the exact same timestamp?
 		List<IntEntry<IQuantity>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.PROCESSES),
 				JfrAttributes.END_TIME);
-		IntEntry<IQuantity> maxNumberProcesses = entries.get(entries.size() - 1);
-		double score = RulesToolkit.mapExp74(maxNumberProcesses.getValue(),
-				vp.getPreferenceValue(OTHER_PROCESSES_INFO_LIMIT).clampedFloorIn(NUMBER_UNITY));
-		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
-				.setSummary(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO))
-				.setExplanation(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO_LONG))
-				.setSolution(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_RECOMMENDATION))
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(COMPETING_PROCESS_COUNT, UnitLookup.NUMBER_UNITY.quantity(maxNumberProcesses.getValue()))
-				.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey()).build();
+		if (entries.size() > 0) {
+			IntEntry<IQuantity> maxNumberProcesses = entries.get(entries.size() - 1);
+			double score = RulesToolkit.mapExp74(maxNumberProcesses.getValue(),
+					vp.getPreferenceValue(OTHER_PROCESSES_INFO_LIMIT).clampedFloorIn(NUMBER_UNITY));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO))
+					.setExplanation(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_INFO_LONG))
+					.setSolution(Messages.getString(Messages.ManyRunningProcessesRule_TEXT_RECOMMENDATION))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(COMPETING_PROCESS_COUNT, UnitLookup.NUMBER_UNITY.quantity(maxNumberProcesses.getValue()))
+					.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey()).build();
+		} else {
+			return ResultBuilder.createFor(this, vp)
+					.setSeverity(Severity.NA)
+					.build();
+		}
 	}
 
 	@Override

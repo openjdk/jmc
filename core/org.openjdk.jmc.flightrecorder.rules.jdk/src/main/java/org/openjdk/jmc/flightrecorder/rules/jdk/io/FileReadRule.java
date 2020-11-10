@@ -85,7 +85,7 @@ public class FileReadRule implements IRule {
 			"Longest Read (Time)", "The longest time it took to perform a file read.", UnitLookup.TIMESPAN,
 			IQuantity.class);
 	public static final TypedResult<String> LONGEST_READ_PATH = new TypedResult<>("longestReadPath", //$NON-NLS-1$
-			"Longest Read (Path)", "The path of the file read that took the lognest time.", UnitLookup.PLAIN_TEXT,
+			"Longest Read (Path)", "The path of the file read that took the longest time.", UnitLookup.PLAIN_TEXT,
 			String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays

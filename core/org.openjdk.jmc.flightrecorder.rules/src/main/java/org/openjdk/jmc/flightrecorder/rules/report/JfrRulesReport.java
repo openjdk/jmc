@@ -287,12 +287,12 @@ public class JfrRulesReport {
 								score.displayUsing(IDisplayable.AUTO)));
 					}
 					ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "summary", //$NON-NLS-1$
-							ResultToolkit.populateMessage(result, result.getSummary())));
+							ResultToolkit.populateMessage(result, result.getSummary(), false)));
 					if (verbose) {
 						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "explanation", //$NON-NLS-1$
-								ResultToolkit.populateMessage(result, result.getExplanation())));
+								ResultToolkit.populateMessage(result, result.getExplanation(), false)));
 						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "solution", //$NON-NLS-1$
-								ResultToolkit.populateMessage(result, result.getSolution())));
+								ResultToolkit.populateMessage(result, result.getSolution(), false)));
 					}
 
 					IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);

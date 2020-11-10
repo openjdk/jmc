@@ -107,6 +107,7 @@ public class ErrorRule extends AbstractRule {
 	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
 			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
 			IQuantity.class);
+	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", "The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, ERROR_COUNT, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR, MOST_COMMON_ERROR_COUNT);
@@ -151,7 +152,7 @@ public class ErrorRule extends AbstractRule {
 
 				@Override
 				public boolean shouldContinue() {
-					return !evaluationTask.get().isCancelled();
+					return !evaluationTask.isCancelled();
 				}
 			}, errorItems, windowSize, slideSize);
 			Pair<IQuantity, IRange<IQuantity>> maxErrorsPerMinute = Collections.max(errorsList,
@@ -170,15 +171,14 @@ public class ErrorRule extends AbstractRule {
 			String longMessage = Messages.getString(Messages.ErrorRule_TEXT_WARN_LONG);
 			// FIXME: List some frames of the most common stack trace
 			if (excludedErrors != null && excludedErrors.longValue() > 0) {
-				longMessage += " " + MessageFormat.format( //$NON-NLS-1$
-						Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO), errorExcludeRegexp,
-						excludedErrors);
+				longMessage += " " + Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO); //$NON-NLS-1$
 			}
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
 					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
+					.addResult(EXCLUDED_ERRORS, excludedErrors)
 					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)

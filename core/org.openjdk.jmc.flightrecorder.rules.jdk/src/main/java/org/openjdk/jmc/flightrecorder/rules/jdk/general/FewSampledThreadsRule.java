@@ -204,7 +204,7 @@ public class FewSampledThreadsRule extends AbstractRule {
 		IPreferenceValueProvider vp) {
 		IItemCollection cpuItems = getCpuItems(items);
 		Pair<IQuantity, IRange<IQuantity>> jvmUsageMaxWindow = SlidingWindowToolkit.slidingWindowUnorderedMinMaxValue(
-				cpuItems, windowSize, evaluationTask.get(), new IUnorderedWindowValueFunction<IQuantity>() {
+				cpuItems, windowSize, evaluationTask, new IUnorderedWindowValueFunction<IQuantity>() {
 
 					@Override
 					public IQuantity getValue(IItemCollection items, IQuantity startTime, IQuantity endTime) {

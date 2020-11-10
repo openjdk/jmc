@@ -111,9 +111,8 @@ public class StackDepthSettingRule implements IRule {
 			IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, TRUNCATED_TRACES);
+			.<TypedResult<?>> asList(TypedResult.SCORE, TRUNCATED_TRACES, STACK_DEPTH, TRUNCATION_RATIO);
 
-	private static final int DEFAULT_STACK_DEPTH = 64;
 	private static final String STACKDEPTH_SETTING_RESULT_ID = "StackdepthSetting"; //$NON-NLS-1$
 
 	private IResult getResult(
@@ -158,11 +157,7 @@ public class StackDepthSettingRule implements IRule {
 
 			double truncatedTracesRatio = truncatedTraces / (double) totalTraces;
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
-			String explanation = MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG),
-					stackDepthValue == null ? DEFAULT_STACK_DEPTH : stackDepthValue,
-					stackDepthValue == null
-							? Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG_DEFAULT) + " " //$NON-NLS-1$
-							: ""); //$NON-NLS-1$
+			String explanation = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG);
 			double score = RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25);
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO))

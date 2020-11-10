@@ -213,8 +213,7 @@ public class AutoBoxingRule extends AbstractRule {
 					+ Messages.getString(Messages.AutoboxingRule_RESULT_MOST_AUTOBOXED_TYPE_LONG);
 		}
 
-		String shortIntro = MessageFormat.format(Messages.getString(Messages.AutoboxingRule_RESULT_AUTOBOXING_RATIO),
-				Math.round(possibleAutoboxingRatio), sizeOfAllBoxedAllocations.displayUsing(IDisplayable.AUTO));
+		String shortIntro = Messages.getString(Messages.AutoboxingRule_RESULT_AUTOBOXING_RATIO);
 		String shortMessage = shortIntro + mostAllocatedTypeInfo;
 		String longMessage = mostAllocatedTypeInfoLong + "\n" //$NON-NLS-1$
 				+ Messages.getString(Messages.AutoboxingRule_RESULT_LONG);
@@ -223,6 +222,7 @@ public class AutoBoxingRule extends AbstractRule {
 				.addResult(LARGEST_ALLOCATED_BY_TYPE, largestAllocatedByType)
 				.addResult(LARGEST_ALLOCATED_TYPE, largestAllocatedType)
 				.addResult(SECOND_FRAME_MOST_ALLOCATED, secondFrameFromMostAllocated)
+				.addResult(BOXED_ALLOCATION_RATIO, UnitLookup.PERCENT_UNITY.quantity(possibleAutoboxingRatio))
 				.addResult(BOXED_ALLOCATION_SIZE, totalAllocationSize).build();
 	}
 }

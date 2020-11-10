@@ -101,7 +101,7 @@ public class GcPauseRatioRule extends AbstractRule {
 		IQuantity haltsTotalRatio = HaltsProvider.calculateGcPauseRatio(items);
 
 		Pair<IQuantity, IRange<IQuantity>> haltsWindowRatio = SlidingWindowToolkit.slidingWindowUnorderedMinMaxValue(
-				items, windowSize, evaluationTask.get(), HaltsProvider.gcHaltsRatioFunction(), true, true);
+				items, windowSize, evaluationTask, HaltsProvider.gcHaltsRatioFunction(), true, true);
 
 		double score = RulesToolkit.mapExp100(haltsWindowRatio.left.doubleValue(), infoLimit.doubleValue(),
 				warningLimit.doubleValue());

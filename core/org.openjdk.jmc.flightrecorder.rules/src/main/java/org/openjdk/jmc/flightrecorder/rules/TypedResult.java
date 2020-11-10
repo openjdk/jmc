@@ -104,6 +104,10 @@ public class TypedResult<T> {
 	public int hashCode() {
 		return identifier.hashCode();
 	}
+	
+	public String format(Object result) {
+		return contentType.getDefaultFormatter().format(clazz.cast(result));
+	}
 
 	@Override
 	public boolean equals(Object o) {

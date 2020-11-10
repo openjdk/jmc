@@ -47,7 +47,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
  * Abstract base class for rules, supplying some boiler plate code.
  */
 public abstract class AbstractRule implements IRule {
-	protected final ThreadLocal<FutureTask<IResult>> evaluationTask;
+	protected FutureTask<IResult> evaluationTask;
 
 	private final String id;
 	private final String name;
@@ -64,7 +64,6 @@ public abstract class AbstractRule implements IRule {
 		this.configAttributes = configAttributes;
 		this.resultAttributes = resultAttributes;
 		this.requiredEvents = requiredEvents;
-		evaluationTask = new ThreadLocal<>();
 	}
 
 	protected abstract IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp);
@@ -79,7 +78,7 @@ public abstract class AbstractRule implements IRule {
 				return getResult(items, valueProvider, resultProvider);
 			}
 		});
-		this.evaluationTask.set(evaluationTask);
+		this.evaluationTask = evaluationTask;
 		return evaluationTask;
 	}
 

@@ -99,11 +99,11 @@ public class Runner {
 		String solution = result.getSolution();
 
 		if (summary != null)
-			summary = ResultToolkit.populateMessage(result, summary);
+			summary = ResultToolkit.populateMessage(result, summary, false);
 		if (explanation != null)
-			explanation = ResultToolkit.populateMessage(result, explanation);
+			explanation = ResultToolkit.populateMessage(result, explanation, false);
 		if (solution != null)
-			solution = ResultToolkit.populateMessage(result, solution);
+			solution = ResultToolkit.populateMessage(result, solution, false);
 
 		System.out.println("=========="); //$NON-NLS-1$
 		System.out.println("Rule: " + result.getRule().getName()); //$NON-NLS-1$

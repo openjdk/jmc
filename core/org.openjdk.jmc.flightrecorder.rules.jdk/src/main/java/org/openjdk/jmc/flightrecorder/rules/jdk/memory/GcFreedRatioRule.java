@@ -143,16 +143,9 @@ public class GcFreedRatioRule extends AbstractRule {
 		double freedRatio = maxFreedGcInfo.freedPerSecondToLivesetRatio.doubleValueIn(UnitLookup.PERCENT_UNITY);
 		double score = RulesToolkit.mapExp74(freedRatio, infoLimit);
 		// FIXME: Check if range is null
-		String longDescription = MessageFormat.format(
-				Messages.getString(Messages.GcFreedRatioRule_RESULT_LONG_DESCRIPTION),
-				maxFreedGcInfo.freedPerSecond.displayUsing(IDisplayable.AUTO),
-				maxFreedGcInfo.range.getExtent().displayUsing(IDisplayable.AUTO),
-				maxFreedGcInfo.range.getStart().displayUsing(IDisplayable.AUTO), freedRatio,
-				maxFreedGcInfo.averageLiveset.displayUsing(IDisplayable.AUTO));
+		String longDescription = Messages.getString(Messages.GcFreedRatioRule_RESULT_LONG_DESCRIPTION);
 
-		String shortDescription = MessageFormat.format(
-				Messages.getString(Messages.GcFreedRatioRule_RESULT_SHORT_DESCRIPTION),
-				Math.round(freedRatio * 10) / 10f);
+		String shortDescription = Messages.getString(Messages.GcFreedRatioRule_RESULT_SHORT_DESCRIPTION);
 		if (score < Severity.INFO.getLimit()) {
 			shortDescription += SPACE + Messages.getString(Messages.GcFreedRatioRule_RESULT_OK);
 			longDescription += SPACE + Messages.getString(Messages.GcFreedRatioRule_RESULT_OK);
@@ -285,7 +278,7 @@ public class GcFreedRatioRule extends AbstractRule {
 
 			@Override
 			public boolean shouldContinue() {
-				return !evaluationTask.get().isCancelled();
+				return !evaluationTask.isCancelled();
 			}
 
 		}, allItems, windowSize, slideSize);

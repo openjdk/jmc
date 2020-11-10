@@ -118,7 +118,7 @@ public class ApplicationHaltsRule extends AbstractRule {
 		ApplicationHaltsInfoHolder haltsRatios = HaltsProvider.calculateApplicationHaltsRatio(items);
 
 		Pair<ApplicationHaltsInfoHolder, IRange<IQuantity>> haltsWindowRatio = SlidingWindowToolkit
-				.slidingWindowUnorderedMinMaxValue(items, windowSize, evaluationTask.get(),
+				.slidingWindowUnorderedMinMaxValue(items, windowSize, evaluationTask,
 						HaltsProvider.applicationHaltsRatioFunction(), applicationHaltsComparator(), true, true);
 		IQuantity haltsTotalWindowRatio = haltsWindowRatio.left.getTotalHaltsRatio();
 		IQuantity nonGcHaltsToTotalRatio = haltsWindowRatio.left.getNonGcHaltsToTotalRatio();

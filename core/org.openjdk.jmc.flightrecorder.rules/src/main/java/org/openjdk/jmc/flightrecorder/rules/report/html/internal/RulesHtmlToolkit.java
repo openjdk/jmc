@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -62,6 +64,8 @@ public class RulesHtmlToolkit {
 	public static final TypedResult<Boolean> IN_PROGRESS = new TypedResult<>("inProgress", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	public static final TypedResult<Boolean> IGNORED = new TypedResult<>("ignored", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
+	private static final Pattern LINK_PATTERN = Pattern.compile("\\[([^]]*)\\]\\(([^\\s^\\)]*)[\\s\\)]"); //$NON-NLS-1$
+	
 	static {
 		RULE_TEMPLATE = readFromFile("rule_result.html"); //$NON-NLS-1$
 		TEMPLATE = readFromFile("rules_overview.html"); //$NON-NLS-1$
@@ -191,7 +195,7 @@ public class RulesHtmlToolkit {
 			clazz = "hidden"; //$NON-NLS-1$
 			button = "+"; //$NON-NLS-1$
 		}
-		boolean isInProgress = result.getResult(IN_PROGRESS);
+		boolean isInProgress = Boolean.TRUE.equals(result.getResult(IN_PROGRESS));
 		String displayScore = isInProgress ? "none" : "inline block"; //$NON-NLS-1$ //$NON-NLS-2$
 		String displayProgress = isInProgress ? "inline block" : "none"; //$NON-NLS-1$ //$NON-NLS-2$
 		return MessageFormat.format(sb.toString(), Encode.forHtml(id + uuid), (value == -1) ? "N/A" : value, //$NON-NLS-1$
@@ -212,12 +216,19 @@ public class RulesHtmlToolkit {
 
 	// FIXME: Make private and instead add a method for creating javascript updates
 	public static String getDescription(IResult result) {
-		String summary = ResultToolkit.populateMessage(result, result.getSummary());
-		String explanation = ResultToolkit.populateMessage(result, result.getExplanation());
-		String solution = ResultToolkit.populateMessage(result, result.getSolution());
+		String summary = ResultToolkit.populateMessage(result, result.getSummary(), true);
+		String explanation = ResultToolkit.populateMessage(result, result.getExplanation(), true);
+		String solution = ResultToolkit.populateMessage(result, result.getSolution(), true);
 		String description = "<div class=\"shortDescription\">" + summary + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
 		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Matcher matcher = LINK_PATTERN.matcher(description);
+		while (matcher.find()) {
+			String title = matcher.group(1);
+			String url = matcher.group(2);
+			String link = "<a href=\"" + url + "\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			description = description.replace(matcher.group(), link);
+		}
 		return description;
 	}
 
