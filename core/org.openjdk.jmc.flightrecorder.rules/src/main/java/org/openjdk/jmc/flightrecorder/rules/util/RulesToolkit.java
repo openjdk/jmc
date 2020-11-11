@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -488,6 +489,16 @@ public class RulesToolkit {
 			return EventAvailability.NONE;
 		}
 		return EventAvailability.UNKNOWN;
+	}
+	
+	public static boolean matchesEventAvailabilityMap(IItemCollection items, Map<String, EventAvailability> availabilityMap) {
+		for (Entry<String, EventAvailability> entry : availabilityMap.entrySet()) {
+			EventAvailability eventAvailability = getEventAvailability(items, entry.getKey());
+			if (eventAvailability.isLessAvailableThan(entry.getValue())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

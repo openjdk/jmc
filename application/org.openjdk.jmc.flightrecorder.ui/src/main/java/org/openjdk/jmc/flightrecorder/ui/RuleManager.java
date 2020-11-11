@@ -58,7 +58,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -67,6 +66,7 @@ import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.RulesHtmlToolkit;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.flightrecorder.ui.preferences.RulesPage;
@@ -110,23 +110,30 @@ public class RuleManager {
 			resultsByTopicByRuleId.get(topic).put(rule.getId(), result);
 			updateListeners(result);
 			try {
-				RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, null);
-				Thread runner = new Thread(future);
-				runner.start();
-				while (true) {
-					if (monitor.isCanceled()) {
-						future.cancel(true);
-						runner.join();
-						result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
-								.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
-								.addResult(RulesHtmlToolkit.FAILED, true).build();
-						break;
-					} else if (future.isDone()) {
-						result = future.get();
-						runner.join();
-						break;
+				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())) {
+					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, null);
+					Thread runner = new Thread(future);
+					runner.start();
+					while (true) {
+						if (monitor.isCanceled()) {
+							future.cancel(true);
+							runner.join();
+							result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
+									.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
+									.addResult(RulesHtmlToolkit.FAILED, true).build();
+							break;
+						} else if (future.isDone()) {
+							result = future.get();
+							runner.join();
+							break;
+						}
+						Thread.sleep(100);
 					}
-					Thread.sleep(100);
+				} else {
+					result = ResultBuilder.createFor(rule, config::getValue)
+							.setSeverity(Severity.NA)
+							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED)
+							.build();
 				}
 			} catch (Exception e) {
 				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not evaluate " + rule.getName(), e); //$NON-NLS-1$

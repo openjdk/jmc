@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -176,7 +177,7 @@ public class OptionsCheckRule implements IRule {
 
 	}
 
-	private static class OptionWarning {
+	private static class OptionWarning implements IDisplayable {
 		private final String option;
 		private final String warning;
 		private final int score;
@@ -197,6 +198,11 @@ public class OptionsCheckRule implements IRule {
 
 		public int getScore() {
 			return score;
+		}
+
+		@Override
+		public String displayUsing(String formatHint) {
+			return getOption() + ": " + getWarning(); //$NON-NLS-1$
 		}
 	}
 

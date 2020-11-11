@@ -28,6 +28,7 @@ import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.JvmInternalsDataProvider;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
@@ -37,32 +38,20 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 public class DuplicateFlagsRule implements IRule {
 
 	public static class DuplicateFlags implements IDisplayable {
-		private final Collection<List<String>> duplicates;
+		private final List<String> duplicates;
 
-		private DuplicateFlags() {
-			duplicates = new ArrayList<>();
-		}
-
-		private void addDuplicates(List<String> duplicates) {
-			this.duplicates.add(duplicates);
+		private DuplicateFlags(List<String> duplicates) {
+			this.duplicates = duplicates;
 		}
 
 		@Override
 		public String displayUsing(String formatHint) {
 			StringBuilder sb = new StringBuilder();
-			sb.append('[');
-			for (List<String> dupes : duplicates) {
-				sb.append('[');
-				for (String d : dupes) {
-					sb.append(d);
-					sb.append(',');
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(']');
+			for (String d : duplicates) {
+				sb.append(d);
 				sb.append(',');
 			}
 			sb.deleteCharAt(sb.length() - 1);
-			sb.append(']');
 			return sb.toString();
 		}
 	}
@@ -74,7 +63,7 @@ public class DuplicateFlagsRule implements IRule {
 	private static final ContentType<DuplicateFlags> DUPLICATE_FLAGS = UnitLookup
 			.createSyntheticContentType("duplicateFlags"); //$NON-NLS-1$
 
-	public static final TypedResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedResult<>("duplicateFlags", //$NON-NLS-1$
+	public static final TypedCollectionResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedCollectionResult<>("duplicateFlags", //$NON-NLS-1$
 			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_NAME),
 			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_DESCRIPTION), DUPLICATE_FLAGS,
 			DuplicateFlags.class);
@@ -129,9 +118,9 @@ public class DuplicateFlagsRule implements IRule {
 		// FIXME: Should we check if there are different jvm args in different chunks?
 		Set<String> args = jvmInfoItems.getAggregate(Aggregators.distinct(JdkAttributes.JVM_ARGUMENTS));
 		if (args != null && !args.isEmpty()) {
-			DuplicateFlags duplicateFlags = new DuplicateFlags();
-			for (ArrayList<String> dupe : JvmInternalsDataProvider.checkDuplicates(args.iterator().next())) {
-				duplicateFlags.addDuplicates(dupe);
+			List<DuplicateFlags> duplicateFlags = new ArrayList<>();
+			for (List<String> dupe : JvmInternalsDataProvider.checkDuplicates(args.iterator().next())) {
+				duplicateFlags.add(new DuplicateFlags(dupe));
 			}
 			if (!JvmInternalsDataProvider.checkDuplicates(args.iterator().next()).isEmpty()) {
 				return ResultBuilder.createFor(this, vp).addResult(DUPLICATED_FLAGS, duplicateFlags)
