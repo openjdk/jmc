@@ -40,7 +40,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -73,20 +72,13 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 public class GraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
-		String jsHtml5shiv = "jslibs/html5shiv.min.js";
-		String jsRespond = "jslibs/respond.min.js";
 		String jsD3V5 = "jslibs/d3.v5.min.js";
 		String jsD3GraphViz = "jslibs/d3-graphviz.js";
 		String jsWebAsm = "jslibs/index.min.js";
-		String cssFlameview = "graph.css";
 
-		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
-		String jsD3Libraries = loadLibraries(jsD3V5, jsWebAsm, jsD3GraphViz);
-		String styleheets = loadLibraries(cssFlameview);
-		
-		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts,
-		// %3 - 3rd party scripts
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), styleheets, jsIeLibraries, jsD3Libraries);
+//		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsWebAsm), loadLibraries(jsD3V5),
+//				loadLibraries(jsD3GraphViz));
+		HTML_PAGE = loadStringFromFile("page_dl.template");
 	}
 
 	private enum ModelState {
@@ -220,16 +212,11 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(String model) {
 		browser.setText(HTML_PAGE);
-		System.out.println(HTML_PAGE);
-//		browser.addListener(SWT.Resize, event -> {
-//			browser.execute("resizeGraph();");
-//		});
-
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("processGraph(%s);", model));
+				browser.execute(String.format("processGraph(`%s`);", model));
 			}
 		});
 	}
@@ -249,7 +236,12 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
-			return Stream.of(libs).map(GraphView::loadStringFromFile).collect(Collectors.joining("\n"));
+			StringBuilder builder = new StringBuilder(2048);
+			for (String lib : libs) {
+				builder.append(loadStringFromFile(lib));
+				builder.append("\n");
+			}
+			return builder.toString();
 		}
 	}
 

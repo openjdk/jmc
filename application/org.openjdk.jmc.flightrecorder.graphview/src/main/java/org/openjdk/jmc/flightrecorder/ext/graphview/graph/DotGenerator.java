@@ -86,6 +86,10 @@ public final class DotGenerator {
 		 */
 		Fontname,
 		/**
+		 * Have title area, true or false.
+		 */
+		TitleArea,
+		/**
 		 * Font size of the title area, e.g. 16. Need to be parseable to a number.
 		 */
 		TitleFontSize,
@@ -263,7 +267,9 @@ public final class DotGenerator {
 		builder.append(String.format("digraph \"%s\" {\n", graphName));
 
 		createDefaultNodeSettingsEntry(builder, configuration);
-		createSubgraphNode(builder, graphName, configuration, model);
+		if (Boolean.valueOf(getConf(configuration, ConfigurationKey.TitleArea, "false"))) {
+			createSubgraphNode(builder, graphName, configuration, model);
+		}
 
 		// Convert Nodes
 		NodeConfigurator nodeConfigurator = new NodeConfigurator(model, configuration);
