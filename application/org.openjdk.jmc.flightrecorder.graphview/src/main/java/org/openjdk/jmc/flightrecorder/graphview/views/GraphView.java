@@ -33,10 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.graphview.views;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Base64;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -54,9 +52,6 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
@@ -72,46 +67,32 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class GraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
-		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
-		String cssD3Flamegraph = "jslibs/d3-flamegraph.css";
-		// from: https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js
 		String jsHtml5shiv = "jslibs/html5shiv.min.js";
-		// from: https://oss.maxcdn.com/respond/1.4.2/respond.min.js
 		String jsRespond = "jslibs/respond.min.js";
-		// from: https://d3js.org/d3.v4.min.js
-		String jsD3V4 = "jslibs/d3.v4.min.js";
-		// from: https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js
-		String jsD3Tip = "jslibs/d3-tip.min.js";
-		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
-		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
-		// jmc flameview coloring, tooltip and other  functions
-		String jsFlameviewName = "flameview.js";
-		String cssFlameview = "flameview.css";
+		String jsD3V5 = "jslibs/d3.v5.min.js";
+		String jsD3GraphViz = "jslibs/d3-graphviz.js";
+		String jsWebAsm = "jslibs/index.min.js";
+		String cssFlameview = "graph.css";
 
 		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
-		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
-		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
-		String jsFlameviewColoring = loadStringFromFile(jsFlameviewName);
-
-		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
-
+		String jsD3Libraries = loadLibraries(jsD3V5, jsWebAsm, jsD3GraphViz);
+		String styleheets = loadLibraries(cssFlameview);
+		
 		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts,
-		// %3 - Search Icon Base64, %4 - 3rd party scripts, %5 - Flameview Coloring,
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
-				jsFlameviewColoring);
+		// %3 - 3rd party scripts
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), styleheets, jsIeLibraries, jsD3Libraries);
 	}
 
 	private enum ModelState {
 		NOT_STARTED, STARTED, FINISHED, NONE;
 	}
-	
+
 	private static class ModelRebuildRunnable implements Runnable {
 		private final GraphView view;
 		private final FrameSeparator separator;
@@ -139,7 +120,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			String json = GraphView.toJSon(model);
+			String json = GraphView.toDot(model);
 			if (isInvalid) {
 				return;
 			} else {
@@ -161,14 +142,14 @@ public class GraphView extends ViewPart implements ISelectionListener {
 					t.setDaemon(true);
 					return t;
 				}
-			});	private FrameSeparator frameSeparator;
-
+			});
+	private FrameSeparator frameSeparator;
 	private Browser browser;
 	private SashForm container;
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
-	
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -217,7 +198,6 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-
 	private void triggerRebuildTask(IItemCollection items) {
 		// Release old model calculation before building a new
 		if (modelRebuildRunnable != null) {
@@ -232,16 +212,18 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private void setModel(final IItemCollection items, final String json) {
+	private void setModel(final IItemCollection items, final String dotString) {
 		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
-			setViewerInput(json);
+			setViewerInput(dotString);
 		}
 	}
+
 	private void setViewerInput(String model) {
 		browser.setText(HTML_PAGE);
-		browser.addListener(SWT.Resize, event -> {
-			browser.execute("resizeFlameGraph();");
-		});
+		System.out.println(HTML_PAGE);
+//		browser.addListener(SWT.Resize, event -> {
+//			browser.execute("resizeGraph();");
+//		});
 
 		browser.addProgressListener(new ProgressAdapter() {
 			@Override
@@ -252,7 +234,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		});
 	}
 
-	private static String toJSon(StacktraceGraphModel model) {
+	private static String toDot(StacktraceGraphModel model) {
 		if (model == null) {
 			return "\"\"";
 		}
@@ -278,19 +260,6 @@ public class GraphView extends ViewPart implements ISelectionListener {
 			FlightRecorderUI.getDefault().getLogger().log(Level.WARNING,
 					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
 			return "";
-		}
-	}
-
-	private static String getIconBase64(String iconName) {
-		Image image = FlightRecorderUI.getDefault().getImage(iconName);
-		if (image == null) {
-			return "";
-		} else {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageLoader loader = new ImageLoader();
-			loader.data = new ImageData[] {image.getImageData()};
-			loader.save(baos, SWT.IMAGE_PNG);
-			return Base64.getEncoder().encodeToString(baos.toByteArray());
 		}
 	}
 }

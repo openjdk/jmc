@@ -274,6 +274,10 @@ public final class StacktraceGraphModel {
 	}
 
 	private void addItem(IItem item, IMemberAccessor<IQuantity, IItem> accessor) {
+		IMCStackTrace stackTrace = getStackTrace(item);
+		if (stackTrace == null) {
+			return;
+		}
 		List<? extends IMCFrame> frames = getStackTrace(item).getFrames();
 		if (frames.isEmpty()) {
 			return;
