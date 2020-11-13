@@ -94,6 +94,18 @@
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
 					</execution>
+					<execution>
+						<id>graphvizlib-wasm</id>
+						<phase>${download-maven-plugin.phase}</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/graphvizlib.wasm</url>
+							<unpack>false</unpack>
+							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
