@@ -101,8 +101,9 @@ public class DiscouragedGcOptionsRule implements IRule {
 			} else if (parallelGCThreads.compareTo(minHwThreads) > 0) {
 				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 						.addResult(HARDWARE_THREADS, minHwThreads).addResult(PARALLEL_GC_THREADS, parallelGCThreads)
-						.setSummary(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO)
-						.setExplanation(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG).build();
+						.setSummary(Messages.getString(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG))
+						.build();
 			} else if (parallelGCThreads.compareTo(ONE) == 0
 					&& (oc == CollectorType.PARALLEL_OLD || oc == CollectorType.G1_OLD)) {
 				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)

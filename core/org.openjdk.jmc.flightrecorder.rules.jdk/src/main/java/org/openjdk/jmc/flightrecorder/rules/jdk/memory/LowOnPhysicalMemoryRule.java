@@ -73,8 +73,8 @@ public class LowOnPhysicalMemoryRule implements IRule {
 	public static final TypedResult<IQuantity> MAX_USED_MEMORY = new TypedResult<>("maxUsedMemory", //$NON-NLS-1$
 			JdkAggregators.MAX_USED_MEMORY, UnitLookup.MEMORY, IQuantity.class);
 
-	private Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
-			USED_MEMORY_RATIO, TOTAL_MEMORY, MAX_USED_MEMORY);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, USED_MEMORY_RATIO, TOTAL_MEMORY, MAX_USED_MEMORY);
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {

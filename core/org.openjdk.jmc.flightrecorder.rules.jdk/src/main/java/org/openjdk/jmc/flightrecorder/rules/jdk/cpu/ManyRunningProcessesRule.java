@@ -104,9 +104,7 @@ public class ManyRunningProcessesRule implements IRule {
 					.addResult(COMPETING_PROCESS_COUNT, UnitLookup.NUMBER_UNITY.quantity(maxNumberProcesses.getValue()))
 					.addResult(COMPETING_PROCESS_TIME, maxNumberProcesses.getKey()).build();
 		} else {
-			return ResultBuilder.createFor(this, vp)
-					.setSeverity(Severity.NA)
-					.build();
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA).build();
 		}
 	}
 

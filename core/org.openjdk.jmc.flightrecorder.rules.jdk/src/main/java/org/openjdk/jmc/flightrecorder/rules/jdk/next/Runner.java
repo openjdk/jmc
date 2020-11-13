@@ -178,7 +178,7 @@ public class Runner {
 						} else {
 							resultProvider.resultMap.put(typedResult, result.getResult(typedResult));
 						}
-	
+
 					}
 				}
 				printResult(result, resultProvider);

@@ -141,7 +141,8 @@ public class SocketReadRule implements IRule {
 			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
-							+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE)).addResult(LONGEST_READ_ADDRESS, address).addResult(LONGEST_READ_AMOUNT, amountRead)
+							+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
+					.addResult(LONGEST_READ_ADDRESS, address).addResult(LONGEST_READ_AMOUNT, amountRead)
 					.addResult(LONGEST_READ_TIME, maxDuration).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(severity)

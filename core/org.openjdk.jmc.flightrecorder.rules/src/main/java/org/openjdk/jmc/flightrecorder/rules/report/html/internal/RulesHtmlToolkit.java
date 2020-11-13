@@ -65,7 +65,7 @@ public class RulesHtmlToolkit {
 	public static final TypedResult<Boolean> IGNORED = new TypedResult<>("ignored", "", "", UnitLookup.FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private static final Pattern LINK_PATTERN = Pattern.compile("\\[([^]]*)\\]\\(([^\\s^\\)]*)[\\s\\)]"); //$NON-NLS-1$
-	
+
 	static {
 		RULE_TEMPLATE = readFromFile("rule_result.html"); //$NON-NLS-1$
 		TEMPLATE = readFromFile("rules_overview.html"); //$NON-NLS-1$
@@ -226,6 +226,7 @@ public class RulesHtmlToolkit {
 		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		Matcher matcher = LINK_PATTERN.matcher(description);
+		description.replace("\n", "<p>"); //$NON-NLS-1$//$NON-NLS-2$
 		while (matcher.find()) {
 			String title = matcher.group(1);
 			String url = matcher.group(2);

@@ -87,9 +87,12 @@ public class GcPauseRatioRule extends AbstractRule {
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).build();
 
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, GC_PAUSE_RATIO, GC_PAUSE_RATIO_WINDOW, WINDOW);
+
 	public GcPauseRatioRule() {
 		super("GcPauseRatio", Messages.getString(Messages.GcPauseRatioRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, CONFIGURATION_ATTRIBUTES, null, REQUIRED_EVENTS);
+				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override

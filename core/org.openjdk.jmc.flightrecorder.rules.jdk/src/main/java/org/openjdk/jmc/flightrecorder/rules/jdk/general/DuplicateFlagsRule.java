@@ -63,7 +63,8 @@ public class DuplicateFlagsRule implements IRule {
 	private static final ContentType<DuplicateFlags> DUPLICATE_FLAGS = UnitLookup
 			.createSyntheticContentType("duplicateFlags"); //$NON-NLS-1$
 
-	public static final TypedCollectionResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedCollectionResult<>("duplicateFlags", //$NON-NLS-1$
+	public static final TypedCollectionResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedCollectionResult<>(
+			"duplicateFlags", //$NON-NLS-1$
 			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_NAME),
 			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_DESCRIPTION), DUPLICATE_FLAGS,
 			DuplicateFlags.class);

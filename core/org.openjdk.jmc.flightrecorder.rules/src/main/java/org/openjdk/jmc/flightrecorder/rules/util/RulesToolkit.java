@@ -490,8 +490,9 @@ public class RulesToolkit {
 		}
 		return EventAvailability.UNKNOWN;
 	}
-	
-	public static boolean matchesEventAvailabilityMap(IItemCollection items, Map<String, EventAvailability> availabilityMap) {
+
+	public static boolean matchesEventAvailabilityMap(
+		IItemCollection items, Map<String, EventAvailability> availabilityMap) {
 		for (Entry<String, EventAvailability> entry : availabilityMap.entrySet()) {
 			EventAvailability eventAvailability = getEventAvailability(items, entry.getKey());
 			if (eventAvailability.isLessAvailableThan(entry.getValue())) {

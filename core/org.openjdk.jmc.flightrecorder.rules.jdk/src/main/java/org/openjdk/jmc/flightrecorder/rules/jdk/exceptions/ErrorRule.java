@@ -107,10 +107,12 @@ public class ErrorRule extends AbstractRule {
 	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
 			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
 			IQuantity.class);
-	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", "The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class); //$NON-NLS-1$
+	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", //$NON-NLS-1$
+			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
-			TypedResult.SCORE, ERROR_COUNT, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR, MOST_COMMON_ERROR_COUNT);
+			TypedResult.SCORE, ERROR_COUNT, EXCLUDED_ERRORS, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR,
+			MOST_COMMON_ERROR_COUNT);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();

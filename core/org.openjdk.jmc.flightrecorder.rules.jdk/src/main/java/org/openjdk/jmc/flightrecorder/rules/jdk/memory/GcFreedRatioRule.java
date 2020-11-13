@@ -36,14 +36,12 @@ import static org.openjdk.jmc.common.unit.UnitLookup.SECOND;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -110,8 +108,8 @@ public class GcFreedRatioRule extends AbstractRule {
 	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset",
 			"The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, HEAP_SUMMARY_EVENTS, GC_FREED_PER_SECOND, GC_FREED_RATIO, AVERAGE_LIVESET, GC_WINDOW);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED)

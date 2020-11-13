@@ -130,10 +130,8 @@ public class RuleManager {
 						Thread.sleep(100);
 					}
 				} else {
-					result = ResultBuilder.createFor(rule, config::getValue)
-							.setSeverity(Severity.NA)
-							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED)
-							.build();
+					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
+							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED).build();
 				}
 			} catch (Exception e) {
 				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not evaluate " + rule.getName(), e); //$NON-NLS-1$

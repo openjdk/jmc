@@ -54,7 +54,8 @@ public class ClassLoadingRule implements IRule {
 			IQuantity.class);
 	public static final TypedResult<IQuantity> TOTAL_CLASS_LOAD_COUNT = new TypedResult<>("totalClassLoadCount", //$NON-NLS-1$
 			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_NAME),
-			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_DESCRIPTION), UnitLookup.TIMESPAN, IQuantity.class);
+			Messages.getString(Messages.ClassLoadingRule_RESULT_TOTAL_LOAD_COUNT_DESCRIPTION), UnitLookup.TIMESPAN,
+			IQuantity.class);
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(MAX_DURATION_LIMIT, RATIO_OF_TOTAL_LIMIT);

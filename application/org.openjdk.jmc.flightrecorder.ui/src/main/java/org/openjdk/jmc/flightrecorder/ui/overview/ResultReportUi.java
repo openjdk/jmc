@@ -383,7 +383,8 @@ public class ResultReportUi {
 		String quoteEscape = adjustedHtml.replaceAll("\\\"", "\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
 		String description = quoteEscape.replaceAll("\n", "</br>"); //$NON-NLS-1$ //$NON-NLS-2$
 		script.append(String.format("overview.updateResult(\"%s\", %d, \"%s\");", //$NON-NLS-1$
-				result.getRule().getId(), Math.round(score == null ? result.getSeverity().getLimit() : score.doubleValue()), description));
+				result.getRule().getId(),
+				Math.round(score == null ? result.getSeverity().getLimit() : score.doubleValue()), description));
 
 		String[] topicsArray = topics.toArray(new String[topics.size()]);
 		if (!isSinglePage) {

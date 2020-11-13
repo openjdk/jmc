@@ -84,17 +84,20 @@ public class ApplicationHaltsRule extends AbstractRule {
 			"Halts Window", "The window during which the most application halts were detected.", UnitLookup.TIMERANGE);
 	public static final TypedResult<IQuantity> HALTS_RATIO = new TypedResult<>("applicationHaltsRatio", "Halts Ratio", //$NON-NLS-1$
 			"The percent of time spent halted.", UnitLookup.PERCENTAGE, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_HALTS_RATIO = new TypedResult<>("totalApplicationHaltsRatio", "Halts Ratio", //$NON-NLS-1$
-			"The percent of time spent halted during the entire recording.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_HALTS_RATIO = new TypedResult<>("totalApplicationHaltsRatio", //$NON-NLS-1$
+			"Halts Ratio", "The percent of time spent halted during the entire recording.", UnitLookup.PERCENTAGE, IQuantity.class);
 	public static final TypedResult<IQuantity> NON_GC_HALTS_RATIO = new TypedResult<>("nonGcApplicationHaltsRatio", //$NON-NLS-1$
 			"Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection.",
 			UnitLookup.PERCENTAGE, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_NON_GC_HALTS_RATIO = new TypedResult<>("totalNonGcApplicationHaltsRatio", //$NON-NLS-1$
-			"Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection during the entire recording.",
+	public static final TypedResult<IQuantity> TOTAL_NON_GC_HALTS_RATIO = new TypedResult<>(
+			"totalNonGcApplicationHaltsRatio", //$NON-NLS-1$
+			"Non-GC Halts Ratio",
+			"The percent of time spent halted on other activities than garbage collection during the entire recording.",
 			UnitLookup.PERCENTAGE, IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, TOTAL_HALTS_RATIO, TOTAL_NON_GC_HALTS_RATIO, HALTS_RATIO, HALTS_WINDOW, NON_GC_HALTS_RATIO);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, TOTAL_HALTS_RATIO, TOTAL_NON_GC_HALTS_RATIO, HALTS_RATIO, HALTS_WINDOW,
+			NON_GC_HALTS_RATIO);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED)

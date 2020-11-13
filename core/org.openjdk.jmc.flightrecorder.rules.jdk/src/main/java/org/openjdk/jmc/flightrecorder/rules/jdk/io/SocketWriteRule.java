@@ -133,7 +133,8 @@ public class SocketWriteRule implements IRule {
 			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
-							+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE)).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+							+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(LONGEST_WRITE_ADDRESS, address).addResult(LONGEST_WRITE_AMOUNT, amountWritten)
 					.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 		}
