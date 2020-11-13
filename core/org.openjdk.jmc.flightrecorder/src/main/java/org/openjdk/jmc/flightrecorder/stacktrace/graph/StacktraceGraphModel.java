@@ -127,7 +127,7 @@ public final class StacktraceGraphModel {
 	public IAttribute<IQuantity> getAttribute() {
 		return attribute;
 	}
-	
+
 	public boolean isEmpty() {
 		return nodes.isEmpty();
 	}
@@ -253,10 +253,12 @@ public final class StacktraceGraphModel {
 		}
 		return maxValue;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("=== StackTraceModel ===\nNode Count:%d\nEdge Count:%d\nNodes: %s\nEdges: %s\n========================", nodes.size(), edges.size(), nodes.toString(), edges.toString());
+		return String.format(
+				"=== StackTraceModel ===\nNode Count:%d\nEdge Count:%d\nNodes: %s\nEdges: %s\n========================",
+				nodes.size(), edges.size(), nodes.toString(), edges.toString());
 	}
 
 	private void buildModel() {

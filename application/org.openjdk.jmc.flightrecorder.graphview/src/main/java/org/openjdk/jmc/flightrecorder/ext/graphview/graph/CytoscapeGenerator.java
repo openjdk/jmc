@@ -41,15 +41,15 @@ import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
  * @see https://js.cytoscape.org.
  */
 public final class CytoscapeGenerator {
-	
+
 	/**
 	 * Renders a {@link StacktraceGraphModel} in Cytoscape format.
 	 */
 	public static String toCytoScapeJSon(StacktraceGraphModel model) {
 		StringBuilder builder = new StringBuilder(2048);
-		
+
 		// Convert to cytoscape format
-		
+
 		return builder.toString();
 	}
 }
