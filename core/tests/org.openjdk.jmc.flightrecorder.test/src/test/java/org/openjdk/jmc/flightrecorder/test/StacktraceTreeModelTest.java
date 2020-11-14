@@ -55,84 +55,78 @@ import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
 public class StacktraceTreeModelTest {
 
-    private static IItemCollection testRecording;
+	private static IItemCollection testRecording;
 
-    @BeforeClass
-    public static void beforeAll() throws IOException, CouldNotLoadRecordingException {
-        IOResourceSet[] testResources = StacktraceTestToolkit.getTestResources();
-        IOResourceSet resourceSet = testResources[0];
-        testRecording = RecordingToolkit.getFlightRecording(resourceSet);
-    }
+	@BeforeClass
+	public static void beforeAll() throws IOException, CouldNotLoadRecordingException {
+		IOResourceSet[] testResources = StacktraceTestToolkit.getTestResources();
+		IOResourceSet resourceSet = testResources[0];
+		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
+	}
 
-    private static final FrameSeparator separator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
+	private static final FrameSeparator separator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
+			false);
 
-    @Test
-    public void testTreeModelWithAttribute() {
-        StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording, JdkAttributes.ALLOCATION_SIZE);
+	@Test
+	public void testTreeModelWithAttribute() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording,
+				JdkAttributes.ALLOCATION_SIZE);
 
-        // check number of branches from root
-        Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
-        assertNotNull(rootNodeChildIds);
-        assertEquals(3, rootNodeChildIds.size());
+		// check number of branches from root
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		assertNotNull(rootNodeChildIds);
+		assertEquals(3, rootNodeChildIds.size());
 
-        // get leaf nodes
-        Map<String, Double> leafValues = getLeafNodeValues(treeModel);
+		// get leaf nodes
+		Map<String, Double> leafValues = getLeafNodeValues(treeModel);
 
-        assertEquals(leafValues.size(), 3);
-        Map<String, Double> expected = new HashMap<>();
-        expected.put("Arrays.copyOfRange(char[], int, int)", 104.00);
-        expected.put("TimerThread.mainLoop()", 112.00);
-        expected.put("AbstractCollection.toArray()", 24.00);
-        assertEquals(expected, leafValues);
-    }
+		assertEquals(leafValues.size(), 3);
+		Map<String, Double> expected = new HashMap<>();
+		expected.put("Arrays.copyOfRange(char[], int, int)", 104.00);
+		expected.put("TimerThread.mainLoop()", 112.00);
+		expected.put("AbstractCollection.toArray()", 24.00);
+		assertEquals(expected, leafValues);
+	}
 
-    @Test
-    public void testTreeModelWithoutAttribute() {
-        StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording, null);
-        System.out.println(treeModel.toJSON());
+	@Test
+	public void testTreeModelWithoutAttribute() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording, null);
 
-        // check number of branches from root
-        Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
-        assertNotNull(rootNodeChildIds);
-        assertEquals(6, rootNodeChildIds.size());
+		// check number of branches from root
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		assertNotNull(rootNodeChildIds);
+		assertEquals(6, rootNodeChildIds.size());
 
-        // get leaf nodes
-        Map<String, Double> leafValues = getLeafNodeValues(treeModel);
+		// get leaf nodes
+		Map<String, Double> leafValues = getLeafNodeValues(treeModel);
 
-        Map<String, Double> expected = new HashMap<>();
-        expected.put("TimerThread.mainLoop()", 1.0);
-        expected.put("AbstractCollection.toArray()", 1.0);
-        expected.put("Buffer.checkIndex(int)", 1.0);
-        expected.put("Object.wait(long)", 98.0);
-        expected.put("ObjectOutputStream$BlockDataOutputStream.writeUTF(String)", 1.0);
-        expected.put("SocketInputStream.read(byte[], int, int, int)", 9.0);
+		Map<String, Double> expected = new HashMap<>();
+		expected.put("TimerThread.mainLoop()", 1.0);
+		expected.put("AbstractCollection.toArray()", 1.0);
+		expected.put("Buffer.checkIndex(int)", 1.0);
+		expected.put("Object.wait(long)", 98.0);
+		expected.put("ObjectOutputStream$BlockDataOutputStream.writeUTF(String)", 1.0);
+		expected.put("SocketInputStream.read(byte[], int, int, int)", 9.0);
 
-        assertEquals(expected, leafValues);
-    }
+		assertEquals(expected, leafValues);
+	}
 
-    @Test
-    public void testTreeModelToJSON() {
-        StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording, null);
-        // FIXME: this is a very weak assertion, but we don't have a JSON library to parse the output
-        assertNotNull(treeModel.toJSON());
-    }
-
-    public Map<String, Double> getLeafNodeValues(StacktraceTreeModel treeModel) {
-        Map<Integer, Node> nodesById = treeModel.getNodes();
-        Map<Integer, Set<Integer>> childrenLookup = treeModel.getChildrenLookup();
-        Set<Integer> rootNodeChildIds = childrenLookup.get(null);
-        Map<String, Double> leafValues = new HashMap<>();
-        for (Integer nodeId : rootNodeChildIds) {
-            Set<Integer> childIds = childrenLookup.get(nodeId);
-            while (childIds.size() > 0) {
-                // we have simple branches where each node has a single child
-                assertEquals(childIds.size(), 1);
-                nodeId = childIds.iterator().next();
-                childIds = childrenLookup.get(nodeId);
-            }
-            Node node = nodesById.get(nodeId);
-            leafValues.put(node.getFrame().getHumanReadableShortString(), node.getWeight());
-        }
-        return leafValues;
-    }
+	public Map<String, Double> getLeafNodeValues(StacktraceTreeModel treeModel) {
+		Map<Integer, Node> nodesById = treeModel.getNodes();
+		Map<Integer, Set<Integer>> childrenLookup = treeModel.getChildrenLookup();
+		Set<Integer> rootNodeChildIds = childrenLookup.get(null);
+		Map<String, Double> leafValues = new HashMap<>();
+		for (Integer nodeId : rootNodeChildIds) {
+			Set<Integer> childIds = childrenLookup.get(nodeId);
+			while (childIds.size() > 0) {
+				// we have simple branches where each node has a single child
+				assertEquals(childIds.size(), 1);
+				nodeId = childIds.iterator().next();
+				childIds = childrenLookup.get(nodeId);
+			}
+			Node node = nodesById.get(nodeId);
+			leafValues.put(node.getFrame().getHumanReadableShortString(), node.getWeight());
+		}
+		return leafValues;
+	}
 }

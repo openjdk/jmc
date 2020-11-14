@@ -57,7 +57,6 @@ public class StacktraceTreeModel {
 	@SuppressWarnings("deprecation")
 	private final static IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
 
-
 	private static final Integer ROOT_ID = null;
 	// TODO: simplify these maps now that Node has usable equals/hashCode
 	private final Map<Integer, Node> nodes = new HashMap<>(1024);
@@ -65,6 +64,10 @@ public class StacktraceTreeModel {
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
 	private final IAttribute<IQuantity> attribute;
+
+	public Node getRoot() {
+		return nodes.get(ROOT_ID);
+	}
 
 	public Map<Integer, Set<Integer>> getChildrenLookup() {
 		return childrenLookup;
@@ -151,49 +154,5 @@ public class StacktraceTreeModel {
 
 	private static IMemberAccessor<IQuantity, IItem> getAccessor(IItemIterable iterable, IAttribute<IQuantity> attr) {
 		return (attr != null) ? iterable.getType().getAccessor(attr.getKey()) : null;
-	}
-
-	public String toJSON() {
-		return toJSON(null);
-	}
-
-	private String toJSON(Node node) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		if (node == null) {
-			sb.append(JSONProps("root", 0));
-		} else {
-			sb.append(JSONProps(node.getFrame().getHumanReadableShortString(), node.getWeight()));
-
-		}
-		Set<Integer> childIds = childrenLookup.get(node != null ? node.getNodeId() : null);
-		if (childIds.size() > 0) {
-			sb.append(", ").append(addQuotes("children"));
-			sb.append(": [");
-			boolean first = true;
-			// since we're iterating on a set, the order is not guaranteed to be deterministic
-			for (int childId : childIds) {
-				if (!first) {
-					sb.append(", ");
-				}
-				sb.append(toJSON(nodes.get(childId)));
-				first = false;
-			}
-			sb.append("]");
-		}
-		sb.append("}");
-		return sb.toString();
-	}
-
-	private static String JSONProps(String name, double value) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(addQuotes("name")).append(": ").append(addQuotes(name));
-		sb.append(", ");
-		sb.append(addQuotes("value")).append(": ").append(value);
-		return sb.toString();
-	}
-
-	private static String addQuotes(String str) {
-		return String.format("\"%s\"", str);
 	}
 }
