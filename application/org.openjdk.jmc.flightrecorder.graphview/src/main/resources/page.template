@@ -18,7 +18,7 @@
 	var currentDot;		
 		
 	graphviz = d3.select("#graph").graphviz()
-		.zoomScaleExtent([.5, 4])
+		.zoomScaleExtent([.5, 100])
     	.attributer(attributer)
     	.renderDot(currentDot);
 
