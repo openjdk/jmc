@@ -175,6 +175,7 @@ public class Messages extends NLS {
 	public static String FlavorSelector_BUTTON_TIMERANGE_SET;
 	public static String FlavorSelector_BUTTON_TIMERANGE_SET_TOOLTIP;
 	public static String FlavorSelector_LABEL_ASPECT;
+	public static String FlavorSelector_LABEL_SELECTION;
 	public static String FlavorSelector_LABEL_NO_SELECTION;
 	public static String FlavorSelector_LABEL_TIMERANGE;
 	public static String GCConfigurationPage_PAGE_NAME;
