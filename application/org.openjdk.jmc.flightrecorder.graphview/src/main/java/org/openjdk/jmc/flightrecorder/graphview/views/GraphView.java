@@ -33,8 +33,12 @@
  */
 package org.openjdk.jmc.flightrecorder.graphview.views;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -73,12 +77,17 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V5 = "jslibs/d3.v5.min.js";
-		String jsD3GraphViz = "jslibs/d3-graphviz.js";
-		String jsWebAsm = "jslibs/index.min.js";
+		String jsGraphviz = "jslibs/index.js";
+		String wasmGraphviz = "jslibs/graphvizlib.wasm";
+		String jsGraphizD3 = "jslibs/d3-graphviz.js";
 
-//		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsWebAsm), loadLibraries(jsD3V5),
-//				loadLibraries(jsD3GraphViz));
-		HTML_PAGE = loadStringFromFile("page_dl.template");
+		String wasmBase64 = loadBase64FromFile(wasmGraphviz);
+
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V5),
+				// we inline base64 wasm in the library code to avoid fetching it at runtime
+				loadStringFromFile(jsGraphviz, "wasmBinaryFile=\"graphvizlib.wasm\";",
+						"wasmBinaryFile=dataURIPrefix + '" + wasmBase64 + "';"),
+				loadLibraries(jsGraphizD3));
 	}
 
 	private enum ModelState {
@@ -232,7 +241,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		return DotGenerator.toDot(model, DotGenerator.getDefaultConfiguration());
 	}
 
-	private static String loadLibraries(String ... libs) {
+	private static String loadLibraries(String... libs) {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
@@ -253,5 +262,32 @@ public class GraphView extends ViewPart implements ISelectionListener {
 					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
 			return "";
 		}
+	}
+
+	private static String loadStringFromFile(String fileName, String substr, String newSubstr) {
+		String content = loadStringFromFile(fileName);
+		return content.replaceAll(substr, newSubstr);
+	}
+
+	private static String loadBase64FromFile(String fileName) {
+		try {
+			byte[] fileBytes = readBytes(GraphView.class.getClassLoader().getResourceAsStream(fileName));
+			return Base64.getEncoder().encodeToString(fileBytes);
+		} catch (IOException e) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.WARNING,
+					MessageFormat.format("Could not load resource \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$
+			return "";
+		}
+	}
+
+	public static byte[] readBytes(InputStream in) throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(in);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		int result = bis.read();
+		while (result != -1) {
+			buf.write((byte) result);
+			result = bis.read();
+		}
+		return buf.toByteArray();
 	}
 }

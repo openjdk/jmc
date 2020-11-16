@@ -77,7 +77,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
