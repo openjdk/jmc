@@ -52,18 +52,19 @@ final class GraphModelTest {
 
 	@Test
 	void testBuildGraph() throws IOException, CouldNotLoadRecordingException {
-		IItemCollection events = JfrLoaderToolkit.loadEvents(GraphModelTest.class.getResourceAsStream("hotmethods.jfr"));
+		IItemCollection events = JfrLoaderToolkit
+				.loadEvents(GraphModelTest.class.getResourceAsStream("hotmethods.jfr"));
 		assertTrue(events.hasItems());
 		IItemCollection executionSamples = events.apply(JdkFilters.EXECUTION_SAMPLE);
 		assertTrue(executionSamples.hasItems());
 		assertEquals(executionSamples.getAggregate(Aggregators.count()).longValue(), 24526);
-		StacktraceGraphModel model = new StacktraceGraphModel(GraphModelUtils.DEFAULT_FRAME_SEPARATOR, executionSamples, null);
+		StacktraceGraphModel model = new StacktraceGraphModel(GraphModelUtils.DEFAULT_FRAME_SEPARATOR, executionSamples,
+				null);
 		assertFalse("No nodes!", model.getNodes().isEmpty());
 		assertFalse("No edges!", model.getEdges().isEmpty());
 	}
 
-	
-	public static void main(String [] args) throws IOException, CouldNotLoadRecordingException {
+	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
 		new GraphModelTest().testBuildGraph();
 	}
 }

@@ -144,26 +144,26 @@ public class RulesToolkit {
 	 * Knowledge about the state of affairs of an event type in an IItemCollection.
 	 */
 	public enum EventAvailability {
-		/**
-		 * The type has events available in the collection.
-		 */
-		AVAILABLE(4),
-		/**
-		 * The type was actively enabled in the collection.
-		 */
-		ENABLED(3),
-		/**
-		 * The type was actively disabled in the collection.
-		 */
-		DISABLED(2),
-		/**
-		 * The type is known in the collection, but no events were found.
-		 */
-		NONE(1),
-		/**
-		 * The type is unknown in the collection.
-		 */
-		UNKNOWN(0);
+				/**
+				 * The type has events available in the collection.
+				 */
+				AVAILABLE(4),
+				/**
+				 * The type was actively enabled in the collection.
+				 */
+				ENABLED(3),
+				/**
+				 * The type was actively disabled in the collection.
+				 */
+				DISABLED(2),
+				/**
+				 * The type is known in the collection, but no events were found.
+				 */
+				NONE(1),
+				/**
+				 * The type is unknown in the collection.
+				 */
+				UNKNOWN(0);
 
 		/*
 		 * Used to determine the ordering of availabilities.

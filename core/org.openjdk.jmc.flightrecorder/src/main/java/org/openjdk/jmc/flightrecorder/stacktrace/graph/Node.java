@@ -128,6 +128,7 @@ public final class Node {
 
 	@Override
 	public String toString() {
-		return String.format("%s counts:%d(%d),weights:%.2f(%.2f)", frame.toString(), count, cumulativeCount, weight, cumulativeWeight);
+		return String.format("%s counts:%d(%d),weights:%.2f(%.2f)", frame.toString(), count, cumulativeCount, weight,
+				cumulativeWeight);
 	}
 }

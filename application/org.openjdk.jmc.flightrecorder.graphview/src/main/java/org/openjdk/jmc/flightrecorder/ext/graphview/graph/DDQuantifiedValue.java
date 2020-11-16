@@ -51,11 +51,11 @@ final class DDQuantifiedValue {
 	public double getValue() {
 		return value;
 	}
-	
+
 	public String getUnit() {
 		return unit;
 	}
-	
+
 	public String getHumanReadable() {
 		return value + unit;
 	}
