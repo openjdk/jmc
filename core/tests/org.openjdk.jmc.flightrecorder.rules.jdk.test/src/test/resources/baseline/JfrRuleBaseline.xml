@@ -42,14 +42,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.</shortDescription>
-<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ClassLoading</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load'.</shortDescription>
-<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CodeCache</id>
@@ -77,7 +77,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Thread Context Switch Rate'.</shortDescription>
-<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>DMSIncident</id>
@@ -119,7 +119,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Error'.</shortDescription>
-<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
@@ -154,7 +154,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'File Write'.</shortDescription>
-<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FlightRecordingSupport</id>
@@ -210,7 +210,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Object Count'.</shortDescription>
-<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapDump</id>
@@ -259,7 +259,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Monitor Blocked'.</shortDescription>
-<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>
@@ -280,14 +280,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ManyRunningProcesses</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'System Process'.</shortDescription>
-<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>MetaspaceOom</id>
@@ -315,7 +315,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -329,21 +329,21 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial Environment Variable'.</shortDescription>
-<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PrimitiveToObjectConversion</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ProcessStarted</id>
@@ -357,14 +357,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Read'.</shortDescription>
-<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SocketWrite</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Write'.</shortDescription>
-<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
@@ -458,14 +458,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.</shortDescription>
-<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ClassLoading</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load'.</shortDescription>
-<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CodeCache</id>
@@ -493,7 +493,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Thread Context Switch Rate'.</shortDescription>
-<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>DMSIncident</id>
@@ -535,7 +535,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Error'.</shortDescription>
-<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
@@ -570,7 +570,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'File Write'.</shortDescription>
-<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FlightRecordingSupport</id>
@@ -584,7 +584,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The G1/CMS Full Collection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The G1/CMS Full Collection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>GcFreedRatio</id>
@@ -626,7 +626,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Object Count'.</shortDescription>
-<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapDump</id>
@@ -640,7 +640,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HighGc</id>
@@ -675,7 +675,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Monitor Blocked'.</shortDescription>
-<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>
@@ -696,14 +696,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ManyRunningProcesses</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'System Process'.</shortDescription>
-<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>MetaspaceOom</id>
@@ -731,7 +731,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -745,21 +745,21 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial Environment Variable'.</shortDescription>
-<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PrimitiveToObjectConversion</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ProcessStarted</id>
@@ -773,14 +773,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Read'.</shortDescription>
-<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SocketWrite</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Write'.</shortDescription>
-<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
@@ -794,14 +794,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Heap Summary'.</shortDescription>
-<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SystemGc</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>TlabAllocationRatio</id>
@@ -839,14 +839,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Allocated Classes rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Allocated Classes rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Allocations.thread</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Threads Allocating rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Threads Allocating rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ApplicationHalts</id>
@@ -874,14 +874,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.</shortDescription>
-<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ClassLoading</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load'.</shortDescription>
-<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CodeCache</id>
@@ -895,7 +895,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-<longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CompressedOops</id>
@@ -909,7 +909,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Thread Context Switch Rate'.</shortDescription>
-<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>DMSIncident</id>
@@ -951,14 +951,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Error'.</shortDescription>
-<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Exception Statistics'.</shortDescription>
-<longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Fatal Errors</id>
@@ -972,7 +972,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.</shortDescription>
-<longDescription>The Parallel Threads rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Parallel Threads rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FileRead</id>
@@ -986,7 +986,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'File Write'.</shortDescription>
-<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FlightRecordingSupport</id>
@@ -1000,7 +1000,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The G1/CMS Full Collection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The G1/CMS Full Collection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>GcFreedRatio</id>
@@ -1042,7 +1042,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Object Count'.</shortDescription>
-<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapDump</id>
@@ -1056,7 +1056,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HighGc</id>
@@ -1070,7 +1070,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-<longDescription>The High JVM CPU Load rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The High JVM CPU Load rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>IncreasingLiveSet</id>
@@ -1091,7 +1091,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Monitor Blocked'.</shortDescription>
-<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>
@@ -1112,14 +1112,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ManyRunningProcesses</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'System Process'.</shortDescription>
-<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>MetaspaceOom</id>
@@ -1133,7 +1133,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.</shortDescription>
-<longDescription>The Method Profiling rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Method Profiling rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Options</id>
@@ -1147,7 +1147,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -1161,21 +1161,21 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial Environment Variable'.</shortDescription>
-<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PrimitiveToObjectConversion</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ProcessStarted</id>
@@ -1189,14 +1189,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Read'.</shortDescription>
-<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SocketWrite</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Write'.</shortDescription>
-<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
@@ -1210,21 +1210,21 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Heap Summary'.</shortDescription>
-<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SystemGc</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>TlabAllocationRatio</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The TLAB Allocation Ratio rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The TLAB Allocation Ratio rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>VMOperations</id>
@@ -1577,7 +1577,7 @@
 <severity>Warning</severity>
 <score>100.0</score>
 <shortDescription>The environment variables in the recording may contain passwords.</shortDescription>
-<longDescription>The following suspicious environment variables were found in this recording: &lt;ul&gt;&lt;li&gt;P4PASSWD&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;They may contain passwords. If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial Environment Variable' event.</longDescription>
+<longDescription>The following suspicious environment variables were found in this recording: &lt;ul&gt;&lt;li&gt;P4PASSWD&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;They may contain passwords. If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial Environment Variable' event. The following regular expression was used to exclude strings from this rule: '(passworld|passwise)'.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
@@ -2912,7 +2912,6 @@
 <longDescription>The Biased Locking Revocation Pauses rule requires that the following event types are enabled: 'VM Operation'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 </report>
-
 <report>
 <file>parallel-gc_cpu.jfr</file>
 <rule>
@@ -3752,14 +3751,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Allocated Classes rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Allocated Classes rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Allocations.thread</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Threads Allocating rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Threads Allocating rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ApplicationHalts</id>
@@ -3787,14 +3786,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.</shortDescription>
-<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Leak rule requires that the following event types are enabled: 'Class Load', 'Class Unload'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ClassLoading</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Class Load'.</shortDescription>
-<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Class Loading Pressure rule requires that the following event types are enabled: 'Class Load'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CodeCache</id>
@@ -3822,7 +3821,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Thread Context Switch Rate'.</shortDescription>
-<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>DMSIncident</id>
@@ -3864,7 +3863,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Error'.</shortDescription>
-<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
@@ -3899,7 +3898,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'File Write'.</shortDescription>
-<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FlightRecordingSupport</id>
@@ -3955,7 +3954,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Object Count'.</shortDescription>
-<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Heap Content rule requires that the following event types are enabled: 'Object Count'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapDump</id>
@@ -4004,7 +4003,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Monitor Blocked'.</shortDescription>
-<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>
@@ -4025,14 +4024,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Management Agent Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ManyRunningProcesses</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'System Process'.</shortDescription>
-<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing Processes rule requires that the following event types are enabled: 'System Process'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>MetaspaceOom</id>
@@ -4060,7 +4059,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Discouraged Recording Settings rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -4074,21 +4073,21 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial Environment Variable'.</shortDescription>
-<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in Environment Variables rule requires that the following event types are enabled: 'Initial Environment Variable'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Initial System Property'.</shortDescription>
-<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in System Properties rule requires that the following event types are enabled: 'Initial System Property'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PrimitiveToObjectConversion</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Primitive To Object Conversion rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ProcessStarted</id>
@@ -4102,14 +4101,14 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Read'.</shortDescription>
-<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SocketWrite</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Write'.</shortDescription>
-<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
@@ -4137,7 +4136,7 @@
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The TLAB Allocation Ratio rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The TLAB Allocation Ratio rule requires that the following event types are enabled: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;If you are using JMC to create a flight recording, then you can enable event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>VMOperations</id>
@@ -4600,7 +4599,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'GC Phase Pause', 'VM Operation'.</shortDescription>
-<longDescription>The Application Halts rule requires events to be available from the following event types: 'GC Phase Pause', 'VM Operation'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Application Halts rule requires events to be available from the following event types: 'GC Phase Pause', 'VM Operation'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>BufferLost</id>
@@ -4635,28 +4634,28 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Code Cache Configuration', 'Code Cache Full', 'Code Cache Statistics', 'JVM Information'.</shortDescription>
-<longDescription>The Code Cache rule requires events to be available from the following event types: 'Code Cache Configuration', 'Code Cache Full', 'Code Cache Statistics', 'JVM Information'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Code Cache rule requires events to be available from the following event types: 'Code Cache Configuration', 'Code Cache Full', 'Code Cache Statistics', 'JVM Information'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CompareCpu</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-<longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing CPU Ratio Usage rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>CompressedOops</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Boolean Flag', 'JVM Information', 'Unsigned Long Flag'.</shortDescription>
-<longDescription>The Compressed Oops rule requires events to be available from the following event types: 'Boolean Flag', 'JVM Information', 'Unsigned Long Flag'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Compressed Oops rule requires events to be available from the following event types: 'Boolean Flag', 'JVM Information', 'Unsigned Long Flag'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ContextSwitch</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Thread Context Switch Rate'.</shortDescription>
-<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Context Switches rule requires events to be available from the following event types: 'Thread Context Switch Rate'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>DMSIncident</id>
@@ -4698,14 +4697,14 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Error'.</shortDescription>
-<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Errors rule requires events to be available from the following event types: 'Java Error'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Exceptions</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Exception Statistics'.</shortDescription>
-<longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Thrown Exceptions rule requires events to be available from the following event types: 'Exception Statistics'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Fatal Errors</id>
@@ -4719,7 +4718,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.</shortDescription>
-<longDescription>The Parallel Threads rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Parallel Threads rule requires events to be available from the following event types: 'CPU Information', 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FileRead</id>
@@ -4733,7 +4732,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'File Write'.</shortDescription>
-<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The File Write Peak Duration rule requires events to be available from the following event types: 'File Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>FlightRecordingSupport</id>
@@ -4754,7 +4753,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Heap Summary'.</shortDescription>
-<longDescription>The GC Freed Ratio rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GC Freed Ratio rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>GcLocker</id>
@@ -4775,21 +4774,21 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'GC Phase Pause'.</shortDescription>
-<longDescription>The GC Pauses rule requires events to be available from the following event types: 'GC Phase Pause'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GC Pauses rule requires events to be available from the following event types: 'GC Phase Pause'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>GcStall</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GC Stall rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GC Stall rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapContent</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Object Count'.</shortDescription>
-<longDescription>The Heap Content rule requires events to be available from the following event types: 'Object Count'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Heap Content rule requires events to be available from the following event types: 'Object Count'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HeapDump</id>
@@ -4803,7 +4802,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by Heap Inspection rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>HighGc</id>
@@ -4817,7 +4816,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'CPU Load'.</shortDescription>
-<longDescription>The High JVM CPU Load rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The High JVM CPU Load rule requires events to be available from the following event types: 'CPU Load'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>IncreasingLiveSet</id>
@@ -4838,7 +4837,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Java Monitor Blocked'.</shortDescription>
-<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Java Blocking rule requires events to be available from the following event types: 'Java Monitor Blocked'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>LongGcPause</id>
@@ -4852,7 +4851,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Physical Memory'.</shortDescription>
-<longDescription>The Free Physical Memory rule requires events to be available from the following event types: 'Physical Memory'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Free Physical Memory rule requires events to be available from the following event types: 'Physical Memory'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ManagementAgent</id>
@@ -4866,7 +4865,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'System Process'.</shortDescription>
-<longDescription>The Competing Processes rule requires events to be available from the following event types: 'System Process'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Competing Processes rule requires events to be available from the following event types: 'System Process'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>MetaspaceOom</id>
@@ -4880,7 +4879,7 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.</shortDescription>
-<longDescription>The Method Profiling rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Method Profiling rule requires events to be available from the following event types: 'Method Profiling Sample', 'Recording Setting'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>Options</id>
@@ -4908,21 +4907,21 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Initial Environment Variable'.</shortDescription>
-<longDescription>The Passwords in Environment Variables rule requires events to be available from the following event types: 'Initial Environment Variable'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in Environment Variables rule requires events to be available from the following event types: 'Initial Environment Variable'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PasswordsInSystemProperties</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Initial System Property'.</shortDescription>
-<longDescription>The Passwords in System Properties rule requires events to be available from the following event types: 'Initial System Property'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Passwords in System Properties rule requires events to be available from the following event types: 'Initial System Property'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>PrimitiveToObjectConversion</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.</shortDescription>
-<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Primitive To Object Conversion rule requires events to be available from the following event types: 'Allocation in new TLAB', 'Allocation outside TLAB'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>ProcessStarted</id>
@@ -4936,14 +4935,14 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Read'.</shortDescription>
-<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Read Peak Duration rule requires events to be available from the following event types: 'Socket Read'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SocketWrite</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Socket Write'.</shortDescription>
-<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The Socket Write Peak Duration rule requires events to be available from the following event types: 'Socket Write'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>StackdepthSetting</id>
@@ -4957,14 +4956,14 @@ The heap is around 22 % full. There is likely no big benefit from enabling strin
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Heap Summary'.</shortDescription>
-<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The String Deduplication rule requires events to be available from the following event types: 'Heap Summary'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>SystemGc</id>
 <severity>Not Applicable</severity>
 <score>-1.0</score>
 <shortDescription>This rule requires events to be available from the following event types: 'Garbage Collection'.</shortDescription>
-<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
+<longDescription>The GCs Caused by System.gc() rule requires events to be available from the following event types: 'Garbage Collection'.&lt;p&gt;They were either disabled during the recording or there might not have happened anything to trigger an event. Event settings like period and threshold may also prevent some events from being emitted. If you are using JMC to create a flight recording, then you can enable and configure event types in the Start Flight Recording wizard. If you are starting the flight recording from the command line, then you can use the settings parameter of &lt;a href="https://docs.oracle.com/javase/9/tools/java.htm#JSWOR624"&gt;-XX:FlightRecorderOptions&lt;/a&gt;.</longDescription>
 </rule>
 <rule>
 <id>TlabAllocationRatio</id>
