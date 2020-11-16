@@ -264,7 +264,7 @@ public final class DotGenerator {
 	public static String toDot(StacktraceGraphModel model, Map<ConfigurationKey, String> configuration) {
 		StringBuilder builder = new StringBuilder(2048);
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
-		builder.append(String.format("digraph \"%s\" {\n", graphName));
+		builder.append(String.format("digraph \"%s\" {%n", graphName));
 
 		createDefaultNodeSettingsEntry(builder, configuration);
 		if (Boolean.valueOf(getConf(configuration, ConfigurationKey.TitleArea, "false"))) {
