@@ -24,7 +24,7 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
-import org.openjdk.jmc.flightrecorder.rules.RuleRegistry2;
+import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 
@@ -155,7 +155,7 @@ public class Runner {
 	}
 
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
-		Collection<IRule> rules2 = RuleRegistry2.getRules();
+		Collection<IRule> rules2 = RuleRegistry.getRules();
 		IItemCollection events = null;
 		if (args.length > 0) {
 			events = JfrLoaderToolkit.loadEvents(new File(args[0]));
