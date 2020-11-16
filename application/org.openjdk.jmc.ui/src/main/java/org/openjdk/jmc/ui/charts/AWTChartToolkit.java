@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -293,6 +293,12 @@ public class AWTChartToolkit {
 	public static void drawAxis(
 		Graphics2D ctx, SubdividedQuantityRange range, int axisPos, boolean labelAhead, int labelLimit,
 		boolean vertical) {
+		drawAxis(ctx, range, axisPos, labelAhead, labelLimit, vertical, 0);
+	}
+
+	public static void drawAxis(
+		Graphics2D ctx, SubdividedQuantityRange range, int axisPos, boolean labelAhead, int labelLimit,
+		boolean vertical, int xOffset) {
 		int axisSize = range.getPixelExtent();
 		FontMetrics fm = ctx.getFontMetrics();
 		int textAscent = fm.getAscent();
@@ -305,7 +311,7 @@ public class AWTChartToolkit {
 			drawUpArrow(ctx, axisPos, Y_AXIS_TOP_SPACE, Math.min(ARROW_SIZE, axisSize - 2));
 			labelSpacing = fm.getHeight() - textAscent;
 		} else {
-			ctx.drawLine(0, axisPos, axisSize - 1, axisPos);
+			ctx.drawLine(0 + xOffset, axisPos, axisSize + xOffset, axisPos);
 			labelSpacing = fm.charWidth(' ') * 2;
 		}
 
@@ -354,14 +360,14 @@ public class AWTChartToolkit {
 					} else {
 						label = formatter.format(currentTick);
 					}
-					ctx.drawLine(tickPos, axisPos - TICK_LINE, tickPos, axisPos + TICK_LINE);
+					ctx.drawLine(tickPos + xOffset, axisPos - TICK_LINE, tickPos + xOffset, axisPos + TICK_LINE);
 					int textXadjust = fm.stringWidth(label) / 2;
 					// FIXME: Decide if truncated labels should be shown
 //					if ((tickPos + textXadjust) >= axisSize) {
 					if (tickPos >= axisSize) {
 						break;
 					} else if ((tickPos - textXadjust) >= labelLimit) {
-						ctx.drawString(label, tickPos - textXadjust, labelYPos);
+						ctx.drawString(label, tickPos - textXadjust + xOffset, labelYPos);
 						labelLimit = tickPos + textXadjust + labelSpacing;
 						lastShownTick = currentTick;
 					}

@@ -99,6 +99,8 @@ public class Messages extends NLS {
 	public static String CompilationsPage_ROW_DURATIONS;
 	public static String CompilationsPage_TAB_COMPILATIONS;
 	public static String CompilationsPage_TAB_COMPILATIONS_FAILED;
+	public static String DropdownLaneFilter_QUICK_FILTER;
+	public static String DropdownLaneFilter_THREAD_STATE_SELECTION;
 	public static String DUMP_RECORDING_DEFAULT_TIMESPAN_TO_DUMP;
 	public static String DUMP_RECORDING_NO_DEFAULT;
 	public static String DUMP_RECORDING_TIMESPAN;
@@ -510,10 +512,19 @@ public class Messages extends NLS {
 	public static String TABLECOMPONENT_NONE;
 	public static String ThreadDumpsPage_PAGE_NAME;
 	public static String ThreadsPage_EDIT_LANES;
+	public static String ThreadsPage_FOLD_CHART_TOOLTIP;
+	public static String ThreadsPage_FOLD_TABLE_TOOLTIP;
 	public static String ThreadsPage_HIDE_THREAD_ACTION;
+	public static String ThreadsPage_LANE_FILTER_HEADER;
 	public static String ThreadsPage_LANE_TOOLTIP_TITLE;
 	public static String ThreadsPage_NAME;
+	public static String ThreadsPage_NAME_LEGACY;
 	public static String ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
+	public static String ThreadsPage_SHOW_CHART_TOOLTIP;
+	public static String ThreadsPage_SHOW_TABLE_TOOLTIP;
+	public static String ThreadsPage_TABLE_POPUP_DESCRIPTION;
+	public static String ThreadsPage_TABLE_POPUP_TITLE;
+	public static String ThreadsPage_VIEW_THREAD_DETAILS;
 	public static String TlabPage_PAGE_NAME;
 	public static String TlabPage_THREADS_TAB_NAME;
 	public static String TlabPage_METHODS_TAB_NAME;

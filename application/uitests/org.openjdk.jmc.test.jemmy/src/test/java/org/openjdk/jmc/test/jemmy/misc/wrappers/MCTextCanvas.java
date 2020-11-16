@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,131 +36,99 @@ package org.openjdk.jmc.test.jemmy.misc.wrappers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.fetchers.Fetcher;
-import org.openjdk.jmc.ui.misc.ChartCanvas;
+import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.jemmy.Point;
 import org.jemmy.control.Wrap;
-import org.jemmy.input.StringPopupOwner;
-import org.jemmy.interfaces.Keyboard.KeyboardButtons;
 import org.jemmy.interfaces.Mouse.MouseButtons;
 import org.jemmy.interfaces.Parent;
-import org.jemmy.resources.StringComparePolicy;
 
 /**
- * The Jemmy wrapper for the Mission Control Chart Canvas.
+ * The Jemmy wrapper for the Mission Control Text Canvas.
  */
-public class MCChartCanvas extends MCJemmyBase {
-
-	private MCChartCanvas(Wrap<? extends ChartCanvas> ChartCanvasWrap) {
-		this.control = ChartCanvasWrap;
+public class MCTextCanvas extends MCJemmyBase {
+	private MCTextCanvas(Wrap<? extends ChartTextCanvas> textCanvasWrap) {
+		this.control = textCanvasWrap;
 	}
 
 	/**
-	 * Returns all visible {@link MCChartCanvas} objects underneath the supplied shell
+	 * Returns all visible {@link MCtextCanvas} objects underneath the supplied shell
 	 *
 	 * @param shell
-	 *            the shell from where to start the search for the ChartCanvas object
-	 * @return a {@link List} of {@link MCChartCanvas} objects
+	 *            the shell from where to start the search for the ChartTextCanvas object
+	 * @return a {@link List} of {@link MCtextCanvas} objects
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<MCChartCanvas> getAll(Wrap<? extends Shell> shell) {
-		List<Wrap<? extends ChartCanvas>> list = getVisible(
-				shell.as(Parent.class, ChartCanvas.class).lookup(ChartCanvas.class));
-		List<MCChartCanvas> canvases = new ArrayList<>();
+	public static List<MCTextCanvas> getAll(Wrap<? extends Shell> shell) {
+		List<Wrap<? extends ChartTextCanvas>> list = getVisible(
+				shell.as(Parent.class, ChartTextCanvas.class).lookup(ChartTextCanvas.class));
+		List<MCTextCanvas> canvases = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
-			canvases.add(new MCChartCanvas(list.get(i)));
+			canvases.add(new MCTextCanvas(list.get(i)));
 		}
 		return canvases;
 	}
 
 	/**
-	 * Returns the first visible {@link MCChartCanvas} object underneath the supplied shell
+	 * Returns the first visible {@link MCtextCanvas} object underneath the supplied shell
 	 *
 	 * @param shell
-	 *            the shell from where to start the search for the ChartCanvas object
-	 * @return a {@link MCChartCanvas} object
+	 *            the shell from where to start the search for the ChartTextCanvas object
+	 * @return a {@link MCtextCanvas} object
 	 */
-	public static MCChartCanvas getFirst(Wrap<? extends Shell> shell) {
+	public static MCTextCanvas getFirst(Wrap<? extends Shell> shell) {
 		return getAll(shell).get(0);
 	}
 
 	/**
-	 * Returns the first visible {@link MCChartCanvas} object underneath the Mission Control main
+	 * Returns the first visible {@link MCTextCanvas} object underneath the Mission Control main
 	 * shell
 	 *
-	 * @return a {@link MCChartCanvas} object
+	 * @return a {@link MCTextCanvas} object
 	 */
-	public static MCChartCanvas getChartCanvas() {
+	public static MCTextCanvas getTextCanvas() {
 		return getFirst(getShell());
 	}
 
 	/**
-	 * Clicks a specific menu item in the context menu
-	 * 
-	 * @param menuItemText
-	 *            the menu item of interest
+	 * Sets a selection listener for the Text Canvas
+	 *
+	 * @param listener
+	 *            the selection listener to be set
 	 */
-	@SuppressWarnings("unchecked")
-	public void clickContextMenuItem(String menuItemText) {
-		focusMc();
-		StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
-		contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
-		contextMenu.push(getRelativeClickPoint(), new String[] {menuItemText});
+	public void setSelectionListener(Runnable listener) {
+		ChartTextCanvas.class.cast(control.getControl()).setSelectionListener(listener);
 	}
 
 	/**
-	 * Click the center of the chart in the ChartCanvas
+	 * Click the middle thread listed in the Text Canvas
 	 */
-	public void clickChart() {
+	@SuppressWarnings("unchecked")
+	public void clickTextCanvas() {
 		Display.getDefault().syncExec(() -> {
 			control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
 		});
 	}
 
 	/**
-	 * Zoom in the chart with keyboard controls
-	 */
-	public void keyboardZoomIn() {
-		control.keyboard().pushKey(KeyboardButtons.UP);
-		waitForIdle();
-	}
-
-	/**
-	 * Zoom out the chart with keyboard controls
-	 */
-	public void keyboardZoomOut() {
-		control.keyboard().pushKey(KeyboardButtons.DOWN);
-		waitForIdle();
-	}
-
-	/**
-	 * Checks the isEnabled value for a menu item in the context menu
+	 * Calculates the click point of the Text Canvas
 	 *
-	 * @param menuItemText
-	 *            the menu item of interest
-	 * @return the isEnabled value for the menu item of interest
-	 */
-	public boolean isContextMenuItemEnabled(String menuItemText) {
-		return this.isContextMenuItemEnabled(getRelativeClickPoint(), menuItemText);
-	}
-
-	/**
-	 * Calculates the click point of the Chart Canvas
-	 *
-	 * @return the Point of the Chart Canvas
+	 * @return the Point of the Text Canvas
 	 */
 	private Point getRelativeClickPoint() {
 		Fetcher<Point> fetcher = new Fetcher<Point>() {
 			@Override
 			public void run() {
-				setOutput(new Point(control.getControl().getParent().getSize().x / 2,
-						control.getControl().getParent().getSize().y / 2));
+				Rectangle clientArea = ChartTextCanvas.class.cast(control.getControl()).getClientArea();
+				setOutput(new Point(clientArea.width / 2, clientArea.height / 2));
 			}
 		};
 		Display.getDefault().syncExec(fetcher);
 		return fetcher.getOutput();
 	}
+
 }

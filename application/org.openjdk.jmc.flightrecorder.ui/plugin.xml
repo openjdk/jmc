@@ -219,6 +219,10 @@
       		id="org.openjdk.jmc.flightrecorder.ui.threads">
       </factory>
       <factory
+      		class="org.openjdk.jmc.flightrecorder.ui.pages.ThreadsPageLegacy$ThreadsPageLegacyFactory"
+      		id="org.openjdk.jmc.flightrecorder.ui.threadslegacy">
+      </factory>
+      <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.HeapPage$HeapPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.heap">
       </factory>

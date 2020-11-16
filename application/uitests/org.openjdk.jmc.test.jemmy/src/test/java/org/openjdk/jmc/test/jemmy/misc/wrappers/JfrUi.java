@@ -58,6 +58,7 @@ public class JfrUi extends MCJemmyBase {
 		AUTOMATED_ANALYSIS_RESULTS,
 		JAVA_APPLICATION,
 		THREADS,
+		THREADS_LEGACY,
 		MEMORY,
 		LOCK_INSTANCES,
 		FILE_IO,
@@ -106,6 +107,9 @@ public class JfrUi extends MCJemmyBase {
 				break;
 			case THREADS:
 				tabText = new String[] {"Java Application", "Threads"};
+				break;
+			case THREADS_LEGACY:
+				tabText = new String[] {"Java Application", "Threads", "(Legacy) Threads"};
 				break;
 			case MEMORY:
 				tabText = new String[] {"Java Application", "Memory"};
