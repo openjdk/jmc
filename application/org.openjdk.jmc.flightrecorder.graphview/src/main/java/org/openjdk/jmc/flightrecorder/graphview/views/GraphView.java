@@ -241,7 +241,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		return DotGenerator.toDot(model, DotGenerator.getDefaultConfiguration());
 	}
 
-	private static String loadLibraries(String... libs) {
+	private static String loadLibraries(String ... libs) {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
