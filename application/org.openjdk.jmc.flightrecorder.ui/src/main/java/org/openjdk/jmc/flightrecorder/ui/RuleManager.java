@@ -60,6 +60,7 @@ import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
@@ -195,7 +196,7 @@ public class RuleManager {
 					}
 				}
 			} else {
-				System.out.println(rule.getClass().getName() + " has no results");
+				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, rule.getClass().getName() + " has a null result attribute collection!"); //$NON-NLS-1$
 			}
 		});
 
@@ -402,6 +403,10 @@ public class RuleManager {
 			FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Error reading configuration XML", saxe); //$NON-NLS-1$
 		}
 		config = new BasicConfig(fromXMLString);
+	}
+	
+	public IResultValueProvider getResultProvider() {
+		return resultProvider;
 	}
 
 }
