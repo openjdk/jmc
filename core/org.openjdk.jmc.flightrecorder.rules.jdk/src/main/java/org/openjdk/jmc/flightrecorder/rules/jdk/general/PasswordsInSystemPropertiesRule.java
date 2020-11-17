@@ -135,6 +135,6 @@ public class PasswordsInSystemPropertiesRule implements IRule {
 
 	@Override
 	public Collection<TypedResult<?>> getResults() {
-		return null;
+		return RESULT_ATTRIBUTES;
 	}
 }

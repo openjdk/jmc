@@ -34,7 +34,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -59,6 +58,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class DiscouragedGcOptionsRule implements IRule {
 	private static final IQuantity LARGE_HEAP = UnitLookup.MEMORY.getUnit(BinaryPrefix.GIBI).quantity(4);
@@ -72,11 +72,7 @@ public class DiscouragedGcOptionsRule implements IRule {
 	public static final TypedResult<IQuantity> PARALLEL_GC_THREADS = new TypedResult<>("parallelGcThreads", //$NON-NLS-1$
 			JdkAggregators.PARALLEL_GC_THREAD_COUNT_MAX, UnitLookup.NUMBER, IQuantity.class);
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
-
-	static {
-		REQUIRED_EVENTS.put(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE);
-	}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build();
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
@@ -156,6 +152,6 @@ public class DiscouragedGcOptionsRule implements IRule {
 
 	@Override
 	public Collection<TypedResult<?>> getResults() {
-		return null;
+		return Collections.emptyList();
 	}
 }

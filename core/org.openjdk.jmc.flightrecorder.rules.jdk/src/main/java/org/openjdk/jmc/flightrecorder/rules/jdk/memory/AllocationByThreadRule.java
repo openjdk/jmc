@@ -153,7 +153,6 @@ public class AllocationByThreadRule implements IRule {
 
 	@Override
 	public Collection<TypedResult<?>> getResults() {
-		// TODO Auto-generated method stub
-		return null;
+		return RESULT_ATTRIBUTES;
 	}
 }

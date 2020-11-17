@@ -62,8 +62,10 @@ import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.RulesHtmlToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
@@ -111,7 +113,7 @@ public class RuleManager {
 			updateListeners(result);
 			try {
 				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())) {
-					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, null);
+					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, resultProvider);
 					Thread runner = new Thread(future);
 					runner.start();
 					while (true) {
@@ -167,6 +169,7 @@ public class RuleManager {
 	private int threadsPerEngine;
 	private IPropertyChangeListener ignoredSetListener;
 	private IPropertyChangeListener configListener;
+	private ResultProvider resultProvider;
 
 	/**
 	 * @param postEvaluationCallback
@@ -175,6 +178,26 @@ public class RuleManager {
 	 */
 	RuleManager(Runnable postEvaluationCallback) {
 		this.postEvaluationCallback = postEvaluationCallback;
+		this.resultProvider = new ResultProvider();
+		addResultListener(result -> {
+			IRule rule = result.getRule();
+			if (rule.getResults() != null) {
+				for (TypedResult<?> typedResult : rule.getResults()) {
+					Object instance = result.getResult(typedResult);
+					if (instance != null) {
+						if (typedResult instanceof TypedCollectionResult<?>) {
+							TypedCollectionResult<?> typedCollectionResult = (TypedCollectionResult<?>) typedResult;
+							Collection<?> result2 = result.getResult(typedCollectionResult);
+							resultProvider.addCollectionResult(typedCollectionResult, result2);
+						} else {
+							resultProvider.addResult(typedResult, result.getResult(typedResult));
+						}
+					}
+				}
+			} else {
+				System.out.println(rule.getClass().getName() + " has no results");
+			}
+		});
 
 		IPreferenceStore preferenceStore = FlightRecorderUI.getDefault().getPreferenceStore();
 		loadIgnoredSet(preferenceStore);

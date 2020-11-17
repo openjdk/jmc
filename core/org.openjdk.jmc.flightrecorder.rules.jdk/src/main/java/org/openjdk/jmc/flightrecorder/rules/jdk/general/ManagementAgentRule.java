@@ -161,7 +161,6 @@ public class ManagementAgentRule implements IRule {
 
 	@Override
 	public Collection<TypedResult<?>> getResults() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 }
