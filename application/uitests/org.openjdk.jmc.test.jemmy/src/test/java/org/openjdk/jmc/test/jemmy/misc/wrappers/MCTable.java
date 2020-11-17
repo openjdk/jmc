@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -281,6 +281,19 @@ public class MCTable extends MCJemmyBase {
 	/**
 	 * Finds tables by column header (first match only)
 	 *
+	 * @param shellText
+	 *            text to look up the shell that contains the table
+	 * @param headerName
+	 *            the name of the column header
+	 * @return a {@link MCTable}
+	 */
+	public static MCTable getByColumnHeader(String shellText, String headerName) {
+		return getByColumnHeader(getShellByText(shellText), headerName);
+	}
+
+	/**
+	 * Finds tables by column header (first match only)
+	 *
 	 * @param shell
 	 *            the shell in which to look for the table
 	 * @param headerName
@@ -508,6 +521,24 @@ public class MCTable extends MCJemmyBase {
 			@Override
 			public void run() {
 				int count = table.getItemCount();
+				setOutput(count);
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return fetcher.getOutput().intValue();
+	}
+
+	/**
+	 * Gets the number of items selected in the table
+	 *
+	 * @return the number of items selected in the table
+	 */
+	public int getSelectionCount() {
+		final Table table = getWrap().getControl();
+		Fetcher<Integer> fetcher = new Fetcher<Integer>() {
+			@Override
+			public void run() {
+				int count = table.getSelectionCount();
 				setOutput(count);
 			}
 		};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -211,6 +211,17 @@ public class MCJemmyBase {
 	 */
 	protected static Wrap<? extends Shell> getShell() {
 		return Shells.SHELLS.lookup(Shell.class, new ByTextShell<>("JDK Mission Control")).wrap();
+	}
+
+	/**
+	 * Gets a shell by text
+	 *
+	 * @param text
+	 *            the text string to lookup the shell with
+	 * @return the associated shell
+	 */
+	protected static Wrap<? extends Shell> getShellByText(String text) {
+		return Shells.SHELLS.lookup(Shell.class, new ByTextShell<>(text)).wrap();
 	}
 
 	/**
