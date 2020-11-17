@@ -59,6 +59,7 @@ import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.StateToolkit;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -107,15 +108,28 @@ public class RuleManager {
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask(rule.getName(), IProgressMonitor.UNKNOWN);
 			String topic = (rule.getTopic() == null) ? UNMAPPED_REMAINDER_TOPIC : rule.getTopic();
-			//IResult result = new Result(rule, RulesHtmlToolkit.IN_PROGRESS, Messages.JFR_EDITOR_RULES_EVALUATING);
 			IResult result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
 					.addResult(RulesHtmlToolkit.IN_PROGRESS, true).build();
 			resultsByTopicByRuleId.get(topic).put(rule.getId(), result);
 			updateListeners(result);
 			try {
 				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())) {
+					evaluatedRules.remove(rule.getClass());
 					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, resultProvider);
 					Thread runner = new Thread(future);
+					DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+					if (dependency != null) {
+						Class<? extends IRule> dependencyType = dependency.value();
+						if (dependencyType!= null) {
+							while (true) {
+								if (evaluatedRules.contains(dependencyType)) {
+									break;
+								} else {
+									Thread.sleep(100);
+								}
+							}
+						}
+					}
 					runner.start();
 					while (true) {
 						if (monitor.isCanceled()) {
@@ -128,6 +142,7 @@ public class RuleManager {
 						} else if (future.isDone()) {
 							result = future.get();
 							runner.join();
+							evaluatedRules.add(rule.getClass());
 							break;
 						}
 						Thread.sleep(100);
@@ -164,6 +179,7 @@ public class RuleManager {
 	private final List<String> unmappedTopics = Collections.synchronizedList(new ArrayList<>());
 
 	private Set<String> ignoredRules = Collections.synchronizedSet(new HashSet<String>());
+	private Set<Class<? extends IRule>> evaluatedRules = Collections.synchronizedSet(new HashSet<Class<? extends IRule>>());
 	private BasicConfig config;
 	private StreamModel items;
 	private Runnable postEvaluationCallback;

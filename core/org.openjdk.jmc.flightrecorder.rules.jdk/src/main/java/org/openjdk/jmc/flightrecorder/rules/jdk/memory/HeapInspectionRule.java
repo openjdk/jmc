@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -49,13 +48,11 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
@@ -65,6 +62,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
+@DependsOn(value = GarbageCollectionInfoRule.class)
 public class HeapInspectionRule implements IRule {
 	private static final String HEAP_INSPECTION_RESULT_ID = "HeapInspectionGc"; //$NON-NLS-1$
 
@@ -100,7 +98,7 @@ public class HeapInspectionRule implements IRule {
 	private IResult getHeapInspectionResult(
 		IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity limit = vp.getPreferenceValue(HEAP_INSPECTION_LIMIT);
-		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
+		GarbageCollectionsInfo aggregate = rp.getResultValue(GarbageCollectionInfoRule.GC_INFO);
 		if (aggregate.getObjectCountGCs() > 0) {
 			double score = RulesToolkit.mapExp74(aggregate.getObjectCountGCs(), limit.longValue());
 			String longMessage = Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG);

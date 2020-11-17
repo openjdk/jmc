@@ -49,6 +49,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -61,6 +62,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
+@DependsOn(value = GarbageCollectionInfoRule.class)
 public class SystemGcRule implements IRule {
 	private static final String SYSTEM_GC_RESULT_ID = "SystemGc"; //$NON-NLS-1$
 	public static final TypedPreference<IQuantity> SYSTEM_GC_RATIO_LIMIT = new TypedPreference<>("systemgc.ratio.limit", //$NON-NLS-1$
@@ -94,7 +96,7 @@ public class SystemGcRule implements IRule {
 
 	private IResult getSystemGcResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
+		GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
 		IQuantity limit = valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT);
 		if (aggregate.getSystemGcCount() > 0) {
 			double systemGcRatio = aggregate.getSystemGcCount() / aggregate.getGcCount();
