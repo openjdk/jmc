@@ -96,6 +96,7 @@ public class MockStacktraceType implements IType<MockItem<IMCStackTrace, MockSta
 				}
 			};
 		}
+		;
 		throw new UnsupportedOperationException(
 				"Attribute " + attribute.getIdentifier() + " is not supported by the testing framwork.");
 	}

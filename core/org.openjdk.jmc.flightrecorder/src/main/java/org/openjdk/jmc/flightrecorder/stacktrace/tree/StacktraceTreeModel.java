@@ -52,50 +52,31 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 
 public class StacktraceTreeModel {
 	@SuppressWarnings("deprecation")
 	private static final IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
-	private static final Integer ROOT_ID = null;
+
+	/**
+	 * A special marker object that indicates a frame that cannot be determined.
+	 * <p>
+	 * A typical case is when a stacktrace is truncated due to to Flight Recorder settings. We know
+	 * that there is a frame because of a truncation flag, but there is no information about it.
+	 */
+	public static final IMCFrame UNKNOWN_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
+
+	public static final IMCFrame ROOT_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
 
 	private final Map<Integer, Node> nodes = new HashMap<>(1024);
 	private final Map<Integer, Set<Integer>> childrenLookup = new HashMap<>(1024);
+	private final Integer rootId;
 
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
 	private final IAttribute<IQuantity> attribute;
 	private final boolean threadRootAtTop;
-
-	public Map<Integer, Set<Integer>> getChildrenLookup() {
-		return childrenLookup;
-	}
-
-	public Set<Node> getRootChildren() {
-		Set<Node> result = new TreeSet<>();
-		for (int childId : childrenLookup.get(ROOT_ID)) {
-			result.add(nodes.get(childId));
-		}
-		return result;
-	}
-
-	public Map<Integer, Node> getNodes() {
-		return nodes;
-	}
-
-	public IItemCollection getItems() {
-		return items;
-	}
-
-	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop,
-			IAttribute<IQuantity> attribute) {
-		this.items = items;
-		this.frameSeparator = frameSeparator;
-		this.attribute = attribute;
-		this.threadRootAtTop = threadRootAtTop;
-		buildModel();
-	}
 
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator) {
 		this(items, frameSeparator, true, null);
@@ -105,12 +86,38 @@ public class StacktraceTreeModel {
 		this(items, frameSeparator, threadRootAtTop, null);
 	}
 
-	void buildModel() {
-		childrenLookup.put(ROOT_ID, new TreeSet<>());
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop,
+			IAttribute<IQuantity> attribute) {
+		this.items = items;
+		this.frameSeparator = frameSeparator;
+		this.attribute = attribute;
+		this.threadRootAtTop = threadRootAtTop;
+
+		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
+		this.rootId = newNodeId(null, rootFrame);
+		nodes.put(rootId, new Node(rootId, rootFrame));
+		childrenLookup.put(rootId, new TreeSet<>());
+
 		for (IItemIterable iterable : items) {
 			IMemberAccessor<IQuantity, IItem> accessor = getAccessor(iterable, attribute);
 			iterable.forEach((item) -> addItem(item, accessor));
 		}
+	}
+
+	public Node getRoot() {
+		return nodes.get(rootId);
+	}
+
+	public Map<Integer, Set<Integer>> getChildrenLookup() {
+		return childrenLookup;
+	}
+
+	public Map<Integer, Node> getNodes() {
+		return nodes;
+	}
+
+	public IItemCollection getItems() {
+		return items;
 	}
 
 	private void addItem(IItem item, IMemberAccessor<IQuantity, IItem> accessor) {
@@ -136,7 +143,7 @@ public class StacktraceTreeModel {
 			return;
 		}
 
-		Integer parentId = ROOT_ID;
+		Integer parentId = rootId;
 		int processedFrames = 0;
 		while (processedFrames < frames.size()) {
 			int idx = threadRootAtTop ? frames.size() - 1 - processedFrames : processedFrames;
@@ -144,7 +151,7 @@ public class StacktraceTreeModel {
 			AggregatableFrame frame;
 			if (stacktrace.getTruncationState().isTruncated() && threadRootAtTop && processedFrames == 0) {
 				// we have a truncated stacktrace so we can't assume anything about the bottom frame
-				frame = new AggregatableFrame(frameSeparator, StacktraceModel.UNKNOWN_FRAME);
+				frame = new AggregatableFrame(frameSeparator, UNKNOWN_FRAME);
 			} else {
 				frame = new AggregatableFrame(frameSeparator, frames.get(idx));
 			}

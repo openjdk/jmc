@@ -77,7 +77,8 @@ public class StacktraceTreeModelTest {
 				JdkAttributes.ALLOCATION_SIZE);
 
 		// check number of branches from root
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		Integer rootId = treeModel.getRoot().getNodeId();
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
 		assertNotNull(rootNodeChildIds);
 		assertEquals(3, rootNodeChildIds.size());
 
@@ -98,7 +99,8 @@ public class StacktraceTreeModelTest {
 				JdkAttributes.ALLOCATION_SIZE);
 
 		// check number of branches from root
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		Integer rootId = treeModel.getRoot().getNodeId();
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
 		assertNotNull(rootNodeChildIds);
 		assertEquals(3, rootNodeChildIds.size());
 
@@ -118,7 +120,8 @@ public class StacktraceTreeModelTest {
 		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator);
 
 		// check number of branches from root
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		Integer rootId = treeModel.getRoot().getNodeId();
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
 		assertNotNull(rootNodeChildIds);
 		assertEquals(6, rootNodeChildIds.size());
 
@@ -140,7 +143,8 @@ public class StacktraceTreeModelTest {
 		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, false);
 
 		// check number of branches from root
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		Integer rootId = treeModel.getRoot().getNodeId();
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
 		assertNotNull(rootNodeChildIds);
 		assertEquals(7, rootNodeChildIds.size());
 

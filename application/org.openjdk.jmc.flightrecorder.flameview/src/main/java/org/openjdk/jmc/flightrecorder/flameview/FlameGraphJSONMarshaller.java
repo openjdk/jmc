@@ -16,7 +16,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 public class FlameGraphJSONMarshaller {
 
 	public static String toJSON(StacktraceTreeModel model) {
-		return toJSON(model, null);
+		return toJSON(model, model.getRoot());
 	}
 
 	private static String toJSON(StacktraceTreeModel model, Node node) {
@@ -26,7 +26,7 @@ public class FlameGraphJSONMarshaller {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 
-		if (node == null) {
+		if (node.equals(model.getRoot())) {
 			AtomicInteger totalEvents = new AtomicInteger(0);
 			Map<String, Integer> eventCountsByType = TraceTreeUtils.eventTypeNameWithCountSorted(model.getItems(),
 					totalEvents);
@@ -35,12 +35,12 @@ public class FlameGraphJSONMarshaller {
 			StringBuilder rootDescription = new StringBuilder();
 
 			TraceTreeUtils.createNodeTitleAndDescription(rootTitle, rootDescription, eventCountsByType);
-			sb.append(JSONProps(rootTitle.toString(), rootDescription.toString(), 0));
+			sb.append(JSONProps(rootTitle.toString(), rootDescription.toString()));
 		} else {
 			sb.append(JSONProps(node.getFrame(), node.getCumulativeWeight()));
 		}
 
-		Set<Integer> childIds = childrenLookup.get(node != null ? node.getNodeId() : null);
+		Set<Integer> childIds = childrenLookup.get(node.getNodeId());
 
 		sb.append(", ").append(addQuotes("c"));
 		sb.append(": [ ");
@@ -75,23 +75,13 @@ public class FlameGraphJSONMarshaller {
 		return sb.toString();
 	}
 
-//	private static String JSONProps(String frameName, double value) {
-//		StringBuilder sb = new StringBuilder();
-//		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
-//		sb.append(", ");
-//		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
-//		return sb.toString();
-//	}
-
-	private static String JSONProps(String frameName, String description, double value) {
+	private static String JSONProps(String frameName, String description) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
 		sb.append(",");
 		sb.append(addQuotes("p")).append(": ").append(addQuotes(""));
 		sb.append(",");
 		sb.append(addQuotes("d")).append(": ").append(addQuotes(description));
-//		sb.append(",");
-//		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
 		return sb.toString();
 	}
 
