@@ -16,7 +16,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 public class FlameGraphJSONMarshaller {
 
 	public static String toJSON(StacktraceTreeModel model) {
-		return toJSON(model, model.getRoot());
+		return toJSON(model, null);
 	}
 
 	private static String toJSON(StacktraceTreeModel model, Node node) {
@@ -26,7 +26,7 @@ public class FlameGraphJSONMarshaller {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 
-		if (node == model.getRoot()) {
+		if (node == null) {
 			AtomicInteger totalEvents = new AtomicInteger(0);
 			Map<String, Integer> eventCountsByType = TraceTreeUtils.eventTypeNameWithCountSorted(model.getItems(),
 					totalEvents);

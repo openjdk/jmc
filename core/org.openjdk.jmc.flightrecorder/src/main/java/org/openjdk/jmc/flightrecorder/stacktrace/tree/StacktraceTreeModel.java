@@ -53,26 +53,31 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 
 public class StacktraceTreeModel {
 	@SuppressWarnings("deprecation")
-	private final static IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
-
+	private static final IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
 	private static final Integer ROOT_ID = null;
-	// TODO: simplify these maps now that Node has usable equals/hashCode
+
 	private final Map<Integer, Node> nodes = new HashMap<>(1024);
 	private final Map<Integer, Set<Integer>> childrenLookup = new HashMap<>(1024);
+
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
 	private final IAttribute<IQuantity> attribute;
 	private final boolean threadRootAtTop;
 
-	public Node getRoot() {
-		return nodes.get(ROOT_ID);
-	}
-
 	public Map<Integer, Set<Integer>> getChildrenLookup() {
 		return childrenLookup;
+	}
+
+	public Set<Node> getRootChildren() {
+		Set<Node> result = new TreeSet<>();
+		for (int childId : childrenLookup.get(ROOT_ID)) {
+			result.add(nodes.get(childId));
+		}
+		return result;
 	}
 
 	public Map<Integer, Node> getNodes() {
@@ -114,32 +119,40 @@ public class StacktraceTreeModel {
 			return;
 		}
 		List<? extends IMCFrame> frames = getStackTrace(item).getFrames();
-		if (frames.isEmpty()) {
+		if (frames == null || frames.isEmpty()) {
 			return;
 		}
 
-		// if we want a specific attribute but it's not available we skip
+		// if we want a specific attribute but its accessor is not available we skip
 		if (attribute != null && accessor == null) {
 			return;
 		}
 
-		// if we don't have an attribute/accessor available, we count occurrences
+		// if we don't request a specific attribute, we simply count occurrences
 		double value = (accessor != null) ? accessor.getMember(item).doubleValue() : 1.0;
 
+		// if the stack is zero valued for the requested attribute we prune it
 		if (attribute != null && value == 0.0) {
 			return;
 		}
 
-		// TODO: handle truncated frames
 		Integer parentId = ROOT_ID;
-		int count = 0;
-		while (count < frames.size()) {
-			int idx = threadRootAtTop ? frames.size() - 1 - count : count;
-			AggregatableFrame frame = new AggregatableFrame(frameSeparator, frames.get(idx));
+		int processedFrames = 0;
+		while (processedFrames < frames.size()) {
+			int idx = threadRootAtTop ? frames.size() - 1 - processedFrames : processedFrames;
+
+			AggregatableFrame frame;
+			if (stacktrace.getTruncationState().isTruncated() && threadRootAtTop && processedFrames == 0) {
+				// we have a truncated stacktrace so we can't assume anything about the bottom frame
+				frame = new AggregatableFrame(frameSeparator, StacktraceModel.UNKNOWN_FRAME);
+			} else {
+				frame = new AggregatableFrame(frameSeparator, frames.get(idx));
+			}
+
 			int nodeId = newNodeId(parentId, frame);
 			Node current = getOrCreateNode(nodeId, frame);
 			current.cumulativeWeight += value;
-			if (count == frames.size() - 1) {
+			if (processedFrames == frames.size() - 1) {
 				current.weight += value;
 			}
 
@@ -148,7 +161,7 @@ public class StacktraceTreeModel {
 				childrenLookup.put(current.getNodeId(), new HashSet<>());
 			}
 			parentId = current.getNodeId();
-			count++;
+			processedFrames++;
 		}
 	}
 
