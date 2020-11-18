@@ -1,5 +1,9 @@
 package org.openjdk.jmc.flightrecorder.flameview;
 
+import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
+import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
@@ -14,6 +19,9 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 
 public class FlameGraphJSONMarshaller {
+
+	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
+	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 
 	public static String toJSON(StacktraceTreeModel model) {
 		return toJSON(model, model.getRoot());
@@ -66,11 +74,21 @@ public class FlameGraphJSONMarshaller {
 
 	private static String JSONProps(AggregatableFrame frame, double value) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(addQuotes("n")).append(": ").append(addQuotes(frame.getHumanReadableShortString()));
-		sb.append(",");
-		sb.append(addQuotes("p")).append(": ")
-				.append(addQuotes(FormatToolkit.getPackage(frame.getMethod().getType().getPackage())));
-		sb.append(",");
+		if (frame.getType().equals(IMCFrame.Type.UNKNOWN)) {
+			// TODO: this is untested
+			sb.append(addQuotes("n")).append(": ").append(addQuotes(UNCLASSIFIABLE_FRAME));
+			sb.append(",");
+			sb.append(addQuotes("d")).append(": ").append(addQuotes(UNCLASSIFIABLE_FRAME_DESC));
+			sb.append(",");
+			sb.append(addQuotes("p")).append(": ").append(addQuotes(""));
+			sb.append(",");
+		} else {
+			sb.append(addQuotes("n")).append(": ").append(addQuotes(frame.getHumanReadableShortString()));
+			sb.append(",");
+			sb.append(addQuotes("p")).append(": ")
+					.append(addQuotes(FormatToolkit.getPackage(frame.getMethod().getType().getPackage())));
+			sb.append(",");
+		}
 		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
 		return sb.toString();
 	}
