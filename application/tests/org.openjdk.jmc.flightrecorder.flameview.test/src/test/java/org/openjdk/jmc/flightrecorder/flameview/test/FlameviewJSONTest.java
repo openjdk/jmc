@@ -70,7 +70,8 @@ public class FlameviewJSONTest {
 
 	@Test
 	public void testRenderedJSONWithAttribute() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, JdkAttributes.ALLOCATION_SIZE);
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true,
+				JdkAttributes.ALLOCATION_SIZE);
 		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
 
 		String expectedJSON = readResource("/flamegraph-attribute.json");
@@ -79,7 +80,7 @@ public class FlameviewJSONTest {
 
 	@Test
 	public void testRenderedJSONWithCounts() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, null);
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
 		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
 
 		String expectedJSON = readResource("/flamegraph-counts.json");
@@ -87,11 +88,22 @@ public class FlameviewJSONTest {
 	}
 
 	@Test
-	public void testCompareAgainstStatefulModel() {
-		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, null);
+	public void testCompareAgainstStatefulModelThreadRootAtTop() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
 		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
 
 		StacktraceModel statefulModel = new StacktraceModel(true, separator, testRecording);
+		String oldJSON = LegacyJSONMarshaller.toLegacyJSON(statefulModel, testRecording);
+
+		assertEquals(oldJSON, flameGraphJSON);
+	}
+
+	@Test
+	public void testCompareAgainstStatefulModelThreadRootAtBottom() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, false);
+		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
+
+		StacktraceModel statefulModel = new StacktraceModel(false, separator, testRecording);
 		String oldJSON = LegacyJSONMarshaller.toLegacyJSON(statefulModel, testRecording);
 
 		assertEquals(oldJSON, flameGraphJSON);

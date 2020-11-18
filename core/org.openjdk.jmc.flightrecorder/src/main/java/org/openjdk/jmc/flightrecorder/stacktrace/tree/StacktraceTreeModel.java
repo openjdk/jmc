@@ -65,6 +65,7 @@ public class StacktraceTreeModel {
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
 	private final IAttribute<IQuantity> attribute;
+	private final boolean threadRootAtTop;
 
 	public Node getRoot() {
 		return nodes.get(ROOT_ID);
@@ -82,11 +83,21 @@ public class StacktraceTreeModel {
 		return items;
 	}
 
-	public StacktraceTreeModel(FrameSeparator frameSeparator, IItemCollection items, IAttribute<IQuantity> attribute) {
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop,
+			IAttribute<IQuantity> attribute) {
 		this.items = items;
 		this.frameSeparator = frameSeparator;
 		this.attribute = attribute;
+		this.threadRootAtTop = threadRootAtTop;
 		buildModel();
+	}
+
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator) {
+		this(items, frameSeparator, true, null);
+	}
+
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {
+		this(items, frameSeparator, threadRootAtTop, null);
 	}
 
 	void buildModel() {
@@ -119,13 +130,16 @@ public class StacktraceTreeModel {
 			return;
 		}
 
+		// TODO: handle truncated frames
 		Integer parentId = ROOT_ID;
-		for (int i = frames.size() - 1; i >= 0; i--) {
-			AggregatableFrame frame = new AggregatableFrame(frameSeparator, frames.get(i));
+		int count = 0;
+		while (count < frames.size()) {
+			int idx = threadRootAtTop ? frames.size() - 1 - count : count;
+			AggregatableFrame frame = new AggregatableFrame(frameSeparator, frames.get(idx));
 			int nodeId = newNodeId(parentId, frame);
 			Node current = getOrCreateNode(nodeId, frame);
 			current.cumulativeWeight += value;
-			if (i == 0) {
+			if (count == frames.size() - 1) {
 				current.weight += value;
 			}
 
@@ -134,6 +148,7 @@ public class StacktraceTreeModel {
 				childrenLookup.put(current.getNodeId(), new HashSet<>());
 			}
 			parentId = current.getNodeId();
+			count++;
 		}
 	}
 

@@ -33,11 +33,15 @@
  */
 package org.openjdk.jmc.flightrecorder.test;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,8 +72,8 @@ public class StacktraceTreeModelTest {
 			false);
 
 	@Test
-	public void testTreeModelWithAttribute() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording,
+	public void testTreeModelWithAttributeThreadRootAtTop() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, true,
 				JdkAttributes.ALLOCATION_SIZE);
 
 		// check number of branches from root
@@ -78,19 +82,40 @@ public class StacktraceTreeModelTest {
 		assertEquals(3, rootNodeChildIds.size());
 
 		// get leaf nodes
-		Map<String, Double> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
 
 		assertEquals(leafValues.size(), 3);
-		Map<String, Double> expected = new HashMap<>();
-		expected.put("Arrays.copyOfRange(char[], int, int)", 104.00);
-		expected.put("TimerThread.mainLoop()", 112.00);
-		expected.put("AbstractCollection.toArray()", 24.00);
+		Map<String, List<Double>> expected = new HashMap<>();
+		expected.put("Arrays.copyOfRange(char[], int, int)", asList(104.00));
+		expected.put("TimerThread.mainLoop()", asList(112.00));
+		expected.put("AbstractCollection.toArray()", asList(24.00));
 		assertEquals(expected, leafValues);
 	}
 
 	@Test
-	public void testTreeModelWithoutAttribute() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(separator, testRecording, null);
+	public void testTreeModelWithAttributeThreadRootAtBottom() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, false,
+				JdkAttributes.ALLOCATION_SIZE);
+
+		// check number of branches from root
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		assertNotNull(rootNodeChildIds);
+		assertEquals(3, rootNodeChildIds.size());
+
+		// get leaf nodes
+		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+
+		assertEquals(leafValues.size(), 3);
+		Map<String, List<Double>> expected = new HashMap<>();
+		expected.put("JFRImpl.onNewChunk()", asList(24.0));
+		expected.put("TimerThread.run()", asList(112.00));
+		expected.put("Thread.run()", asList(104.0));
+		assertEquals(expected, leafValues);
+	}
+
+	@Test
+	public void testTreeModelWithoutAttributeThreadRootAtTop() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator);
 
 		// check number of branches from root
 		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
@@ -98,34 +123,53 @@ public class StacktraceTreeModelTest {
 		assertEquals(6, rootNodeChildIds.size());
 
 		// get leaf nodes
-		Map<String, Double> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
 
-		Map<String, Double> expected = new HashMap<>();
-		expected.put("TimerThread.mainLoop()", 1.0);
-		expected.put("AbstractCollection.toArray()", 1.0);
-		expected.put("Buffer.checkIndex(int)", 1.0);
-		expected.put("Object.wait(long)", 98.0);
-		expected.put("ObjectOutputStream$BlockDataOutputStream.writeUTF(String)", 1.0);
-		expected.put("SocketInputStream.read(byte[], int, int, int)", 9.0);
-
+		Map<String, List<Double>> expected = new HashMap<>();
+		expected.put("AbstractCollection.toArray()", asList(1.0));
+		expected.put("Buffer.checkIndex(int)", asList(1.0));
+		expected.put("Object.wait(long)", asList(10.0, 98.0));
+		expected.put("ObjectOutputStream$BlockDataOutputStream.writeUTF(String)", asList(1.0));
+		expected.put("SocketInputStream.read(byte[], int, int, int)", asList(9.0));
+		expected.put("Arrays.copyOfRange(char[], int, int)", asList(1.0));
 		assertEquals(expected, leafValues);
 	}
 
-	public Map<String, Double> getLeafNodeValues(StacktraceTreeModel treeModel) {
+	@Test
+	public void testTreeModelWithoutAttributeThreadRootAtBottom() {
+		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, false);
+
+		// check number of branches from root
+		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(null);
+		assertNotNull(rootNodeChildIds);
+		assertEquals(7, rootNodeChildIds.size());
+
+		// get leaf nodes
+		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+
+		Map<String, List<Double>> expected = new HashMap<>();
+		expected.put("TimerThread.run()", asList(1.0, 10.0));
+		expected.put("JFRImpl.onNewChunk()", asList(1.0));
+		expected.put("OGLRenderQueue$QueueFlusher.run()", asList(98.0));
+		expected.put("InstantEvent.commit()", asList(1.0));
+		expected.put("Thread.run()", asList(1.0, 9.0));
+		expected.put("ArrayList.writeObject(ObjectOutputStream)", asList(1.0));
+		assertEquals(expected, leafValues);
+	}
+
+	public Map<String, List<Double>> getLeafNodeValues(StacktraceTreeModel treeModel) {
 		Map<Integer, Node> nodesById = treeModel.getNodes();
 		Map<Integer, Set<Integer>> childrenLookup = treeModel.getChildrenLookup();
-		Set<Integer> rootNodeChildIds = childrenLookup.get(null);
-		Map<String, Double> leafValues = new HashMap<>();
-		for (Integer nodeId : rootNodeChildIds) {
-			Set<Integer> childIds = childrenLookup.get(nodeId);
-			while (childIds.size() > 0) {
-				// we have simple branches where each node has a single child
-				assertEquals(childIds.size(), 1);
-				nodeId = childIds.iterator().next();
-				childIds = childrenLookup.get(nodeId);
+		Map<String, List<Double>> leafValues = new HashMap<>();
+		// we get the leaves by checking the lookup and selecting nodes with no children
+		for (Integer nodeId : childrenLookup.keySet()) {
+			if (childrenLookup.get(nodeId).isEmpty()) {
+				Node node = nodesById.get(nodeId);
+				String key = node.getFrame().getHumanReadableShortString();
+				leafValues.computeIfAbsent(key, k -> new ArrayList<>());
+				leafValues.get(key).add(node.getWeight());
+				leafValues.get(key).sort(Comparator.naturalOrder());
 			}
-			Node node = nodesById.get(nodeId);
-			leafValues.put(node.getFrame().getHumanReadableShortString(), node.getWeight());
 		}
 		return leafValues;
 	}
