@@ -1,8 +1,15 @@
 package org.openjdk.jmc.flightrecorder.flameview;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 
@@ -19,44 +26,77 @@ public class FlameGraphJSONMarshaller {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 
-		// TODO: remove this special case, the root node should be identical to other
-		// nodes
 		if (node == model.getRoot()) {
-			sb.append(JSONProps("root", 0));
-		} else {
-			sb.append(JSONProps(node.getFrame().getHumanReadableShortString(), node.getWeight()));
+			AtomicInteger totalEvents = new AtomicInteger(0);
+			Map<String, Integer> eventCountsByType = TraceTreeUtils.eventTypeNameWithCountSorted(model.getItems(),
+					totalEvents);
+			String selectionText = TraceTreeUtils.createSelectionText(totalEvents.get(), eventCountsByType.size());
+			StringBuilder rootTitle = new StringBuilder(selectionText);
+			StringBuilder rootDescription = new StringBuilder();
 
+			TraceTreeUtils.createNodeTitleAndDescription(rootTitle, rootDescription, eventCountsByType);
+			sb.append(JSONProps(rootTitle.toString(), rootDescription.toString(), 0));
+		} else {
+			sb.append(JSONProps(node.getFrame(), node.getCumulativeWeight()));
 		}
 
 		Set<Integer> childIds = childrenLookup.get(node != null ? node.getNodeId() : null);
-		if (childIds.size() > 0) {
-			sb.append(", ").append(addQuotes("children"));
-			sb.append(": [");
-			boolean first = true;
-			// since we're iterating on a set, the order is not guaranteed to be
-			// deterministic
-			for (int childId : childIds) {
-				if (!first) {
-					sb.append(", ");
-				}
-				sb.append(toJSON(model, nodes.get(childId)));
-				first = false;
+
+		sb.append(", ").append(addQuotes("c"));
+		sb.append(": [ ");
+		boolean first = true;
+		// we sort the nodes so that the output is deterministic
+		// TODO: remove once we validate the output
+		List<Integer> sortedIds = new ArrayList<>();
+		sortedIds.addAll(childIds);
+		sortedIds.sort(Comparator.comparing((id) -> {
+			return nodes.get(id).getFrame().getHumanReadableShortString();
+		}));
+		for (int childId : sortedIds) {
+			if (!first) {
+				sb.append(",");
 			}
-			sb.append("]");
+			sb.append(toJSON(model, nodes.get(childId)));
+			first = false;
 		}
+		sb.append("]");
 		sb.append("}");
 		return sb.toString();
 	}
 
-	private static String JSONProps(String name, double value) {
+	private static String JSONProps(AggregatableFrame frame, double value) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(addQuotes("name")).append(": ").append(addQuotes(name));
-		sb.append(", ");
-		sb.append(addQuotes("value")).append(": ").append(value);
+		sb.append(addQuotes("n")).append(": ").append(addQuotes(frame.getHumanReadableShortString()));
+		sb.append(",");
+		sb.append(addQuotes("p")).append(": ")
+				.append(addQuotes(FormatToolkit.getPackage(frame.getMethod().getType().getPackage())));
+		sb.append(",");
+		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
+		return sb.toString();
+	}
+
+//	private static String JSONProps(String frameName, double value) {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
+//		sb.append(", ");
+//		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
+//		return sb.toString();
+//	}
+
+	private static String JSONProps(String frameName, String description, double value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
+		sb.append(",");
+		sb.append(addQuotes("p")).append(": ").append(addQuotes(""));
+		sb.append(",");
+		sb.append(addQuotes("d")).append(": ").append(addQuotes(description));
+//		sb.append(",");
+//		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
 		return sb.toString();
 	}
 
 	private static String addQuotes(String str) {
 		return String.format("\"%s\"", str);
 	}
+
 }

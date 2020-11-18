@@ -34,16 +34,22 @@
 
 package org.openjdk.jmc.flightrecorder.flameview.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
+import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJSONMarshaller;
+import org.openjdk.jmc.flightrecorder.flameview.LegacyJSONMarshaller;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
@@ -63,10 +69,41 @@ public class FlameviewJSONTest {
 			false);
 
 	@Test
-	public void testImportsWork() throws Exception {
+	public void testRenderedJSONWithAttribute() throws Exception {
 		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, JdkAttributes.ALLOCATION_SIZE);
 		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
-//		assertEquals(flameGraphJSON, "");
+
+		String expectedJSON = readResource("/flamegraph-attribute.json");
+		assertEquals(expectedJSON, flameGraphJSON);
+	}
+
+	@Test
+	public void testRenderedJSONWithCounts() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, null);
+		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
+
+		String expectedJSON = readResource("/flamegraph-counts.json");
+		assertEquals(expectedJSON, flameGraphJSON);
+	}
+
+	@Test
+	public void testCompareAgainstStatefulModel() {
+		StacktraceTreeModel model = new StacktraceTreeModel(separator, testRecording, null);
+		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
+
+		StacktraceModel statefulModel = new StacktraceModel(true, separator, testRecording);
+		String oldJSON = LegacyJSONMarshaller.toLegacyJSON(statefulModel, testRecording);
+
+		assertEquals(oldJSON, flameGraphJSON);
+	}
+
+	private String readResource(String resourcePath) throws IOException {
+		try (InputStream is = FlameviewJSONTest.class.getResourceAsStream(resourcePath)) {
+			if (is == null) {
+				throw new IllegalArgumentException(resourcePath + " not found");
+			}
+			return StringToolkit.readString(is);
+		}
 	}
 
 }

@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.flameview.tree;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TraceNode {
@@ -66,6 +67,7 @@ public class TraceNode {
 
 	public void addChild(TraceNode child) {
 		children.add(child);
+		children.sort(Comparator.comparing(TraceNode::getName));
 	}
 
 	@Override

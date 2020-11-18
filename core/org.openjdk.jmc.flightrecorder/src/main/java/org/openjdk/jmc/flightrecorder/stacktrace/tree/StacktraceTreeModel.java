@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -77,6 +78,10 @@ public class StacktraceTreeModel {
 		return nodes;
 	}
 
+	public IItemCollection getItems() {
+		return items;
+	}
+
 	public StacktraceTreeModel(FrameSeparator frameSeparator, IItemCollection items, IAttribute<IQuantity> attribute) {
 		this.items = items;
 		this.frameSeparator = frameSeparator;
@@ -85,7 +90,7 @@ public class StacktraceTreeModel {
 	}
 
 	void buildModel() {
-		childrenLookup.put(ROOT_ID, new HashSet<>());
+		childrenLookup.put(ROOT_ID, new TreeSet<>());
 		for (IItemIterable iterable : items) {
 			IMemberAccessor<IQuantity, IItem> accessor = getAccessor(iterable, attribute);
 			iterable.forEach((item) -> addItem(item, accessor));
@@ -125,7 +130,9 @@ public class StacktraceTreeModel {
 			}
 
 			childrenLookup.get(parentId).add(current.getNodeId());
-			childrenLookup.put(current.getNodeId(), new HashSet<>());
+			if (childrenLookup.get(current.getNodeId()) == null) {
+				childrenLookup.put(current.getNodeId(), new HashSet<>());
+			}
 			parentId = current.getNodeId();
 		}
 	}

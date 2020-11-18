@@ -109,7 +109,6 @@ public final class TraceTreeUtils {
 	 * @return root
 	 */
 	public static TraceNode createRootWithDescription(IItemCollection items, int branchCount) {
-
 		StringBuilder titleSb = new StringBuilder();
 		StringBuilder descSb = new StringBuilder();
 		AtomicInteger totalItemsSum = new AtomicInteger(0);
@@ -141,7 +140,7 @@ public final class TraceTreeUtils {
 		return builder.toString();
 	}
 
-	private static String createSelectionText(int events, int types) {
+	public static String createSelectionText(int events, int types) {
 		String eventText = events > 1 ? getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_EVENTS)
 				: getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_EVENT);
 		String typeText = types > 1 ? getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE_TYPES)
@@ -183,7 +182,7 @@ public final class TraceTreeUtils {
 		return builder.toString();
 	}
 
-	private static Map<String, Integer> eventTypeNameWithCountSorted(
+	public static Map<String, Integer> eventTypeNameWithCountSorted(
 		IItemCollection items, AtomicInteger totalEventTypeSum) {
 		final HashMap<String, Integer> map = new HashMap<>();
 		IAggregator<IQuantity, ?> build = GroupingAggregator.build(EMPTY_STRING, EMPTY_STRING, JfrAttributes.EVENT_TYPE,
@@ -209,7 +208,7 @@ public final class TraceTreeUtils {
 		return RulesToolkit.sortMap(map, false);
 	}
 
-	private static void createNodeTitleAndDescription(
+	public static void createNodeTitleAndDescription(
 		StringBuilder titleSb, StringBuilder descSb, Map<String, Integer> orderedItemCountByType) {
 
 		int i = 0;

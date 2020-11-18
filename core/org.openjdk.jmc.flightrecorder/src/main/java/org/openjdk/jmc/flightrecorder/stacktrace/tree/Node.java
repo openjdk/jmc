@@ -74,6 +74,12 @@ public final class Node {
 		return weight;
 	}
 
+	/**
+	 * @return the cumulative weight of this node.
+	 */
+	public double getCumulativeWeight() {
+		return cumulativeWeight;
+	}
 
 	public AggregatableFrame getFrame() {
 		return frame;
@@ -95,10 +101,8 @@ public final class Node {
 			return false;
 		Node other = (Node) obj;
 
-		return Objects.equals(nodeId, other.nodeId) &&
-				Objects.equals(frame, other.frame) &&
-				weight == other.weight &&
-				cumulativeWeight == other.cumulativeWeight;
+		return Objects.equals(nodeId, other.nodeId) && Objects.equals(frame, other.frame) && weight == other.weight
+				&& cumulativeWeight == other.cumulativeWeight;
 	}
 
 	public Integer getNodeId() {
@@ -107,7 +111,6 @@ public final class Node {
 
 	@Override
 	public String toString() {
-		return String.format("%s %.2f (%.2f)",
-				frame.getHumanReadableShortString(), weight, cumulativeWeight);
+		return String.format("%s %.2f (%.2f)", frame.getHumanReadableShortString(), weight, cumulativeWeight);
 	}
 }
