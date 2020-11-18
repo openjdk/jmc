@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -83,6 +83,11 @@
 	<Match>
 		<Class name="org.openjdk.jmc.flightrecorder.internal.parser.v1.StructTypes$JfrOldObject" />
 		<Method name="isRoot" />
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+	</Match>
+	<Match>
+		<Class name="org.openjdk.jmc.common.util.MCMethod" />
+		<Method name="isHidden" />
 		<Bug pattern="NP_BOOLEAN_RETURN_NULL" />
 	</Match>
 	
@@ -596,6 +601,12 @@
 	</Match>
 	<Match>
 		<Class name="org.openjdk.jmc.ui.fields.FieldToolkit" />
+		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
+	</Match>
+
+	<!-- This is an enum! -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.misc.FilterEditor" />
 		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
 	</Match>
 

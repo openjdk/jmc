@@ -96,7 +96,8 @@ public class ExpressionResolver {
 
 	private void enterStartState() throws IllegalSyntaxException {
 		if (!iterator.hasNext()) {
-			enterIllegalState("Unexpected end of input: expects 'this', 'super', a field name, a class name, a package name, or a package name fragment");
+			enterIllegalState(
+					"Unexpected end of input: expects 'this', 'super', a field name, a class name, a package name, or a package name fragment");
 		}
 
 		String token = iterator.next(); // first identifier
@@ -263,8 +264,8 @@ public class ExpressionResolver {
 					field.getDeclaringClass().getName()));
 		}
 
-		if (!caller.equals(memberingClass) && Modifier.isPrivate(field.getModifiers()) && AccessUtils
-				.areNestMates(caller, memberingClass)) {
+		if (!caller.equals(memberingClass) && Modifier.isPrivate(field.getModifiers())
+				&& AccessUtils.areNestMates(caller, memberingClass)) {
 			enterIllegalState(
 					new UnsupportedOperationException("Private member access between nestmates is not supported"));
 		}

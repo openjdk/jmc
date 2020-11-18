@@ -138,7 +138,7 @@ public class ManyRunningProcessesRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.PROCESSES_TOPIC;
+		return JfrRuleTopics.PROCESSES;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -324,6 +324,9 @@ public class Messages {
 	public static final String HeapContentRuleFactory_TEXT_INFO_LONG = "HeapContentRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String HeapContentRuleFactory_TEXT_OK = "HeapContentRuleFactory_TEXT_OK"; //$NON-NLS-1$
 	public static final String HeapContentRule_AGGR_CLASS_SCORE = "HeapContentRule_AGGR_CLASS_SCORE"; //$NON-NLS-1$
+	public static final String HeapDumpRule_RULE_NAME = "HeapDumpRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String HeapDumpRule_TEXT_INFO = "HeapDumpRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String HeapDumpRule_TEXT_OK = "HeapDumpRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_RULE_NAME = "HeapInspectionGcRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_TEXT_INFO = "HeapInspectionGcRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String HeapInspectionGcRuleFactory_TEXT_INFO_LONG = "HeapInspectionGcRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
@@ -485,23 +488,35 @@ public class Messages {
 	public static final String ParGcFewThreadsRuleFactory_TEXT_INFO_LONG = "ParGcFewThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ParallelOnSingleCpuRuleFactory_TEXT_INFO = "ParallelOnSingleCpuRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String ParallelOnSingleCpuRuleFactory_TEXT_INFO_LONG = "ParallelOnSingleCpuRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
+	public static final String PasswordsInArgsRule_CONFIG_EXCLUDED_STRINGS = "PasswordsInArgsRule_CONFIG_EXCLUDED_STRINGS"; //$NON-NLS-1$
+	public static final String PasswordsInArgsRule_CONFIG_EXCLUDED_STRINGS_LONG = "PasswordsInArgsRule_CONFIG_EXCLUDED_STRINGS_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_JAVAARGS_TEXT_INFO = "PasswordsInArgsRule_JAVAARGS_TEXT_INFO"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG = "PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_JAVAARGS_TEXT_SOLUTION = "PasswordsInArgsRule_JAVAARGS_TEXT_SOLUTION"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_RULE_NAME = "PasswordsInArgsRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String PasswordsInArgsRule_TEXT_INFO_EXCLUDED_INFO = "PasswordsInArgsRule_TEXT_INFO_EXCLUDED_INFO"; //$NON-NLS-1$	
 	public static final String PasswordsInArgsRule_TEXT_OK = "PasswordsInArgsRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS = "PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS"; //$NON-NLS-1$
+	public static final String PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS_LONG = "PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_RULE_NAME = "PasswordsInEnvironmentRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_TEXT_INFO = "PasswordsInEnvironmentRuleFactory_TEXT_INFO"; //$NON-NLS-1$
+	public static final String PasswordsInEnvironmentRuleFactory_TEXT_INFO_EXCLUDED_INFO = "PasswordsInEnvironmentRuleFactory_TEXT_INFO_EXCLUDED_INFO"; //$NON-NLS-1$	
 	public static final String PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG = "PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_TEXT_SOLUTION = "PasswordsInEnvironmentRuleFactory_TEXT_SOLUTION"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_TEXT_OK = "PasswordsInEnvironmentRuleFactory_TEXT_OK"; //$NON-NLS-1$
+	public static final String PasswordsInSystemPropertiesRule_CONFIG_EXCLUDED_STRINGS = "PasswordsInSystemPropertiesRule_CONFIG_EXCLUDED_STRINGS"; //$NON-NLS-1$
+	public static final String PasswordsInSystemPropertiesRule_CONFIG_EXCLUDED_STRINGS_LONG = "PasswordsInSystemPropertiesRule_CONFIG_EXCLUDED_STRINGS_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInSystemPropertiesRule_RULE_NAME = "PasswordsInSystemPropertiesRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String PasswordsInSystemPropertiesRule_TEXT_INFO = "PasswordsInSystemPropertiesRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String PasswordsInSystemPropertiesRule_TEXT_INFO_EXCLUDED_INFO = "PasswordsInSystemPropertiesRule_TEXT_INFO_EXCLUDED_INFO"; //$NON-NLS-1$
 	public static final String PasswordsInSystemPropertiesRule_TEXT_INFO_LONG = "PasswordsInSystemPropertiesRule_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInSystemPropertiesRule_TEXT_SOLUTION = "PasswordsInSystemPropertiesRule_TEXT_SOLUTION"; //$NON-NLS-1$
 	public static final String PasswordsInSystemPropertiesRule_TEXT_OK = "PasswordsInSystemPropertiesRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING = "Preference_SHORT_RECORDING"; //$NON-NLS-1$
 	public static final String Preference_SHORT_RECORDING_LONG = "Preference_SHORT_RECORDING_LONG"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_RULE_NAME = "ProcessStartedRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_INFO = "ProcessStartedRule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String ProcessStartedRule_TEXT_OK = "ProcessStartedRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_FINAL_REFERENCES = "ReferenceStatisticsType_FINAL_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_PHANTOM_REFERENCES = "ReferenceStatisticsType_PHANTOM_REFERENCES"; //$NON-NLS-1$
 	public static final String ReferenceStatisticsType_SOFT_REFERENCES = "ReferenceStatisticsType_SOFT_REFERENCES"; //$NON-NLS-1$

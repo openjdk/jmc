@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,9 +66,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.forms.widgets.FormText;
-
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IStateful;
 import org.openjdk.jmc.common.IWritableState;
@@ -95,7 +94,7 @@ public class LaneEditor {
 
 	private static final IItemFilter TYPE_HAS_THREAD_AND_DURATION = new IItemFilter() {
 		@Override
-		public IPredicate<IItem> getPredicate(IType<IItem> type) {
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
 			if (DataPageToolkit.isTypeWithThreadAndDuration(type)) {
 				return PredicateToolkit.truePredicate();
 			}
@@ -103,29 +102,40 @@ public class LaneEditor {
 		}
 	};
 
-	private static class EditLanesWizardPage extends WizardPage implements IPerformFinishable {
+	static class EditLanesContainer extends Composite {
 
-		private final EventTypeFolderNode root;
-		private final List<LaneDefinition> lanes;
+		final EventTypeFolderNode root;
+		final List<LaneDefinition> lanes;
+
 		private LaneDefinition restLane;
 		private TypeFilterBuilder filterEditor;
 		private CheckboxTableViewer lanesViewer;
 		private Object selected;
+		private Runnable updateChart;
+		private boolean isDropdownFilter;
 
-		private EditLanesWizardPage(EventTypeFolderNode root, Collection<LaneDefinition> lanesInput) {
-			super("EditFilterLanesPage"); //$NON-NLS-1$
-			this.root = root;
-			this.lanes = new ArrayList<>(lanesInput);
-			restLane = ensureRestLane(lanes);
+		EditLanesContainer(Composite parent, EventTypeFolderNode root, List<LaneDefinition> lanes) {
+			this(parent, root, lanes, null);
 		}
 
-		@Override
-		public void createControl(Composite parent) {
-			// FIXME: Do we want to group under categories somehow, or just hide the filters that don't have any existing event types.
-			Composite container = new Composite(parent, SWT.NONE);
-			container.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
+		EditLanesContainer(Composite parent, EventTypeFolderNode root, List<LaneDefinition> lanes, Runnable action) {
+			super(parent, SWT.NONE);
+			this.root = root;
+			this.lanes = lanes;
+			this.updateChart = action;
+			restLane = ensureRestLane(lanes);
+			init();
+		}
 
-			Composite laneHeaderContainer = new Composite(container, SWT.NONE);
+		public List<LaneDefinition> getLanes() {
+			return lanes;
+		}
+
+		private void init() {
+			// FIXME: Do we want to group under categories somehow, or just hide the filters that don't have any existing event types.
+			this.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
+
+			Composite laneHeaderContainer = new Composite(this, SWT.NONE);
 			laneHeaderContainer.setLayout(GridLayoutFactory.swtDefaults().create());
 			laneHeaderContainer.setLayoutData(GridDataFactory.fillDefaults().create());
 
@@ -145,12 +155,12 @@ public class LaneEditor {
 			Label lanesTitle = new Label(laneHeaderContainer, SWT.NONE);
 			lanesTitle.setText(Messages.LANES_EDITOR_LABEL);
 			lanesTitle.setLayoutData(GridDataFactory.fillDefaults().create());
-			Label filterTitle = new Label(container, SWT.NONE);
+			Label filterTitle = new Label(this, SWT.NONE);
 			filterTitle.setText(Messages.LANES_FILTER_LABEL);
 			filterTitle.setLayoutData(
 					GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.END).create());
 
-			lanesViewer = CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.V_SCROLL);
+			lanesViewer = CheckboxTableViewer.newCheckList(this, SWT.BORDER | SWT.V_SCROLL);
 			TableViewerColumn viewerColumn = new TableViewerColumn(lanesViewer, SWT.NONE);
 			viewerColumn.getColumn().setText(Messages.LANES_LANE_COLUMN);
 			viewerColumn.getColumn().setWidth(200);
@@ -271,17 +281,16 @@ public class LaneEditor {
 
 			mm.appendToGroup(MCContextMenuManager.GROUP_EDIT, removeAction);
 
-			filterEditor = new TypeFilterBuilder(container, this::onTypeFilterChange);
+			filterEditor = new TypeFilterBuilder(this, this::onTypeFilterChange);
 			filterEditor.setInput(root);
 			filterEditor.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+			isDropdownFilter = updateChart != null ? true : false;
 			lanesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
 			lanesViewer.addSelectionChangedListener(
 					e -> laneSelectionChanges(((IStructuredSelection) e.getSelection()).getFirstElement()));
 			LaneDefinition firstLane = lanes.get(0);
 			lanesViewer.setSelection(new StructuredSelection(firstLane));
-
-			setControl(container);
 		}
 
 		private void addLane() {
@@ -304,6 +313,9 @@ public class LaneEditor {
 				}
 			}
 			lanesViewer.update(selected, null);
+			if (isDropdownFilter) {
+				updateChart();
+			}
 		}
 
 		private void deleteSelected() {
@@ -332,53 +344,101 @@ public class LaneEditor {
 
 		private void laneSelectionChanges(Object newSelected) {
 			int selectedIndex = lanes.indexOf(newSelected);
-			if (this.selected != newSelected) {
-				saveFilter();
-				this.selected = lanes.get(selectedIndex);
-				if (selected instanceof LaneDefinition) {
-					Types typesFilter;
-					if (((LaneDefinition) selected).getFilter() instanceof Types) {
-						typesFilter = ((Types) ((LaneDefinition) selected).getFilter());
-					} else {
-						typesFilter = (Types) ItemFilters.convertToTypes(((LaneDefinition) selected).getFilter(),
-								filterEditor.getAllTypes());
+			if (selectedIndex == -1 && isDropdownFilter) {
+				selectedIndex = findLaneDefinitionIndexByName(selected);
+			}
+			saveFilter();
+			this.selected = lanes.get(selectedIndex);
+			if (selected instanceof LaneDefinition) {
+				Types typesFilter;
+				if (((LaneDefinition) selected).getFilter() instanceof Types) {
+					typesFilter = ((Types) ((LaneDefinition) selected).getFilter());
+				} else {
+					typesFilter = (Types) ItemFilters.convertToTypes(((LaneDefinition) selected).getFilter(),
+							filterEditor.getAllTypes());
+				}
+				filterEditor.selectTypes(typesFilter.getTypes());
+			}
+			if (isDropdownFilter) {
+				updateChart();
+			}
+		}
+
+		private void updateChart() {
+			saveFilter(); // updates the LaneDefinition with the new filter
+			updateChart.run(); // repaints the chart and text canvases
+		}
+
+		private int findLaneDefinitionIndexByName(Object selected) {
+			int index = -1;
+			if (selected != null) {
+				for (int i = 0; i < lanes.size(); i++) {
+					if (lanes.get(i).getName().equals(((LaneDefinition) selected).getName())) {
+						index = i;
+						break;
 					}
-					filterEditor.selectTypes(typesFilter.getTypes());
 				}
 			}
+			return index;
 		}
 
 		private void saveFilter() {
 			int selectedIndex = lanes.indexOf(selected);
+			if (selectedIndex == -1 && isDropdownFilter) {
+				selectedIndex = findLaneDefinitionIndexByName(selected);
+			}
 			if (selectedIndex >= 0) {
 				LaneDefinition ld = lanes.get(selectedIndex);
-				if (!ld.isRestLane()) {
-					IItemFilter newFilter = ItemFilters
-							.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
-					LaneDefinition newLd = new LaneDefinition(ld.name, lanesViewer.getChecked(ld), newFilter,
-							ld.isRestLane);
-					lanes.set(selectedIndex, newLd);
-					lanesViewer.replace(newLd, selectedIndex);
-					if (restLane != null) {
-						LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled,
-								getRestFilter(lanes), true);
-						int restIndex = lanes.indexOf(restLane);
-						lanes.set(restIndex, newRest);
-						lanesViewer.replace(newRest, restIndex);
-						restLane = newRest;
-					}
-					lanesViewer.refresh();
+				IItemFilter newFilter = ItemFilters.type(filterEditor.getCheckedTypeIds().collect(Collectors.toSet()));
+				LaneDefinition newLd = new LaneDefinition(ld.name, lanesViewer.getChecked(ld), newFilter,
+						ld.isRestLane);
+				lanes.set(selectedIndex, newLd);
+				lanesViewer.replace(newLd, selectedIndex);
+				if (ld.isRestLane()) {
+					restLane = newLd;
+				} else {
+					LaneDefinition newRest = new LaneDefinition(restLane.name, restLane.enabled, getRestFilter(lanes),
+							true);
+					int restIndex = findLaneDefinitionIndexByName(restLane);
+					lanes.set(restIndex, newRest);
+					lanesViewer.replace(newRest, restIndex);
+					restLane = newRest;
 				}
+				lanesViewer.refresh();
 			}
+		}
+	}
+
+	private static class EditLanesWizardPage extends WizardPage implements IPerformFinishable {
+
+		private EditLanesContainer container;
+		protected EventTypeFolderNode root;
+		private List<LaneDefinition> lanes;
+
+		private EditLanesWizardPage(EventTypeFolderNode root, Collection<LaneDefinition> lanesInput) {
+			super("EditFilterLanesPage"); //$NON-NLS-1$
+			this.root = root;
+			this.lanes = new ArrayList<>(lanesInput);
+		}
+
+		public List<LaneDefinition> getLanes() {
+			return lanes;
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			container = new EditLanesContainer(parent, root, lanes);
+			setControl(container);
 		}
 
 		@Override
 		public boolean performFinish() {
-			saveFilter();
+			container.saveFilter();
 			for (int i = 0; i < lanes.size(); i++) {
 				LaneDefinition ld = lanes.get(i);
-				if (ld.isEnabled() != lanesViewer.getChecked(ld)) {
-					lanes.set(i, new LaneDefinition(ld.name, lanesViewer.getChecked(ld), ld.filter, ld.isRestLane));
+				if (ld.isEnabled() != container.lanesViewer.getChecked(ld)) {
+					lanes.set(i, new LaneDefinition(ld.name, container.lanesViewer.getChecked(ld), ld.filter,
+							ld.isRestLane));
 				}
 			}
 			return true;
@@ -434,6 +494,10 @@ public class LaneEditor {
 			return isRestLane;
 		}
 
+		public boolean isEnabledAndNotRestLane() {
+			return enabled && !isRestLane;
+		}
+
 		@Override
 		public void saveTo(IWritableState writableState) {
 			writableState.putString(NAME, name);
@@ -473,7 +537,7 @@ public class LaneEditor {
 		page.setTitle(title);
 		page.setDescription(description);
 		if (OnePageWizardDialog.open(page, 500, 600) == Window.OK) {
-			return page.lanes.stream().filter(LaneEditor::laneIncludesTypes).collect(Collectors.toList());
+			return page.getLanes().stream().filter(LaneEditor::laneIncludesTypes).collect(Collectors.toList());
 		}
 		return lanes;
 	}

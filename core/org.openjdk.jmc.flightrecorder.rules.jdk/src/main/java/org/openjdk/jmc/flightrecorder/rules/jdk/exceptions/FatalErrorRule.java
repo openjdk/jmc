@@ -65,7 +65,7 @@ public class FatalErrorRule extends AbstractRule {
 			.addEventType(JdkTypeIDs.VM_SHUTDOWN, EventAvailability.AVAILABLE).build();
 
 	public FatalErrorRule() {
-		super(RESULT_ID, Messages.getString(Messages.FatalErrorRule_RULE_NAME), JfrRuleTopics.JVM_INFORMATION_TOPIC,
+		super(RESULT_ID, Messages.getString(Messages.FatalErrorRule_RULE_NAME), JfrRuleTopics.JVM_INFORMATION,
 				Collections.<TypedPreference<?>> emptyList(), Collections.<TypedResult<?>> emptyList(),
 				REQUIRED_EVENTS);
 	}

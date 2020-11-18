@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
 #
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
@@ -61,6 +61,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.general.OptionsCheckRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInArgumentsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInSystemPropertiesRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ProcessStartedRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.RecordingSettingsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.StackDepthSettingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule
@@ -86,6 +87,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcFreedRatioRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcPauseRatioRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapContentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapDumpRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapInspectionRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.HighGcRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.IncreasingLiveSetRule

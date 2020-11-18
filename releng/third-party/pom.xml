@@ -84,7 +84,7 @@
 									</instructions>
 								</artifact>
 								<artifact>
-									<id>org.hdrhistogram:HdrHistogram:2.1.11</id>
+									<id>org.hdrhistogram:HdrHistogram:2.1.12</id>
 								</artifact>
 								<artifact>
 									<id>org.adoptopenjdk:jemmy-awt-input:2.0.0</id>
@@ -106,7 +106,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.4.14.v20181114</version>
+				<version>9.4.33.v20201020</version>
 				<configuration>
 					<scanIntervalSeconds>60</scanIntervalSeconds>
 					<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
@@ -121,7 +121,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M1</version>
+				<version>3.0.0-M3</version>
 				<executions>
 					<execution>
 						<id>enforce-java</id>

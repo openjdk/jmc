@@ -132,7 +132,7 @@ public class CodeCachePage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.CODE_CACHE_TOPIC};
+			return new String[] {JfrRuleTopics.CODE_CACHE};
 		}
 
 		@Override

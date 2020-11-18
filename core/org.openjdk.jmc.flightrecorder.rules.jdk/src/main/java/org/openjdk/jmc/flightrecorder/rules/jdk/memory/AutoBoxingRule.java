@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,12 +37,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
-import org.openjdk.jmc.common.IPredicate;
 import org.openjdk.jmc.common.collection.SimpleArray;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -87,9 +87,9 @@ public class AutoBoxingRule extends AbstractRule {
 	private static final String BYTE = "java.lang.Byte"; //$NON-NLS-1$
 	private static final String BOOLEAN = "java.lang.Boolean"; //$NON-NLS-1$
 
-	private static final IPredicate<IMCMethod> IS_AUTOBOXED_PREDICATE = new IPredicate<IMCMethod>() {
+	private static final Predicate<IMCMethod> IS_AUTOBOXED_PREDICATE = new Predicate<IMCMethod>() {
 		@Override
-		public boolean evaluate(IMCMethod method) {
+		public boolean test(IMCMethod method) {
 			String type = method.getType().getFullName();
 			if (VALUE_OF_METHOD_NAME.equals(method.getMethodName())) {
 				if (BYTE.equals(type)) {
@@ -153,7 +153,7 @@ public class AutoBoxingRule extends AbstractRule {
 
 	public AutoBoxingRule() {
 		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+				JfrRuleTopics.HEAP, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class AutoBoxingRule extends AbstractRule {
 		IMCFrame secondFrameFromMostAllocated = null;
 		for (StacktraceFrame stacktraceFrame : model.getRootFork().getFirstFrames()) {
 			IMCMethod method = stacktraceFrame.getFrame().getMethod();
-			if (IS_AUTOBOXED_PREDICATE.evaluate(method)) {
+			if (IS_AUTOBOXED_PREDICATE.test(method)) {
 				SimpleArray<IItem> itemArray = stacktraceFrame.getItems();
 				IQuantity total = UnitLookup.BYTE.quantity(0);
 				for (IItem item : itemArray) {

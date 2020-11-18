@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,7 +53,7 @@ public class TestJavaObjectTable {
 		JavaObjectTable table = builder.buildJavaObjectTable(classes);
 
 		JavaLazyReadObject obj = table.getObject(objPosInTable);
-		Assert.assertTrue(obj instanceof JavaObject);
+		Assert.assertTrue(JavaObject.class.isInstance(obj));
 		Assert.assertEquals(fooClass, obj.getClazz());
 		Assert.assertEquals(10, obj.getObjOfsInFile());
 	}
@@ -95,7 +95,7 @@ public class TestJavaObjectTable {
 			JavaLazyReadObject obj = table.getObject(objPosInTable[i]);
 
 			if (i % 2 == 0) {
-				Assert.assertTrue(obj instanceof JavaObject);
+				Assert.assertTrue(JavaObject.class.isInstance(obj));
 				Assert.assertEquals(fooClass, obj.getClazz());
 				Assert.assertFalse(obj.isVisited());
 				Assert.assertFalse(obj.isVisitedAsCollectionImpl());
@@ -103,7 +103,7 @@ public class TestJavaObjectTable {
 				Assert.assertTrue(obj.isVisited());
 				Assert.assertFalse(obj.isVisitedAsCollectionImpl());
 			} else {
-				Assert.assertTrue(obj instanceof JavaObjectArray);
+				Assert.assertTrue(JavaObjectArray.class.isInstance(obj));
 				Assert.assertEquals(barClass, obj.getClazz());
 				Assert.assertEquals(arrLen, ((JavaObjectArray) obj).getLength());
 				Assert.assertFalse(obj.isVisited());
@@ -123,12 +123,12 @@ public class TestJavaObjectTable {
 			Assert.assertEquals("i = " + i, objOfsInFile, obj.getObjOfsInFile());
 
 			if (i % 2 == 0) {
-				Assert.assertTrue("i = " + i, obj instanceof JavaObject);
+				Assert.assertTrue("i = " + i, JavaObject.class.isInstance(obj));
 				Assert.assertEquals("i = " + i, fooClass, obj.getClazz());
 				Assert.assertTrue(obj.isVisited());
 				Assert.assertFalse(obj.isVisitedAsCollectionImpl());
 			} else {
-				Assert.assertTrue("i = " + i, obj instanceof JavaObjectArray);
+				Assert.assertTrue("i = " + i, JavaObjectArray.class.isInstance(obj));
 				Assert.assertEquals("i = " + i, barClass, obj.getClazz());
 				Assert.assertEquals("i = " + i, arrLen, ((JavaObjectArray) obj).getLength());
 				Assert.assertFalse(obj.isVisited());
@@ -179,10 +179,10 @@ public class TestJavaObjectTable {
 			Assert.assertEquals("i = " + i, objOfsInFile, obj.getObjOfsInFile());
 
 			if (i % 2 == 0) {
-				Assert.assertTrue("i = " + i, obj instanceof JavaObject);
+				Assert.assertTrue("i = " + i, JavaObject.class.isInstance(obj));
 				Assert.assertEquals("i = " + i, fooClass, obj.getClazz());
 			} else {
-				Assert.assertTrue("i = " + i, obj instanceof JavaObjectArray);
+				Assert.assertTrue("i = " + i, JavaObjectArray.class.isInstance(obj));
 				Assert.assertEquals("i = " + i, barClass, obj.getClazz());
 				Assert.assertEquals("i = " + i, arrLen, ((JavaObjectArray) obj).getLength());
 			}

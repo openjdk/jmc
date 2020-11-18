@@ -33,6 +33,7 @@
 package org.openjdk.jmc.console.ui.editor.internal;
 
 import java.io.StringReader;
+import java.util.logging.Level;
 
 import javax.inject.Inject;
 
@@ -53,6 +54,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.Form;
+import org.openjdk.jmc.console.ui.ConsolePlugin;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
@@ -174,7 +176,12 @@ public class ConsoleFormPage extends FormPage implements IConsolePageContainer {
 		if (iconName != null) {
 			String pluginId = config.getDeclaringExtension().getContributor().getName();
 			ImageDescriptor iconDesc = ResourceLocator.imageDescriptorFromBundle(pluginId, iconName).orElse(null);
-			icon = (Image) JFaceResources.getResources().get(iconDesc);
+			if (iconDesc != null) {
+				icon = (Image) JFaceResources.getResources().get(iconDesc);
+			} else {
+				ConsolePlugin.getDefault().getLogger().log(Level.WARNING,
+						"Could not load icon " + iconName + " for plug-in " + pluginId);
+			}
 		}
 	}
 

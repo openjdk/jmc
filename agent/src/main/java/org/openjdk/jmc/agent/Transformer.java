@@ -60,9 +60,6 @@ public class Transformer implements ClassFileTransformer {
 	public byte[] transform(
 		ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 		byte[] classfileBuffer) throws IllegalClassFormatException {
-		if (!registry.hasPendingTransforms(className)) {
-			return registry.isRevertIntrumentation() ? classfileBuffer : null;
-		}
 
 		// We need a class instance for reflective inspection, so create a InspectionClassLoader if the class if not yet 
 		// loaded.
@@ -72,29 +69,26 @@ public class Transformer implements ClassFileTransformer {
 
 	private byte[] doTransforms(
 		List<TransformDescriptor> transformDataList, byte[] classfileBuffer, ClassLoader definingClassLoader,
-			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-			InspectionClassLoader inspectionClassLoader) {
+		Class<?> classBeingRedefined, ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
 		for (TransformDescriptor td : transformDataList) {
-			if (td.isPendingTransforms()) {
-				// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
-				classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined,
-						protectionDomain, inspectionClassLoader);
-				td.setPendingTransforms(false);
-			}
+			// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
+			classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined,
+					protectionDomain, inspectionClassLoader);
+			td.setPendingTransforms(false);
 		}
 		return classfileBuffer;
 	}
 
 	private byte[] doTransform(
 		TransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader, Class<?> classBeingRedefined,
-			ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
+		ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
 		return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, classBeingRedefined,
 				protectionDomain, inspectionClassLoader);
 	}
 
 	private byte[] doJFRLogging(
-		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader, Class<?> classBeingRedefined,
-			ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
+		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
+		Class<?> classBeingRedefined, ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
 		if (VersionResolver.getAvailableJFRVersion() == JFRVersion.NONE) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Could not find JFR classes. Failed to instrument " + td.getMethod().toString()); //$NON-NLS-1$
@@ -102,11 +96,11 @@ public class Transformer implements ClassFileTransformer {
 		}
 		try {
 			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT ?
-					new JFRNextClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain,
-							inspectionClassLoader) :
-					new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain,
-							inspectionClassLoader); 
+			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT
+					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined,
+							protectionDomain, inspectionClassLoader)
+					: new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain,
+							inspectionClassLoader);
 			ClassReader reader = new ClassReader(classfileBuffer);
 			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 			return classWriter.toByteArray();

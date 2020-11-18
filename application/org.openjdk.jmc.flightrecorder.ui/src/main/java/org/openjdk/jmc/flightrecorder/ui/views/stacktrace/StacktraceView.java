@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -193,6 +193,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private ColumnViewer viewer;
 	private boolean treeLayout;
 	private boolean reducedTree;
+	private IAction reducedTreeAction;
 	private boolean threadRootAtTop;
 	private IItemCollection itemsToShow;
 	private MethodFormatter methodFormatter;
@@ -361,6 +362,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	};
 
+	private void updateReducedTreeOption() {
+		reducedTreeAction.setEnabled(treeLayout);
+		reducedTreeAction.setChecked(reducedTree);
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -370,10 +376,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		treeLayout = StateToolkit.readBoolean(state, TREE_LAYOUT_KEY, false);
 		reducedTree = StateToolkit.readBoolean(state, REDUCED_TREE_KEY, true);
 
-		IAction reducedTreeAction = ActionToolkit.checkAction(this::setReducedTree,
-				Messages.STACKTRACE_VIEW_REDUCE_TREE_DEPTH, null);
-		reducedTreeAction.setChecked(reducedTree);
-		IAction treeAction = ActionToolkit.checkAction(this::setTreeLayout, Messages.STACKTRACE_VIEW_SHOW_AS_TREE,
+		reducedTreeAction = ActionToolkit.checkAction(this::setReducedTree, Messages.STACKTRACE_VIEW_REDUCE_TREE_DEPTH,
+				null);
+		updateReducedTreeOption();
+
+		IAction treeAction = ActionToolkit.checkAction(this::setTreeLayout, Messages.STACKTRACE_VIEW_TREE_VIEW,
 				CoreImages.TREE_MODE);
 		treeAction.setChecked(treeLayout);
 		layoutActions = new IAction[] {treeAction, reducedTreeAction};
@@ -431,6 +438,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void setTreeLayout(boolean treeLayout) {
 		this.treeLayout = treeLayout;
 		rebuildViewer();
+		updateReducedTreeOption();
 	}
 
 	private void setReducedTree(boolean reducedTree) {
@@ -438,6 +446,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (viewer instanceof TreeViewer) {
 			viewer.setContentProvider(createTreeContentProvider());
 		}
+		updateReducedTreeOption();
 	}
 
 	// See JMC-6787
@@ -755,12 +764,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			String frameFraction = UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount)
 					.displayUsing(IDisplayable.AUTO);
 			StringBuilder sb = new StringBuilder("<form>"); //$NON-NLS-1$
-			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'>"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.stackTraceMessage(itemCount, totalCount, frameFraction));
-			sb.append("</li>"); //$NON-NLS-1$
-			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'>"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("</span></li>"); //$NON-NLS-1$
+			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.siblingMessage(itemsInSiblings, parentFork.getBranchCount() - 1));
-			sb.append("</li>"); //$NON-NLS-1$
+			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("</form>"); //$NON-NLS-1$
 			return sb.toString();
 		}

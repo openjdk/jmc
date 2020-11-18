@@ -122,7 +122,7 @@ public class FullGcRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.GARBAGE_COLLECTION_TOPIC;
+		return JfrRuleTopics.GARBAGE_COLLECTION;
 	}
 
 	private static class G1Aggregator extends MergingAggregator<G1FullGCInfo, G1FullGCInfo> {

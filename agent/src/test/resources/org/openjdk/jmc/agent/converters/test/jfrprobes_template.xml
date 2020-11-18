@@ -34,17 +34,18 @@
 <jfragent>
 	<!-- Global configuration options -->
 	<config>
-		<!-- This is the prefix to use when generating event class names -->
+		<!-- This is the prefix to use when generating event class names. -->
 		<classprefix>__JFREvent</classprefix>
 		<!-- Will allow the recording of arrays and object parameters as Strings. 
-			This will cause toString to be called for array elements and objects other 
-			than strings, which in turn can cause trouble if the toString method is badly 
-			implemented. Use with care. -->
+			 This will cause toString to be called for array elements and objects other 
+			 than strings, which in turn can cause trouble if the toString method is badly 
+			 implemented. Use with care. -->
 		<allowtostring>true</allowtostring>
-		<!-- Allows converters to be used. If a converter is badly implemented, 
-			you are on your own. -->
+		<!-- Allows converters to be used. 
+		     See the org.openjdk.jmc.agent.converters package for more information. -->
 		<allowconverter>true</allowconverter>
 	</config>
+	<!-- Event probe declarations -->
 	<events>
 		<event id="demo.jfr.convertertest.String">
 			<name>ConverterEventString-%TEST_NAME%</name>

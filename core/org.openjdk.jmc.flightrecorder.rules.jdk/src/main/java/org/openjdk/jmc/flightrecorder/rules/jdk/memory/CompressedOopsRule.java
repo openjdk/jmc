@@ -121,7 +121,7 @@ public class CompressedOopsRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.GC_CONFIGURATION_TOPIC;
+		return JfrRuleTopics.GC_CONFIGURATION;
 	}
 
 	@Override

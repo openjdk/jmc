@@ -40,19 +40,20 @@
 	<artifactId>org.openjdk.jmc.agent</artifactId>
 	<packaging>jar</packaging>
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<asm.version>8.0.1</asm.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.version>1.26.0</spotless.version>
+		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.2.4</version>
 				<configuration>
 					<artifactSet>
 						<includes>
@@ -65,6 +66,27 @@
 							<shadedPattern>org.openjdk.jmc.internal.org.objectweb.asm.</shadedPattern>
 						</relocation>
 					</relocations>
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>module-info.class</exclude>
+								<exclude>META-INF/MANIFEST.MF</exclude>
+							</excludes>
+						</filter>
+					</filters>
+					<transformers>
+						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+							<manifestEntries>
+								<Automatic-Module-Name>org.openjdk.jmc.agent</Automatic-Module-Name>
+								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
+								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
+								<Can-Retransform-Classes>true</Can-Retransform-Classes>
+								<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+								<Built-By></Built-By>
+							</manifestEntries>
+						</transformer>
+					</transformers>
 				</configuration>
 				<executions>
 					<execution>
@@ -79,18 +101,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.1.0</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Automatic-Module-Name>org.openjdk.jmc.agent</Automatic-Module-Name>
-							<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
-							<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
-							<Can-Retransform-Classes>true</Can-Retransform-Classes>
-							<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
-							<Built-By></Built-By>
-						</manifestEntries>
-					</archive>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -101,8 +111,10 @@
 						-XX:+FlightRecorder</argLine>
 					<excludes>
 						<exclude>TestDefineEventProbes.java</exclude>
+						<exclude>TestCustomClassloader.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
+						<exclude>TestRetrieveEventProbes.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -135,6 +147,32 @@
 								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
 								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
 							<includes>TestDefineEventProbes.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-custom-classloader</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestCustomClassloader.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-retrieve-event-probes</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
+								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+							<includes>TestRetrieveEventProbes.java</includes>
 						</configuration>
 					</execution>
 					<execution>
@@ -219,6 +257,19 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<eclipse>
+	  						<file>${spotless.config.path}</file>
+	 						<version>4.8.0</version>
+ 						</eclipse>
+					</java>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

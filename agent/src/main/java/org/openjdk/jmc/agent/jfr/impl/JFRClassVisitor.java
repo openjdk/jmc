@@ -53,16 +53,14 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 	public JFRClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			InspectionClassLoader inspectionClassLoader) {
-		super(Opcodes.ASM5, cv);
+		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
 
 		try {
-			this.inspectionClass =
-					classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined :
-							inspectionClassLoader
-									.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
+			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
+					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e); // This should not happen
 		}
@@ -73,7 +71,8 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM5, mv, access, name, desc);
+			transformDescriptor.matchFound(true);
+			return new JFRMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -87,6 +86,11 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
 					t);
 		}
+		if (!transformDescriptor.isMatchFound()) {
+			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
+					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
+		}
+
 		super.visitEnd();
 	}
 

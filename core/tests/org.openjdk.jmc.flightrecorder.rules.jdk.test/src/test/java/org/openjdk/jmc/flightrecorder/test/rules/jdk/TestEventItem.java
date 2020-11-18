@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,24 +31,51 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common;
+package org.openjdk.jmc.flightrecorder.test.rules.jdk;
 
-/**
- * A predicate tests an object and returns either {@code true} or {@code false} depending on the
- * implementation. This is very similar to the Java 8 interface java.util.Predicate.
- *
- * @param <T>
- *            the type of objects that this predicate can test
- */
-// FIXME: Move to a subpackage (common.util?)
-public interface IPredicate<T> {
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.function.Predicate;
 
-	/**
-	 * Tests an object.
-	 *
-	 * @param o
-	 *            object to test
-	 * @return the test result, {@code true} or {@code false}
-	 */
-	boolean evaluate(T o);
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IType;
+
+public class TestEventItem implements IItem, IItemIterable {
+	private final TestEvent event;
+
+	public TestEventItem(TestEvent event) {
+		this.event = event;
+	}
+
+	@Override
+	public IType<IItem> getType() {
+		return event;
+	}
+
+	TestEvent getEvent() {
+		return event;
+	}
+
+	@Override
+	public Iterator<IItem> iterator() {
+		return Collections.singleton((IItem) event).iterator();
+	}
+
+	@Override
+	public boolean hasItems() {
+		return true;
+	}
+
+	@Override
+	public long getItemCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public IItemIterable apply(Predicate<IItem> predicate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

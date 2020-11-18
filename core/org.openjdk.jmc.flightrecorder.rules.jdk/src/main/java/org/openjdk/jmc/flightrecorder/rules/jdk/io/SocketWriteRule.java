@@ -43,6 +43,7 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -90,9 +91,12 @@ public class SocketWriteRule implements IRule {
 	public static final TypedResult<String> LONGEST_WRITE_ADDRESS = new TypedResult<>("longestWriteHost", //$NON-NLS-1$
 			"Longest Write (Host)", "The remote host of the socket write that took the longest time.",
 			UnitLookup.PLAIN_TEXT, String.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalWriteForLongest", "Total Write (Top Host)", "The total duration of all socket writes for the host with the longest write.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketWrite", "Average Socket Write", "The average duration of all socket writes.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketWrite", "Total Socket Write", "The total duration of all socket writes.", UnitLookup.TIMESPAN, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
-			TypedResult.SCORE, LONGEST_WRITE_ADDRESS, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_TIME);
+			TypedResult.SCORE, LONGEST_WRITE_ADDRESS, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_TIME, LONGEST_TOTAL_READ, AVERAGE_SOCKET_READ, TOTAL_SOCKET_READ);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.SOCKET_WRITE, EventAvailability.AVAILABLE).build();
@@ -114,6 +118,7 @@ public class SocketWriteRule implements IRule {
 		IQuantity warningLimit = vp.getPreferenceValue(WRITE_WARNING_LIMIT);
 		IItem longestEvent = items.apply(JdkFilters.NO_RMI_SOCKET_WRITE)
 				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
+		IItemCollection writeItems = items.apply(JdkFilters.NO_RMI_SOCKET_WRITE);
 		// We had events, but all got filtered out - say ok, duration 0. Perhaps say "no matching" or something similar.
 		if (longestEvent == null) {
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
@@ -130,12 +135,23 @@ public class SocketWriteRule implements IRule {
 			String address = SocketReadRule
 					.sanitizeAddress(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS));
 			IQuantity amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_WRITTEN);
+			IQuantity avgDuration = writeItems
+					.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION));
+			IQuantity totalDuration = writeItems
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION));
+			IItemCollection eventsFromLongestAddress = writeItems
+					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, longestIOAddress));
+			IQuantity totalLongestIOAddress = eventsFromLongestAddress
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_WRITE, JfrAttributes.DURATION));
 			return ResultBuilder.createFor(this, vp).setSeverity(severity)
 					.setSummary(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.SocketWriteRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
 							+ Messages.getString(Messages.SocketWriteRuleFactory_TEXT_RMI_NOTE))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(LONGEST_WRITE_ADDRESS, address).addResult(LONGEST_WRITE_AMOUNT, amountWritten)
+					.addResult(LONGEST_TOTAL_READ, totalLongestIOAddress)
+					.addResult(AVERAGE_SOCKET_READ, avgDuration)
+					.addResult(TOTAL_SOCKET_READ, totalDuration)
 					.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(severity)
@@ -162,7 +178,7 @@ public class SocketWriteRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.SOCKET_IO_TOPIC;
+		return JfrRuleTopics.SOCKET_IO;
 	}
 
 	@Override

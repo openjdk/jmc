@@ -67,12 +67,14 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final boolean allowToString;
 	private final boolean allowConverter;
 	private final boolean emitOnException;
+	private boolean matchFound;
 	private final List<Parameter> parameters;
 	private final ReturnValue returnValue;
 	private final List<Field> fields;
 
 	public JFRTransformDescriptor(String id, String className, Method method,
-			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue, List<Field> fields) {
+			Map<String, String> transformationAttributes, List<Parameter> parameters, ReturnValue returnValue,
+			List<Field> fields) {
 		super(id, className, method, transformationAttributes);
 		classPrefix = initializeClassPrefix();
 		eventName = initializeEventName();
@@ -104,16 +106,17 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 
 		Map<String, String> attr = new HashMap<>();
 		TabularData td = (TabularData) cd.get("transformationAttributes");
-		Object[]  values =  td.values().toArray();
-		for (int i = 0; i < values.length; i++){
+		Object[] values = td.values().toArray();
+		for (int i = 0; i < values.length; i++) {
 			CompositeData cdValue = (CompositeData) values[i];
 			String value = (String) cdValue.get("value");
 			String key = (String) cdValue.get("key");
 			attr.put(key, value);
 		}
 
-		return new JFRTransformDescriptor((String) cd.get("id"), (String) cd.get("className"), Method.from((CompositeData) cd.get("method")),
-				attr, params, ReturnValue.from((CompositeData) cd.get("returnValue")), fields);
+		return new JFRTransformDescriptor((String) cd.get("id"), (String) cd.get("className"),
+				Method.from((CompositeData) cd.get("method")), attr, params,
+				ReturnValue.from((CompositeData) cd.get("returnValue")), fields);
 	}
 
 	public String getEventClassName() {
@@ -147,11 +150,11 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	public boolean isAllowToString() {
 		return allowToString;
 	}
-	
+
 	public boolean isAllowConverter() {
 		return allowConverter;
 	}
-	
+
 	public boolean isEmitOnException() {
 		return emitOnException;
 	}
@@ -233,4 +236,13 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		}
 		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;
 	}
+
+	public void matchFound(boolean matched) {
+		this.matchFound = matched;
+	}
+
+	public boolean isMatchFound() {
+		return matchFound;
+	}
+
 }

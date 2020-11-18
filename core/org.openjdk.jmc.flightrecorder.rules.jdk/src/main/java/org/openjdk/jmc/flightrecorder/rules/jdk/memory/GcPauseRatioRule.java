@@ -92,7 +92,7 @@ public class GcPauseRatioRule extends AbstractRule {
 
 	public GcPauseRatioRule() {
 		super("GcPauseRatio", Messages.getString(Messages.GcPauseRatioRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.GARBAGE_COLLECTION_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+				JfrRuleTopics.GARBAGE_COLLECTION, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override

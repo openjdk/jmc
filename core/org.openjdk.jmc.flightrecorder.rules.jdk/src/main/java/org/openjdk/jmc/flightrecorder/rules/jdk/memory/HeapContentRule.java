@@ -144,7 +144,7 @@ public class HeapContentRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.HEAP_TOPIC;
+		return JfrRuleTopics.HEAP;
 	}
 
 	@Override

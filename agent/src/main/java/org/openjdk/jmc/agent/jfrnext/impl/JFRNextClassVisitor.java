@@ -35,12 +35,12 @@ package org.openjdk.jmc.agent.jfrnext.impl;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
@@ -54,16 +54,14 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
 			InspectionClassLoader inspectionClassLoader) {
-		super(Opcodes.ASM5, cv);
+		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
 
 		try {
-			this.inspectionClass =
-					classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined :
-							inspectionClassLoader
-									.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
+			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
+					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(e); // This should not happen
 		}
@@ -74,7 +72,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
-			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM5, mv, access, name, desc);
+			transformDescriptor.matchFound(true);
+			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
 		}
 		return mv;
 	}
@@ -84,8 +83,12 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		try {
 			reflectiveRegister(generateEventClass());
 		} catch (Exception e) {
-			Logger.getLogger(JFRNextClassVisitor.class.getName()).log(Level.SEVERE,
-					"Failed to generate event class for " + transformDescriptor.toString(), e); //$NON-NLS-1$
+			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
+					e);
+		}
+		if (!transformDescriptor.isMatchFound()) {
+			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
+					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
 		super.visitEnd();
 	}
@@ -98,12 +101,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	}
 
 	private Class<?> generateEventClass() throws Exception {
-		try {
-			return Class.forName(TypeUtils.getCanonicalName(transformDescriptor.getEventClassName()));
-		} catch (ClassNotFoundException e) {
-			byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
-			return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
-					definingClassLoader, protectionDomain);
-		}
+		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
+		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
+				definingClassLoader, protectionDomain);
 	}
 }

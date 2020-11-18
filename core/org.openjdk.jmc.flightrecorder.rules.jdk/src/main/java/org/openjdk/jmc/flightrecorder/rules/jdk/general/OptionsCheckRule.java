@@ -636,7 +636,7 @@ public class OptionsCheckRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 
 	@Override

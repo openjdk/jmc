@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -67,9 +68,17 @@ public class VerifyNoneRule implements IRule {
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String verifyNone = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-Xverify:none", false); //$NON-NLS-1$
+		if (verifyNone == null) {
+			verifyNone = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
+					"\\-Xverify:none", false); //$NON-NLS-1$
+		}
 		// FIXME: Possibly not needed, seems to be translated to -Xverify:none.
 		String noVerify = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-noverify*", false); //$NON-NLS-1$
+		if (noVerify == null) {
+			noVerify = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS, "\\-noverify*", //$NON-NLS-1$
+					false);
+		}
 		if (verifyNone != null || noVerify != null) {
 			// FIXME: Improve check, possibly make it configurable for the user?
 			String wls = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
@@ -79,9 +88,11 @@ public class VerifyNoneRule implements IRule {
 						.setSummary(Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO))
 						.setExplanation(Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO_LONG)).build();
 			}
+			String argument = verifyNone != null ? verifyNone : noVerify;
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG)).build();
+					.setExplanation(MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG), argument))
+					.build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.VerifyNoneRule_TEXT_OK)).build();
@@ -117,7 +128,7 @@ public class VerifyNoneRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 
 	@Override

@@ -143,7 +143,7 @@ public class AllocationByThreadRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JAVA_APPLICATION_TOPIC;
+		return JfrRuleTopics.JAVA_APPLICATION;
 	}
 
 	@Override

@@ -118,7 +118,7 @@ public class ClassLoadingPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.CLASS_LOADING_TOPIC};
+			return new String[] {JfrRuleTopics.CLASS_LOADING};
 		}
 
 		@Override

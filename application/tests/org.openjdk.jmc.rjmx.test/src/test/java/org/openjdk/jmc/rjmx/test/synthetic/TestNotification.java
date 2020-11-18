@@ -32,8 +32,11 @@
  */
 package org.openjdk.jmc.rjmx.test.synthetic;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.MBeanServerConnection;
 import javax.management.openmbean.OpenType;
@@ -42,7 +45,14 @@ import javax.management.openmbean.SimpleType;
 import org.openjdk.jmc.rjmx.subscription.internal.AbstractSyntheticNotification;
 
 public class TestNotification extends AbstractSyntheticNotification {
-	private Timer timer;
+	private final static AtomicInteger THREAD_ID_PROVIDER = new AtomicInteger(0);
+	private final int notificationId = THREAD_ID_PROVIDER.getAndIncrement();
+	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "TestNotification Executor " + notificationId);
+		}
+	});
 	private int count = 1;
 
 	@Override
@@ -53,18 +63,17 @@ public class TestNotification extends AbstractSyntheticNotification {
 	@Override
 	public void init(MBeanServerConnection connection, String type, String message) {
 		super.init(connection, type, message);
-		timer = new Timer(getMessage(), true);
-		timer.schedule(new TimerTask() {
+		executor.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				triggerNotification();
 			}
-		}, 0, 1000);
+		}, 5, 100, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public void stop() {
-		timer.cancel();
+		executor.shutdownNow();
 	}
 
 	@Override
@@ -75,5 +84,10 @@ public class TestNotification extends AbstractSyntheticNotification {
 	@Override
 	public boolean hasResolvedDependencies(MBeanServerConnection connection) {
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TestNotification " + notificationId + " - " + getMessage();
 	}
 }

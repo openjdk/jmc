@@ -105,7 +105,7 @@ public class ApplicationHaltsRule extends AbstractRule {
 
 	public ApplicationHaltsRule() {
 		super("ApplicationHalts", Messages.getString(Messages.ApplicationHaltsRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.JAVA_APPLICATION_TOPIC, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+				JfrRuleTopics.JAVA_APPLICATION, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override

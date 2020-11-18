@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -94,21 +94,39 @@ public class ThreadGraphLanes {
 	private Runnable buildChart;
 	private List<IAction> actions;
 	private String tooltipTitle;
+	private EventTypeFolderNode typeTree;
 
 	public ThreadGraphLanes(Supplier<StreamModel> dataSourceSupplier, Runnable buildChart) {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
 		this.actions = new ArrayList<>();
+		this.typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+	}
+
+	protected EventTypeFolderNode getTypeTree() {
+		return typeTree;
 	}
 
 	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		EventTypeFolderNode typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
 				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
 		updateContextMenu(mm, isLegendMenu);
+		buildChart.run();
+	}
+
+	public void openEditLanesDialog(MCContextMenuManager[] mms, boolean isLegendMenu) {
+		// FIXME: Might there be other interesting events that don't really have duration?
+		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
+				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
+				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
+				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
+		updateContextMenus(mms, isLegendMenu);
 		buildChart.run();
 	}
 
@@ -137,6 +155,15 @@ public class ThreadGraphLanes {
 
 	private void resetTooltipTitle() {
 		this.tooltipTitle = null;
+	}
+
+	public void buildChart() {
+		buildChart.run();
+	}
+
+	private void setLaneDefinitionEnablement(LaneDefinition oldLd, int laneIndex, boolean isEnabled) {
+		LaneDefinition newLd = new LaneDefinition(oldLd.getName(), isEnabled, oldLd.getFilter(), oldLd.isRestLane());
+		laneDefs.set(laneIndex, newLd);
 	}
 
 	public IXDataRenderer buildThreadRenderer(Object thread, IItemCollection items) {
@@ -243,8 +270,60 @@ public class ThreadGraphLanes {
 	private List<String> chartActionIdentifiers = new ArrayList<>();
 	private List<String> legendActionIdentifiers = new ArrayList<>();
 
-	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
+	public void updateContextMenus(MCContextMenuManager[] mms, boolean isLegendMenu) {
+		if (isLegendMenu) {
+			for (String id : legendActionIdentifiers) {
+				for (MCContextMenuManager mm : mms) {
+					mm.remove(id);
+				}
+			}
+			legendActionIdentifiers.clear();
+		} else {
+			for (String id : chartActionIdentifiers) {
+				for (MCContextMenuManager mm : mms) {
+					mm.remove(id);
+				}
+			}
+			chartActionIdentifiers.clear();
+		}
+		if (mms[0].indexOf(EDIT_LANES) == -1) {
+			IAction action = ActionToolkit.action(() -> this.openEditLanesDialog(mms, isLegendMenu),
+					Messages.JavaApplicationPage_EDIT_THREAD_LANES_ACTION,
+					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_LANES_EDIT));
+			action.setId(EDIT_LANES);
+			for (MCContextMenuManager mm : mms) {
+				mm.add(action);
+				mm.add(new Separator());
+			}
+			actions.add(action);
+		}
+		laneDefs.stream().forEach(ld -> {
+			Action checkAction = new Action(ld.getName(), IAction.AS_CHECK_BOX) {
+				int laneIndex = laneDefs.indexOf(ld);
 
+				@Override
+				public void run() {
+					setLaneDefinitionEnablement(ld, laneIndex, isChecked());
+					buildChart.run();
+				}
+			};
+			String identifier = ld.getName() + checkAction.hashCode();
+			checkAction.setId(identifier);
+			if (isLegendMenu) {
+				legendActionIdentifiers.add(identifier);
+			} else {
+				chartActionIdentifiers.add(identifier);
+			}
+			checkAction.setChecked(ld.isEnabled());
+			// FIXME: Add a tooltip here
+			for (MCContextMenuManager mm : mms) {
+				mm.add(checkAction);
+			}
+			actions.add(checkAction);
+		});
+	}
+
+	public void updateContextMenu(MCContextMenuManager mm, boolean isLegendMenu) {
 		if (isLegendMenu) {
 			for (String id : legendActionIdentifiers) {
 				mm.remove(id);
@@ -271,9 +350,7 @@ public class ThreadGraphLanes {
 
 				@Override
 				public void run() {
-					LaneDefinition newLd = new LaneDefinition(ld.getName(), isChecked(), ld.getFilter(),
-							ld.isRestLane());
-					laneDefs.set(laneIndex, newLd);
+					setLaneDefinitionEnablement(ld, laneIndex, isChecked());
 					buildChart.run();
 				}
 			};

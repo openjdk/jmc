@@ -89,7 +89,7 @@ public class CompareCpuRule extends AbstractRule {
 			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE).build();
 
 	public CompareCpuRule() {
-		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES_TOPIC, //$NON-NLS-1$
+		super("CompareCpu", Messages.getString(Messages.CompareCpuRule_RULE_NAME), JfrRuleTopics.PROCESSES, //$NON-NLS-1$
 				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 

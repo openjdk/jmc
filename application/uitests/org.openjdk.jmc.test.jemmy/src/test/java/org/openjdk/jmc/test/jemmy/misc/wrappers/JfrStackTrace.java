@@ -61,7 +61,7 @@ public class JfrStackTrace extends MCJemmyBase {
 	private String FRAME_GROUP = "Choose Frame Group";
 	private String PREVIOUS = "Previous Frame Group";
 	private String NEXT = "Next Frame Group";
-	private String TREE = "Show as Tree";
+	private String TREE = "Tree View";
 	private String GROUP_METHOD = "Group traces from last method";
 	private String GROUP_ROOT = "Group traces from thread root";
 
@@ -392,7 +392,7 @@ public class JfrStackTrace extends MCJemmyBase {
 	}
 
 	/**
-	 * Clicks the button "Show as Tree" in the toolbar
+	 * Clicks the button "Tree View" in the toolbar
 	 */
 	public void clickShowAsTreeButton() {
 		toolBar.clickToolItem(TREE);
@@ -428,7 +428,7 @@ public class JfrStackTrace extends MCJemmyBase {
 	}
 
 	/**
-	 * Makes sure that the the state of the Show as tree mode corresponds with the provided value.
+	 * Makes sure that the the state of the "Tree View" mode corresponds with the provided value.
 	 *
 	 * @param state
 	 *            {@code true} if the stack trace should be displayed as a tree, {@code false} if it
@@ -444,7 +444,7 @@ public class JfrStackTrace extends MCJemmyBase {
 	}
 
 	/**
-	 * Checks if the "Show as Tree" button in the toolbar is enabled.
+	 * Checks if the "Tree View" button in the toolbar is enabled.
 	 * 
 	 * @return {@code true} if enabled, {@code false} if not
 	 */

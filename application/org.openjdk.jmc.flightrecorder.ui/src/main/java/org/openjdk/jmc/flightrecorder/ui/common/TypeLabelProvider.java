@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,40 +36,79 @@ import java.awt.Color;
 
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 // May evolve into a label provider
 public class TypeLabelProvider {
 
 	public static Color getColor(String typeId) {
 		switch (typeId) {
-		case JdkTypeIDs.ERRORS_THROWN:
-			return new Color(0xFF0000);
-		case JdkTypeIDs.EXCEPTIONS_THROWN:
-			return new Color(0xC80000);
+		case JdkTypeIDs.RECORDINGS:
+			return Palette.PF_CYAN_300.getAWTColor();
+		case JdkTypeIDs.RECORDING_SETTING:
+			return Palette.PF_GREEN_300.getAWTColor();
+		case JdkTypeIDs.THROWABLES_STATISTICS:
+			return Palette.PF_GOLD_500.getAWTColor();
+		case JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION:
+			return Palette.PF_PURPLE_400.getAWTColor();
+		case JdkTypeIDs.BIASED_LOCK_REVOCATION:
+			return Palette.PF_LIGHT_GREEN_300.getAWTColor();
+		case JdkTypeIDs.BIASED_LOCK_SELF_REVOCATION:
+			return Palette.PF_LIGHT_GREEN_400.getAWTColor();
 		case JdkTypeIDs.FILE_READ:
-			return new Color(0xBE4422);
+			return Palette.PF_ORANGE_300.getAWTColor();
 		case JdkTypeIDs.FILE_WRITE:
-			return new Color(0x2C689E);
+			return Palette.PF_CYAN_600.getAWTColor();
+		case JdkTypeIDs.ERRORS_THROWN:
+			return Palette.PF_RED_100.getAWTColor();
+		case JdkTypeIDs.EXCEPTIONS_THROWN:
+			return Palette.PF_RED_300.getAWTColor();
 		case JdkTypeIDs.MONITOR_ENTER:
-			return new Color(0xFF6D64);
+			return Palette.PF_ORANGE_200.getAWTColor();
 		case JdkTypeIDs.MONITOR_WAIT:
-			return new Color(0xFFE75B);
+			return Palette.PF_GOLD_200.getAWTColor();
+		case JdkTypeIDs.THREAD_PARK:
+			return Palette.PF_BLACK_500.getAWTColor();
+		case JdkTypeIDs.THREAD_SLEEP:
+			return Palette.PF_BLUE_500.getAWTColor();
+		case JdkTypeIDs.OLD_OBJECT_SAMPLE:
+			return Palette.PF_CYAN_200.getAWTColor();
+		case JdkTypeIDs.SWEEP_CODE_CACHE:
+			return Palette.PF_LIGHT_GREEN_500.getAWTColor();
+		case JdkTypeIDs.SOCKET_READ:
+			return new Color(0xC8321E);
+		case JdkTypeIDs.SOCKET_WRITE:
+			return Palette.PF_LIGHT_BLUE_500.getAWTColor();
+		case JdkTypeIDs.CLASS_LOAD:
+			return Palette.PF_PURPLE_100.getAWTColor();
+		case JdkTypeIDs.COMPILATION:
+			return Palette.PF_GOLD_300.getAWTColor();
+		case JdkTypeIDs.GC_PAUSE:
+			return new Color(0xDC3C00);
+		case JdkTypeIDs.GC_PAUSE_L1:
+			return new Color(0xE6CB45);
+		case JdkTypeIDs.GC_PAUSE_L2:
+			return new Color(0x458AE6);
+		case JdkTypeIDs.GC_PAUSE_L3:
+			return new Color(0xE645E2);
+		case JdkTypeIDs.GC_PAUSE_L4:
+			return new Color(0x85A115);
+		case JdkTypeIDs.SAFEPOINT_BEGIN:
+			return Palette.PF_PURPLE_200.getAWTColor();
+		case JdkTypeIDs.SAFEPOINT_CLEANUP:
+			return Palette.PF_PURPLE_500.getAWTColor();
+		case JdkTypeIDs.SAFEPOINT_CLEANUP_TASK:
+			return Palette.PF_BLUE_300.getAWTColor();
+		case JdkTypeIDs.VM_OPERATIONS:
+			return Palette.PF_ORANGE_500.getAWTColor();
 		case JdkTypeIDs.ALLOC_INSIDE_TLAB:
 			return new Color(0xFF8000);
 		case JdkTypeIDs.ALLOC_OUTSIDE_TLAB:
 			return new Color(0x808000);
-		case JdkTypeIDs.SOCKET_READ:
-			return new Color(0xC8321E);
-		case JdkTypeIDs.SOCKET_WRITE:
-			return new Color(0x4678C8);
-		case JdkTypeIDs.THREAD_PARK:
-			return new Color(0x808080);
 		case JdkTypeIDs.JAVA_THREAD_END:
 			return new Color(0x408040);
 		case JdkTypeIDs.JAVA_THREAD_START:
 			return new Color(0x80FF80);
-		case JdkTypeIDs.CLASS_LOAD:
-			return new Color(0x9B81DB);
 		case JdkTypeIDs.CLASS_UNLOAD:
 			return new Color(0x00FF00);
 		case JdkTypeIDs.COMPILER_FAILURE:
@@ -84,26 +123,12 @@ public class TypeLabelProvider {
 			return new Color(0xFF0000);
 		case JdkTypeIDs.GC_DETAILED_PROMOTION_FAILED:
 			return new Color(0xD04E4E);
-		case JdkTypeIDs.GC_PAUSE:
-			return new Color(0xDC3C00);
-		case JdkTypeIDs.GC_PAUSE_L1:
-			return new Color(0xE6CB45);
-		case JdkTypeIDs.GC_PAUSE_L2:
-			return new Color(0x458AE6);
-		case JdkTypeIDs.GC_PAUSE_L3:
-			return new Color(0xE645E2);
-		case JdkTypeIDs.GC_PAUSE_L4:
-			return new Color(0x85A115);
 		case JdkTypeIDs.EXECUTION_SAMPLE:
 			return new Color(0xCC66FF);
 		case JdkTypeIDs.EXECUTION_SAMPLING_INFO_EVENT_ID:
 			return new Color(0xE6C940);
-		case JdkTypeIDs.VM_OPERATIONS:
-			return new Color(0xBA6F1F);
 		case JdkTypeIDs.PROCESSES:
 			return new Color(0xE37A44);
-		case JdkTypeIDs.COMPILATION:
-			return new Color(0xF7EA2A);
 		case JdkTypeIDs.CONCURRENT_MODE_FAILURE:
 			return new Color(0xFF0000);
 		case JdkTypeIDs.CONTEXT_SWITCH_RATE:

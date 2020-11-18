@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -91,8 +91,8 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return <tt>true</tt> of it is a JRockit, <tt>false</tt> if it isn't or if was not possible
-	 *         to tell.
+	 * @return <code>true</code> of it is a JRockit, <code>false</code> if it isn't or if was not
+	 *         possible to tell.
 	 */
 	public static boolean isJRockitJVMName(String vmName) {
 		if (vmName == null) {
@@ -106,8 +106,8 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return <tt>true</tt> if it is a HotSpot, <tt>false</tt> if it isn't or if was not possible
-	 *         to tell.
+	 * @return <code>true</code> if it is a HotSpot, <code>false</code> if it isn't or if was not
+	 *         possible to tell.
 	 */
 	public static boolean isHotspotJVMName(String vmName) {
 		if (vmName == null) {

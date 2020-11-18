@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,12 +38,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
+
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
@@ -62,7 +70,17 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class PasswordsInEnvironmentRule implements IRule {
+
 	private static final String PWD_RESULT_ID = "PasswordsInEnvironment"; //$NON-NLS-1$
+
+	public static final TypedPreference<String> EXCLUDED_STRINGS_REGEXP = new TypedPreference<>(
+			"passwordsinenvironment.string.exclude.regexp", //$NON-NLS-1$
+			Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS),
+			Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS_LONG),
+			PLAIN_TEXT.getPersister(), "(passworld|passwise)"); //$NON-NLS-1$
+
+	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(EXCLUDED_STRINGS_REGEXP);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ENVIRONMENT_VARIABLE, EventAvailability.AVAILABLE).build();
@@ -75,6 +93,13 @@ public class PasswordsInEnvironmentRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		String stringExcludeRegexp = valueProvider.getPreferenceValue(EXCLUDED_STRINGS_REGEXP).trim();
+		if (!stringExcludeRegexp.isEmpty()) {
+			IItemFilter matchesExclude = ItemFilters.matches(JdkAttributes.ENVIRONMENT_KEY, stringExcludeRegexp);
+			IItemFilter stringsExcludingExclude = ItemFilters.and(ItemFilters.type(JdkTypeIDs.ENVIRONMENT_VARIABLE),
+					ItemFilters.not(matchesExclude));
+			items = items.apply(stringsExcludingExclude);
+		}
 		// FIXME: Should extract set of variable names instead of joined string
 		String pwds = RulesToolkit.findMatches(JdkTypeIDs.ENVIRONMENT_VARIABLE, items, JdkAttributes.ENVIRONMENT_KEY,
 				PasswordsInArgumentsRule.PASSWORD_MATCH_STRING, true);
@@ -84,9 +109,16 @@ public class PasswordsInEnvironmentRule implements IRule {
 			for (String env : envs) {
 				passwords.add(env);
 			}
+			String explanation = Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG);
+			if (!stringExcludeRegexp.isEmpty()) {
+				explanation = explanation + " "
+						+ MessageFormat.format(
+								Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_EXCLUDED_INFO),
+								stringExcludeRegexp);
+			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG))
+					.setExplanation(explanation)
 					.addResult(PASSWORDS, passwords).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
@@ -108,7 +140,7 @@ public class PasswordsInEnvironmentRule implements IRule {
 
 	@Override
 	public Collection<TypedPreference<?>> getConfigurationAttributes() {
-		return Collections.emptyList();
+		return CONFIG_ATTRIBUTES;
 	}
 
 	@Override
@@ -123,7 +155,7 @@ public class PasswordsInEnvironmentRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.ENVIRONMENT_VARIABLES_TOPIC;
+		return JfrRuleTopics.ENVIRONMENT_VARIABLES;
 	}
 
 	@Override
