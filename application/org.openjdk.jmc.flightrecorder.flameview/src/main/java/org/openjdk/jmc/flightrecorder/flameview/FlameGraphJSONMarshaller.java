@@ -47,12 +47,9 @@ import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktra
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -91,14 +88,7 @@ public class FlameGraphJSONMarshaller {
 		Set<Integer> childIds = childrenLookup.get(node.getNodeId());
 		sb.append(", ").append(addQuotes("c")).append(": [ ");
 		boolean first = true;
-		// we sort the nodes so that the output is deterministic
-		// TODO: remove once we validate the output
-		List<Integer> sortedIds = new ArrayList<>();
-		sortedIds.addAll(childIds);
-		sortedIds.sort(Comparator.comparing((id) -> {
-			return nodes.get(id).getFrame().getHumanReadableShortString();
-		}));
-		for (int childId : sortedIds) {
+		for (int childId : childIds) {
 			if (!first) {
 				sb.append(",");
 			}
