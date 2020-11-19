@@ -44,14 +44,14 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
-import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJSONMarshaller;
+import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJsonMarshaller;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
-public class FlameGraphJSONMarshallerTest {
+public class FlameGraphJsonMarshallerTest {
 
 	private static IItemCollection testRecording;
 
@@ -66,26 +66,26 @@ public class FlameGraphJSONMarshallerTest {
 			false);
 
 	@Test
-	public void testRenderedJSONWithAttribute() throws Exception {
+	public void testRenderedJsonWithAttribute() throws Exception {
 		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true,
 				JdkAttributes.ALLOCATION_SIZE);
-		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
+		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
-		String expectedJSON = readResource("/flamegraph-attribute.json");
-		assertEquals(expectedJSON, flameGraphJSON);
+		String expectedJson = readResource("/flamegraph-attribute.json");
+		assertEquals(expectedJson, flameGraphJson);
 	}
 
 	@Test
-	public void testRenderedJSONWithCounts() throws Exception {
+	public void testRenderedJsonWithCounts() throws Exception {
 		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
-		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
+		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
-		String expectedJSON = readResource("/flamegraph-counts.json");
-		assertEquals(expectedJSON, flameGraphJSON);
+		String expectedJson = readResource("/flamegraph-counts.json");
+		assertEquals(expectedJson, flameGraphJson);
 	}
 
 	private String readResource(String resourcePath) throws IOException {
-		try (InputStream is = FlameGraphJSONMarshallerTest.class.getResourceAsStream(resourcePath)) {
+		try (InputStream is = FlameGraphJsonMarshallerTest.class.getResourceAsStream(resourcePath)) {
 			if (is == null) {
 				throw new IllegalArgumentException(resourcePath + " not found");
 			}

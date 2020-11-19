@@ -63,27 +63,27 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 
-public class FlameGraphJSONMarshaller {
+public class FlameGraphJsonMarshaller {
 
 	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
 	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private final static int MAX_TYPES_IN_ROOT_TITLE = 2;
 	private final static int MAX_TYPES_IN_ROOT_DESCRIPTION = 10;
 
-	public static String toJSON(StacktraceTreeModel model) {
-		return toJSON(model, model.getRoot());
+	public static String toJson(StacktraceTreeModel model) {
+		return toJson(model, model.getRoot());
 	}
 
-	private static String toJSON(StacktraceTreeModel model, Node node) {
+	private static String toJson(StacktraceTreeModel model, Node node) {
 		Map<Integer, Set<Integer>> childrenLookup = model.getChildrenLookup();
 		Map<Integer, Node> nodes = model.getNodes();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		if (node.equals(model.getRoot())) {
-			sb.append(createRootNodeJSON(model.getItems()));
+			sb.append(createRootNodeJson(model.getItems()));
 		} else {
-			sb.append(JSONProps(node.getFrame(), node.getCumulativeWeight()));
+			sb.append(createNodeJsonProps(node.getFrame(), node.getCumulativeWeight()));
 		}
 
 		Set<Integer> childIds = childrenLookup.get(node.getNodeId());
@@ -93,14 +93,14 @@ public class FlameGraphJSONMarshaller {
 			if (!first) {
 				sb.append(",");
 			}
-			sb.append(toJSON(model, nodes.get(childId)));
+			sb.append(toJson(model, nodes.get(childId)));
 			first = false;
 		}
 		sb.append("]").append("}");
 		return sb.toString();
 	}
 
-	private static String JSONProps(AggregatableFrame frame, double value) {
+	private static String createNodeJsonProps(AggregatableFrame frame, double value) {
 		StringBuilder sb = new StringBuilder();
 		if (frame.getType().equals(IMCFrame.Type.UNKNOWN)) {
 			// TODO: this is untested
@@ -121,7 +121,7 @@ public class FlameGraphJSONMarshaller {
 		return sb.toString();
 	}
 
-	private static String JSONProps(String frameName, String description) {
+	private static String createJsonProps(String frameName, String description) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
 		sb.append(",");
@@ -150,11 +150,11 @@ public class FlameGraphJSONMarshaller {
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
-	private static String createRootNodeJSON(IItemCollection events) {
+	private static String createRootNodeJson(IItemCollection events) {
 		Map<String, Long> eventCountsByType = countEventsByType(events);
 		String rootTitle = createRootNodeTitle(eventCountsByType);
 		String rootDescription = createRootNodeDescription(eventCountsByType);
-		return JSONProps(rootTitle, rootDescription);
+		return createJsonProps(rootTitle, rootDescription);
 	}
 
 	private static String createRootNodeTitle(Map<String, Long> eventCountsByType) {
