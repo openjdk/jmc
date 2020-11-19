@@ -68,6 +68,13 @@ public final class Node {
 	}
 
 	/**
+	 * @return the unique identifier associated with this node.
+	 */
+	public Integer getNodeId() {
+		return nodeId;
+	}
+
+	/**
 	 * @return the weight of this node.
 	 */
 	public double getWeight() {
@@ -81,6 +88,9 @@ public final class Node {
 		return cumulativeWeight;
 	}
 
+	/**
+	 * @return the frame corresponding to this node.
+	 */
 	public AggregatableFrame getFrame() {
 		return frame;
 	}
@@ -103,10 +113,6 @@ public final class Node {
 
 		return Objects.equals(nodeId, other.nodeId) && Objects.equals(frame, other.frame) && weight == other.weight
 				&& cumulativeWeight == other.cumulativeWeight;
-	}
-
-	public Integer getNodeId() {
-		return nodeId;
 	}
 
 	@Override

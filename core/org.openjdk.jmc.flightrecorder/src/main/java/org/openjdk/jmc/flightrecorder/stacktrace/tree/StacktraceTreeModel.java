@@ -36,6 +36,7 @@ package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 import static org.openjdk.jmc.common.item.ItemToolkit.accessor;
 import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,10 +55,12 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 
 public class StacktraceTreeModel {
 	@SuppressWarnings("deprecation")
 	private static final IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
+	private static final FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
 	/**
 	 * A special marker object that indicates a frame that cannot be determined.
@@ -65,27 +68,78 @@ public class StacktraceTreeModel {
 	 * A typical case is when a stacktrace is truncated due to to Flight Recorder settings. We know
 	 * that there is a frame because of a truncation flag, but there is no information about it.
 	 */
-	public static final IMCFrame UNKNOWN_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
+	private static final IMCFrame UNKNOWN_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
 
-	public static final IMCFrame ROOT_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
+	/**
+	 * A special marker object that indicates a hand-crafted frame at the root of the tree.
+	 * <p>
+	 * We need to create this frame as a parent to all branches of the tree we want to represent.
+	 */
+	private static final IMCFrame ROOT_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
 
 	private final Map<Integer, Node> nodes = new HashMap<>(1024);
 	private final Map<Integer, Set<Integer>> childrenLookup = new HashMap<>(1024);
 	private final Integer rootId;
 
-	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
+	private final FrameSeparator frameSeparator;
 	private final IAttribute<IQuantity> attribute;
 	private final boolean threadRootAtTop;
 
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events with defaults: frame separator
+	 * METHOD, the thread root at the top and no value attribute (uses counts).
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 */
+	public StacktraceTreeModel(IItemCollection items) {
+		this(items, DEFAULT_FRAME_SEPARATOR, true, null);
+	}
+
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events with defaults: the thread root
+	 * at the top and no value attribute (uses counts).
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 * @param frameSeparator
+	 *            defines what represents a node in the tree. Defaults to METHOD.
+	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator) {
 		this(items, frameSeparator, true, null);
 	}
 
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events with no attribute specified
+	 * (uses occurrences to determine node weight).
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 * @param frameSeparator
+	 *            defines what represents a node in the tree. Defaults to METHOD.
+	 * @param threadRootAtTop
+	 *            defines how the stacks are aggregated. Defaults to true (i.e. bottom-up,
+	 *            Thread.run() at the root of the tree).
+	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {
 		this(items, frameSeparator, threadRootAtTop, null);
 	}
 
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events.
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 * @param frameSeparator
+	 *            defines what represents a node in the tree. Defaults to METHOD.
+	 * @param threadRootAtTop
+	 *            defines how the stacks are aggregated. Defaults to true (i.e. bottom-up,
+	 *            Thread.run() at the root of the tree).
+	 * @param attribute
+	 *            defines what we use as node weights. If null, the weight is the number of
+	 *            occurrences for the frame.
+	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop,
 			IAttribute<IQuantity> attribute) {
 		this.items = items;
@@ -104,18 +158,30 @@ public class StacktraceTreeModel {
 		}
 	}
 
+	/**
+	 * @return the root node of the tree.
+	 */
 	public Node getRoot() {
 		return nodes.get(rootId);
 	}
 
+	/**
+	 * @return an unmodifiable view over the child lookup map.
+	 */
 	public Map<Integer, Set<Integer>> getChildrenLookup() {
-		return childrenLookup;
+		return Collections.unmodifiableMap(childrenLookup);
 	}
 
+	/**
+	 * @return an unmodifiable view over the node lookup map.
+	 */
 	public Map<Integer, Node> getNodes() {
-		return nodes;
+		return Collections.unmodifiableMap(nodes);
 	}
 
+	/**
+	 * @return the source data set.
+	 */
 	public IItemCollection getItems() {
 		return items;
 	}
