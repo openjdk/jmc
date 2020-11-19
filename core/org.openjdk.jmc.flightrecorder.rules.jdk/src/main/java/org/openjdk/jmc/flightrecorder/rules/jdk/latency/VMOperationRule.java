@@ -134,21 +134,19 @@ public class VMOperationRule implements IRule {
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
 		boolean isCombinedDuration = getDuration(startingEvent).compareTo(longestDuration) != 0;
-		longestDuration = null;
-		startingEvent = null;
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String longMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION
-					: Messages.VMOperationRuleFactory_TEXT_WARN_LONG;
-			String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION
-					: Messages.VMOperationRuleFactory_TEXT_WARN;
+			String longMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION)
+					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG);
+			String shortMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION)
+					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN);
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
 					.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(LONGEST_OPERATION, operation).addResult(LONGEST_OPERATION_CALLER, caller)
 					.addResult(LONGEST_OPERATION_DURATION, longestDuration)
 					.addResult(LONGEST_OPERATION_START_TIME, longestOperationStart).build();
 		}
-		String shortMessage = isCombinedDuration ? Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION
-				: Messages.VMOperationRuleFactory_TEXT_OK;
+		String shortMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION)
+				: Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK);
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).setSummary(shortMessage)
 				.addResult(LONGEST_OPERATION, operation).addResult(LONGEST_OPERATION_DURATION, longestDuration).build();

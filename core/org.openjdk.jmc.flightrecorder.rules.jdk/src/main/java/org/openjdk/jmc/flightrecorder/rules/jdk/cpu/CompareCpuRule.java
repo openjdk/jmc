@@ -83,7 +83,7 @@ public class CompareCpuRule extends AbstractRule {
 			"Average CPU Load Window", "The window during which the high CPU load was detected.", UnitLookup.TIMERANGE);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE);
+			.<TypedResult<?>> asList(TypedResult.SCORE, AVERAGE_CPU_LOAD, AVERAGE_CPU_LOAD_WINDOW);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE).build();

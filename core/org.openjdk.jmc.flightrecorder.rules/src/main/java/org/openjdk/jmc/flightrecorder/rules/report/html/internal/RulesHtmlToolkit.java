@@ -222,7 +222,7 @@ public class RulesHtmlToolkit {
 		summary = ResultToolkit.populateMessage(result, result.getSummary(), true);
 		explanation = ResultToolkit.populateMessage(result, result.getExplanation(), true);
 		solution = ResultToolkit.populateMessage(result, result.getSolution(), true);
-		String description = "<div class=\"shortDescription\">" + summary + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
+		String description = "<div class=\"longDescription\">" + summary + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
 		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		Matcher matcher = LINK_PATTERN.matcher(description);

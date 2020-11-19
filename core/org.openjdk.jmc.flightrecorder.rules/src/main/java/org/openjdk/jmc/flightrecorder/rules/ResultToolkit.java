@@ -93,7 +93,7 @@ public class ResultToolkit {
 		}
 		return s;
 	}
-	
+
 	private static String encodeIfNeeded(String input, boolean shouldEncode) {
 		if (shouldEncode) {
 			return Encode.forHtml(input);

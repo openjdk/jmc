@@ -88,13 +88,17 @@ public class FileReadRule implements IRule {
 	public static final TypedResult<String> LONGEST_READ_PATH = new TypedResult<>("longestReadPath", //$NON-NLS-1$
 			"Longest Read (Path)", "The path of the file read that took the longest time.", UnitLookup.PLAIN_TEXT,
 			String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest", "Total Read (Top File)", "The total duration of all file reads for the file with the longest read.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_FILE_READ = new TypedResult<>("averageFileRead", "Average File Read", "The average duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_FILE_READ = new TypedResult<>("totalFileRead", "Total File Read", "The total duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest",
+			"Total Read (Top File)", "The total duration of all file reads for the file with the longest read.",
+			UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_FILE_READ = new TypedResult<>("averageFileRead",
+			"Average File Read", "The average duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_FILE_READ = new TypedResult<>("totalFileRead", "Total File Read",
+			"The total duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
 
-
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_READ_AMOUNT, LONGEST_READ_PATH, LONGEST_READ_TIME, LONGEST_TOTAL_READ, AVERAGE_FILE_READ, TOTAL_FILE_READ);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_READ_AMOUNT, LONGEST_READ_PATH, LONGEST_READ_TIME, LONGEST_TOTAL_READ,
+			AVERAGE_FILE_READ, TOTAL_FILE_READ);
 
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
 		IQuantity warningLimit = vp.getPreferenceValue(READ_WARNING_LIMIT);
@@ -130,10 +134,8 @@ public class FileReadRule implements IRule {
 					.setExplanation(Messages.getString(Messages.FileReadRuleFactory_TEXT_WARN_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(LONGEST_READ_AMOUNT, amountRead).addResult(LONGEST_READ_TIME, longestDuration)
-					.addResult(AVERAGE_FILE_READ, avgDuration)
-					.addResult(TOTAL_FILE_READ, totalDuration)
-					.addResult(LONGEST_TOTAL_READ, totalLongestIOPath)
-					.addResult(LONGEST_READ_PATH, fileName).build();
+					.addResult(AVERAGE_FILE_READ, avgDuration).addResult(TOTAL_FILE_READ, totalDuration)
+					.addResult(LONGEST_TOTAL_READ, totalLongestIOPath).addResult(LONGEST_READ_PATH, fileName).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.FileReadRuleFactory_TEXT_OK))

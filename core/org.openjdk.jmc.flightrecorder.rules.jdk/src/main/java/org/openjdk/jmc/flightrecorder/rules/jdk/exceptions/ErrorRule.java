@@ -190,7 +190,7 @@ public class ErrorRule extends AbstractRule {
 	}
 
 	public ErrorRule() {
-		super(RESULT_ID, Messages.getString(Messages.ErrorRule_RULE_NAME), JfrRuleTopics.EXCEPTIONS,
-				CONFIG_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+		super(RESULT_ID, Messages.getString(Messages.ErrorRule_RULE_NAME), JfrRuleTopics.EXCEPTIONS, CONFIG_ATTRIBUTES,
+				RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 }

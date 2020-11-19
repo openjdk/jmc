@@ -574,7 +574,7 @@ public class OptionsCheckRule implements IRule {
 						.setSummary(shortMessage).setExplanation(sb.toString()).build();
 			} else {
 				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-						.setSummary(Messages.OptionsCheckRule_TEXT_OK).build();
+						.setSummary(Messages.getString(Messages.OptionsCheckRule_TEXT_OK)).build();
 			}
 		} else {
 			return RulesToolkit.getNotApplicableResult(this, valueProvider,

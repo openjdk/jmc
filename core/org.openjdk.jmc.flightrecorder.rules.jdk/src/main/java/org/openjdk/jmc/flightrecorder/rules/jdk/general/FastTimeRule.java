@@ -10,6 +10,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -40,7 +41,7 @@ public class FastTimeRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION_TOPIC;
+		return JfrRuleTopics.JVM_INFORMATION;
 	}
 
 	@Override
@@ -57,9 +58,9 @@ public class FastTimeRule implements IRule {
 		IItemCollection items, IPreferenceValueProvider preferences, IResultValueProvider results) {
 		// Check time conversion error
 		IItemCollection timeConversionItems = items.apply(JdkFilters.TIME_CONVERSION);
-		IQuantity conversionFactor = timeConversionItems
-				.getAggregate(Aggregators.max(attr("fastTimeConversionAdjustments", null, //$NON-NLS-1$
-						UnitLookup.NUMBER)));
+		IAggregator<IQuantity, ?> max = Aggregators.max(attr("fastTimeConversionAdjustments", null, //$NON-NLS-1$
+				UnitLookup.NUMBER));
+		IQuantity conversionFactor = timeConversionItems.getAggregate(max);
 		Boolean fastTimeEnabled = timeConversionItems
 				.getAggregate(Aggregators.and(JdkTypeIDs.TIME_CONVERSION, attr("fastTimeEnabled", null, //$NON-NLS-1$
 						UnitLookup.FLAG)));

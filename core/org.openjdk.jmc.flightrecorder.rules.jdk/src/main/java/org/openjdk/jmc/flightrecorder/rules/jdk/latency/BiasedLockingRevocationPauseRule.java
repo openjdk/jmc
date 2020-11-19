@@ -92,7 +92,7 @@ public final class BiasedLockingRevocationPauseRule implements IRule {
 				ItemFilters.and(JdkFilters.VM_OPERATIONS, ItemFilters.matches(JdkAttributes.OPERATION, "RevokeBias"))); //$NON-NLS-1$
 		if (!revocationEvents.hasItems()) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-					.setSummary(Messages.BiasedLockingRevocationPauseRule_TEXT_OK).build();
+					.setSummary(Messages.getString(Messages.BiasedLockingRevocationPauseRule_TEXT_OK)).build();
 		}
 		IQuantity timeSpentRevoking = revocationEvents.hasItems()
 				? revocationEvents.getAggregate(Aggregators.sum(JfrAttributes.DURATION))

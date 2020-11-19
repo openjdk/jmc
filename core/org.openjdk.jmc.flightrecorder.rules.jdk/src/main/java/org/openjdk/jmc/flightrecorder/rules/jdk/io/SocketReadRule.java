@@ -91,12 +91,17 @@ public class SocketReadRule implements IRule {
 	public static final TypedResult<String> LONGEST_READ_ADDRESS = new TypedResult<>("longestReadHost", //$NON-NLS-1$
 			"Longest Read (Host)", "The remote host of the socket read that took the longest time.",
 			UnitLookup.PLAIN_TEXT, String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest", "Total Read (Top Host)", "The total duration of all socket reads for the host with the longest read.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketRead", "Average Socket Read", "The average duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketRead", "Total Socket Read", "The total duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest",
+			"Total Read (Top Host)", "The total duration of all socket reads for the host with the longest read.",
+			UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketRead",
+			"Average Socket Read", "The average duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketRead",
+			"Total Socket Read", "The total duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_READ_ADDRESS, LONGEST_READ_AMOUNT, LONGEST_READ_TIME, LONGEST_TOTAL_READ, AVERAGE_SOCKET_READ, TOTAL_SOCKET_READ)s;
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_READ_ADDRESS, LONGEST_READ_AMOUNT, LONGEST_READ_TIME, LONGEST_TOTAL_READ,
+			AVERAGE_SOCKET_READ, TOTAL_SOCKET_READ);
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(READ_INFO_LIMIT, READ_WARNING_LIMIT);
@@ -142,11 +147,12 @@ public class SocketReadRule implements IRule {
 				address = Messages.getString(Messages.General_UNKNOWN_ADDRESS);
 			}
 			IQuantity amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_READ);
-			IQuantity avgDuration = readItems.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
+			IQuantity avgDuration = readItems
+					.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
 			IQuantity totalDuration = readItems
 					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
 			IItemCollection eventsFromLongestAddress = readItems
-					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, longestIOAddress));
+					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, address));
 			IQuantity totalLongestIOAddress = eventsFromLongestAddress
 					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
 			return ResultBuilder.createFor(this, vp).setSeverity(severity)
@@ -154,10 +160,8 @@ public class SocketReadRule implements IRule {
 					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
 							+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
 					.addResult(LONGEST_READ_ADDRESS, address).addResult(LONGEST_READ_AMOUNT, amountRead)
-					.addResult(LONGEST_TOTAL_READ, totalLongestIOAddress)
-					.addResult(AVERAGE_SOCKET_READ, avgDuration)
-					.addResult(TOTAL_SOCKET_READ, totalDuration)
-					.addResult(LONGEST_READ_TIME, maxDuration).build();
+					.addResult(LONGEST_TOTAL_READ, totalLongestIOAddress).addResult(AVERAGE_SOCKET_READ, avgDuration)
+					.addResult(TOTAL_SOCKET_READ, totalDuration).addResult(LONGEST_READ_TIME, maxDuration).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_OK))

@@ -15,13 +15,31 @@ public class ResultProvider implements IResultValueProvider {
 		resultMap = new HashMap<>();
 		collectionResultMap = new HashMap<>();
 	}
-	
-	public void addResult(TypedResult<?> result, Object instance) {
+
+	private void addResult(TypedResult<?> result, Object instance) {
 		resultMap.put(result, instance);
 	}
-	
-	public void addCollectionResult(TypedCollectionResult<?> result, Collection<?> collection) {
+
+	private void addCollectionResult(TypedCollectionResult<?> result, Collection<?> collection) {
 		collectionResultMap.put(result, collection);
+	}
+	
+	public void addResults(IResult result) {
+		IRule rule = result.getRule();
+		if (rule.getResults() != null) {
+			for (TypedResult<?> typedResult : rule.getResults()) {
+				Object instance = result.getResult(typedResult);
+				if (instance != null) {
+					if (typedResult instanceof TypedCollectionResult<?>) {
+						TypedCollectionResult<?> typedCollectionResult = (TypedCollectionResult<?>) typedResult;
+						Collection<?> result2 = result.getResult(typedCollectionResult);
+						addCollectionResult(typedCollectionResult, result2);
+					} else {
+						addResult(typedResult, result.getResult(typedResult));
+					}
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")

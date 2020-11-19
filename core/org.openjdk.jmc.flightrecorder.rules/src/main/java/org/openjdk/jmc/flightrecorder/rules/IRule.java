@@ -82,7 +82,7 @@ public interface IRule {
 	 *
 	 * @param items
 	 *            items to evaluate
-	 * @param valueProvider
+	 * @param preferenceValueProvider
 	 *            Provider of configuration values used for evaluation. The attributes that will be
 	 *            asked for from the provider should be provided by
 	 *            {@link IRule#getConfigurationAttributes()}.

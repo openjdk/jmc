@@ -92,25 +92,30 @@ public class AllocationByThreadRule implements IRule {
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		List<IntEntry<IMCThread>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
 				JfrAttributes.EVENT_THREAD);
-		double balance = RulesToolkit.calculateBalanceScore(entries);
-		IntEntry<IMCThread> mostSignificant = entries.get(entries.size() - 1);
-		// FIXME: Configuration attribute instead of hard coded 1000 tlabs => relevance 50
-		double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
-		double score = balance * relevance * 0.74; // ceiling at 74;
-
-		IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
-				ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostSignificant.getKey()));
-		StacktraceModel stacktraceModel = new StacktraceModel(false,
-				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
-		Fork rootFork = stacktraceModel.getRootFork();
-		List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0),
-				rootFork.getItemsInFork());
-		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-				.setSummary(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE))
-				.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG))
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
-				.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
+		if (entries.size() > 0) {
+			double balance = RulesToolkit.calculateBalanceScore(entries);
+			IntEntry<IMCThread> mostSignificant = entries.get(entries.size() - 1);
+			// FIXME: Configuration attribute instead of hard coded 1000 tlabs => relevance 50
+			double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
+			double score = balance * relevance * 0.74; // ceiling at 74;
+	
+			IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
+					ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostSignificant.getKey()));
+			StacktraceModel stacktraceModel = new StacktraceModel(false,
+					new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
+			Fork rootFork = stacktraceModel.getRootFork();
+			List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0),
+					rootFork.getItemsInFork());
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE))
+					.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
+					.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
+		}
+		return ResultBuilder.createFor(this, valueProvider)
+				.setSeverity(Severity.NA)
+				.build();
 	}
 
 	@Override

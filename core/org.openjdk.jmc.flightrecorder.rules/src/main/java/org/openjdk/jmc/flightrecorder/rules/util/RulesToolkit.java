@@ -89,6 +89,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
@@ -1191,7 +1192,7 @@ public class RulesToolkit {
 	 * @param items
 	 *            items to evaluate
 	 * @param preferences
-	 *            See {@link IRule#evaluate(IItemCollection, IPreferenceValueProvider)}. If
+	 *            See {@link IRule#createEvaluation(IItemCollection, IPreferenceValueProvider, IResultValueProvider)}. If
 	 *            {@code null}, then default values will be used.
 	 * @param nThreads
 	 *            The number or parallel threads to use when evaluating. If 0, then the number of

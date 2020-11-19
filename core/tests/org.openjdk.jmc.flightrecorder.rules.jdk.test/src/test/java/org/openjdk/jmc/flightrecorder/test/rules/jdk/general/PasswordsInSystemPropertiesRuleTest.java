@@ -40,7 +40,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInSystemPropertiesRule;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
@@ -52,7 +56,7 @@ public class PasswordsInSystemPropertiesRuleTest {
 	public void containsPassword() {
 		TestEvent[] testEvents = new TestEvent[] {new SystemPropertiesTestEvent("password")};
 		testPasswordsInSystemPropertiesRule(testEvents,
-				"The following suspicious system properties were found in this recording: <ul><li>password</li></ul><p>They may contain passwords. If you wish to keep having passwords in your system properties, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial System Property' event. The following regular expression was used to exclude strings from this rule: '(passworld|passwise)'.");
+				"The following suspicious system properties were found in this recording: password. The following regular expression was used to exclude strings from this rule: ''(passworld|passwise)''.If you wish to keep having passwords in your system properties, but want to be able to share recordings without also sharing the passwords, please disable the ''Initial System Property'' event.");
 	}
 
 	@Test
@@ -72,13 +76,18 @@ public class PasswordsInSystemPropertiesRuleTest {
 	private void testPasswordsInSystemPropertiesRule(TestEvent[] testEvents, String descriptionExpected) {
 		IItemCollection events = new MockEventCollection(testEvents);
 		PasswordsInSystemPropertiesRule passwordsInSystemPropertiesRule = new PasswordsInSystemPropertiesRule();
-		RunnableFuture<Result> future = passwordsInSystemPropertiesRule.evaluate(events,
-				IPreferenceValueProvider.DEFAULT_VALUES);
+		RunnableFuture<IResult> future = passwordsInSystemPropertiesRule.createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
 		try {
 			future.run();
-			Result res = future.get();
-			String longDesc = res.getLongDescription();
-			Assert.assertEquals(descriptionExpected, longDesc);
+			IResult res = future.get();
+			String message;
+			if (res.getSeverity() == Severity.OK) {
+				message = res.getSummary();
+			} else {
+				message = ResultToolkit.populateMessage(res, res.getExplanation(), false) + res.getSolution();
+			}
+			Assert.assertEquals(descriptionExpected, message);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}

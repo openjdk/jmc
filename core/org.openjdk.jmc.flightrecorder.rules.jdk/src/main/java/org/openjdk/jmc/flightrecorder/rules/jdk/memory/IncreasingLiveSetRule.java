@@ -120,20 +120,19 @@ public class IncreasingLiveSetRule implements IRule {
 			"Time After JVM Start", "The time since the JVM was started.", UnitLookup.TIMESPAN, IQuantity.class);
 	public static final TypedResult<IQuantity> LEAK_CANDIDATE_COUNT = new TypedResult<>("leakCandidateCount", //$NON-NLS-1$
 			"Leak Candidate Count", "The number of leak candidates detected.", UnitLookup.NUMBER, IQuantity.class);
-	public static final TypedResult<ReferenceTreeObject> LEAK_CANDIDATE = new TypedResult<>(
-			"leakCandidate", "Leak Candidate", "The main leak candidate detected.", REFERENCE_TREE_OBJECT, //$NON-NLS-1$
-			ReferenceTreeObject.class);
+	public static final TypedResult<ReferenceTreeObject> LEAK_CANDIDATE = new TypedResult<>("leakCandidate", //$NON-NLS-1$
+			"Leak Candidate", "The main leak candidate detected.", REFERENCE_TREE_OBJECT, ReferenceTreeObject.class);
 	public static final TypedCollectionResult<ReferenceTreeObject> REFERENCE_CHAIN = new TypedCollectionResult<>(
-			"referenceChain", "Reference Chain", "The objects keeping the main leak candidate alive.", REFERENCE_TREE_OBJECT, //$NON-NLS-1$
-			ReferenceTreeObject.class);
+			"referenceChain", "Reference Chain", "The objects keeping the main leak candidate alive.", //$NON-NLS-1$
+			REFERENCE_TREE_OBJECT, ReferenceTreeObject.class);
 	public static final TypedResult<IQuantity> POST_WARMUP_TIME = new TypedResult<>("postWarmupTime", //$NON-NLS-1$
 			"Post Warmup Time",
 			"The time after which the rule assumes that long lived objects aren't supposed to be allocated.",
 			UnitLookup.TIMESTAMP, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
-			TypedResult.SCORE, LIVESET_INCREASE, TIME_AFTER_JVM_START, LEAK_CANDIDATE_COUNT, LEAK_CANDIDATE, REFERENCE_CHAIN,
-			POST_WARMUP_TIME);
+			TypedResult.SCORE, LIVESET_INCREASE, TIME_AFTER_JVM_START, LEAK_CANDIDATE_COUNT, LEAK_CANDIDATE,
+			REFERENCE_CHAIN, POST_WARMUP_TIME);
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
@@ -231,59 +230,15 @@ public class IncreasingLiveSetRule implements IRule {
 		List<ReferenceTreeObject> leakCandidates = tree.getLeakCandidates(
 				valueProvider.getPreferenceValue(RELEVANCE_THRESHOLD).doubleValueIn(UnitLookup.NUMBER_UNITY));
 		if (leakCandidates.size() > 0) {
-			StringBuilder descriptionBuilder = new StringBuilder();
-			descriptionBuilder
-					.append(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO));
-			descriptionBuilder.append("\n"); //$NON-NLS-1$
-			descriptionBuilder.append(Messages.getString(Messages.IncreasingLiveSetRule_LEAK_CANDIDATES));
-//			descriptionBuilder.append("<ul>"); //$NON-NLS-1$
-//			int objectFormat = ReferenceTreeObject.FORMAT_PACKAGE | ReferenceTreeObject.FORMAT_FIELD
-//					| ReferenceTreeObject.FORMAT_ARRAY_INFO;
-//			for (ReferenceTreeObject candidate : leakCandidates) {
-//				descriptionBuilder.append("<li>"); //$NON-NLS-1$
-//				descriptionBuilder.append(candidate.toString(objectFormat));
-//				descriptionBuilder.append("<br/>"); //$NON-NLS-1$
-//				descriptionBuilder.append(Messages.getString(Messages.IncreasingLiveSetRule_CANDIDATE_REFERRED_BY));
-//				descriptionBuilder.append("<ul>"); //$NON-NLS-1$
-//				ReferenceTreeObject chainObject = candidate.getParent();
-//				for (int i = 0; i < 10 && chainObject != null; i++) {
-//					descriptionBuilder.append("<li>"); //$NON-NLS-1$
-//					descriptionBuilder.append(chainObject.toString(objectFormat));
-//					if (chainObject.getParent() == null) { // aborting the loop because we have found the root
-//						descriptionBuilder.append(" ("); //$NON-NLS-1$
-//						descriptionBuilder.append(chainObject.getRootDescription());
-//						descriptionBuilder.append(")</li>"); //$NON-NLS-1$
-//						break;
-//					}
-//					descriptionBuilder.append("</li>"); //$NON-NLS-1$
-//					chainObject = chainObject.getParent();
-//				}
-//				if (chainObject != null && chainObject.getParent() != null) { // we never iterated to the object
-//					while (chainObject.getParent() != null) {
-//						chainObject = chainObject.getParent();
-//					}
-//					descriptionBuilder.append("<li>"); //$NON-NLS-1$
-//					descriptionBuilder.append("The candidate is referenced by this chain.");
-//					descriptionBuilder.append("</li><li>"); //$NON-NLS-1$
-//					descriptionBuilder.append(chainObject.toString(objectFormat));
-//					descriptionBuilder.append(" ("); //$NON-NLS-1$
-//					descriptionBuilder.append(chainObject.getRootDescription());
-//					descriptionBuilder.append(")</li>"); //$NON-NLS-1$
-//				}
-//				descriptionBuilder.append("</ul>"); //$NON-NLS-1$
-//				descriptionBuilder.append("</li>"); //$NON-NLS-1$
-//			}
-//			descriptionBuilder.append("</ul>"); //$NON-NLS-1$
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO))
-					.setExplanation(descriptionBuilder.toString())
+					.setExplanation(Messages.getString(Messages.IncreasingLiveSetRule_LEAK_CANDIDATES))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart)
 					.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
 					.addResult(LEAK_CANDIDATE_COUNT, UnitLookup.NUMBER_UNITY.quantity(leakCandidates.size()))
 					.addResult(LEAK_CANDIDATE, leakCandidates.get(0))
-					.addResult(REFERENCE_CHAIN, getReferenceChain(leakCandidates.get(0)))
-					.build();
+					.addResult(REFERENCE_CHAIN, getReferenceChain(leakCandidates.get(0))).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.IncreasingLiveSetRuleFactory_TEXT_INFO))
@@ -292,7 +247,7 @@ public class IncreasingLiveSetRule implements IRule {
 				.addResult(LIVESET_INCREASE, liveSetIncreasePerSecond)
 				.addResult(TIME_AFTER_JVM_START, timeAfterJVMStart).addResult(POST_WARMUP_TIME, postWarmupTime).build();
 	}
-	
+
 	private List<ReferenceTreeObject> getReferenceChain(ReferenceTreeObject candidate) {
 		ReferenceTreeObject chainObject = candidate.getParent();
 		List<ReferenceTreeObject> referenceChain = new ArrayList<>();

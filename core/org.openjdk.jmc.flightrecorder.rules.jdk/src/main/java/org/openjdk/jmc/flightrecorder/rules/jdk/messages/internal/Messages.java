@@ -494,7 +494,7 @@ public class Messages {
 	public static final String PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG = "PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_JAVAARGS_TEXT_SOLUTION = "PasswordsInArgsRule_JAVAARGS_TEXT_SOLUTION"; //$NON-NLS-1$
 	public static final String PasswordsInArgsRule_RULE_NAME = "PasswordsInArgsRule_RULE_NAME"; //$NON-NLS-1$
-	public static final String PasswordsInArgsRule_TEXT_INFO_EXCLUDED_INFO = "PasswordsInArgsRule_TEXT_INFO_EXCLUDED_INFO"; //$NON-NLS-1$	
+	public static final String PasswordsInArgsRule_TEXT_INFO_EXCLUDED = "PasswordsInArgsRule_TEXT_INFO_EXCLUDED"; //$NON-NLS-1$	
 	public static final String PasswordsInArgsRule_TEXT_OK = "PasswordsInArgsRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS = "PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS"; //$NON-NLS-1$
 	public static final String PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS_LONG = "PasswordsInEnvironmentRuleFactory_CONFIG_EXCLUDED_STRINGS_LONG"; //$NON-NLS-1$

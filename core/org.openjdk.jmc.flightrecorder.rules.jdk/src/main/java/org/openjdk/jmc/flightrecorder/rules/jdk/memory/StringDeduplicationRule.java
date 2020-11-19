@@ -127,7 +127,7 @@ public class StringDeduplicationRule extends AbstractRule {
 			String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE);
+			.<TypedResult<?>> asList(TypedResult.SCORE, HEAP_USAGE, STRING_HEAP_RATIO, INTERNAL_STRING_TYPE);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
@@ -175,8 +175,6 @@ public class StringDeduplicationRule extends AbstractRule {
 		EventAvailability objectCountAvail = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJECT_COUNT);
 		EventAvailability objectCountAfterGcAvail = RulesToolkit.getEventAvailability(items,
 				JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC);
-		EventAvailability allocationAvail = RulesToolkit.getEventAvailability(items,
-				JdkTypeIDs.ALLOC_INSIDE_TLAB /* ,ALLOC_OUTSIDE_TLAB */);
 		// FIXME: Add info about rule preferring object count event, and wanting heap conf or flags...
 
 		IQuantity stringLivesetRatioAndHeapUsageLimit = vp
@@ -194,10 +192,10 @@ public class StringDeduplicationRule extends AbstractRule {
 		String heapInfo = MessageFormat.format(
 				Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_MAX_HEAP_INFO), JdkTypeIDs.HEAP_CONF,
 				JdkTypeIDs.ULONG_FLAG);
-		double heapUsedRatio = -1;
+		IQuantity heapUsedRatio = null;
 		if (maxHeapSize != null) {
 			IQuantity avgHeapUsed = items.getAggregate(JdkAggregators.AVG_HEAP_USED_AFTER_GC);
-			heapUsedRatio = avgHeapUsed.ratioTo(maxHeapSize) * 100;
+			heapUsedRatio = UnitLookup.PERCENT_UNITY.quantity(avgHeapUsed.ratioTo(maxHeapSize));
 			heapInfo = Messages.getString(Messages.StringDeduplicationRule_RESULT_HEAP_USAGE);
 		}
 
@@ -227,7 +225,7 @@ public class StringDeduplicationRule extends AbstractRule {
 	private IResult getLivesetRatioResult(
 		IItemCollection items, String stringInternalArrayType, IItemFilter stringInternalArrayTypeFilter,
 		IQuantity averageStringSize, IQuantity stringLivesetRatioAndHeapUsageLimit, String objectCountEventType,
-		String heapInfo, double heapUsedRatio, String extraGcInfo, IPreferenceValueProvider vp) {
+		String heapInfo, IQuantity heapUsedRatio, String extraGcInfo, IPreferenceValueProvider vp) {
 
 		IItemCollection objectCountItems = items.apply(ItemFilters.type(objectCountEventType));
 
@@ -271,7 +269,7 @@ public class StringDeduplicationRule extends AbstractRule {
 		}
 		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO)
 				+ NEW_LINE + heapInfo;
-		double scoreBase = stringMaxRatio + (stringMaxRatio * heapUsedRatio / 100);
+		double scoreBase = stringMaxRatio + (stringMaxRatio * heapUsedRatio.longValue());
 		double score = RulesToolkit.mapExp74(scoreBase, stringLivesetRatioAndHeapUsageLimit.doubleValue());
 
 		String recommendation;
@@ -286,14 +284,14 @@ public class StringDeduplicationRule extends AbstractRule {
 		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
 				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(HEAP_USAGE, UnitLookup.PERCENT_UNITY.quantity(heapUsedRatio))
+				.addResult(HEAP_USAGE, heapUsedRatio)
 				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringMaxRatio))
 				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}
 
 	private IResult getAllocationRatioResult(
 		IItemCollection items, String stringInternalArrayType, IItemFilter stringInternalArrayTypeFilter,
-		IQuantity stringAllocationRatioLimit, String allocationFramesString, String heapInfo, double heapUsedRatio,
+		IQuantity stringAllocationRatioLimit, String allocationFramesString, String heapInfo, IQuantity heapUsedRatio,
 		String extraGcInfo, IPreferenceValueProvider vp) {
 		// TODO: Calculate in time windows?
 
@@ -315,10 +313,9 @@ public class StringDeduplicationRule extends AbstractRule {
 					.setSummary(Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS)).build();
 			// FIXME: Check if the stacktrace attribute is enabled
 		}
-		double stringAllocationRatioBasedOnStacktrace = stringInternalArraySizeBasedOnStacktrace.ratioTo(totalSize)
-				* 100;
+		double stringAllocationRatioBasedOnStacktrace = stringInternalArraySizeBasedOnStacktrace.ratioTo(totalSize);
 		double scoreBase = stringAllocationRatioBasedOnStacktrace
-				+ (stringAllocationRatioBasedOnStacktrace * heapUsedRatio / 100);
+				+ (stringAllocationRatioBasedOnStacktrace * heapUsedRatio.longValue());
 		double score = RulesToolkit.mapExp74(scoreBase, stringAllocationRatioLimit.doubleValue());
 		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO)
 				+ NEW_LINE + heapInfo;
@@ -335,7 +332,7 @@ public class StringDeduplicationRule extends AbstractRule {
 		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
 				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(HEAP_USAGE, UnitLookup.PERCENT_UNITY.quantity(heapUsedRatio))
+				.addResult(HEAP_USAGE, heapUsedRatio)
 				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringAllocationRatioBasedOnStacktrace))
 				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}

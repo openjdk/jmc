@@ -26,14 +26,17 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuil
 
 public class GarbageCollectionInfoRule implements IRule {
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE).build();
-	
-	private static final ContentType<GarbageCollectionsInfo> GC_INFO_TYPE = UnitLookup.createSyntheticContentType("gcInfoType"); //$NON-NLS-1$
-	
-	public static final TypedResult<GarbageCollectionsInfo> GC_INFO = new TypedResult<>("gcInfo", GarbageCollectionsInfo.GC_INFO_AGGREGATOR, GC_INFO_TYPE, GarbageCollectionsInfo.class); //$NON-NLS-1$
-	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE).build();
+
+	private static final ContentType<GarbageCollectionsInfo> GC_INFO_TYPE = UnitLookup
+			.createSyntheticContentType("gcInfoType"); //$NON-NLS-1$
+
+	public static final TypedResult<GarbageCollectionsInfo> GC_INFO = new TypedResult<>("gcInfo", //$NON-NLS-1$
+			GarbageCollectionsInfo.GC_INFO_AGGREGATOR, GC_INFO_TYPE, GarbageCollectionsInfo.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(GC_INFO);
-	
+
 	@Override
 	public String getId() {
 		return "GarbageCollectionInfoRule";
@@ -41,7 +44,7 @@ public class GarbageCollectionInfoRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.GARBAGE_COLLECTION_TOPIC;
+		return JfrRuleTopics.GARBAGE_COLLECTION;
 	}
 
 	@Override
@@ -55,20 +58,21 @@ public class GarbageCollectionInfoRule implements IRule {
 	}
 
 	@Override
-	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider, final IResultValueProvider dependencyResults) {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
 				GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
-				if (aggregate.foundNonRequestedSerialOldGc() || aggregate.getGcCount() > 0 || aggregate.getGcLockers() > 0 || aggregate.getObjectCountGCs() > 0 || aggregate.getSystemGcCount() > 0) {
+				if (aggregate.foundNonRequestedSerialOldGc() || aggregate.getGcCount() > 0
+						|| aggregate.getGcLockers() > 0 || aggregate.getObjectCountGCs() > 0
+						|| aggregate.getSystemGcCount() > 0) {
 					return ResultBuilder.createFor(GarbageCollectionInfoRule.this, preferenceValueProvider)
-							.setSeverity(Severity.OK)
-							.addResult(GC_INFO, aggregate)
-							.build();
+							.setSeverity(Severity.OK).addResult(GC_INFO, aggregate).build();
 				}
 				return ResultBuilder.createFor(GarbageCollectionInfoRule.this, preferenceValueProvider)
-						.setSeverity(Severity.NA)
-						.build();
+						.setSeverity(Severity.NA).build();
 			}
 		});
 		return evaluationTask;

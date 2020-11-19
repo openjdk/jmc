@@ -96,7 +96,7 @@ public class ClassLeakingRule implements IRule {
 
 	@Override
 	public String getTopic() {
-		return JfrRuleTopics.CLASS_LOADING_TOPIC;
+		return JfrRuleTopics.CLASS_LOADING;
 	}
 
 	@Override

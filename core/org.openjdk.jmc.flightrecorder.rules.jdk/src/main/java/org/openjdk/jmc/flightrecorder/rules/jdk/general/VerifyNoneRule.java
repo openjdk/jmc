@@ -91,7 +91,8 @@ public class VerifyNoneRule implements IRule {
 			String argument = verifyNone != null ? verifyNone : noVerify;
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO))
-					.setExplanation(MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG), argument))
+					.setExplanation(
+							MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG), argument))
 					.build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)

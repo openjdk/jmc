@@ -32,18 +32,13 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
-
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -51,9 +46,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
@@ -120,7 +115,8 @@ public class PasswordsInArgumentsRule implements IRule {
 			}
 			String explanation = Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG);
 			if (!stringExcludeRegexp.isEmpty()) {
-				explanation = explanation + " " + Messages.getString(Messages.PasswordsInArgsRule_TEXT_INFO_EXCLUDED_INFO);
+			explanation = explanation + " " //$NON-NLS-1$
+						+ Messages.getString(Messages.PasswordsInArgsRule_TEXT_INFO_EXCLUDED);
 			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_INFO))

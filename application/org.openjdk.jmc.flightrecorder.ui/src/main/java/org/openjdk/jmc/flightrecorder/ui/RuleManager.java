@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -67,7 +68,6 @@ import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
-import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.RulesHtmlToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
@@ -103,6 +103,27 @@ public class RuleManager {
 		public boolean belongsTo(Object family) {
 			return family == ruleJobFamily;
 		}
+		
+		private boolean shouldEvaluate(IRule rule) throws InterruptedException {
+			DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+			if (dependency != null) {
+				Class<? extends IRule> dependencyType = dependency.value();
+				if (dependencyType!= null) {
+					while (true) {
+						if (evaluatedRules.containsKey(dependencyType)) {
+							if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
+								return false;
+							}
+							return true;
+						} else {
+							FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Waiting one second to evaluate " + rule.getClass().getName() + " for result from " + dependencyType.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+							Thread.sleep(1000);
+						}
+					}
+				}
+			}
+			return true;
+		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
@@ -117,50 +138,43 @@ public class RuleManager {
 					evaluatedRules.remove(rule.getClass());
 					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, resultProvider);
 					Thread runner = new Thread(future);
-					DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
-					if (dependency != null) {
-						Class<? extends IRule> dependencyType = dependency.value();
-						if (dependencyType!= null) {
-							while (true) {
-								if (evaluatedRules.contains(dependencyType)) {
-									break;
-								} else {
-									Thread.sleep(100);
-								}
+					if (shouldEvaluate(rule)) {
+						runner.start();
+						while (true) {
+							if (monitor.isCanceled()) {
+								future.cancel(true);
+								runner.join();
+								result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
+										.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
+										.addResult(RulesHtmlToolkit.FAILED, true).build();
+								evaluatedRules.put(rule.getClass(), Severity.NA);
+								break;
+							} else if (future.isDone()) {
+								result = future.get();
+								runner.join();
+								evaluatedRules.put(rule.getClass(), result.getSeverity());
+								break;
 							}
+							Thread.sleep(100);
 						}
-					}
-					runner.start();
-					while (true) {
-						if (monitor.isCanceled()) {
-							future.cancel(true);
-							runner.join();
-							result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
-									.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
-									.addResult(RulesHtmlToolkit.FAILED, true).build();
-							break;
-						} else if (future.isDone()) {
-							result = future.get();
-							runner.join();
-							evaluatedRules.add(rule.getClass());
-							break;
-						}
-						Thread.sleep(100);
 					}
 				} else {
 					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
 							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED).build();
+					evaluatedRules.put(rule.getClass(), Severity.NA);
 				}
 			} catch (Exception e) {
 				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not evaluate " + rule.getName(), e); //$NON-NLS-1$
 				result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
 						.setSummary(NLS.bind(Messages.JFR_EDITOR_RULE_EVALUATION_ERROR_DESCRIPTION, e))
 						.addResult(RulesHtmlToolkit.FAILED, true).build();
+				evaluatedRules.put(rule.getClass(), Severity.NA);
 			}
 			if (result == null) { // This breaks the IRule implicit contract to never return a null valued result, but we should handle it decently
 				result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
 						.setSummary(Messages.RuleManager_NULL_RESULT_DESCRIPTION)
 						.addResult(RulesHtmlToolkit.FAILED, true).build();
+				evaluatedRules.put(rule.getClass(), Severity.NA);
 			}
 			resultsByTopicByRuleId.get(topic).put(rule.getId(), result);
 			updateListeners(result);
@@ -179,7 +193,7 @@ public class RuleManager {
 	private final List<String> unmappedTopics = Collections.synchronizedList(new ArrayList<>());
 
 	private Set<String> ignoredRules = Collections.synchronizedSet(new HashSet<String>());
-	private Set<Class<? extends IRule>> evaluatedRules = Collections.synchronizedSet(new HashSet<Class<? extends IRule>>());
+	private Map<Class<? extends IRule>, Severity> evaluatedRules = new ConcurrentHashMap<>();
 	private BasicConfig config;
 	private StreamModel items;
 	private Runnable postEvaluationCallback;
@@ -196,26 +210,7 @@ public class RuleManager {
 	RuleManager(Runnable postEvaluationCallback) {
 		this.postEvaluationCallback = postEvaluationCallback;
 		this.resultProvider = new ResultProvider();
-		addResultListener(result -> {
-			IRule rule = result.getRule();
-			if (rule.getResults() != null) {
-				for (TypedResult<?> typedResult : rule.getResults()) {
-					Object instance = result.getResult(typedResult);
-					if (instance != null) {
-						if (typedResult instanceof TypedCollectionResult<?>) {
-							TypedCollectionResult<?> typedCollectionResult = (TypedCollectionResult<?>) typedResult;
-							Collection<?> result2 = result.getResult(typedCollectionResult);
-							resultProvider.addCollectionResult(typedCollectionResult, result2);
-						} else {
-							resultProvider.addResult(typedResult, result.getResult(typedResult));
-						}
-					}
-				}
-			} else {
-				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, rule.getClass().getName() + " has a null result attribute collection!"); //$NON-NLS-1$
-			}
-		});
-
+		addResultListener(resultProvider::addResults);
 		IPreferenceStore preferenceStore = FlightRecorderUI.getDefault().getPreferenceStore();
 		loadIgnoredSet(preferenceStore);
 		loadConfig(preferenceStore);

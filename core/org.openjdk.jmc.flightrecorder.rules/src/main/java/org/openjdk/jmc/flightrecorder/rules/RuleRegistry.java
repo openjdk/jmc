@@ -25,35 +25,35 @@ public class RuleRegistry {
 		private boolean permanentMark = false;
 		private final IRule rule;
 		private final Collection<Vertex> edges = new ArrayList<>();
-		
+
 		Vertex(IRule rule) {
 			this.rule = rule;
 		}
-		
+
 		boolean isTemporarilyMarked() {
 			return temporaryMark;
 		}
-		
+
 		boolean isPermanentlyMarked() {
 			return permanentMark;
 		}
-		
+
 		void temporarilyMark() {
 			this.temporaryMark = true;
 		}
-		
+
 		void removeTemporaryMark() {
 			temporaryMark = false;
 		}
-		
+
 		void permanentlyMark() {
 			this.permanentMark = true;
 		}
 	}
-	
+
 	private static class Graph {
 		private final Map<IRule, Vertex> vertices = new HashMap<>();
-		
+
 		Collection<IRule> getTopologicalOrder() {
 			int permanentlyMarkedVertices = 0;
 			List<IRule> orderedList = new ArrayList<>();
@@ -65,7 +65,7 @@ public class RuleRegistry {
 			}
 			return orderedList;
 		}
-		
+
 		void visit(Vertex vertex, List<IRule> orderedList) {
 			if (vertex.isPermanentlyMarked()) {
 				return;
@@ -81,18 +81,18 @@ public class RuleRegistry {
 			vertex.permanentlyMark();
 			orderedList.add(0, vertex.rule);
 		}
-		
+
 		void addVertex(IRule rule) {
 			vertices.put(rule, new Vertex(rule));
 		}
-		
+
 		void addDependency(IRule dependee, IRule depender) {
 			Vertex vertex = new Vertex(depender);
 			vertices.put(depender, vertex);
 			vertices.get(dependee).edges.add(vertex);
 		}
 	}
-	
+
 	static {
 		ServiceLoader<IRule> ruleLoader = ServiceLoader.load(IRule.class, IRule.class.getClassLoader());
 		Set<IRule> rules = new HashSet<>();
@@ -133,7 +133,7 @@ public class RuleRegistry {
 		Collection<IRule> topologicalOrder = g.getTopologicalOrder();
 		RULES = Collections.unmodifiableCollection(topologicalOrder);
 	}
-	
+
 	private static Logger getLogger() {
 		return Logger.getLogger("org.openjdk.jmc.flightrecorder.rules"); //$NON-NLS-1$
 	}

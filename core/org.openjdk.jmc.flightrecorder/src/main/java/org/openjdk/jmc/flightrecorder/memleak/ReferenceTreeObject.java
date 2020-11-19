@@ -315,7 +315,7 @@ public class ReferenceTreeObject implements IMCOldObject, IDisplayable {
 	public void updateOldObjectSamples(ReferenceTreeObject oldobjectrefnode) {
 		oldObjectSamples.put(oldobjectrefnode.getTimestamp(), oldobjectrefnode);
 	}
-	
+
 	@Override
 	public String displayUsing(String hint) {
 		int format = 0;
@@ -325,7 +325,8 @@ public class ReferenceTreeObject implements IMCOldObject, IDisplayable {
 			break;
 		case IDisplayable.EXACT:
 		case IDisplayable.VERBOSE:
-			format = FORMAT_ARRAY_INFO | FORMAT_FIELD | FORMAT_OTHER_MODIFIERS | FORMAT_PACKAGE | FORMAT_STATIC_MODIFIER;
+			format = FORMAT_ARRAY_INFO | FORMAT_FIELD | FORMAT_OTHER_MODIFIERS | FORMAT_PACKAGE
+					| FORMAT_STATIC_MODIFIER;
 		}
 		return toString(format);
 	}

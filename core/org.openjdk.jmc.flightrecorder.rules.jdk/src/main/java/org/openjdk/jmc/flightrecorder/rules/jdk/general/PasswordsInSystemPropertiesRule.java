@@ -110,11 +110,12 @@ public class PasswordsInSystemPropertiesRule implements IRule {
 			}
 			String explanation = Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO_LONG);
 			if (!stringExcludeRegexp.isEmpty()) {
-				explanation = explanation + " " + Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO_EXCLUDED_INFO);
+				explanation = explanation + " " //$NON-NLS-1$
+						+ Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO_EXCLUDED_INFO);
 			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_INFO_LONG))
+					.setExplanation(explanation)
 					.setSolution(Messages.getString(Messages.PasswordsInSystemPropertiesRule_TEXT_SOLUTION))
 					.addResult(PASSWORDS, passwords).build();
 		}

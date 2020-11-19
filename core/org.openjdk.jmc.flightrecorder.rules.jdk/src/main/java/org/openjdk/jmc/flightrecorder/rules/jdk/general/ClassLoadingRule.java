@@ -132,7 +132,8 @@ public class ClassLoadingRule implements IRule {
 		IQuantity endTime = RulesToolkit.getLatestEndTime(events);
 		if (startTime != null && endTime != null) {
 			IQuantity totalTime = endTime.subtract(startTime);
-			IQuantity longestTime = events.getAggregate(Aggregators.max(JfrAttributes.DURATION));
+			IAggregator<IQuantity, ?> max = Aggregators.max(JfrAttributes.DURATION);
+			IQuantity longestTime = events.getAggregate(max);
 			IQuantity sumTimeLoadedClasses = events.getAggregate(Aggregators.sum(JfrAttributes.DURATION));
 			if ((longestTime.compareTo(maxDurationLimit) > 0)
 					|| (sumTimeLoadedClasses.ratioTo(totalTime) > ratioOfTotalLimit.doubleValue())) {

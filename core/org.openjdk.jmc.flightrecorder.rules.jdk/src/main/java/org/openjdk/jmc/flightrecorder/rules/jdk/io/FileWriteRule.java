@@ -84,12 +84,17 @@ public class FileWriteRule implements IRule {
 	public static final TypedResult<String> LONGEST_WRITE_PATH = new TypedResult<>("longestWritePath", //$NON-NLS-1$
 			"Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT,
 			String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_WRITE = new TypedResult<>("totalWriteForLongest", "Total Write (Top File)", "The total duration of all file writes for the file with the longest write.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_FILE_WRITE = new TypedResult<>("averageFileWrite", "Average File Write", "The average duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_FILE_WRITE = new TypedResult<>("totalFileWrite", "Total File Write", "The total duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_WRITE = new TypedResult<>("totalWriteForLongest",
+			"Total Write (Top File)", "The total duration of all file writes for the file with the longest write.",
+			UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_FILE_WRITE = new TypedResult<>("averageFileWrite",
+			"Average File Write", "The average duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_FILE_WRITE = new TypedResult<>("totalFileWrite",
+			"Total File Write", "The total duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_PATH, LONGEST_WRITE_TIME, LONGEST_TOTAL_WRITE, AVERAGE_FILE_WRITE, TOTAL_FILE_WRITE);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_PATH, LONGEST_WRITE_TIME, LONGEST_TOTAL_WRITE,
+			AVERAGE_FILE_WRITE, TOTAL_FILE_WRITE);
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(WRITE_WARNING_LIMIT);
@@ -121,7 +126,7 @@ public class FileWriteRule implements IRule {
 			IQuantity totalDuration = fileWriteEvents
 					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION));
 			IItemCollection eventsFromLongestIOPath = fileWriteEvents
-					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, longestIOPath));
+					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, fileName));
 			IQuantity totalLongestIOPath = eventsFromLongestIOPath
 					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION));
 			return ResultBuilder.createFor(this, vp).setSeverity(severity)
@@ -129,14 +134,12 @@ public class FileWriteRule implements IRule {
 					.setExplanation(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(LONGEST_WRITE_AMOUNT, amountWritten).addResult(LONGEST_WRITE_TIME, maxDuration)
-					.addResult(LONGEST_TOTAL_WRITE, totalLongestIOPath)
-					.addResult(AVERAGE_FILE_WRITE, avgDuration)
-					.addResult(TOTAL_FILE_WRITE, totalDuration)
-					.addResult(LONGEST_WRITE_PATH, fileName).build();
+					.addResult(LONGEST_TOTAL_WRITE, totalLongestIOPath).addResult(AVERAGE_FILE_WRITE, avgDuration)
+					.addResult(TOTAL_FILE_WRITE, totalDuration).addResult(LONGEST_WRITE_PATH, fileName).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(severity)
 				.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_OK))
-				.addResult(LONGEST_WRITE_AMOUNT, maxDuration).build();
+				.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 	}
 
 	@Override

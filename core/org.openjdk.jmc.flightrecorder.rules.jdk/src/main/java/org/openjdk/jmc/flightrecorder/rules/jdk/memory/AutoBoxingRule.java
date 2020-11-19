@@ -32,14 +32,12 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
@@ -149,7 +147,7 @@ public class AutoBoxingRule extends AbstractRule {
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, LARGEST_ALLOCATED_TYPE, LARGEST_ALLOCATED_BY_TYPE, SECOND_FRAME_MOST_ALLOCATED,
-			BOXED_ALLOCATION_SIZE);
+			BOXED_ALLOCATION_SIZE, BOXED_ALLOCATION_RATIO);
 
 	public AutoBoxingRule() {
 		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
@@ -199,9 +197,9 @@ public class AutoBoxingRule extends AbstractRule {
 					.setSummary(Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING)).build();
 		}
 		IQuantity totalAllocationSize = allocationItems.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
-		double possibleAutoboxingRatio = sizeOfAllBoxedAllocations.ratioTo(totalAllocationSize) * 100;
+		double possibleAutoboxingRatio = sizeOfAllBoxedAllocations.ratioTo(totalAllocationSize);
 
-		double score = RulesToolkit.mapExp100(possibleAutoboxingRatio, autoboxingRatioInfoLimit,
+		double score = RulesToolkit.mapExp100(possibleAutoboxingRatio * 100, autoboxingRatioInfoLimit,
 				autoboxingRatioWarningLimit);
 
 		// Compute information about top autoboxing type

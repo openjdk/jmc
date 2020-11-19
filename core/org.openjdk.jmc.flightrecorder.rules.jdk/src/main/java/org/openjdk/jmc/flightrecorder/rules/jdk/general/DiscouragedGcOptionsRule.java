@@ -72,7 +72,8 @@ public class DiscouragedGcOptionsRule implements IRule {
 	public static final TypedResult<IQuantity> PARALLEL_GC_THREADS = new TypedResult<>("parallelGcThreads", //$NON-NLS-1$
 			JdkAggregators.PARALLEL_GC_THREAD_COUNT_MAX, UnitLookup.NUMBER, IQuantity.class);
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build();
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CPU_INFORMATION, EventAvailability.AVAILABLE).build();
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {

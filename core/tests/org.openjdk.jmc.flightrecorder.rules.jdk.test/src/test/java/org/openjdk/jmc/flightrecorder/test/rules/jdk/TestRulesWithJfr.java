@@ -39,10 +39,11 @@ import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -84,11 +85,16 @@ import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -235,57 +241,85 @@ public class TestRulesWithJfr {
 			return new File(System.getProperty("user.dir"));
 		}
 	}
-
+	
+	private static boolean shouldEvaluate(Map<Class<? extends IRule>, Severity> evaluatedRules, IRule rule) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		if (dependency != null) {
+			Class<? extends IRule> dependencyType = dependency.value();
+			if (dependencyType!= null) {
+				while (true) {
+					if (evaluatedRules.containsKey(dependencyType)) {
+						if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
+							return false;
+						}
+						return true;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
 	private static Report generateReport(IOResource jfr, boolean verbose, Severity minSeverity) {
 		Report report = new Report(jfr.getName());
+		ResultProvider rp = new ResultProvider();
+		Map<Class<? extends IRule>, Severity> evaluatedRules = new HashMap<>();
 		try {
 			IItemCollection events = JfrLoaderToolkit.loadEvents(jfr.open());
-
 			for (IRule rule : RuleRegistry.getRules()) {
-				try {
-					RunnableFuture<IResult> future = rule.createEvaluation(events,
-							IPreferenceValueProvider.DEFAULT_VALUES, null);
-					future.run();
-					IResult result = future.get();
-//					for (Result result : results) {
-					if (minSeverity == null || result.getSeverity().compareTo(minSeverity) >= 0) {
-						ItemSet itemSet = null;
-						IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);
-						if (verbose && itemQuery != null && !itemQuery.getAttributes().isEmpty()) {
-							itemSet = new ItemSet();
-							IItemCollection resultEvents = events.apply(itemQuery.getFilter());
-							Collection<? extends IAttribute<?>> attributes = itemQuery.getAttributes();
-							for (IAttribute<?> attribute : attributes) {
-								itemSet.addField(attribute.getName());
-							}
-							Iterator<? extends IItemIterable> iterables = resultEvents.iterator();
-							while (iterables.hasNext()) {
-								IItemIterable ii = iterables.next();
-								IType<IItem> type = ii.getType();
-								List<IMemberAccessor<?, IItem>> accessors = new ArrayList<>(attributes.size());
-								for (IAttribute<?> a : attributes) {
-									accessors.add(a.getAccessor(type));
-								}
-								Iterator<? extends IItem> items = ii.iterator();
-								while (items.hasNext()) {
-									ItemList itemList = new ItemList();
-									IItem item = items.next();
-									for (IMemberAccessor<?, IItem> a : accessors) {
-										itemList.add(String.valueOf(a.getMember(item)));
-									}
-									itemSet.addItem(itemList);
-								}
-							}
+				if (shouldEvaluate(evaluatedRules, rule)) {
+					try {
+						RunnableFuture<IResult> future = rule.createEvaluation(events,
+								IPreferenceValueProvider.DEFAULT_VALUES, rp);
+						IResult result;
+						if (!RulesToolkit.matchesEventAvailabilityMap(events, rule.getRequiredEvents())) {
+							result = ResultBuilder.createFor(rule, IPreferenceValueProvider.DEFAULT_VALUES)
+									.setSeverity(Severity.NA)
+									.build();
+						} else {
+							future.run();
+							result = future.get();
 						}
-						RuleResult ruleResult = new RuleResult(String.valueOf(result.getRule().getId()),
-								result.getSeverity().getLocalizedName(), result.getSummary(), result.getExplanation(),
-								result.getSolution(), itemSet, Collections.emptyList());
-						report.put(String.valueOf(result.getRule().getId()), ruleResult);
-//						}
+						evaluatedRules.put(rule.getClass(), result.getSeverity());
+						rp.addResults(result);
+						if (minSeverity == null || result.getSeverity().compareTo(minSeverity) >= 0) {
+							ItemSet itemSet = null;
+							IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);
+							if (verbose && itemQuery != null && !itemQuery.getAttributes().isEmpty()) {
+								itemSet = new ItemSet();
+								IItemCollection resultEvents = events.apply(itemQuery.getFilter());
+								Collection<? extends IAttribute<?>> attributes = itemQuery.getAttributes();
+								for (IAttribute<?> attribute : attributes) {
+									itemSet.addField(attribute.getName());
+								}
+								Iterator<? extends IItemIterable> iterables = resultEvents.iterator();
+								while (iterables.hasNext()) {
+									IItemIterable ii = iterables.next();
+									IType<IItem> type = ii.getType();
+									List<IMemberAccessor<?, IItem>> accessors = new ArrayList<>(attributes.size());
+									for (IAttribute<?> a : attributes) {
+										accessors.add(a.getAccessor(type));
+									}
+									Iterator<? extends IItem> items = ii.iterator();
+									while (items.hasNext()) {
+										ItemList itemList = new ItemList();
+										IItem item = items.next();
+										for (IMemberAccessor<?, IItem> a : accessors) {
+											itemList.add(String.valueOf(a.getMember(item)));
+										}
+										itemSet.addItem(itemList);
+									}
+								}
+							}
+							RuleResult ruleResult = new RuleResult(result, itemSet);
+							report.put(String.valueOf(result.getRule().getId()), ruleResult);
+						}
+					} catch (RuntimeException | InterruptedException | ExecutionException e) {
+						e.printStackTrace();
+						System.out.println("Problem while evaluating rules for \"" + jfr.getName() + "\". Message: "
+								+ e.getLocalizedMessage());
+						evaluatedRules.put(rule.getClass(), Severity.NA);
 					}
-				} catch (RuntimeException | InterruptedException | ExecutionException e) {
-					System.out.println("Problem while evaluating rules for \"" + jfr.getName() + "\". Message: "
-							+ e.getLocalizedMessage());
 				}
 			}
 		} catch (IOException | CouldNotLoadRecordingException e) {
@@ -513,8 +547,17 @@ public class TestRulesWithJfr {
 		private String explanation;
 		private ItemSet itemset;
 
+		public RuleResult(IResult result, ItemSet itemset) {
+			this.id = result.getRule().getId();
+			this.severity = result.getSeverity().getLocalizedName();
+			this.summary = ResultToolkit.populateMessage(result, result.getSummary(), true);
+			this.solution = ResultToolkit.populateMessage(result, result.getSolution(), true);
+			this.explanation = ResultToolkit.populateMessage(result, result.getExplanation(), true);
+			this.itemset = itemset;
+		}
+		
 		public RuleResult(String id, String severity, String summary, String explanation, String solution,
-				ItemSet itemset, Collection<Object> results) {
+				ItemSet itemset) {
 			this.id = id;
 			this.severity = severity;
 			this.summary = summary;
@@ -606,7 +649,7 @@ public class TestRulesWithJfr {
 				itemset = ItemSet.fromXml(items.item(0));
 			}
 			rule = new RuleResult(getNodeValues("./id", node).get(0), getNodeValues("./severity", node).get(0), summary,
-					explanation, solution, itemset, Collections.emptyList());
+					explanation, solution, itemset);
 			return rule;
 		}
 
