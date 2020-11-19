@@ -46,15 +46,13 @@ import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJSONMarshaller;
-import org.openjdk.jmc.flightrecorder.flameview.LegacyJSONMarshaller;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
-public class FlameviewJSONTest {
+public class FlameGraphJSONMarshallerTest {
 
 	private static IItemCollection testRecording;
 
@@ -87,30 +85,8 @@ public class FlameviewJSONTest {
 		assertEquals(expectedJSON, flameGraphJSON);
 	}
 
-	@Test
-	public void testCompareAgainstStatefulModelThreadRootAtTop() {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
-		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
-
-		StacktraceModel statefulModel = new StacktraceModel(true, separator, testRecording);
-		String oldJSON = LegacyJSONMarshaller.toLegacyJSON(statefulModel, testRecording);
-
-		assertEquals(oldJSON, flameGraphJSON);
-	}
-
-	@Test
-	public void testCompareAgainstStatefulModelThreadRootAtBottom() {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, false);
-		String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(model);
-
-		StacktraceModel statefulModel = new StacktraceModel(false, separator, testRecording);
-		String oldJSON = LegacyJSONMarshaller.toLegacyJSON(statefulModel, testRecording);
-
-		assertEquals(oldJSON, flameGraphJSON);
-	}
-
 	private String readResource(String resourcePath) throws IOException {
-		try (InputStream is = FlameviewJSONTest.class.getResourceAsStream(resourcePath)) {
+		try (InputStream is = FlameGraphJSONMarshallerTest.class.getResourceAsStream(resourcePath)) {
 			if (is == null) {
 				throw new IllegalArgumentException(resourcePath + " not found");
 			}
