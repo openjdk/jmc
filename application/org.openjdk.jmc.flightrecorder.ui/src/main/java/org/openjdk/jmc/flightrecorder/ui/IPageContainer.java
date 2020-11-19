@@ -58,7 +58,7 @@ public interface IPageContainer {
 	RuleManager getRuleManager();
 
 	BasicConfig getConfig();
-	
+
 	/**
 	 * Asks the page container to refresh the currently selected page, implementations should also
 	 * update all other views so that they accurately represent the page.

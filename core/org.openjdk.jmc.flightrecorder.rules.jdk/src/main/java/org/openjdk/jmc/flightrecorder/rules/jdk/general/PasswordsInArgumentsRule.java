@@ -115,7 +115,7 @@ public class PasswordsInArgumentsRule implements IRule {
 			}
 			String explanation = Messages.getString(Messages.PasswordsInArgsRule_JAVAARGS_TEXT_INFO_LONG);
 			if (!stringExcludeRegexp.isEmpty()) {
-			explanation = explanation + " " //$NON-NLS-1$
+				explanation = explanation + " " //$NON-NLS-1$
 						+ Messages.getString(Messages.PasswordsInArgsRule_TEXT_INFO_EXCLUDED);
 			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)

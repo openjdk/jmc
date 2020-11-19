@@ -241,12 +241,12 @@ public class TestRulesWithJfr {
 			return new File(System.getProperty("user.dir"));
 		}
 	}
-	
+
 	private static boolean shouldEvaluate(Map<Class<? extends IRule>, Severity> evaluatedRules, IRule rule) {
 		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
 		if (dependency != null) {
 			Class<? extends IRule> dependencyType = dependency.value();
-			if (dependencyType!= null) {
+			if (dependencyType != null) {
 				while (true) {
 					if (evaluatedRules.containsKey(dependencyType)) {
 						if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
@@ -259,7 +259,7 @@ public class TestRulesWithJfr {
 		}
 		return true;
 	}
-	
+
 	private static Report generateReport(IOResource jfr, boolean verbose, Severity minSeverity) {
 		Report report = new Report(jfr.getName());
 		ResultProvider rp = new ResultProvider();
@@ -274,8 +274,7 @@ public class TestRulesWithJfr {
 						IResult result;
 						if (!RulesToolkit.matchesEventAvailabilityMap(events, rule.getRequiredEvents())) {
 							result = ResultBuilder.createFor(rule, IPreferenceValueProvider.DEFAULT_VALUES)
-									.setSeverity(Severity.NA)
-									.build();
+									.setSeverity(Severity.NA).build();
 						} else {
 							future.run();
 							result = future.get();
@@ -555,7 +554,7 @@ public class TestRulesWithJfr {
 			this.explanation = ResultToolkit.populateMessage(result, result.getExplanation(), true);
 			this.itemset = itemset;
 		}
-		
+
 		public RuleResult(String id, String severity, String summary, String explanation, String solution,
 				ItemSet itemset) {
 			this.id = id;

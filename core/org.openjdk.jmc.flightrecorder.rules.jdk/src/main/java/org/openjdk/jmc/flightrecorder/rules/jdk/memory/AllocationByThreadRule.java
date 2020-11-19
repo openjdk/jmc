@@ -98,7 +98,7 @@ public class AllocationByThreadRule implements IRule {
 			// FIXME: Configuration attribute instead of hard coded 1000 tlabs => relevance 50
 			double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
 			double score = balance * relevance * 0.74; // ceiling at 74;
-	
+
 			IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
 					ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostSignificant.getKey()));
 			StacktraceModel stacktraceModel = new StacktraceModel(false,
@@ -113,9 +113,7 @@ public class AllocationByThreadRule implements IRule {
 					.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
 					.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
 		}
-		return ResultBuilder.createFor(this, valueProvider)
-				.setSeverity(Severity.NA)
-				.build();
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA).build();
 	}
 
 	@Override

@@ -1192,8 +1192,9 @@ public class RulesToolkit {
 	 * @param items
 	 *            items to evaluate
 	 * @param preferences
-	 *            See {@link IRule#createEvaluation(IItemCollection, IPreferenceValueProvider, IResultValueProvider)}. If
-	 *            {@code null}, then default values will be used.
+	 *            See
+	 *            {@link IRule#createEvaluation(IItemCollection, IPreferenceValueProvider, IResultValueProvider)}.
+	 *            If {@code null}, then default values will be used.
 	 * @param nThreads
 	 *            The number or parallel threads to use when evaluating. If 0, then the number of
 	 *            available processors will be used.

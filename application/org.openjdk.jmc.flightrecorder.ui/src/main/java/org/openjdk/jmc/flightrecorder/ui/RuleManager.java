@@ -103,12 +103,12 @@ public class RuleManager {
 		public boolean belongsTo(Object family) {
 			return family == ruleJobFamily;
 		}
-		
+
 		private boolean shouldEvaluate(IRule rule) throws InterruptedException {
 			DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
 			if (dependency != null) {
 				Class<? extends IRule> dependencyType = dependency.value();
-				if (dependencyType!= null) {
+				if (dependencyType != null) {
 					while (true) {
 						if (evaluatedRules.containsKey(dependencyType)) {
 							if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
@@ -116,7 +116,8 @@ public class RuleManager {
 							}
 							return true;
 						} else {
-							FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Waiting one second to evaluate " + rule.getClass().getName() + " for result from " + dependencyType.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+							FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Waiting one second to evaluate " //$NON-NLS-1$
+									+ rule.getClass().getName() + " for result from " + dependencyType.getName()); //$NON-NLS-1$
 							Thread.sleep(1000);
 						}
 					}
@@ -136,7 +137,8 @@ public class RuleManager {
 			try {
 				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())) {
 					evaluatedRules.remove(rule.getClass());
-					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue, resultProvider);
+					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue,
+							resultProvider);
 					Thread runner = new Thread(future);
 					if (shouldEvaluate(rule)) {
 						runner.start();
@@ -415,7 +417,7 @@ public class RuleManager {
 		}
 		config = new BasicConfig(fromXMLString);
 	}
-	
+
 	public IResultValueProvider getResultProvider() {
 		return resultProvider;
 	}

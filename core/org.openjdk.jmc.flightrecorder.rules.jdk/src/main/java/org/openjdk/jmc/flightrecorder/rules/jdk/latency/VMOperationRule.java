@@ -135,9 +135,11 @@ public class VMOperationRule implements IRule {
 
 		boolean isCombinedDuration = getDuration(startingEvent).compareTo(longestDuration) != 0;
 		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String longMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION)
+			String longMessage = isCombinedDuration
+					? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION)
 					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG);
-			String shortMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION)
+			String shortMessage = isCombinedDuration
+					? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION)
 					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN);
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
 					.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
@@ -145,7 +147,8 @@ public class VMOperationRule implements IRule {
 					.addResult(LONGEST_OPERATION_DURATION, longestDuration)
 					.addResult(LONGEST_OPERATION_START_TIME, longestOperationStart).build();
 		}
-		String shortMessage = isCombinedDuration ? Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION)
+		String shortMessage = isCombinedDuration
+				? Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK_COMBINED_DURATION)
 				: Messages.getString(Messages.VMOperationRuleFactory_TEXT_OK);
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).setSummary(shortMessage)

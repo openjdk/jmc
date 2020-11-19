@@ -23,7 +23,7 @@ public class ResultProvider implements IResultValueProvider {
 	private void addCollectionResult(TypedCollectionResult<?> result, Collection<?> collection) {
 		collectionResultMap.put(result, collection);
 	}
-	
+
 	public void addResults(IResult result) {
 		IRule rule = result.getRule();
 		if (rule.getResults() != null) {

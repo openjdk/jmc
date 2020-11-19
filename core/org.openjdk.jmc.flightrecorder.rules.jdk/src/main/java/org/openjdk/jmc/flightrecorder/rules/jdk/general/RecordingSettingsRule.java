@@ -64,20 +64,24 @@ public class RecordingSettingsRule implements IRule {
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.SYSTEM_PROPERTIES, EventAvailability.AVAILABLE).build();
 
-	public static final TypedCollectionResult<String> NO_THRESHOLD_EVENT_TYPES = new TypedCollectionResult<>("noThresholdEventTypes", "No Threshold Event Types", "Event types that have no threshold.", UnitLookup.PLAIN_TEXT, String.class); //$NON-NLS-1$
-	
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(NO_THRESHOLD_EVENT_TYPES);
-	
+	public static final TypedCollectionResult<String> NO_THRESHOLD_EVENT_TYPES = new TypedCollectionResult<>(
+			"noThresholdEventTypes", "No Threshold Event Types", "Event types that have no threshold.", //$NON-NLS-1$
+			UnitLookup.PLAIN_TEXT, String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(NO_THRESHOLD_EVENT_TYPES);
+
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// TODO: We might want to re-write this rule entirely to provide more detailed TypedResults
-		String[] names = RulesToolkit.getTypesWithZeroThreshold(items, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.MONITOR_ENTER).split(","); //$NON-NLS-1$
+		String[] names = RulesToolkit.getTypesWithZeroThreshold(items, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.MONITOR_ENTER)
+				.split(","); //$NON-NLS-1$
 		if (names != null && names.length > 0) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO_LONG))
-					.addResult(NO_THRESHOLD_EVENT_TYPES, Arrays.asList(names))
-					.build();
+					.setExplanation(
+							Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO_LONG))
+					.addResult(NO_THRESHOLD_EVENT_TYPES, Arrays.asList(names)).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_RULE_TEXT_OK))

@@ -111,11 +111,13 @@ public class PasswordsInEnvironmentRule implements IRule {
 			}
 			String explanation = Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_LONG);
 			if (!stringExcludeRegexp.isEmpty()) {
-				explanation = explanation + " " + Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_EXCLUDED_INFO); //$NON-NLS-1$
+				explanation = explanation + " " //$NON-NLS-1$
+						+ Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO_EXCLUDED_INFO);
 			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_INFO))
-					.setExplanation(explanation).setSolution(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_SOLUTION))
+					.setExplanation(explanation)
+					.setSolution(Messages.getString(Messages.PasswordsInEnvironmentRuleFactory_TEXT_SOLUTION))
 					.addResult(PASSWORDS, passwords).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)

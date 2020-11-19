@@ -102,8 +102,7 @@ public class HighJvmCpuRule implements IRule {
 			JfrAttributes.END_TIME);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE)
-			.build();
+			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE).build();
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
 			.<TypedResult<?>> asList(TypedResult.SCORE);
