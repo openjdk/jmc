@@ -46,9 +46,6 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
-import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
-import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
-import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -99,12 +96,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.StringToolkit;
+import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJSONMarshaller;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
-import org.openjdk.jmc.flightrecorder.flameview.tree.TraceNode;
-import org.openjdk.jmc.flightrecorder.flameview.tree.TraceTreeUtils;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
@@ -117,8 +113,6 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
 	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview"; //$NON-NLS-1$
-	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
-	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private static final String TABLE_COLUMN_COUNT = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_COUNT);
 	private static final String TABLE_COLUMN_EVENT_TYPE = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_TYPE);
 	private static final String TOOLTIP_PACKAGE = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE);
@@ -307,21 +301,19 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			view.modelState = ModelState.STARTED;
-			StacktraceModel model = new StacktraceModel(view.threadRootAtTop, view.frameSeparator, items);
-			TraceNode root = TraceTreeUtils.createRootWithDescription(items, model.getRootFork().getBranchCount());
 			if (isInvalid) {
 				return;
 			}
-			TraceNode traceNode = TraceTreeUtils.createTree(root, model);
+			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, view.threadRootAtTop);
 			if (isInvalid) {
 				return;
 			}
-			String jsonModel = view.toJSonModel(traceNode, this).toString();
+			String flameGraphJSON = FlameGraphJSONMarshaller.toJSON(treeModel);
 			if (isInvalid) {
 				return;
 			} else {
 				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, jsonModel));
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, flameGraphJSON));
 			}
 		}
 	}
@@ -502,54 +494,6 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		} catch (InterruptedException | ExecutionException | IOException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
 		}
-	}
-
-	private StringBuilder toJSonModel(TraceNode root, ModelRebuildRunnable rebuildCallable) {
-		StringBuilder builder = new StringBuilder();
-		String rootNodeStart = createJsonRootTraceNode(root);
-		builder.append(rootNodeStart);
-		renderChildren(builder, root, rebuildCallable);
-		builder.append("]}");
-		return builder;
-	}
-
-	private static void render(StringBuilder builder, TraceNode node, ModelRebuildRunnable rebuildCallable) {
-		String start = UNCLASSIFIABLE_FRAME.equals(node.getName()) ? createJsonDescTraceNode(node)
-				: createJsonTraceNode(node);
-		builder.append(start);
-		renderChildren(builder, node, rebuildCallable);
-		builder.append("]}");
-	}
-
-	private static void renderChildren(StringBuilder builder, TraceNode node, ModelRebuildRunnable rebuildCallable) {
-		int i = 0;
-		while (i < node.getChildren().size() && !rebuildCallable.isInvalid) {
-			render(builder, node.getChildren().get(i), rebuildCallable);
-			if (i < node.getChildren().size() - 1) {
-				builder.append(",");
-			}
-			i++;
-		}
-	}
-
-	private static String createJsonRootTraceNode(TraceNode rootNode) {
-		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", rootNode.getName()), toJSonKeyValue("p", ""),
-				toJSonKeyValue("d", rootNode.getPackageName()));
-	}
-
-	private static String createJsonTraceNode(TraceNode node) {
-		return String.format("{%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("v", String.valueOf(node.getValue())));
-	}
-
-	private static String createJsonDescTraceNode(TraceNode node) {
-		return String.format("{%s,%s,%s,%s, \"c\": [ ", toJSonKeyValue("n", node.getName()),
-				toJSonKeyValue("p", node.getPackageName()), toJSonKeyValue("d", UNCLASSIFIABLE_FRAME_DESC),
-				toJSonKeyValue("v", String.valueOf(node.getValue())));
-	}
-
-	private static String toJSonKeyValue(String key, String value) {
-		return "\"" + key + "\": " + "\"" + value + "\"";
 	}
 
 	private static String loadLibraries(String ... libs) {
