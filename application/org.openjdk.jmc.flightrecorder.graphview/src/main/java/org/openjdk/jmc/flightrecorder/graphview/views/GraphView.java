@@ -221,11 +221,22 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(String model) {
 		browser.setText(HTML_PAGE);
+
 		browser.addProgressListener(new ProgressAdapter() {
+			private boolean loaded = false;
+
+			@Override
+			public void changed(ProgressEvent event) {
+				if (loaded) {
+					browser.removeProgressListener(this);
+				}
+			}
+
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
 				browser.execute(String.format("processGraph(`%s`);", model));
+				loaded = true;
 			}
 		});
 	}

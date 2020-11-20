@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Flamegraph
+Bundle-Name: GraphView
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview;singleton:=true
 Bundle-Version: 8.0.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder;bundle-version="8.0.0",
