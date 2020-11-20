@@ -53,6 +53,11 @@ import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
 public class FlameGraphJsonMarshallerTest {
 
+	private static final boolean THREAD_ROOT_AT_TOP = true;
+	private static final boolean THREAD_ROOT_AT_BOTTOM = false;
+	private static final FrameSeparator METHOD_SEPARATOR = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
+			false);
+
 	private static IItemCollection testRecording;
 
 	@BeforeClass
@@ -62,12 +67,9 @@ public class FlameGraphJsonMarshallerTest {
 		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
 	}
 
-	private static final FrameSeparator separator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
-			false);
-
 	@Test
 	public void testRenderedJsonWithAttribute() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true,
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, THREAD_ROOT_AT_TOP,
 				JdkAttributes.ALLOCATION_SIZE);
 		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
@@ -76,11 +78,30 @@ public class FlameGraphJsonMarshallerTest {
 	}
 
 	@Test
+	public void testRenderedJsonWithAttributeInverted() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, THREAD_ROOT_AT_BOTTOM,
+				JdkAttributes.ALLOCATION_SIZE);
+		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-attribute-inverted.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	@Test
 	public void testRenderedJsonWithCounts() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording);
 		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
 		String expectedJson = readResource("/flamegraph-counts.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	@Test
+	public void testRenderedJsonWithCountsInverted() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording);
+		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-counts-inverted.json");
 		assertEquals(expectedJson, flameGraphJson);
 	}
 
