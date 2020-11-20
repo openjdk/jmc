@@ -38,12 +38,9 @@ import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -77,14 +74,13 @@ public class StacktraceTreeModel {
 	 */
 	private static final IMCFrame ROOT_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
 
-	private final Map<Integer, Node> nodes = new HashMap<>(1024);
-	private final Map<Integer, Set<Integer>> childrenLookup = new HashMap<>(1024);
+	private final Map<Integer, Node> nodesById = new HashMap<>(1024);
 	private final Integer rootId;
 
 	private final IItemCollection items;
 	private final FrameSeparator frameSeparator;
 	private final IAttribute<IQuantity> attribute;
-	private final boolean threadRootAtTop;
+	private final boolean invertedStacks;
 
 	/**
 	 * Builds a StacktraceTreeModel from a given collection of events with defaults: frame separator
@@ -94,7 +90,7 @@ public class StacktraceTreeModel {
 	 *            the data we want to represent.
 	 */
 	public StacktraceTreeModel(IItemCollection items) {
-		this(items, DEFAULT_FRAME_SEPARATOR, true, null);
+		this(items, DEFAULT_FRAME_SEPARATOR, false, null);
 	}
 
 	/**
@@ -107,7 +103,7 @@ public class StacktraceTreeModel {
 	 *            defines what represents a node in the tree. Defaults to METHOD.
 	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator) {
-		this(items, frameSeparator, true, null);
+		this(items, frameSeparator, false, null);
 	}
 
 	/**
@@ -118,12 +114,12 @@ public class StacktraceTreeModel {
 	 *            the data we want to represent.
 	 * @param frameSeparator
 	 *            defines what represents a node in the tree. Defaults to METHOD.
-	 * @param threadRootAtTop
-	 *            defines how the stacks are aggregated. Defaults to true (i.e. bottom-up,
+	 * @param invertedStacks
+	 *            defines how the stacks are aggregated. Defaults to false (i.e. bottom-up,
 	 *            Thread.run() at the root of the tree).
 	 */
-	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop) {
-		this(items, frameSeparator, threadRootAtTop, null);
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks) {
+		this(items, frameSeparator, invertedStacks, null);
 	}
 
 	/**
@@ -133,24 +129,23 @@ public class StacktraceTreeModel {
 	 *            the data we want to represent.
 	 * @param frameSeparator
 	 *            defines what represents a node in the tree. Defaults to METHOD.
-	 * @param threadRootAtTop
-	 *            defines how the stacks are aggregated. Defaults to true (i.e. bottom-up,
+	 * @param invertedStacks
+	 *            defines how the stacks are aggregated. Defaults to false (i.e. bottom-up,
 	 *            Thread.run() at the root of the tree).
 	 * @param attribute
 	 *            defines what we use as node weights. If null, the weight is the number of
 	 *            occurrences for the frame.
 	 */
-	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean threadRootAtTop,
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
 			IAttribute<IQuantity> attribute) {
 		this.items = items;
 		this.frameSeparator = frameSeparator;
 		this.attribute = attribute;
-		this.threadRootAtTop = threadRootAtTop;
+		this.invertedStacks = invertedStacks;
 
 		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
-		this.rootId = newNodeId(null, rootFrame);
-		nodes.put(rootId, new Node(rootId, rootFrame));
-		childrenLookup.put(rootId, new TreeSet<>());
+		this.rootId = newNodeId(rootFrame);
+		nodesById.put(rootId, new Node(rootId, rootFrame));
 
 		for (IItemIterable iterable : items) {
 			IMemberAccessor<IQuantity, IItem> accessor = getAccessor(iterable, attribute);
@@ -162,21 +157,14 @@ public class StacktraceTreeModel {
 	 * @return the root node of the tree.
 	 */
 	public Node getRoot() {
-		return nodes.get(rootId);
-	}
-
-	/**
-	 * @return an unmodifiable view over the child lookup map.
-	 */
-	public Map<Integer, Set<Integer>> getChildrenLookup() {
-		return Collections.unmodifiableMap(childrenLookup);
+		return nodesById.get(rootId);
 	}
 
 	/**
 	 * @return an unmodifiable view over the node lookup map.
 	 */
-	public Map<Integer, Node> getNodes() {
-		return Collections.unmodifiableMap(nodes);
+	public Map<Integer, Node> getNodesById() {
+		return Collections.unmodifiableMap(nodesById);
 	}
 
 	/**
@@ -209,42 +197,47 @@ public class StacktraceTreeModel {
 			return;
 		}
 
-		Integer parentId = rootId;
+		Node parent = getRoot();
 		int processedFrames = 0;
 		while (processedFrames < frames.size()) {
-			int idx = threadRootAtTop ? frames.size() - 1 - processedFrames : processedFrames;
+			int idx = invertedStacks ? processedFrames : frames.size() - 1 - processedFrames;
 
 			AggregatableFrame frame;
-			if (stacktrace.getTruncationState().isTruncated() && threadRootAtTop && processedFrames == 0) {
+			if (stacktrace.getTruncationState().isTruncated() && !invertedStacks && processedFrames == 0) {
 				// we have a truncated stacktrace so we can't assume anything about the bottom frame
 				frame = new AggregatableFrame(frameSeparator, UNKNOWN_FRAME);
 			} else {
 				frame = new AggregatableFrame(frameSeparator, frames.get(idx));
 			}
 
-			int nodeId = newNodeId(parentId, frame);
-			Node current = getOrCreateNode(nodeId, frame);
+			Node current = getOrCreateNode(parent, frame);
 			current.cumulativeWeight += value;
 			if (processedFrames == frames.size() - 1) {
 				current.weight += value;
 			}
 
-			childrenLookup.get(parentId).add(current.getNodeId());
-			if (childrenLookup.get(current.getNodeId()) == null) {
-				childrenLookup.put(current.getNodeId(), new HashSet<>());
-			}
-			parentId = current.getNodeId();
+			parent = current;
 			processedFrames++;
 		}
 	}
 
-	private Node getOrCreateNode(Integer nodeId, AggregatableFrame frame) {
-		Node n = nodes.get(nodeId);
-		if (n == null) {
-			n = new Node(nodeId, frame);
-			nodes.put(nodeId, n);
-		}
-		return n;
+	private Node getOrCreateNode(Node parent, AggregatableFrame frame) {
+		// TODO: move nodeId calculation internally
+		Integer nodeId = newNodeId(parent.getNodeId(), frame);
+		return parent.children.stream()
+					// TODO: consider a map lookup instead of linear search
+					.filter(child -> child.getFrame().equals(frame)).findAny()
+					.orElseGet(() -> {
+						Node result = new Node(nodeId, frame);
+						result.parent = parent;
+						parent.children.add(result);
+						nodesById.put(result.getNodeId(), result);
+						return result;
+					});
+	}
+
+	private Integer newNodeId(AggregatableFrame aFrame) {
+		return newNodeId(null, aFrame);
 	}
 
 	private Integer newNodeId(Integer parentId, AggregatableFrame aframe) {

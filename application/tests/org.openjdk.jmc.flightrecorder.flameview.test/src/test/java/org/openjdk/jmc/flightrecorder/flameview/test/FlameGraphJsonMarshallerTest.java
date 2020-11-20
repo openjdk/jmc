@@ -53,8 +53,8 @@ import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
 public class FlameGraphJsonMarshallerTest {
 
-	private static final boolean THREAD_ROOT_AT_TOP = true;
-	private static final boolean THREAD_ROOT_AT_BOTTOM = false;
+	private static final boolean INVERTED_STACKS = true;
+	private static final boolean REGULAR_STACKS = false;
 	private static final FrameSeparator METHOD_SEPARATOR = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
 			false);
 
@@ -69,7 +69,7 @@ public class FlameGraphJsonMarshallerTest {
 
 	@Test
 	public void testRenderedJsonWithAttribute() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, THREAD_ROOT_AT_TOP,
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, REGULAR_STACKS,
 				JdkAttributes.ALLOCATION_SIZE);
 		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
@@ -78,8 +78,8 @@ public class FlameGraphJsonMarshallerTest {
 	}
 
 	@Test
-	public void testRenderedJsonWithAttributeInverted() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, THREAD_ROOT_AT_BOTTOM,
+	public void testRenderedJsonWithAttributeInvertedStacks() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, INVERTED_STACKS,
 				JdkAttributes.ALLOCATION_SIZE);
 		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
@@ -97,8 +97,8 @@ public class FlameGraphJsonMarshallerTest {
 	}
 
 	@Test
-	public void testRenderedJsonWithCountsInverted() throws Exception {
-		StacktraceTreeModel model = new StacktraceTreeModel(testRecording);
+	public void testRenderedJsonWithCountsInvertedStacks() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, INVERTED_STACKS);
 		String flameGraphJson = FlameGraphJsonMarshaller.toJson(model);
 
 		String expectedJson = readResource("/flamegraph-counts-inverted.json");

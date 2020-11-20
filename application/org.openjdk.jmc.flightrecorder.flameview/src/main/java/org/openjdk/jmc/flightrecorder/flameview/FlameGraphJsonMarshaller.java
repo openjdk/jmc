@@ -52,7 +52,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openjdk.jmc.common.IMCFrame;
@@ -75,25 +74,21 @@ public class FlameGraphJsonMarshaller {
 	}
 
 	private static String toJson(StacktraceTreeModel model, Node node) {
-		Map<Integer, Set<Integer>> childrenLookup = model.getChildrenLookup();
-		Map<Integer, Node> nodes = model.getNodes();
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
-		if (node.equals(model.getRoot())) {
+		if (node.isRoot()) {
 			sb.append(createRootNodeJson(model.getItems()));
 		} else {
 			sb.append(createNodeJsonProps(node.getFrame(), node.getCumulativeWeight()));
 		}
 
-		Set<Integer> childIds = childrenLookup.get(node.getNodeId());
 		sb.append(", ").append(addQuotes("c")).append(": [ ");
 		boolean first = true;
-		for (int childId : childIds) {
+		for (Node child : node.getChildren()) {
 			if (!first) {
 				sb.append(",");
 			}
-			sb.append(toJson(model, nodes.get(childId)));
+			sb.append(toJson(model, child));
 			first = false;
 		}
 		sb.append("]").append("}");
@@ -103,7 +98,7 @@ public class FlameGraphJsonMarshaller {
 	private static String createNodeJsonProps(AggregatableFrame frame, double value) {
 		StringBuilder sb = new StringBuilder();
 		if (frame.getType().equals(IMCFrame.Type.UNKNOWN)) {
-			// TODO: this is untested
+			// TODO: find recording with truncated stacks and add unit test for this case
 			sb.append(addQuotes("n")).append(": ").append(addQuotes(UNCLASSIFIABLE_FRAME));
 			sb.append(",");
 			sb.append(addQuotes("d")).append(": ").append(addQuotes(UNCLASSIFIABLE_FRAME_DESC));
@@ -111,10 +106,11 @@ public class FlameGraphJsonMarshaller {
 			sb.append(addQuotes("p")).append(": ").append(addQuotes(""));
 			sb.append(",");
 		} else {
-			sb.append(addQuotes("n")).append(": ").append(addQuotes(frame.getHumanReadableShortString()));
+			String frameName = frame.getHumanReadableShortString();
+			String packageName = FormatToolkit.getPackage(frame.getMethod().getType().getPackage());
+			sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
 			sb.append(",");
-			sb.append(addQuotes("p")).append(": ")
-					.append(addQuotes(FormatToolkit.getPackage(frame.getMethod().getType().getPackage())));
+			sb.append(addQuotes("p")).append(": ").append(addQuotes(packageName));
 			sb.append(",");
 		}
 		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));

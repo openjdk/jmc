@@ -33,6 +33,9 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -53,6 +56,10 @@ public final class Node {
 	 * The weight when being the top frame.
 	 */
 	double weight;
+
+	Node parent;
+
+	final List<Node> children = new ArrayList<>();
 
 	/**
 	 * The cumulative weight for all contributions.
@@ -93,6 +100,22 @@ public final class Node {
 	 */
 	public AggregatableFrame getFrame() {
 		return frame;
+	}
+
+	public List<Node> getChildren() {
+		return Collections.unmodifiableList(children);
+	}
+
+	public Node getParent() {
+		return parent;
+	}
+
+	public boolean isRoot() {
+		return parent == null;
+	}
+
+	public boolean isLeaf() {
+		return children.isEmpty();
 	}
 
 	@Override

@@ -43,7 +43,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,18 +71,16 @@ public class StacktraceTreeModelTest {
 			false);
 
 	@Test
-	public void testTreeModelWithAttributeThreadRootAtTop() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, true,
+	public void testTreeModelWithAttributeNormalStacks() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, false,
 				JdkAttributes.ALLOCATION_SIZE);
+		Node root = model.getRoot();
 
 		// check number of branches from root
-		Integer rootId = treeModel.getRoot().getNodeId();
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
-		assertNotNull(rootNodeChildIds);
-		assertEquals(3, rootNodeChildIds.size());
+		assertEquals(3, root.getChildren().size());
 
 		// get leaf nodes
-		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(root);
 
 		assertEquals(leafValues.size(), 3);
 		Map<String, List<Double>> expected = new HashMap<>();
@@ -94,18 +91,16 @@ public class StacktraceTreeModelTest {
 	}
 
 	@Test
-	public void testTreeModelWithAttributeThreadRootAtBottom() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, false,
+	public void testTreeModelWithAttributeInvertedStacks() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true,
 				JdkAttributes.ALLOCATION_SIZE);
 
-		// check number of branches from root
-		Integer rootId = treeModel.getRoot().getNodeId();
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
-		assertNotNull(rootNodeChildIds);
-		assertEquals(3, rootNodeChildIds.size());
+
+		Node root = model.getRoot();
+		assertEquals(3, root.getChildren().size());
 
 		// get leaf nodes
-		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(root);
 
 		assertEquals(leafValues.size(), 3);
 		Map<String, List<Double>> expected = new HashMap<>();
@@ -116,17 +111,15 @@ public class StacktraceTreeModelTest {
 	}
 
 	@Test
-	public void testTreeModelWithoutAttributeThreadRootAtTop() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator);
+	public void testTreeModelWithoutAttributeNormalStacks() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator);
+		Node root = model.getRoot();
 
 		// check number of branches from root
-		Integer rootId = treeModel.getRoot().getNodeId();
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
-		assertNotNull(rootNodeChildIds);
-		assertEquals(6, rootNodeChildIds.size());
+		assertEquals(6, root.getChildren().size());
 
 		// get leaf nodes
-		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(root);
 
 		Map<String, List<Double>> expected = new HashMap<>();
 		expected.put("AbstractCollection.toArray()", asList(1.0));
@@ -139,17 +132,15 @@ public class StacktraceTreeModelTest {
 	}
 
 	@Test
-	public void testTreeModelWithoutAttributeThreadRootAtBottom() {
-		StacktraceTreeModel treeModel = new StacktraceTreeModel(testRecording, separator, false);
+	public void testTreeModelWithoutAttributeInvertedStacks() {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true);
+		Node root = model.getRoot();
 
 		// check number of branches from root
-		Integer rootId = treeModel.getRoot().getNodeId();
-		Set<Integer> rootNodeChildIds = treeModel.getChildrenLookup().get(rootId);
-		assertNotNull(rootNodeChildIds);
-		assertEquals(7, rootNodeChildIds.size());
+		assertEquals(7, root.getChildren().size());
 
 		// get leaf nodes
-		Map<String, List<Double>> leafValues = getLeafNodeValues(treeModel);
+		Map<String, List<Double>> leafValues = getLeafNodeValues(model.getRoot());
 
 		Map<String, List<Double>> expected = new HashMap<>();
 		expected.put("TimerThread.run()", asList(1.0, 10.0));
@@ -161,20 +152,22 @@ public class StacktraceTreeModelTest {
 		assertEquals(expected, leafValues);
 	}
 
-	public Map<String, List<Double>> getLeafNodeValues(StacktraceTreeModel treeModel) {
-		Map<Integer, Node> nodesById = treeModel.getNodes();
-		Map<Integer, Set<Integer>> childrenLookup = treeModel.getChildrenLookup();
+	private Map<String, List<Double>> getLeafNodeValues(Node root) {
 		Map<String, List<Double>> leafValues = new HashMap<>();
-		// we get the leaves by checking the lookup and selecting nodes with no children
-		for (Integer nodeId : childrenLookup.keySet()) {
-			if (childrenLookup.get(nodeId).isEmpty()) {
-				Node node = nodesById.get(nodeId);
-				String key = node.getFrame().getHumanReadableShortString();
-				leafValues.computeIfAbsent(key, k -> new ArrayList<>());
-				leafValues.get(key).add(node.getWeight());
-				leafValues.get(key).sort(Comparator.naturalOrder());
+		pickLeaves(root, leafValues);
+		return leafValues;
+	}
+
+	private void pickLeaves(Node node, Map<String, List<Double>> accumulator) {
+		if (node.isLeaf()) {
+			String name = node.getFrame().getHumanReadableShortString();
+			accumulator.computeIfAbsent(name, k -> new ArrayList<>());
+			accumulator.get(name).add(node.getWeight());
+			accumulator.get(name).sort(Comparator.naturalOrder());
+		} else {
+			for (Node child : node.getChildren()) {
+				pickLeaves(child, accumulator);
 			}
 		}
-		return leafValues;
 	}
 }
