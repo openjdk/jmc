@@ -57,8 +57,14 @@ public final class Node {
 	 */
 	double weight;
 
+	/**
+	 * The parent node; null when root.
+	 */
 	Node parent;
 
+	/**
+	 * The child nodes; empty when leaf.
+	 */
 	final List<Node> children = new ArrayList<>();
 
 	/**
@@ -66,12 +72,21 @@ public final class Node {
 	 */
 	double cumulativeWeight;
 
-	public Node(Integer nodeId, AggregatableFrame frame) {
-		this.nodeId = nodeId;
+	public static Node newRootNode(AggregatableFrame rootFrame) {
+		return new Node(null, rootFrame);
+	}
+
+	public Node(Node parent, AggregatableFrame frame) {
+		this.nodeId = computeNodeId(parent, frame);
+		this.parent = parent;
 		this.frame = frame;
 		if (frame == null) {
 			throw new NullPointerException("Frame cannot be null!");
 		}
+	}
+
+	private static Integer computeNodeId(Node parent, AggregatableFrame frame) {
+		return Objects.hash(parent != null ? parent.getNodeId() : null, frame.hashCode());
 	}
 
 	/**
@@ -102,10 +117,16 @@ public final class Node {
 		return frame;
 	}
 
+	/**
+	 * @return the list of child nodes, in order of appearance.
+	 */
 	public List<Node> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
 
+	/**
+	 * @return the parent node or null when root.
+	 */
 	public Node getParent() {
 		return parent;
 	}

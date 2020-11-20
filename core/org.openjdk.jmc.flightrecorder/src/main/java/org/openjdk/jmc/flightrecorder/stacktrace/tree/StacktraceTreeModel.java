@@ -36,11 +36,7 @@ package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 import static org.openjdk.jmc.common.item.ItemToolkit.accessor;
 import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -74,13 +70,12 @@ public class StacktraceTreeModel {
 	 */
 	private static final IMCFrame ROOT_FRAME = new MCFrame(null, null, null, IMCFrame.Type.UNKNOWN);
 
-	private final Map<Integer, Node> nodesById = new HashMap<>(1024);
-	private final Integer rootId;
-
 	private final IItemCollection items;
 	private final FrameSeparator frameSeparator;
 	private final IAttribute<IQuantity> attribute;
 	private final boolean invertedStacks;
+
+	private final Node root;
 
 	/**
 	 * Builds a StacktraceTreeModel from a given collection of events with defaults: frame separator
@@ -144,9 +139,7 @@ public class StacktraceTreeModel {
 		this.invertedStacks = invertedStacks;
 
 		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
-		this.rootId = newNodeId(rootFrame);
-		nodesById.put(rootId, new Node(rootId, rootFrame));
-
+		this.root = Node.newRootNode(rootFrame);
 		for (IItemIterable iterable : items) {
 			IMemberAccessor<IQuantity, IItem> accessor = getAccessor(iterable, attribute);
 			iterable.forEach((item) -> addItem(item, accessor));
@@ -157,14 +150,7 @@ public class StacktraceTreeModel {
 	 * @return the root node of the tree.
 	 */
 	public Node getRoot() {
-		return nodesById.get(rootId);
-	}
-
-	/**
-	 * @return an unmodifiable view over the node lookup map.
-	 */
-	public Map<Integer, Node> getNodesById() {
-		return Collections.unmodifiableMap(nodesById);
+		return root;
 	}
 
 	/**
@@ -222,31 +208,13 @@ public class StacktraceTreeModel {
 	}
 
 	private Node getOrCreateNode(Node parent, AggregatableFrame frame) {
-		// TODO: move nodeId calculation internally
-		Integer nodeId = newNodeId(parent.getNodeId(), frame);
 		return parent.children.stream()
-					// TODO: consider a map lookup instead of linear search
-					.filter(child -> child.getFrame().equals(frame)).findAny()
-					.orElseGet(() -> {
-						Node result = new Node(nodeId, frame);
-						result.parent = parent;
-						parent.children.add(result);
-						nodesById.put(result.getNodeId(), result);
-						return result;
-					});
-	}
-
-	private Integer newNodeId(AggregatableFrame aFrame) {
-		return newNodeId(null, aFrame);
-	}
-
-	private Integer newNodeId(Integer parentId, AggregatableFrame aframe) {
-		// this is a naive implementation of content-addressable stacks
-		// given the same ancestors and the same frame, the node will have the same id
-		if (parentId == null) {
-			return aframe.hashCode();
-		}
-		return Objects.hash(parentId, aframe.hashCode());
+				// TODO: consider a map lookup instead of linear search
+				.filter(child -> child.getFrame().equals(frame)).findAny().orElseGet(() -> {
+					Node result = new Node(parent, frame);
+					parent.children.add(result);
+					return result;
+				});
 	}
 
 	private IMCStackTrace getStackTrace(IItem item) {

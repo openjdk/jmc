@@ -95,7 +95,6 @@ public class StacktraceTreeModelTest {
 		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, separator, true,
 				JdkAttributes.ALLOCATION_SIZE);
 
-
 		Node root = model.getRoot();
 		assertEquals(3, root.getChildren().size());
 
