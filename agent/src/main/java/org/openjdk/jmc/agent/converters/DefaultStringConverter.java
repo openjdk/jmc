@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,17 +35,11 @@ package org.openjdk.jmc.agent.converters;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 /**
- * The default converter used if nothing has been specified.
+ * The default converter used if nothing has been specified on reference types. The default use is
+ * opt-in, but it can also just be used as a converter if opted out.
  */
-public final class DefaultStringConverter implements StringConverter<Object> {
-	private final static DefaultStringConverter INSTANCE = new DefaultStringConverter();
-
-	@Override
-	public String convert(Object o) {
+public final class DefaultStringConverter {
+	public static String convert(Object o) {
 		return TypeUtils.toString(o);
-	}
-
-	public static DefaultStringConverter getInstance() {
-		return INSTANCE;
 	}
 }

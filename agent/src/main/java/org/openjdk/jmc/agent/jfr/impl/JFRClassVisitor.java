@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.agent.jfr.impl;
 
+import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
 
@@ -44,21 +45,26 @@ import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-public class JFRClassVisitor extends ClassVisitor implements Opcodes {
+/**
+ * This class visits a class to be instrumented, discovers methods to be visited and visits them. It
+ * will also kick off the generation of the event class and register the created event class.
+ */
+public class JFRClassVisitor extends ClassVisitor {
 	private final JFRTransformDescriptor transformDescriptor;
 	private final ClassLoader definingClassLoader;
 	private final Class<?> inspectionClass;
 	private final ProtectionDomain protectionDomain;
 
 	public JFRClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
-			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-			InspectionClassLoader inspectionClassLoader) {
+			Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
 		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
 
 		try {
+			InspectionClassLoader inspectionClassLoader = classBeingRedefined != null ? null
+					: new InspectionClassLoader(definingClassLoader);
 			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
 					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
@@ -80,18 +86,23 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 	@Override
 	public void visitEnd() {
 		try {
-			Class<?> c = generateEventClass();
-			Agent.getLogger().log(Level.FINE, "Generated " + c);
-		} catch (Throwable t) {
+			reflectiveRegister(generateEventClass());
+		} catch (Exception e) {
 			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
-					t);
+					e);
 		}
 		if (!transformDescriptor.isMatchFound()) {
 			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
 					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
-
 		super.visitEnd();
+	}
+
+	// NOTE: multi-release jars should let us compile against jdk9 and do a direct call here
+	private void reflectiveRegister(Class<?> generateEventClass) throws Exception {
+		Class<?> jfr = Class.forName("jdk.jfr.FlightRecorder"); //$NON-NLS-1$
+		Method registerMethod = jfr.getDeclaredMethod("register", Class.class); //$NON-NLS-1$
+		registerMethod.invoke(null, generateEventClass);
 	}
 
 	private Class<?> generateEventClass() throws Exception {
@@ -99,5 +110,4 @@ public class JFRClassVisitor extends ClassVisitor implements Opcodes {
 		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
 				definingClassLoader, protectionDomain);
 	}
-
 }

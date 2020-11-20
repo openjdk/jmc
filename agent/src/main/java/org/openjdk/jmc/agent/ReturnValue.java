@@ -34,26 +34,26 @@ package org.openjdk.jmc.agent;
 
 import javax.management.openmbean.CompositeData;
 
+import org.openjdk.jmc.agent.impl.AbstractConvertable;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 /**
  * Metadata for a return value to be logged by the agent.
  */
-public final class ReturnValue implements Attribute {
+public final class ReturnValue extends AbstractConvertable implements Attribute {
 	private final String name;
 	private final String fieldName;
 	private final String description;
 	private final String contentType;
 	private final String relationKey;
-	private final String converterClassName;
 
 	public ReturnValue(String name, String description, String contentType, String relationKey,
 			String converterClassName) {
+		super(converterClassName);
 		this.name = name == null ? "Return Value" : name;
 		this.description = description;
 		this.contentType = contentType;
 		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(this.name); //$NON-NLS-1$
 	}
 
@@ -80,11 +80,6 @@ public final class ReturnValue implements Attribute {
 	@Override
 	public String getRelationKey() {
 		return relationKey;
-	}
-
-	@Override
-	public String getConverterClassName() {
-		return converterClassName;
 	}
 
 	public String getFieldName() {

@@ -64,7 +64,7 @@ public final class TestToolkit {
 	public static String randomString() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < RND.nextInt(10) + 1; i++) {
-			builder.append(Character.toString((char) (RND.nextInt(26) + 64)));
+			builder.append(Character.toString((char) (RND.nextInt(26) + 65)));
 		}
 		return builder.toString();
 	}

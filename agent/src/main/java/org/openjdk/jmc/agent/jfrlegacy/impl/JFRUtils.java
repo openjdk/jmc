@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.jfr.impl;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -39,9 +39,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.Agent;
 
 /**
- * Utility class to support JDK 7 and JDK 8 style JFR.
+ * Utility class to support Oracle JDK 7 and JDK 8 style JFR.
  */
 @SuppressWarnings("deprecation")
 public class JFRUtils {
@@ -75,8 +76,8 @@ public class JFRUtils {
 			return producerClass.getDeclaredMethod("addEvent", Class.class);
 		} catch (NoSuchMethodException | SecurityException e) {
 			// This should never happen
-			System.err.println("Failed to find the addEvent method of the producer.");
-			System.err.println("No BCI generated JFR events will be available.");
+			Agent.getLogger().severe("Failed to find the addEvent method of the producer.");
+			Agent.getLogger().severe("No BCI generated JFR events will be available.");
 			e.printStackTrace();
 		}
 		return null;
@@ -91,9 +92,9 @@ public class JFRUtils {
 			registerMethod.invoke(producer);
 			return producer;
 		} catch (Exception e) {
-			System.err.println(
+			Agent.getLogger().severe(
 					"Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder.");
-			System.err.println("No BCI generated JFR events will be available.");
+			Agent.getLogger().severe("No BCI generated JFR events will be available.");
 			e.printStackTrace();
 		}
 		return null;

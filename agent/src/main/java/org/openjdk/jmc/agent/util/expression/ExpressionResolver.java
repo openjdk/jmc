@@ -94,6 +94,7 @@ public class ExpressionResolver {
 		return resolver.referenceChain;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void enterStartState() throws IllegalSyntaxException {
 		if (!iterator.hasNext()) {
 			enterIllegalState(

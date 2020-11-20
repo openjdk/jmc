@@ -60,7 +60,7 @@ import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jfrnext.impl.JFRNextEventClassGenerator;
+import org.openjdk.jmc.agent.jfr.impl.JFREventClassGenerator;
 import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
@@ -147,7 +147,7 @@ public class TestDefineEventProbes {
 			}
 		};
 
-		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(eventTd, InstrumentMe.class);
+		byte[] eventClass = JFREventClassGenerator.generateEventClass(eventTd, InstrumentMe.class);
 		ClassReader reader = new ClassReader(eventClass);
 		reader.accept(classVisitor, 0);
 		byte[] modifiedEvent = classWriter.toByteArray();

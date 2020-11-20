@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,18 +31,9 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
 /**
- * Interface for converting an object to an int.
+ * This package contains classes related to adding JFR events for the early versions of JFR in the
+ * Oracle JDK 7 and the Oracle JDK 8.
  */
-public interface IntConverter<T> {
-	/**
-	 * Converts an object to an int.
-	 * 
-	 * @param o
-	 *            the object to convert.
-	 * @return the object converted to a int.
-	 */
-	int convert(T o);
-}

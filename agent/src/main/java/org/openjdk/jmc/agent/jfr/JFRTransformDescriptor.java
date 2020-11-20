@@ -43,6 +43,7 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.Convertable;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
@@ -230,8 +231,12 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return returnValue;
 	}
 
-	public boolean isAllowedFieldType(Type type) {
+	public boolean isAllowedEventFieldType(Convertable convertable, Type type) {
 		if (isAllowToString()) {
+			return true;
+		}
+		// FIXME: Add better validation, such as checking the class is available
+		if (isAllowConverter() && convertable.hasConverter()) {
 			return true;
 		}
 		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;

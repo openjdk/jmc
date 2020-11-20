@@ -44,7 +44,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
+import org.openjdk.jmc.agent.Convertable;
+import org.openjdk.jmc.agent.jfrlegacy.impl.JFRUtils;
 
 /**
  * Helper methods for doing transforms.
@@ -217,7 +218,10 @@ public final class TypeUtils {
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
 	}
 
-	public static boolean shouldStringify(Type argumentType) {
+	public static boolean shouldStringify(Convertable convertable, Type argumentType) {
+		/*
+		 * if (convertable.getConverterClassName() != null) { return false; }
+		 */
 		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
 			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
 		}

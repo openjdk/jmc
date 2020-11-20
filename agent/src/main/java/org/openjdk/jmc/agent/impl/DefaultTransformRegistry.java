@@ -66,6 +66,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.IOToolkit;
@@ -187,11 +188,11 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 	private static boolean validate(DefaultTransformRegistry registry, TransformDescriptor td) {
 		if (td.getClassName() == null) {
-			System.err.println("Encountered probe without associated class! Check probe definitions!"); //$NON-NLS-1$
+			Agent.getLogger().warning("Encountered probe without associated class! Check probe definitions!"); //$NON-NLS-1$
 			return false;
 		}
 		if (td.getId() == null) {
-			System.err.println("Encountered probe without associated id! Check probe definitions!"); //$NON-NLS-1$
+			Agent.getLogger().warning("Encountered probe without associated id! Check probe definitions!"); //$NON-NLS-1$
 			return false;
 		}
 
@@ -201,8 +202,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			for (TransformDescriptor tdListEntry : transformDataList) {
 				String existingName = ((JFRTransformDescriptor) tdListEntry).getEventClassName();
 				if (existingName.equals(tdEventClassName)) {
-					System.err.println("Encountered probe with an event class name that already exists. "
-							+ "Check probe definitions!"); //$NON-NLS-1$
+					Agent.getLogger().warning("Encountered probe with an event class name that already exists: "
+							+ tdEventClassName + "Check probe definitions!"); //$NON-NLS-1$
 					return false;
 				}
 			}

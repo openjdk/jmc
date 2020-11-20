@@ -30,18 +30,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
-/**
- * Interface for converting an object to a float.
- */
-public interface FloatConverter<T> {
-	/**
-	 * Converts an object to a float.
-	 * 
-	 * @param o
-	 *            the object to convert.
-	 * @return the object converted to a float.
-	 */
-	float convert(T o);
+public enum JFRLegacyEventType {
+	INSTANT, DURATION, TIMED, UNDEFINED;
+
+	public static JFRLegacyEventType parse(String string) {
+		if (string == null) {
+			return UNDEFINED;
+		}
+		JFRLegacyEventType et = JFRLegacyEventType.valueOf(string.toUpperCase().trim());
+		if (et == null) {
+			return UNDEFINED;
+		}
+		return et;
+	}
 }

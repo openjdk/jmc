@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,9 +33,10 @@
 package org.openjdk.jmc.agent.converters;
 
 /**
- * This package contains converter interfaces and implementations. A converter will convert an
- * object into one of the types that the recorder can record. Note that the converter will be called
- * from the event site, so make sure your code performs. If your converter has a static getInstance
- * method, it will be assumed that your converter is thread safe, and no converter field will be
- * generated into the event class - the singleton will be used instead.
+ * This package contains converter implementations. A converter will convert an object into one of
+ * the types that the recorder can record. Note that the converter will be called from the event
+ * site, so make sure your code performs and that no exceptions can escape. For a converter to
+ * function, it must contain a static method named convert, and take as a single argument of the
+ * type of the parameter/return value/field it is supposed to convert. It must return one of the JFR
+ * supported field types.
  */
