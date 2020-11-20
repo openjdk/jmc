@@ -41,6 +41,7 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_EVENTS;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPE;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPES;
+import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER;
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
@@ -156,6 +157,9 @@ public class FlameGraphJsonMarshaller {
 	private static String createRootNodeTitle(Map<String, Long> eventCountsByType) {
 		int eventsInTitle = Math.min(eventCountsByType.size(), MAX_TYPES_IN_ROOT_TITLE);
 		long totalEvents = eventCountsByType.values().stream().mapToLong(Long::longValue).sum();
+		if (totalEvents == 0) {
+			return getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE);
+		}
 		StringBuilder title = new StringBuilder(createRootNodeTitlePrefix(totalEvents, eventCountsByType.size()));
 		int i = 0;
 		for (Map.Entry<String, Long> entry : eventCountsByType.entrySet()) {
