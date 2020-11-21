@@ -30,21 +30,24 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.jfr;
+package org.openjdk.jmc.agent.util;
 
 import java.lang.reflect.Method;
 import java.util.OptionalInt;
 
-public final class VersionResolver {
+public final class VersionUtils {
 
-	private final static JFRVersion availableJFRVersion;
+	private static final JFRVersion AVAILABLE_JFR_VERSION = determineJFRVersion();
 	private static final int FEATURE_VERSION = determineFeatureVersion();
 
 	public enum JFRVersion {
 		JFR, JFRNEXT, NONE
 	}
 
-	static {
+	private VersionUtils() {
+	}
+
+	private static JFRVersion determineJFRVersion() {
 		JFRVersion type = null;
 		try {
 			Class.forName("com.oracle.jrockit.jfr.InstantEvent"); //$NON-NLS-1$
@@ -57,18 +60,18 @@ public final class VersionResolver {
 				type = JFRVersion.NONE;
 			}
 		}
-		availableJFRVersion = type;
-	}
-
-	private VersionResolver() {
-	}
-
-	public static JFRVersion getAvailableJFRVersion() {
-		return availableJFRVersion;
+		return type;
 	}
 
 	/**
-	 * Returns the current JVM' feature (major) version, e.g. 8, 11, or 15.
+	 * Returns the current JVM's JFR version.
+	 */
+	public static JFRVersion getAvailableJFRVersion() {
+		return AVAILABLE_JFR_VERSION;
+	}
+
+	/**
+	 * Returns the current JVM's feature (major) version, e.g. 8, 11, or 15.
 	 */
 	public static OptionalInt getFeatureVersion() {
 		return FEATURE_VERSION == 0 ? OptionalInt.empty() : OptionalInt.of(FEATURE_VERSION);

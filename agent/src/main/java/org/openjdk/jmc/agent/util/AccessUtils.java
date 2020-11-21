@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Queue;
 
 /**
@@ -203,7 +204,8 @@ public final class AccessUtils {
 	 * @return whether the class is accessible
 	 */
 	public static boolean verifyModuleAccess(Class<?> targetClass, Class<?> callerClass) {
-		if (isPreJava9()) {
+		OptionalInt featureVersion = VersionUtils.getFeatureVersion();
+		if (featureVersion.isPresent() && featureVersion.getAsInt() < 9) {
 			return true; // There is no module for pre-java 9
 		}
 
@@ -231,15 +233,6 @@ public final class AccessUtils {
 				| IllegalAccessException
 				| InvocationTargetException e) {
 			throw new RuntimeException(e); // this should not happen
-		}
-	}
-
-	private static boolean isPreJava9() {
-		try {
-			Class.forName("java.lang.Module");
-			return false;
-		} catch (ClassNotFoundException e) {
-			return true;
 		}
 	}
 

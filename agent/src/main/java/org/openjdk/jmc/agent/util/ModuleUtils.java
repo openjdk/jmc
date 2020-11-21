@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020 Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,7 +40,6 @@ import java.util.Collections;
 import java.util.logging.Level;
 
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.jfr.VersionResolver;
 
 /**
  * Utility for dealing with module system specifics.
@@ -51,7 +50,7 @@ public class ModuleUtils {
 	 * Allows the agent's module to access the Unsafe class when running on JDK 11 or newer.
 	 */
 	public static void openUnsafePackage(Instrumentation instrumentation) {
-		VersionResolver.getFeatureVersion().ifPresent(featureVersion -> {
+		VersionUtils.getFeatureVersion().ifPresent(featureVersion -> {
 			if (featureVersion >= 11) {
 
 				Method redefineModule = getRedefineModuleMethod();

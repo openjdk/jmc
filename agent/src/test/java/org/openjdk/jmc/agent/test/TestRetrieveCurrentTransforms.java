@@ -51,7 +51,7 @@ public class TestRetrieveCurrentTransforms {
 	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
 
 	@Test
-	public void testRetreiveCurrentTransforms() throws Exception {
+	public void testRetrieveCurrentTransforms() throws Exception {
 		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
 		Assert.assertTrue(jfrTds.length == 1);
 		for (JFRTransformDescriptor jfrTd : jfrTds) {

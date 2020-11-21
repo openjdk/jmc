@@ -43,11 +43,11 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jfr.VersionResolver;
-import org.openjdk.jmc.agent.jfr.VersionResolver.JFRVersion;
 import org.openjdk.jmc.agent.jfr.impl.JFRClassVisitor;
 import org.openjdk.jmc.agent.jfrnext.impl.JFRNextClassVisitor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
+import org.openjdk.jmc.agent.util.VersionUtils;
+import org.openjdk.jmc.agent.util.VersionUtils.JFRVersion;
 
 public class Transformer implements ClassFileTransformer {
 	private TransformRegistry registry;
@@ -89,14 +89,14 @@ public class Transformer implements ClassFileTransformer {
 	private byte[] doJFRLogging(
 		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
 		Class<?> classBeingRedefined, ProtectionDomain protectionDomain, InspectionClassLoader inspectionClassLoader) {
-		if (VersionResolver.getAvailableJFRVersion() == JFRVersion.NONE) {
+		if (VersionUtils.getAvailableJFRVersion() == JFRVersion.NONE) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Could not find JFR classes. Failed to instrument " + td.getMethod().toString()); //$NON-NLS-1$
 			return classfileBuffer;
 		}
 		try {
 			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			ClassVisitor visitor = VersionResolver.getAvailableJFRVersion() == JFRVersion.JFRNEXT
+			ClassVisitor visitor = VersionUtils.getAvailableJFRVersion() == JFRVersion.JFRNEXT
 					? new JFRNextClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined,
 							protectionDomain, inspectionClassLoader)
 					: new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain,
