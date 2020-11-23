@@ -50,6 +50,7 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
@@ -142,6 +143,7 @@ public class ClassLoadingRule implements IRule {
 						.addResult(LONGEST_CLASS_LOAD, longestTime)
 						.addResult(TOTAL_CLASS_LOAD_COUNT, totalLoadedClasses)
 						.addResult(TOTAL_CLASS_LOAD_TIME, sumTimeLoadedClasses)
+						.addResult(TypedResult.ITEM_QUERY, JdkQueries.CLASS_LOAD)
 						.setSummary(Messages.getString(Messages.ClassLoadingRule_RESULT_SUMMARY))
 						.setExplanation(Messages.getString(Messages.ClassLoadingRule_RESULT_EXPLANATION)).build();
 			}

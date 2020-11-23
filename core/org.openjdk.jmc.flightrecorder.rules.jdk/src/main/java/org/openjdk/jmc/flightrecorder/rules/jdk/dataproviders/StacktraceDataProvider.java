@@ -54,7 +54,7 @@ public class StacktraceDataProvider {
 	 *            the total amount of frames in the root branch
 	 * @return an HTML representation of a stack trace
 	 */
-	public static List<IMCMethod> getRelevantTraceHtmlList(Branch branch, int rootItems) {
+	public static List<IMCMethod> getRelevantTraceList(Branch branch, int rootItems) {
 		double threshold = rootItems / 5d;
 		List<IMCMethod> frames = new ArrayList<>();
 		if (branch.getFirstFrame().getItemCount() >= threshold) {

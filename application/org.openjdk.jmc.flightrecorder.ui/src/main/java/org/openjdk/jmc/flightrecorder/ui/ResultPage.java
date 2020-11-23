@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.Page;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.overview.ResultReportUi;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;

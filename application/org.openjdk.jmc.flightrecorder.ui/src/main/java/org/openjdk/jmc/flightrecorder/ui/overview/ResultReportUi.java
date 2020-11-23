@@ -69,7 +69,6 @@ import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.HtmlResultGroup;
@@ -391,8 +390,6 @@ public class ResultReportUi {
 			boolean allOk = editor.getRuleManager().getMaxSeverity(topicsArray) == Severity.OK;
 			script.append(String.format("overview.allOk(%b);", allOk)); //$NON-NLS-1$
 		}
-		boolean allIgnored = editor.getRuleManager().getScoreStream(topicsArray).allMatch(d -> d == Result.IGNORE);
-		script.append(String.format("overview.allIgnored(%b);", allIgnored)); //$NON-NLS-1$
 
 		commandQueue.add(script.toString());
 

@@ -112,7 +112,6 @@ public class HighJvmCpuRule implements IRule {
 		String periodNotBelow = RulesToolkit.getPeriodIfGreaterThan(items,
 				vp.getPreferenceValue(MINIMUM_CPU_LOAD_PERIOD), JdkTypeIDs.CPU_LOAD);
 		if (periodNotBelow != null) {
-			// FIXME: Should the score be hard-coded to 50 here?
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.HighJvmCpuRule_LONG_CPU_LOAD_PERIOD))
 					.setExplanation(MessageFormat.format(

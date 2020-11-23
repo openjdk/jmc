@@ -47,7 +47,9 @@ import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.ItemQueryBuilder;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -96,9 +98,10 @@ public class DMSIncidentRule implements IRule {
 		IQuantity incidents = items.getAggregate(INCIDENTS_COUNT);
 		if (incidents != null && incidents.compareTo(limit) >= 0) {
 			double score = RulesToolkit.mapExp100(incidents.doubleValue(), limit.doubleValueIn(incidents.getUnit()));
+			IItemQuery query = ItemQueryBuilder.fromWhere(FILTER).build();
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(DMS_INCIDENTS, incidents)
+					.addResult(DMS_INCIDENTS, incidents).addResult(TypedResult.ITEM_QUERY, query)
 					.setSummary(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN))
 					.setExplanation(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN_LONG)).build();
 		}

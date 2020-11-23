@@ -116,9 +116,11 @@ public final class BiasedLockingRevocationRule implements IRule {
 			"Revoked Classes", "Revoked Classes.", UnitLookup.CLASS, IMCType.class);
 	public static final TypedCollectionResult<ClassEntry> REVOCATION_CLASSES = new TypedCollectionResult<>(
 			"revocationClasses", "Revocation Classes", "Revocation Classes", ClassEntry.CLASS_ENTRY, ClassEntry.class); //$NON-NLS-1$
+	public static final TypedCollectionResult<String> FILTERED_TYPES = new TypedCollectionResult<>("filteredTypes",
+			"Filtered Types", "Types that were filtered out.", UnitLookup.PLAIN_TEXT, String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, REVOKED_TYPES, REVOCATION_CLASSES);
+			.<TypedResult<?>> asList(TypedResult.SCORE, REVOKED_TYPES, REVOCATION_CLASSES, FILTERED_TYPES);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION, EventAvailability.ENABLED).build();
@@ -141,7 +143,6 @@ public final class BiasedLockingRevocationRule implements IRule {
 
 		StringBuilder summary = new StringBuilder();
 		StringBuilder explanation = new StringBuilder();
-		List<IMCType> revokedTypesResult = new ArrayList<>();
 
 		float totalScore = 0;
 
@@ -171,9 +172,8 @@ public final class BiasedLockingRevocationRule implements IRule {
 		if (revocationClasses.size() > 0) {
 			int maxClasses = (int) valueProvider.getPreferenceValue(MAX_NUMBER_OF_CLASSES_TO_REPORT).longValue();
 			summary.append(Messages.getString(Messages.BiasedLockingRevocationRule_TEXT_REVOKE_LIMIT_CLASSES_FOUND));
-			explanation.append(MessageFormat.format(
-					Messages.getString(Messages.BiasedLockingRevocationRule_TEXT_REVOKE_LIMIT_CLASSES_FOUND_LONG),
-					warningLimit));
+			explanation.append(
+					Messages.getString(Messages.BiasedLockingRevocationRule_TEXT_REVOKE_LIMIT_CLASSES_FOUND_LONG));
 			int classLimit = Math.min(revocationClasses.size(), maxClasses);
 			for (int i = 0; i < classLimit; i++) {
 				ClassEntry classEntry = revocationClasses.get(i);
@@ -192,7 +192,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(totalScore))
 				.setSummary(summary.toString()).setExplanation(explanation.toString())
 				.addResult(REVOKED_TYPES, revokedTypes).addResult(REVOCATION_CLASSES, filteredRevocationClasses)
-				.build();
+				.addResult(FILTERED_TYPES, filteredTypes).build();
 	}
 
 	private int calculateRevocationCountScore(List<ClassEntry> offendingClasses) {

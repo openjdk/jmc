@@ -54,6 +54,7 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -131,6 +132,7 @@ public class BufferLostRule implements IRule {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(rawScore))
 					.addResult(TypedResult.SCORE, score).addResult(DROPPED_COUNT, droppedCount)
 					.addResult(DROPPED_SIZE, droppedSize).addResult(FIRST_DROPPED_BUFFER_TIME, startTime)
+					.addResult(TypedResult.ITEM_QUERY, JdkQueries.JFR_DATA_LOST)
 					.setSummary(Messages.getString(Messages.BufferLostRuleFactory_RESULT_SUMMARY))
 					.setExplanation(Messages.getString(Messages.BufferLostRuleFactory_RESULT_EXPLANATION))
 					.setSolution(Messages.getString(Messages.BufferLostRuleFactory_RESULT_SOLUTION)).build();

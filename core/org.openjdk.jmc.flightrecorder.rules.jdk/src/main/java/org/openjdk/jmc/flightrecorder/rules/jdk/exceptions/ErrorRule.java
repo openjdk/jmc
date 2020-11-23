@@ -61,6 +61,7 @@ import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
@@ -182,7 +183,7 @@ public class ErrorRule extends AbstractRule {
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
 					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
-					.addResult(EXCLUDED_ERRORS, excludedErrors)
+					.addResult(EXCLUDED_ERRORS, excludedErrors).addResult(TypedResult.ITEM_QUERY, JdkQueries.ERRORS)
 					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)

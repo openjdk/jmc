@@ -104,7 +104,7 @@ public class AllocationByClassRule implements IRule {
 		StacktraceModel stacktraceModel = new StacktraceModel(false,
 				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
 		Fork rootFork = stacktraceModel.getRootFork();
-		List<IMCMethod> relevantFramesList = StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0),
+		List<IMCMethod> relevantFramesList = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
 				rootFork.getItemsInFork());
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 				.setSummary(Messages.getString(Messages.AllocationByClassRule_TEXT_MESSAGE))

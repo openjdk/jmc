@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.report.html.internal;
 import java.util.Collection;
 
 import org.openjdk.jmc.flightrecorder.rules.IResult;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 
 /**
  * Associates topics with results. Where the results are coming from depends on the implementation.

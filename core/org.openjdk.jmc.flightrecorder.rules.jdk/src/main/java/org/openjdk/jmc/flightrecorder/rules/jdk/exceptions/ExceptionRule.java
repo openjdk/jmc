@@ -53,6 +53,7 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
@@ -114,6 +115,7 @@ public class ExceptionRule implements IRule {
 					.setExplanation(Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(EXCEPTION_RATE, UnitLookup.NUMBER_UNITY.quantity(exPerSec))
+					.addResult(TypedResult.ITEM_QUERY, JdkQueries.THROWABLES_STATISTICS)
 					.addResult(EXCEPTION_WINDOW, window).build();
 		}
 		return RulesToolkit.getTooFewEventsResult(this, vp);
