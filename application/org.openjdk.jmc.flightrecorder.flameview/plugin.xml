@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, Datadog, Inc. All rights reserved.
+   Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -40,9 +40,17 @@
 			category="org.openjdk.jmc.ui.main"
 			class="org.openjdk.jmc.flightrecorder.flameview.views.FlameGraphView"
 			icon="icons/flame.png"
-			id="org.openjdk.jmc.flightrecorder.flameview"
-			name="%FLAME_VIEW_NAME"
-			restorable="true">
-		</view>
+			id="org.openjdk.jmc.flightrecorder.FlameView"
+			name="%FLAME_VIEW_NAME"/>
+	</extension>
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+			<view
+				id="org.openjdk.jmc.flightrecorder.FlameView"
+				relationship="stack"
+				relative="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
+				showTitle="true"
+				visible="true"/>
+		</perspectiveExtension>
 	</extension>
 </plugin>
