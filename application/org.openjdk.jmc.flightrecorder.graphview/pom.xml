@@ -68,6 +68,8 @@
 							<url>https://d3js.org/d3.v5.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+							<skipCache>true</skipCache>
+							<overwrite>true</overwrite>
 						</configuration>
 					</execution>
 					<execution>
@@ -77,9 +79,11 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.js</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@0.3.14/dist/index.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+							<skipCache>true</skipCache>
+							<overwrite>true</overwrite>
 						</configuration>
 					</execution>
 					<execution>
@@ -92,6 +96,8 @@
 							<url>https://unpkg.com/d3-graphviz@3.1.0/build/d3-graphviz.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+							<skipCache>true</skipCache>
+							<overwrite>true</overwrite>
 						</configuration>
 					</execution>
 					<execution>
@@ -104,6 +110,8 @@
 							<url>https://unpkg.com/@hpcc-js/wasm@0.3.14/dist/graphvizlib.wasm</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
+							<skipCache>true</skipCache>
+							<overwrite>true</overwrite>
 						</configuration>
 					</execution>
 				</executions>
