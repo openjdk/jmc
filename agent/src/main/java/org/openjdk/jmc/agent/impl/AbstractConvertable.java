@@ -36,14 +36,14 @@ package org.openjdk.jmc.agent.impl;
 import org.openjdk.jmc.agent.Convertable;
 
 public abstract class AbstractConvertable implements Convertable {
-	private final String converterClassName;
+	private final String converterDefinition;
 
-	public AbstractConvertable(String converterClassName) {
-		this.converterClassName = converterClassName;
+	public AbstractConvertable(String converterDefinition) {
+		this.converterDefinition = converterDefinition;
 	}
 
 	@Override
-	public String getConverterClassName() {
-		return converterClassName;
+	public String getConverterDefinition() {
+		return converterDefinition;
 	}
 }

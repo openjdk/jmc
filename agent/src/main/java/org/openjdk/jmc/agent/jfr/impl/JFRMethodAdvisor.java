@@ -45,6 +45,7 @@ import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
+import org.openjdk.jmc.agent.impl.MalformedConverterException;
 import org.openjdk.jmc.agent.impl.ResolvedConvertable;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
@@ -124,12 +125,12 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 	protected void onMethodEnter() {
 		try {
 			createEvent();
-		} catch (IllegalSyntaxException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void createEvent() throws IllegalSyntaxException {
+	private void createEvent() throws IllegalSyntaxException, MalformedConverterException {
 		mv.visitTypeInsn(NEW, transformDescriptor.getEventClassName());
 		mv.visitInsn(DUP);
 		mv.visitInsn(DUP);
@@ -141,7 +142,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 				mv.visitInsn(DUP);
 				loadArg(param.getIndex());
 				if (param.hasConverter()) {
-					argumentType = convertify(mv, param);
+					argumentType = convertify(mv, param, argumentType);
 				} else {
 					if (TypeUtils.shouldStringify(param, argumentType)) {
 						TypeUtils.stringify(mv);
@@ -246,8 +247,8 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
 	}
 
-	private Type convertify(MethodVisitor mv, Attribute convertable) {
-		ResolvedConvertable resolvedConvertable = new ResolvedConvertable(convertable.getConverterClassName());
+	private Type convertify(MethodVisitor mv, Attribute convertable, Type type) throws MalformedConverterException {
+		ResolvedConvertable resolvedConvertable = new ResolvedConvertable(convertable.getConverterDefinition(), type);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(resolvedConvertable.getConverterClass()),
 				resolvedConvertable.getConverterMethod().getName(),
 				Type.getMethodDescriptor(resolvedConvertable.getConverterMethod()), false);

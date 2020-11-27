@@ -49,7 +49,7 @@ public class Gurka {
 		return "Gurka ID=" + String.valueOf(gurkID); //$NON-NLS-1$
 	}
 
-	public final static Gurka createGurka() {
+	public static final Gurka createGurka() {
 		return new Gurka(gurkCounter++);
 	}
 }

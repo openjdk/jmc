@@ -33,7 +33,7 @@
 package org.openjdk.jmc.agent.jfr;
 
 public final class VersionResolver {
-	private final static JFRVersion availableJFRVersion;
+	private static final JFRVersion availableJFRVersion;
 
 	public enum JFRVersion {
 		JFR, JFRNEXT, NONE

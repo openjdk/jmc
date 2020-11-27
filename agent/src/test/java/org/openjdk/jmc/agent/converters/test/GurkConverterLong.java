@@ -36,7 +36,7 @@ package org.openjdk.jmc.agent.converters.test;
 import org.openjdk.jmc.agent.test.Gurka;
 
 /**
- * Converts a {@link Gurka} to long, by taking the ID and casting it to a long.
+ * Converts a {@link Gurka} to long by taking the ID and casting it.
  */
 public class GurkConverterLong {
 	public static long convert(Gurka gurka) {

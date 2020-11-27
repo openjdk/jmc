@@ -41,7 +41,7 @@ public interface Convertable {
 	 * @return true if this is convertable, false otherwise.
 	 */
 	default boolean hasConverter() {
-		return getConverterClassName() != null;
+		return getConverterDefinition() != null;
 	}
 
 	/**
@@ -49,5 +49,5 @@ public interface Convertable {
 	 *
 	 * @return the class name of the converter to use, or null, if no converter should be used.
 	 */
-	String getConverterClassName();
+	String getConverterDefinition();
 }

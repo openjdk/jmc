@@ -36,10 +36,18 @@ package org.openjdk.jmc.agent.converters.test;
 import org.openjdk.jmc.agent.test.Gurka;
 
 /**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
+ * Converts a {@link Gurka} to various different types.
  */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
+public class GurkMultiCustomConverter {
+	public static int convertCustomInt(Gurka gurka) {
+		return (int) gurka.getID();
+	}
+
+	public static double convertCustomDouble(Gurka gurka) {
+		return (double) gurka.getID();
+	}
+
+	public static String convertCustomString(Gurka gurka) {
+		return "StringGurka " + gurka.getID();
 	}
 }

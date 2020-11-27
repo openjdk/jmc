@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.agent.jfr.impl;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -46,6 +47,7 @@ import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.ReturnValue;
+import org.openjdk.jmc.agent.impl.MalformedConverterException;
 import org.openjdk.jmc.agent.impl.ResolvedConvertable;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
@@ -99,8 +101,18 @@ public class JFREventClassGenerator {
 		String fieldType = null;
 
 		if (attribute.hasConverter()) {
-			ResolvedConvertable resolved = new ResolvedConvertable(attribute.getConverterClassName());
-			fieldType = getFieldType(Type.getType(resolved.getConverterMethod().getReturnType()));
+			ResolvedConvertable resolved;
+			try {
+				resolved = new ResolvedConvertable(attribute.getConverterDefinition(), type);
+				fieldType = getFieldType(Type.getType(resolved.getConverterMethod().getReturnType()));
+			} catch (MalformedConverterException e) {
+				Agent.getLogger()
+						.log(Level.SEVERE,
+								"Failed to load specified converter class " + attribute.getConverterDefinition()
+										+ " - will not use that converter! Skipped generating field in event class.",
+								e);
+				return;
+			}
 		} else {
 			fieldType = getFieldType(type);
 		}

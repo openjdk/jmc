@@ -46,9 +46,9 @@ import org.openjdk.jmc.agent.Agent;
  */
 @SuppressWarnings("deprecation")
 public class JFRUtils {
-	public final static String INAME = Type.getInternalName(JFRUtils.class);
-	public final static Object PRODUCER;
-	public final static Method REGISTER_METHOD;
+	public static final String INAME = Type.getInternalName(JFRUtils.class);
+	public static final Object PRODUCER;
+	public static final Method REGISTER_METHOD;
 
 	static {
 		URI producerURI = URI.create("http://jmc.openjdk.org/jfragent/"); //$NON-NLS-1$

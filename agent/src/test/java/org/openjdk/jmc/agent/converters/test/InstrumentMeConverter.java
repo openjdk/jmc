@@ -52,7 +52,7 @@ public class InstrumentMeConverter {
 		System.in.read();
 	}
 
-	private final static class Runner implements Runnable {
+	private static final class Runner implements Runnable {
 		public void run() {
 			while (true) {
 				try {
@@ -63,6 +63,11 @@ public class InstrumentMeConverter {
 					printGurkaToDouble(Gurka.createGurka());
 					printFileToString(new File(TestToolkit.randomString().toLowerCase() + ".tmp"));
 					printUriToString(new URI("http://localhost:7777/" + TestToolkit.randomString()));
+					printNumber(TestToolkit.randomLong());
+					printIntMultiCustom(Gurka.createGurka());
+					printDoubleMultiCustom(Gurka.createGurka());
+					printLongMultiDefault(TestToolkit.randomLong());
+					printDoubleMultiDefault(TestToolkit.randomLong() / 2.0d);
 				} catch (InterruptedException e) {
 				} catch (URISyntaxException e) {
 				}
@@ -102,6 +107,31 @@ public class InstrumentMeConverter {
 
 	public static void printUriToString(URI someUri) throws InterruptedException {
 		System.out.println("C URI: " + someUri);
+		Thread.sleep(1000);
+	}
+
+	public static void printNumber(Number number) throws InterruptedException {
+		System.out.println("C Number: " + number.doubleValue());
+		Thread.sleep(1000);
+	}
+
+	private static void printIntMultiCustom(Gurka gurka) throws InterruptedException {
+		System.out.println("C int MC: " + gurka);
+		Thread.sleep(1000);
+	}
+
+	public static void printDoubleMultiCustom(Gurka gurka) throws InterruptedException {
+		System.out.println("C Long MC: " + gurka);
+		Thread.sleep(1000);
+	}
+
+	public static void printLongMultiDefault(Long value) throws InterruptedException {
+		System.out.println("C Long MD: " + value.longValue());
+		Thread.sleep(1000);
+	}
+
+	public static void printDoubleMultiDefault(Double value) throws InterruptedException {
+		System.out.println("C Long MD: " + value.doubleValue());
 		Thread.sleep(1000);
 	}
 }

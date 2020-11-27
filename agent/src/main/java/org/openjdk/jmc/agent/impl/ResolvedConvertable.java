@@ -34,28 +34,37 @@
 package org.openjdk.jmc.agent.impl;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 
-import org.openjdk.jmc.agent.Agent;
+import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Convertable;
 
-public class ResolvedConvertable extends AbstractConvertable implements Convertable {
-	private final static String CONVERTER_METHOD = "convert";
+public final class ResolvedConvertable extends AbstractConvertable implements Convertable {
+	public static final String DEFAULT_CONVERTER_METHOD = "convert";
 	private final Class<?> converterClass;
 	private final Method converterMethod;
 
-	public ResolvedConvertable(String converterClassName) {
-		super(converterClassName);
+	public ResolvedConvertable(String converterDefinition, Class<?> typeToConvert) throws MalformedConverterException {
+		super(converterDefinition);
+		if (typeToConvert == null) {
+			throw new MalformedConverterException("Type to convert cannot be null!");
+		}
+		String className = resolveClassName(converterDefinition);
 		Class<?> tmpClass = null;
 		try {
-			if (converterClassName != null) {
-				tmpClass = Class.forName(converterClassName);
+			if (converterDefinition != null) {
+				tmpClass = Class.forName(className);
 			}
 		} catch (ClassNotFoundException e) {
-			Agent.getLogger().severe("Failed to load specified converter class " + converterClassName
-					+ " - will not use that converter!");
+			throw new MalformedConverterException("Converter must convert to an existing class!", e);
 		}
 		this.converterClass = tmpClass;
-		this.converterMethod = getConvertMethod(tmpClass);
+		this.converterMethod = getConvertMethod(tmpClass, converterDefinition, typeToConvert);
+	}
+
+	public ResolvedConvertable(String converterDefinition, Type type) throws MalformedConverterException {
+		this(converterDefinition, getClassFromType(type));
 	}
 
 	public Class<?> getConverterClass() {
@@ -66,21 +75,74 @@ public class ResolvedConvertable extends AbstractConvertable implements Converta
 		return converterMethod;
 	}
 
-	private static Method getConvertMethod(Class<?> converterClass) {
+	private static Method getConvertMethod(Class<?> converterClass, String converterDefinition, Class<?> originalType)
+			throws MalformedConverterException {
+		String methodName = resolveMethodName(converterDefinition);
+
 		if (converterClass == null) {
 			return null;
 		}
 		for (Method m : converterClass.getDeclaredMethods()) {
-			if (CONVERTER_METHOD.equals(m.getName())) {
-				return m;
+			if (methodName.equals(m.getName())) {
+				if ((!Modifier.isStatic(m.getModifiers())) || m.getParameterCount() != 1) {
+					continue;
+				}
+				if (parameterIsAssignableType(m.getParameters()[0], originalType)) {
+					return m;
+				}
 			}
 		}
-		return null;
+		throw new MalformedConverterException("Could not find the convert method to use in " + converterDefinition
+				+ " to convert " + originalType.getName());
+	}
+
+	private static boolean parameterIsAssignableType(Parameter p, Class<?> originalType) {
+		if (p.getType().isAssignableFrom(originalType)) {
+			return true;
+		}
+		return false;
+	}
+
+	private static String resolveClassName(String converterDefinition) throws MalformedConverterException {
+		if (!converterDefinition.contains("(")) {
+			return converterDefinition;
+		}
+		int lastDotIndex = converterDefinition.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			throw new MalformedConverterException(
+					"Converter with method declaration must contain method: " + converterDefinition);
+		}
+		return converterDefinition.substring(0, lastDotIndex);
+	}
+
+	private static String resolveMethodName(String converterDefinition) throws MalformedConverterException {
+		// org.openjdk.jmc.agent.converters.test.GurkConverterInt.customConvert(Lorg/openjdk/jmc/agent/test/Gurka;)I
+		if (!converterDefinition.contains("(")) {
+			return DEFAULT_CONVERTER_METHOD;
+		}
+		int lastDotIndex = converterDefinition.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			throw new MalformedConverterException(
+					"Converter with method declaration must contain method: " + converterDefinition);
+		}
+		int firstParenIndex = converterDefinition.lastIndexOf('(');
+		if (firstParenIndex < lastDotIndex) {
+			throw new MalformedConverterException("No dots in the formal descriptor allowed: " + converterDefinition);
+		}
+		return converterDefinition.substring(lastDotIndex + 1, firstParenIndex);
+	}
+
+	private static Class<?> getClassFromType(Type type) throws MalformedConverterException {
+		try {
+			return Class.forName(type.getClassName());
+		} catch (ClassNotFoundException e) {
+			throw new MalformedConverterException("The type to transform could not be found", e);
+		}
 	}
 
 	@Override
 	public String toString() {
-		return "Resolved " + getConverterClassName() + ":\nClass: " + converterClass.getCanonicalName() + "\nMethod: "
+		return "Resolved " + getConverterDefinition() + ":\nClass: " + converterClass.getCanonicalName() + "\nMethod: "
 				+ getConverterMethod();
 	}
 

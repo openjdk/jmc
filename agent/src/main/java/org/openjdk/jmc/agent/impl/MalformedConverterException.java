@@ -31,15 +31,20 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters.test;
+package org.openjdk.jmc.agent.impl;
 
-import org.openjdk.jmc.agent.test.Gurka;
+public final class MalformedConverterException extends Exception {
+	private static final long serialVersionUID = 1L;
 
-/**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
- */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
+	public MalformedConverterException(String message) {
+		super(message);
+	}
+
+	public MalformedConverterException(Throwable t) {
+		super(t);
+	}
+
+	public MalformedConverterException(String message, Throwable t) {
+		super(message, t);
 	}
 }

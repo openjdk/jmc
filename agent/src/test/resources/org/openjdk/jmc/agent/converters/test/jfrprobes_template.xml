@@ -225,5 +225,124 @@
 			</method>
 			<location>WRAP</location>
 		</event>
+		<event id="demo.jfr.convertertest.URI">
+			<name>ConverterEventNumber</name>
+			<description>Defined in the xml file and added by the agent. Should
+				transform the Number parameter to a
+				double.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printNumber</name>
+				<descriptor>(Ljava/lang/Number;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Number</name>
+						<description>The converted Number-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.ConverterNumber
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+
+		<!-- Multi and custom converters -->
+		<event id="demo.jfr.convertertest.URI">
+			<name>ConverterEventMultiCustomInt</name>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printIntMultiCustom</name>
+				<descriptor>(Lorg/openjdk/jmc/agent/test/Gurka;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Number as Int</name>
+						<description>The converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiCustomConverter.convertCustomInt(Lorg/openjdk/jmc/agent/test/Gurka;)I
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.URI">
+			<name>ConverterEventMultiCustomDouble</name>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printDoubleMultiCustom</name>
+				<descriptor>(Lorg/openjdk/jmc/agent/test/Gurka;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Number as Double</name>
+						<description>The converted Gurk-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiCustomConverter.convertCustomDouble(Lorg/openjdk/jmc/agent/test/Gurka;)D
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.URI">
+			<name>ConverterEventMultiDefaultLong</name>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printLongMultiDefault</name>
+				<descriptor>(Ljava/lang/Long;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Long as int</name>
+						<description>The converted Long-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.URI">
+			<name>ConverterEventMultiDefaultDouble</name>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printDoubleMultiDefault</name>
+				<descriptor>(Ljava/lang/Double;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Double as Int</name>
+						<description>The converted Double-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
 	</events>
 </jfragent>
