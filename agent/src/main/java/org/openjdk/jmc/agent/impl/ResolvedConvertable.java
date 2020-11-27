@@ -82,7 +82,7 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 		}
 		for (Method m : converterClass.getDeclaredMethods()) {
 			if (methodName.equals(m.getName())) {
-				if ((!Modifier.isStatic(m.getModifiers())) || m.getParameterCount() != 1) {
+				if (!isValidMethod(m)) {
 					continue;
 				}
 				if (parameterIsAssignableType(m.getParameters()[0], originalType)) {
@@ -92,6 +92,12 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 		}
 		throw new MalformedConverterException("Could not find the convert method to use in " + converterDefinition
 				+ " to convert " + originalType.getName());
+	}
+
+	private static boolean isValidMethod(Method m) {
+		return Modifier.isStatic(m.getModifiers())
+				&& !(Modifier.isAbstract(m.getModifiers()) || Modifier.isInterface(m.getModifiers()))
+				&& m.getParameterCount() == 1;
 	}
 
 	private static boolean parameterIsAssignableType(Parameter p, Class<?> originalType) {
@@ -114,7 +120,6 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 	}
 
 	private static String resolveMethodName(String converterDefinition) throws MalformedConverterException {
-		// org.openjdk.jmc.agent.converters.test.GurkConverterInt.customConvert(Lorg/openjdk/jmc/agent/test/Gurka;)I
 		if (!converterDefinition.contains("(")) {
 			return DEFAULT_CONVERTER_METHOD;
 		}
