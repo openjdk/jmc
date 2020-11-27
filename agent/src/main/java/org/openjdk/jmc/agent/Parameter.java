@@ -63,7 +63,7 @@ public final class Parameter extends AbstractConvertable implements Attribute {
 
 	public static Parameter from(CompositeData cd) {
 		return new Parameter((int) cd.get("index"), (String) cd.get("name"), (String) cd.get("description"),
-				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterDefinition"));
 	}
 
 	public int getIndex() {

@@ -66,7 +66,7 @@ public class Field extends AbstractConvertable implements Attribute {
 
 	public static Field from(CompositeData cd) {
 		return new Field((String) cd.get("name"), (String) cd.get("expression"), (String) cd.get("description"),
-				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterDefinition"));
 	}
 
 	@Override

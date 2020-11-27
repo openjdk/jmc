@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.agent.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.management.ManagementFactory;
 
 import javax.management.JMX;
@@ -53,7 +55,7 @@ public class TestRetrieveCurrentTransforms {
 	@Test
 	public void testRetreiveCurrentTransforms() throws Exception {
 		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
-		Assert.assertTrue(jfrTds.length == 1);
+		assertEquals(1, jfrTds.length);
 		for (JFRTransformDescriptor jfrTd : jfrTds) {
 			Assert.assertEquals(EVENT_ID, jfrTd.getId());
 			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
