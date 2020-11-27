@@ -304,7 +304,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, view.threadRootAtTop);
+			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
 			if (isInvalid) {
 				return;
 			}
