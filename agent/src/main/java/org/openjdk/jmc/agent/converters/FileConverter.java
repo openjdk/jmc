@@ -34,6 +34,7 @@
 package org.openjdk.jmc.agent.converters;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.openjdk.jmc.agent.Agent;
 
@@ -48,7 +49,8 @@ public final class FileConverter {
 		try {
 			return file.getCanonicalPath();
 		} catch (Throwable e) {
-			Agent.getLogger().warning("Agent failed to convert file to String: " + e.getMessage());
+			Agent.getLogger().log(Level.WARNING,
+					"Agent failed to convert file to String, will use path. File was: " + file.toString(), e);
 		}
 		return file.getPath();
 	}
