@@ -42,7 +42,6 @@ import org.openjdk.jmc.agent.Convertable;
 
 public final class ResolvedConvertable extends AbstractConvertable implements Convertable {
 	public static final String DEFAULT_CONVERTER_METHOD = "convert";
-	private final Class<?> converterClass;
 	private final Method converterMethod;
 
 	public ResolvedConvertable(String converterDefinition, Class<?> typeToConvert) throws MalformedConverterException {
@@ -59,7 +58,6 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 		} catch (ClassNotFoundException e) {
 			throw new MalformedConverterException("Converter must convert to an existing class!", e);
 		}
-		this.converterClass = tmpClass;
 		this.converterMethod = getConvertMethod(tmpClass, converterDefinition, typeToConvert);
 	}
 
@@ -68,7 +66,7 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 	}
 
 	public Class<?> getConverterClass() {
-		return converterClass;
+		return converterMethod.getDeclaringClass();
 	}
 
 	public Method getConverterMethod() {
@@ -142,7 +140,7 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 
 	@Override
 	public String toString() {
-		return "Resolved " + getConverterDefinition() + ":\nClass: " + converterClass.getCanonicalName() + "\nMethod: "
+		return "Resolved " + getConverterDefinition() + ":\nClass: " + getConverterClass() + "\nMethod: "
 				+ getConverterMethod();
 	}
 

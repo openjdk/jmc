@@ -219,9 +219,6 @@ public final class TypeUtils {
 	}
 
 	public static boolean shouldStringify(Convertable convertable, Type argumentType) {
-		/*
-		 * if (convertable.getConverterClassName() != null) { return false; }
-		 */
 		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
 			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
 		}
