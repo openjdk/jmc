@@ -14,6 +14,7 @@ Export-Package: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.parser.filter,
  org.openjdk.jmc.flightrecorder.stacktrace,
  org.openjdk.jmc.flightrecorder.stacktrace.tree,
+ org.openjdk.jmc.flightrecorder.stacktrace.graph,
  org.openjdk.jmc.flightrecorder.stacktrace.messages.internal,
  org.openjdk.jmc.flightrecorder.util
 Require-Bundle: org.openjdk.jmc.common;visibility:=reexport

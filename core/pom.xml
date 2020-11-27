@@ -83,6 +83,7 @@
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<nexus.staging.version>1.6.8</nexus.staging.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
+		<build.helper.maven.version>3.2.0</build.helper.maven.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
@@ -148,14 +149,15 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 							<resources>
 								<resource>
+									<targetPath>${basedir}/target/classes</targetPath>
 									<directory>${rootDir}/license</directory>
-									<includes>
-										<include>LICENSE.txt</include>
-										<include>THIRD_PARTY_LICENSES.txt</include>
-									</includes>
+								</resource>
+								<resource>
+									<targetPath>${basedir}/target/apidocs</targetPath>
+									<directory>${rootDir}/license</directory>
 								</resource>
 							</resources>
 						</configuration>
@@ -178,6 +180,24 @@
 						<phase>initialize</phase>
 						<configuration>
 							<property>rootDir</property>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build.helper.maven.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${rootDir}/license</source>
+							</sources>
 						</configuration>
 					</execution>
 				</executions>

@@ -172,7 +172,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
-	private ModelState modelState = ModelState.NONE;
+	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 
 	private enum GroupActionType {
