@@ -98,7 +98,7 @@ public class FlameGraphJsonMarshaller {
 
 	private static String createNodeJsonProps(AggregatableFrame frame, double value) {
 		StringBuilder sb = new StringBuilder();
-		if (frame.getType().equals(IMCFrame.Type.UNKNOWN)) {
+		if (frame.getType().equals(IMCFrame.Type.UNKNOWN) && frame.getHumanReadableShortString().equals(".()")) {
 			// TODO: find recording with truncated stacks and add unit test for this case
 			sb.append(addQuotes("n")).append(": ").append(addQuotes(UNCLASSIFIABLE_FRAME));
 			sb.append(",");
