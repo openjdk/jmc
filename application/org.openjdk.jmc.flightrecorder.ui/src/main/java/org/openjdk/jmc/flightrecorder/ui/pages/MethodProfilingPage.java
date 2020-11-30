@@ -33,6 +33,8 @@
 package org.openjdk.jmc.flightrecorder.ui.pages;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.stream.Stream;
@@ -60,15 +62,21 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters.MethodFilter;
@@ -81,6 +89,9 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IDataPageFactory;
 import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
@@ -143,6 +154,28 @@ public class MethodProfilingPage extends AbstractDataPage {
 		}
 	};
 
+	private static final Listener SUCCESSOR_PERCENTAGE_BACKGROUND_DRAWER = new Listener() {
+		@Override
+		public void handleEvent(Event event) {
+			SuccessorNode node = (SuccessorNode) event.item.getData();
+			double total;
+			if (event.index == 2 && (total = node.model.root.count) > 0) { // index == 2 => percentage column
+				// Draw siblings
+				int siblingsStart = 0;
+				int siblingsWidth = (int) Math.round(event.width * node.count / total);
+				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
+				// Draw group
+				double fraction = node.count / total;
+				event.gc.setBackground(COUNT_COLOR);
+				int startPixel = 0;
+				int widthPixel = (int) Math.round(event.width * fraction);
+				event.gc.fillRectangle(event.x + startPixel, event.y, Math.max(widthPixel, 1), event.height);
+				event.detail &= ~SWT.BACKGROUND;
+			}
+		}
+	};
+
 	public static class MethodProfilingPageFactory implements IDataPageFactory {
 		@Override
 		public String getName(IState state) {
@@ -179,6 +212,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 		private static final String METHOD_TABLE = "methodTable"; //$NON-NLS-1$
 		private static final String SASH_ELEMENT = "sash"; //$NON-NLS-1$
 		private static final String TABLE_ELEMENT = "table"; //$NON-NLS-1$
+		private static final String METHOD_FORMAT_KEY = "metodFormat"; //$NON-NLS-1$
 
 		private final ItemHistogram table;
 		private final TreeViewer successorTree;
@@ -186,6 +220,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 		private final SashForm sash;
 		private FilterComponent tableFilter;
 		private FlavorSelector flavorSelector;
+		private MethodFormatter methodFormatter;
 		private int[] columnWidths = {650, 80, 120};
 
 		MethodProfilingUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
@@ -209,6 +244,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 			mm.add(tableFilter.getShowSearchAction());
 
 			tableFilter.loadState(state.getChild(METHOD_TABLE));
+			methodFormatter = new MethodFormatter(state.getChild(METHOD_FORMAT_KEY), this::refreshTrees);
 
 			CTabFolder tabFolder = new CTabFolder(sash, SWT.NONE);
 			toolkit.adapt(tabFolder);
@@ -219,25 +255,29 @@ public class MethodProfilingPage extends AbstractDataPage {
 			t1.setControl(predecessorTree.getControl());
 			predecessorTree.getControl().addListener(SWT.EraseItem, PERCENTAGE_BACKGROUND_DRAWER);
 			buildColumn(predecessorTree, Messages.STACKTRACE_VIEW_STACK_TRACE, SWT.NONE, columnWidths[0])
-					.setLabelProvider(new StackTraceLabelProvider(() -> predecessorTree.refresh()));
+					.setLabelProvider(new StackTraceLabelProvider(methodFormatter));
 			buildColumn(predecessorTree, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, SWT.RIGHT, columnWidths[1])
 					.setLabelProvider(new CountLabelProvider());
 			buildColumn(predecessorTree, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
 					.setLabelProvider(new PercentageLabelProvider());
+			MCContextMenuManager predTreeMenu = MCContextMenuManager.create(predecessorTree.getControl());
+			predTreeMenu.appendToGroup(MCContextMenuManager.GROUP_VIEWER_SETUP, methodFormatter.createMenu());
 
 			CTabItem t2 = new CTabItem(tabFolder, SWT.NONE);
 			t2.setToolTipText(Messages.MethodProfilingPage_SUCCESSORS_DESCRIPTION);
-			successorTree = buildTree(tabFolder, new StacktraceReducedTreeContentProvider());
+			successorTree = buildTree(tabFolder, new StacktraceTreeContentProvider());
 			t2.setText(Messages.PAGES_SUCCESSORS);
 			t2.setControl(successorTree.getControl());
-			successorTree.getControl().addListener(SWT.EraseItem, PERCENTAGE_BACKGROUND_DRAWER);
+			successorTree.getControl().addListener(SWT.EraseItem, SUCCESSOR_PERCENTAGE_BACKGROUND_DRAWER);
 			successorTree.getControl().addDisposeListener(e -> columnWidths = getColumnWidths(successorTree));
 			buildColumn(successorTree, Messages.STACKTRACE_VIEW_STACK_TRACE, SWT.NONE, columnWidths[0])
-					.setLabelProvider(new StackTraceLabelProvider(() -> successorTree.refresh()));
+					.setLabelProvider(new StackTraceTreeLabelProvider(methodFormatter));
 			buildColumn(successorTree, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, SWT.RIGHT, columnWidths[1])
-					.setLabelProvider(new CountLabelProvider());
+					.setLabelProvider(new CountTreeLabelProvider());
 			buildColumn(successorTree, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
-					.setLabelProvider(new PercentageLabelProvider());
+					.setLabelProvider(new PercentageTreeLabelProvider());
+			MCContextMenuManager succTreeMenu = MCContextMenuManager.create(successorTree.getControl());
+			succTreeMenu.appendToGroup(MCContextMenuManager.GROUP_VIEWER_SETUP, methodFormatter.createMenu());
 
 			tabFolder.setSelection(t1);
 
@@ -250,6 +290,11 @@ public class MethodProfilingPage extends AbstractDataPage {
 
 			addResultActions(form);
 
+		}
+
+		private void refreshTrees() {
+			predecessorTree.refresh();
+			successorTree.refresh();
 		}
 
 		private TreeViewer buildTree(Composite parent, IContentProvider contentProvider) {
@@ -283,6 +328,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 		@Override
 		public void saveTo(IWritableState writableState) {
 			PersistableSashForm.saveState(sash, writableState.createChild(SASH_ELEMENT));
+			methodFormatter.saveState(writableState.createChild(METHOD_FORMAT_KEY));
 			saveToLocal();
 		}
 
@@ -315,22 +361,42 @@ public class MethodProfilingPage extends AbstractDataPage {
 		}
 
 		private void buildSuccessorTree(IItemCollection items) {
-			FrameSeparator frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-			StacktraceModel stacktraceModel = new StacktraceModel(false, frameSeparator, items);
-			CompletableFuture<StacktraceModel> modelPreparer = getSuccessorModelPreparer(stacktraceModel);
+			CompletableFuture<SuccessorTreeModel> modelPreparer = getSuccessorModelPreparer(items);
 			modelPreparer.thenAcceptAsync(this::setModelSuccessor, DisplayToolkit.inDisplayThread())
 					.exceptionally(MethodProfilingPage::handleModelBuilException);
 
 		}
 
-		private void setModelSuccessor(StacktraceModel model) {
-			if (!successorTree.getControl().isDisposed()) {
-				Fork rootFork = model.getRootFork();
-				if (rootFork.getBranchCount() == 1) {
-					successorTree.setInput(rootFork.getBranch(0).getEndFork());
-					return;
+		private void mergeNode(SuccessorTreeModel model, SuccessorNode destNode, Node srcNode) {
+			destNode.count += (int) srcNode.getCumulativeWeight();
+			for (Node child : srcNode.getChildren()) {
+				String key = SuccessorTreeModel.makeKey(child.getFrame());
+				SuccessorNode existing = destNode.children.putIfAbsent(key, new SuccessorNode(model, destNode, child));
+				if (existing != null) {
+					mergeNode(model, existing, child);
 				}
-				successorTree.setInput(rootFork);
+			}
+		}
+
+		private void traverse(Node current, String typeName, String methodName, SuccessorTreeModel model) {
+			if (methodName.equals(current.getFrame().getMethod().getMethodName())
+					&& typeName.equals(current.getFrame().getMethod().getType().getFullName())) {
+				if (model.root == null) {
+					model.root = new SuccessorNode(model, null, current);
+				}
+				mergeNode(model, model.root, current);
+			}
+			for (Node child : current.getChildren()) {
+				traverse(child, typeName, methodName, model);
+			}
+		}
+
+		private void setModelSuccessor(SuccessorTreeModel model) {
+			if (model == null) {
+				return;
+			}
+			if (!successorTree.getControl().isDisposed()) {
+				successorTree.setInput(model);
 			}
 		}
 
@@ -348,28 +414,41 @@ public class MethodProfilingPage extends AbstractDataPage {
 			});
 		}
 
-		private CompletableFuture<StacktraceModel> getSuccessorModelPreparer(StacktraceModel initialModel) {
+		private CompletableFuture<SuccessorTreeModel> getSuccessorModelPreparer(IItemCollection items) {
 			return CompletableFuture.supplyAsync(() -> {
-				Fork root = initialModel.getRootFork();
-				if (root.getFirstFrames().length == 0) {
-					return initialModel;
+				IItem execSample = null;
+				if (items.hasItems()) {
+					IItemIterable itemIterable = items.iterator().next();
+					if (itemIterable.hasItems()) {
+						execSample = itemIterable.iterator().next();
+					}
 				}
-				try {
-					StacktraceFrame currentFrame = root.getFirstFrames()[0];
-					String methodName = currentFrame.getFrame().getMethod().getMethodName();
-					String typeName = currentFrame.getFrame().getMethod().getType().getFullName();
-					MethodFilter methodFilter = new JdkFilters.MethodFilter(typeName, methodName);
-					// Filters event containing the current method
-					IItemCollection methodEvents = getDataSource().getItems()
-							.apply(ItemFilters.and(TABLE_ITEMS, methodFilter));
-					FrameSeparator frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-					StacktraceModel stacktraceModel = new StacktraceModel(true, frameSeparator, methodEvents);
-					stacktraceModel.getRootFork(); // force computing internal state
-					return stacktraceModel;
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					return initialModel;
+				if (execSample == null) {
+					return null;
 				}
+				@SuppressWarnings("deprecation")
+				IMemberAccessor<IMCStackTrace, IItem> accessor = ItemToolkit.accessor(JfrAttributes.EVENT_STACKTRACE);
+				IMCStackTrace stackTrace = accessor.getMember(execSample);
+				String methodName = null;
+				String typeName = null;
+				if (stackTrace != null) {
+					if (!stackTrace.getFrames().isEmpty()) {
+						IMCFrame topFrame = stackTrace.getFrames().get(0);
+						methodName = topFrame.getMethod().getMethodName();
+						typeName = topFrame.getMethod().getType().getFullName();
+					}
+				}
+				if (methodName == null || typeName == null) {
+					return null;
+				}
+				MethodFilter methodFilter = new JdkFilters.MethodFilter(typeName, methodName);
+				// Filters event containing the current method
+				IItemCollection methodEvents = getDataSource().getItems()
+						.apply(ItemFilters.and(TABLE_ITEMS, methodFilter));
+				StacktraceTreeModel stacktraceTreeModel = new StacktraceTreeModel(methodEvents);
+				SuccessorTreeModel model = new SuccessorTreeModel();
+				traverse(stacktraceTreeModel.getRoot(), typeName, methodName, model);
+				return model;
 			});
 		}
 
@@ -413,12 +492,6 @@ public class MethodProfilingPage extends AbstractDataPage {
 		return frame.getBranch().getLastFrame() == frame && frame.getBranch().getEndFork().getBranchCount() == 0;
 	}
 
-	// See JMC-6787
-	@SuppressWarnings("deprecation")
-	private static boolean isInOpenFork(StacktraceFrame frame) {
-		return frame.getBranch().getParentFork().getSelectedBranch() == null;
-	}
-
 	@Override
 	public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 		return new MethodProfilingUi(parent, toolkit, pageContainer, state);
@@ -445,13 +518,12 @@ public class MethodProfilingPage extends AbstractDataPage {
 	}
 
 	private static class StackTraceLabelProvider extends ColumnLabelProvider {
-
 		FrameSeparator frameSeparator;
 		MethodFormatter methodFormatter;
 
-		public StackTraceLabelProvider(Runnable onUpdate) {
+		public StackTraceLabelProvider(MethodFormatter methodFormatter) {
 			frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-			methodFormatter = new MethodFormatter(null, onUpdate);
+			this.methodFormatter = methodFormatter;
 		}
 
 		@Override
@@ -460,7 +532,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 			return getText(frame, frameSeparator);
 		}
 
-		private String getText(IMCFrame frame, FrameSeparator frameSeparator) {
+		protected String getText(IMCFrame frame, FrameSeparator frameSeparator) {
 			return StacktraceFormatToolkit.formatFrame(frame, frameSeparator, methodFormatter.showReturnValue(),
 					methodFormatter.showReturnValuePackage(), methodFormatter.showClassName(),
 					methodFormatter.showClassPackageName(), methodFormatter.showArguments(),
@@ -472,11 +544,8 @@ public class MethodProfilingPage extends AbstractDataPage {
 			StacktraceFrame frame = (StacktraceFrame) element;
 			FlightRecorderUI plugin = FlightRecorderUI.getDefault();
 			boolean isFirstInBranch = isFirstInBranchWithSiblings(frame);
-			boolean firstInOpenFork = isFirstInBranch && isInOpenFork(frame);
-			if (firstInOpenFork || isFirstInBranch) {
+			if (isFirstInBranch) {
 				return plugin.getImage(ImageConstants.ICON_ARROW_CURVED_UP);
-			} else if (isFirstInBranchWithSiblings(frame)) {
-				return plugin.getImage(ImageConstants.ICON_ARROW_FORK3_UP);
 			} else if (isLastFrame(frame)) {
 				return plugin.getImage(ImageConstants.ICON_ARROW_UP_END);
 			} else {
@@ -496,10 +565,77 @@ public class MethodProfilingPage extends AbstractDataPage {
 		}
 	}
 
+	private static class StackTraceTreeLabelProvider extends StackTraceLabelProvider {
+
+		public StackTraceTreeLabelProvider(MethodFormatter methodFormatter) {
+			super(methodFormatter);
+		}
+
+		@Override
+		public String getText(Object element) {
+			IMCFrame frame = ((SuccessorNode) element).frame;
+			return getText(frame, frameSeparator);
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			FlightRecorderUI plugin = FlightRecorderUI.getDefault();
+			SuccessorNode node = (SuccessorNode) element;
+			if (isFirstInBranchWithSiblings(node)) {
+				return plugin.getImage(ImageConstants.ICON_ARROW_CURVED_UP);
+			} else if (isLastFrame(node)) {
+				return plugin.getImage(ImageConstants.ICON_ARROW_UP_END);
+			} else {
+				return plugin.getImage(ImageConstants.ICON_ARROW_UP);
+			}
+		}
+
+		private boolean isFirstInBranchWithSiblings(SuccessorNode node) {
+			SuccessorNode parent = node.parent;
+			if (parent == null) {
+				return false;
+			}
+			if (node.children.isEmpty()) {
+				return false;
+			}
+			return true;
+		}
+
+		private boolean isLastFrame(SuccessorNode node) {
+			SuccessorNode parent = node.parent;
+			if (parent == null) {
+				return false;
+			}
+			SuccessorNode[] children = parent.children.values().toArray(new SuccessorNode[0]);
+			if (children.length == 0) {
+				return false;
+			}
+			return children[children.length - 1] == node;
+		}
+
+		@Override
+		public Color getBackground(Object element) {
+			int parentCount = 0;
+			SuccessorNode current = ((SuccessorNode) element).parent;
+			while (current != null) {
+				current = current.parent;
+				parentCount++;
+			}
+			return parentCount % 2 == 0 ? null : ALTERNATE_COLOR;
+		}
+	}
+
 	private static class CountLabelProvider extends ColumnLabelProvider {
 		@Override
 		public String getText(Object element) {
 			return Integer.toString(((StacktraceFrame) element).getItemCount());
+		}
+	}
+
+	private static class CountTreeLabelProvider extends ColumnLabelProvider {
+		@Override
+		public String getText(Object element) {
+			return Integer.toString((int) ((SuccessorNode) element).count);
 		}
 	}
 
@@ -528,6 +664,31 @@ public class MethodProfilingPage extends AbstractDataPage {
 			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.siblingMessage(itemsInSiblings, parentFork.getBranchCount() - 1));
+			sb.append("</span></li>"); //$NON-NLS-1$
+			sb.append("</form>"); //$NON-NLS-1$
+			return sb.toString();
+		}
+	}
+
+	private static class PercentageTreeLabelProvider extends ColumnLabelProvider {
+		@Override
+		public String getText(Object element) {
+			SuccessorNode node = (SuccessorNode) element;
+			int itemCount = node.count;
+			int totalCount = node.model.root.count;
+			return UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount).displayUsing(IDisplayable.AUTO);
+		}
+
+		@Override
+		public String getToolTipText(Object element) {
+			SuccessorNode node = (SuccessorNode) element;
+			int itemCount = node.count;
+			int totalCount = node.model.root.count;
+			String frameFraction = UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount)
+					.displayUsing(IDisplayable.AUTO);
+			StringBuilder sb = new StringBuilder("<form>"); //$NON-NLS-1$
+			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(Messages.stackTraceMessage(itemCount, totalCount, frameFraction));
 			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("</form>"); //$NON-NLS-1$
 			return sb.toString();
@@ -577,6 +738,56 @@ public class MethodProfilingPage extends AbstractDataPage {
 			} else {
 				return frame.getBranch().getFirstFrame();
 			}
+		}
+	}
+
+	private static class StacktraceTreeContentProvider extends AbstractStructuredContentProvider
+			implements ITreeContentProvider {
+
+		@Override
+		public SuccessorNode[] getElements(Object inputElement) {
+			if (inputElement instanceof SuccessorTreeModel) {
+				return new SuccessorNode[] {((SuccessorTreeModel) inputElement).root};
+			}
+			return new SuccessorNode[] {(SuccessorNode) inputElement};
+		}
+
+		@Override
+		public SuccessorNode[] getChildren(Object inputElement) {
+			return ((SuccessorNode) inputElement).children.values().toArray(new SuccessorNode[0]);
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			return !((SuccessorNode) element).children.isEmpty();
+		}
+	}
+
+	private static class SuccessorTreeModel {
+		SuccessorNode root;
+
+		public static String makeKey(IMCFrame frame) {
+			return frame.getMethod().getType().getFullName() + "::" + frame.getMethod().getMethodName();
+		}
+	}
+
+	private static class SuccessorNode {
+		final SuccessorTreeModel model;
+		final SuccessorNode parent;
+		final AggregatableFrame frame;
+		final Map<String, SuccessorNode> children = new HashMap<>();
+		int count;
+
+		SuccessorNode(SuccessorTreeModel model, SuccessorNode parent, Node node) {
+			this.model = model;
+			this.parent = parent;
+			this.frame = node.getFrame();
+			this.count = (int) node.getCumulativeWeight();
 		}
 	}
 }
