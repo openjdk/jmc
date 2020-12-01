@@ -248,7 +248,7 @@ public class FlavorSelector implements SelectionStoreListener {
 		Composite selectorRow = new Composite(container, SWT.NONE);
 		selectorRow
 				.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
-		selectorRow.setLayout(GridLayoutFactory.swtDefaults().numColumns(9).create());
+		selectorRow.setLayout(GridLayoutFactory.swtDefaults().numColumns(10).create());
 
 //		useSelectionButton = new Button(selectorRow, SWT.CHECK);
 //		useSelectionButton.setLayoutData(GridDataFactory.swtDefaults().create());
@@ -256,6 +256,10 @@ public class FlavorSelector implements SelectionStoreListener {
 //		useSelectionButton.setEnabled(pageContainer.getSelectionStore().getSelections().count() > 0);
 //		useSelectionButton.setSelection(pageContainer.getSelectionStore().isCurrentActive());
 //		useSelectionButton.addSelectionListener(new SelectionCheckboxSelectionListener());
+
+		Label selectionLabel = new Label(selectorRow, SWT.NONE);
+		selectionLabel.setLayoutData(GridDataFactory.swtDefaults().create());
+		selectionLabel.setText(Messages.FlavorSelector_LABEL_SELECTION);
 
 		selectionCombo = new ComboViewer(selectorRow);
 		selectionCombo.getCombo().setLayoutData(GridDataFactory.swtDefaults().hint(200, SWT.DEFAULT)

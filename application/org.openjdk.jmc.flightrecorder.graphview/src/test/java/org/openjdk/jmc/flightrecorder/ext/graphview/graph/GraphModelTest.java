@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,45 +31,40 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.flightrecorder.ext.graphview.graph;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.management.ManagementFactory;
+import java.io.IOException;
 
-import javax.management.JMX;
-import javax.management.ObjectName;
+import org.junit.jupiter.api.Test;
+import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.stacktrace.graph.GraphModelUtils;
+import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
-
-public class TestRetrieveCurrentTransforms {
-
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
-	private static final String EVENT_ID = "demo.jfr.test1"; //$NON-NLS-1$
-	private static final String METHOD_NAME = "printHelloWorldJFR1"; //$NON-NLS-1$
-	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
+final class GraphModelTest {
 
 	@Test
-	public void testRetrieveCurrentTransforms() throws Exception {
-		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
-		assertEquals(1, jfrTds.length);
-		for (JFRTransformDescriptor jfrTd : jfrTds) {
-			Assert.assertEquals(EVENT_ID, jfrTd.getId());
-			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
-			Assert.assertEquals(FIELD_NAME, jfrTd.getFields().get(0).getName());
-		}
+	void testBuildGraph() throws IOException, CouldNotLoadRecordingException {
+		IItemCollection events = JfrLoaderToolkit
+				.loadEvents(GraphModelTest.class.getResourceAsStream("hotmethods.jfr"));
+		assertTrue(events.hasItems());
+		IItemCollection executionSamples = events.apply(JdkFilters.EXECUTION_SAMPLE);
+		assertTrue(executionSamples.hasItems());
+		assertEquals(executionSamples.getAggregate(Aggregators.count()).longValue(), 24526);
+		StacktraceGraphModel model = new StacktraceGraphModel(GraphModelUtils.DEFAULT_FRAME_SEPARATOR, executionSamples,
+				null);
+		assertFalse("No nodes!", model.getNodes().isEmpty());
+		assertFalse("No edges!", model.getEdges().isEmpty());
 	}
 
-	private JFRTransformDescriptor[] doRetrieveCurrentTransforms() throws Exception {
-		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		return mbean.retrieveCurrentTransforms();
-	}
-
-	public void test() {
-		//Dummy method for instrumentation
+	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
+		new GraphModelTest().testBuildGraph();
 	}
 }

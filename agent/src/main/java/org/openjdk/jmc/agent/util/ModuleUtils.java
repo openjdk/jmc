@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,45 +31,52 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.agent.util;
 
-import static org.junit.Assert.assertEquals;
+import java.lang.instrument.Instrumentation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.logging.Level;
 
-import java.lang.management.ManagementFactory;
+import org.openjdk.jmc.agent.Agent;
 
-import javax.management.JMX;
-import javax.management.ObjectName;
+/**
+ * Utility for dealing with module system specifics.
+ */
+public class ModuleUtils {
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
+	/**
+	 * Allows the agent's module to access the Unsafe class when running on JDK 11 or newer.
+	 */
+	public static void openUnsafePackage(Instrumentation instrumentation) {
+		VersionUtils.getFeatureVersion().ifPresent(featureVersion -> {
+			if (featureVersion >= 11) {
 
-public class TestRetrieveCurrentTransforms {
+				Method redefineModule = getRedefineModuleMethod();
 
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
-	private static final String EVENT_ID = "demo.jfr.test1"; //$NON-NLS-1$
-	private static final String METHOD_NAME = "printHelloWorldJFR1"; //$NON-NLS-1$
-	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
+				try {
+					redefineModule.invoke(instrumentation, Object.class.getModule(), Collections.emptySet(), // extraReads
+							Collections.emptyMap(), // extraExports
+							Collections.singletonMap("jdk.internal.misc",
+									Collections.singleton(Agent.class.getModule())), // extraOpens
+							Collections.emptySet(), // extraUses
+							Collections.emptyMap() // extraProvides
+					);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					Agent.getLogger().log(Level.WARNING, "Failed to open module", e); //$NON-NLS-1$
+				}
+			}
+		});
+	}
 
-	@Test
-	public void testRetrieveCurrentTransforms() throws Exception {
-		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
-		assertEquals(1, jfrTds.length);
-		for (JFRTransformDescriptor jfrTd : jfrTds) {
-			Assert.assertEquals(EVENT_ID, jfrTd.getId());
-			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
-			Assert.assertEquals(FIELD_NAME, jfrTd.getFields().get(0).getName());
+	private static Method getRedefineModuleMethod() {
+		for (java.lang.reflect.Method method : Instrumentation.class.getDeclaredMethods()) {
+			if (method.getName().equals("redefineModule")) {
+				return method;
+			}
 		}
-	}
 
-	private JFRTransformDescriptor[] doRetrieveCurrentTransforms() throws Exception {
-		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		return mbean.retrieveCurrentTransforms();
-	}
-
-	public void test() {
-		//Dummy method for instrumentation
+		return null;
 	}
 }

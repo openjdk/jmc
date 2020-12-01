@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,45 +31,43 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.flightrecorder.stacktrace.graph;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
-import java.lang.management.ManagementFactory;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 
-import javax.management.JMX;
-import javax.management.ObjectName;
+public final class GraphModelUtils {
+	public final static FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
-
-public class TestRetrieveCurrentTransforms {
-
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
-	private static final String EVENT_ID = "demo.jfr.test1"; //$NON-NLS-1$
-	private static final String METHOD_NAME = "printHelloWorldJFR1"; //$NON-NLS-1$
-	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
-
-	@Test
-	public void testRetrieveCurrentTransforms() throws Exception {
-		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
-		assertEquals(1, jfrTds.length);
-		for (JFRTransformDescriptor jfrTd : jfrTds) {
-			Assert.assertEquals(EVENT_ID, jfrTd.getId());
-			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
-			Assert.assertEquals(FIELD_NAME, jfrTd.getFields().get(0).getName());
-		}
+	public static String printGraph(StacktraceGraphModel model) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("=== Graph Printout ===\n");
+		printNodes(builder, model.getNodes());
+		printLinks(builder, model.getEdges());
+		return builder.toString();
 	}
 
-	private JFRTransformDescriptor[] doRetrieveCurrentTransforms() throws Exception {
-		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		return mbean.retrieveCurrentTransforms();
+	public static String getTypeNames(IItemCollection items) {
+		List<String> typeNames = new LinkedList<>();
+		items.forEach((iterable) -> typeNames.add(iterable.getType().getName()));
+		return String.join(", ", typeNames);
+
 	}
 
-	public void test() {
-		//Dummy method for instrumentation
+	private static void printLinks(StringBuilder builder, Collection<Edge> edges) {
+		builder.append("Number of edges:");
+		builder.append(edges.size());
+		builder.append("\n");
+	}
+
+	private static void printNodes(StringBuilder builder, Collection<Node> nodes) {
+		builder.append("Number of nodes:");
+		builder.append(nodes.size());
+		builder.append("\n");
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,45 +31,80 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.test;
+package org.openjdk.jmc.flightrecorder.stacktrace.graph;
 
-import static org.junit.Assert.assertEquals;
+/**
+ * An edge in the graph of aggregated stack traces.
+ */
+public final class Edge {
+	private final Node from;
+	private final Node to;
+	int count;
+	double value;
 
-import java.lang.management.ManagementFactory;
-
-import javax.management.JMX;
-import javax.management.ObjectName;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
-
-public class TestRetrieveCurrentTransforms {
-
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
-	private static final String EVENT_ID = "demo.jfr.test1"; //$NON-NLS-1$
-	private static final String METHOD_NAME = "printHelloWorldJFR1"; //$NON-NLS-1$
-	private static final String FIELD_NAME = "'InstrumentMe.STATIC_STRING_FIELD'"; //$NON-NLS-1$
-
-	@Test
-	public void testRetrieveCurrentTransforms() throws Exception {
-		JFRTransformDescriptor[] jfrTds = doRetrieveCurrentTransforms();
-		assertEquals(1, jfrTds.length);
-		for (JFRTransformDescriptor jfrTd : jfrTds) {
-			Assert.assertEquals(EVENT_ID, jfrTd.getId());
-			Assert.assertEquals(METHOD_NAME, jfrTd.getMethod().getName());
-			Assert.assertEquals(FIELD_NAME, jfrTd.getFields().get(0).getName());
+	/**
+	 * Constructor.
+	 * 
+	 * @param from
+	 *            non null from node.
+	 * @param to
+	 *            non null to node.
+	 */
+	public Edge(Node from, Node to) {
+		if (from == null || to == null) {
+			throw new NullPointerException("Nodes must not be null");
 		}
+		this.from = from;
+		this.to = to;
 	}
 
-	private JFRTransformDescriptor[] doRetrieveCurrentTransforms() throws Exception {
-		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		return mbean.retrieveCurrentTransforms();
+	public Node getFrom() {
+		return from;
 	}
 
-	public void test() {
-		//Dummy method for instrumentation
+	public Node getTo() {
+		return to;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + from.hashCode();
+		result = prime * result + to.hashCode();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass())
+			return false;
+		Edge other = (Edge) obj;
+		if (!from.equals(other.from)) {
+			return false;
+		}
+		if (!to.equals(other.to)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return getFrom().toString() + " -> " + getTo().toString() + ", count = " + count;
 	}
 }

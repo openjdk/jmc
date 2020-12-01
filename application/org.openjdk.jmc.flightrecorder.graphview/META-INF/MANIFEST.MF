@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GraphView
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview;singleton:=true
+Bundle-Version: 8.0.0.qualifier
+Require-Bundle: org.openjdk.jmc.flightrecorder;bundle-version="8.0.0",
+ org.openjdk.jmc.flightrecorder.ui;bundle-version="8.0.0",
+ org.junit,
+ org.junit.jupiter.api,
+ org.junit.jupiter.engine,
+ org.junit.jupiter.migrationsupport,
+ org.junit.jupiter.params,
+ org.junit.platform.commons,
+ org.junit.platform.engine,
+ org.junit.platform.launcher,
+ org.junit.platform.runner,
+ org.junit.platform.suite.api,
+ org.junit.vintage.engine,
+ org.hamcrest.core,
+ org.opentest4j,
+ org.apiguardian
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.graphview
+Bundle-Vendor: Oracle Corporation

@@ -1,0 +1,64 @@
+<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<script>%1$s</script>
+	<script>%2$s</script>
+	<script>%3$s</script>
+</head>
+
+<body>
+	<div id="graph" style="text-align: center;"></div>
+	<script type="text/javascript">
+		
+	var graphviz;
+	var margin = 20; // to avoid scrollbars
+
+	var currentDot;		
+		
+	graphviz = d3.select("#graph").graphviz()
+		.zoomScaleExtent([.5, 100])
+    	.attributer(attributer)
+    	.renderDot(currentDot);
+
+	function attributer(datum, index, nodes) {
+	    var selection = d3.select(this);
+	    if (datum.tag == "svg") {
+	        var width = window.innerWidth;
+	        var height = window.innerHeight;
+	        selection
+	            .attr("width", width)
+	            .attr("height", height)
+	        datum.attributes.width = width - margin;
+	        datum.attributes.height = height - margin;
+	    }
+	}
+
+	function resetZoom() {
+	    graphviz
+	        .resetZoom(d3.transition().duration(1000));
+	}
+
+	function resizeSVG() {
+	    console.log('Resize');
+	    var width = window.innerWidth;
+	    var height = window.innerHeight;
+	    d3.select("#graph").selectWithoutDataPropagation("svg")
+	        .transition()
+	        .duration(700)
+	        .attr("width", width - margin)
+	        .attr("height", height - margin);
+	};
+
+	d3.select(window).on("resize", resizeSVG);
+	d3.select(window).on("click", resetZoom);
+	
+	function processGraph(dotString) {
+		currentDot = dotString;			
+		graphviz.renderDot(dotString);
+		resetZoom();
+	};
+	</script>
+</body>
+</html>
