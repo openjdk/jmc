@@ -225,7 +225,7 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.URI">
+		<event id="demo.jfr.convertertest.ConverterEventNumber">
 			<name>ConverterEventNumber</name>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Number parameter to a
@@ -252,7 +252,7 @@
 		</event>
 
 		<!-- Multi and custom converters -->
-		<event id="demo.jfr.convertertest.URI">
+		<event id="demo.jfr.convertertest.ConverterEventMultiCustomInt">
 			<name>ConverterEventMultiCustomInt</name>
 			<description>Testing picking the right method.
 			</description>
@@ -275,7 +275,7 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.URI">
+		<event id="demo.jfr.convertertest.ConverterEventMultiCustomDouble">
 			<name>ConverterEventMultiCustomDouble</name>
 			<description>Testing picking the right method.
 			</description>
@@ -298,7 +298,7 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.URI">
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultLong">
 			<name>ConverterEventMultiDefaultLong</name>
 			<description>Testing picking the right method.
 			</description>
@@ -321,7 +321,7 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.URI">
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultDouble">
 			<name>ConverterEventMultiDefaultDouble</name>
 			<description>Testing picking the right method.
 			</description>
