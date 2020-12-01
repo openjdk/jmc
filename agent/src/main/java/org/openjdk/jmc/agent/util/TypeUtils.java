@@ -44,7 +44,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.jfr.impl.JFRUtils;
+import org.openjdk.jmc.agent.Convertable;
+import org.openjdk.jmc.agent.jfrlegacy.impl.JFRUtils;
 
 /**
  * Helper methods for doing transforms.
@@ -61,8 +62,8 @@ public final class TypeUtils {
 
 	public static final Object STRING_INTERNAL_NAME = "java/lang/String"; //$NON-NLS-1$
 
-	private final static String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
-	private final static String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
+	private static final String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
+	private static final String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
 
 	private static final Object UNSAFE;
 	private static final Method UNSAFE_DEFINE_CLASS_METHOD;
@@ -217,7 +218,7 @@ public final class TypeUtils {
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
 	}
 
-	public static boolean shouldStringify(Type argumentType) {
+	public static boolean shouldStringify(Convertable convertable, Type argumentType) {
 		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
 			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
 		}

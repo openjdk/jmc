@@ -43,6 +43,7 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 
 import org.objectweb.asm.Type;
+import org.openjdk.jmc.agent.Convertable;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
@@ -51,11 +52,11 @@ import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFRTransformDescriptor extends TransformDescriptor {
-	private final static String ATTRIBUTE_EVENT_NAME = "name"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_JFR_EVENT_DESCRIPTION = "description"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_JFR_EVENT_PATH = "path"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_STACK_TRACE = "stacktrace"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_RETHROW = "rethrow"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_EVENT_NAME = "name"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_JFR_EVENT_DESCRIPTION = "description"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_JFR_EVENT_PATH = "path"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_STACK_TRACE = "stacktrace"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_RETHROW = "rethrow"; //$NON-NLS-1$
 
 	private final String classPrefix;
 	private final String eventDescription;
@@ -230,8 +231,12 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return returnValue;
 	}
 
-	public boolean isAllowedFieldType(Type type) {
+	public boolean isAllowedEventFieldType(Convertable convertable, Type type) {
 		if (isAllowToString()) {
+			return true;
+		}
+		// FIXME: Add better validation, such as checking the class is available
+		if (isAllowConverter() && convertable.hasConverter()) {
 			return true;
 		}
 		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;

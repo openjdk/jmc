@@ -38,9 +38,10 @@ import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 
 import javax.management.openmbean.CompositeData;
 
+import org.openjdk.jmc.agent.impl.AbstractConvertable;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-public class Field implements Attribute {
+public class Field extends AbstractConvertable implements Attribute {
 
 	private final String name;
 	private final String expression;
@@ -48,25 +49,24 @@ public class Field implements Attribute {
 	private final String description;
 	private final String contentType;
 	private final String relationKey;
-	private final String converterClassName;
 
 	private Class<?> resolvingCaller;
 	private ReferenceChain referenceChain;
 
 	public Field(String name, String expression, String description, String contentType, String relationKey,
 			String converterClassName) {
+		super(converterClassName);
 		this.name = name;
 		this.expression = expression;
 		this.description = description;
 		this.contentType = contentType;
 		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name);
 	}
 
 	public static Field from(CompositeData cd) {
 		return new Field((String) cd.get("name"), (String) cd.get("expression"), (String) cd.get("description"),
-				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterDefinition"));
 	}
 
 	@Override
@@ -96,11 +96,6 @@ public class Field implements Attribute {
 	@Override
 	public String getRelationKey() {
 		return this.relationKey;
-	}
-
-	@Override
-	public String getConverterClassName() {
-		return this.converterClassName;
 	}
 
 	public ReferenceChain resolveReferenceChain(Class<?> callerClass) throws IllegalSyntaxException {

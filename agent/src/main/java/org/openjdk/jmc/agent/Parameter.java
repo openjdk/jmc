@@ -34,12 +34,13 @@ package org.openjdk.jmc.agent;
 
 import javax.management.openmbean.CompositeData;
 
+import org.openjdk.jmc.agent.impl.AbstractConvertable;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 /**
  * Metadata for a parameter to be logged by the agent.
  */
-public final class Parameter implements Attribute {
+public final class Parameter extends AbstractConvertable implements Attribute {
 	public static final int INDEX_INVALID = -1;
 
 	private final int index;
@@ -48,22 +49,21 @@ public final class Parameter implements Attribute {
 	private final String description;
 	private final String contentType;
 	private final String relationKey;
-	private final String converterClassName;
 
 	public Parameter(int index, String name, String description, String contentType, String relationKey,
 			String converterClassName) {
+		super(converterClassName);
 		this.index = index;
 		this.name = name;
 		this.description = description;
 		this.contentType = contentType;
 		this.relationKey = relationKey;
-		this.converterClassName = converterClassName;
 		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name); //$NON-NLS-1$
 	}
 
 	public static Parameter from(CompositeData cd) {
 		return new Parameter((int) cd.get("index"), (String) cd.get("name"), (String) cd.get("description"),
-				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterClassName"));
+				(String) cd.get("contentType"), (String) cd.get("relationKey"), (String) cd.get("converterDefinition"));
 	}
 
 	public int getIndex() {
@@ -92,9 +92,5 @@ public final class Parameter implements Attribute {
 
 	public boolean isInvalid() {
 		return index == INDEX_INVALID;
-	}
-
-	public String getConverterClassName() {
-		return converterClassName;
 	}
 }

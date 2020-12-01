@@ -70,7 +70,7 @@ public class InstrumentMe {
 		System.in.read();
 	}
 
-	private final static class Runner implements Runnable {
+	private static final class Runner implements Runnable {
 		public void run() {
 			InstrumentMe instance = new InstrumentMe();
 			while (true) {

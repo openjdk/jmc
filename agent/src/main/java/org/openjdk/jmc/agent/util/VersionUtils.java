@@ -36,7 +36,6 @@ import java.lang.reflect.Method;
 import java.util.OptionalInt;
 
 public final class VersionUtils {
-
 	private static final JFRVersion AVAILABLE_JFR_VERSION = determineJFRVersion();
 	private static final int FEATURE_VERSION = determineFeatureVersion();
 

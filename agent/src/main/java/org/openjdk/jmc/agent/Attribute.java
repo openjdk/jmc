@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.agent;
 
-public interface Attribute {
+public interface Attribute extends Convertable {
 	String getName();
 
 	String getFieldName();
@@ -42,6 +42,4 @@ public interface Attribute {
 	String getContentType();
 
 	String getRelationKey();
-
-	String getConverterClassName();
 }

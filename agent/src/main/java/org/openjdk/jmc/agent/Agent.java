@@ -58,7 +58,7 @@ public class Agent {
 	/**
 	 * This should be generated as part of the build later.
 	 */
-	public final static String VERSION = "0.0.2"; //$NON-NLS-1$
+	public static final String VERSION = "0.9.0"; //$NON-NLS-1$
 	private static boolean loadedDynamically = false;
 
 	/**

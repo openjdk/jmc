@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,15 +30,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters.test;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
-import org.openjdk.jmc.agent.test.Gurka;
+public enum JFRLegacyEventType {
+	INSTANT, DURATION, TIMED, UNDEFINED;
 
-/**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
- */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
+	public static JFRLegacyEventType parse(String string) {
+		if (string == null) {
+			return UNDEFINED;
+		}
+		JFRLegacyEventType et = JFRLegacyEventType.valueOf(string.toUpperCase().trim());
+		if (et == null) {
+			return UNDEFINED;
+		}
+		return et;
 	}
 }

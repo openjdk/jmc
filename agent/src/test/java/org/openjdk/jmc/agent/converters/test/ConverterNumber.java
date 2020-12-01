@@ -33,13 +33,11 @@
  */
 package org.openjdk.jmc.agent.converters.test;
 
-import org.openjdk.jmc.agent.test.Gurka;
-
 /**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
+ * Converts a {@link Number} to long.
  */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
+public class ConverterNumber {
+	public static long convert(Number number) {
+		return number.longValue();
 	}
 }

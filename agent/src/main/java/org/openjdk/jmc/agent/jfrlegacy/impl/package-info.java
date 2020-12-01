@@ -31,15 +31,9 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters.test;
-
-import org.openjdk.jmc.agent.test.Gurka;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
 /**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
+ * This package contains classes related to adding JFR events for the early versions of JFR in the
+ * Oracle JDK 7 and the Oracle JDK 8.
  */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
-	}
-}

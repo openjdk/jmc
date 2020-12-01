@@ -30,31 +30,31 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.jfrnext.impl;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
-import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Attribute;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
-import org.openjdk.jmc.agent.util.expression.ReferenceChainElement;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
+import org.openjdk.jmc.agent.util.expression.ReferenceChainElement;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Code emitter for JFR next, i.e. the version of JFR distributed with JDK 9 and later.
+ * Code emitter for JFR distributed with pre-JDK 9 releases. Probably works with JRockit too. ;)
  */
-public class JFRNextMethodAdvisor extends AdviceAdapter {
+public class JFRLegacyMethodAdvisor extends AdviceAdapter {
 	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
 
 	private final JFRTransformDescriptor transformDescriptor;
@@ -66,11 +66,10 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	private Label tryBegin = new Label();
 	private Label tryEnd = new Label();
-	private Label catchBegin = new Label();
 
 	private boolean shouldInstrumentThrow;
 
-	protected JFRNextMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api,
+	protected JFRLegacyMethodAdvisor(JFRTransformDescriptor transformDescriptor, Class<?> inspectionClass, int api,
 			MethodVisitor mv, int access, String name, String desc) {
 		super(api, mv, access, name, desc);
 		this.transformDescriptor = transformDescriptor;
@@ -80,21 +79,21 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		this.returnTypeRef = Type.getReturnType(desc);
 		this.eventType = Type.getObjectType(transformDescriptor.getEventClassName());
 
-		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow() || !transformDescriptor.isEmitOnException(); // don't instrument inner throws if rethrow is enabled
+		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow(); // don't instrument inner throws if rethrow is enabled
 	}
 
 	@Override
 	public void visitCode() {
 		super.visitCode();
 
-		if (transformDescriptor.isUseRethrow() || transformDescriptor.isEmitOnException()) {
+		if (transformDescriptor.isUseRethrow()) {
 			visitLabel(tryBegin);
 		}
 	}
 
 	@Override
 	public void visitEnd() {
-		if (transformDescriptor.isUseRethrow() && !transformDescriptor.isEmitOnException()) {
+		if (transformDescriptor.isUseRethrow()) {
 			visitLabel(tryEnd);
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
 
@@ -103,18 +102,8 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 			// Simply rethrow. Event commits are instrumented by onMethodExit()
 			shouldInstrumentThrow = true;
 			visitInsn(ATHROW);
-		} else if (transformDescriptor.isEmitOnException()) {
-			visitLabel(tryEnd);
-			visitTryCatchBlock(tryBegin, tryEnd, catchBegin, THROWABLE_BINARY_NAME);
-			if (!transformDescriptor.isUseRethrow()) {
-				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
-				visitInsn(RETURN);
-			} else {
-				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
-				shouldInstrumentThrow = true;
-				visitInsn(ATHROW);
-			}
 		}
+
 		super.visitEnd();
 	}
 
@@ -134,7 +123,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 		mv.visitMethodInsn(INVOKESPECIAL, transformDescriptor.getEventClassName(), "<init>", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Parameter param : transformDescriptor.getParameters()) {
 			Type argumentType = argumentTypesRef[param.getIndex()];
-			if (transformDescriptor.isAllowedFieldType(argumentType)) {
+			if (transformDescriptor.isAllowedEventFieldType(param, argumentType)) {
 				mv.visitInsn(DUP);
 				loadArg(param.getIndex());
 				writeAttribute(param, argumentType);
@@ -149,7 +138,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 						"Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
-			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+			if (transformDescriptor.isAllowedEventFieldType(field, refChain.getType())) {
 				mv.visitInsn(DUP);
 				loadField(refChain);
 				writeAttribute(field, refChain.getType());
@@ -232,7 +221,7 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 	}
 
 	private void writeAttribute(Attribute param, Type type) {
-		if (TypeUtils.shouldStringify(type)) {
+		if (TypeUtils.shouldStringify(param, type)) {
 			TypeUtils.stringify(mv);
 			type = TypeUtils.STRING_TYPE;
 		}
@@ -241,12 +230,10 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	@Override
 	protected void onMethodExit(int opcode) {
-		if (transformDescriptor.isEmitOnException()) {
-			visitLabel(catchBegin);
-		}
 		if (opcode == ATHROW && !shouldInstrumentThrow) {
 			return;
 		}
+
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			ReturnValue returnValue = transformDescriptor.getReturnValue();
 			if (returnValue != null) {
@@ -272,6 +259,8 @@ public class JFRNextMethodAdvisor extends AdviceAdapter {
 
 	private void commitEvent() {
 		mv.visitVarInsn(ALOAD, eventLocal);
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "end", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

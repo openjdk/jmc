@@ -30,9 +30,8 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.jfrnext.impl;
+package org.openjdk.jmc.agent.jfrlegacy.impl;
 
-import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
 
@@ -45,21 +44,22 @@ import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.InspectionClassLoader;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
-public class JFRNextClassVisitor extends ClassVisitor {
+public class JFRLegacyClassVisitor extends ClassVisitor implements Opcodes {
 	private final JFRTransformDescriptor transformDescriptor;
 	private final ClassLoader definingClassLoader;
 	private final Class<?> inspectionClass;
 	private final ProtectionDomain protectionDomain;
 
-	public JFRNextClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
-			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-			InspectionClassLoader inspectionClassLoader) {
+	public JFRLegacyClassVisitor(ClassWriter cv, JFRTransformDescriptor descriptor, ClassLoader definingLoader,
+			Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
 		super(Opcodes.ASM8, cv);
 		this.transformDescriptor = descriptor;
 		this.definingClassLoader = definingLoader;
 		this.protectionDomain = protectionDomain;
 
 		try {
+			InspectionClassLoader inspectionClassLoader = classBeingRedefined != null ? null
+					: new InspectionClassLoader(definingClassLoader);
 			this.inspectionClass = classBeingRedefined != null || descriptor.getFields().isEmpty() ? classBeingRedefined
 					: inspectionClassLoader.loadClass(TypeUtils.getCanonicalName(transformDescriptor.getClassName()));
 		} catch (ClassNotFoundException e) {
@@ -73,7 +73,8 @@ public class JFRNextClassVisitor extends ClassVisitor {
 		if (name.equals(transformDescriptor.getMethod().getName())
 				&& desc.equals(transformDescriptor.getMethod().getSignature())) {
 			transformDescriptor.matchFound(true);
-			return new JFRNextMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name, desc);
+			return new JFRLegacyMethodAdvisor(transformDescriptor, inspectionClass, Opcodes.ASM8, mv, access, name,
+					desc);
 		}
 		return mv;
 	}
@@ -81,28 +82,24 @@ public class JFRNextClassVisitor extends ClassVisitor {
 	@Override
 	public void visitEnd() {
 		try {
-			reflectiveRegister(generateEventClass());
-		} catch (Exception e) {
+			Class<?> c = generateEventClass();
+			Agent.getLogger().log(Level.FINE, "Generated " + c);
+		} catch (Throwable t) {
 			Agent.getLogger().log(Level.SEVERE, "Failed to generate event class for " + transformDescriptor.toString(), //$NON-NLS-1$
-					e);
+					t);
 		}
 		if (!transformDescriptor.isMatchFound()) {
 			Agent.getLogger().warning("Method " + transformDescriptor.getMethod().getName() + " "
 					+ transformDescriptor.getMethod().getSignature() + " not found."); // $NON-NLS-1$
 		}
+
 		super.visitEnd();
 	}
 
-	// NOTE: multi-release jars should let us compile against jdk9 and do a direct call here
-	private void reflectiveRegister(Class<?> generateEventClass) throws Exception {
-		Class<?> jfr = Class.forName("jdk.jfr.FlightRecorder"); //$NON-NLS-1$
-		Method registerMethod = jfr.getDeclaredMethod("register", Class.class); //$NON-NLS-1$
-		registerMethod.invoke(null, generateEventClass);
-	}
-
 	private Class<?> generateEventClass() throws Exception {
-		byte[] eventClass = JFRNextEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
+		byte[] eventClass = JFRLegacyEventClassGenerator.generateEventClass(transformDescriptor, inspectionClass);
 		return TypeUtils.defineClass(transformDescriptor.getEventClassName(), eventClass, 0, eventClass.length,
 				definingClassLoader, protectionDomain);
 	}
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,18 +31,23 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters;
+package org.openjdk.jmc.agent.converters.test;
+
+import org.openjdk.jmc.agent.test.Gurka;
 
 /**
- * Interface for converting an object to a long.
+ * Converts a {@link Gurka} to various different types.
  */
-public interface LongConverter<T> {
-	/**
-	 * Converts an object to a long.
-	 * 
-	 * @param o
-	 *            the object to convert.
-	 * @return the object converted to a long.
-	 */
-	long convert(T o);
+public class GurkMultiCustomConverter {
+	public static int convertCustomInt(Gurka gurka) {
+		return (int) gurka.getID();
+	}
+
+	public static double convertCustomDouble(Gurka gurka) {
+		return (double) gurka.getID();
+	}
+
+	public static String convertCustomString(Gurka gurka) {
+		return "StringGurka " + gurka.getID();
+	}
 }

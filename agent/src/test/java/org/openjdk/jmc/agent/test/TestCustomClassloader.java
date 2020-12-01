@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020 Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,29 +34,11 @@
 
 package org.openjdk.jmc.agent.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.util.List;
 import java.util.logging.Logger;
 
-import javax.management.JMX;
-import javax.management.ObjectName;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.Type;
-import org.openjdk.jmc.agent.TransformDescriptor;
-import org.openjdk.jmc.agent.TransformRegistry;
-import org.openjdk.jmc.agent.Transformer;
-import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
-import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
-import org.openjdk.jmc.agent.jmx.AgentControllerMXBean;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 /***
@@ -70,26 +52,11 @@ public class TestCustomClassloader {
 
 	private static Logger logger = Logger.getLogger(TestCustomClassloader.class.getName());
 
-	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
-	private static final String EVENT_ID = "demo.jfr.test6";
-	private static final String EVENT_NAME = "JFR Hello World Event 1 %TEST_NAME%";
-	private static final String EVENT_DESCRIPTION = "JFR Hello World Event 1 %TEST_NAME%";
-	private static final String EVENT_PATH = "demo/jfrhelloworldevent";
-	private static final String EVENT_CLASS_NAME = "org.openjdk.jmc.agent.test.TestDummy";
-	private static final String METHOD_NAME = "testWithoutException";
-	private static final String METHOD_DESCRIPTOR = "()V";
-
-	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
-			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
-			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
-			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
-
 	@Test
 	public void testCorrectMethodDescriptor() throws Exception {
 		try {
 			ClassLoader c = new CustomClassLoader();
-			Class reproducer = c.loadClass(TestDummy.class.getName());
+			Class<?> reproducer = c.loadClass(TestDummy.class.getName());
 			for (int i = 0; i < 10; i++) {
 				reproducer.getDeclaredMethod("testWithoutException")
 						.invoke(reproducer.getDeclaredConstructor().newInstance());
@@ -98,12 +65,6 @@ public class TestCustomClassloader {
 			logger.severe("===================================" + e.toString());
 			Assert.fail();
 		}
-	}
-
-	private void doDefineEventProbes(String xmlDescription) throws Exception {
-		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
-				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
-		mbean.defineEventProbes(xmlDescription);
 	}
 
 	private class CustomClassLoader extends ClassLoader {

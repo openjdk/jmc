@@ -15,6 +15,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.openjdk.jmc.agent.converters.test.InstrumentMeConverter"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="org.openjdk.jmc.agent"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.openjdk.jmc.agent"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:${resource_loc:/org.openjdk.jmc.agent/target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar}=${resource_loc:/org.openjdk.jmc.agent/src/test/resources/org/openjdk/jmc/agent/converters/test/jfrprobes_template.xml}"/>

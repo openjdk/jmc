@@ -31,15 +31,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.agent.converters.test;
+package org.openjdk.jmc.agent.impl;
 
-import org.openjdk.jmc.agent.test.Gurka;
+import org.openjdk.jmc.agent.Convertable;
 
-/**
- * Converts a {@link Gurka} to an int by taking the ID and casting it.
- */
-public class GurkConverterInt {
-	public static int convert(Gurka gurka) {
-		return gurka.getID();
+public abstract class AbstractConvertable implements Convertable {
+	private final String converterDefinition;
+
+	public AbstractConvertable(String converterDefinition) {
+		this.converterDefinition = converterDefinition;
+	}
+
+	@Override
+	public String getConverterDefinition() {
+		return converterDefinition;
 	}
 }

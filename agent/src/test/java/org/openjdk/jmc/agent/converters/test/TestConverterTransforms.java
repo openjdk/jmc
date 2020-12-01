@@ -32,17 +32,26 @@
  */
 package org.openjdk.jmc.agent.converters.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.instrument.IllegalClassFormatException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.Transformer;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
@@ -59,5 +68,40 @@ public class TestConverterTransforms {
 				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMeConverter.class)));
+
+		Transformer jfrTransformer = new Transformer(registry);
+		byte[] transformedClass = jfrTransformer.transform(InstrumentMeConverter.class.getClassLoader(),
+				Type.getInternalName(InstrumentMeConverter.class), InstrumentMeConverter.class, null,
+				TestToolkit.getByteCode(InstrumentMeConverter.class));
+
+		assertNotNull(transformedClass);
+		assertFalse(registry.hasPendingTransforms(Type.getInternalName(InstrumentMeConverter.class)));
+
+		TraceClassVisitor visitor = new TraceClassVisitor(
+				new PrintWriter(new BufferedOutputStream(new ByteArrayOutputStream())));
+		CheckClassAdapter checkAdapter = new CheckClassAdapter(visitor);
+		ClassReader reader = new ClassReader(transformedClass);
+		reader.accept(checkAdapter, 0);
+	}
+
+	public static void main(String[] args) throws XMLStreamException, IOException, IllegalClassFormatException {
+		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(),
+				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
+
+		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMeConverter.class)));
+
+		Transformer jfrTransformer = new Transformer(registry);
+		byte[] transformedClass = jfrTransformer.transform(InstrumentMeConverter.class.getClassLoader(),
+				Type.getInternalName(InstrumentMeConverter.class), InstrumentMeConverter.class, null,
+				TestToolkit.getByteCode(InstrumentMeConverter.class));
+
+		assertNotNull(transformedClass);
+		assertFalse(registry.hasPendingTransforms(Type.getInternalName(InstrumentMeConverter.class)));
+
+		TraceClassVisitor visitor = new TraceClassVisitor(new PrintWriter(System.out));
+		CheckClassAdapter checkAdapter = new CheckClassAdapter(visitor);
+		ClassReader reader = new ClassReader(transformedClass);
+		reader.accept(checkAdapter, 0);
+		System.out.println(registry);
 	}
 }

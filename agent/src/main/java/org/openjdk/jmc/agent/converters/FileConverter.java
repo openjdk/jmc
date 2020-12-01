@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -32,16 +33,25 @@
  */
 package org.openjdk.jmc.agent.converters;
 
+import java.io.File;
+import java.util.logging.Level;
+
+import org.openjdk.jmc.agent.Agent;
+
 /**
- * Interface for converting an object to a float.
+ * A converter which converts files into their canonical path.
  */
-public interface FloatConverter<T> {
-	/**
-	 * Converts an object to a float.
-	 * 
-	 * @param o
-	 *            the object to convert.
-	 * @return the object converted to a float.
-	 */
-	float convert(T o);
+public final class FileConverter {
+	public static String convert(File file) {
+		if (file == null) {
+			return "null";
+		}
+		try {
+			return file.getCanonicalPath();
+		} catch (Throwable e) {
+			Agent.getLogger().log(Level.WARNING,
+					"Agent failed to convert file to String, will use path. File was: " + file.toString(), e);
+		}
+		return file.getPath();
+	}
 }

@@ -32,6 +32,10 @@
  */
 package org.openjdk.jmc.agent.jfr.impl;
 
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -41,18 +45,17 @@ import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
+import org.openjdk.jmc.agent.impl.MalformedConverterException;
+import org.openjdk.jmc.agent.impl.ResolvedConvertable;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
 import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 import org.openjdk.jmc.agent.util.expression.ReferenceChainElement;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Code emitter for JFR distributed with pre-JDK 9 releases. Probably works with JRockit too. ;)
+ * This class is responsible for transforming the method to be instrumented. Code emitter for JFR
+ * next, i.e. the version of JFR distributed with JDK 9 and later.
  */
 public class JFRMethodAdvisor extends AdviceAdapter {
 	private static final String THROWABLE_BINARY_NAME = "java/lang/Throwable"; //$NON-NLS-1$
@@ -66,6 +69,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	private Label tryBegin = new Label();
 	private Label tryEnd = new Label();
+	private Label catchBegin = new Label();
 
 	private boolean shouldInstrumentThrow;
 
@@ -79,21 +83,21 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		this.returnTypeRef = Type.getReturnType(desc);
 		this.eventType = Type.getObjectType(transformDescriptor.getEventClassName());
 
-		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow(); // don't instrument inner throws if rethrow is enabled
+		this.shouldInstrumentThrow = !transformDescriptor.isUseRethrow() || !transformDescriptor.isEmitOnException(); // don't instrument inner throws if rethrow is enabled
 	}
 
 	@Override
 	public void visitCode() {
 		super.visitCode();
 
-		if (transformDescriptor.isUseRethrow()) {
+		if (transformDescriptor.isUseRethrow() || transformDescriptor.isEmitOnException()) {
 			visitLabel(tryBegin);
 		}
 	}
 
 	@Override
 	public void visitEnd() {
-		if (transformDescriptor.isUseRethrow()) {
+		if (transformDescriptor.isUseRethrow() && !transformDescriptor.isEmitOnException()) {
 			visitLabel(tryEnd);
 			visitTryCatchBlock(tryBegin, tryEnd, tryEnd, THROWABLE_BINARY_NAME);
 
@@ -102,8 +106,18 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			// Simply rethrow. Event commits are instrumented by onMethodExit()
 			shouldInstrumentThrow = true;
 			visitInsn(ATHROW);
+		} else if (transformDescriptor.isEmitOnException()) {
+			visitLabel(tryEnd);
+			visitTryCatchBlock(tryBegin, tryEnd, catchBegin, THROWABLE_BINARY_NAME);
+			if (!transformDescriptor.isUseRethrow()) {
+				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+				visitInsn(RETURN);
+			} else {
+				visitFrame(Opcodes.F_NEW, 0, null, 1, new Object[] {THROWABLE_BINARY_NAME});
+				shouldInstrumentThrow = true;
+				visitInsn(ATHROW);
+			}
 		}
-
 		super.visitEnd();
 	}
 
@@ -111,21 +125,30 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 	protected void onMethodEnter() {
 		try {
 			createEvent();
-		} catch (IllegalSyntaxException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void createEvent() throws IllegalSyntaxException {
+	private void createEvent() throws IllegalSyntaxException, MalformedConverterException {
 		mv.visitTypeInsn(NEW, transformDescriptor.getEventClassName());
 		mv.visitInsn(DUP);
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(INVOKESPECIAL, transformDescriptor.getEventClassName(), "<init>", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Parameter param : transformDescriptor.getParameters()) {
 			Type argumentType = argumentTypesRef[param.getIndex()];
-			if (transformDescriptor.isAllowedFieldType(argumentType)) {
+			if (transformDescriptor.isAllowedEventFieldType(param, argumentType)) {
+				// Top of the stack is the event instance object reference.
 				mv.visitInsn(DUP);
 				loadArg(param.getIndex());
+				if (param.hasConverter()) {
+					argumentType = convertify(mv, param, argumentType);
+				} else {
+					if (TypeUtils.shouldStringify(param, argumentType)) {
+						TypeUtils.stringify(mv);
+						argumentType = TypeUtils.STRING_TYPE;
+					}
+				}
 				writeAttribute(param, argumentType);
 			}
 		}
@@ -138,7 +161,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 						"Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
-			if (transformDescriptor.isAllowedFieldType(refChain.getType())) {
+			if (transformDescriptor.isAllowedEventFieldType(field, refChain.getType())) {
 				mv.visitInsn(DUP);
 				loadField(refChain);
 				writeAttribute(field, refChain.getType());
@@ -221,19 +244,25 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 	}
 
 	private void writeAttribute(Attribute param, Type type) {
-		if (TypeUtils.shouldStringify(type)) {
-			TypeUtils.stringify(mv);
-			type = TypeUtils.STRING_TYPE;
-		}
 		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
+	}
+
+	private Type convertify(MethodVisitor mv, Attribute convertable, Type type) throws MalformedConverterException {
+		ResolvedConvertable resolvedConvertable = new ResolvedConvertable(convertable.getConverterDefinition(), type);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(resolvedConvertable.getConverterClass()),
+				resolvedConvertable.getConverterMethod().getName(),
+				Type.getMethodDescriptor(resolvedConvertable.getConverterMethod()), false);
+		return Type.getType(resolvedConvertable.getConverterMethod().getReturnType());
 	}
 
 	@Override
 	protected void onMethodExit(int opcode) {
+		if (transformDescriptor.isEmitOnException()) {
+			visitLabel(catchBegin);
+		}
 		if (opcode == ATHROW && !shouldInstrumentThrow) {
 			return;
 		}
-
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			ReturnValue returnValue = transformDescriptor.getReturnValue();
 			if (returnValue != null) {
@@ -259,8 +288,6 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	private void commitEvent() {
 		mv.visitVarInsn(ALOAD, eventLocal);
-		mv.visitInsn(DUP);
-		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "end", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 		mv.visitMethodInsn(INVOKEVIRTUAL, transformDescriptor.getEventClassName(), "commit", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
