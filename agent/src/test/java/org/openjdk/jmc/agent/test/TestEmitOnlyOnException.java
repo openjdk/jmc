@@ -67,11 +67,11 @@ public class TestEmitOnlyOnException {
 			+ "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>" + EVENT_PATH + "</path>"
 			+ "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>" + "<name>"
 			+ METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
-			+ "<location>WRAP</location>" + "</event>" + "<event id=\"" + EVENT_ID + "2" + "\">" + "<label>" + EVENT_LABEL
-			+ "2" + "</label>" + "<description>" + EVENT_DESCRIPTION + "2" + "</description>" + "<path>" + EVENT_PATH
-			+ "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>"
-			+ "<name>" + METHOD_NAME_2 + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
-			+ "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+			+ "<location>WRAP</location>" + "</event>" + "<event id=\"" + EVENT_ID + "2" + "\">" + "<label>"
+			+ EVENT_LABEL + "2" + "</label>" + "<description>" + EVENT_DESCRIPTION + "2" + "</description>" + "<path>"
+			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>" + "<name>" + METHOD_NAME_2 + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
+			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
 
 	@Test
 	public void testEmitOnException() throws Exception {
