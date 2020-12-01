@@ -75,7 +75,7 @@
 
 	<xs:complexType name="eventType">
 		<xs:all>
-			<xs:element type="xs:string" name="name" />
+			<xs:element type="xs:string" name="label" />
 			<xs:element type="classType" name="class" />
 			<xs:element type="methodType" name="method" />
 			<xs:element type="xs:string" name="description"

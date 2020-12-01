@@ -52,7 +52,7 @@ import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.util.TypeUtils;
 
 public class JFRTransformDescriptor extends TransformDescriptor {
-	private static final String ATTRIBUTE_EVENT_NAME = "name"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_EVENT_LABEL = "label"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_JFR_EVENT_DESCRIPTION = "description"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_JFR_EVENT_PATH = "path"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_STACK_TRACE = "stacktrace"; //$NON-NLS-1$
@@ -61,7 +61,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	private final String classPrefix;
 	private final String eventDescription;
 	private final String eventClassName;
-	private final String eventName;
+	private final String eventLabel;
 	private final String eventPath;
 	private final boolean recordStackTrace;
 	private final boolean useRethrow;
@@ -78,7 +78,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 			List<Field> fields) {
 		super(id, className, method, transformationAttributes);
 		classPrefix = initializeClassPrefix();
-		eventName = initializeEventName();
+		eventLabel = initializeEventLabel();
 		eventClassName = initializeEventClassName();
 		eventPath = initializeEventPath();
 		eventDescription = initializeEventDescription();
@@ -124,8 +124,8 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return eventClassName;
 	}
 
-	public String getEventName() {
-		return eventName;
+	public String getEventLabel() {
+		return eventLabel;
 	}
 
 	public String getClassPrefix() {
@@ -168,14 +168,14 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		return DEFAULT_CLASS_PREFIX;
 	}
 
-	private String initializeEventName() {
-		String eventName = getTransformationAttribute(ATTRIBUTE_EVENT_NAME);
-		if (eventName == null || eventName.length() == 0) {
-			eventName = getMethod().getName();
+	private String initializeEventLabel() {
+		String eventLabel = getTransformationAttribute(ATTRIBUTE_EVENT_LABEL);
+		if (eventLabel == null || eventLabel.length() == 0) {
+			eventLabel = getMethod().getName();
 			Logger.getLogger(JFRTransformDescriptor.class.getName()).log(Level.INFO,
-					"Could not find an event name, generated one: " + eventName); //$NON-NLS-1$
+					"Could not find an event name, generated one: " + eventLabel); //$NON-NLS-1$
 		}
-		return eventName;
+		return eventLabel;
 	}
 
 	private String initializeEventDescription() {
@@ -189,7 +189,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 
 	private String initializeEventClassName() {
 		return TypeUtils.getPathPart(getClassName()) + getClassPrefix()
-				+ TypeUtils.deriveIdentifierPart(getEventName());
+				+ TypeUtils.deriveIdentifierPart(getEventLabel());
 	}
 
 	private String initializeEventPath() {
@@ -207,7 +207,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		if (strVal == null || strVal.isEmpty()) {
 			Logger.getLogger(JFRTransformDescriptor.class.getName()).log(Level.FINE,
 					"The boolean attribute " + attribute //$NON-NLS-1$
-							+ " was not set for the event " + eventName + ". Assuming " + defaultValue + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							+ " was not set for the event " + eventLabel + ". Assuming " + defaultValue + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return defaultValue;
 		}
 		return Boolean.parseBoolean(strVal);
@@ -216,7 +216,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 	@Override
 	public String toString() {
 		return String.format("JFRTransformDescriptor [method:%s, eventName:%s, #params:%d]", getMethod().toString(), //$NON-NLS-1$
-				eventName, parameters.size());
+				eventLabel, parameters.size());
 	}
 
 	public List<Parameter> getParameters() {

@@ -54,8 +54,8 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 public class TestIncorrectMethodDescriptor {
 
 	private static final String EVENT_ID = "demo.jfr.test6";
-	private static final String CORRECT_EVENT_NAME = "JFR Hello World Event 6 %TEST_NAME%";
-	private static final String INCORRECT_EVENT_NAME = "JFR Hello World Event 6 Incorrect %TEST_NAME%";
+	private static final String CORRECT_EVENT_LABEL = "JFR Hello World Event 6 %TEST_NAME%";
+	private static final String INCORRECT_EVENT_LABEL = "JFR Hello World Event 6 Incorrect %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Hello World Event 6 %TEST_NAME%";
 	private static final String EVENT_PATH = "demo/jfrhelloworldevent6";
 	private static final String EVENT_CLASS_NAME = "org.openjdk.jmc.agent.test.InstrumentMe";
@@ -64,14 +64,14 @@ public class TestIncorrectMethodDescriptor {
 	private static final String INCORRECT_METHOD_DESCRIPTOR = "()Z";
 
 	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>{0}</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>" + EVENT_PATH
+			+ "<label>{0}</label>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>" + EVENT_PATH
 			+ "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>"
 			+ "<name>" + METHOD_NAME + "</name>" + "<descriptor>{1}</descriptor>" + "</method>"
 			+ "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
 
 	@Test
 	public void testCorrectMethodDescriptor() throws Exception {
-		String xmlDescription = MessageFormat.format(XML_DESCRIPTION, CORRECT_EVENT_NAME, CORRECT_METHOD_DESCRIPTOR);
+		String xmlDescription = MessageFormat.format(XML_DESCRIPTION, CORRECT_EVENT_LABEL, CORRECT_METHOD_DESCRIPTOR);
 
 		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(xmlDescription.getBytes()));
 		assertTrue(registry.hasPendingTransforms(Type.getInternalName(InstrumentMe.class)));
@@ -89,7 +89,7 @@ public class TestIncorrectMethodDescriptor {
 
 	@Test
 	public void testIncorrectMethodDescriptor() throws Exception {
-		String xmlDescription = MessageFormat.format(XML_DESCRIPTION, INCORRECT_EVENT_NAME,
+		String xmlDescription = MessageFormat.format(XML_DESCRIPTION, INCORRECT_EVENT_LABEL,
 				INCORRECT_METHOD_DESCRIPTOR);
 
 		TransformRegistry registry = DefaultTransformRegistry.from(new ByteArrayInputStream(xmlDescription.getBytes()));
