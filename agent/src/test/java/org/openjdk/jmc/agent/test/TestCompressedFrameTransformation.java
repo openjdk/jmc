@@ -17,7 +17,7 @@ public class TestCompressedFrameTransformation implements Opcodes {
 	private static final String XML_EVENT_DESCRIPTION = "<jfragent>" //
 			+ "<events>" // 
 			+ "<event id=\"test.compressed.frame.transformation\">" // 
-			+ "<name>Test Compressed Frame Transformation</name>" //
+			+ "<label>Test Compressed Frame Transformation</label>" //
 			+ "<description>agent instrumentation should be compatible with compressed frame types</description>" //
 			+ "<path>test/frames</path>" //
 			+ "<class>Target</class>" //

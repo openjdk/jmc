@@ -47,7 +47,7 @@ public class TestRetrieveEventProbes {
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 
 	private static final String XML_TEST_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"demo.jfr.test1\">"
-			+ "<name>JFR Hello World Event 1 </name>"
+			+ "<label>JFR Hello World Event 1 </label>"
 			+ "<description>Defined in the xml file and added by the agent.</description>"
 			+ "<path>demo/jfrhelloworldevent1</path>" + "<stacktrace>true</stacktrace>"
 			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>" + "<method>" + "<name>printHelloWorldJFR1</name>"

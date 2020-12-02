@@ -53,7 +53,7 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 public class TestDefaultTransformRegistry {
 
 	private static final String XML_EVENT_DESCRIPTION = "<event id=\"demo.jfr.test1\">"
-			+ "<name>JFR Hello World Event 1 %TEST_NAME% </name>"
+			+ "<label>JFR Hello World Event 1 %TEST_NAME% </label>"
 			+ "<description>Defined in the xml file and added by the agent.</description>"
 			+ "<path>demo/jfrhelloworldevent1</path>" + "<stacktrace>true</stacktrace>"
 			+ "<class>org.openjdk.jmc.agent.test.InstrumentMe</class>" + "<method>" + "<name>printHelloWorldJFR1</name>"

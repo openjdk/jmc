@@ -54,7 +54,7 @@ import org.openjdk.jmc.agent.test.util.TestToolkit;
 public class TestEmitOnlyOnException {
 
 	private static final String EVENT_ID = "demo.jfr.test";
-	private static final String EVENT_NAME = "JFR Emit on Exception Event %TEST_NAME%";
+	private static final String EVENT_LABEL = "JFR Emit on Exception Event %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Emit on Exception Event %TEST_NAME%";
 	private static final String EVENT_PATH = "demo/emitonexceptionevent";
 	private static final String EVENT_CLASS_NAME = "org.openjdk.jmc.agent.test.TestDummy";
@@ -63,15 +63,15 @@ public class TestEmitOnlyOnException {
 	private static final String METHOD_DESCRIPTOR = "()V";
 
 	private static final String XML_DESCRIPTION = "<jfragent>" + "<config>" + "<emitonexception>true</emitonexception>"
-			+ "</config>" + "<events>" + "<event id=\"" + EVENT_ID + "\">" + "<name>" + EVENT_NAME + "</name>"
+			+ "</config>" + "<events>" + "<event id=\"" + EVENT_ID + "\">" + "<label>" + EVENT_LABEL + "</label>"
 			+ "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>" + EVENT_PATH + "</path>"
 			+ "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>" + "<name>"
 			+ METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
-			+ "<location>WRAP</location>" + "</event>" + "<event id=\"" + EVENT_ID + "2" + "\">" + "<name>" + EVENT_NAME
-			+ "2" + "</name>" + "<description>" + EVENT_DESCRIPTION + "2" + "</description>" + "<path>" + EVENT_PATH
-			+ "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>" + "<method>"
-			+ "<name>" + METHOD_NAME_2 + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>" + "</method>"
-			+ "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+			+ "<location>WRAP</location>" + "</event>" + "<event id=\"" + EVENT_ID + "2" + "\">" + "<label>"
+			+ EVENT_LABEL + "2" + "</label>" + "<description>" + EVENT_DESCRIPTION + "2" + "</description>" + "<path>"
+			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
+			+ "<method>" + "<name>" + METHOD_NAME_2 + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
+			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
 
 	@Test
 	public void testEmitOnException() throws Exception {
