@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -61,13 +61,13 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.openjdk.jmc.agent.Agent;
+import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Method;
 import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
-import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.IOToolkit;
 import org.openjdk.jmc.agent.util.TypeUtils;
@@ -157,7 +157,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				if (XML_ELEMENT_NAME_EVENT.equals(element.getLocalPart())) {
 					TransformDescriptor td = parseTransformData(streamReader, globalDefaults);
 					if (validate(registry, td)) {
-						add(registry, td);
+						registry.add(td);
 					}
 					continue;
 				} else if (XML_ELEMENT_CONFIGURATION.equals(element.getLocalPart())) {
@@ -177,11 +177,11 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return registry;
 	}
 
-	private static void add(DefaultTransformRegistry registry, TransformDescriptor td) {
-		List<TransformDescriptor> transformDataList = registry.getTransformData(td.getClassName());
+	private void add(TransformDescriptor td) {
+		List<TransformDescriptor> transformDataList = transformData.get(td.getClassName());
 		if (transformDataList == null) {
 			transformDataList = new ArrayList<>();
-			registry.transformData.put(td.getClassName(), transformDataList);
+			transformData.put(td.getClassName(), transformDataList);
 		}
 		transformDataList.add(td);
 	}
@@ -454,7 +454,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 	@Override
 	public List<TransformDescriptor> getTransformData(String className) {
-		return transformData.get(className);
+		List<TransformDescriptor> data = transformData.get(className);
+		return data != null ? data : Collections.emptyList();
 	}
 
 	private boolean isPendingTransforms(List<TransformDescriptor> transforms) {
@@ -482,6 +483,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return builder.toString();
 	}
 
+	@Override
 	public Set<String> modify(String xmlDescription) {
 		try {
 			validateProbeDefinition(xmlDescription);
@@ -501,7 +503,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 							transformData.remove(td.getClassName());
 						}
 						if (validate(this, td)) {
-							add(this, td);
+							add(td);
 						}
 						continue;
 					} else if (XML_ELEMENT_CONFIGURATION.equals(element.getLocalPart())) {
@@ -528,6 +530,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		}
 	}
 
+	@Override
 	public Set<String> clearAllTransformData() {
 		Set<String> classNames = new HashSet<>(getClassNames());
 		transformData.clear();
@@ -538,22 +541,27 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
 	}
 
+	@Override
 	public Set<String> getClassNames() {
 		return Collections.unmodifiableSet(transformData.keySet());
 	}
 
+	@Override
 	public String getCurrentConfiguration() {
 		return currentConfiguration;
 	}
 
+	@Override
 	public void setCurrentConfiguration(String configuration) {
 		currentConfiguration = configuration;
 	}
 
+	@Override
 	public void setRevertInstrumentation(boolean shouldRevert) {
 		this.revertInstrumentation = shouldRevert;
 	}
 
+	@Override
 	public boolean isRevertIntrumentation() {
 		return revertInstrumentation;
 	}
