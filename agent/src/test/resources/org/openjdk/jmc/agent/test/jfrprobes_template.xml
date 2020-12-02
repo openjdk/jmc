@@ -47,7 +47,7 @@
 	</config>
 	<events>
 		<event id="demo.jfr.test1">
-			<name>JFR Hello World Event 1 %TEST_NAME%</name>
+			<label>JFR Hello World Event 1 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent.
 			</description>
 			<path>demo/jfrhelloworldevent1</path>
@@ -61,7 +61,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.test2">
-			<name>JFR Hello World Event 2 %TEST_NAME%</name>
+			<label>JFR Hello World Event 2 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the parameters.
 			</description>
@@ -94,7 +94,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.test11">
-			<name>JFR Hello World Event 11 %TEST_NAME%</name>
+			<label>JFR Hello World Event 11 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the value of static reference
 				'STATIC_STRING_FIELD'
@@ -132,7 +132,7 @@
 			</fields>
 		</event>
 		<event id="demo.jfr.test12">
-			<name>JFR Hello World Event 12 %TEST_NAME%</name>
+			<label>JFR Hello World Event 12 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the values of
 				'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and
@@ -161,7 +161,7 @@
 			</fields>
 		</event>
 		<event id="demo.jfr.test13">
-			<name>JFR Hello World Event 13 %TEST_NAME%</name>
+			<label>JFR Hello World Event 13 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the values of static
 				'STATIC_NULL_FIELD.STATIC_STRING_FIELD'
@@ -190,7 +190,7 @@
 			</fields>
 		</event>
 		<event id="demo.jfr.testI1">
-			<name>JFR Hello World Instance Event 1 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 1 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent.
 			</description>
 			<path>demo/jfrhelloworldeventI1</path>
@@ -204,7 +204,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.testI2">
-			<name>JFR Hello World Instance Event 2 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 2 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the parameters.
 			</description>
@@ -233,7 +233,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI3">
-			<name>JFR Hello World Instance Event 3 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 3 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the parameters.
 			</description>
@@ -254,7 +254,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI4">
-			<name>JFR Hello World Instance Event 4 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 4 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the parameters.
 			</description>
@@ -275,7 +275,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI5">
-			<name>JFR Hello World Instance Event 5 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 5 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the parameters.
 			</description>
@@ -296,7 +296,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI6">
-			<name>JFR Hello World Instance Event 6 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 6 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the return value.
 			</description>
@@ -314,7 +314,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI7">
-			<name>JFR Hello World Instance Event 7 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 7 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. The
 				original method contains a try-catch
 				clause.
@@ -328,7 +328,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI8">
-			<name>JFR Hello World Instance Event 8 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 8 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record even if an exception is raised.
 			</description>
@@ -342,7 +342,7 @@
 			<rethrow>true</rethrow>
 		</event>
 		<event id="demo.jfr.testI9">
-			<name>JFR Hello World Instance Event 9 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 9 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				not record if an exception is raised.
 			</description>
@@ -355,7 +355,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.testI10">
-			<name>JFR Hello World Instance Event 10 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 10 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record even if an exception is raised,
 				but should
@@ -372,7 +372,7 @@
 			<rethrow>true</rethrow>
 		</event>
 		<event id="demo.jfr.testI11">
-			<name>JFR Hello World Instance Event 11 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 11 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the value of instance reference
 				'instanceStringField'
@@ -408,7 +408,7 @@
 			</fields>
 		</event>
 		<event id="demo.jfr.testI12">
-			<name>JFR Hello World Instance Event 12 %TEST_NAME%</name>
+			<label>JFR Hello World Instance Event 12 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent. Should
 				record the values of various
 				references

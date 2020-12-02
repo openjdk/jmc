@@ -201,7 +201,7 @@ public class JFRLegacyEventClassGenerator {
 
 	private static void generateClassAnnotations(ClassWriter cw, JFRTransformDescriptor td) {
 		AnnotationVisitor av0 = cw.visitAnnotation("Lcom/oracle/jrockit/jfr/EventDefinition;", true); //$NON-NLS-1$
-		av0.visit("name", td.getEventName()); //$NON-NLS-1$
+		av0.visit("name", td.getEventLabel()); //$NON-NLS-1$
 		av0.visit("description", td.getEventDescription()); //$NON-NLS-1$
 		av0.visit("path", td.getEventPath()); //$NON-NLS-1$
 		av0.visit("stacktrace", td.isRecordStackTrace()); //$NON-NLS-1$

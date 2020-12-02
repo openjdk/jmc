@@ -34,7 +34,7 @@
 <jfragent>
 	<events>
 		<event id="demo.jfr.test1">
-			<name>JFR Hello World Event 1 %TEST_NAME%</name>
+			<label>JFR Hello World Event 1 %TEST_NAME%</label>
 			<description>Defined in the xml file and added by the agent.</description>
 			<path>demo/jfrhelloworldevent1</path>
 			<stacktrace>true</stacktrace>

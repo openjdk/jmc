@@ -252,7 +252,7 @@ public class JFREventClassGenerator {
 	private static void generateClassAnnotations(ClassWriter cw, JFRTransformDescriptor td) {
 		// Label
 		AnnotationVisitor av = cw.visitAnnotation("Ljdk/jfr/Label;", true);
-		av.visit("value", td.getEventName());
+		av.visit("value", td.getEventLabel());
 		av.visitEnd();
 
 		// Description

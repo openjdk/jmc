@@ -68,7 +68,7 @@ public class TestDefineEventProbes {
 
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController"; //$NON-NLS-1$
 	private static final String EVENT_ID = "demo.jfr.test6";
-	private static final String EVENT_NAME = "JFR Hello World Event 6 %TEST_NAME%";
+	private static final String EVENT_LABEL = "JFR Hello World Event 6 %TEST_NAME%";
 	private static final String EVENT_DESCRIPTION = "JFR Hello World Event 6 %TEST_NAME%";
 	private static final String EVENT_PATH = "demo/jfrhelloworldevent6";
 	private static final String EVENT_CLASS_NAME = "org.openjdk.jmc.agent.test.InstrumentMe";
@@ -76,7 +76,7 @@ public class TestDefineEventProbes {
 	private static final String METHOD_DESCRIPTOR = "()D";
 
 	private static final String XML_DESCRIPTION = "<jfragent>" + "<events>" + "<event id=\"" + EVENT_ID + "\">"
-			+ "<name>" + EVENT_NAME + "</name>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
+			+ "<label>" + EVENT_LABEL + "</label>" + "<description>" + EVENT_DESCRIPTION + "</description>" + "<path>"
 			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
 			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
 			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
@@ -116,7 +116,7 @@ public class TestDefineEventProbes {
 		Method method = new Method(METHOD_NAME, METHOD_DESCRIPTOR);
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("path", EVENT_PATH);
-		attributes.put("name", EVENT_NAME);
+		attributes.put("label", EVENT_LABEL);
 		attributes.put("description", EVENT_DESCRIPTION);
 		ReturnValue retVal = new ReturnValue(null, "", null, null, null);
 		JFRTransformDescriptor eventTd = new JFRTransformDescriptor(EVENT_ID,

@@ -49,7 +49,7 @@
 	<!-- Converter test event probes -->
 	<events>
 		<event id="demo.jfr.convertertest.String">
-			<name>ConverterEventString</name>
+			<label>ConverterEventString</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Gurka parameter to
 				String.
@@ -74,7 +74,7 @@
 			</method>
 		</event>
 		<event id="demo.jfr.convertertest.Int">
-			<name>ConverterEventInt</name>
+			<label>ConverterEventInt</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Gurka parameter to an
 				int.
@@ -100,7 +100,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Long">
-			<name>ConverterEventLong</name>
+			<label>ConverterEventLong</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Gurka parameter to a
 				long.
@@ -126,7 +126,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Float">
-			<name>ConverterEventFloat</name>
+			<label>ConverterEventFloat</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Gurka parameter to a
 				float.
@@ -151,7 +151,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.Double">
-			<name>ConverterEventDouble</name>
+			<label>ConverterEventDouble</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Gurka parameter to a
 				double.
@@ -177,7 +177,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.File">
-			<name>ConverterEventFile</name>
+			<label>ConverterEventFile</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the File parameter to a
 				String.
@@ -202,7 +202,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.URI">
-			<name>ConverterEventUri</name>
+			<label>ConverterEventUri</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the URI parameter to a
 				String using the standard toString
@@ -226,7 +226,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.ConverterEventNumber">
-			<name>ConverterEventNumber</name>
+			<label>ConverterEventNumber</label>
 			<description>Defined in the xml file and added by the agent. Should
 				transform the Number parameter to a
 				double.
@@ -253,7 +253,7 @@
 
 		<!-- Multi and custom converters -->
 		<event id="demo.jfr.convertertest.ConverterEventMultiCustomInt">
-			<name>ConverterEventMultiCustomInt</name>
+			<label>ConverterEventMultiCustomInt</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -276,7 +276,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.ConverterEventMultiCustomDouble">
-			<name>ConverterEventMultiCustomDouble</name>
+			<label>ConverterEventMultiCustomDouble</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -299,7 +299,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultLong">
-			<name>ConverterEventMultiDefaultLong</name>
+			<label>ConverterEventMultiDefaultLong</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -322,7 +322,7 @@
 			<location>WRAP</location>
 		</event>
 		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultDouble">
-			<name>ConverterEventMultiDefaultDouble</name>
+			<label>ConverterEventMultiDefaultDouble</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
