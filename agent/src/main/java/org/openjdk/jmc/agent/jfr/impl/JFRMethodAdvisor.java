@@ -284,13 +284,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			ReturnValue returnValue = transformDescriptor.getReturnValue();
 			if (returnValue != null) {
-				emitSettingReturnParam(opcode, returnValue);
+				try {
+					emitSettingReturnParam(opcode, returnValue);
+				} catch (MalformedConverterException e) {
+					throw new RuntimeException();
+				}
 			}
 		}
 		commitEvent();
 	}
 
-	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) {
+	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) throws MalformedConverterException {
 		if (returnTypeRef.getSize() == 1) {
 			dup();
 			mv.visitVarInsn(ALOAD, eventLocal);
@@ -301,6 +305,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
+
+		Type returnType = returnTypeRef;
+		if (returnValue.hasConverter()) {
+			returnType = convertify(mv, returnValue, returnType);
+		} else {
+			if (TypeUtils.shouldStringify(returnValue, returnType)) {
+				TypeUtils.stringify(mv);
+				returnType = TypeUtils.STRING_TYPE;
+			}
+		}
+
 		writeAttribute(returnValue, returnTypeRef);
 	}
 
