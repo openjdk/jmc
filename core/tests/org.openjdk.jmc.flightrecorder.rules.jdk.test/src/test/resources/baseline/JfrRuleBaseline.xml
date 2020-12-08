@@ -1013,9 +1013,8 @@ This recording is only 9.903 s long, consider creating a recording longer than 
 </rule>
 <rule>
 <id>OverAggressiveRecordingSetting</id>
-<severity>Information</severity>
-<summary>These following event types had no threshold: &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</summary>
-<explanation>Event types without threshold can lead to quite a lot of events being generated, possibly translating to higher overhead. If this was not intended, please check the settings in the template for future recordings.</explanation>
+<severity>OK</severity>
+<summary>No problems were found with the recording settings.</summary>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -2057,9 +2056,8 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
 </rule>
 <rule>
 <id>OverAggressiveRecordingSetting</id>
-<severity>Information</severity>
-<summary>These following event types had no threshold: &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</summary>
-<explanation>Event types without threshold can lead to quite a lot of events being generated, possibly translating to higher overhead. If this was not intended, please check the settings in the template for future recordings.</explanation>
+<severity>OK</severity>
+<summary>No problems were found with the recording settings.</summary>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -2343,9 +2341,8 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
 </rule>
 <rule>
 <id>OverAggressiveRecordingSetting</id>
-<severity>Information</severity>
-<summary>These following event types had no threshold: &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</summary>
-<explanation>Event types without threshold can lead to quite a lot of events being generated, possibly translating to higher overhead. If this was not intended, please check the settings in the template for future recordings.</explanation>
+<severity>OK</severity>
+<summary>No problems were found with the recording settings.</summary>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
@@ -2943,9 +2940,8 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
 </rule>
 <rule>
 <id>OverAggressiveRecordingSetting</id>
-<severity>Information</severity>
-<summary>These following event types had no threshold: &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</summary>
-<explanation>Event types without threshold can lead to quite a lot of events being generated, possibly translating to higher overhead. If this was not intended, please check the settings in the template for future recordings.</explanation>
+<severity>OK</severity>
+<summary>No problems were found with the recording settings.</summary>
 </rule>
 <rule>
 <id>PasswordsInArguments</id>
