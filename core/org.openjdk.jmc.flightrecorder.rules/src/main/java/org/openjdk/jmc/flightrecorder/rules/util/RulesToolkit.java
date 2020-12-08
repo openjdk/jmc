@@ -1011,7 +1011,8 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Gets a {@link IResult} object representing a not applicable result due to a missing attribute.
+	 * Gets a {@link IResult} object representing a not applicable result due to a missing
+	 * attribute.
 	 *
 	 * @param rule
 	 *            the rule which could not be evaluated

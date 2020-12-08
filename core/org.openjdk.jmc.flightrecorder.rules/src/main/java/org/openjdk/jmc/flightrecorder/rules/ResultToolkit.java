@@ -85,9 +85,11 @@ public class ResultToolkit {
 									collection
 											.append(Encode.forHtml(((IDisplayable) o).displayUsing(IDisplayable.AUTO)));
 								} else if (o instanceof IMCFrame) {
-									collection.append(Encode.forHtml(StacktraceFormatToolkit.formatFrame((IMCFrame) o, DEFAULT_SEPARATOR)));
+									collection.append(Encode.forHtml(
+											StacktraceFormatToolkit.formatFrame((IMCFrame) o, DEFAULT_SEPARATOR)));
 								} else if (o instanceof IMCStackTrace) {
-									collection.append(Encode.forHtml(FormatToolkit.getHumanReadable((IMCStackTrace) o)));
+									collection
+											.append(Encode.forHtml(FormatToolkit.getHumanReadable((IMCStackTrace) o)));
 								} else {
 									collection.append(Encode.forHtml(typedResult.format(o)));
 								}
@@ -112,7 +114,8 @@ public class ResultToolkit {
 								s = s.replace(group, encodeIfNeeded(StacktraceFormatToolkit
 										.formatFrame((IMCFrame) typedResultInstance, DEFAULT_SEPARATOR), withHtml));
 							} else if (typedResultInstance instanceof IMCStackTrace) {
-								s = s.replace(group, encodeIfNeeded(FormatToolkit.getHumanReadable((IMCStackTrace) typedResultInstance), withHtml));
+								s = s.replace(group, encodeIfNeeded(
+										FormatToolkit.getHumanReadable((IMCStackTrace) typedResultInstance), withHtml));
 							} else {
 								s = s.replace(group, encodeIfNeeded(typedResult.format(typedResultInstance), withHtml));
 							}

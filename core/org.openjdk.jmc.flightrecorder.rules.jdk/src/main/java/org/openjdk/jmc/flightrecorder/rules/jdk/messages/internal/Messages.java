@@ -289,7 +289,7 @@ public class Messages {
 	public static final String GcFreedRatioRule_RESULT_NOT_OK = "GcFreedRatioRule_RESULT_NOT_OK"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RESULT_OK = "GcFreedRatioRule_RESULT_OK"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RESULT_SHORT_DESCRIPTION = "GcFreedRatioRule_RESULT_SHORT_DESCRIPTION"; //$NON-NLS-1$
-	public static final String GarbageCollectionInfo_RULE_NAME="GarbageCollectionInfo_RULE_NAME"; //$NON-NLS-1$
+	public static final String GarbageCollectionInfo_RULE_NAME = "GarbageCollectionInfo_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RULE_NAME = "GcFreedRatioRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE = "GcFreedRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE_DESC = "GcFreedRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$

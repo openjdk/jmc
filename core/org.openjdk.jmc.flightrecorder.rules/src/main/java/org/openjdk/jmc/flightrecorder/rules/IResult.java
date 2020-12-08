@@ -37,7 +37,9 @@ import java.util.Collection;
 import org.openjdk.jmc.common.util.TypedPreference;
 
 /**
- * Interface specifying result objects for use with {@link IRule} implementations. The default use is to use {@link ResultBuilder}, but this interface exists to allow further customization by downstream users.
+ * Interface specifying result objects for use with {@link IRule} implementations. The default use
+ * is to use {@link ResultBuilder}, but this interface exists to allow further customization by
+ * downstream users.
  */
 public interface IResult {
 
@@ -56,39 +58,49 @@ public interface IResult {
 	IRule getRule();
 
 	/**
-	 * A short, one sentence, summary of the results of the rule evaluation.
-	 * This is intended to give a very quick overview of what the rule detected. If the severity is {@code OK} or {@code NA} this should not be expected to contain any information, but it may. If the severity is {@code INFO} or {@code WARNING} this is expected to provide a very short summary of the found problem.
+	 * A short, one sentence, summary of the results of the rule evaluation. This is intended to
+	 * give a very quick overview of what the rule detected. If the severity is {@code OK} or
+	 * {@code NA} this should not be expected to contain any information, but it may. If the
+	 * severity is {@code INFO} or {@code WARNING} this is expected to provide a very short summary
+	 * of the found problem.
 	 * 
 	 * @return a short text describing the findings of the rule
 	 */
 	String getSummary();
 
 	/**
-	 * A more detailed explanation of what kind of problem was identified and why the identified issue is a problem. This field is always optional, but when it exists it may be very long and detailed.
+	 * A more detailed explanation of what kind of problem was identified and why the identified
+	 * issue is a problem. This field is always optional, but when it exists it may be very long and
+	 * detailed.
 	 * 
 	 * @return a detailed explanation of why and how the result is relevant
 	 */
 	String getExplanation();
 
 	/**
-	 * An attempted solution for the identified problem. This field is always optional, but if included it can e.g. specify new JVM flags or suggest changes in the source code.
+	 * An attempted solution for the identified problem. This field is always optional, but if
+	 * included it can e.g. specify new JVM flags or suggest changes in the source code.
 	 * 
 	 * @return a text describing a possible solution for the found problem
 	 */
 	String getSolution();
 
 	/**
-	 * An optional field potentially used for rules that have a set of recording settings that may help the rule return more detailed information.
+	 * An optional field potentially used for rules that have a set of recording settings that may
+	 * help the rule return more detailed information.
 	 * 
 	 * @return a set of recording settings
 	 */
 	Collection<IRecordingSetting> suggestRecordingSettings();
 
 	/**
-	 * Returns a collection of typed instances of a result contained in this result instance, i.e. is contained in {@code IRule.getResults()}.
+	 * Returns a collection of typed instances of a result contained in this result instance, i.e.
+	 * is contained in {@code IRule.getResults()}.
 	 * 
-	 * @param <T> a type parameter
-	 * @param result the typed result that is to be retrieved
+	 * @param <T>
+	 *            a type parameter
+	 * @param result
+	 *            the typed result that is to be retrieved
 	 * @return a typed result instance
 	 */
 	<T> Collection<T> getResult(TypedCollectionResult<T> result);
@@ -96,17 +108,23 @@ public interface IResult {
 	/**
 	 * Returns a preference value that was used when evaluating the rule for this particular result.
 	 * 
-	 * @param <T> a type parameter
- 	 * @param preference a preference used by this rule, i.e. contained in {@code IRule.getConfigurationAttributes()}
+	 * @param <T>
+	 *            a type parameter
+	 * @param preference
+	 *            a preference used by this rule, i.e. contained in
+	 *            {@code IRule.getConfigurationAttributes()}
 	 * @return a preference value
 	 */
 	<T> T getPreference(TypedPreference<T> preference);
 
 	/**
-	 * Returns a typed instance of a result contained in this result instance, i.e. is contained in {@code IRule.getResults()}.
+	 * Returns a typed instance of a result contained in this result instance, i.e. is contained in
+	 * {@code IRule.getResults()}.
 	 * 
-	 * @param <T> a type parameter
-	 * @param result the typed result that is to be retrieved
+	 * @param <T>
+	 *            a type parameter
+	 * @param result
+	 *            the typed result that is to be retrieved
 	 * @return a typed result instance
 	 */
 	<T> T getResult(TypedResult<T> result);
