@@ -219,9 +219,9 @@ public class RulesHtmlToolkit {
 		String summary = result.getSummary() == null ? "" : Encode.forHtml(result.getSummary()); //$NON-NLS-1$
 		String explanation = result.getExplanation() == null ? "" : Encode.forHtml(result.getExplanation()); //$NON-NLS-1$
 		String solution = result.getSolution() == null ? "" : Encode.forHtml(result.getSolution()); //$NON-NLS-1$
-		summary = ResultToolkit.populateMessage(result, result.getSummary(), true);
-		explanation = ResultToolkit.populateMessage(result, result.getExplanation(), true);
-		solution = ResultToolkit.populateMessage(result, result.getSolution(), true);
+		summary = ResultToolkit.populateMessage(result, summary, true);
+		explanation = ResultToolkit.populateMessage(result, explanation, true);
+		solution = ResultToolkit.populateMessage(result, solution, true);
 		String description = "<div class=\"longDescription\">" + summary + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$
 		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
