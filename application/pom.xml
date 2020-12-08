@@ -86,6 +86,7 @@
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.flameview</module>
+		<module>org.openjdk.jmc.flightrecorder.graphview</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.g1</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.jfx</module>
 		<module>org.openjdk.jmc.flightrecorder.metadata</module>

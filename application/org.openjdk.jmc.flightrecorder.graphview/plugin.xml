@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.ui.views">
+		<view
+          allowMultiple="false"
+          category="org.openjdk.jmc.ui.main"
+          class="org.openjdk.jmc.flightrecorder.graphview.views.GraphView"
+          icon="icons/graph.png"
+          id="org.openjdk.jmc.flightrecorder.graphview"
+          name="Graph View"
+          restorable="true">
+		</view>
+	</extension>
+</plugin>
