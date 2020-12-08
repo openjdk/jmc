@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -91,12 +91,12 @@ public class SocketWriteRule implements IRule {
 	public static final TypedResult<String> LONGEST_WRITE_ADDRESS = new TypedResult<>("longestWriteHost", //$NON-NLS-1$
 			"Longest Write (Host)", "The remote host of the socket write that took the longest time.",
 			UnitLookup.PLAIN_TEXT, String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalWriteForLongest",
-			"Total Write (Top Host)", "The total duration of all socket writes for the host with the longest write.",
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalWriteForLongest", //$NON-NLS-1$
+			"Total Write (Top Host)", "The total duration of all socket writes for the host with the longest write.", //$NON-NLS-1$
 			UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketWrite",
+	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketWrite", //$NON-NLS-1$
 			"Average Socket Write", "The average duration of all socket writes.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketWrite",
+	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketWrite", //$NON-NLS-1$
 			"Total Socket Write", "The total duration of all socket writes.", UnitLookup.TIMESPAN, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(

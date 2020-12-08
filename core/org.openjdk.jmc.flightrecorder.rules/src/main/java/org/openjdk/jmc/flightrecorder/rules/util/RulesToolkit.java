@@ -556,11 +556,11 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Creates a {@link Result} object for the given {@link IRule} object representing a result
+	 * Creates a {@link IResult} object for the given {@link IRule} object representing a result
 	 * where there are too few events to properly evaluate a rule.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @return an object describing that the rule could not be evaluated due to there not being
 	 *         enough data
 	 */
@@ -569,11 +569,11 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
+	 * Creates a {@link IResult} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @param message
 	 *            the description of the result
 	 * @return an object representing a generic not applicable result for the provided rule
@@ -583,11 +583,11 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
+	 * Creates a {@link IResult} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @param shortMessage
 	 *            the description of the result, as a short description
 	 * @param longMessage
@@ -1011,7 +1011,7 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Gets a {@link Result} object representing a not applicable result due to a missing attribute.
+	 * Gets a {@link IResult} object representing a not applicable result due to a missing attribute.
 	 *
 	 * @param rule
 	 *            the rule which could not be evaluated

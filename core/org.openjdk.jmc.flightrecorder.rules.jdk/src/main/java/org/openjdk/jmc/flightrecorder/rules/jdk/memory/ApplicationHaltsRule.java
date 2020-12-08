@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,12 +88,12 @@ public class ApplicationHaltsRule extends AbstractRule {
 			"Halts Ratio", "The percent of time spent halted during the entire recording.", UnitLookup.PERCENTAGE,
 			IQuantity.class);
 	public static final TypedResult<IQuantity> NON_GC_HALTS_RATIO = new TypedResult<>("nonGcApplicationHaltsRatio", //$NON-NLS-1$
-			"Non-GC Halts Ratio", "The percent of time spent halted on other activities than garbage collection.",
+			"Non-GC Halts Ratio", "The percent of time spent halted on activities other than garbage collection.",
 			UnitLookup.PERCENTAGE, IQuantity.class);
 	public static final TypedResult<IQuantity> TOTAL_NON_GC_HALTS_RATIO = new TypedResult<>(
 			"totalNonGcApplicationHaltsRatio", //$NON-NLS-1$
 			"Non-GC Halts Ratio",
-			"The percent of time spent halted on other activities than garbage collection during the entire recording.",
+			"The percent of time spent halted on activities other than garbage collection during the entire recording.",
 			UnitLookup.PERCENTAGE, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(

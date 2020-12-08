@@ -41,7 +41,6 @@ import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
 import java.util.Arrays;
-import java.text.MessageFormat;
 import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.IMCThread;

@@ -102,11 +102,11 @@ public class GcFreedRatioRule extends AbstractRule {
 			"Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", //$NON-NLS-1$
 			"The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class);
-	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond",
+	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond", //$NON-NLS-1$
 			"GC Freed Per Second", "The amount of memory freed per second.", UnitLookup.MEMORY, IQuantity.class);
-	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window",
+	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window", //$NON-NLS-1$
 			"The window where the most amount of memory freed occurred.", UnitLookup.TIMERANGE);
-	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset",
+	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset", //$NON-NLS-1$
 			"The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(

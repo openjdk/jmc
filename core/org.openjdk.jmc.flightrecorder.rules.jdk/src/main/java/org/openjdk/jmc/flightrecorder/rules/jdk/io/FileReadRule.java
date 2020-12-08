@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,12 +88,12 @@ public class FileReadRule implements IRule {
 	public static final TypedResult<String> LONGEST_READ_PATH = new TypedResult<>("longestReadPath", //$NON-NLS-1$
 			"Longest Read (Path)", "The path of the file read that took the longest time.", UnitLookup.PLAIN_TEXT,
 			String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest",
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest", //$NON-NLS-1$ 
 			"Total Read (Top File)", "The total duration of all file reads for the file with the longest read.",
 			UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_FILE_READ = new TypedResult<>("averageFileRead",
+	public static final TypedResult<IQuantity> AVERAGE_FILE_READ = new TypedResult<>("averageFileRead", //$NON-NLS-1$
 			"Average File Read", "The average duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_FILE_READ = new TypedResult<>("totalFileRead", "Total File Read",
+	public static final TypedResult<IQuantity> TOTAL_FILE_READ = new TypedResult<>("totalFileRead", "Total File Read", //$NON-NLS-1$
 			"The total duration of all file reads.", UnitLookup.TIMESPAN, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(

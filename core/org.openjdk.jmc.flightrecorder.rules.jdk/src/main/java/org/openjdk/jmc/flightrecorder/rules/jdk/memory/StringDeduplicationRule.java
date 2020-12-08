@@ -211,7 +211,7 @@ public class StringDeduplicationRule extends AbstractRule {
 			String objectCountEventType = (objectCountAvail == AVAILABLE) ? JdkTypeIDs.OBJECT_COUNT
 					: JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC;
 
-			return getLivesetRatioResult(items, stringInternalArrayType, stringInternalArrayTypeFilter,
+			return getLiveSetRatioResult(items, stringInternalArrayType, stringInternalArrayTypeFilter,
 					averageStringSize, stringLivesetRatioAndHeapUsageLimit, objectCountEventType, heapInfo,
 					heapUsedRatio, extraCompatInfo, vp);
 		} else {
@@ -222,7 +222,7 @@ public class StringDeduplicationRule extends AbstractRule {
 		// TODO: Check free physical memory?
 	}
 
-	private IResult getLivesetRatioResult(
+	private IResult getLiveSetRatioResult(
 		IItemCollection items, String stringInternalArrayType, IItemFilter stringInternalArrayTypeFilter,
 		IQuantity averageStringSize, IQuantity stringLivesetRatioAndHeapUsageLimit, String objectCountEventType,
 		String heapInfo, IQuantity heapUsedRatio, String extraGcInfo, IPreferenceValueProvider vp) {

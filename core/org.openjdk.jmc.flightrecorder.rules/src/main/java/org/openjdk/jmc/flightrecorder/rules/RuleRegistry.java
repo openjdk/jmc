@@ -70,15 +70,15 @@ public class RuleRegistry {
 			return permanentMark;
 		}
 
-		void temporarilyMark() {
+		void setTemporarilyMark() {
 			this.temporaryMark = true;
 		}
 
-		void removeTemporaryMark() {
+		void resetTemporaryMark() {
 			temporaryMark = false;
 		}
 
-		void permanentlyMark() {
+		void setPermanentlyMark() {
 			this.permanentMark = true;
 		}
 	}
@@ -105,12 +105,12 @@ public class RuleRegistry {
 			if (vertex.isTemporarilyMarked()) {
 				throw new RuntimeException("Non-DAG IRule dependency graph detected!"); //$NON-NLS-1$
 			}
-			vertex.temporarilyMark();
+			vertex.setTemporarilyMark();
 			for (Vertex v : vertex.edges) {
 				visit(v, orderedList);
 			}
-			vertex.removeTemporaryMark();
-			vertex.permanentlyMark();
+			vertex.resetTemporaryMark();
+			vertex.setPermanentlyMark();
 			orderedList.add(0, vertex.rule);
 		}
 

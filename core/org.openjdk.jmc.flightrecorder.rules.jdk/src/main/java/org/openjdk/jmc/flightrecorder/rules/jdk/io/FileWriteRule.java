@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -82,14 +82,14 @@ public class FileWriteRule implements IRule {
 			"Longest Write (Time)", "The longest time it took to perform a file write.", UnitLookup.TIMESPAN,
 			IQuantity.class);
 	public static final TypedResult<String> LONGEST_WRITE_PATH = new TypedResult<>("longestWritePath", //$NON-NLS-1$
-			"Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT,
+			"Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT, //$NON-NLS-1$
 			String.class);
-	public static final TypedResult<IQuantity> LONGEST_TOTAL_WRITE = new TypedResult<>("totalWriteForLongest",
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_WRITE = new TypedResult<>("totalWriteForLongest", //$NON-NLS-1$
 			"Total Write (Top File)", "The total duration of all file writes for the file with the longest write.",
 			UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> AVERAGE_FILE_WRITE = new TypedResult<>("averageFileWrite",
+	public static final TypedResult<IQuantity> AVERAGE_FILE_WRITE = new TypedResult<>("averageFileWrite", //$NON-NLS-1$
 			"Average File Write", "The average duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_FILE_WRITE = new TypedResult<>("totalFileWrite",
+	public static final TypedResult<IQuantity> TOTAL_FILE_WRITE = new TypedResult<>("totalFileWrite", //$NON-NLS-1$
 			"Total File Write", "The total duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(

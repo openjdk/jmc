@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.latency;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -92,6 +91,8 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuil
  * been more than 15 revocations (can be configured) for a particular class.
  */
 public final class BiasedLockingRevocationRule implements IRule {
+
+	private static final String RESULT_ID = "biasedLockingRevocation"; //$NON-NLS-1$
 	public static final TypedPreference<IQuantity> WARNING_LIMIT = new TypedPreference<>(
 			"biasedRevocation.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.BiasedLockingRevocationRule_CONFIG_WARNING_LIMIT),
@@ -116,7 +117,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 			"Revoked Classes", "Revoked Classes.", UnitLookup.CLASS, IMCType.class);
 	public static final TypedCollectionResult<ClassEntry> REVOCATION_CLASSES = new TypedCollectionResult<>(
 			"revocationClasses", "Revocation Classes", "Revocation Classes", ClassEntry.CLASS_ENTRY, ClassEntry.class); //$NON-NLS-1$
-	public static final TypedCollectionResult<String> FILTERED_TYPES = new TypedCollectionResult<>("filteredTypes",
+	public static final TypedCollectionResult<String> FILTERED_TYPES = new TypedCollectionResult<>("filteredTypes", //$NON-NLS-1$
 			"Filtered Types", "Types that were filtered out.", UnitLookup.PLAIN_TEXT, String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
@@ -315,7 +316,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 
 	@Override
 	public String getId() {
-		return "biasedLockingRevocation"; //$NON-NLS-1$
+		return RESULT_ID;
 	}
 
 	@Override

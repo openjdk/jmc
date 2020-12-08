@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,7 +32,6 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.latency;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +40,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -55,7 +53,6 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
@@ -74,11 +71,11 @@ public final class BiasedLockingRevocationPauseRule implements IRule {
 			Messages.getString(Messages.BiasedLockingRevocationPauseRule_CONFIG_WARNING_LIMIT_LONG),
 			UnitLookup.TIMESPAN, UnitLookup.MILLISECOND.quantity(100));
 
-	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(INFO_LIMIT);
-
 	public static final TypedResult<IQuantity> REVOCATION_TIME = new TypedResult<>("revocationTime", "Revocation Time", //$NON-NLS-1$
 			"Time spent revoking biased locks.", UnitLookup.TIMESPAN, IQuantity.class);
 
+	private static final String RESULT_ID = "biasedLockingRevocationPause"; //$NON-NLS-1$
+	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(INFO_LIMIT);
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
 			.<TypedResult<?>> asList(TypedResult.SCORE, REVOCATION_TIME);
 
@@ -128,7 +125,7 @@ public final class BiasedLockingRevocationPauseRule implements IRule {
 
 	@Override
 	public String getId() {
-		return "biasedLockingRevocationPause"; //$NON-NLS-1$
+		return RESULT_ID;
 	}
 
 	@Override

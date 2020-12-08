@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -79,10 +79,10 @@ public class ManyRunningProcessesRule implements IRule {
 			.addEventType(JdkTypeIDs.PROCESSES, EventAvailability.AVAILABLE).build();
 
 	public static final TypedResult<IQuantity> COMPETING_PROCESS_COUNT = new TypedResult<>("competingProcessCount", //$NON-NLS-1$
-			"Competing Process Count", "The number of other processes running at the same time on the same system.",
+			"Competing Process Count", "The number of other processes running at the same time on the same system.", //$NON-NLS-1$
 			UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedResult<IQuantity> COMPETING_PROCESS_TIME = new TypedResult<>("competingProcessTime", //$NON-NLS-1$
-			"Competing Process Time", "The timestamp when the number of competing processes was at the maximum.",
+			"Competing Process Time", "The timestamp when the number of competing processes was at the maximum.", //$NON-NLS-1$
 			UnitLookup.TIMESTAMP, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
