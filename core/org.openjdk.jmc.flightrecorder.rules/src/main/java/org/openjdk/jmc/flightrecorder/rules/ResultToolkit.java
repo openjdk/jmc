@@ -38,6 +38,9 @@ import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.IMCStackTrace;
+import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -81,6 +84,10 @@ public class ResultToolkit {
 								if (o instanceof IDisplayable) {
 									collection
 											.append(Encode.forHtml(((IDisplayable) o).displayUsing(IDisplayable.AUTO)));
+								} else if (o instanceof IMCFrame) {
+									collection.append(Encode.forHtml(StacktraceFormatToolkit.formatFrame((IMCFrame) o, DEFAULT_SEPARATOR)));
+								} else if (o instanceof IMCStackTrace) {
+									collection.append(Encode.forHtml(FormatToolkit.getHumanReadable((IMCStackTrace) o)));
 								} else {
 									collection.append(Encode.forHtml(typedResult.format(o)));
 								}
@@ -104,6 +111,8 @@ public class ResultToolkit {
 							} else if (typedResultInstance instanceof IMCFrame) {
 								s = s.replace(group, encodeIfNeeded(StacktraceFormatToolkit
 										.formatFrame((IMCFrame) typedResultInstance, DEFAULT_SEPARATOR), withHtml));
+							} else if (typedResultInstance instanceof IMCStackTrace) {
+								s = s.replace(group, encodeIfNeeded(FormatToolkit.getHumanReadable((IMCStackTrace) typedResultInstance), withHtml));
 							} else {
 								s = s.replace(group, encodeIfNeeded(typedResult.format(typedResultInstance), withHtml));
 							}
