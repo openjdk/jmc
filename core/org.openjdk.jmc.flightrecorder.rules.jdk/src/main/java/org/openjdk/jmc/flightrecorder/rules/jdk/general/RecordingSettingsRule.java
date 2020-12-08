@@ -74,14 +74,14 @@ public class RecordingSettingsRule implements IRule {
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		// TODO: We might want to re-write this rule entirely to provide more detailed TypedResults
-		String[] names = RulesToolkit.getTypesWithZeroThreshold(items, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.MONITOR_ENTER)
-				.split(","); //$NON-NLS-1$
-		if (names != null && names.length > 0) {
+		String names = RulesToolkit.getTypesWithZeroThreshold(items, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.MONITOR_ENTER);
+		if (names != null && !names.isEmpty()) {
+			String[] types = names.split(","); //$NON-NLS-1$
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 					.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO))
 					.setExplanation(
 							Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_TEXT_INFO_LONG))
-					.addResult(NO_THRESHOLD_EVENT_TYPES, Arrays.asList(names)).build();
+					.addResult(NO_THRESHOLD_EVENT_TYPES, Arrays.asList(types)).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.OverAggressiveRecordingSettingRuleFactory_RULE_TEXT_OK))
