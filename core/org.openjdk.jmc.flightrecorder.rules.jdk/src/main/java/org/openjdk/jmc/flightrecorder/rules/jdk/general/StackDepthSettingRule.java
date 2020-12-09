@@ -72,6 +72,8 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 public class StackDepthSettingRule implements IRule {
 
+	private static final IQuantity DEFAULT_STACK_DEPTH_SETTING = UnitLookup.NUMBER_UNITY.quantity(64);
+
 	public static class StackDepthTruncationData implements IDisplayable {
 
 		private final IQuantity percentTruncated;
@@ -104,8 +106,8 @@ public class StackDepthSettingRule implements IRule {
 	public static final TypedCollectionResult<StackDepthTruncationData> TRUNCATED_TRACES = new TypedCollectionResult<>(
 			"truncatedTraces", "Truncated Traces", "The types that had truncated stacktraces.", TRUNCATION_DATA, //$NON-NLS-1$
 			StackDepthTruncationData.class);
-	public static final TypedResult<String> STACK_DEPTH = new TypedResult<>("stackdepth", "Stackdepth", //$NON-NLS-1$
-			"The maximum stack depth before the trace is truncated.", UnitLookup.PLAIN_TEXT, String.class);
+	public static final TypedResult<IQuantity> STACK_DEPTH = new TypedResult<>("stackdepth", "Stackdepth", //$NON-NLS-1$
+			"The maximum stack depth before the trace is truncated.", UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedResult<IQuantity> TRUNCATION_RATIO = new TypedResult<>("truncationRatio", //$NON-NLS-1$
 			"Truncation Ratio", "The percentage of stacktraces that were truncated.", UnitLookup.PERCENTAGE,
 			IQuantity.class);
@@ -159,9 +161,10 @@ public class StackDepthSettingRule implements IRule {
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
 			String explanation = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG);
 			double score = RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25);
+			IQuantity stackDepthSetting = stackDepthValue == null ? DEFAULT_STACK_DEPTH_SETTING : UnitLookup.NUMBER_UNITY.quantity(Long.parseLong(stackDepthValue));
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO))
-					.setExplanation(explanation).addResult(STACK_DEPTH, stackDepthValue)
+					.setExplanation(explanation).addResult(STACK_DEPTH, stackDepthSetting)
 					.addResult(TRUNCATED_TRACES, truncationData)
 					.addResult(TRUNCATION_RATIO, UnitLookup.PERCENT_UNITY.quantity(truncatedTracesRatio)).build();
 		}
