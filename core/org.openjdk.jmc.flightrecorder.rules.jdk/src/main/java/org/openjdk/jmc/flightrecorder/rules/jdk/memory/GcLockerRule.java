@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,30 +34,35 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
-import static org.openjdk.jmc.common.unit.UnitLookup.PERCENT_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
+@DependsOn(value = GarbageCollectionInfoRule.class)
 public class GcLockerRule implements IRule {
 	private static final String GC_LOCKER_RESULT_ID = "GcLocker"; //$NON-NLS-1$
 
@@ -67,45 +72,51 @@ public class GcLockerRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(GC_LOCKER_RATIO_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.GARBAGE_COLLECTION);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.GARBAGE_COLLECTION);
-		}
+	public static final TypedResult<IQuantity> GC_LOCKER_RATIO = new TypedResult<>("gcLockerRatio", "GC Locker Ratio", //$NON-NLS-1$
+			"Ratio of GC locker caused GCs to total GCs.", UnitLookup.PERCENTAGE, IQuantity.class);
 
-		GarbageCollectionsInfo aggregate = items.getAggregate(GarbageCollectionsInfo.GC_INFO_AGGREGATOR);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, GC_LOCKER_RATIO);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+		GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
 		if (aggregate != null) {
-			return getGcLockerResult(aggregate.getGcLockers(), aggregate.getGcCount(),
-					valueProvider.getPreferenceValue(GC_LOCKER_RATIO_LIMIT));
+			int gcLockers = aggregate.getGcLockers();
+			if (gcLockers > 0) {
+				int gcCount = aggregate.getGcCount();
+				IQuantity limit = valueProvider.getPreferenceValue(GC_LOCKER_RATIO_LIMIT);
+				double ratio = gcLockers / gcCount;
+				double score = RulesToolkit.mapExp74(ratio, limit.doubleValue());
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(GC_LOCKER_RATIO, UnitLookup.PERCENT_UNITY.quantity(ratio)).build();
+			} else {
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK)).build();
+			}
 		} else {
-			return new Result(this, -1, Messages.getString(Messages.GcLockerRule_TEXT_NA));
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
-	}
-
-	private Result getGcLockerResult(double gcLockers, double totalCcCount, IQuantity limit) {
-		if (gcLockers > 0) {
-			double ratio = gcLockers / totalCcCount;
-			double score = RulesToolkit.mapExp74(ratio, limit.doubleValue());
-			String message = MessageFormat.format(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO),
-					PERCENT_UNITY.quantity(ratio).displayUsing(IDisplayable.AUTO));
-			return new Result(this, score, message, Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO_LONG),
-					JdkQueries.GARBAGE_COLLECTION);
-		} else {
-			return new Result(this, 0, Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK), null,
-					JdkQueries.GARBAGE_COLLECTION);
-		}
 	}
 
 	@Override
@@ -126,5 +137,15 @@ public class GcLockerRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.GARBAGE_COLLECTION;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

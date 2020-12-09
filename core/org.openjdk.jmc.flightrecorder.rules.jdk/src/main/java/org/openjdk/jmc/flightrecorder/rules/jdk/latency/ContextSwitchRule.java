@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -53,12 +54,17 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class ContextSwitchRule implements IRule {
 
@@ -77,28 +83,30 @@ public class ContextSwitchRule implements IRule {
 			Messages.getString(Messages.ContextSwitchRule_AGGR_MAX_BLOCKS), null, JdkAttributes.MONITOR_ADDRESS,
 			JdkAggregators.TOTAL_BLOCKED_COUNT);
 
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CONTEXT_SWITCH_RATE, EventAvailability.AVAILABLE).build();
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider vp) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return evaluate(items, vp.getPreferenceValue(CONTEXT_SWITCH_WARNING_LIMIT)
-						.clampedLongValueIn(UnitLookup.NUMBER_UNITY));
+			public IResult call() throws Exception {
+				return evaluate(items, vp);
 			}
 		});
 		return evaluationTask;
 	}
 
-	private Result evaluate(IItemCollection items, long switchRateLimit) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CONTEXT_SWITCH_RATE);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.CONTEXT_SWITCH_RATE);
-		}
-
+	private IResult evaluate(IItemCollection items, IPreferenceValueProvider vp) {
+		long switchRateLimit = vp.getPreferenceValue(CONTEXT_SWITCH_WARNING_LIMIT)
+				.clampedLongValueIn(UnitLookup.NUMBER_UNITY);
 		long switchRate = calculateSwitchRate(items);
 		if (switchRate == -1) {
-			return RulesToolkit.getTooFewEventsResult(this);
+			return RulesToolkit.getTooFewEventsResult(this, vp);
 		}
 		long mostBlocks = (switchRate > switchRateLimit) ? getMostBlocks(items) : 0;
 		// FIXME: Configuration attribute for the warning and info limits
@@ -113,7 +121,8 @@ public class ContextSwitchRule implements IRule {
 			text = Messages.getString(Messages.ContextSwitchRuleFactory_TEXT_INFO);
 			longText = Messages.getString(Messages.ContextSwitchRuleFactory_TEXT_INFO_LONG);
 		}
-		return new Result(this, score, text, longText);
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(text)
+				.setExplanation(longText).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
 	}
 
 	private static long calculateSwitchRate(IItemCollection switchItems) {
@@ -145,5 +154,15 @@ public class ContextSwitchRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.LOCK_INSTANCES;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

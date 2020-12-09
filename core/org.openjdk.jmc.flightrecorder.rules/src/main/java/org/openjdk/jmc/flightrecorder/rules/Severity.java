@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules;
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
 
 public enum Severity {
+
 	/**
 	 * Results with this severity score are not applicable to the recording, but it should be
 	 * possible to view them so the user can see which results have not been possible to evaluate.
@@ -79,4 +80,5 @@ public enum Severity {
 		}
 		return Severity.NA;
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,15 +32,15 @@
  */
 package org.openjdk.jmc.flightrecorder.ext.jfx;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -53,9 +53,14 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ext.jfx.JfxVersionUtil.JavaFxEventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 public class JfxPulseDurationRule implements IRule {
 	private static final String RESULT_ID = "pulseDuration"; //$NON-NLS-1$
@@ -74,15 +79,23 @@ public class JfxPulseDurationRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(CONFIG_TARGET_FRAME_RATE);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
+	public static final TypedResult<IQuantity> SLOW_PHASES = new TypedResult<>("slowPhaseRatio", "Slow Phase Ratio", //$NON-NLS-1$
+			"Percentage of JFX phases that were slow to render.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> TARGET_TIME = new TypedResult<>("targetTime", "Target Time", //$NON-NLS-1$
+			"The target time to render each frame.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> RENDER_TARGET = new TypedResult<>("renderTarget", "Render Target", //$NON-NLS-1$
+			"The target rendering frequency.", UnitLookup.FREQUENCY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		JavaFxEventAvailability availability = JfxVersionUtil.getAvailability(items);
 		if (availability == JavaFxEventAvailability.None) {
 			// Could possibly check the JVM version for better suggestions here, but not very important
-			return RulesToolkit.getEventAvailabilityResult(this, items,
-					RulesToolkit.getEventAvailability(items, JfxConstants.TYPE_ID_PULSE_PHASE_12),
-					JfxConstants.TYPE_ID_PULSE_PHASE_12);
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA).build();
 		}
-
 		IQuantity targetFramerate = valueProvider.getPreferenceValue(CONFIG_TARGET_FRAME_RATE);
 		ITypedQuantity<LinearUnit> targetPhaseTime = UnitLookup.MILLISECOND
 				.quantity(1000.0 / targetFramerate.longValue());
@@ -96,22 +109,25 @@ public class JfxPulseDurationRule implements IRule {
 			double ratioOfLongPhases = longPhases.ratioTo(allPhases);
 			double mappedScore = RulesToolkit.mapExp100(ratioOfLongPhases, 0.05, 0.5);
 			mappedScore = mappedScore < 1 ? 1 : mappedScore;
-			return new Result(this, mappedScore,
-					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING,
-							UnitLookup.PERCENT_UNITY.quantity(ratioOfLongPhases).displayUsing(IDisplayable.AUTO),
-							targetPhaseTime.displayUsing(IDisplayable.AUTO)),
-					MessageFormat.format(Messages.JfxPulseDurationRule_WARNING_LONG,
-							targetFramerate.displayUsing(IDisplayable.AUTO)));
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(mappedScore))
+					.setSummary(Messages.JfxPulseDurationRule_WARNING)
+					.setExplanation(Messages.JfxPulseDurationRule_WARNING_LONG)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(mappedScore))
+					.addResult(SLOW_PHASES, UnitLookup.PERCENT_UNITY.quantity(ratioOfLongPhases))
+					.addResult(TARGET_TIME, targetPhaseTime).addResult(RENDER_TARGET, targetFramerate).build();
 		}
-		return new Result(this, 0, Messages.JfxPulseDurationRule_OK);
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.JfxPulseDurationRule_OK).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -135,5 +151,15 @@ public class JfxPulseDurationRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfxConstants.JFX_RULE_PATH;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return Collections.emptyMap();
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

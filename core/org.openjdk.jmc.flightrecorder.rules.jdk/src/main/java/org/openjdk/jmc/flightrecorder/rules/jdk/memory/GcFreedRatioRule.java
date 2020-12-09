@@ -36,11 +36,12 @@ import static org.openjdk.jmc.common.unit.UnitLookup.SECOND;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.flightrecorder.rules.jdk.RulePreferences.SHORT_RECORDING_LIMIT;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -56,15 +57,18 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnorderedWindowVisitor;
 
@@ -74,7 +78,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit.IUnordered
  */
 public class GcFreedRatioRule extends AbstractRule {
 
-	private static final String NEW_PARAGRAPH = "<p>"; //$NON-NLS-1$
+	private static final String NEW_PARAGRAPH = "\n"; //$NON-NLS-1$
 	private static final String SPACE = " "; //$NON-NLS-1$
 
 	private static final TypedPreference<IQuantity> GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT = new TypedPreference<>(
@@ -91,28 +95,35 @@ public class GcFreedRatioRule extends AbstractRule {
 			Messages.getString(Messages.GcFreedRatioRule_FEW_GCS_LIMIT_DESC), UnitLookup.NUMBER,
 			UnitLookup.NUMBER_UNITY.quantity(10));
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT);
+
+	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", //$NON-NLS-1$
+			"Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> GC_FREED_RATIO = new TypedResult<>("gcFreedRatio", "GC Freed Ratio", //$NON-NLS-1$
+			"The ratio of memory freed by gc and liveset.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> GC_FREED_PER_SECOND = new TypedResult<>("gcFreedPerSecond", //$NON-NLS-1$
+			"GC Freed Per Second", "The amount of memory freed per second.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> GC_WINDOW = new TypedResult<>("gcWindoow", "Window", //$NON-NLS-1$
+			"The window where the most amount of memory freed occurred.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> AVERAGE_LIVESET = new TypedResult<>("averageLiveset", "Average Liveset", //$NON-NLS-1$
+			"The average amount of live memory.", UnitLookup.MEMORY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, HEAP_SUMMARY_EVENTS, GC_FREED_PER_SECOND, GC_FREED_RATIO, AVERAGE_LIVESET, GC_WINDOW);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
+
 	public GcFreedRatioRule() {
 		super("GcFreedRatio", Messages.getString(Messages.GcFreedRatioRule_RULE_NAME), JfrRuleTopics.HEAP, //$NON-NLS-1$
-				GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT, SHORT_RECORDING_LIMIT);
+				CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-
-		EventAvailability heapSummaryAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_SUMMARY);
-		if (!(heapSummaryAvailability == EventAvailability.ENABLED
-				|| heapSummaryAvailability == EventAvailability.AVAILABLE)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, heapSummaryAvailability,
-					JdkTypeIDs.HEAP_SUMMARY);
-		}
-		String recommendedEventTypesInfo = null;
-		EventAvailability allocAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (!(allocAvailability == EventAvailability.ENABLED || allocAvailability == EventAvailability.AVAILABLE)) {
-			recommendedEventTypesInfo = RulesToolkit.getEnabledEventTypesRecommendation(items,
-					JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
-
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		double infoLimit = vp.getPreferenceValue(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT).doubleValue();
 		IQuantity windowSize = vp.getPreferenceValue(WINDOW_SIZE);
 		IQuantity slideSize = windowSize.getUnit().quantity(windowSize.ratioTo(windowSize.getUnit().quantity(2)));
@@ -121,10 +132,9 @@ public class GcFreedRatioRule extends AbstractRule {
 
 		IQuantity heapSummaryCount = items.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.HEAP_SUMMARY)));
 		if (heapSummaryCount.compareTo(fewGcsLimit) < 0) {
-			return new Result(this, 0,
-					MessageFormat.format(Messages.getString(Messages.GcFreedRatioRule_RESULT_FEW_GCS),
-							heapSummaryCount.displayUsing(IDisplayable.AUTO),
-							fewGcsLimit.displayUsing(IDisplayable.AUTO)));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.GcFreedRatioRule_RESULT_FEW_GCS))
+					.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount).build();
 		}
 
 		// Do the rule calculations
@@ -132,16 +142,9 @@ public class GcFreedRatioRule extends AbstractRule {
 		double freedRatio = maxFreedGcInfo.freedPerSecondToLivesetRatio.doubleValueIn(UnitLookup.PERCENT_UNITY);
 		double score = RulesToolkit.mapExp74(freedRatio, infoLimit);
 		// FIXME: Check if range is null
-		String longDescription = MessageFormat.format(
-				Messages.getString(Messages.GcFreedRatioRule_RESULT_LONG_DESCRIPTION),
-				maxFreedGcInfo.freedPerSecond.displayUsing(IDisplayable.AUTO),
-				maxFreedGcInfo.range.getExtent().displayUsing(IDisplayable.AUTO),
-				maxFreedGcInfo.range.getStart().displayUsing(IDisplayable.AUTO), freedRatio,
-				maxFreedGcInfo.averageLiveset.displayUsing(IDisplayable.AUTO));
+		String longDescription = Messages.getString(Messages.GcFreedRatioRule_RESULT_LONG_DESCRIPTION);
 
-		String shortDescription = MessageFormat.format(
-				Messages.getString(Messages.GcFreedRatioRule_RESULT_SHORT_DESCRIPTION),
-				Math.round(freedRatio * 10) / 10f);
+		String shortDescription = Messages.getString(Messages.GcFreedRatioRule_RESULT_SHORT_DESCRIPTION);
 		if (score < Severity.INFO.getLimit()) {
 			shortDescription += SPACE + Messages.getString(Messages.GcFreedRatioRule_RESULT_OK);
 			longDescription += SPACE + Messages.getString(Messages.GcFreedRatioRule_RESULT_OK);
@@ -157,11 +160,12 @@ public class GcFreedRatioRule extends AbstractRule {
 			// Halving score for short recordings
 			score = score > 0 ? score / 2 : score;
 		}
-		if (recommendedEventTypesInfo != null) {
-			longDescription += NEW_PARAGRAPH + recommendedEventTypesInfo;
-		}
-
-		return new Result(this, score, shortDescription, longDescription, JdkQueries.HEAP_SUMMARY);
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortDescription)
+				.setExplanation(longDescription).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(GC_FREED_RATIO, maxFreedGcInfo.freedPerSecondToLivesetRatio)
+				.addResult(HEAP_SUMMARY_EVENTS, heapSummaryCount).addResult(GC_WINDOW, maxFreedGcInfo.range)
+				.addResult(AVERAGE_LIVESET, maxFreedGcInfo.averageLiveset)
+				.addResult(GC_FREED_PER_SECOND, maxFreedGcInfo.freedPerSecond).build();
 	}
 
 	private GcInfoHolder getMaxFreedWindow(final IItemCollection allItems, IQuantity windowSize, IQuantity slideSize) {

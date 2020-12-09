@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCOldObject;
 import org.openjdk.jmc.common.IMCOldObjectArray;
 import org.openjdk.jmc.common.IMCOldObjectField;
@@ -52,7 +53,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 /**
  * A data type representing alive objects in a Java heap used in a {@link ReferenceTreeModel}.
  */
-public class ReferenceTreeObject implements IMCOldObject {
+public class ReferenceTreeObject implements IMCOldObject, IDisplayable {
 
 	public enum ReferenceTreeObjectType {
 		Array, InstanceField, JavaObject, LeakObject
@@ -313,6 +314,21 @@ public class ReferenceTreeObject implements IMCOldObject {
 	 */
 	public void updateOldObjectSamples(ReferenceTreeObject oldobjectrefnode) {
 		oldObjectSamples.put(oldobjectrefnode.getTimestamp(), oldobjectrefnode);
+	}
+
+	@Override
+	public String displayUsing(String hint) {
+		int format = 0;
+		switch (hint) {
+		case IDisplayable.AUTO:
+			format = FORMAT_FIELD | FORMAT_PACKAGE | FORMAT_STATIC_MODIFIER;
+			break;
+		case IDisplayable.EXACT:
+		case IDisplayable.VERBOSE:
+			format = FORMAT_ARRAY_INFO | FORMAT_FIELD | FORMAT_OTHER_MODIFIERS | FORMAT_PACKAGE
+					| FORMAT_STATIC_MODIFIER;
+		}
+		return toString(format);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -57,12 +58,17 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 // FIXME: This rule seems to be a precondition for other rules (Method profiling rules). Remove?
 public class HighJvmCpuRule implements IRule {
@@ -95,26 +101,29 @@ public class HighJvmCpuRule implements IRule {
 			Messages.getString(Messages.HighJvmCpuRule_AGGR_MIN_ENDTIME), null, JdkTypeIDs.CPU_LOAD,
 			JfrAttributes.END_TIME);
 
-	// FIXME: The implementation seems to assume that all quantities have the same unit
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CPU_LOAD);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CPU_LOAD);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CPU_LOAD, EventAvailability.AVAILABLE).build();
 
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE);
+
+	// FIXME: The implementation seems to assume that all quantities have the same unit
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		String periodNotBelow = RulesToolkit.getPeriodIfGreaterThan(items,
 				vp.getPreferenceValue(MINIMUM_CPU_LOAD_PERIOD), JdkTypeIDs.CPU_LOAD);
 		if (periodNotBelow != null) {
-			// FIXME: Should the score be hard-coded to 50 here?
-			return new Result(this, 50, Messages.getString(Messages.HighJvmCpuRule_LONG_CPU_LOAD_PERIOD), MessageFormat
-					.format(Messages.getString(Messages.HighJvmCpuRule_LONG_CPU_LOAD_PERIOD_LONG), periodNotBelow));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.INFO)
+					.setSummary(Messages.getString(Messages.HighJvmCpuRule_LONG_CPU_LOAD_PERIOD))
+					.setExplanation(MessageFormat.format(
+							Messages.getString(Messages.HighJvmCpuRule_LONG_CPU_LOAD_PERIOD_LONG), periodNotBelow))
+					.build();
 		}
 
 		// This is for returning a helpful result if old recordings are encountered
 		IItemCollection cpuItems = items.apply(JdkFilters.CPU_LOAD);
 		IType<IItem> cpuLoadType = RulesToolkit.getType(cpuItems, JdkTypeIDs.CPU_LOAD);
 		if (!cpuLoadType.hasAttribute(JdkAttributes.JVM_USER)) {
-			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_USER);
+			return RulesToolkit.getMissingAttributeResult(this, cpuLoadType, JdkAttributes.JVM_USER, vp);
 		}
 
 		// FIXME: Just looking at the overall average is not enough (it is recording length dependent)
@@ -140,26 +149,33 @@ public class HighJvmCpuRule implements IRule {
 			double missingSampleLimit = vp.getPreferenceValue(MISSING_SAMPLE_LIMIT).doubleValue();
 			if (lackingSamplesTimesCpu >= missingSampleLimit) {
 				double missingSamplesScore = RulesToolkit.mapExp74(lackingSamplesTimesCpu, missingSampleLimit);
-				String shortMessage = Messages.getString(Messages.HighJvmCpuRule_FEW_SAMPLES);
-				String longMessage = shortMessage + " " + Messages.getString(Messages.HighJvmCpuRule_FEW_SAMPLES_LONG); //$NON-NLS-1$
-				return new Result(this, missingSamplesScore, shortMessage, longMessage);
+				return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(missingSamplesScore))
+						.setSummary(Messages.getString(Messages.HighJvmCpuRule_FEW_SAMPLES))
+						.setExplanation(Messages.getString(Messages.HighJvmCpuRule_FEW_SAMPLES_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(missingSamplesScore)).build();
 			}
 		}
 		long infoLimit = vp.getPreferenceValue(JVM_CPU_INFO_LIMIT).longValue();
 		double jvmUsageScore = RulesToolkit.mapExp74(jvmUsage.doubleValueIn(UnitLookup.PERCENT), infoLimit);
 		if (jvmUsageScore >= infoLimit) {
 			// FIXME: This case (or similar) should be replaced with evaluating the method profiling rule
-			return new Result(this, jvmUsageScore, Messages.getString(Messages.HighJvmCpuRule_TEXT_WARN));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(jvmUsageScore))
+					.setSummary(Messages.getString(Messages.HighJvmCpuRule_TEXT_WARN))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(jvmUsageScore)).build();
 		}
-		return new Result(this, jvmUsageScore, Messages.getString(Messages.HighJvmCpuRule_TEXT_OK));
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.HighJvmCpuRule_TEXT_OK))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(jvmUsageScore)).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -183,5 +199,15 @@ public class HighJvmCpuRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.JAVA_APPLICATION;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

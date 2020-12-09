@@ -33,9 +33,10 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -48,37 +49,50 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class ProcessStartedRule implements IRule {
 	private static final String PROCESS_STARTED_RESULT_ID = "ProcessStarted"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.PROCESS_START);
-		if (eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.PROCESS_START);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.PROCESS_START, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IQuantity> PROCESS_STARTED_COUNT = new TypedResult<>("processesStarted", //$NON-NLS-1$
+			"Processes Started", "The number of processes started.", UnitLookup.NUMBER, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(PROCESS_STARTED_COUNT);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemCollection processStartEvents = items.apply(ItemFilters.type(JdkTypeIDs.PROCESS_START));
 		if (!processStartEvents.hasItems()) {
-			return new Result(this, 0, Messages.getString(Messages.ProcessStartedRule_TEXT_OK));
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.ProcessStartedRule_TEXT_OK)).build();
 		}
 		IQuantity processStartedCount = processStartEvents.getAggregate(Aggregators.count());
-		String message = Messages.getString(Messages.ProcessStartedRule_TEXT_INFO);
-		return new Result(this, 50,
-				MessageFormat.format(message, processStartedCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY)));
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
+				.setSummary(Messages.getString(Messages.ProcessStartedRule_TEXT_INFO))
+				.addResult(PROCESS_STARTED_COUNT, processStartedCount).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -102,5 +116,15 @@ public class ProcessStartedRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.PROCESSES;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

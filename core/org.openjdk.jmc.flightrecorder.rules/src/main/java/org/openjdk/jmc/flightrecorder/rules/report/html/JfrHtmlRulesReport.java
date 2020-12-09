@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,8 +53,8 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.HtmlResultGroup;
 import org.openjdk.jmc.flightrecorder.rules.report.html.internal.HtmlResultProvider;
@@ -142,10 +142,10 @@ public class JfrHtmlRulesReport {
 	 */
 	public static String createReport(IItemCollection events) {
 		// TODO: Provide configuration
-		Map<IRule, Future<Result>> resultFutures = RulesToolkit.evaluateParallel(RuleRegistry.getRules(), events, null,
+		Map<IRule, Future<IResult>> resultFutures = RulesToolkit.evaluateParallel(RuleRegistry.getRules(), events, null,
 				0);
-		Collection<Result> results = new HashSet<>();
-		for (Map.Entry<IRule, Future<Result>> resultEntry : resultFutures.entrySet()) {
+		Collection<IResult> results = new HashSet<>();
+		for (Map.Entry<IRule, Future<IResult>> resultEntry : resultFutures.entrySet()) {
 			try {
 				results.add(resultEntry.getValue().get());
 			} catch (Throwable t) {
@@ -161,17 +161,17 @@ public class JfrHtmlRulesReport {
 	}
 
 	private static class SimpleResultProvider implements HtmlResultProvider {
-		private Map<String, Collection<Result>> resultsByTopic = new HashMap<>();
+		private Map<String, Collection<IResult>> resultsByTopic = new HashMap<>();
 		private Set<String> unmappedTopics;
 
-		public SimpleResultProvider(Collection<Result> results, List<HtmlResultGroup> groups) {
-			for (Result result : results) {
+		public SimpleResultProvider(Collection<IResult> results, List<HtmlResultGroup> groups) {
+			for (IResult result : results) {
 				String topic = result.getRule().getTopic();
 				if (topic == null) {
 					// Magic string to denote null topic
 					topic = ""; //$NON-NLS-1$
 				}
-				Collection<Result> topicResults = resultsByTopic.get(topic);
+				Collection<IResult> topicResults = resultsByTopic.get(topic);
 				if (topicResults == null) {
 					topicResults = new HashSet<>();
 					resultsByTopic.put(topic, topicResults);
@@ -193,15 +193,15 @@ public class JfrHtmlRulesReport {
 		}
 
 		@Override
-		public Collection<Result> getResults(Collection<String> topics) {
+		public Collection<IResult> getResults(Collection<String> topics) {
 			Collection<String> topics2 = topics;
 			if (topics2.contains("")) { //$NON-NLS-1$
 				topics2 = new HashSet<>(topics);
 				topics2.addAll(unmappedTopics);
 			}
-			Collection<Result> results = new HashSet<>();
+			Collection<IResult> results = new HashSet<>();
 			for (String topic : topics2) {
-				Collection<Result> topicResults = resultsByTopic.get(topic);
+				Collection<IResult> topicResults = resultsByTopic.get(topic);
 				if (topicResults != null) {
 					results.addAll(topicResults);
 				}

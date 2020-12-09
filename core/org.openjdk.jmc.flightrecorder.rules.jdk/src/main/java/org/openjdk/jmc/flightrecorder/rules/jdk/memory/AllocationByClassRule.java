@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,59 +32,64 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.StacktraceDataProvider;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
-import org.owasp.encoder.Encode;
 
 public class AllocationByClassRule implements IRule {
 	private static final String CLASS_RESULT_ID = "Allocations.class"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailabilityInside = RulesToolkit.getEventAvailability(items,
-				JdkTypeIDs.ALLOC_INSIDE_TLAB);
-		EventAvailability eventAvailabilityOutside = RulesToolkit.getEventAvailability(items,
-				JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		if (!RulesToolkit.isEventsEnabled(eventAvailabilityInside, eventAvailabilityOutside)) {
-			return RulesToolkit.getEventAvailabilityResult(this, items,
-					RulesToolkit.getLeastAvailable(eventAvailabilityInside, eventAvailabilityOutside),
-					JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
-		if (!(eventAvailabilityInside == EventAvailability.AVAILABLE
-				|| eventAvailabilityOutside == EventAvailability.AVAILABLE)) {
-			return RulesToolkit.getNotApplicableResult(this,
-					MessageFormat.format(Messages.getString(Messages.General_RULE_REQUIRES_EVENTS_FROM_ONE_OF_MANY),
-							JdkTypeIDs.ALLOC_INSIDE_TLAB + ", " + JdkTypeIDs.ALLOC_OUTSIDE_TLAB)); //$NON-NLS-1$
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
 
+	public static final TypedResult<IMCType> MOST_ALLOCATED_TYPE = new TypedResult<>("mostAllocatedType", //$NON-NLS-1$
+			"Most Allocated Type", "The most allocated type.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedCollectionResult<IMCMethod> ALLOCATION_FRAMES = new TypedCollectionResult<>(
+			"allocationFrames", "Allocation Frames", //$NON-NLS-1$
+			"The most interesting frames leading to the most commonly allocated type.", UnitLookup.METHOD,
+			IMCMethod.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, MOST_ALLOCATED_TYPE, ALLOCATION_FRAMES);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		List<IntEntry<IMCType>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
 				JdkAttributes.ALLOCATION_CLASS);
 
@@ -99,21 +104,24 @@ public class AllocationByClassRule implements IRule {
 		StacktraceModel stacktraceModel = new StacktraceModel(false,
 				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
 		Fork rootFork = stacktraceModel.getRootFork();
-		String generatedHtmlTraces = rootFork.getBranchCount() == 0
-				? Messages.getString(Messages.General_NO_STACK_TRACE_AVAILABLE)
-				: StacktraceDataProvider.getRelevantTraceHtmlList(rootFork.getBranch(0), rootFork.getItemsInFork());
-		String message = MessageFormat.format(Messages.getString(Messages.AllocationByClassRule_TEXT_MESSAGE),
-				Encode.forHtml(FormatToolkit.getType(mostSignificant.getKey(), true)), generatedHtmlTraces);
-		String longMessage = message + "<p>" + Messages.getString(Messages.AllocationRuleFactory_TEXT_CLASS_INFO_LONG); //$NON-NLS-1$
-		return new Result(this, score, message, longMessage, JdkQueries.ALLOC_INSIDE_TLAB_BY_CLASS);
+		List<IMCMethod> relevantFramesList = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
+				rootFork.getItemsInFork());
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+				.setSummary(Messages.getString(Messages.AllocationByClassRule_TEXT_MESSAGE))
+				.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_CLASS_INFO_LONG))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(ALLOCATION_FRAMES, relevantFramesList)
+				.addResult(MOST_ALLOCATED_TYPE, mostSignificant.getKey()).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -137,5 +145,15 @@ public class AllocationByClassRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.HEAP;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

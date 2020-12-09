@@ -427,12 +427,13 @@ public class Messages extends NLS {
 	public static String RecordingPage_SECTION_CONCURRENT_RECORDINGS;
 	public static String RecordingPage_SECTION_EVENT_SETTINGS;
 	public static String RecordingPage_SECTION_RECORDING_INFORMATION;
-	public static String ResultOverview_COLUMN_LONG_DESCRIPTION;
+	public static String ResultOverview_COLUMN_EXPLANATION;
 	public static String ResultOverview_COLUMN_PAGE;
 	public static String ResultOverview_COLUMN_RESULT_ID;
 	public static String ResultOverview_COLUMN_RULE_NAME;
 	public static String ResultOverview_COLUMN_SCORE;
-	public static String ResultOverview_COLUMN_SHORT_DESCRIPTION;
+	public static String ResultOverview_COLUMN_SUMMARY;
+	public static String ResultOverview_COLUMN_SOLUTION;
 	public static String ResultOverview_DISPLAYMODE_REPORT;
 	public static String ResultOverview_DISPLAYMODE_TABLE;
 	public static String ResultOverview_EXPORT_ACTION;

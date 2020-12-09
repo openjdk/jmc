@@ -32,86 +32,85 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
+import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders.JvmInternalsDataProvider;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.owasp.encoder.Encode;
 
 public class DuplicateFlagsRule implements IRule {
 
+	public static class DuplicateFlags implements IDisplayable {
+		private final List<String> duplicates;
+
+		private DuplicateFlags(List<String> duplicates) {
+			this.duplicates = duplicates;
+		}
+
+		@Override
+		public String displayUsing(String formatHint) {
+			StringBuilder sb = new StringBuilder();
+			for (String d : duplicates) {
+				sb.append(d);
+				sb.append(',');
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			return sb.toString();
+		}
+	}
+
 	private static final String RESULT_ID = "DuplicateFlags"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_INFO);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_INFO);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = new HashMap<>();
 
-		IItemCollection jvmInfoItems = items.apply(JdkFilters.VM_INFO);
+	private static final ContentType<DuplicateFlags> DUPLICATE_FLAGS = UnitLookup
+			.createSyntheticContentType("duplicateFlags"); //$NON-NLS-1$
 
-		// FIXME: Should we check if there are different jvm args in different chunks?
-		Set<String> args = jvmInfoItems
-				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct(JdkAttributes.JVM_ARGUMENTS));
-		if (args != null && !args.isEmpty()) {
+	public static final TypedCollectionResult<DuplicateFlags> DUPLICATED_FLAGS = new TypedCollectionResult<>(
+			"duplicateFlags", //$NON-NLS-1$
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_NAME),
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_DESCRIPTION), DUPLICATE_FLAGS,
+			DuplicateFlags.class);
+	public static final TypedResult<IQuantity> TOTAL_DUPLICATED_FLAGS = new TypedResult<>("totalDuplicatedFlags", //$NON-NLS-1$
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_NAME),
+			Messages.getString(Messages.DuplicateFlagsRule_RESULT_DUPLICATED_FLAGS_COUNT_DESCRIPTION),
+			UnitLookup.NUMBER, IQuantity.class);
 
-			Collection<ArrayList<String>> dupes = JvmInternalsDataProvider.checkDuplicates(args.iterator().next());
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(DUPLICATED_FLAGS,
+			TOTAL_DUPLICATED_FLAGS);
 
-			if (!dupes.isEmpty()) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("<ul>"); //$NON-NLS-1$
-				for (ArrayList<String> dupe : dupes) {
-					sb.append("<li>" + Encode.forHtml(StringToolkit.join(dupe, ", ")) + "</li>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				}
-				sb.append("</ul>"); //$NON-NLS-1$
-				String shortDescription = dupes.size() > 1
-						? MessageFormat.format(Messages.getString(Messages.DuplicateFlagsRuleFactory_TEXT_WARN),
-								dupes.size())
-						: Messages.getString(Messages.DuplicateFlagsRuleFactory_TEXT_WARN_SINGULAR);
-				String longDescription = shortDescription + " " + MessageFormat //$NON-NLS-1$
-						.format(Messages.getString(Messages.DuplicateFlagsRuleFactory_TEXT_WARN_LONG), sb.toString());
-				return new Result(this, 50, shortDescription, longDescription, JdkQueries.VM_INFO);
-			}
-		}
-		return new Result(this, 0, Messages.getString(Messages.DuplicateFlagsRuleFactory_TEXT_OK));
-	}
-
-	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
-			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
-			}
-		});
-		return evaluationTask;
-	}
-
-	@Override
-	public Collection<TypedPreference<?>> getConfigurationAttributes() {
-		return Collections.emptyList();
+	static {
+		REQUIRED_EVENTS.put(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE);
 	}
 
 	@Override
@@ -120,12 +119,65 @@ public class DuplicateFlagsRule implements IRule {
 	}
 
 	@Override
+	public String getTopic() {
+		return JfrRuleTopics.JVM_INFORMATION;
+	}
+
+	@Override
 	public String getName() {
 		return Messages.getString(Messages.DuplicateFlagsRuleFactory_RULE_NAME);
 	}
 
 	@Override
-	public String getTopic() {
-		return JfrRuleTopics.JVM_INFORMATION;
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
 	}
+
+	@Override
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
+			@Override
+			public IResult call() throws Exception {
+				return getResult(items, preferenceValueProvider, dependencyResults);
+			}
+		});
+		return evaluationTask;
+	}
+
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
+		IItemCollection jvmInfoItems = items.apply(JdkFilters.VM_INFO);
+
+		// FIXME: Should we check if there are different jvm args in different chunks?
+		IAggregator<Set<String>, ?> argumentAggregator = Aggregators.distinct(JdkAttributes.JVM_ARGUMENTS);
+		Set<String> args = jvmInfoItems.getAggregate(argumentAggregator);
+		if (args != null && !args.isEmpty()) {
+			List<DuplicateFlags> duplicateFlags = new ArrayList<>();
+			for (List<String> dupe : JvmInternalsDataProvider.checkDuplicates(args.iterator().next())) {
+				duplicateFlags.add(new DuplicateFlags(dupe));
+			}
+			if (!JvmInternalsDataProvider.checkDuplicates(args.iterator().next()).isEmpty()) {
+				return ResultBuilder.createFor(this, vp).addResult(DUPLICATED_FLAGS, duplicateFlags)
+						.addResult(TOTAL_DUPLICATED_FLAGS, UnitLookup.NUMBER_UNITY.quantity(duplicateFlags.size()))
+						.setSeverity(Severity.INFO)
+						.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY))
+						.setExplanation(Messages.getString(Messages.DuplicateFlagsRule_RESULT_EXPLANATION))
+						.setSolution(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SOLUTION)).build();
+			}
+		}
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY_OK)).build();
+	}
+
+	@Override
+	public Collection<TypedPreference<?>> getConfigurationAttributes() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
+	}
+
 }

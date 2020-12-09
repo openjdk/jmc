@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,10 +35,10 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -51,13 +51,19 @@ import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemQueryBuilder;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class DMSIncidentRule implements IRule {
 
@@ -73,32 +79,44 @@ public class DMSIncidentRule implements IRule {
 			Messages.getString(Messages.DMSIncidentRule_CONFIG_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(1));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, DMS_PATH);
+	public static final TypedResult<IQuantity> DMS_INCIDENTS = new TypedResult<>("dmsIncidentCount", INCIDENTS_COUNT, //$NON-NLS-1$
+			UnitLookup.NUMBER, IQuantity.class);
 
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			DMS_INCIDENTS);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS;
+
+	static {
 		// Not getting any is good, but only if the event was not unavailable or disabled
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, DMS_PATH);
-		}
+		REQUIRED_EVENTS = RequiredEventsBuilder.create().addEventType(DMS_PATH, EventAvailability.ENABLED).build();
+	}
 
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity limit = valueProvider.getPreferenceValue(WARNING_LIMIT);
 		IQuantity incidents = items.getAggregate(INCIDENTS_COUNT);
 		if (incidents != null && incidents.compareTo(limit) >= 0) {
 			double score = RulesToolkit.mapExp100(incidents.doubleValue(), limit.doubleValueIn(incidents.getUnit()));
 			IItemQuery query = ItemQueryBuilder.fromWhere(FILTER).build();
-			return new Result(this, score, Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN),
-					MessageFormat.format(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN_LONG), incidents),
-					query);
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(DMS_INCIDENTS, incidents).addResult(TypedResult.ITEM_QUERY, query)
+					.setSummary(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_WARN_LONG)).build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_OK));
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSolution(Messages.getString(Messages.DMSIncidentRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -123,6 +141,16 @@ public class DMSIncidentRule implements IRule {
 	public String getTopic() {
 		// FIXME: Create constant for path
 		return "DMS"; //$NON-NLS-1$
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }

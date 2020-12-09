@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -87,9 +88,12 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.tree.Range;
 import org.openjdk.jmc.flightrecorder.rules.tree.TimeRangeFilter;
@@ -184,6 +188,30 @@ public class RulesToolkit {
 		 */
 		public boolean isLessAvailableThan(EventAvailability availability) {
 			return availabilityScore < availability.availabilityScore;
+		}
+	}
+
+	public static class RequiredEventsBuilder {
+		private Map<String, EventAvailability> requiredEvents;
+
+		private RequiredEventsBuilder() {
+			requiredEvents = new HashMap<>();
+		}
+
+		public static RequiredEventsBuilder create() {
+			return new RequiredEventsBuilder();
+		}
+
+		public RequiredEventsBuilder addEventType(String typeId, EventAvailability availability) {
+			if (requiredEvents.containsKey(typeId)) {
+				throw new IllegalArgumentException("Already specified " + availability + " for " + typeId); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			requiredEvents.put(typeId, availability);
+			return this;
+		}
+
+		public Map<String, EventAvailability> build() {
+			return Collections.unmodifiableMap(requiredEvents);
 		}
 	}
 
@@ -463,6 +491,17 @@ public class RulesToolkit {
 		return EventAvailability.UNKNOWN;
 	}
 
+	public static boolean matchesEventAvailabilityMap(
+		IItemCollection items, Map<String, EventAvailability> availabilityMap) {
+		for (Entry<String, EventAvailability> entry : availabilityMap.entrySet()) {
+			EventAvailability eventAvailability = getEventAvailability(items, entry.getKey());
+			if (eventAvailability.isLessAvailableThan(entry.getValue())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Returns the least available EventAvailability from the ones provided. See
 	 * {@link EventAvailability}.
@@ -517,106 +556,38 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Returns a proper result for the availability problem. The result will be a "Not Applicable"
-	 * result and the text provided will be based upon the assumption that the provided
-	 * EventAvailability is the availability that makes it impossible to evaluate the rule.
-	 *
-	 * @param rule
-	 *            the rule for which this result will be generated
-	 * @param items
-	 *            the items for which the availability was tested
-	 * @param eventAvailability
-	 *            the availability making the rule N/A
-	 * @param typeIds
-	 *            the types for which the availability was tested
-	 * @return the result for the provided availability problem
-	 */
-	public static Result getEventAvailabilityResult(
-		IRule rule, IItemCollection items, EventAvailability eventAvailability, String ... typeIds) {
-		JavaVersion javaVersion;
-		String link;
-		switch (eventAvailability) {
-		case ENABLED:
-		case NONE:
-			String requiredEventsTypeNames = getEventTypeNames(items, typeIds);
-			javaVersion = RulesToolkit.getJavaSpecVersion(items);
-			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS),
-							requiredEventsTypeNames),
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENTS_LONG),
-							rule.getName(), requiredEventsTypeNames, link));
-		case DISABLED:
-			String disabledEventTypeNames = getDisabledEventTypeNames(items, typeIds);
-			javaVersion = RulesToolkit.getJavaSpecVersion(items);
-			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE),
-							disabledEventTypeNames),
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_LONG),
-							rule.getName(), disabledEventTypeNames, link));
-		case UNKNOWN:
-			// Can't get type names if the event type is unavailable
-			List<String> quotedTypeIds = new ArrayList<>();
-			for (String typeId : typeIds) {
-				quotedTypeIds.add("'" + typeId + "'"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			Collections.sort(quotedTypeIds);
-			String unavailableTypeNames = StringToolkit.join(quotedTypeIds, ", "); //$NON-NLS-1$
-			return getNotApplicableResult(rule,
-					MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE),
-							rule.getName(), unavailableTypeNames),
-					MessageFormat.format(
-							Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE_LONG),
-							rule.getName(), unavailableTypeNames));
-		case AVAILABLE:
-			String availableEventTypeNames = getEventTypeNames(items, typeIds);
-			javaVersion = RulesToolkit.getJavaSpecVersion(items);
-			link = RulesToolkit.getJavaCommandHelpLink(javaVersion);
-			return getNotApplicableResult(rule,
-					MessageFormat.format(
-							Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE),
-							availableEventTypeNames),
-					MessageFormat.format(Messages.RulesToolkit_RULE_REQUIRES_EVENT_TYPE_NOT_AVAILABLE_LONG,
-							rule.getName(), availableEventTypeNames, link));
-		default:
-			throw new IllegalArgumentException("Unsupported event availability: " + eventAvailability); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * Creates a {@link Result} object for the given {@link IRule} object representing a result
+	 * Creates a {@link IResult} object for the given {@link IRule} object representing a result
 	 * where there are too few events to properly evaluate a rule.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @return an object describing that the rule could not be evaluated due to there not being
 	 *         enough data
 	 */
-	public static Result getTooFewEventsResult(IRule rule) {
-		return getNotApplicableResult(rule, Messages.getString(Messages.RulesToolkit_TOO_FEW_EVENTS));
+	public static IResult getTooFewEventsResult(IRule rule, IPreferenceValueProvider vp) {
+		return getNotApplicableResult(rule, vp, Messages.getString(Messages.RulesToolkit_TOO_FEW_EVENTS));
 	}
 
 	/**
-	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
+	 * Creates a {@link IResult} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @param message
 	 *            the description of the result
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	public static Result getNotApplicableResult(IRule rule, String message) {
-		return getNotApplicableResult(rule, message, null);
+	public static IResult getNotApplicableResult(IRule rule, IPreferenceValueProvider vp, String message) {
+		return getNotApplicableResult(rule, vp, message, null);
 	}
 
 	/**
-	 * Creates a {@link Result} object with a generic not applicable (N/A) result for a given rule
+	 * Creates a {@link IResult} object with a generic not applicable (N/A) result for a given rule
 	 * with a specified message.
 	 *
 	 * @param rule
-	 *            the rule to create a {@link Result} object for
+	 *            the rule to create a {@link IResult} object for
 	 * @param shortMessage
 	 *            the description of the result, as a short description
 	 * @param longMessage
@@ -624,24 +595,10 @@ public class RulesToolkit {
 	 *            could not be evaluated
 	 * @return an object representing a generic not applicable result for the provided rule
 	 */
-	private static Result getNotApplicableResult(IRule rule, String shortMessage, String longMessage) {
-		return new Result(rule, Result.NOT_APPLICABLE, shortMessage, longMessage);
-	}
-
-	/**
-	 * Creates a {@link Result} object describing that at least one of the specified event types
-	 * must be present in the rule's input.
-	 *
-	 * @param rule
-	 *            the rule to create a {@link Result} object for
-	 * @param typeIds
-	 *            the ids of the event types required for this rule
-	 * @return an object representing a not applicable result due to not missing event types
-	 */
-	public static Result getRuleRequiresAtLeastOneEventTypeResult(IRule rule, String ... typeIds) {
-		return getNotApplicableResult(rule,
-				MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_REQUIRES_SOME_EVENTS),
-						rule.getName(), StringToolkit.join(typeIds, ", "))); //$NON-NLS-1$
+	private static IResult getNotApplicableResult(
+		IRule rule, IPreferenceValueProvider vp, String shortMessage, String longMessage) {
+		return ResultBuilder.createFor(rule, vp).setSeverity(Severity.NA).setSummary(shortMessage)
+				.setExplanation(longMessage).build();
 	}
 
 	/**
@@ -961,10 +918,6 @@ public class RulesToolkit {
 		return getEventTypeNames(items.apply(createEnablementFilter(false, typeIds)));
 	}
 
-	private static String getEventTypeNames(IItemCollection items, String ... typeIds) {
-		return getEventTypeNames(items.apply(getSettingsFilter(REC_SETTING_NAME_ENABLED, typeIds)));
-	}
-
 	private static String getEventTypeNames(IItemCollection items) {
 		Set<String> names = items
 				.getAggregate((IAggregator<Set<String>, ?>) Aggregators.distinct("", TYPE_NAME_ACCESSOR_FACTORY)); //$NON-NLS-1$
@@ -1058,7 +1011,8 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Gets a {@link Result} object representing a not applicable result due to a missing attribute.
+	 * Gets a {@link IResult} object representing a not applicable result due to a missing
+	 * attribute.
 	 *
 	 * @param rule
 	 *            the rule which could not be evaluated
@@ -1068,8 +1022,9 @@ public class RulesToolkit {
 	 *            the attribute that is missing
 	 * @return an object that represents the not applicable result due to the missing attribute
 	 */
-	public static Result getMissingAttributeResult(IRule rule, IType<IItem> type, IAttribute<?> attribute) {
-		return getNotApplicableResult(rule,
+	public static IResult getMissingAttributeResult(
+		IRule rule, IType<IItem> type, IAttribute<?> attribute, IPreferenceValueProvider vp) {
+		return getNotApplicableResult(rule, vp,
 				MessageFormat.format(Messages.getString(Messages.RulesToolkit_ATTRIBUTE_NOT_FOUND),
 						attribute.getIdentifier(), type.getIdentifier()),
 				MessageFormat.format(Messages.getString(Messages.RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG),
@@ -1237,14 +1192,15 @@ public class RulesToolkit {
 	 * @param items
 	 *            items to evaluate
 	 * @param preferences
-	 *            See {@link IRule#evaluate(IItemCollection, IPreferenceValueProvider)}. If
-	 *            {@code null}, then default values will be used.
+	 *            See
+	 *            {@link IRule#createEvaluation(IItemCollection, IPreferenceValueProvider, IResultValueProvider)}.
+	 *            If {@code null}, then default values will be used.
 	 * @param nThreads
 	 *            The number or parallel threads to use when evaluating. If 0, then the number of
 	 *            available processors will be used.
 	 * @return a map from rules to result futures
 	 */
-	public static Map<IRule, Future<Result>> evaluateParallel(
+	public static Map<IRule, Future<IResult>> evaluateParallel(
 		Collection<IRule> rules, IItemCollection items, IPreferenceValueProvider preferences, int nThreads) {
 		if (preferences == null) {
 			preferences = IPreferenceValueProvider.DEFAULT_VALUES;
@@ -1252,10 +1208,10 @@ public class RulesToolkit {
 		if (nThreads < 1) {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
-		Map<IRule, Future<Result>> resultFutures = new HashMap<>();
-		Queue<RunnableFuture<Result>> futureQueue = new ConcurrentLinkedQueue<>();
+		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
+		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
 		for (IRule rule : rules) {
-			RunnableFuture<Result> resultFuture = rule.evaluate(items, preferences);
+			RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
 			resultFutures.put(rule, resultFuture);
 			futureQueue.add(resultFuture);
 		}
@@ -1268,15 +1224,15 @@ public class RulesToolkit {
 	}
 
 	private static class RuleEvaluator implements Runnable {
-		private Queue<RunnableFuture<Result>> futureQueue;
+		private Queue<RunnableFuture<IResult>> futureQueue;
 
-		public RuleEvaluator(Queue<RunnableFuture<Result>> futureQueue) {
+		public RuleEvaluator(Queue<RunnableFuture<IResult>> futureQueue) {
 			this.futureQueue = futureQueue;
 		}
 
 		@Override
 		public void run() {
-			RunnableFuture<Result> resultFuture;
+			RunnableFuture<IResult> resultFuture;
 			while ((resultFuture = futureQueue.poll()) != null) {
 				resultFuture.run();
 			}

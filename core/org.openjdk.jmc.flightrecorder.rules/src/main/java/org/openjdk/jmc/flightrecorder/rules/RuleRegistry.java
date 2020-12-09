@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,39 +32,106 @@
  */
 package org.openjdk.jmc.flightrecorder.rules;
 
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openjdk.jmc.flightrecorder.rules.internal.IRuleProvider;
 
-/**
- * Registry for rules. Uses Java Service Loader to discover implementations of the {@link IRule}
- * interface.
- * <p>
- * In order to add a new rule to the registry, create a new IRule implementation and add its fully
- * qualified class name in a file named META-INF/services/org.openjdk.jmc.flightrecorder.rules.IRule
- * (one line per class).
- */
 public class RuleRegistry {
 
 	private static final Collection<IRule> RULES;
 
+	private static class Vertex {
+		private boolean temporaryMark = false;
+		private boolean permanentMark = false;
+		private final IRule rule;
+		private final Collection<Vertex> edges = new ArrayList<>();
+
+		Vertex(IRule rule) {
+			this.rule = rule;
+		}
+
+		boolean isTemporarilyMarked() {
+			return temporaryMark;
+		}
+
+		boolean isPermanentlyMarked() {
+			return permanentMark;
+		}
+
+		void setTemporarilyMark() {
+			this.temporaryMark = true;
+		}
+
+		void resetTemporaryMark() {
+			temporaryMark = false;
+		}
+
+		void setPermanentlyMark() {
+			this.permanentMark = true;
+		}
+	}
+
+	private static class Graph {
+		private final Map<IRule, Vertex> vertices = new HashMap<>();
+
+		Collection<IRule> getTopologicalOrder() {
+			int permanentlyMarkedVertices = 0;
+			List<IRule> orderedList = new ArrayList<>();
+			for (Vertex vertex : vertices.values()) {
+				if (permanentlyMarkedVertices == vertices.size()) {
+					return orderedList;
+				}
+				visit(vertex, orderedList);
+			}
+			return orderedList;
+		}
+
+		void visit(Vertex vertex, List<IRule> orderedList) {
+			if (vertex.isPermanentlyMarked()) {
+				return;
+			}
+			if (vertex.isTemporarilyMarked()) {
+				throw new RuntimeException("Non-DAG IRule dependency graph detected!"); //$NON-NLS-1$
+			}
+			vertex.setTemporarilyMark();
+			for (Vertex v : vertex.edges) {
+				visit(v, orderedList);
+			}
+			vertex.resetTemporaryMark();
+			vertex.setPermanentlyMark();
+			orderedList.add(0, vertex.rule);
+		}
+
+		void addVertex(IRule rule) {
+			vertices.put(rule, new Vertex(rule));
+		}
+
+		void addDependency(IRule dependee, IRule depender) {
+			Vertex vertex = new Vertex(depender);
+			vertices.put(depender, vertex);
+			vertices.get(dependee).edges.add(vertex);
+		}
+	}
+
 	static {
-		Map<String, IRule> rulesById = new HashMap<>();
 		ServiceLoader<IRule> ruleLoader = ServiceLoader.load(IRule.class, IRule.class.getClassLoader());
+		Set<IRule> rules = new HashSet<>();
 		Iterator<IRule> ruleIter = ruleLoader.iterator();
 		while (ruleIter.hasNext()) {
 			try {
-				IRule rule = ruleIter.next();
-				add(rule, rulesById);
+				rules.add(ruleIter.next());
 			} catch (ServiceConfigurationError e) {
 				getLogger().log(Level.WARNING, "Could not create IRule instance specified in a JSL services file", e); //$NON-NLS-1$
 			}
@@ -76,43 +143,37 @@ public class RuleRegistry {
 			try {
 				IRuleProvider provider = providerIter.next();
 				for (IRule rule : provider.getRules()) {
-					add(rule, rulesById);
+					rules.add(rule);
 				}
 			} catch (ServiceConfigurationError e) {
 				getLogger().log(Level.WARNING,
 						"Could not create IRuleProvider instance specified in a JSL services file", e); //$NON-NLS-1$
 			}
 		}
-
-		RULES = Collections.unmodifiableCollection(rulesById.values());
-	}
-
-	// Do not instantiate
-	private RuleRegistry() {
+		Map<Class<? extends IRule>, IRule> rulesByClass = new HashMap<>();
+		Graph g = new Graph();
+		for (IRule rule : rules) {
+			g.addVertex(rule);
+			rulesByClass.put(rule.getClass(), rule);
+		}
+		for (IRule rule : rules) {
+			DependsOn[] dependencies = rule.getClass().getAnnotationsByType(DependsOn.class);
+			for (DependsOn dependency : dependencies) {
+				g.addDependency(rulesByClass.get(dependency.value()), rule);
+			}
+		}
+		Collection<IRule> topologicalOrder = g.getTopologicalOrder();
+		RULES = Collections.unmodifiableCollection(topologicalOrder);
 	}
 
 	private static Logger getLogger() {
 		return Logger.getLogger("org.openjdk.jmc.flightrecorder.rules"); //$NON-NLS-1$
 	}
 
-	private static void add(IRule rule, Map<String, IRule> rulesById) {
-		if (rule != null) {
-			if (!rulesById.containsKey(rule.getId())) {
-				rulesById.put(rule.getId(), rule);
-			} else {
-				// FIXME: can we make it impossible to get rule id conflicts?
-				IRule firstRule = rulesById.get(rule.getId());
-				getLogger().log(Level.WARNING, MessageFormat.format(
-						"Could not register rule \"{0}\" ({1}), because its id ({2}) conflicts with the rule \"{3}\" ({4}) which has already been registered", //$NON-NLS-1$
-						rule.getName(), rule.getClass().getName(), rule.getId(), firstRule.getName(),
-						firstRule.getClass().getName()));
-			}
-		}
+	private RuleRegistry() {
+		throw new InstantiationError();
 	}
 
-	/**
-	 * @return a collection of all registered rules
-	 */
 	public static Collection<IRule> getRules() {
 		return RULES;
 	}

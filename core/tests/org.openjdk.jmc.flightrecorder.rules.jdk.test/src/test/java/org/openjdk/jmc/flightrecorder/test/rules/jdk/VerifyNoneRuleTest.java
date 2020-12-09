@@ -40,7 +40,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule;
 
 public class VerifyNoneRuleTest {
@@ -49,39 +51,40 @@ public class VerifyNoneRuleTest {
 	public void verifyNone_jvmArguments() {
 		TestEvent[] testEvents = new TestEvent[] {new VMInfoTestEvent("-Xverify:none", "")};
 		testVerifyNoneRule(testEvents,
-				"The application ran with bytecode verification disabled with '-Xverify:none' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the <a href=\"https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification\">Secure Coding Standard for Java</a>."); //$NON-NLS-1$
+				"The application ran with bytecode verification disabled with '-Xverify:none' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the [Secure Coding Standard for Java](https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification)."); //$NON-NLS-1$
 	}
 
 	@Test
 	public void verifyNone_javaArguments() {
 		TestEvent[] testEvents = new TestEvent[] {new VMInfoTestEvent("", "-Xverify:none")};
 		testVerifyNoneRule(testEvents,
-				"The application ran with bytecode verification disabled with '-Xverify:none' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the <a href=\"https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification\">Secure Coding Standard for Java</a>."); //$NON-NLS-1$
+				"The application ran with bytecode verification disabled with '-Xverify:none' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the [Secure Coding Standard for Java](https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification)."); //$NON-NLS-1$
 	}
 
 	@Test
 	public void noVerify_jvmArguments() {
 		TestEvent[] testEvents = new TestEvent[] {new VMInfoTestEvent("-noverify", "")};
 		testVerifyNoneRule(testEvents,
-				"The application ran with bytecode verification disabled with '-noverify' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the <a href=\"https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification\">Secure Coding Standard for Java</a>."); //$NON-NLS-1$
+				"The application ran with bytecode verification disabled with '-noverify' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the [Secure Coding Standard for Java](https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification)."); //$NON-NLS-1$
 	}
 
 	@Test
 	public void noVerify_javaArguments() {
 		TestEvent[] testEvents = new TestEvent[] {new VMInfoTestEvent("", "-noverify")};
 		testVerifyNoneRule(testEvents,
-				"The application ran with bytecode verification disabled with '-noverify' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the <a href=\"https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification\">Secure Coding Standard for Java</a>."); //$NON-NLS-1$
+				"The application ran with bytecode verification disabled with '-noverify' argument. Disabling bytecode verification is unsafe and should not be done in a production system. If it is not necessary for the application, then dont use -Xverify:none or -noverify on the command line. See the [Secure Coding Standard for Java](https://www.securecoding.cert.org/confluence/display/java/ENV04-J.+Do+not+disable+bytecode+verification)."); //$NON-NLS-1$
 	}
 
 	private void testVerifyNoneRule(TestEvent[] testEvents, String descriptionExpected) {
 		IItemCollection events = new MockEventCollection(testEvents);
 		@SuppressWarnings("restriction")
 		VerifyNoneRule verifyNoneRule = new VerifyNoneRule();
-		RunnableFuture<Result> future = verifyNoneRule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
+		RunnableFuture<IResult> future = verifyNoneRule.createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
 		try {
 			future.run();
-			Result res = future.get();
-			String longDesc = res.getLongDescription();
+			IResult res = future.get();
+			String longDesc = ResultToolkit.populateMessage(res, res.getExplanation(), false);
 			Assert.assertEquals(descriptionExpected, longDesc);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();

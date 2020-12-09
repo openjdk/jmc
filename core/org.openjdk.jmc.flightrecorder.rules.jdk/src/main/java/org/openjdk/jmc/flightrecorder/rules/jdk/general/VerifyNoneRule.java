@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -44,23 +45,27 @@ import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class VerifyNoneRule implements IRule {
 	private static final String VERIFYNONE_RESULT_ID = "BytecodeVerification"; //$NON-NLS-1$
 	// FIXME: JMC-4617 - Merge with OptionsCheckRule?
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.VM_INFO);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.VM_INFO);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();
 
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String verifyNone = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JVM_ARGUMENTS,
 				"\\-Xverify:none", false); //$NON-NLS-1$
 		if (verifyNone == null) {
@@ -79,23 +84,29 @@ public class VerifyNoneRule implements IRule {
 			String wls = RulesToolkit.findMatches(JdkTypeIDs.VM_INFO, items, JdkAttributes.JAVA_ARGUMENTS,
 					"weblogic.Server", false); //$NON-NLS-1$
 			if (wls != null) {
-				return new Result(this, 1, Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO),
-						Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO_LONG));
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.VerifyNoneRule_WLS_TEXT_INFO_LONG)).build();
 			}
 			String argument = verifyNone != null ? verifyNone : noVerify;
-			String longDescription = MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG),
-					argument);
-			return new Result(this, 100, Messages.getString(Messages.VerifyNoneRule_TEXT_INFO), longDescription);
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
+					.setSummary(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO))
+					.setExplanation(
+							MessageFormat.format(Messages.getString(Messages.VerifyNoneRule_TEXT_INFO_LONG), argument))
+					.build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.VerifyNoneRule_TEXT_OK));
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.VerifyNoneRule_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -119,5 +130,15 @@ public class VerifyNoneRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.JVM_INFORMATION;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return Collections.emptyList();
 	}
 }

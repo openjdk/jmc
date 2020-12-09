@@ -40,7 +40,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRule;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
@@ -52,7 +55,7 @@ public class PasswordsInEnvironmentRuleTest {
 	public void containsPassword() {
 		TestEvent[] testEvents = new TestEvent[] {new EnvironmentVariableTestEvent("password")};
 		testPasswordsInEnvRule(testEvents,
-				"The following suspicious environment variables were found in this recording: <ul><li>password</li></ul><p>They may contain passwords. If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the 'Initial Environment Variable' event. The following regular expression was used to exclude strings from this rule: '(passworld|passwise)'.");
+				"The following suspicious environment variables were found in this recording: password. The following regular expression was used to exclude strings from this rule: ''(passworld|passwise)''.If you wish to keep having passwords in your environment variables, but want to be able to share recordings without also sharing the passwords, please disable the ''Initial Environment Variable'' event.");
 	}
 
 	@Test
@@ -72,12 +75,18 @@ public class PasswordsInEnvironmentRuleTest {
 	private void testPasswordsInEnvRule(TestEvent[] testEvents, String descriptionExpected) {
 		IItemCollection events = new MockEventCollection(testEvents);
 		PasswordsInEnvironmentRule passwordsInEnvRule = new PasswordsInEnvironmentRule();
-		RunnableFuture<Result> future = passwordsInEnvRule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
+		RunnableFuture<IResult> future = passwordsInEnvRule.createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
 		try {
 			future.run();
-			Result res = future.get();
-			String longDesc = res.getLongDescription();
-			Assert.assertEquals(descriptionExpected, longDesc);
+			IResult res = future.get();
+			String message;
+			if (res.getSeverity() == Severity.OK) {
+				message = res.getSummary();
+			} else {
+				message = ResultToolkit.populateMessage(res, res.getExplanation(), false) + res.getSolution();
+			}
+			Assert.assertEquals(descriptionExpected, message);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}

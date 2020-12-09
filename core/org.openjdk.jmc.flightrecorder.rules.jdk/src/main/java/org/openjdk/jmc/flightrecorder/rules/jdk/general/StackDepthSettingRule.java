@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,9 +34,11 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -50,23 +52,73 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
-import org.owasp.encoder.Encode;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 public class StackDepthSettingRule implements IRule {
-	private static final int DEFAULT_STACK_DEPTH = 64;
+
+	private static final IQuantity DEFAULT_STACK_DEPTH_SETTING = UnitLookup.NUMBER_UNITY.quantity(64);
+
+	public static class StackDepthTruncationData implements IDisplayable {
+
+		private final IQuantity percentTruncated;
+		private final String type;
+
+		public StackDepthTruncationData(String type, IQuantity percentTruncated) {
+			this.type = type;
+			this.percentTruncated = percentTruncated;
+		}
+
+		public IQuantity getPercentTruncated() {
+			return percentTruncated;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		@Override
+		public String displayUsing(String formatHint) {
+			return MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE), type,
+					percentTruncated.displayUsing(formatHint));
+		}
+
+	}
+
+	public static final ContentType<StackDepthTruncationData> TRUNCATION_DATA = UnitLookup
+			.createSyntheticContentType("truncationData"); //$NON-NLS-1$
+
+	public static final TypedCollectionResult<StackDepthTruncationData> TRUNCATED_TRACES = new TypedCollectionResult<>(
+			"truncatedTraces", "Truncated Traces", "The types that had truncated stacktraces.", TRUNCATION_DATA, //$NON-NLS-1$
+			StackDepthTruncationData.class);
+	public static final TypedResult<IQuantity> STACK_DEPTH = new TypedResult<>("stackdepth", "Stackdepth", //$NON-NLS-1$
+			"The maximum stack depth before the trace is truncated.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> TRUNCATION_RATIO = new TypedResult<>("truncationRatio", //$NON-NLS-1$
+			"Truncation Ratio", "The percentage of stacktraces that were truncated.", UnitLookup.PERCENTAGE,
+			IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, TRUNCATED_TRACES, STACK_DEPTH, TRUNCATION_RATIO);
+
 	private static final String STACKDEPTH_SETTING_RESULT_ID = "StackdepthSetting"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter stackTracesFilter = ItemFilters.hasAttribute(JfrAttributes.EVENT_STACKTRACE);
 		Map<String, Long> truncatedTracesByType = new HashMap<>();
 		Map<String, Long> tracesByType = new HashMap<>();
@@ -90,46 +142,45 @@ public class StackDepthSettingRule implements IRule {
 			}
 		}
 		if (totalTraces == 0L) {
-			return RulesToolkit.getNotApplicableResult(this,
+			return RulesToolkit.getNotApplicableResult(this, valueProvider,
 					Messages.getString(Messages.StackdepthSettingRule_TEXT_NA));
 		}
 		if (truncatedTraces > 0) {
-			ArrayList<String> typesWithTruncatedTraces = new ArrayList<>(truncatedTracesByType.keySet());
+			List<String> typesWithTruncatedTraces = new ArrayList<>(truncatedTracesByType.keySet());
 			Collections.sort(typesWithTruncatedTraces);
-			StringBuilder listBuilder = new StringBuilder();
+			//TODO: Model this data better with e.g. a EventTruncationData class or something similar
+			List<StackDepthTruncationData> truncationData = new ArrayList<>();
 			for (String type : typesWithTruncatedTraces) {
-				listBuilder.append("<li>"); //$NON-NLS-1$
 				Long value = truncatedTracesByType.get(type);
 				IQuantity percentTruncated = UnitLookup.PERCENT_UNITY
 						.quantity((double) value / (double) tracesByType.get(type));
-				listBuilder.append(
-						MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TYPE_LIST_TEMPLATE),
-								Encode.forHtml(type), percentTruncated.displayUsing(IDisplayable.AUTO)));
-				listBuilder.append("</li>"); //$NON-NLS-1$
+				truncationData.add(new StackDepthTruncationData(type, percentTruncated));
 			}
 
 			double truncatedTracesRatio = truncatedTraces / (double) totalTraces;
-			String shortMessage = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO);
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
-			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-					+ MessageFormat.format(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG),
-							stackDepthValue == null ? DEFAULT_STACK_DEPTH : Encode.forHtml(stackDepthValue),
-							stackDepthValue == null
-									? Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG_DEFAULT) + " " //$NON-NLS-1$
-									: "", //$NON-NLS-1$
-							UnitLookup.PERCENT_UNITY.quantity(truncatedTracesRatio).displayUsing(IDisplayable.AUTO),
-							listBuilder.toString());
-			return new Result(this, RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25), shortMessage, longMessage);
+			String explanation = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG);
+			double score = RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25);
+			IQuantity stackDepthSetting = stackDepthValue == null ? DEFAULT_STACK_DEPTH_SETTING
+					: UnitLookup.NUMBER_UNITY.quantity(Long.parseLong(stackDepthValue));
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO))
+					.setExplanation(explanation).addResult(STACK_DEPTH, stackDepthSetting)
+					.addResult(TRUNCATED_TRACES, truncationData)
+					.addResult(TRUNCATION_RATIO, UnitLookup.PERCENT_UNITY.quantity(truncatedTracesRatio)).build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.StackdepthSettingRule_TEXT_OK));
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -153,5 +204,15 @@ public class StackDepthSettingRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.JVM_INFORMATION;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return Collections.emptyMap();
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -73,10 +73,12 @@ import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -255,17 +257,17 @@ public class JfrRulesReport {
 			}
 
 			// TODO: Provide configuration
-			Map<IRule, Future<Result>> resultFutures = RulesToolkit.evaluateParallel(RuleRegistry.getRules(), events,
+			Map<IRule, Future<IResult>> resultFutures = RulesToolkit.evaluateParallel(RuleRegistry.getRules(), events,
 					null, 0);
-			List<Map.Entry<IRule, Future<Result>>> resultFutureList = new ArrayList<>(resultFutures.entrySet());
+			List<Map.Entry<IRule, Future<IResult>>> resultFutureList = new ArrayList<>(resultFutures.entrySet());
 			Collections.sort(resultFutureList, new Comparator<Map.Entry<IRule, ?>>() {
 				@Override
 				public int compare(Entry<IRule, ?> o1, Entry<IRule, ?> o2) {
 					return o1.getKey().getId().compareTo(o2.getKey().getId());
 				}
 			});
-			for (Map.Entry<IRule, Future<Result>> resultEntry : resultFutureList) {
-				Result result = null;
+			for (Map.Entry<IRule, Future<IResult>> resultEntry : resultFutureList) {
+				IResult result = null;
 				try {
 					result = resultEntry.getValue().get();
 				} catch (Throwable t) {
@@ -274,21 +276,26 @@ public class JfrRulesReport {
 					continue;
 				}
 
-				if (result != null && Severity.get(result.getScore()).compareTo(minSeverity) >= 0) {
+				if (result != null && result.getSeverity().compareTo(minSeverity) >= 0) {
 					Element ruleNode = createRuleNode(parent, reportNode, result.getRule());
 
 					ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "severity", //$NON-NLS-1$
-							Severity.get(result.getScore()).getLocalizedName()));
-					ruleNode.appendChild(
-							createValueNode(parent.getOwnerDocument(), "score", String.valueOf(result.getScore()))); //$NON-NLS-1$
-					ruleNode.appendChild(
-							createValueNode(parent.getOwnerDocument(), "message", result.getShortDescription())); //$NON-NLS-1$
+							result.getSeverity().getLocalizedName()));
+					IQuantity score = result.getResult(TypedResult.SCORE);
+					if (score != null) {
+						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "score", //$NON-NLS-1$
+								score.displayUsing(IDisplayable.AUTO)));
+					}
+					ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "summary", //$NON-NLS-1$
+							ResultToolkit.populateMessage(result, result.getSummary(), false)));
 					if (verbose) {
-						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "detailedmessage", //$NON-NLS-1$
-								result.getLongDescription()));
+						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "explanation", //$NON-NLS-1$
+								ResultToolkit.populateMessage(result, result.getExplanation(), false)));
+						ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "solution", //$NON-NLS-1$
+								ResultToolkit.populateMessage(result, result.getSolution(), false)));
 					}
 
-					IItemQuery itemQuery = result.getItemQuery();
+					IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);
 					if (verbose && itemQuery != null && !itemQuery.getAttributes().isEmpty()) {
 						Element itemSetNode = parent.getOwnerDocument().createElement("itemset"); //$NON-NLS-1$
 						ruleNode.appendChild(itemSetNode);

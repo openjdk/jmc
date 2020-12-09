@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -265,7 +265,7 @@ final public class UnitLookup {
 		return Logger.getLogger("org.openjdk.jmc.common.unit");
 	}
 
-	private static <T> ContentType<T> createSyntheticContentType(String id) {
+	public static <T> ContentType<T> createSyntheticContentType(String id) {
 		ContentType<T> contentType = new ContentType<>(id);
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Default"));
 		return contentType;

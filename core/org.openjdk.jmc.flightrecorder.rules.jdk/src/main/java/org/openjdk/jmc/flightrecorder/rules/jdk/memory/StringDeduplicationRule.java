@@ -35,6 +35,9 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 import static org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability.AVAILABLE;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.openjdk.jmc.common.item.Aggregators;
@@ -53,11 +56,16 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 /**
  * Intent of this rule is to find out if it would be worth enabling string deduplication. String
@@ -106,18 +114,40 @@ public class StringDeduplicationRule extends AbstractRule {
 	// FIXME: Does it make more sense to have individual liveset/allocation ratio limit and heap usage limits?
 	// FIXME: Add a physical memory limit
 
+	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(
+			STRING_ARRAY_ALLOCATION_FRAMES, STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT,
+			STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT);
+
+	public static final TypedResult<IQuantity> HEAP_USAGE = new TypedResult<>("heapUsage", "Heap Usage Ratio", //$NON-NLS-1$
+			"The percentage of the heap used.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<IQuantity> STRING_HEAP_RATIO = new TypedResult<>("stringHeapRatio", "String Usage", //$NON-NLS-1$
+			"The percent of the heap used for String objects.", UnitLookup.PERCENTAGE, IQuantity.class);
+	public static final TypedResult<String> INTERNAL_STRING_TYPE = new TypedResult<>("stringType", //$NON-NLS-1$
+			"Internal String Type", "The internal type used to represent Strings.", UnitLookup.PLAIN_TEXT,
+			String.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, HEAP_USAGE, STRING_HEAP_RATIO, INTERNAL_STRING_TYPE);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE)
+			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.OBJECT_COUNT, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.HEAP_SUMMARY, EventAvailability.AVAILABLE).build();
+
 	public StringDeduplicationRule() {
 		super("StringDeduplication", Messages.getString(Messages.StringDeduplicationRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP, STRING_ARRAY_LIVESET_RATIO_AND_HEAP_USAGE_LIMIT,
-				STRING_ARRAY_ALLOCATION_RATIO_AND_HEAP_USAGE_LIMIT, STRING_ARRAY_ALLOCATION_FRAMES);
+				JfrRuleTopics.HEAP, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 
 	@Override
-	protected Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		JavaVersion javaVersion = RulesToolkit.getJavaVersion(items);
 		if (javaVersion == null) {
-			return RulesToolkit.getNotApplicableResult(this,
-					Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.General_TEXT_COULD_NOT_DETERMINE_JAVA_VERSION)).build();
 		}
 
 		String stringInternalArrayType = "byte[]"; //$NON-NLS-1$
@@ -136,25 +166,15 @@ public class StringDeduplicationRule extends AbstractRule {
 
 		Boolean useStringDeduplication = items.getAggregate(JdkAggregators.USE_STRING_DEDUPLICATION);
 		if (Boolean.TRUE.equals(useStringDeduplication)) {
-			return new Result(this, 0,
-					Messages.getString(Messages.StringDeduplicationRule_RESULT_USE_STRING_DEDUPLICATION_ENABLED));
-		}
-
-		EventAvailability heapSummaryAvailable = RulesToolkit.getEventAvailability(items, JdkTypeIDs.HEAP_SUMMARY);
-		if (heapSummaryAvailable != AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, heapSummaryAvailable, JdkTypeIDs.HEAP_SUMMARY);
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages
+							.getString(Messages.StringDeduplicationRule_RESULT_USE_STRING_DEDUPLICATION_ENABLED))
+					.build();
 		}
 
 		EventAvailability objectCountAvail = RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJECT_COUNT);
 		EventAvailability objectCountAfterGcAvail = RulesToolkit.getEventAvailability(items,
 				JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC);
-		EventAvailability allocationAvail = RulesToolkit.getEventAvailability(items,
-				JdkTypeIDs.ALLOC_INSIDE_TLAB /* ,ALLOC_OUTSIDE_TLAB */);
-		if (objectCountAvail != AVAILABLE && objectCountAfterGcAvail != AVAILABLE && allocationAvail != AVAILABLE) {
-			return RulesToolkit.getRuleRequiresAtLeastOneEventTypeResult(this, JdkTypeIDs.OBJECT_COUNT,
-					JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC, JdkTypeIDs.ALLOC_INSIDE_TLAB,
-					JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
-		}
 		// FIXME: Add info about rule preferring object count event, and wanting heap conf or flags...
 
 		IQuantity stringLivesetRatioAndHeapUsageLimit = vp
@@ -172,12 +192,11 @@ public class StringDeduplicationRule extends AbstractRule {
 		String heapInfo = MessageFormat.format(
 				Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_MAX_HEAP_INFO), JdkTypeIDs.HEAP_CONF,
 				JdkTypeIDs.ULONG_FLAG);
-		double heapUsedRatio = -1;
+		IQuantity heapUsedRatio = null;
 		if (maxHeapSize != null) {
 			IQuantity avgHeapUsed = items.getAggregate(JdkAggregators.AVG_HEAP_USED_AFTER_GC);
-			heapUsedRatio = avgHeapUsed.ratioTo(maxHeapSize) * 100;
-			heapInfo = MessageFormat.format(Messages.getString(Messages.StringDeduplicationRule_RESULT_HEAP_USAGE),
-					Math.round(heapUsedRatio));
+			heapUsedRatio = UnitLookup.PERCENT_UNITY.quantity(avgHeapUsed.ratioTo(maxHeapSize));
+			heapInfo = Messages.getString(Messages.StringDeduplicationRule_RESULT_HEAP_USAGE);
 		}
 
 		Boolean useG1GC = items.getAggregate(JdkAggregators.USE_G1_GC);
@@ -192,21 +211,21 @@ public class StringDeduplicationRule extends AbstractRule {
 			String objectCountEventType = (objectCountAvail == AVAILABLE) ? JdkTypeIDs.OBJECT_COUNT
 					: JdkTypeIDs.GC_DETAILED_OBJECT_COUNT_AFTER_GC;
 
-			return getLivesetRatioResult(items, stringInternalArrayType, stringInternalArrayTypeFilter,
+			return getLiveSetRatioResult(items, stringInternalArrayType, stringInternalArrayTypeFilter,
 					averageStringSize, stringLivesetRatioAndHeapUsageLimit, objectCountEventType, heapInfo,
-					heapUsedRatio, extraCompatInfo);
+					heapUsedRatio, extraCompatInfo, vp);
 		} else {
 			return getAllocationRatioResult(items, stringInternalArrayType, stringInternalArrayTypeFilter,
 					stringAllocationRatioAndHeapUsageLimit, allocationFramesString, heapInfo, heapUsedRatio,
-					extraCompatInfo);
+					extraCompatInfo, vp);
 		}
 		// TODO: Check free physical memory?
 	}
 
-	private Result getLivesetRatioResult(
+	private IResult getLiveSetRatioResult(
 		IItemCollection items, String stringInternalArrayType, IItemFilter stringInternalArrayTypeFilter,
 		IQuantity averageStringSize, IQuantity stringLivesetRatioAndHeapUsageLimit, String objectCountEventType,
-		String heapInfo, double heapUsedRatio, String extraGcInfo) {
+		String heapInfo, IQuantity heapUsedRatio, String extraGcInfo, IPreferenceValueProvider vp) {
 
 		IItemCollection objectCountItems = items.apply(ItemFilters.type(objectCountEventType));
 
@@ -248,10 +267,9 @@ public class StringDeduplicationRule extends AbstractRule {
 				}
 			}
 		}
-		String description = MessageFormat.format(
-				Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO),
-				Math.round(stringMaxRatio), stringInternalArrayType) + NEW_LINE + heapInfo;
-		double scoreBase = stringMaxRatio + (stringMaxRatio * heapUsedRatio / 100);
+		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_LIVESET_RATIO)
+				+ NEW_LINE + heapInfo;
+		double scoreBase = stringMaxRatio + (stringMaxRatio * heapUsedRatio.longValue());
 		double score = RulesToolkit.mapExp74(scoreBase, stringLivesetRatioAndHeapUsageLimit.doubleValue());
 
 		String recommendation;
@@ -263,15 +281,18 @@ public class StringDeduplicationRule extends AbstractRule {
 		}
 
 		String shortMessage = description + " " + recommendation; //$NON-NLS-1$
-		String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-				+ Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
-		return new Result(this, score, shortMessage, longMessage);
+		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(HEAP_USAGE, heapUsedRatio)
+				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringMaxRatio))
+				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}
 
-	private Result getAllocationRatioResult(
+	private IResult getAllocationRatioResult(
 		IItemCollection items, String stringInternalArrayType, IItemFilter stringInternalArrayTypeFilter,
-		IQuantity stringAllocationRatioLimit, String allocationFramesString, String heapInfo, double heapUsedRatio,
-		String extraGcInfo) {
+		IQuantity stringAllocationRatioLimit, String allocationFramesString, String heapInfo, IQuantity heapUsedRatio,
+		String extraGcInfo, IPreferenceValueProvider vp) {
 		// TODO: Calculate in time windows?
 
 		// Find the char/byte array allocations coming from string creation, compare to total allocation
@@ -288,18 +309,16 @@ public class StringDeduplicationRule extends AbstractRule {
 		IQuantity stringInternalArraySizeBasedOnStacktrace = stringInternalArrayAllocItems
 				.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
 		if (stringInternalArraySizeBasedOnStacktrace == null) {
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+					.setSummary(Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS)).build();
 			// FIXME: Check if the stacktrace attribute is enabled
-			return new Result(this, Result.NOT_APPLICABLE,
-					Messages.getString(Messages.StringDeduplicationRule_RESULT_NO_ALLOC_ITEMS));
 		}
-		double stringAllocationRatioBasedOnStacktrace = stringInternalArraySizeBasedOnStacktrace.ratioTo(totalSize)
-				* 100;
+		double stringAllocationRatioBasedOnStacktrace = stringInternalArraySizeBasedOnStacktrace.ratioTo(totalSize);
 		double scoreBase = stringAllocationRatioBasedOnStacktrace
-				+ (stringAllocationRatioBasedOnStacktrace * heapUsedRatio / 100);
+				+ (stringAllocationRatioBasedOnStacktrace * heapUsedRatio.longValue());
 		double score = RulesToolkit.mapExp74(scoreBase, stringAllocationRatioLimit.doubleValue());
-		String description = MessageFormat.format(
-				Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO),
-				Math.round(stringAllocationRatioBasedOnStacktrace), stringInternalArrayType) + NEW_LINE + heapInfo;
+		String description = Messages.getString(Messages.StringDeduplicationRule_RESULT_STRING_ARRAY_ALLOCATION_RATIO)
+				+ NEW_LINE + heapInfo;
 
 		String recommendation;
 		if (stringAllocationRatioBasedOnStacktrace > stringAllocationRatioLimit.doubleValue()) {
@@ -310,9 +329,12 @@ public class StringDeduplicationRule extends AbstractRule {
 		}
 
 		String shortMessage = description + " " + recommendation; //$NON-NLS-1$
-		String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-				+ Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
-		return new Result(this, score, shortMessage, longMessage);
+		String longMessage = Messages.getString(Messages.StringDeduplicationRule_RESULT_LONG_DESCRIPTION) + extraGcInfo;
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score)).setSummary(shortMessage)
+				.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(HEAP_USAGE, heapUsedRatio)
+				.addResult(STRING_HEAP_RATIO, UnitLookup.PERCENT_UNITY.quantity(stringAllocationRatioBasedOnStacktrace))
+				.addResult(INTERNAL_STRING_TYPE, stringInternalArrayType).build();
 	}
 
 	private IItemFilter getAllocationFramesFilter(String allocationFramesString) {

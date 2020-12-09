@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,7 +80,7 @@ import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.StateToolkit;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
@@ -375,7 +375,7 @@ public class ItemHandlerPage extends AbstractDataPage {
 
 			onGrouped(histogramSettings.groupBy != null);
 
-			Consumer<Result> listener = r -> {
+			Consumer<IResult> listener = r -> {
 				for (String topic : getTopics()) {
 					if (form != null && r.getRule().getTopic().equals(topic)) {
 						DisplayToolkit.safeAsyncExec(() -> form.setImage(getImageDescriptor().createImage()));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -36,11 +36,9 @@ package org.openjdk.jmc.flightrecorder.ext.jfx.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.text.MessageFormat;
 import java.util.concurrent.RunnableFuture;
 
 import org.junit.Test;
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.TestToolkit;
 import org.openjdk.jmc.common.test.io.IOResource;
@@ -51,12 +49,13 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.ext.jfx.JfxPulseDurationRule;
 import org.openjdk.jmc.flightrecorder.ext.jfx.Messages;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 
 public class JfxPulseDurationRuleTest {
 
-	private static final String RECORDINGS_DIR = "jfr";
-	private static final String JFR_FILENAME = "pulseduration.jfr";
+	private static final String RECORDINGS_DIR = "jfr"; //$NON-NLS-1$
+	private static final String JFR_FILENAME = "pulseduration.jfr"; //$NON-NLS-1$
 	private static final IQuantity TARGET_HZ = UnitLookup.HERTZ.quantity(60);
 	private static final IQuantity LONG_PHASES_PERCENT = UnitLookup.PERCENT_UNITY.quantity(0.08106355382619974);
 	private static final IQuantity TARGET_PHASE_TIME = UnitLookup.MILLISECOND.quantity(16.666666666666668);
@@ -73,7 +72,7 @@ public class JfxPulseDurationRuleTest {
 
 		// Execute the rule on our test recording
 		JfxPulseDurationRule rule = new JfxPulseDurationRule();
-		RunnableFuture<Result> future = rule.evaluate(events, new IPreferenceValueProvider() {
+		RunnableFuture<IResult> future = rule.createEvaluation(events, new IPreferenceValueProvider() {
 
 			@Override
 			@SuppressWarnings("unchecked")
@@ -84,16 +83,17 @@ public class JfxPulseDurationRuleTest {
 				}
 				return DEFAULT_VALUES.getPreferenceValue(preference);
 			}
-		});
+		}, null);
 		future.run();
-		Result result = future.get();
+		IResult result = future.get();
 
 		// Check that score and warnings match expected values
-		assertEquals(SCORE, result.getScore(), DELTA);
-		assertEquals(MessageFormat.format(WARNING_SHORT, LONG_PHASES_PERCENT.displayUsing(IDisplayable.AUTO),
-				TARGET_PHASE_TIME.displayUsing(IDisplayable.AUTO)), result.getShortDescription());
-		assertEquals(MessageFormat.format(WARNING_LONG, TARGET_HZ.displayUsing(IDisplayable.AUTO)),
-				result.getLongDescription());
+		assertEquals(SCORE, result.getResult(TypedResult.SCORE).doubleValue(), DELTA);
+		assertEquals(TARGET_HZ, result.getResult(JfxPulseDurationRule.RENDER_TARGET));
+		assertEquals(LONG_PHASES_PERCENT, result.getResult(JfxPulseDurationRule.SLOW_PHASES));
+		assertEquals(TARGET_PHASE_TIME, result.getResult(JfxPulseDurationRule.TARGET_TIME));
+		assertEquals(WARNING_SHORT, result.getSummary());
+		assertEquals(WARNING_LONG, result.getExplanation());
 	}
 
 }

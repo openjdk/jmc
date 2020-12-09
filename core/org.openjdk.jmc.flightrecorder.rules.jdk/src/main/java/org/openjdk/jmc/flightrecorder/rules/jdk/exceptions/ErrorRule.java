@@ -36,18 +36,14 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
+import java.util.Map;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.Aggregators;
@@ -66,16 +62,20 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.AbstractRule;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
-import org.owasp.encoder.Encode;
 
-public class ErrorRule implements IRule {
+public class ErrorRule extends AbstractRule {
 
 	private static final String RESULT_ID = "Errors"; //$NON-NLS-1$
 
@@ -97,14 +97,29 @@ public class ErrorRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(
 			ERROR_INFO_LIMIT, ERROR_WARNING_LIMIT, EXCLUDED_ERRORS_REGEXP, ERROR_WINDOW_SIZE);
 
-	private FutureTask<Result> evaluationTask;
+	public static final TypedResult<IRange<IQuantity>> ERROR_WINDOW = new TypedResult<>("errorWindow", "Error Window", //$NON-NLS-1$
+			"The window during which the rule detected the most errors.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> ERROR_RATE = new TypedResult<>("errorRate", "Error Rate", //$NON-NLS-1$
+			"The rate of errors created.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IQuantity> ERROR_COUNT = new TypedResult<>("errorCount", "Error Count", //$NON-NLS-1$
+			"The total amount of errors created.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IMCType> MOST_COMMON_ERROR = new TypedResult<>("mostCommonError", //$NON-NLS-1$
+			"Most Common Error", "The most common error thrown.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
+			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", //$NON-NLS-1$
+			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.ERRORS_THROWN);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.ERRORS_THROWN);
-		}
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, ERROR_COUNT, EXCLUDED_ERRORS, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR,
+			MOST_COMMON_ERROR_COUNT);
 
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();
+
+	@Override
+	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		long warnLimit = vp.getPreferenceValue(ERROR_WARNING_LIMIT).clampedLongValueIn(NUMBER_UNITY);
 		long infoLimit = vp.getPreferenceValue(ERROR_INFO_LIMIT).clampedLongValueIn(NUMBER_UNITY);
 		String errorExcludeRegexp = vp.getPreferenceValue(EXCLUDED_ERRORS_REGEXP).trim();
@@ -154,55 +169,28 @@ public class ErrorRule implements IRule {
 					});
 			List<IntEntry<IMCType>> errorGrouping = RulesToolkit.calculateGroupingScore(errorItems,
 					JdkAttributes.EXCEPTION_THROWNCLASS);
-			String mostCommonError = Encode.forHtml(errorGrouping.get(errorGrouping.size() - 1).getKey().getFullName());
+			IMCType mostCommonError = errorGrouping.get(errorGrouping.size() - 1).getKey();
 			int errorsThrown = errorGrouping.get(errorGrouping.size() - 1).getValue();
 			double score = RulesToolkit.mapExp100(maxErrorsPerMinute.left.doubleValue(), infoLimit, warnLimit);
-			String shortMessage = MessageFormat.format(Messages.getString(Messages.ErrorRule_TEXT_WARN),
-					maxErrorsPerMinute.left.displayUsing(IDisplayable.AUTO),
-					maxErrorsPerMinute.right.displayUsing(IDisplayable.AUTO));
-			String longMessage = MessageFormat.format(Messages.getString(Messages.ErrorRule_TEXT_WARN_LONG),
-					maxErrorsPerMinute.left.displayUsing(IDisplayable.AUTO),
-					maxErrorsPerMinute.right.displayUsing(IDisplayable.AUTO), errorCount, mostCommonError,
-					errorsThrown);
+			String longMessage = Messages.getString(Messages.ErrorRule_TEXT_WARN_LONG);
 			// FIXME: List some frames of the most common stack trace
 			if (excludedErrors != null && excludedErrors.longValue() > 0) {
-				longMessage += " " + MessageFormat.format( //$NON-NLS-1$
-						Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO), errorExcludeRegexp,
-						excludedErrors);
+				longMessage += " " + Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO); //$NON-NLS-1$
 			}
-			return new Result(this, score, shortMessage, longMessage, JdkQueries.ERRORS);
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
+					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
+					.addResult(EXCLUDED_ERRORS, excludedErrors).addResult(TypedResult.ITEM_QUERY, JdkQueries.ERRORS)
+					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.ErrorRule_TEXT_OK));
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.ErrorRule_TEXT_OK)).build();
 	}
 
-	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		evaluationTask = new FutureTask<>(new Callable<Result>() {
-			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
-			}
-		});
-		return evaluationTask;
-	}
-
-	@Override
-	public Collection<TypedPreference<?>> getConfigurationAttributes() {
-		return CONFIG_ATTRIBUTES;
-	}
-
-	@Override
-	public String getId() {
-		return RESULT_ID;
-	}
-
-	@Override
-	public String getName() {
-		return Messages.getString(Messages.ErrorRule_RULE_NAME);
-	}
-
-	@Override
-	public String getTopic() {
-		return JfrRuleTopics.EXCEPTIONS;
+	public ErrorRule() {
+		super(RESULT_ID, Messages.getString(Messages.ErrorRule_RULE_NAME), JfrRuleTopics.EXCEPTIONS, CONFIG_ATTRIBUTES,
+				RESULT_ATTRIBUTES, REQUIRED_EVENTS);
 	}
 }

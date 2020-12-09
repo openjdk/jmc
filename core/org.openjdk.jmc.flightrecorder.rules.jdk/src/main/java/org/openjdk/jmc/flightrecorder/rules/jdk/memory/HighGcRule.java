@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,66 +32,79 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
-import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_NS;
-
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.KindOfQuantity;
+import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanSquare;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class HighGcRule implements IRule {
 
 	private static final String RESULT_ID = "HighGc"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.GC_PAUSE);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.GC_PAUSE);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED).build();
 
+	public static final TypedResult<IRange<IQuantity>> PAUSE_CLUSTER = new TypedResult<>("pauseCluster", //$NON-NLS-1$
+			"Pause Cluster", "The time in which a cluster of pauses was detected.", UnitLookup.TIMERANGE);
+	public static final TypedResult<IQuantity> PAUSE_TIME = new TypedResult<>("pauseTime", "Pause Time Ratio", //$NON-NLS-1$
+			"The percent of the cluster spent paused.", UnitLookup.PERCENTAGE, IQuantity.class);
+
+	public static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			PAUSE_CLUSTER, PAUSE_TIME);
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		SpanSquare longestGcCluster = calculateLongestGcCluster(items.apply(JdkFilters.GC_PAUSE));
 		if (longestGcCluster != null) {
 			long sumPauseNanos = longestGcCluster.mass;
+			IRange<IQuantity> cluster = QuantityRange.createWithEnd(
+					UnitLookup.EPOCH_NS.quantity(longestGcCluster.start),
+					UnitLookup.EPOCH_NS.quantity(longestGcCluster.end));
 			long durationNanos = longestGcCluster.end - longestGcCluster.start;
 			IQuantity pausePercent = UnitLookup.PERCENT_UNITY.quantity(sumPauseNanos / (double) durationNanos);
 			// FIXME: Configuration attribute instead of hard coded 1 second => score 90
 			// FIXME: Also consider duration length when calculating score?
 			double score = RulesToolkit.mapExp100Y(sumPauseNanos, 1e9, 90);
 			// int score = longestGcCluster == null ? 0 : (int) (longestGcCluster.mass / 10000000); // 1 s => 100 p
-			String startTime = KindOfQuantity.format(longestGcCluster.start, EPOCH_NS);
-			String duration = KindOfQuantity.format(durationNanos, UnitLookup.NANOSECOND);
-			String message = MessageFormat.format(Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO), duration,
-					startTime, pausePercent.displayUsing(IDisplayable.AUTO));
-			String longMessage = message + " " + Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO_LONG); //$NON-NLS-1$
+			String longMessage = Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO_LONG);
 			if (!RulesToolkit.isEventsEnabled(items, JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkTypeIDs.ALLOC_OUTSIDE_TLAB)) {
-				longMessage = longMessage + "<p>" //$NON-NLS-1$
+				longMessage = longMessage + "\n" //$NON-NLS-1$
 						+ RulesToolkit.getEnabledEventTypesRecommendation(items, JdkTypeIDs.ALLOC_INSIDE_TLAB,
 								JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 			}
-			return new Result(this, score, message, longMessage, JdkQueries.GC_PAUSE);
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_INFO)).setExplanation(longMessage)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(PAUSE_CLUSTER, cluster).addResult(PAUSE_TIME, pausePercent).build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.HighGcRuleFactory_TEXT_OK), null, JdkQueries.GC_PAUSE);
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.HighGcRuleFactory_TEXT_OK)).build();
 	}
 
 	private static SpanSquare calculateLongestGcCluster(IItemCollection items) {
@@ -99,11 +112,13 @@ public class HighGcRule implements IRule {
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -127,5 +142,15 @@ public class HighGcRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.HEAP;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,13 +58,19 @@ import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemQueryBuilder;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedCollectionResult;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.jdk.util.ClassEntry;
 import org.openjdk.jmc.flightrecorder.rules.jdk.util.ColumnInfo;
@@ -75,7 +80,7 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.util.ItemResultSetFactory;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.owasp.encoder.Encode;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 /**
  * This rule looks at the loaded classes to try to figure out if multiple classes with the same name
@@ -83,7 +88,8 @@ import org.owasp.encoder.Encode;
  * (thousands) of unique classes.
  */
 // FIXME: This rule could perhaps be improved by doing a linear regression of the metaspace usage the higher k, the higher score.
-public final class ClassLeakingRule implements IRule {
+public class ClassLeakingRule implements IRule {
+
 	private static final String RESULT_ID = "ClassLeak"; //$NON-NLS-1$
 	private static final String COUNT_AGGREGATOR_ID = "count"; //$NON-NLS-1$
 
@@ -99,13 +105,48 @@ public final class ClassLeakingRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
 			MAX_NUMBER_OF_CLASSES_TO_REPORT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.CLASS_LOAD,
-				JdkTypeIDs.CLASS_UNLOAD);
-		if (eventAvailability == EventAvailability.UNKNOWN || eventAvailability == EventAvailability.DISABLED) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.CLASS_LOAD,
-					JdkTypeIDs.CLASS_UNLOAD);
-		}
+	public static final TypedCollectionResult<ClassEntry> LOADED_CLASSES = new TypedCollectionResult<>("loadedClasses", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_DESCRIPTION), ClassEntry.CLASS_ENTRY,
+			ClassEntry.class);
+	public static final TypedResult<IMCType> MOST_LOADED_CLASS = new TypedResult<>("mostLoadedClass", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_DESCRIPTION), UnitLookup.CLASS,
+			IMCType.class);
+	public static final TypedResult<IQuantity> MOST_LOADED_CLASS_TIMES = new TypedResult<>("mostLoadedClassTimes", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_NAME),
+			Messages.getString(Messages.ClassLeakingRule_RESULT_MOST_LOADED_CLASS_LOADS_DESCRIPTION), UnitLookup.NUMBER,
+			IQuantity.class);
+
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE,
+			LOADED_CLASSES, MOST_LOADED_CLASS, MOST_LOADED_CLASS_TIMES);
+
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.CLASS_LOAD, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.CLASS_UNLOAD, EventAvailability.ENABLED).build();
+
+	@Override
+	public String getId() {
+		return RESULT_ID;
+	}
+
+	@Override
+	public String getTopic() {
+		return JfrRuleTopics.CLASS_LOADING;
+	}
+
+	@Override
+	public String getName() {
+		return Messages.getString(Messages.ClassLeakingRule_NAME);
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	private IResult getResult(
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults) {
 		int warningLimit = (int) valueProvider.getPreferenceValue(WARNING_LIMIT).longValue();
 
 		ItemQueryBuilder queryLoad = ItemQueryBuilder.fromWhere(JdkFilters.CLASS_LOAD);
@@ -124,32 +165,28 @@ public final class ClassLeakingRule implements IRule {
 		List<ClassEntry> entries = new ArrayList<>(diff.values());
 
 		if (entries.size() > 0) {
-			StringBuilder longText = new StringBuilder();
 			int classLimit = Math.min(
 					(int) valueProvider.getPreferenceValue(MAX_NUMBER_OF_CLASSES_TO_REPORT).longValue(),
 					entries.size());
-			longText.append(MessageFormat.format(Messages.getString(Messages.ClassLeakingRule_TEXT_WARN_LONG),
-					String.valueOf(classLimit)));
-
-			int maxCount = 0;
+			long maxCount = 0;
 			Collections.sort(entries);
-			longText.append("<p><ul>"); //$NON-NLS-1$
+			Collection<ClassEntry> entriesOverLimit = new ArrayList<>();
 			for (int i = 0; i < classLimit; i++) {
 				ClassEntry entry = entries.get(i);
-				longText.append("<li>"); //$NON-NLS-1$
-				longText.append(entry);
-				longText.append("</li>"); //$NON-NLS-1$
-				maxCount = Math.max(entry.getCount(), maxCount);
+				entriesOverLimit.add(entry);
+				maxCount = Math.max(entry.getCount().longValue(), maxCount);
 			}
-			longText.append("</ul></p>"); //$NON-NLS-1$
 			double maxScore = RulesToolkit.mapExp100(maxCount, warningLimit) * 0.75;
 			ClassEntry worst = entries.get(0);
-			return new Result(this, maxScore,
-					MessageFormat.format(Messages.getString(Messages.ClassLeakingRule_TEXT_WARN),
-							Encode.forHtml(worst.getType().getFullName()), worst.getCount()),
-					longText.toString());
+			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(maxScore))
+					.setSummary(Messages.getString(Messages.ClassLeakingRule_RESULT_SUMMARY))
+					.setExplanation(Messages.getString(Messages.ClassLeakingRule_RESULT_EXPLANATION))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(maxScore))
+					.addResult(LOADED_CLASSES, entriesOverLimit).addResult(MOST_LOADED_CLASS, worst.getType())
+					.addResult(MOST_LOADED_CLASS_TIMES, worst.getCount()).build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.ClassLeakingRule_TEXT_OK));
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.ClassLeakingRule_TEXT_OK)).build();
 	}
 
 	private static IItemFilter createClassAttributeFilter(
@@ -171,7 +208,7 @@ public final class ClassLeakingRule implements IRule {
 			ClassEntry classEntryUnload = entriesUnload.get(mapEntryLoad.getKey());
 			if (classEntryUnload != null) {
 				diffMap.put(mapEntryLoad.getKey(), new ClassEntry(mapEntryLoad.getValue().getType(),
-						mapEntryLoad.getValue().getCount() - classEntryUnload.getCount()));
+						mapEntryLoad.getValue().getCount().subtract(classEntryUnload.getCount())));
 			} else {
 				diffMap.put(mapEntryLoad.getKey(), mapEntryLoad.getValue());
 			}
@@ -190,10 +227,9 @@ public final class ClassLeakingRule implements IRule {
 			try {
 				countObject = (IQuantity) resultSet.getValue(countColumn.getColumn());
 				if (countObject != null) {
-					int count = (int) countObject.longValue();
 					IMCType type = (IMCType) resultSet.getValue(classColumn.getColumn());
 					if (type != null) {
-						ClassEntry entry = new ClassEntry(type, count);
+						ClassEntry entry = new ClassEntry(type, countObject);
 						entries.put(entry.getType().getFullName(), entry);
 					}
 				}
@@ -206,11 +242,13 @@ public final class ClassLeakingRule implements IRule {
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider preferenceValueProvider,
+		final IResultValueProvider dependencyResults) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, preferenceValueProvider, dependencyResults);
 			}
 		});
 		return evaluationTask;
@@ -222,18 +260,8 @@ public final class ClassLeakingRule implements IRule {
 	}
 
 	@Override
-	public String getId() {
-		return RESULT_ID;
-	}
-
-	@Override
-	public String getName() {
-		return Messages.getString(Messages.ClassLeakingRule_NAME);
-	}
-
-	@Override
-	public String getTopic() {
-		return JfrRuleTopics.CLASS_LOADING;
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }

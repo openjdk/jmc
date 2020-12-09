@@ -41,8 +41,10 @@ import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule;
 
@@ -67,11 +69,12 @@ public class TestFileReadWriteRule {
 				new FileTestEvent(eventType, FILE_NAME_1, 5000, 4096),
 				new FileTestEvent(eventType, FILE_NAME_2, 4000, 4096)};
 		IItemCollection events = new MockEventCollection(testEvents);
-		RunnableFuture<Result> future = rule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
+		RunnableFuture<IResult> future = rule.createEvaluation(events, IPreferenceValueProvider.DEFAULT_VALUES,
+				new ResultProvider());
 		try {
 			future.run();
-			Result res = future.get();
-			String longDesc = res.getLongDescription();
+			IResult res = future.get();
+			String longDesc = ResultToolkit.populateMessage(res, res.getExplanation(), false);
 			Assert.assertEquals(expectedLongDesc, longDesc);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();

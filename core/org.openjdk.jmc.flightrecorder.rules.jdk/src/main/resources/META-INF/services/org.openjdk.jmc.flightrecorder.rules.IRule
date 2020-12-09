@@ -30,6 +30,15 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
 #  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+org.openjdk.jmc.flightrecorder.rules.jdk.general.BufferLostRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLoadingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DuplicateFlagsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DebugNonSafepointsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedGcOptionsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedVmOptionsRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DMSIncidentRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.DumpReasonRule
 org.openjdk.jmc.flightrecorder.rules.jdk.compilation.CodeCacheRule
 org.openjdk.jmc.flightrecorder.rules.jdk.cpu.CompareCpuRule
 org.openjdk.jmc.flightrecorder.rules.jdk.cpu.HighJvmCpuRule
@@ -37,15 +46,12 @@ org.openjdk.jmc.flightrecorder.rules.jdk.cpu.ManyRunningProcessesRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ErrorRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ExceptionRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.FatalErrorRule
-org.openjdk.jmc.flightrecorder.rules.jdk.general.BufferLostRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule
-org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLoadingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DMSIncidentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DebugNonSafepointsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedGcOptionsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedVmOptionsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DumpReasonRule
-org.openjdk.jmc.flightrecorder.rules.jdk.general.DuplicateFlagsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.FewSampledThreadsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.FlightRecordingSupportRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ManagementAgentRule
@@ -73,6 +79,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.memory.ApplicationHaltsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.AutoBoxingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.CompressedOopsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.FullGcRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GarbageCollectionInfoRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcLockerRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcFreedRatioRule

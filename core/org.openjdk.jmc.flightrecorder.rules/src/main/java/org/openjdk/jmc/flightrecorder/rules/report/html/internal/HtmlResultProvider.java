@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,7 +34,7 @@ package org.openjdk.jmc.flightrecorder.rules.report.html.internal;
 
 import java.util.Collection;
 
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
 
 /**
  * Associates topics with results. Where the results are coming from depends on the implementation.
@@ -46,5 +46,5 @@ public interface HtmlResultProvider {
 	 *            wildcard topics like the empty string.
 	 * @return a collection with all known results associated with the provided topics
 	 */
-	Collection<Result> getResults(Collection<String> topics);
+	Collection<IResult> getResults(Collection<String> topics);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,15 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.io;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -52,15 +51,18 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class FileWriteRule implements IRule {
 
@@ -70,65 +72,84 @@ public class FileWriteRule implements IRule {
 			Messages.getString(Messages.FileWriteRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
 			UnitLookup.MILLISECOND.quantity(4000));
 
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.FILE_WRITE, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> LONGEST_WRITE_AMOUNT = new TypedResult<>("longestWriteAmount", //$NON-NLS-1$
+			"Longest Write (Amount)", "The amount read for the longest file write.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_WRITE_TIME = new TypedResult<>("longestWriteTime", //$NON-NLS-1$
+			"Longest Write (Time)", "The longest time it took to perform a file write.", UnitLookup.TIMESPAN,
+			IQuantity.class);
+	public static final TypedResult<String> LONGEST_WRITE_PATH = new TypedResult<>("longestWritePath", //$NON-NLS-1$
+			"Longest Write (Path)", "The path of the file write that took the lognest time.", UnitLookup.PLAIN_TEXT, //$NON-NLS-1$
+			String.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_WRITE = new TypedResult<>("totalWriteForLongest", //$NON-NLS-1$
+			"Total Write (Top File)", "The total duration of all file writes for the file with the longest write.",
+			UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_FILE_WRITE = new TypedResult<>("averageFileWrite", //$NON-NLS-1$
+			"Average File Write", "The average duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_FILE_WRITE = new TypedResult<>("totalFileWrite", //$NON-NLS-1$
+			"Total File Write", "The total duration of all file write.", UnitLookup.TIMESPAN, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_WRITE_AMOUNT, LONGEST_WRITE_PATH, LONGEST_WRITE_TIME, LONGEST_TOTAL_WRITE,
+			AVERAGE_FILE_WRITE, TOTAL_FILE_WRITE);
+
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(WRITE_WARNING_LIMIT);
 	private static final String RESULT_ID = "FileWrite"; //$NON-NLS-1$
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity warningLimit = vp.getPreferenceValue(WRITE_WARNING_LIMIT);
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.FILE_WRITE);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.FILE_WRITE);
-		}
+		IItem longestEvent = items.apply(JdkFilters.FILE_WRITE)
+				.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		IItemCollection fileWriteEvents = items.apply(JdkFilters.FILE_WRITE);
-		IItem longestEvent = fileWriteEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
 		// Aggregate of all file write events - if null, then we had no events
 		if (longestEvent == null) {
-			return new Result(this, 0, Messages.getString(Messages.FileWriteRuleFactory_TEXT_NO_EVENTS), null,
-					JdkQueries.FILE_WRITE);
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_NO_EVENTS)).build();
 		}
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		String peakDuration = maxDuration.displayUsing(IDisplayable.AUTO);
 		double score = RulesToolkit.mapExp100(maxDuration.doubleValueIn(UnitLookup.SECOND),
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
-		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String longestIOPath = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH);
-			String fileName = FileReadRule.sanitizeFileName(longestIOPath);
-			String amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_WRITTEN)
-					.displayUsing(IDisplayable.AUTO);
-			String avgDuration = fileWriteEvents
-					.getAggregate(Aggregators.avg(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
-			String totalDuration = fileWriteEvents
-					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
+		Severity severity = Severity.get(score);
+		if (severity == Severity.WARNING || severity == Severity.INFO) {
+			IQuantity amountWritten = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_FILE_BYTES_WRITTEN);
+			String fileName = FileReadRule.sanitizeFileName(RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH));
+			IQuantity avgDuration = fileWriteEvents
+					.getAggregate(Aggregators.avg(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION));
+			IQuantity totalDuration = fileWriteEvents
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION));
 			IItemCollection eventsFromLongestIOPath = fileWriteEvents
-					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, longestIOPath));
-			String totalLongestIOPath = eventsFromLongestIOPath
-					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
-			return new Result(this, score,
-					MessageFormat.format(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN), peakDuration),
-					MessageFormat.format(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN_LONG), peakDuration,
-							fileName, amountWritten, avgDuration, totalDuration, totalLongestIOPath),
-					JdkQueries.FILE_WRITE);
+					.apply(ItemFilters.equals(JdkAttributes.IO_PATH, fileName));
+			IQuantity totalLongestIOPath = eventsFromLongestIOPath
+					.getAggregate(Aggregators.sum(JdkTypeIDs.FILE_WRITE, JfrAttributes.DURATION));
+			return ResultBuilder.createFor(this, vp).setSeverity(severity)
+					.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.FileWriteRuleFactory_TEXT_WARN_LONG))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(LONGEST_WRITE_AMOUNT, amountWritten).addResult(LONGEST_WRITE_TIME, maxDuration)
+					.addResult(LONGEST_TOTAL_WRITE, totalLongestIOPath).addResult(AVERAGE_FILE_WRITE, avgDuration)
+					.addResult(TOTAL_FILE_WRITE, totalDuration).addResult(LONGEST_WRITE_PATH, fileName).build();
 		}
-		return new Result(this, score,
-				MessageFormat.format(Messages.getString(Messages.FileWriteRuleFactory_TEXT_OK), peakDuration), null,
-				JdkQueries.FILE_WRITE);
-
+		return ResultBuilder.createFor(this, vp).setSeverity(severity)
+				.setSummary(Messages.getString(Messages.FileWriteRuleFactory_TEXT_OK))
+				.addResult(LONGEST_WRITE_TIME, maxDuration).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -152,6 +173,16 @@ public class FileWriteRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.FILE_IO;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }

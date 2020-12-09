@@ -35,15 +35,14 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 import static org.openjdk.jmc.common.unit.UnitLookup.MILLISECOND;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -56,12 +55,17 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class LongGcPauseRule implements IRule {
 
@@ -75,36 +79,54 @@ public class LongGcPauseRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(GC_PAUSE_INFO_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.GC_PAUSE,
-				JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
-		if (eventAvailability == EventAvailability.DISABLED || eventAvailability == EventAvailability.UNKNOWN) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.GC_PAUSE,
-					JdkTypeIDs.GC_CONF, JdkTypeIDs.HEAP_CONF, JdkTypeIDs.GC_PAUSE_L1);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GC_PAUSE, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.HEAP_CONF, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.GC_PAUSE_L1, EventAvailability.ENABLED).build();
+
+	public static final TypedResult<IQuantity> LONGEST_PAUSE = new TypedResult<>("longestPause", "Longest GC Pause", //$NON-NLS-1$
+			"The longest detected GC pause.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> LIVE_SET = new TypedResult<>("liveset", "Liveset", //$NON-NLS-1$
+			"The detected liveset.", UnitLookup.MEMORY, IQuantity.class);
+	public static final TypedResult<IQuantity> HEAP_SIZE = new TypedResult<>("heapSize", "Heap Size", //$NON-NLS-1$
+			"The detected heap size.", UnitLookup.MEMORY, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, LONGEST_PAUSE, LIVE_SET, HEAP_SIZE);
+
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity maxPause = items.getAggregate(JdkAggregators.LONGEST_GC_PAUSE);
 		if (maxPause != null) {
-			String message = MessageFormat.format(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_INFO),
-					maxPause.displayUsing(IDisplayable.AUTO));
 			double gcPauseScore = RulesToolkit.mapExp74(maxPause.doubleValueIn(MILLISECOND),
 					vp.getPreferenceValue(GC_PAUSE_INFO_LIMIT).doubleValueIn(MILLISECOND));
-			String longMessage = message;
+			String longMessage = ""; //$NON-NLS-1$
+			IQuantity liveSet = items.getAggregate(JdkAggregators.AVG_HEAP_USED_AFTER_GC);
+			IQuantity maxMx = items.getAggregate(JdkAggregators.HEAP_CONF_MAX_SIZE);
 			if (gcPauseScore >= 25) {
-				longMessage = appendMessage(longMessage, getLivesetMessage(items));
+				longMessage = appendMessage(longMessage, getLivesetMessage(liveSet, maxMx));
 				longMessage = appendMessage(longMessage, getSemiRefsMessage(items));
 				longMessage = appendMessage(longMessage, getCollectorMessage(items));
 			}
-			return new Result(this, gcPauseScore, message, longMessage);
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(gcPauseScore))
+					.setSummary(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_INFO))
+					.setExplanation(longMessage)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(gcPauseScore))
+					.addResult(LIVE_SET, liveSet).addResult(HEAP_SIZE, maxMx).addResult(LONGEST_PAUSE, maxPause)
+					.build();
 		}
-		return new Result(this, 0, Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_OK));
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+				.setSummary(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_OK)).build();
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -128,15 +150,12 @@ public class LongGcPauseRule implements IRule {
 		return null;
 	}
 
-	private static String getLivesetMessage(IItemCollection items) {
-		IQuantity liveSet = items.getAggregate(JdkAggregators.AVG_HEAP_USED_AFTER_GC);
-		IQuantity maxMx = items.getAggregate(JdkAggregators.HEAP_CONF_MAX_SIZE);
+	private static String getLivesetMessage(IQuantity liveSet, IQuantity maxMx) {
 		// If liveset is low ( < 50% ), suggest lowering mx.
 		if (liveSet != null && maxMx != null) {
 			int live = (int) (liveSet.ratioTo(maxMx) * 100);
 			if (live < 50) {
-				return MessageFormat.format(Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_INFO_MX),
-						liveSet.displayUsing(IDisplayable.AUTO), maxMx.displayUsing(IDisplayable.AUTO));
+				return Messages.getString(Messages.LongGcPauseRuleFactory_TEXT_INFO_MX);
 			}
 		}
 		return null;
@@ -174,5 +193,15 @@ public class LongGcPauseRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.GARBAGE_COLLECTION;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

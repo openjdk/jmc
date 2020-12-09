@@ -40,7 +40,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
+import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInArgumentsRule;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
@@ -53,7 +56,7 @@ public class PasswordsInArgumentsRuleTest {
 	public void containsPassword() {
 		TestEvent[] testEvents = new TestEvent[] {new VMInfoTestEvent("", "-Dpassword=foo")};
 		testPasswordsInArgsRule(testEvents,
-				"The following suspicious application arguments were found in this recording: <ul><li>-Dpassword=[...]</li></ul><p>They may contain passwords. If you do not want to have your passwords directly as arguments to the Java process, there are usually other means to provide them to your software. If you wish to keep using passwords as arguments, but want to be able to share recordings without also sharing the passwords, please disable the 'JVM Information' event. Note that disabling the 'JVM Information' event can limit functionality in the Flight Recorder automated analysis. The following regular expression was used to exclude strings from this rule: '.*(passworld|passwise).*'.");
+				"The following suspicious application arguments were found in this recording: -Dpassword=[...]. The following regular expression was used to exclude strings from this rule: ''.*(passworld|passwise).*''.If you do not want to have your passwords directly as arguments to the Java process, there are usually other means to provide them to your software. If you wish to keep using passwords as arguments, but want to be able to share recordings without also sharing the passwords, please disable the ''JVM Information'' event. Note that disabling the ''JVM Information'' event can limit functionality in the Flight Recorder automated analysis.");
 	}
 
 	@Test
@@ -73,12 +76,18 @@ public class PasswordsInArgumentsRuleTest {
 	private void testPasswordsInArgsRule(TestEvent[] testEvents, String descriptionExpected) {
 		IItemCollection events = new MockEventCollection(testEvents);
 		PasswordsInArgumentsRule passwordsInArgsRule = new PasswordsInArgumentsRule();
-		RunnableFuture<Result> future = passwordsInArgsRule.evaluate(events, IPreferenceValueProvider.DEFAULT_VALUES);
+		RunnableFuture<IResult> future = passwordsInArgsRule.createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
 		try {
 			future.run();
-			Result res = future.get();
-			String longDesc = res.getLongDescription();
-			Assert.assertEquals(descriptionExpected, longDesc);
+			IResult res = future.get();
+			String message;
+			if (res.getSeverity() == Severity.OK) {
+				message = res.getSummary();
+			} else {
+				message = ResultToolkit.populateMessage(res, res.getExplanation(), false) + res.getSolution();
+			}
+			Assert.assertEquals(descriptionExpected, message);
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}

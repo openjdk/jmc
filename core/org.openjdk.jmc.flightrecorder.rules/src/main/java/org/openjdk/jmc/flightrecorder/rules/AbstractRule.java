@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.rules;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -41,35 +41,44 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 
 /**
  * Abstract base class for rules, supplying some boiler plate code.
  */
 public abstract class AbstractRule implements IRule {
-	protected FutureTask<Result> evaluationTask;
+	protected FutureTask<IResult> evaluationTask;
 
 	private final String id;
 	private final String name;
 	private final String topic;
 	private final Collection<TypedPreference<?>> configAttributes;
+	private final Collection<TypedResult<?>> resultAttributes;
+	private final Map<String, EventAvailability> requiredEvents;
 
-	public AbstractRule(String id, String name, String topic, TypedPreference<?> ... configAttributes) {
+	public AbstractRule(String id, String name, String topic, Collection<TypedPreference<?>> configAttributes,
+			Collection<TypedResult<?>> resultAttributes, Map<String, EventAvailability> requiredEvents) {
 		this.id = id;
 		this.name = name;
 		this.topic = topic;
-		this.configAttributes = Arrays.asList(configAttributes);
+		this.configAttributes = configAttributes;
+		this.resultAttributes = resultAttributes;
+		this.requiredEvents = requiredEvents;
 	}
 
-	protected abstract Result getResult(IItemCollection items, IPreferenceValueProvider vp);
+	protected abstract IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp);
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
+		this.evaluationTask = evaluationTask;
 		return evaluationTask;
 	}
 
@@ -91,5 +100,15 @@ public abstract class AbstractRule implements IRule {
 	@Override
 	public String getTopic() {
 		return topic;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return resultAttributes;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return requiredEvents;
 	}
 }

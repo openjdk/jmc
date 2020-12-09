@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,21 +32,21 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.exceptions;
 
-import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_NS;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.KindOfQuantity;
+import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
@@ -55,14 +55,19 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanSquare;
 import org.openjdk.jmc.flightrecorder.rules.jdk.combine.SpanToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class ExceptionRule implements IRule {
 
@@ -79,14 +84,19 @@ public class ExceptionRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(EXCEPTIONS_INFO_LIMIT, EXCEPTIONS_WARNING_LIMIT);
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider vp) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items,
-				JdkTypeIDs.THROWABLES_STATISTICS);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability,
-					JdkTypeIDs.THROWABLES_STATISTICS);
-		}
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.THROWABLES_STATISTICS, EventAvailability.AVAILABLE).build();
 
+	public static final TypedResult<IQuantity> EXCEPTION_RATE = new TypedResult<>("exceptionsRate", "Exception Rate", //$NON-NLS-1$
+			"The rate of exceptions thrown per minute.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<IRange<IQuantity>> EXCEPTION_WINDOW = new TypedResult<>("exceptionsWindow", //$NON-NLS-1$
+			"Exception Window", "The window during which the highest exception rate was detected.",
+			UnitLookup.TIMERANGE);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
+			.<TypedResult<?>> asList(TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW);
+
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		long infoLimit = vp.getPreferenceValue(EXCEPTIONS_INFO_LIMIT).clampedLongValueIn(NUMBER_UNITY);
 		long warningLimit = vp.getPreferenceValue(EXCEPTIONS_WARNING_LIMIT).clampedLongValueIn(NUMBER_UNITY);
 
@@ -97,29 +107,28 @@ public class ExceptionRule implements IRule {
 			double duration = (maxExceptionPeriod.end - maxExceptionPeriod.start) / 1000000000.0;
 			double exPerSec = maxExceptionPeriod.mass / duration;
 			double score = RulesToolkit.mapExp100(exPerSec, infoLimit, warningLimit);
-
-			String startTime = KindOfQuantity.format(maxExceptionPeriod.start, EPOCH_NS);
-			String durationStr = KindOfQuantity.format(duration, UnitLookup.SECOND);
-			String exPerSecStr = KindOfQuantity.format(exPerSec, UnitLookup.NUMBER_UNITY);
-
-			String message = MessageFormat.format(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE), durationStr,
-					startTime, exPerSecStr);
-			String longMessage = null;
-			if (score >= 25) {
-				longMessage = message + "<p>" + Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG); //$NON-NLS-1$
-				// FIXME: List most common exception if events are available
-			}
-			return new Result(this, score, message, longMessage, JdkQueries.THROWABLES_STATISTICS);
+			IRange<IQuantity> window = QuantityRange.createWithEnd(
+					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.start),
+					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.end));
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE))
+					.setExplanation(Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(EXCEPTION_RATE, UnitLookup.NUMBER_UNITY.quantity(exPerSec))
+					.addResult(TypedResult.ITEM_QUERY, JdkQueries.THROWABLES_STATISTICS)
+					.addResult(EXCEPTION_WINDOW, window).build();
 		}
-		return RulesToolkit.getTooFewEventsResult(this);
+		return RulesToolkit.getTooFewEventsResult(this, vp);
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -143,5 +152,15 @@ public class ExceptionRule implements IRule {
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.EXCEPTIONS;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 }

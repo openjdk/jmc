@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -38,6 +38,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -56,8 +57,12 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
@@ -67,25 +72,16 @@ public class FullGcRule implements IRule {
 	private static final String FULL_GC_RESULT_ID = "FullGc"; //$NON-NLS-1$
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		return new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider valueProvider,
+		final IResultValueProvider resultProvider) {
+		return new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
+			public IResult call() throws Exception {
 				final CollectorType collectorType = CollectorType.getOldCollectorType(items);
 				if (!(CollectorType.CMS.equals(collectorType) || CollectorType.G1_OLD.equals(collectorType))) {
-					return RulesToolkit.getNotApplicableResult(FullGcRule.this,
+					return RulesToolkit.getNotApplicableResult(FullGcRule.this, valueProvider,
 							Messages.getString(Messages.FullGcRule_OTHER_COLLECTOR_IN_USE));
-				}
-
-				final String[] eventTypes;
-				if (CollectorType.CMS.equals(collectorType)) {
-					eventTypes = new String[] {JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION};
-				} else {
-					eventTypes = G1Aggregator.EVENT_TYPES;
-				}
-				if (!hasAvailableEvents(items, eventTypes)) {
-					return RulesToolkit.getEventAvailabilityResult(FullGcRule.this, items,
-							RulesToolkit.getEventAvailability(items, eventTypes), eventTypes);
 				}
 
 				final int fullGCs;
@@ -98,18 +94,15 @@ public class FullGcRule implements IRule {
 				}
 
 				if (fullGCs > 0) {
-					return new Result(FullGcRule.this, 100,
-							Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_TITLE),
-							Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC));
+					return ResultBuilder.createFor(FullGcRule.this, valueProvider).setSeverity(Severity.WARNING)
+							.setSummary(Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_TITLE))
+							.setExplanation(Messages.getString(Messages.FullGcRule_FULL_GC_OCCURRED_DESC)).build();
 				} else {
-					return new Result(FullGcRule.this, 0, Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED));
+					return ResultBuilder.createFor(FullGcRule.this, valueProvider).setSeverity(Severity.OK)
+							.setSummary(Messages.getString(Messages.FullGcRule_NO_FULL_GC_OCCURRED)).build();
 				}
 			}
 		});
-	}
-
-	private boolean hasAvailableEvents(final IItemCollection items, final String[] eventTypes) {
-		return RulesToolkit.getEventAvailability(items, eventTypes) == EventAvailability.AVAILABLE;
 	}
 
 	@Override
@@ -180,6 +173,16 @@ public class FullGcRule implements IRule {
 				this.fullGCs++;
 			}
 		}
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return Collections.emptyMap();
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return Collections.emptyList();
 	}
 
 }

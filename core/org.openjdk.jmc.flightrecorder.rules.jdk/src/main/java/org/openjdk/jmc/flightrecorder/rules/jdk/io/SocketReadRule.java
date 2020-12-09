@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,15 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.io;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -53,16 +52,18 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.owasp.encoder.Encode;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 public class SocketReadRule implements IRule {
 
@@ -78,74 +79,95 @@ public class SocketReadRule implements IRule {
 			Messages.getString(Messages.SocketReadRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
 			UnitLookup.MILLISECOND.quantity(2000));
 
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.SOCKET_READ, EventAvailability.AVAILABLE).build();
+
+	public static final TypedResult<IQuantity> LONGEST_READ_AMOUNT = new TypedResult<>("longestReadAmount", //$NON-NLS-1$
+			"Longest Read (Amount)", "The amount read for the longest socket read.", UnitLookup.MEMORY,
+			IQuantity.class);
+	public static final TypedResult<IQuantity> LONGEST_READ_TIME = new TypedResult<>("longestReadTime", //$NON-NLS-1$
+			"Longest Read (Time)", "The longest time it took to perform a socket read.", UnitLookup.TIMESPAN,
+			IQuantity.class);
+	public static final TypedResult<String> LONGEST_READ_ADDRESS = new TypedResult<>("longestReadHost", //$NON-NLS-1$
+			"Longest Read (Host)", "The remote host of the socket read that took the longest time.",
+			UnitLookup.PLAIN_TEXT, String.class);
+	public static final TypedResult<IQuantity> LONGEST_TOTAL_READ = new TypedResult<>("totalReadForLongest", //$NON-NLS-1$
+			"Total Read (Top Host)", "The total duration of all socket reads for the host with the longest read.",
+			UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> AVERAGE_SOCKET_READ = new TypedResult<>("averageSocketRead", //$NON-NLS-1$
+			"Average Socket Read", "The average duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
+	public static final TypedResult<IQuantity> TOTAL_SOCKET_READ = new TypedResult<>("totalSocketRead", //$NON-NLS-1$
+			"Total Socket Read", "The total duration of all socket reads.", UnitLookup.TIMESPAN, IQuantity.class);
+
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, LONGEST_READ_ADDRESS, LONGEST_READ_AMOUNT, LONGEST_READ_TIME, LONGEST_TOTAL_READ,
+			AVERAGE_SOCKET_READ, TOTAL_SOCKET_READ);
+
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(READ_INFO_LIMIT, READ_WARNING_LIMIT);
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider vp) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(
+		final IItemCollection items, final IPreferenceValueProvider vp, final IResultValueProvider rp) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return evaluate(items, vp.getPreferenceValue(READ_INFO_LIMIT),
-						vp.getPreferenceValue(READ_WARNING_LIMIT));
+			public IResult call() throws Exception {
+				return evaluate(items, vp, rp);
 			}
 		});
 		return evaluationTask;
 	}
 
-	private Result evaluate(IItemCollection items, IQuantity infoLimit, IQuantity warningLimit) {
-		EventAvailability eventAvailability = RulesToolkit.getEventAvailability(items, JdkTypeIDs.SOCKET_READ);
-		if (eventAvailability != EventAvailability.AVAILABLE) {
-			return RulesToolkit.getEventAvailabilityResult(this, items, eventAvailability, JdkTypeIDs.SOCKET_READ);
-		}
-
+	private IResult evaluate(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
+		IQuantity infoLimit = vp.getPreferenceValue(READ_INFO_LIMIT);
+		IQuantity warningLimit = vp.getPreferenceValue(READ_WARNING_LIMIT);
 		// Check if this is an early unsupported recording
 		IItemCollection readItems = items.apply(JdkFilters.NO_RMI_SOCKET_READ);
 		IType<IItem> readType = RulesToolkit.getType(readItems, JdkTypeIDs.SOCKET_READ);
 		if (!readType.hasAttribute(JdkAttributes.IO_ADDRESS)) {
-			return RulesToolkit.getMissingAttributeResult(this, readType, JdkAttributes.IO_ADDRESS);
+			return RulesToolkit.getMissingAttributeResult(this, readType, JdkAttributes.IO_ADDRESS, vp);
 		}
 
 		IItem longestEvent = readItems.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 		// Had events, but all got filtered out - say ok, duration 0. We could possibly say "no matching" or something similar.
 		if (longestEvent == null) {
-			String shortMessage = Messages.getString(Messages.SocketReadRuleFactory_TEXT_NO_EVENTS);
-			String longMessage = shortMessage + "<p>" //$NON-NLS-1$
-					+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE);
-			return new Result(this, 0, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_READ);
+			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+					.setSummary(Messages.SocketReadRuleFactory_TEXT_NO_EVENTS)
+					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE)).build();
 		}
 
 		IQuantity maxDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		String peakDuration = maxDuration.displayUsing(IDisplayable.AUTO);
 		double score = RulesToolkit.mapExp100(maxDuration.doubleValueIn(UnitLookup.SECOND),
 				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
 
-		if (Severity.get(score) == Severity.WARNING || Severity.get(score) == Severity.INFO) {
-			String longestIOAddress = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS);
-			String address = sanitizeAddress(longestIOAddress);
-			String amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_READ)
-					.displayUsing(IDisplayable.AUTO);
-			String avgDuration = readItems.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
-			String totalDuration = readItems
-					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
+		Severity severity = Severity.get(score);
+		if (severity == Severity.WARNING || severity == Severity.INFO) {
+			String address = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_ADDRESS);
+			if (address == null || address.isEmpty()) {
+				address = Messages.getString(Messages.General_UNKNOWN_ADDRESS);
+			}
+			IQuantity amountRead = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_SOCKET_BYTES_READ);
+			IQuantity avgDuration = readItems
+					.getAggregate(Aggregators.avg(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
+			IQuantity totalDuration = readItems
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
 			IItemCollection eventsFromLongestAddress = readItems
-					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, longestIOAddress));
-			String totalLongestIOAddress = eventsFromLongestAddress
-					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION))
-					.displayUsing(IDisplayable.AUTO);
-			String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN),
-					maxDuration.displayUsing(IDisplayable.AUTO));
-			String longMessage = MessageFormat.format(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG),
-					peakDuration, address, amountRead, avgDuration, totalDuration, totalLongestIOAddress) + " " //$NON-NLS-1$
-					+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE);
-			return new Result(this, score, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_READ);
+					.apply(ItemFilters.equals(JdkAttributes.IO_ADDRESS, address));
+			IQuantity totalLongestIOAddress = eventsFromLongestAddress
+					.getAggregate(Aggregators.sum(JdkTypeIDs.SOCKET_READ, JfrAttributes.DURATION));
+			return ResultBuilder.createFor(this, vp).setSeverity(severity)
+					.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN))
+					.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_WARN_LONG) + " " //$NON-NLS-1$
+							+ Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
+					.addResult(LONGEST_READ_ADDRESS, address).addResult(LONGEST_READ_AMOUNT, amountRead)
+					.addResult(LONGEST_TOTAL_READ, totalLongestIOAddress).addResult(AVERAGE_SOCKET_READ, avgDuration)
+					.addResult(TOTAL_SOCKET_READ, totalDuration).addResult(LONGEST_READ_TIME, maxDuration).build();
 		}
-		String shortMessage = MessageFormat.format(Messages.getString(Messages.SocketReadRuleFactory_TEXT_OK),
-				peakDuration);
-		String longMessage = shortMessage + "<p>" + Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE); //$NON-NLS-1$
-		return new Result(this, score, shortMessage, longMessage, JdkQueries.NO_RMI_SOCKET_READ);
+		return ResultBuilder.createFor(this, vp).setSeverity(severity)
+				.setSummary(Messages.getString(Messages.SocketReadRuleFactory_TEXT_OK))
+				.setExplanation(Messages.getString(Messages.SocketReadRuleFactory_TEXT_RMI_NOTE))
+				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+				.addResult(LONGEST_READ_TIME, maxDuration).build();
 	}
 
 	@Override
@@ -163,17 +185,26 @@ public class SocketReadRule implements IRule {
 		return Messages.getString(Messages.SocketReadRuleFactory_RULE_NAME);
 	}
 
-	// FIXME: This should be moved to some data provider/toolkit/whatever
 	protected static String sanitizeAddress(String address) {
 		if (address == null || address.isEmpty()) {
-			return Encode.forHtml(Messages.getString(Messages.General_UNKNOWN_ADDRESS));
+			Messages.getString(Messages.General_UNKNOWN_ADDRESS);
 		}
-		return Encode.forHtml(address);
+		return address;
 	}
 
 	@Override
 	public String getTopic() {
 		return JfrRuleTopics.SOCKET_IO;
+	}
+
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
+	}
+
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
 	}
 
 }
