@@ -161,7 +161,8 @@ public class StackDepthSettingRule implements IRule {
 			String stackDepthValue = RulesToolkit.getFlightRecorderOptions(items).get("stackdepth"); //$NON-NLS-1$
 			String explanation = Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO_LONG);
 			double score = RulesToolkit.mapExp100Y(truncatedTracesRatio, 0.01, 25);
-			IQuantity stackDepthSetting = stackDepthValue == null ? DEFAULT_STACK_DEPTH_SETTING : UnitLookup.NUMBER_UNITY.quantity(Long.parseLong(stackDepthValue));
+			IQuantity stackDepthSetting = stackDepthValue == null ? DEFAULT_STACK_DEPTH_SETTING
+					: UnitLookup.NUMBER_UNITY.quantity(Long.parseLong(stackDepthValue));
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.StackdepthSettingRule_TEXT_INFO))
 					.setExplanation(explanation).addResult(STACK_DEPTH, stackDepthSetting)
