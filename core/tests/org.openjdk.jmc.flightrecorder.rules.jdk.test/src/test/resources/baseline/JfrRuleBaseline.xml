@@ -1719,7 +1719,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
 <rule>
 <id>HeapDump</id>
 <severity>Information</severity>
-<summary>{0} heap dump(s) performed.</summary>
+<summary>2 heap dump(s) performed.</summary>
 </rule>
 <rule>
 <id>HeapInspectionGc</id>
@@ -2778,7 +2778,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
 <rule>
 <id>DuplicateFlags</id>
 <severity>Information</severity>
-<summary>{totalDuplicatedFlags} duplicated JVM flags found.</summary>
+<summary>2 duplicated JVM flags found.</summary>
 <explanation>Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;-Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed,-Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed&lt;/li&gt;&lt;li&gt;-Xverify:none,-Xverify:none&lt;/li&gt;&lt;/ul&gt;</explanation>
 <solution>Try to find all the places where the flag is defined and keep only one.</solution>
 </rule>
@@ -3090,7 +3090,7 @@ You can read more about string deduplication in the java options documentation o
 <rule>
 <id>DuplicateFlags</id>
 <severity>Information</severity>
-<summary>{totalDuplicatedFlags} duplicated JVM flags found.</summary>
+<summary>5 duplicated JVM flags found.</summary>
 <explanation>Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;-XX:NewSize=65m,-XX:NewSize=65m&lt;/li&gt;&lt;li&gt;-Dweblogic.home=C:\weblogic\src122130_build\Oracle_Home\wlserver/server,-Dweblogic.home=C:\weblogic\SRC122~1\ORACLE~1\wlserver\server&lt;/li&gt;&lt;li&gt;-Xmx500m,-Xmx500m&lt;/li&gt;&lt;li&gt;-Xms160m,-Xms160m&lt;/li&gt;&lt;li&gt;-XX:MaxNewSize=65m,-XX:MaxNewSize=65m&lt;/li&gt;&lt;/ul&gt;</explanation>
 <solution>Try to find all the places where the flag is defined and keep only one.</solution>
 </rule>

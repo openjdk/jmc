@@ -159,6 +159,7 @@ public class DuplicateFlagsRule implements IRule {
 			}
 			if (!JvmInternalsDataProvider.checkDuplicates(args.iterator().next()).isEmpty()) {
 				return ResultBuilder.createFor(this, vp).addResult(DUPLICATED_FLAGS, duplicateFlags)
+						.addResult(TOTAL_DUPLICATED_FLAGS, UnitLookup.NUMBER_UNITY.quantity(duplicateFlags.size()))
 						.setSeverity(Severity.INFO)
 						.setSummary(Messages.getString(Messages.DuplicateFlagsRule_RESULT_SUMMARY))
 						.setExplanation(Messages.getString(Messages.DuplicateFlagsRule_RESULT_EXPLANATION))
