@@ -148,14 +148,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	}
 
 	private void setAddress(String address) {
-		if (address != null) {
-			try {
-				url = new JMXServiceURL(address);
-			} catch (MalformedURLException e) {
-				BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE,
-						"Could not get create service URL from a local address!", e); //$NON-NLS-1$
-			}
-		} else if (isSelfMonitoring()) {
+		if (isSelfMonitoring() || address == null) {
 			// If we're attempting to monitor ourselves, use the local
 			// JVM (since the poor agent currently may go into infinite
 			// recursion otherwise).
@@ -164,6 +157,13 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 			} catch (MalformedURLException e) {
 				// Not going to happen...
 				e.printStackTrace();
+			}
+		} else {
+			try {
+				url = new JMXServiceURL(address);
+			} catch (MalformedURLException e) {
+				BrowserAttachPlugin.getPluginLogger().log(Level.SEVERE,
+						"Could not get create service URL from a local address!", e); //$NON-NLS-1$
 			}
 		}
 	}
