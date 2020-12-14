@@ -22,7 +22,7 @@ function exitTrap() {
 }
 
 function installCore() {
-    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local timestamp="$1"
     local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
     pushd core 1> /dev/null || {
         err_log "directory core not found"
@@ -39,7 +39,7 @@ function installCore() {
 }
 
 function startJetty() {
-    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local timestamp=$1
     local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
     local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
     
@@ -100,16 +100,17 @@ function runTests() {
 }
 
 function runUiTests() {
-    startJetty
-    installCore
+    local timestamp=$1
+    startJetty $timestamp
+    installCore $timestamp
     echo "$(date +%T) running UI tests"
     mvn verify -P uitests
 }
 
 function packageJmc() {
-    startJetty
-    installCore
-    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local timestamp=$1
+    startJetty $timestamp
+    installCore $timestamp
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
@@ -125,7 +126,7 @@ function packageJmc() {
 }
 
 function packageAgent() {
-    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local timestamp=$1
     local packageLog="${BASEDIR}/build_${timestamp}.5.package.log"
 
     pushd agent 1> /dev/null || {
@@ -236,6 +237,7 @@ function runAgentExample(){
 }
 
 function parseArgs() {
+    local timestamp="$(date +%Y%m%d%H%M%S)"
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --help)
@@ -246,13 +248,13 @@ function parseArgs() {
                 runTests
                 ;;
             --testUi)
-                runUiTests
+                runUiTests $timestamp
                 ;;
             --packageJmc)
-                packageJmc
+                packageJmc $timestamp
                 ;;
             --packageAgent)
-                packageAgent
+                packageAgent $timestamp
                 ;;
             --clean)
                 clean
