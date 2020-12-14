@@ -12,5 +12,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Oracle Corporation
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flameview
 Export-Package: org.openjdk.jmc.flightrecorder.flameview,
- org.openjdk.jmc.flightrecorder.flameview.tree,
  org.openjdk.jmc.flightrecorder.flameview.views
