@@ -1,10 +1,10 @@
 <!--
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
    Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 -->
 <html>
   <head>
-    <title>Mission Control - Running Eclipse on JDK</title>
+    <title>JDK Mission Control - Running Eclipse on JDK</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" >
 		<link rel ="stylesheet" type="text/css" href="../stylesheet.css" title="Style"/>
   </head>
@@ -18,7 +18,7 @@
           <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
               <td>
-                <div class="bannertitle">Mission Control for Eclipse</div><br>
+                <div class="bannertitle">JDK Mission Control for Eclipse</div><br>
               </td>
             </tr>
           </table>
@@ -31,12 +31,12 @@
 
       <tr>
         <td class="body-text">
-	<p>To fully take advantage of running Mission Control in your Eclipse IDE, you need to run Eclipse on a JDK installation. <br>
+	<p>To fully take advantage of running JDK Mission Control in your Eclipse IDE, you need to run Eclipse on a JDK installation. <br>
 	Attaching to locally running JVMs will only work if you're running with a JDK. </p>
 	<p>Follow the instructions below to run on a HotSpot JDK.</p>
-	<p>The easiest way to change the JVM on which to start Eclipse is by modifying the eclipse.ini file. You can also set the -vm on the command line used to start Eclipse. In windows you would typically do that in the shortcut you use to launch Eclipse. Here is an example ini file:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk7_40/jre/bin/</code></p></blockquote> 
-	<p>You can also configure JVM options by using -vmargs on commandline or eclipse.ini:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk8_131/jre/bin/<br>-vmargs<br>&lt;JVM options on separate lines&gt;</code></p></blockquote> 
-	<p>If you use JDK 9 (or later) to run Eclipse, the following JVM options are needed for Mission Control to work properly:</p>
+	<p>The easiest way to change the JVM on which to start Eclipse is by modifying the eclipse.ini file. You can also set the -vm on the command line used to start Eclipse. In windows you would typically do that in the shortcut you use to launch Eclipse. Here is an example ini file:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk1.8.0_261/bin/</code></p></blockquote> 
+	<p>You can also configure JVM options by using -vmargs on commandline or eclipse.ini:  <blockquote> <p><code>-showsplash<br>org.eclipse.platform<br>-vm <br>D:/java/jdk1.8.0_261/bin/<br>-vmargs<br>&lt;JVM options on separate lines&gt;</code></p></blockquote> 
+	<p>If you use JDK 11 (or later) to run Eclipse, the following JVM options are needed for JDK Mission Control to work properly:</p>
 	 <blockquote> <p><code>-Djdk.attach.allowAttachSelf=true
 	 <br>--add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
 	 <br>--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
