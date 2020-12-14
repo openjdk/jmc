@@ -121,7 +121,7 @@ function packageJmc() {
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
         echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
     else
-        err_log "unknown OS type: \"${OSTYPE}\". Please coheck your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
+        err_log "unknown OS type: \"${OSTYPE}\". Please check your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
     fi
 }
 
