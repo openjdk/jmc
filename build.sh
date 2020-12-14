@@ -7,6 +7,7 @@ PROGNAME=$(basename "$0")
 
 JETTY_PID=""
 BASEDIR=""
+JMC_DIR=""
 
 function err_report() {
     err_log "$(date +%T) ${PROGNAME}: Error on line $1"
@@ -20,11 +21,28 @@ function exitTrap() {
     fi
 }
 
+function installCore() {
+    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
+    pushd core 1> /dev/null || {
+        err_log "directory core not found"
+        exit 1
+    }
+
+    echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
+    mvn clean install --log-file "${installLog}"
+
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
+}
+
 function startJetty() {
     local timestamp="$(date +%Y%m%d%H%M%S)"
     local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
     local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
-    local installLog="${BASEDIR}/build_${timestamp}.3.install.log"
+    
 
     pushd releng/third-party 1> /dev/null || {
         err_log "directory releng/third-party not found"
@@ -47,19 +65,7 @@ function startJetty() {
     popd 1> /dev/null || {
         err_log "could not go to project root directory"
         exit 1
-    }
-    pushd core 1> /dev/null || {
-        err_log "directory core not found"
-        exit 1
-    }
-
-    echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
-    mvn clean install --log-file "${installLog}"
-
-    popd 1> /dev/null || {
-        err_log "could not go to project root directory"
-        exit 1
-    }
+    }  
 }
 
 function err_log() {
@@ -75,8 +81,10 @@ function printHelp() {
         printf " \t%s\t%s\n" "--test" "to run the tests"
         printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
+        printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
+        printf " \t%s\t%s\n" "--runAgentExample" "to run Agent Example once it was packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }
@@ -93,13 +101,16 @@ function runTests() {
 
 function runUiTests() {
     startJetty
+    installCore
     echo "$(date +%T) running UI tests"
     mvn verify -P uitests
 }
 
 function packageJmc() {
     startJetty
-    local packageLog="${BASEDIR}/build_$(date +%Y%m%d%H%M%S).4.package.log"
+    installCore
+    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
@@ -109,7 +120,32 @@ function packageJmc() {
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
         echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
     else
-        err_log "unknown OS type: \"${OSTYPE}\". Please check your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
+        err_log "unknown OS type: \"${OSTYPE}\". Please coheck your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
+    fi
+}
+
+function packageAgent() {
+    local timestamp="$(date +%Y%m%d%H%M%S)"
+    local packageLog="${BASEDIR}/build_${timestamp}.5.package.log"
+
+    pushd agent 1> /dev/null || {
+        err_log "directory agent not found"
+        exit 1
+    }
+    
+    echo "$(date +%T) packaging jmc agent - logging output to ${packageLog}"
+    mvn package --log-file "${packageLog}"
+
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
+
+    if [[ "${OSTYPE}" =~ "linux"* ]] || [[ "${OSTYPE}" =~ "darwin"* ]]; then
+       printf "%s\n" "You can nor run agent by calling \"${PROGNAME} --runAgentExample\""
+    else
+        err_log "unknown OS type: \"${OSTYPE}\". Please coheck package in \"${JMC_DIR}/agent/target\""
+        exit 1
     fi
 }
 
@@ -119,6 +155,16 @@ function clean() {
 
     pushd core 1> /dev/null || {
         err_log "directory core not found"
+        exit 1
+    }
+    mvn clean
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
+
+    pushd agent 1> /dev/null || {
+        err_log "directory agent not found"
         exit 1
     }
     mvn clean
@@ -157,6 +203,38 @@ function run() {
     fi
 }
 
+function runAgentExample(){
+    checkJava
+    if [[ "${OSTYPE}" =~ "linux"* ]] || [[ "${OSTYPE}" =~ "darwin"* ]]; then
+       printf "%s\n" "try to execute an agent example"
+    else
+        err_log "unknown OS type: \"${OSTYPE}\". Please coheck package ${JMC_DIR}/agent README.MD"
+        exit 1
+    fi
+
+
+    local javaVersion=`java -version 2>&1 | head -1 | cut -d '"' -f 2 | sed 's/^1\.//' | cut -d '.' -f 1`
+    printf "Java Version:%d\n" "${javaVersion}"
+    local pathToAgentTargetDir="${JMC_DIR}/agent/target"
+    local pathToAgentJar="${pathToAgentTargetDir}/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar"
+    printf "Agent path:%s\n" "${pathToAgentJar}"
+    if [ -f "${pathToAgentJar}" ]; then
+        if [ "$javaVersion" -lt "8" ]; then
+            echo "min. required java version is 8"
+            exit 1
+        elif [ "$javaVersion" -eq "8" ]; then
+            java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+        elif [ "$javaVersion" -lt "13" ]; then 
+            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+        else 
+            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+        fi
+    else
+        err_log "Agent not found in \"${pathToAgentJar}\". Did you call --packageAgent before?"
+        exit 1
+    fi
+}
+
 function parseArgs() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -173,11 +251,17 @@ function parseArgs() {
             --packageJmc)
                 packageJmc
                 ;;
+            --packageAgent)
+                packageAgent
+                ;;
             --clean)
                 clean
                 ;;
             --run)
                 run
+                ;;
+            --runAgentExample)
+                runAgentExample
                 ;;
             *)
                 err_log "unknown argument \"$1\""
@@ -189,18 +273,23 @@ function parseArgs() {
     done
 }
 
+function checkJava() {
+    if ! command -v   java &> /dev/null ; then
+        err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
+        exit 1
+    fi
+}
+
 function checkPreconditions() {
     if ! command -v   mvn &> /dev/null ; then
         err_log "It seems you do not have maven installed. Please ensure you have it installed and executable as \"mvn\"."
         exit 1
     fi
 
-    if ! command -v   java &> /dev/null ; then
-        err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
-        exit 1
-    fi
+    checkJava
 
     BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
+    JMC_DIR=$(pwd)
     mkdir -p "${BASEDIR}" # just in case clean was called before
 }
 
