@@ -33,6 +33,7 @@
 package org.openjdk.jmc.rjmx.services.internal;
 
 import org.openjdk.jmc.common.version.JavaVersion;
+import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
@@ -53,6 +54,10 @@ public class CommercialFeaturesServiceFactory implements IServiceFactory<ICommer
 		if (descriptor != null) {
 			JavaVersion version = new JavaVersion(descriptor.getJavaVersion());
 			if (version.getMajorVersion() >= 11) {
+				return new NoCommercialFeaturesService();
+			}
+		} else if (handle.isConnected() && ConnectionToolkit.isOracle(handle)) {
+			if (ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JDK_11)) {
 				return new NoCommercialFeaturesService();
 			}
 		}
