@@ -80,6 +80,7 @@ function printHelp() {
     {
         printf " \t%s\t%s\n" "--test" "to run the tests"
         printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
+        printf " \t%s\t%s\n" "--installCore" "install JMC core"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
@@ -108,7 +109,7 @@ function runUiTests() {
 }
 
 function packageJmc() {
-    local timestamp=$1
+        
     startJetty $timestamp
     installCore $timestamp
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
@@ -249,6 +250,9 @@ function parseArgs() {
                 ;;
             --testUi)
                 runUiTests $timestamp
+                ;;
+            --installCore)
+                installCore $timestamp
                 ;;
             --packageJmc)
                 packageJmc $timestamp
