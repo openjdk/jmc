@@ -37,6 +37,7 @@ if "%1" == "--help" goto print_usage
 if "%1" == "--test" goto test
 if "%1" == "--testUi" goto testUi
 if "%1" == "--packageJmc" goto packageJmc
+if "%1" == "--packageAgent" goto packageAgent
 if "%1" == "--clean" goto clean
 if "%1" == "--run" goto run
 echo unknown argument %1
@@ -115,10 +116,29 @@ if %ERRORLEVEL% == 0 echo You can now run jmc by calling "%0 --run" or "%cd%\tar
 call :killJetty %JETTY_TITLE%
 goto end
 
+:packageAgent
+@REM generate a unique id for window title
+@REM allow to filter uniquely to get PID associated later
+for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
+set TIMESTAMP=%LOCALDATETIME:~0,14%
+set PACKAGE_LOG=%cd%\build_%TIMESTAMP%.5.package.log
+cd agent
+call mvn install --log-file "%PACKAGE_LOG%"
+cd ..
+if %ERRORLEVEL% == 0  (
+	echo You can nor run agent, see agent/README.md
+) else {
+	exit /B 1
+}
+exit /B 0
+
 :clean
 echo %time% running clean up
 call mvn clean
 cd core
+call mvn clean
+cd ..
+cd agent
 call mvn clean
 cd ..
 cd releng\third-party
