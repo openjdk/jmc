@@ -26,7 +26,9 @@ if not "%*" == "" goto parse_args
 echo usage: call %0 with the following options:
 echo 	--test	to run the tests
 echo 	--testUi	to run the tests including UI tests
+echo 	--installCore to install JMC core
 echo 	--packageJmc	to package JMC
+echo 	--packageAgent to package Agent
 echo 	--clean	to run maven clean
 echo 	--run	to run JMC once it was packaged
 echo 	--help	to show this help dialog
@@ -36,6 +38,7 @@ exit /B 0
 if "%1" == "--help" goto print_usage
 if "%1" == "--test" goto test
 if "%1" == "--testUi" goto testUi
+if "%1" == "--installCore" goto installCore
 if "%1" == "--packageJmc" goto packageJmc
 if "%1" == "--packageAgent" goto packageAgent
 if "%1" == "--clean" goto clean
@@ -48,7 +51,6 @@ for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALD
 set TIMESTAMP=%LOCALDATETIME:~0,14%
 set P2_SITE_LOG=%cd%\build_%TIMESTAMP%.1.p2_site.log
 set JETTY_LOG=%cd%\build_%TIMESTAMP%.2.jetty.log
-set INSTALL_LOG=%cd%\build_%TIMESTAMP%.3.install.log
 echo %time% building p2:site - logging output to %P2_SITE_LOG%
 call mvn -f releng\third-party\pom.xml p2:site --log-file "%P2_SITE_LOG%"
 if not %ERRORLEVEL% == 0 (
@@ -63,14 +65,25 @@ timeout /t 1
 findstr "[INFO] Started Jetty Server" %JETTY_LOG%
 if not %ERRORLEVEL% == 0 goto :wait_jetty
 echo %time% jetty server up and running
+call :installCore
+if not %ERRORLEVEL% == 0 (
+	call :killJetty %1
+	exit /B 1
+)
+exit /B 0
+
+:installCore
+for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
+set TIMESTAMP=%LOCALDATETIME:~0,14%
+set INSTALL_LOG=%cd%\build_%TIMESTAMP%.3.install.log
 echo %time% installing core artifacts - logging output to %INSTALL_LOG%
 call mvn -f core\pom.xml clean install --log-file "%INSTALL_LOG%"
 if not %ERRORLEVEL% == 0 (
-	call :killJetty %1
 	echo installing core artifacts failed!
 	exit /B 1
 )
 exit /B 0
+
 
 @REM Kill the console based on title passed as first arg (%1)
 @REM tasklist gives us the pid, and using unique id on window title to filter the list
