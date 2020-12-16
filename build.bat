@@ -84,7 +84,6 @@ if not %ERRORLEVEL% == 0 (
 )
 exit /B 0
 
-
 @REM Kill the console based on title passed as first arg (%1)
 @REM tasklist gives us the pid, and using unique id on window title to filter the list
 :killJetty

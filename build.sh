@@ -65,7 +65,7 @@ function startJetty() {
     popd 1> /dev/null || {
         err_log "could not go to project root directory"
         exit 1
-    }  
+    }
 }
 
 function err_log() {
