@@ -33,7 +33,7 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2020-09" sequenceNumber="47">
+<target name="jmc-target-2020-12" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
@@ -49,10 +49,10 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.900.v20200819-0940"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.500.v20200902-1800"/>
-            <unit id="org.eclipse.platform.sdk" version="4.17.0.I20200902-1800"/>
-            <repository location="http://download.eclipse.org/releases/2020-09/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1000.v20200915-1508"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.600.v20201202-1800"/>
+            <unit id="org.eclipse.platform.sdk" version="4.18.0.I20201202-1800"/>
+            <repository location="http://download.eclipse.org/releases/2020-12/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.17.0.v20201010020001"/>
