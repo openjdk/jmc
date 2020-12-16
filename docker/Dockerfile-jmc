@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-stretch AS builder
+FROM openjdk:11-jdk-stretch AS builder
 
 RUN apt-get update && apt-get install -y maven
 
