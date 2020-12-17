@@ -96,7 +96,9 @@ if [ $# -eq 0 ]; then
 fi
 
 function runTests() {
-    echo "$(date +%T) running tests"
+    local timestamp=$1
+    startJetty $timestamp
+    echo "$${timestamp} running tests"
     mvn verify
 }
 
@@ -109,7 +111,7 @@ function runUiTests() {
 }
 
 function packageJmc() {
-        
+    local timestamp=$1    
     startJetty $timestamp
     installCore $timestamp
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
@@ -246,7 +248,7 @@ function parseArgs() {
                 exit 0
                 ;;
             --test)
-                runTests
+                runTests $timestamp
                 ;;
             --testUi)
                 runUiTests $timestamp
