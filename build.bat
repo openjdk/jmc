@@ -138,7 +138,7 @@ cd agent
 call mvn install --log-file "%PACKAGE_LOG%"
 cd ..
 if %ERRORLEVEL% == 0  (
-	echo You can nor run agent, see agent/README.md
+	echo You can run the agent, see agent/README.md
 ) else {
 	exit /B 1
 }
