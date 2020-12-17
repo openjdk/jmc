@@ -26,7 +26,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 ### Bell-Soft (Liberica Mission Control)
 * Released version
 
-[https://bell-sw.com/downloads](https://bell-sw.com/downloads)
+[https://bell-sw.com/pages/lmc](https://bell-sw.com/pages/lmc)
 
 ### Oracle
 * Released version
