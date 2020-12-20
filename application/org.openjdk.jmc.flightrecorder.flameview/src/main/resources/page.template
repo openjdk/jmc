@@ -4,10 +4,6 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<style type="text/css">%1$s</style>
-	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-		<script>%2$s</script>
-	<![endif]-->
 	<style type="text/css" media="print">
 		body {
 			background: #fff;
@@ -22,11 +18,15 @@
 <body>
 	<div id="search" align="right">
 		<input type="text" id="searchInput" size="30" onfocusout="executeSearch()" value="">
-		<img src="data:image/png;base64, %3$s" width="12" height="12">
+		<img src="data:image/png;base64, %2$s" width="12" height="12">
 	</div>
 	<div id="chart"></div>
-	<script type="text/javascript">%4$s</script>
-	<script type="text/javascript">%5$s</script>
+	<script type="text/javascript">
+	%3$s
+	</script>
+	<script type="text/javascript">
+	%4$s
+	</script>
 	<script type="text/javascript">
 		
 		const minSearchTextSize = 3;
@@ -59,14 +59,11 @@
 			tootlipDescription = dt;
 		};
 		
-		const tip = d3.tip()
-        	.direction("s")
-        	.offset([8, 0])
-        	.attr('class', 'd3-flame-graph-tip')
-        	.html(adjustTip);
+		const tip = flamegraph.tooltip.defaultFlamegraphTooltip()
+			.html(adjustTip);
 
 		function processGraph(jsonObj, viewInverted) {
-			flameGraph = d3.flamegraph()
+			flameGraph = flamegraph()
 				.width(windowSize())
 				.cellHeight(18)
 				.transitionDuration(320)
@@ -74,7 +71,6 @@
 				.transitionEase(d3.easeCubic)
 				.sort(true)
 				.title("")
-				.differential(false)
 				.inverted(viewInverted)
 				.tooltip(tip)
 				.color(colorCell);
