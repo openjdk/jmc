@@ -132,7 +132,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		String jsFlameviewName = "flameview.js";
 		String cssFlameview = "flameview.css";
 
-		String jsD3 = loadLibraries(jsD3V6,jsD3FlameGraph, jsD3Tip);
+		String jsD3 = loadLibraries(jsD3V6, jsD3FlameGraph, jsD3Tip);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 		String jsFlameviewColoring = fileContent(jsFlameviewName);
 
@@ -140,8 +140,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		// formatter arguments for the template: %1 - CSSs stylesheets,
 		// %2 - Search Icon Base64, %3 - 3rd party scripts, %4 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, magnifierIcon,
-				jsD3, jsFlameviewColoring);
+		HTML_PAGE = String.format(fileContent("page.template"), styleheets, magnifierIcon, jsD3, jsFlameviewColoring);
 	}
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
