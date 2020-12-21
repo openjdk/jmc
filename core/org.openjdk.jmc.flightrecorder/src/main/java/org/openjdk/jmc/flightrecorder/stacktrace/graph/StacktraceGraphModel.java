@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.graph;
 
-import static org.openjdk.jmc.common.item.ItemToolkit.accessor;
 import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 import java.io.File;
@@ -80,8 +79,6 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
  * </pre>
  */
 public final class StacktraceGraphModel {
-	@SuppressWarnings("deprecation")
-	private final static IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
 	private final IAttribute<IQuantity> attribute;
@@ -263,31 +260,33 @@ public final class StacktraceGraphModel {
 
 	private void buildModel() {
 		for (IItemIterable iterable : items) {
-			iterable.forEach((item) -> addItem(item, getAccessor(iterable, attribute)));
+			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = getAccessor(iterable, EVENT_STACKTRACE);
+			if (stacktraceAccessor == null) {
+				continue;
+			}
+			iterable.forEach((item) -> addItem(item, stacktraceAccessor, getAccessor(iterable, attribute)));
 		}
 	}
 
-	private static IMemberAccessor<IQuantity, IItem> getAccessor(IItemIterable iterable, IAttribute<IQuantity> attr) {
-		IMemberAccessor<IQuantity, IItem> accessor = null;
-		if (attr != null) {
-			accessor = iterable.getType().getAccessor(attr.getKey());
-		}
-		return accessor;
+	private static <T> IMemberAccessor<T, IItem> getAccessor(IItemIterable iterable, IAttribute<T> attr) {
+		return (attr != null) ? iterable.getType().getAccessor(attr.getKey()) : null;
 	}
 
-	private void addItem(IItem item, IMemberAccessor<IQuantity, IItem> accessor) {
-		IMCStackTrace stackTrace = getStackTrace(item);
+	private void addItem(
+		IItem item, IMemberAccessor<IMCStackTrace, IItem> stackTraceAccessor,
+		IMemberAccessor<IQuantity, IItem> quantityAccessor) {
+		IMCStackTrace stackTrace = stackTraceAccessor.getMember(item);
 		if (stackTrace == null) {
 			return;
 		}
-		List<? extends IMCFrame> frames = getStackTrace(item).getFrames();
+		List<? extends IMCFrame> frames = stackTrace.getFrames();
 		if (frames.isEmpty()) {
 			return;
 		}
 
 		double value = 0;
-		if (accessor != null) {
-			value = accessor.getMember(item).doubleValue();
+		if (quantityAccessor != null) {
+			value = quantityAccessor.getMember(item).doubleValue();
 		}
 
 		// First frame is the frame where things are actually happening, i.e. the method
@@ -348,10 +347,6 @@ public final class StacktraceGraphModel {
 		Edge edge = new Edge(fromNode, toNode);
 		toSet.add(edge);
 		return edge;
-	}
-
-	private IMCStackTrace getStackTrace(IItem item) {
-		return ACCESSOR_STACKTRACE.getMember(item);
 	}
 
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
