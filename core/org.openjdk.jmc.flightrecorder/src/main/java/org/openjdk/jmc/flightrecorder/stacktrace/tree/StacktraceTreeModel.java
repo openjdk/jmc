@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 
-import static org.openjdk.jmc.common.item.ItemToolkit.accessor;
 import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 import java.util.List;
@@ -51,8 +50,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 
 public class StacktraceTreeModel {
-	@SuppressWarnings("deprecation")
-	private static final IMemberAccessor<IMCStackTrace, IItem> ACCESSOR_STACKTRACE = accessor(EVENT_STACKTRACE);
+
 	private static final FrameSeparator DEFAULT_FRAME_SEPARATOR = new FrameSeparator(FrameCategorization.METHOD, false);
 
 	/**
@@ -141,8 +139,12 @@ public class StacktraceTreeModel {
 		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
 		this.root = Node.newRootNode(rootFrame);
 		for (IItemIterable iterable : items) {
-			IMemberAccessor<IQuantity, IItem> accessor = getAccessor(iterable, attribute);
-			iterable.forEach((item) -> addItem(item, accessor));
+			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = getAccessor(iterable, EVENT_STACKTRACE);
+			if (stacktraceAccessor == null) {
+				continue;
+			}
+			IMemberAccessor<IQuantity, IItem> quantityAccessor = getAccessor(iterable, attribute);
+			iterable.forEach((item) -> addItem(item, stacktraceAccessor, quantityAccessor));
 		}
 	}
 
@@ -160,23 +162,25 @@ public class StacktraceTreeModel {
 		return items;
 	}
 
-	private void addItem(IItem item, IMemberAccessor<IQuantity, IItem> accessor) {
-		IMCStackTrace stacktrace = getStackTrace(item);
+	private void addItem(
+		IItem item, IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor,
+		IMemberAccessor<IQuantity, IItem> quantityAccessor) {
+		IMCStackTrace stacktrace = stacktraceAccessor.getMember(item);
 		if (stacktrace == null) {
 			return;
 		}
-		List<? extends IMCFrame> frames = getStackTrace(item).getFrames();
+		List<? extends IMCFrame> frames = stacktrace.getFrames();
 		if (frames == null || frames.isEmpty()) {
 			return;
 		}
 
 		// if we want a specific attribute but its accessor is not available we skip
-		if (attribute != null && accessor == null) {
+		if (attribute != null && quantityAccessor == null) {
 			return;
 		}
 
 		// if we don't request a specific attribute, we simply count occurrences
-		double value = (accessor != null) ? accessor.getMember(item).doubleValue() : 1.0;
+		double value = (quantityAccessor != null) ? quantityAccessor.getMember(item).doubleValue() : 1.0;
 
 		// if the stack is zero valued for the requested attribute we prune it
 		if (attribute != null && value == 0.0) {
@@ -217,11 +221,7 @@ public class StacktraceTreeModel {
 				});
 	}
 
-	private IMCStackTrace getStackTrace(IItem item) {
-		return ACCESSOR_STACKTRACE.getMember(item);
-	}
-
-	private static IMemberAccessor<IQuantity, IItem> getAccessor(IItemIterable iterable, IAttribute<IQuantity> attr) {
+	private static <T> IMemberAccessor<T, IItem> getAccessor(IItemIterable iterable, IAttribute<T> attr) {
 		return (attr != null) ? iterable.getType().getAccessor(attr.getKey()) : null;
 	}
 }
