@@ -39,8 +39,19 @@
 	<version>8.0.0-SNAPSHOT</version>
 
 	<properties>
+		<!-- Config -->
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<!-- Versions -->
+		<hdrhistogram.version>2.1.12</hdrhistogram.version>
+		<jakarta.activation.version>1.2.1</jakarta.activation.version>
 		<jakarta.mail.version>1.6.5</jakarta.mail.version>
+		<jemmy.version>2.0.0</jemmy.version>
+		<jetty-maven-plugin.version>9.4.33.v20201020</jetty-maven-plugin.version>
+		<lz4.version>1.7.1</lz4.version>
+		<maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+		<owasp.encoder.version>1.2.2</owasp.encoder.version>
+		<p2-maven-plugin.version>1.5.0</p2-maven-plugin.version>
+		<twitter4j.core.version>4.0.7</twitter4j.core.version>
 	</properties>
 
 	<build>
@@ -48,7 +59,7 @@
 			<plugin>
 				<groupId>org.reficio</groupId>
 				<artifactId>p2-maven-plugin</artifactId>
-				<version>1.3.0</version>
+				<version>${p2-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -59,7 +70,7 @@
 								<!-- specify third party non-OSGi dependencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>org.twitter4j:twitter4j-core:4.0.7</id>
+									<id>org.twitter4j:twitter4j-core:${twitter4j.core.version}</id>
 								</artifact>
 								<artifact>
 									<id>com.sun.mail:jakarta.mail:${jakarta.mail.version}</id>
@@ -70,13 +81,13 @@
 									</instructions>
 								</artifact>
 								<artifact>
-									<id>com.sun.activation:jakarta.activation:1.2.1</id>
+									<id>com.sun.activation:jakarta.activation:${jakarta.activation.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.owasp.encoder:encoder:1.2.2</id>
+									<id>org.owasp.encoder:encoder:${owasp.encoder.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.lz4:lz4-java:1.7.1</id>
+									<id>org.lz4:lz4-java:${lz4.version}</id>
 									<override>true</override>
 									<instructions>
 										<Bundle-Name>org.lz4.lz4-java</Bundle-Name>
@@ -84,19 +95,19 @@
 									</instructions>
 								</artifact>
 								<artifact>
-									<id>org.hdrhistogram:HdrHistogram:2.1.12</id>
+									<id>org.hdrhistogram:HdrHistogram:${hdrhistogram.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.adoptopenjdk:jemmy-awt-input:2.0.0</id>
+									<id>org.adoptopenjdk:jemmy-awt-input:${jemmy.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.adoptopenjdk:jemmy-browser:2.0.0</id>
+									<id>org.adoptopenjdk:jemmy-browser:${jemmy.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.adoptopenjdk:jemmy-core:2.0.0</id>
+									<id>org.adoptopenjdk:jemmy-core:${jemmy.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.adoptopenjdk:jemmy-swt:2.0.0</id>
+									<id>org.adoptopenjdk:jemmy-swt:${jemmy.version}</id>
 								</artifact>
 							</artifacts>
 						</configuration>
@@ -106,7 +117,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.4.33.v20201020</version>
+				<version>${jetty-maven-plugin.version}</version>
 				<configuration>
 					<scanIntervalSeconds>60</scanIntervalSeconds>
 					<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
@@ -121,7 +132,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M3</version>
+				<version>${maven-enforcer-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>enforce-java</id>
