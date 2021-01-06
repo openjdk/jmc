@@ -1,3 +1,4 @@
+
 /*
  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  Copyright (c) 2020, Datadog, Inc. All rights reserved.
@@ -146,7 +147,7 @@ const adjustTip = function(d) {
 	var tipMessage = "".concat(d.data.n, htmlTagBr);
 	
 	if (nodeContainsChildren(d.data)) {
-		if (d.data.v === undefined) {
+		if (d.data.d && d.data.d.includes("|")) {
 			tipMessage += createRootTable(d.data.d);
 		} else {
 			tipMessage += createNodeTipTable(d.data);

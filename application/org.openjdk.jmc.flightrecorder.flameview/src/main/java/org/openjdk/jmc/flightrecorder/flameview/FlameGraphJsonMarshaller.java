@@ -114,17 +114,19 @@ public class FlameGraphJsonMarshaller {
 			sb.append(addQuotes("p")).append(": ").append(addQuotes(packageName));
 			sb.append(",");
 		}
-		sb.append(addQuotes("v")).append(": ").append(addQuotes(String.valueOf((int) value)));
+		sb.append(addQuotes("v")).append(": ").append(String.valueOf((int) value));
 		return sb.toString();
 	}
 
-	private static String createJsonProps(String frameName, String description) {
+	private static String createJsonProps(String frameName, String description, double value) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(addQuotes("n")).append(": ").append(addQuotes(frameName));
 		sb.append(",");
 		sb.append(addQuotes("p")).append(": ").append(addQuotes(""));
 		sb.append(",");
 		sb.append(addQuotes("d")).append(": ").append(addQuotes(description));
+		sb.append(",");
+		sb.append(addQuotes("v")).append(": ").append(String.valueOf((int) value));
 		return sb.toString();
 	}
 
@@ -151,7 +153,8 @@ public class FlameGraphJsonMarshaller {
 		Map<String, Long> eventCountsByType = countEventsByType(events);
 		String rootTitle = createRootNodeTitle(eventCountsByType);
 		String rootDescription = createRootNodeDescription(eventCountsByType);
-		return createJsonProps(rootTitle, rootDescription);
+		return createJsonProps(rootTitle, rootDescription,
+				eventCountsByType.values().stream().mapToLong(Long::longValue).sum());
 	}
 
 	private static String createRootNodeTitle(Map<String, Long> eventCountsByType) {

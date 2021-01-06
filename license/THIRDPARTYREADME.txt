@@ -547,7 +547,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 %% The following notice is provided with respect to D3, which may
 be included with this product.
 
-Copyright 2010-2017 Mike Bostock
+Copyright 2010-2020 Mike Bostock
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

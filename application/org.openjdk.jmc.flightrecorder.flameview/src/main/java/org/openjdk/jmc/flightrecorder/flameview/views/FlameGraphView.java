@@ -120,33 +120,27 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String TOOLTIP_DESCRIPTION = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION);
 	private static final String HTML_PAGE;
 	static {
-		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.css
 		String cssD3Flamegraph = "jslibs/d3-flamegraph.css";
-		// from: https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js
-		String jsHtml5shiv = "jslibs/html5shiv.min.js";
-		// from: https://oss.maxcdn.com/respond/1.4.2/respond.min.js
-		String jsRespond = "jslibs/respond.min.js";
-		// from: https://d3js.org/d3.v4.min.js
-		String jsD3V4 = "jslibs/d3.v4.min.js";
-		// from: https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js
-		String jsD3Tip = "jslibs/d3-tip.min.js";
-		// from: https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js
-		String jsD3FlameGraph = "jslibs/d3-flamegraph.min.js";
+		// from: https://d3js.org/d3.v6.min.js
+		String jsD3V6 = "jslibs/d3.v6.min.js";
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph-tooltip.js
+		String jsD3Tip = "jslibs/d3-flamegraph-tooltip.js";
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.js
+		String jsD3FlameGraph = "jslibs/d3-flamegraph.js";
 		// jmc flameview coloring, tooltip and other  functions
 		String jsFlameviewName = "flameview.js";
 		String cssFlameview = "flameview.css";
 
-		String jsIeLibraries = loadLibraries(jsHtml5shiv, jsRespond);
-		String jsD3Libraries = loadLibraries(jsD3V4, jsD3Tip, jsD3FlameGraph);
+		String jsD3 = loadLibraries(jsD3V6, jsD3FlameGraph, jsD3Tip);
 		String styleheets = loadLibraries(cssD3Flamegraph, cssFlameview);
 		String jsFlameviewColoring = fileContent(jsFlameviewName);
 
 		String magnifierIcon = getIconBase64(ImageConstants.ICON_MAGNIFIER);
 
-		// formatter arguments for the template: %1 - CSSs stylesheets, %2 - IE9 specific scripts,
-		// %3 - Search Icon Base64, %4 - 3rd party scripts, %5 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, jsIeLibraries, magnifierIcon, jsD3Libraries,
-				jsFlameviewColoring);
+		// formatter arguments for the template: %1 - CSSs stylesheets,
+		// %2 - Search Icon Base64, %3 - 3rd party scripts, %4 - Flameview Coloring,
+		HTML_PAGE = String.format(fileContent("page.template"), styleheets, magnifierIcon, jsD3, jsFlameviewColoring);
 	}
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
