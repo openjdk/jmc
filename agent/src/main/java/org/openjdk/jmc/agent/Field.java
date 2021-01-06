@@ -32,14 +32,13 @@
  */
 package org.openjdk.jmc.agent;
 
-import org.openjdk.jmc.agent.util.expression.ExpressionResolver;
-import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
-import org.openjdk.jmc.agent.util.expression.ReferenceChain;
-
 import javax.management.openmbean.CompositeData;
 
 import org.openjdk.jmc.agent.impl.AbstractConvertable;
 import org.openjdk.jmc.agent.util.TypeUtils;
+import org.openjdk.jmc.agent.util.expression.ExpressionResolver;
+import org.openjdk.jmc.agent.util.expression.IllegalSyntaxException;
+import org.openjdk.jmc.agent.util.expression.ReferenceChain;
 
 public class Field extends AbstractConvertable implements Attribute {
 
@@ -61,7 +60,7 @@ public class Field extends AbstractConvertable implements Attribute {
 		this.description = description;
 		this.contentType = contentType;
 		this.relationKey = relationKey;
-		this.fieldName = "field" + TypeUtils.deriveIdentifierPart(name);
+		this.fieldName = TypeUtils.deriveIdentifierPart(name);
 	}
 
 	public static Field from(CompositeData cd) {
