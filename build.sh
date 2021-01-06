@@ -215,7 +215,7 @@ function runAgentByClass(){
         printHelp
         exit 1
     else
-        printf "example agent class: %d\n" "${agentExampleClass}"
+        printf "example agent class: %s\n" "${agentExampleClass}"
     fi
 
     checkJava
@@ -279,7 +279,7 @@ function parseArgs() {
                 run
                 ;;
             --runAgentExample)
-                runAgentByClass  "org.openjdk.jmc.agent.test.InstrumentMe"
+                runAgentByClass "org.openjdk.jmc.agent.test.InstrumentMe"
                 ;;
             *)
                 err_log "unknown arguments: ${$1}, ${$2}, ${$3}"
