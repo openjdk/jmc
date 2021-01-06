@@ -86,6 +86,7 @@ function printHelp() {
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
         printf " \t%s\t%s\n" "--runAgentExample" "to run Agent Example once it was packaged"
+        printf " \t%s\t%s\n" "--runAgentCustomExample --class:'org.openjdk.jmc.agent.test.InstrumentMe'" "to run custom agent class, once Agent was packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }
@@ -207,7 +208,16 @@ function run() {
     fi
 }
 
-function runAgentExample(){
+function runAgentByClass(){
+    local agentExampleClass=$1
+    if [[ -z "${agentExampleClass}" ]]; then
+        err_log "emtpy class"
+        printHelp
+        exit 1
+    else
+        printf "example agent class: %d\n" "${agentExampleClass}"
+    fi
+
     checkJava
     if [[ "${OSTYPE}" =~ "linux"* ]] || [[ "${OSTYPE}" =~ "darwin"* ]]; then
        printf "%s\n" "try to execute an agent example"
@@ -227,11 +237,11 @@ function runAgentExample(){
             echo "min. required java version is 8"
             exit 1
         elif [ "$javaVersion" -eq "8" ]; then
-            java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+            java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
         elif [ "$javaVersion" -lt "13" ]; then 
-            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
         else 
-            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+            java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
         fi
     else
         err_log "Agent not found in \"${pathToAgentJar}\". Did you call --packageAgent before?"
@@ -269,10 +279,10 @@ function parseArgs() {
                 run
                 ;;
             --runAgentExample)
-                runAgentExample
+                runAgentByClass  "org.openjdk.jmc.agent.test.InstrumentMe"
                 ;;
             *)
-                err_log "unknown argument \"$1\""
+                err_log "unknown arguments: ${$1}, ${$2}, ${$3}"
                 printHelp
                 exit 1
                 ;;
