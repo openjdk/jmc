@@ -73,7 +73,6 @@
 	<modules>
 		<module>application</module>
 		<module>releng</module>
-		<module>../jmc-oracle-dev/closed/</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
