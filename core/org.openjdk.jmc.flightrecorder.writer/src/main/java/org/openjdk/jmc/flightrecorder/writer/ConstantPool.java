@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 
@@ -42,8 +40,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** An in-memory map of distinct values of a certain {@linkplain Type} */
-@ToString(of = "type")
-@EqualsAndHashCode
 final class ConstantPool {
 	private final TypeImpl type;
 	private final Map<Object, TypedValueImpl> constantMap = new HashMap<>();
@@ -198,5 +194,47 @@ final class ConstantPool {
 			throw new IllegalArgumentException("Unsupported built-in type " + type.getTypeName());
 		}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ConstantPool [type=" + type + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((constantMap == null) ? 0 : constantMap.hashCode());
+		result = prime * result + ((reverseMap == null) ? 0 : reverseMap.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConstantPool other = (ConstantPool) obj;
+		if (constantMap == null) {
+			if (other.constantMap != null)
+				return false;
+		} else if (!constantMap.equals(other.constantMap))
+			return false;
+		if (reverseMap == null) {
+			if (other.reverseMap != null)
+				return false;
+		} else if (!reverseMap.equals(other.reverseMap))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
 	}
 }

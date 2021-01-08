@@ -33,9 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.util.TypeByUsageComparator;
 
 import java.util.Iterator;
@@ -48,8 +45,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** A per-type map of {@linkplain ConstantPool} instances */
-@ToString
-@EqualsAndHashCode
 public final class ConstantPools implements Iterable<ConstantPool> {
 	private final Map<TypeImpl, ConstantPool> constantPoolMap = new ConcurrentHashMap<>();
 
@@ -62,7 +57,6 @@ public final class ConstantPools implements Iterable<ConstantPool> {
 	 * @throws IllegalArgumentException
 	 *             if the type does not support constant pools
 	 */
-	@SuppressWarnings("unchecked")
 	public ConstantPool forType(TypeImpl type) {
 		if (!type.hasConstantPool()) {
 			throw new IllegalArgumentException();
@@ -95,7 +89,6 @@ public final class ConstantPools implements Iterable<ConstantPool> {
 	 *
 	 * @return sorted pool instances
 	 */
-	@SuppressWarnings("unchecked")
 	private Stream<ConstantPool> getOrderedPoolsStream() {
 		return constantPoolMap.entrySet().stream()
 				.sorted((e1, e2) -> TypeByUsageComparator.INSTANCE.compare(e1.getKey(), e2.getKey()))
@@ -108,5 +101,35 @@ public final class ConstantPools implements Iterable<ConstantPool> {
 
 	private ConstantPool newConstantPool(TypeImpl type) {
 		return new ConstantPool(type);
+	}
+
+	@Override
+	public String toString() {
+		return "ConstantPools [constantPoolMap=" + constantPoolMap + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((constantPoolMap == null) ? 0 : constantPoolMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConstantPools other = (ConstantPools) obj;
+		if (constantPoolMap == null) {
+			if (other.constantPoolMap != null)
+				return false;
+		} else if (!constantPoolMap.equals(other.constantPoolMap))
+			return false;
+		return true;
 	}
 }

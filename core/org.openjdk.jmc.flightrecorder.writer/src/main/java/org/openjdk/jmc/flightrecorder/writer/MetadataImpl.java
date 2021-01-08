@@ -33,16 +33,9 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.ToString;
-import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
-import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
-import org.openjdk.jmc.flightrecorder.writer.api.Type;
-import org.openjdk.jmc.flightrecorder.writer.api.Types;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -50,9 +43,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
+import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
+
 /** JFR type repository class. */
-@ToString
-@EqualsAndHashCode
 final class MetadataImpl {
 	private static final String CLASS_KEY = "class";
 	private static final String FIELD_KEY = "field";
@@ -271,7 +266,8 @@ final class MetadataImpl {
 		});
 	}
 
-	int stringIndex(@NonNull String value) {
+	int stringIndex(String value) {
+		Objects.requireNonNull(value);
 		return stringTable.get(value);
 	}
 

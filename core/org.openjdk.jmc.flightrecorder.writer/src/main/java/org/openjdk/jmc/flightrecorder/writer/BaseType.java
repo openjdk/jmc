@@ -33,10 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 import java.util.HashSet;
@@ -48,7 +46,6 @@ import java.util.function.Consumer;
 /**
  * Common JFR type super-class
  */
-@ToString(of = {"id", "name", "supertype"})
 abstract class BaseType implements TypeImpl {
 	int hashcode = 0;
 
@@ -249,5 +246,10 @@ abstract class BaseType implements TypeImpl {
 			hashcode = NonZeroHashCode.hash(id, name, supertype);
 		}
 		return hashcode;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseType [id=" + id + ", name=" + name + ", supertype=" + supertype + "]";
 	}
 }

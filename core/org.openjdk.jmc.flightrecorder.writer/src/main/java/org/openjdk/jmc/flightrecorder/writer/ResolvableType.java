@@ -33,18 +33,15 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.ToString;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-@ToString
 public final class ResolvableType implements TypeImpl {
 	private final String typeName;
 	private final MetadataImpl metadata;
@@ -247,5 +244,10 @@ public final class ResolvableType implements TypeImpl {
 	@Override
 	public int hashCode() {
 		return NonZeroHashCode.hash(typeName);
+	}
+
+	@Override
+	public String toString() {
+		return "ResolvableType [typeName=" + typeName + ", metadata=" + metadata + ", delegate=" + delegate + "]";
 	}
 }

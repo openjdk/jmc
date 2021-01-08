@@ -33,13 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
-import org.openjdk.jmc.flightrecorder.writer.api.Type;
-import org.openjdk.jmc.flightrecorder.writer.api.TypeStructure;
-import org.openjdk.jmc.flightrecorder.writer.api.TypeStructureBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.Recording;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
-
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -53,6 +46,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+
+import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.Recording;
+import org.openjdk.jmc.flightrecorder.writer.api.TypeStructureBuilder;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 
 /**
  * The main entry point to JFR recording functionality. Allows to define custom types and initiate

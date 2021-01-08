@@ -33,16 +33,11 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.ToString;
-import org.openjdk.jmc.flightrecorder.writer.api.Type;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
-import org.openjdk.jmc.flightrecorder.writer.api.Types;
-
 import java.util.function.Consumer;
 
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
+
 /** A representation of JFR chunk - self contained set of JFR data. */
-@ToString
 final class Chunk {
 	private final LEB128Writer writer = LEB128Writer.getInstance();
 	private final long startTicks;
@@ -169,5 +164,10 @@ final class Chunk {
 
 		writer.writeInt(eventWriter.length()) // write event size
 				.writeBytes(eventWriter.export());
+	}
+
+	@Override
+	public String toString() {
+		return "Chunk [writer=" + writer + ", startTicks=" + startTicks + ", startNanos=" + startNanos + "]";
 	}
 }

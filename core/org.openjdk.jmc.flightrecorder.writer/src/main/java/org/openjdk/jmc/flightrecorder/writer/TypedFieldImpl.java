@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Objects;
 
 /** A representation of a typed field with a name */
-@ToString
 public final class TypedFieldImpl implements org.openjdk.jmc.flightrecorder.writer.api.TypedField {
 	private int hashCode = 0;
 
@@ -110,5 +108,11 @@ public final class TypedFieldImpl implements org.openjdk.jmc.flightrecorder.writ
 			hashCode = NonZeroHashCode.hash(name, type, isArray, annotations);
 		}
 		return hashCode;
+	}
+
+	@Override
+	public String toString() {
+		return "TypedFieldImpl [hashCode=" + hashCode + ", name=" + name + ", type=" + type + ", isArray=" + isArray
+				+ ", annotations=" + annotations + "]";
 	}
 }

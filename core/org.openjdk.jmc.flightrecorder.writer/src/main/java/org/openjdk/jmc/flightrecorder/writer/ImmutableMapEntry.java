@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.Getter;
-import lombok.NonNull;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 import java.util.Map;
@@ -43,13 +41,11 @@ import java.util.Objects;
 final class ImmutableMapEntry<K, V> implements Map.Entry<K, V> {
 	private int hashCode = 0;
 
-	@Getter
 	private final K key;
-	@Getter
 	private final V value;
 
-	ImmutableMapEntry(@NonNull K key, V value) {
-		this.key = key;
+	ImmutableMapEntry(K key, V value) {
+		this.key = Objects.requireNonNull(key);
 		this.value = value;
 	}
 
@@ -76,5 +72,15 @@ final class ImmutableMapEntry<K, V> implements Map.Entry<K, V> {
 			hashCode = NonZeroHashCode.hash(key, value);
 		}
 		return hashCode;
+	}
+
+	@Override
+	public K getKey() {
+		return key;
+	}
+
+	@Override
+	public V getValue() {
+		return value;
 	}
 }

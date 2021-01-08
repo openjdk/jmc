@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.NonNull;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
@@ -66,8 +65,8 @@ final class TypedValueImpl implements TypedValue {
 		this.cpIndex = cpIndex;
 	}
 
-	TypedValueImpl(@NonNull TypeImpl type, @NonNull Consumer<TypedValueBuilder> builderCallback) {
-		this(type, getFieldValues(type, builderCallback));
+	TypedValueImpl(TypeImpl type, Consumer<TypedValueBuilder> builderCallback) {
+		this(Objects.requireNonNull(type), getFieldValues(type, Objects.requireNonNull(builderCallback)));
 	}
 
 	TypedValueImpl(TypedValueBuilder builder) {

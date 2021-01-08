@@ -33,14 +33,13 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 final class InvalidType implements TypeImpl {
 	@Override

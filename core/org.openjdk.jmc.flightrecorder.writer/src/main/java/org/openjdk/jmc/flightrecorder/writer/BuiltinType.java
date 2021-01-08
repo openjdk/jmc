@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
@@ -42,7 +41,6 @@ import java.util.Collections;
 import java.util.List;
 
 /** A built-in type. Corresponds to a Java primitive type or {@link String String} */
-@ToString(of = "builtin")
 final class BuiltinType extends BaseType {
 	private int hashcode = 0;
 
@@ -136,5 +134,10 @@ final class BuiltinType extends BaseType {
 			hashcode = NonZeroHashCode.hash(super.hashCode(), builtin);
 		}
 		return hashcode;
+	}
+
+	@Override
+	public String toString() {
+		return "BuiltinType [builtin=" + builtin + "]";
 	}
 }

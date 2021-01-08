@@ -33,21 +33,16 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
-import lombok.Getter;
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 import java.util.Objects;
 
 /** A struct-like representation of a JFR annotation */
-@ToString
 public final class Annotation {
 	public static final String ANNOTATION_SUPER_TYPE_NAME = "java.lang.annotation.Annotation";
 	private int hashCode = 0;
 
-	@Getter
 	private final Type type;
-	@Getter
 	private final String value;
 
 	/**
@@ -92,5 +87,18 @@ public final class Annotation {
 			hashCode = NonZeroHashCode.hash(type, value);
 		}
 		return hashCode;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "Annotation [type=" + type + ", value=" + value + "]";
 	}
 }

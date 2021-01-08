@@ -33,21 +33,22 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import lombok.NonNull;
-import lombok.ToString;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 final class SingleFieldMap implements Map<String, TypedFieldValue> {
 	private int hashCode = 0;
 	private final ImmutableMapEntry<String, TypedFieldValue> entry;
 
-	SingleFieldMap(@NonNull String name, @NonNull TypedFieldValue value) {
+	SingleFieldMap(String name, TypedFieldValue value) {
+		Objects.nonNull(name);
+		Objects.nonNull(value);
 		this.entry = new ImmutableMapEntry<>(name, value);
 	}
 
