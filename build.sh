@@ -85,8 +85,8 @@ function printHelp() {
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
-        printf " \t%s\t%s\n" "--runAgentExample" "to run Agent Example once it was packaged"
-        printf " \t%s\t%s\n" "--runAgentCustomExample --class:'org.openjdk.jmc.agent.test.InstrumentMe'" "to run custom agent class, once Agent was packaged"
+        printf " \t%s\t%s\n" "--runAgentExample" "to run Agent 'InstrumentMe' example once it was packaged"
+        printf " \t%s\t%s\n" "--runAgentCustomExample '<class>'" "to run custom Agent class: 'org.openjdk.jmc.agent.test.InstrumentMe', once Agent was packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }
@@ -208,7 +208,7 @@ function run() {
     fi
 }
 
-function runAgentByClass(){
+function runAgentByClass() {
     local agentExampleClass=$1
     if [[ -z "${agentExampleClass}" ]]; then
         err_log "emtpy class"
@@ -281,8 +281,13 @@ function parseArgs() {
             --runAgentExample)
                 runAgentByClass "org.openjdk.jmc.agent.test.InstrumentMe"
                 ;;
+            --runAgentCustomExample)
+                shift 
+                exampleAgentClass=$1;
+                runAgentByClass $exampleAgentClass
+                ;;
             *)
-                err_log "unknown arguments: ${$1}, ${$2}, ${$3}"
+                err_log "unknown arguments: $@"
                 printHelp
                 exit 1
                 ;;
