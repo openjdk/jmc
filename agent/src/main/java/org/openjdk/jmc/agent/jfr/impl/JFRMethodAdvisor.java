@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -130,11 +130,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		}
 	}
 
+	/**
+	 * Generates the transformation for instantiating the event type, setting its parameter and
+	 * field attributes and call begin().
+	 */
 	private void createEvent() throws IllegalSyntaxException, MalformedConverterException {
 		mv.visitTypeInsn(NEW, transformDescriptor.getEventClassName());
 		mv.visitInsn(DUP);
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(INVOKESPECIAL, transformDescriptor.getEventClassName(), "<init>", "()V", false); //$NON-NLS-1$ //$NON-NLS-2$
+
+		// write attribute for each parameter
 		for (Parameter param : transformDescriptor.getParameters()) {
 			Type argumentType = argumentTypesRef[param.getIndex()];
 			if (transformDescriptor.isAllowedEventFieldType(param, argumentType)) {
@@ -153,6 +159,7 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			}
 		}
 
+		// write attribute for each event field
 		for (Field field : transformDescriptor.getFields()) {
 			ReferenceChain refChain = field.resolveReferenceChain(inspectionClass).normalize();
 
@@ -161,10 +168,21 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 						"Illegal non-static reference from a static context: " + field.getExpression());
 			}
 
-			if (transformDescriptor.isAllowedEventFieldType(field, refChain.getType())) {
+			Type fieldType = refChain.getType();
+			if (transformDescriptor.isAllowedEventFieldType(field, fieldType)) {
 				mv.visitInsn(DUP);
 				loadField(refChain);
-				writeAttribute(field, refChain.getType());
+
+				if (field.hasConverter()) {
+					fieldType = convertify(mv, field, fieldType);
+				} else {
+					if (TypeUtils.shouldStringify(field, fieldType)) {
+						TypeUtils.stringify(mv);
+						fieldType = TypeUtils.STRING_TYPE;
+					}
+				}
+
+				writeAttribute(field, fieldType);
 			}
 		}
 
@@ -266,13 +284,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		if (returnTypeRef.getSort() != Type.VOID && opcode != ATHROW) {
 			ReturnValue returnValue = transformDescriptor.getReturnValue();
 			if (returnValue != null) {
-				emitSettingReturnParam(opcode, returnValue);
+				try {
+					emitSettingReturnParam(opcode, returnValue);
+				} catch (MalformedConverterException e) {
+					throw new RuntimeException();
+				}
 			}
 		}
 		commitEvent();
 	}
 
-	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) {
+	private void emitSettingReturnParam(int opcode, ReturnValue returnValue) throws MalformedConverterException {
 		if (returnTypeRef.getSize() == 1) {
 			dup();
 			mv.visitVarInsn(ALOAD, eventLocal);
@@ -283,6 +305,17 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
+
+		Type returnType = returnTypeRef;
+		if (returnValue.hasConverter()) {
+			returnType = convertify(mv, returnValue, returnType);
+		} else {
+			if (TypeUtils.shouldStringify(returnValue, returnType)) {
+				TypeUtils.stringify(mv);
+				returnType = TypeUtils.STRING_TYPE;
+			}
+		}
+
 		writeAttribute(returnValue, returnTypeRef);
 	}
 
