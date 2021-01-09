@@ -87,7 +87,7 @@ public class JfxPulseDurationRule implements IRule {
 			"The target rendering frequency.", UnitLookup.FREQUENCY, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE);
+			.<TypedResult<?>> asList(TypedResult.SCORE, SLOW_PHASES, TARGET_TIME, RENDER_TARGET);
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
