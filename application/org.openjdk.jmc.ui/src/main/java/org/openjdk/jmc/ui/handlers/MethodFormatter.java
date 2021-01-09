@@ -38,10 +38,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IMemento;
-
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.IState;
+import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.ui.misc.MementoToolkit;
@@ -89,7 +89,10 @@ public class MethodFormatter {
 	private final Runnable onUpdate;
 
 	public MethodFormatter(IMemento memento, Runnable onUpdate) {
-		IState state = MementoToolkit.asState(memento);
+		this(MementoToolkit.asState(memento), onUpdate);
+	}
+
+	public MethodFormatter(IState state, Runnable onUpdate) {
 		options[RETURN_VALUE_INDEX] = StateToolkit.readEnum(state, RETURN_VALUE, Option.CLASS, Option.class);
 		options[CLASS_INDEX] = StateToolkit.readEnum(state, CLASS, Option.QUALIFIED, Option.class);
 		options[PARAMETER_INDEX] = StateToolkit.readEnum(state, PARAMETER, Option.CLASS, Option.class);
@@ -176,6 +179,12 @@ public class MethodFormatter {
 	}
 
 	public void saveState(IMemento state) {
+		state.putString(RETURN_VALUE, options[RETURN_VALUE_INDEX].name());
+		state.putString(CLASS, options[CLASS_INDEX].name());
+		state.putString(PARAMETER, options[PARAMETER_INDEX].name());
+	}
+
+	public void saveState(IWritableState state) {
 		state.putString(RETURN_VALUE, options[RETURN_VALUE_INDEX].name());
 		state.putString(CLASS, options[CLASS_INDEX].name());
 		state.putString(PARAMETER, options[PARAMETER_INDEX].name());

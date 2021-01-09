@@ -145,7 +145,7 @@ public final class JdkFilters {
 			JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION, JdkTypeIDs.BIASED_LOCK_REVOCATION,
 			JdkTypeIDs.BIASED_LOCK_SELF_REVOCATION);
 
-	private static class MethodFilter implements IItemFilter {
+	public static class MethodFilter implements IItemFilter {
 
 		private final String typeName;
 		private final String methodName;

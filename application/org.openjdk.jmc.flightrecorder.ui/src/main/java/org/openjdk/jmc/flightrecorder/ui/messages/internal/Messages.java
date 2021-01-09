@@ -355,6 +355,8 @@ public class Messages extends NLS {
 	public static String MethodProfilingPage_CLASS_HISTOGRAM_SELECTION;
 	public static String MethodProfilingPage_PACKAGE_HISTOGRAM_SELECTION;
 	public static String MethodProfilingPage_PAGE_NAME;
+	public static String MethodProfilingPage_PREDECESSORS_DESCRIPTION;
+	public static String MethodProfilingPage_SUCCESSORS_DESCRIPTION;
 	public static String NativeLibraryPage_PAGE_NAME;
 	public static String NAVIGATOR_MOVE_BACKWARD_TEXT;
 	public static String NAVIGATOR_MOVE_FORWARD_TEXT;
@@ -366,6 +368,8 @@ public class Messages extends NLS {
 	public static String PAGES_EVENT_LOG;
 	public static String PAGES_TIMELINE;
 	public static String PAGES_SIZE;
+	public static String PAGES_SUCCESSORS;
+	public static String PAGES_PREDECESSORS;
 	public static String PAGE_CHANGE_ICON_CHOOSE_IMAGE_FILE;
 	public static String PAGE_CHANGE_ICON_CURRENT_ICON;
 	public static String PAGE_CHANGE_ICON_MENU_ACTION;
