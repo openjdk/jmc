@@ -274,7 +274,7 @@ public final class DotGenerator {
 			builder.append("}");
 			return builder.toString();
 		} else if (nodeCount == 0) {
-			emitMessage(builder, "No graph data in current selection", configuration);
+			emitEmptyMessage(builder, "No graph data in current selection", configuration);
 			builder.append("}");
 			return builder.toString();
 		}
@@ -381,6 +381,13 @@ public final class DotGenerator {
 		builder.append("\" fillcolor=\"");
 		builder.append(fillColor);
 		builder.append("\"]\n");
+	}
+
+	private static void emitEmptyMessage(
+		StringBuilder builder, String message, Map<ConfigurationKey, String> configuration) {
+		builder.append("label= <<font color='gray' point-size='1'>");
+		builder.append(message);
+		builder.append("</font>>");
 	}
 
 	private static void createSubgraphNode(
