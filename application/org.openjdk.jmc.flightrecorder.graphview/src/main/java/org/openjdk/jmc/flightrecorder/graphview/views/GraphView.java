@@ -183,7 +183,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		private Menu menu;
 
 		NodeThresholdSelection() {
-			super("Max nodes rendered", IAction.AS_DROP_DOWN_MENU);
+			super("Max Nodes", IAction.AS_DROP_DOWN_MENU);
 			setMenuCreator(this);
 		}
 
