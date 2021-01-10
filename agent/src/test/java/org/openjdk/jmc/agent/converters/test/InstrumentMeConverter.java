@@ -56,6 +56,7 @@ public class InstrumentMeConverter {
 
 	private static final class Runner implements Runnable {
 		InnerClass innerClass = new InnerClass();
+
 		public void run() {
 			while (true) {
 				try {
@@ -89,13 +90,12 @@ public class InstrumentMeConverter {
 		public void instrumentationPoint() {
 			System.out.println("InnerClass: currentGurka field is " + currentGurka);
 		}
-		
+
 		public void switchGurka() {
 			currentGurka = Gurka.createGurka();
 		}
 	}
 
-	
 	public static void printGurkaToString(Gurka gurka) throws InterruptedException {
 		System.out.println("C String: " + gurka);
 		Thread.sleep(SLEEP_TIME);

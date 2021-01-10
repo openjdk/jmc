@@ -62,7 +62,7 @@ public class TestConverterTransforms {
 		return TestToolkit.readTemplate(TestConverterTransforms.class, TestToolkit.DEFAULT_TEMPLATE_NAME);
 	}
 
-	@Test 
+	@Test
 	public void testRunConverterTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
 		if (true) {
 			return;
