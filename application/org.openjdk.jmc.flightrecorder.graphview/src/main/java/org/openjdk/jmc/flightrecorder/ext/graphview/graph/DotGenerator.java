@@ -261,15 +261,19 @@ public final class DotGenerator {
 	/**
 	 * Renders a {@link StacktraceGraphModel} in DOT format.
 	 */
-	public static String toDot(StacktraceGraphModel model, Map<ConfigurationKey, String> configuration) {
+	public static String toDot(
+		StacktraceGraphModel model, int maxNodesRendered, Map<ConfigurationKey, String> configuration) {
 		StringBuilder builder = new StringBuilder(2048);
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
 		builder.append(String.format("digraph \"%s\" {%n", graphName));
-		if (model.getNodes().size() > 100) {
-			emitMessage(builder, "Too many nodes in current selection", configuration);
+		int nodeCount = model.getNodes().size();
+		if (nodeCount > maxNodesRendered) {
+			String message = String.format("Too many nodes in current selection\n(max: %d, actual: %d)",
+					maxNodesRendered, nodeCount);
+			emitMessage(builder, message, configuration);
 			builder.append("}");
 			return builder.toString();
-		} else if (model.getNodes().size() == 0) {
+		} else if (nodeCount == 0) {
 			emitMessage(builder, "No graph data in current selection", configuration);
 			builder.append("}");
 			return builder.toString();
@@ -445,6 +449,6 @@ public final class DotGenerator {
 		StacktraceGraphModel model = new StacktraceGraphModel(frameSeparator, filteredItems, null);
 		Map<ConfigurationKey, String> configuration = getDefaultConfiguration();
 		configuration.put(ConfigurationKey.Name, jfrFile.getName());
-		System.out.println(toDot(model, configuration));
+		System.out.println(toDot(model, 1000, configuration));
 	}
 }
