@@ -64,9 +64,6 @@ public class TestConverterTransforms {
 
 	@Test
 	public void testRunConverterTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
-		if (true) {
-			return;
-		}
 		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(),
 				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 
