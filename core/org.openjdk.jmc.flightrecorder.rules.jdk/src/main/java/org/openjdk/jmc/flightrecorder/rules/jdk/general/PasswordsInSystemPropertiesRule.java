@@ -32,26 +32,21 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
-
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
