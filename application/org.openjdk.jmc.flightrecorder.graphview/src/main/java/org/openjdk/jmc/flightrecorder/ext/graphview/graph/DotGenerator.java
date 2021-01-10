@@ -265,7 +265,15 @@ public final class DotGenerator {
 		StringBuilder builder = new StringBuilder(2048);
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
 		builder.append(String.format("digraph \"%s\" {%n", graphName));
-
+		if (model.getNodes().size() > 100) {
+			emitMessage(builder, "Too many nodes in current selection", configuration);
+			builder.append("}");
+			return builder.toString();
+		} else if (model.getNodes().size() == 0) {
+			emitMessage(builder, "No graph data in current selection", configuration);
+			builder.append("}");
+			return builder.toString();
+		}
 		createDefaultNodeSettingsEntry(builder, configuration);
 		if (Boolean.valueOf(getConf(configuration, ConfigurationKey.TitleArea, "false"))) {
 			createSubgraphNode(builder, graphName, configuration, model);
@@ -350,6 +358,24 @@ public final class DotGenerator {
 		builder.append(configurator.color);
 		builder.append("\" fillcolor=\"");
 		builder.append(configurator.fillColor);
+		builder.append("\"]\n");
+	}
+
+	private static void emitMessage(
+		StringBuilder builder, String message, Map<ConfigurationKey, String> configuration) {
+		String shape = getConf(configuration, ConfigurationKey.NodeShape, DEFAULT_SHAPE);
+		String color = getConf(configuration, ConfigurationKey.NodeColor, "#b22b00");
+		String fillColor = getConf(configuration, ConfigurationKey.NodeFillColor, "#eddbd5");
+		builder.append("message [label=\"");
+		builder.append(message);
+		builder.append("\" id=\"message\"");
+		builder.append(" shape=");
+		builder.append(shape);
+		builder.append(" fontsize=5");
+		builder.append(" color=\"");
+		builder.append(color);
+		builder.append("\" fillcolor=\"");
+		builder.append(fillColor);
 		builder.append("\"]\n");
 	}
 
