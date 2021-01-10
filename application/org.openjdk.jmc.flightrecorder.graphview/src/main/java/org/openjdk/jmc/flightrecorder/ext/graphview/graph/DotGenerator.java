@@ -268,7 +268,7 @@ public final class DotGenerator {
 		builder.append(String.format("digraph \"%s\" {%n", graphName));
 		int nodeCount = model.getNodes().size();
 		if (nodeCount > maxNodesRendered) {
-			String message = String.format("Too many nodes in current selection\n(max: %d, actual: %d)",
+			String message = String.format("Too many nodes in current selection%n(max: %d, actual: %d)",
 					maxNodesRendered, nodeCount);
 			emitMessage(builder, message, configuration);
 			builder.append("}");
