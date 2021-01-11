@@ -147,7 +147,7 @@ function packageAgent() {
     }
 
     if [[ "${OSTYPE}" =~ "linux"* ]] || [[ "${OSTYPE}" =~ "darwin"* ]]; then
-       printf "%s\n" "You can nor run agent by calling \"${PROGNAME} --runAgentExample\""
+       printf "%s\n" "You can now run agent by calling \"${PROGNAME} --runAgentExample or --runAgentConverterExample\""
     else
         err_log "unknown OS type: \"${OSTYPE}\". Please coheck package in \"${JMC_DIR}/agent/target\""
         exit 1
