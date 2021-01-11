@@ -208,10 +208,8 @@ public class ThreadGraphLanes {
 	private IQuantitySeries<?> threadRanges(String threadName, IItemCollection items) {
 		IItemCollection startEvents = items.apply(ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START));
 		IItemCollection endEvents = items.apply(ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END));
-		Iterator<IQuantity> start = startEvents.values(JfrAttributes.START_TIME).get().sorted()
-				.iterator();
-		Iterator<IQuantity> end = endEvents.values(JfrAttributes.END_TIME).get().sorted()
-				.iterator();
+		Iterator<IQuantity> start = startEvents.values(JfrAttributes.START_TIME).get().sorted().iterator();
+		Iterator<IQuantity> end = endEvents.values(JfrAttributes.END_TIME).get().sorted().iterator();
 
 		ArrayList<IQuantity> startList = new ArrayList<>();
 		ArrayList<IQuantity> endList = new ArrayList<>();

@@ -273,8 +273,7 @@ public class ClassLoadingPage extends AbstractDataPage {
 				// The standard aggregators will skip the null classloader, so we need to do this manually.
 				IItemCollection selection = ItemCollectionToolkit
 						.build(classLoaderStatisticsTable.getSelection().get());
-				Stream<IMCClassLoader> stream = selection.values(JdkAttributes.CLASSLOADER).get()
-						.distinct();
+				Stream<IMCClassLoader> stream = selection.values(JdkAttributes.CLASSLOADER).get().distinct();
 				Set<IMCClassLoader> selected = stream.collect(Collectors.toSet());
 				IItemFilter selectionFilter = ItemFilters.and(
 						ItemFilters.or(JdkFilters.CLASS_LOAD_OR_UNLOAD, JdkFilters.CLASS_DEFINE),
