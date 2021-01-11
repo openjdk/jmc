@@ -211,7 +211,7 @@ function run() {
 function runAgentByClass() {
     local agentExampleClass=$1
     if [[ -z "${agentExampleClass}" ]]; then
-        err_log "emtpy class"
+        err_log "error: try to run undefiend agent class, empty class"
         printHelp
         exit 1
     else
