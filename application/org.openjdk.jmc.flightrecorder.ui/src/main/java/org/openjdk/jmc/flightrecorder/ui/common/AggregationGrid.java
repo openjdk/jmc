@@ -240,7 +240,7 @@ public class AggregationGrid {
 	}
 
 	public <T> Object[] buildRows(IItemCollection items, IAccessorFactory<T> classifier) {
-		Map<T, List<IItem[]>> itemsMap = mapItems(ItemCollectionToolkit.stream(items), classifier);
+		Map<T, List<IItem[]>> itemsMap = mapItems(items.stream(), classifier);
 		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size(), items);
 		int index = 0;
 		for (Entry<T, List<IItem[]>> e : itemsMap.entrySet()) {

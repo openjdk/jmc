@@ -62,7 +62,6 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.ContentType;
@@ -254,7 +253,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			typeFilterTree.getViewer().getControl().setRedraw(false);
 			TreePath[] expansion = typeFilterTree.getViewer().getExpandedTreePaths();
 			ISelection selection = typeFilterTree.getViewer().getSelection();
-			typeFilterTree.setInput(getDataSource().getTypeTree((ItemCollectionToolkit.stream(selectionItems)
+			typeFilterTree.setInput(getDataSource().getTypeTree((selectionItems.stream()
 					.filter(ii -> showTypesWithoutEvents || ii.hasItems()))));
 			typeFilterTree.getViewer().setExpandedTreePaths(expansion);
 			typeFilterTree.getViewer().setSelection(selection);
@@ -291,7 +290,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			Iterator<? extends IType<?>> types = selectedTypes.iterator();
 			IItemCollection filteredItems = getFilteredItems();
 			if (selectedTypes.isEmpty()) {
-				types = ItemCollectionToolkit.stream(selectionItems).map(is -> is.getType()).distinct().iterator();
+				types = selectionItems.stream().map(is -> is.getType()).distinct().iterator();
 			}
 
 			// FIXME: Possibly move to attribute toolkit/handler?

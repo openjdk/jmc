@@ -100,8 +100,8 @@ public class ThreadGraphLanes {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
 		this.actions = new ArrayList<>();
-		this.typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		this.typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 	}
 
 	protected EventTypeFolderNode getTypeTree() {
@@ -110,8 +110,8 @@ public class ThreadGraphLanes {
 
 	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
@@ -121,8 +121,8 @@ public class ThreadGraphLanes {
 
 	public void openEditLanesDialog(MCContextMenuManager[] mms, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);

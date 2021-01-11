@@ -184,8 +184,7 @@ public class ItemHistogram {
 			// FIXME: Refactor/remove this method to avoid it being used instead of passing an IAggregator.
 			// Accessing the thread-group is quite a special case as it is a property of the key (group by attribute).
 			// The caller of this method should be responsible for passing a unique column id, as with aggregators.
-			IMemberAccessor<Object, T> anyValueAccessor = row -> ItemCollectionToolkit
-					.stream(AggregationGrid.getItems(row))
+			IMemberAccessor<Object, T> anyValueAccessor = row -> AggregationGrid.getItems(row).stream()
 					.flatMap(is -> ItemIterableToolkit.stream(is).map(a.getAccessor(is.getType())::getMember))
 					.filter(Objects::nonNull).findAny().orElse(null);
 			columns.add(new ColumnBuilder(a.getName(), a.getIdentifier(), anyValueAccessor)

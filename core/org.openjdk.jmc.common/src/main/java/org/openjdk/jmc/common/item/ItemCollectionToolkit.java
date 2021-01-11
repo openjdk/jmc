@@ -45,7 +45,6 @@ import java.util.Spliterator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.openjdk.jmc.common.messages.internal.Messages;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -122,19 +121,17 @@ public class ItemCollectionToolkit {
 	public static IItemCollection merge(Supplier<Stream<IItemCollection>> items) {
 		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getTimeRanges().stream())
 				.collect(Collectors.toSet());
-		return ItemCollectionToolkit.build(() -> items.get().flatMap(ItemCollectionToolkit::stream), chunkRanges);
+		return ItemCollectionToolkit.build(() -> items.get().flatMap(i -> i.stream()), chunkRanges);
 	}
 
 	public static <V> Optional<IItemIterable> join(IItemCollection items, String withTypeId) {
 		IItemCollection itemsWithType = items.apply(ItemFilters.type(withTypeId));
-		return ItemCollectionToolkit.stream(itemsWithType).findAny()
-				.map(s -> ItemIterableToolkit.build(
-						() -> ItemCollectionToolkit.stream(itemsWithType).flatMap(ItemIterableToolkit::stream),
-						s.getType()));
+		return itemsWithType.stream().findAny().map(s -> ItemIterableToolkit
+				.build(() -> itemsWithType.stream().flatMap(ItemIterableToolkit::stream), s.getType()));
 	}
 
 	public static <T> Supplier<Stream<T>> values(IItemCollection items, IAttribute<T> attribute) {
-		return () -> ItemCollectionToolkit.stream(items).flatMap(itemStream -> {
+		return () -> items.stream().flatMap(itemStream -> {
 			IMemberAccessor<T, IItem> accessor = attribute.getAccessor(itemStream.getType());
 			if (accessor != null) {
 				return ItemIterableToolkit.stream(itemStream).map(accessor::getMember);
@@ -145,7 +142,7 @@ public class ItemCollectionToolkit {
 	}
 
 	public static String getDescription(IItemCollection items) {
-		Map<IType<?>, Long> itemCountByType = ItemCollectionToolkit.stream(items).filter(IItemIterable::hasItems)
+		Map<IType<?>, Long> itemCountByType = items.stream().filter(IItemIterable::hasItems)
 				.collect(Collectors.toMap(IItemIterable::getType, IItemIterable::getItemCount, Long::sum));
 		if (itemCountByType.size() < 4) {
 			return itemCountByType.entrySet().stream().map(e -> e.getValue() + " " + e.getKey().getName()).sorted() //$NON-NLS-1$
@@ -157,14 +154,6 @@ public class ItemCollectionToolkit {
 
 	public static IItemCollection filterIfNotNull(IItemCollection items, IItemFilter filter) {
 		return filter == null ? items : items.apply(filter);
-	}
-
-	public static Stream<IItemIterable> stream(IItemCollection items) {
-		return StreamSupport.stream(items.spliterator(), false);
-	}
-
-	public static Stream<IItemIterable> parallelStream(IItemCollection items) {
-		return StreamSupport.stream(items.spliterator(), true);
 	}
 
 }

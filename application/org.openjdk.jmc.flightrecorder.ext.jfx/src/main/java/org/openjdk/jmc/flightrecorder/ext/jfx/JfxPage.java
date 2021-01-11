@@ -302,8 +302,8 @@ public class JfxPage extends AbstractDataPage {
 
 		private void buildChart() {
 			List<IXDataRenderer> rows = new ArrayList<>();
-			Stream<IXDataRenderer> phaseRows = AggregationGrid.mapItems(ItemCollectionToolkit.stream(phaseItems),
-					JfrAttributes.EVENT_THREAD, JfxPage::buildThreadRenderer);
+			Stream<IXDataRenderer> phaseRows = AggregationGrid.mapItems(phaseItems.stream(), JfrAttributes.EVENT_THREAD,
+					JfxPage::buildThreadRenderer);
 			phaseRows.forEach(rows::add);
 
 			HistogramSelection inputSelection = inputTable.getSelection();

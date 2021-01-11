@@ -919,7 +919,7 @@ public class DataPageToolkit {
 	// FIXME: Move to some AttributeToolkit?
 	@SuppressWarnings("deprecation")
 	private static Stream<IAttribute<?>> getAttributes(IItemCollection items) {
-		return ItemCollectionToolkit.stream(items).filter(IItemIterable::hasItems)
+		return items.stream().filter(IItemIterable::hasItems)
 				.flatMap(is -> is.getType().getAttributes().stream());
 	}
 
@@ -964,7 +964,7 @@ public class DataPageToolkit {
 	 */
 	@SuppressWarnings("unchecked")
 	private static <V> V findValueForFilter(IItemCollection items, ICanonicalAccessorFactory<V> attribute) {
-		IItem firstItem = ItemCollectionToolkit.stream(items).filter(is -> is.getType().hasAttribute(attribute))
+		IItem firstItem = items.stream().filter(is -> is.getType().hasAttribute(attribute))
 				.flatMap(ItemIterableToolkit::stream)
 				.filter(i -> ((IMemberAccessor<V, IItem>) attribute.getAccessor(i.getType())).getMember(i) != null)
 				.findFirst().orElse(null);

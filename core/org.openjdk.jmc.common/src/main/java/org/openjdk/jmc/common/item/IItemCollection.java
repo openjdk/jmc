@@ -33,6 +33,8 @@
 package org.openjdk.jmc.common.item;
 
 import java.util.Set;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -78,4 +80,24 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 *         IItemCollection
 	 */
 	Set<IRange<IQuantity>> getTimeRanges();
+
+	/**
+	 * Creates a new sequential {@code Stream} of {@link IItemIterable} from the
+	 * {@link IItemCollection}.
+	 *
+	 * @return a new sequential {@code Stream}
+	 */
+	default Stream<IItemIterable> stream() {
+		return StreamSupport.stream(this.spliterator(), false);
+	}
+
+	/**
+	 * Creates a new parallel {@code Stream} of {@link IItemIterable} from the
+	 * {@link IItemCollection}.
+	 *
+	 * @return a new parallel {@code Stream}
+	 */
+	default Stream<IItemIterable> parallelStream() {
+		return StreamSupport.stream(this.spliterator(), true);
+	}
 }

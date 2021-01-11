@@ -65,7 +65,6 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -352,7 +351,7 @@ class ItemChart {
 						rows.addAll(updateSpanChart(histogramSelection));
 					}
 				}
-				if (ItemCollectionToolkit.stream(chartItems).count() > 0 && !attributesToLineChart.isEmpty()) {
+				if (chartItems.stream().count() > 0 && !attributesToLineChart.isEmpty()) {
 					rows.addAll(updateLineChart(chartItems));
 				}
 				rows.addAll(updateBarChart(itemsToChart));

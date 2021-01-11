@@ -46,7 +46,6 @@ import org.openjdk.jmc.common.item.IItemConsumer;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.Pair;
@@ -113,7 +112,7 @@ public class PairBucketBuilder<C extends IItemConsumer<C>, CC extends IItemConsu
 	Pair<IQuantity[], IQuantity[]> buildBuckets(IItemCollection items) {
 		IQuantity[] q1 = new IQuantity[bucketCount];
 		IQuantity[] q2 = new IQuantity[bucketCount];
-		List<List<Pair<C, CC>>> collect = ItemCollectionToolkit.parallelStream(items).filter(this::acceptItems)
+		List<List<Pair<C, CC>>> collect = items.parallelStream().filter(this::acceptItems)
 				.map(this::collectItems).collect(Collectors.toList());
 		for (int i = 0; i < bucketCount; i++) {
 			int bucketIndex = i;

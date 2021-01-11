@@ -166,6 +166,6 @@ public class StreamModel {
 	}
 
 	public EventTypeFolderNode getTypeTree() {
-		return getTypeTree(ItemCollectionToolkit.stream(getItems()));
+		return getTypeTree(getItems().stream());
 	}
 }
