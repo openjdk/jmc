@@ -86,7 +86,7 @@ function printHelp() {
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
         printf " \t%s\t%s\n" "--runAgentExample" "to run Agent 'InstrumentMe' example once it was packaged"
-        printf " \t%s\t%s\n" "--runAgentCustomExample '<class>'" "to run custom Agent class: 'org.openjdk.jmc.agent.test.InstrumentMe', once Agent was packaged"
+        printf " \t%s\t%s\n" "--runAgentConverterExample" "to run Agent Converter 'InstrumentMeConverter' example, once Agent was packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }
@@ -281,10 +281,8 @@ function parseArgs() {
             --runAgentExample)
                 runAgentByClass "org.openjdk.jmc.agent.test.InstrumentMe"
                 ;;
-            --runAgentCustomExample)
-                shift 
-                exampleAgentClass=$1;
-                runAgentByClass $exampleAgentClass
+            --runAgentConverterExample)
+                runAgentByClass "org.openjdk.jmc.agent.converters.test.InstrumentMeConverter"
                 ;;
             *)
                 err_log "unknown arguments: $@"
@@ -297,19 +295,23 @@ function parseArgs() {
 }
 
 function checkJava() {
-    if ! command -v   java &> /dev/null ; then
+    if [[ -z "$JAVA_HOME" ]]; then 
+        echo "JAVA_HOME is not defined"
+    fi
+
+    if ! command -v java &> /dev/null ; then
         err_log "It seems you do not have java installed. Please ensure you have it installed and executable as \"java\"."
         exit 1
     fi
 }
 
 function checkPreconditions() {
-    if ! command -v   mvn &> /dev/null ; then
+    checkJava
+
+    if ! command -v mvn &> /dev/null ; then
         err_log "It seems you do not have maven installed. Please ensure you have it installed and executable as \"mvn\"."
         exit 1
     fi
-
-    checkJava
 
     BASEDIR=$(mvn help:evaluate -Dexpression=project.build.directory --non-recursive -q -DforceStdout)
     JMC_DIR=$(pwd)
