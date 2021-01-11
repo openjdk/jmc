@@ -34,15 +34,11 @@ package org.openjdk.jmc.rjmx.test;
 
 import java.io.IOException;
 
-import javax.management.MBeanServerConnection;
-
 import org.junit.After;
 import org.junit.Before;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle;
-import org.openjdk.jmc.rjmx.internal.RJMXConnection;
 import org.openjdk.jmc.rjmx.internal.ServerHandle;
 
 public abstract class ServerHandleTestCase extends RjmxTestCase {

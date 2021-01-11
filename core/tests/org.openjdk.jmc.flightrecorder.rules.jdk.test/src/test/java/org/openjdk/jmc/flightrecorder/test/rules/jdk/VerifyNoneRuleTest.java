@@ -45,6 +45,7 @@ import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule;
 
+@SuppressWarnings("restriction")
 public class VerifyNoneRuleTest {
 
 	@Test
@@ -77,7 +78,6 @@ public class VerifyNoneRuleTest {
 
 	private void testVerifyNoneRule(TestEvent[] testEvents, String descriptionExpected) {
 		IItemCollection events = new MockEventCollection(testEvents);
-		@SuppressWarnings("restriction")
 		VerifyNoneRule verifyNoneRule = new VerifyNoneRule();
 		RunnableFuture<IResult> future = verifyNoneRule.createEvaluation(events,
 				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
