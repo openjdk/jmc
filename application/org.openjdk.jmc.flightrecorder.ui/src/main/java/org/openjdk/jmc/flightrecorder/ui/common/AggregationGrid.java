@@ -219,7 +219,7 @@ public class AggregationGrid {
 			}
 			// It seems Eclipse 4.5 has trouble inferring the correct type of this function ...
 			Function<IItem, T> getMemberFunc = accessor::getMember;
-			return ItemIterableToolkit.parallelStream(is).collect(KeyedStream.collector(getMemberFunc));
+			return is.stream().collect(KeyedStream.collector(getMemberFunc));
 		});
 		return flatMap.collect(Collector.of(HashMap<T, List<IItem[]>>::new, AggregationGrid::addStream,
 				AggregationGrid::merge, Characteristics.UNORDERED));

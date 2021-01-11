@@ -47,7 +47,6 @@ import org.openjdk.jmc.common.item.IItemConsumer;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.ui.charts.IQuantitySeries;
 import org.openjdk.jmc.ui.charts.SubdividedQuantityRange;
@@ -100,7 +99,7 @@ public class BucketBuilder<C extends IItemConsumer<C>> {
 	}
 
 	private List<C> collectItems(IItemIterable is) {
-		return ItemIterableToolkit.parallelStream(is).collect(collector(is.getType()));
+		return is.stream().collect(collector(is.getType()));
 	}
 
 	IQuantity[] buildBuckets(IItemCollection items) {

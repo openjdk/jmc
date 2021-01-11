@@ -53,7 +53,6 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.util.SortedHead;
@@ -155,7 +154,7 @@ public class ItemList {
 	}
 
 	public void show(IItemCollection items) {
-		show(items.stream().flatMap(ItemIterableToolkit::stream).iterator());
+		show(items.stream().flatMap(iterable -> iterable.stream()).iterator());
 	}
 
 	public void show(Iterator<? extends IItem> it) {

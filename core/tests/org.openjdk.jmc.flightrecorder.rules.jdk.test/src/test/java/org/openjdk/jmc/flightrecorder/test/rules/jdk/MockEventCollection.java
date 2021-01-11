@@ -120,7 +120,7 @@ public class MockEventCollection implements IItemCollection {
 	}
 
 	@Override
-	public Set<IRange<IQuantity>> getTimeRanges() {
+	public Set<IRange<IQuantity>> getAvailableTimeRanges() {
 		return null;
 	}
 }

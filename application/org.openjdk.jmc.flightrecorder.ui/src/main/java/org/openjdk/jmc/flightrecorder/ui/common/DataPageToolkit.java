@@ -108,7 +108,6 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -965,7 +964,7 @@ public class DataPageToolkit {
 	@SuppressWarnings("unchecked")
 	private static <V> V findValueForFilter(IItemCollection items, ICanonicalAccessorFactory<V> attribute) {
 		IItem firstItem = items.stream().filter(is -> is.getType().hasAttribute(attribute))
-				.flatMap(ItemIterableToolkit::stream)
+				.flatMap(iterable -> iterable.stream())
 				.filter(i -> ((IMemberAccessor<V, IItem>) attribute.getAccessor(i.getType())).getMember(i) != null)
 				.findFirst().orElse(null);
 		if (firstItem != null) {

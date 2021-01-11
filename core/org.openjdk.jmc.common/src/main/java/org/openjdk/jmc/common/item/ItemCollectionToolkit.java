@@ -93,13 +93,13 @@ public class ItemCollectionToolkit {
 		}
 
 		@Override
-		public Set<IRange<IQuantity>> getTimeRanges() {
+		public Set<IRange<IQuantity>> getAvailableTimeRanges() {
 			return chunkRanges;
 		}
 
 	}
 
-	public static IItemCollection build(Stream<? extends IItem> items, Set<IRange<IQuantity>> chunkRanges) {
+	static IItemCollection build(Stream<? extends IItem> items, Set<IRange<IQuantity>> chunkRanges) {
 		Map<IType<IItem>, List<IItem>> byTypeMap = items.collect(Collectors.groupingBy(ItemToolkit::getItemType));
 		List<Entry<IType<IItem>, List<IItem>>> entryList = new ArrayList<>(byTypeMap.entrySet());
 		return ItemCollectionToolkit
@@ -119,7 +119,7 @@ public class ItemCollectionToolkit {
 	}
 
 	public static IItemCollection merge(Supplier<Stream<IItemCollection>> items) {
-		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getTimeRanges().stream())
+		Set<IRange<IQuantity>> chunkRanges = items.get().flatMap(i -> i.getAvailableTimeRanges().stream())
 				.collect(Collectors.toSet());
 		return ItemCollectionToolkit.build(() -> items.get().flatMap(i -> i.stream()), chunkRanges);
 	}
@@ -127,14 +127,14 @@ public class ItemCollectionToolkit {
 	public static <V> Optional<IItemIterable> join(IItemCollection items, String withTypeId) {
 		IItemCollection itemsWithType = items.apply(ItemFilters.type(withTypeId));
 		return itemsWithType.stream().findAny().map(s -> ItemIterableToolkit
-				.build(() -> itemsWithType.stream().flatMap(ItemIterableToolkit::stream), s.getType()));
+				.build(() -> itemsWithType.stream().flatMap(i -> i.stream()), s.getType()));
 	}
 
 	public static <T> Supplier<Stream<T>> values(IItemCollection items, IAttribute<T> attribute) {
 		return () -> items.stream().flatMap(itemStream -> {
 			IMemberAccessor<T, IItem> accessor = attribute.getAccessor(itemStream.getType());
 			if (accessor != null) {
-				return ItemIterableToolkit.stream(itemStream).map(accessor::getMember);
+				return itemStream.stream().map(accessor::getMember);
 			} else {
 				return Stream.empty();
 			}
@@ -155,5 +155,4 @@ public class ItemCollectionToolkit {
 	public static IItemCollection filterIfNotNull(IItemCollection items, IItemFilter filter) {
 		return filter == null ? items : items.apply(filter);
 	}
-
 }

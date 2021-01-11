@@ -33,6 +33,7 @@
 package org.openjdk.jmc.common.item;
 
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -42,7 +43,7 @@ import org.openjdk.jmc.common.unit.IRange;
 /**
  * An immutable collection of items.
  */
-public interface IItemCollection extends Iterable<IItemIterable> {
+public interface IItemCollection extends Iterable<IItemIterable>, Supplier<Stream<IItemIterable>> {
 
 	/**
 	 * Creates a new item collection with all items in this collection that pass through the filter.
@@ -76,10 +77,22 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 * collection. This set is not affected by any filtering operations on the item collection since
 	 * its use is to show the time ranges in which events could possibly have been occurred.
 	 * 
-	 * @return a set of IRange objects representing the time ranges of represented by this
+	 * @return a set of IRange objects representing the time ranges available in this
 	 *         IItemCollection
 	 */
-	Set<IRange<IQuantity>> getTimeRanges();
+	Set<IRange<IQuantity>> getAvailableTimeRanges();
+
+//	/**
+//	 * Returns a new item collection with all items in this collection that pass the filter and is
+//	 * within the provided range.
+//	 * 
+//	 * @param range
+//	 *            the matching range.
+//	 * @param filter
+//	 *            the matching filter.
+//	 * @return an item collection matching the range and filter.
+//	 */
+//	IItemCollection getItems(IRange<IQuantity> range, IItemFilter filter);
 
 	/**
 	 * Creates a new sequential {@code Stream} of {@link IItemIterable} from the
@@ -99,5 +112,10 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 */
 	default Stream<IItemIterable> parallelStream() {
 		return StreamSupport.stream(this.spliterator(), true);
+	}
+	
+	@Override
+	default Stream<IItemIterable> get() {
+		return stream();
 	}
 }

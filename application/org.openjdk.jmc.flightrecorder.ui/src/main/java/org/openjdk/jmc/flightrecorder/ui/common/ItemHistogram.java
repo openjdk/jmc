@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -61,7 +60,6 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
@@ -185,7 +183,7 @@ public class ItemHistogram {
 			// Accessing the thread-group is quite a special case as it is a property of the key (group by attribute).
 			// The caller of this method should be responsible for passing a unique column id, as with aggregators.
 			IMemberAccessor<Object, T> anyValueAccessor = row -> AggregationGrid.getItems(row).stream()
-					.flatMap(is -> ItemIterableToolkit.stream(is).map(a.getAccessor(is.getType())::getMember))
+					.flatMap(is -> is.stream().map(a.getAccessor(is.getType())::getMember))
 					.filter(Objects::nonNull).findAny().orElse(null);
 			columns.add(new ColumnBuilder(a.getName(), a.getIdentifier(), anyValueAccessor)
 					.description(a.getDescription()).build());
