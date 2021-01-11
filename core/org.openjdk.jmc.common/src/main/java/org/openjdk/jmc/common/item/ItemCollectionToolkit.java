@@ -126,19 +126,8 @@ public class ItemCollectionToolkit {
 
 	public static <V> Optional<IItemIterable> join(IItemCollection items, String withTypeId) {
 		IItemCollection itemsWithType = items.apply(ItemFilters.type(withTypeId));
-		return itemsWithType.stream().findAny().map(s -> ItemIterableToolkit
-				.build(() -> itemsWithType.stream().flatMap(i -> i.stream()), s.getType()));
-	}
-
-	public static <T> Supplier<Stream<T>> values(IItemCollection items, IAttribute<T> attribute) {
-		return () -> items.stream().flatMap(itemStream -> {
-			IMemberAccessor<T, IItem> accessor = attribute.getAccessor(itemStream.getType());
-			if (accessor != null) {
-				return itemStream.stream().map(accessor::getMember);
-			} else {
-				return Stream.empty();
-			}
-		});
+		return itemsWithType.stream().findAny().map(
+				s -> ItemIterableToolkit.build(() -> itemsWithType.stream().flatMap(i -> i.stream()), s.getType()));
 	}
 
 	public static String getDescription(IItemCollection items) {

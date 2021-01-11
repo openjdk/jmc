@@ -104,8 +104,8 @@ public class BucketBuilder<C extends IItemConsumer<C>> {
 
 	IQuantity[] buildBuckets(IItemCollection items) {
 		IQuantity[] q = new IQuantity[bucketCount];
-		List<List<C>> collect = items.parallelStream().filter(this::acceptItems)
-				.map(this::collectItems).collect(Collectors.toList());
+		List<List<C>> collect = items.parallelStream().filter(this::acceptItems).map(this::collectItems)
+				.collect(Collectors.toList());
 		for (int i = 0; i < bucketCount; i++) {
 			int bucketIndex = i;
 			Iterator<C> iterator = collect.stream().map(list -> list.get(bucketIndex)).iterator();

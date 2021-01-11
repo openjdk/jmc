@@ -113,7 +113,27 @@ public interface IItemCollection extends Iterable<IItemIterable>, Supplier<Strea
 	default Stream<IItemIterable> parallelStream() {
 		return StreamSupport.stream(this.spliterator(), true);
 	}
-	
+
+	/**
+	 * Returns the values for the supplied attribute from this IItemCollection.
+	 * 
+	 * @param <T>
+	 *            the type of the attribute, e.g. IQuantity.
+	 * @param attribute
+	 *            the attribute to retrieve values for.
+	 * @return a stream of values.
+	 */
+	default <T> Supplier<Stream<T>> values(IAttribute<T> attribute) {
+		return () -> this.stream().flatMap(itemStream -> {
+			IMemberAccessor<T, IItem> accessor = attribute.getAccessor(itemStream.getType());
+			if (accessor != null) {
+				return itemStream.stream().map(accessor::getMember);
+			} else {
+				return Stream.empty();
+			}
+		});
+	}
+
 	@Override
 	default Stream<IItemIterable> get() {
 		return stream();

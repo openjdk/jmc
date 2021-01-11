@@ -918,8 +918,7 @@ public class DataPageToolkit {
 	// FIXME: Move to some AttributeToolkit?
 	@SuppressWarnings("deprecation")
 	private static Stream<IAttribute<?>> getAttributes(IItemCollection items) {
-		return items.stream().filter(IItemIterable::hasItems)
-				.flatMap(is -> is.getType().getAttributes().stream());
+		return items.stream().filter(IItemIterable::hasItems).flatMap(is -> is.getType().getAttributes().stream());
 	}
 
 	public static Stream<IAttribute<?>> getPersistableAttributes(Stream<IAttribute<?>> attributes) {

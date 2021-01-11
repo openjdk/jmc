@@ -183,8 +183,8 @@ public class ItemHistogram {
 			// Accessing the thread-group is quite a special case as it is a property of the key (group by attribute).
 			// The caller of this method should be responsible for passing a unique column id, as with aggregators.
 			IMemberAccessor<Object, T> anyValueAccessor = row -> AggregationGrid.getItems(row).stream()
-					.flatMap(is -> is.stream().map(a.getAccessor(is.getType())::getMember))
-					.filter(Objects::nonNull).findAny().orElse(null);
+					.flatMap(is -> is.stream().map(a.getAccessor(is.getType())::getMember)).filter(Objects::nonNull)
+					.findAny().orElse(null);
 			columns.add(new ColumnBuilder(a.getName(), a.getIdentifier(), anyValueAccessor)
 					.description(a.getDescription()).build());
 		}

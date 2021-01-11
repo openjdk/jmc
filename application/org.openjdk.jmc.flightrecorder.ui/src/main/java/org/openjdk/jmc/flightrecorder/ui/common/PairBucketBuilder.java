@@ -111,8 +111,8 @@ public class PairBucketBuilder<C extends IItemConsumer<C>, CC extends IItemConsu
 	Pair<IQuantity[], IQuantity[]> buildBuckets(IItemCollection items) {
 		IQuantity[] q1 = new IQuantity[bucketCount];
 		IQuantity[] q2 = new IQuantity[bucketCount];
-		List<List<Pair<C, CC>>> collect = items.parallelStream().filter(this::acceptItems)
-				.map(this::collectItems).collect(Collectors.toList());
+		List<List<Pair<C, CC>>> collect = items.parallelStream().filter(this::acceptItems).map(this::collectItems)
+				.collect(Collectors.toList());
 		for (int i = 0; i < bucketCount; i++) {
 			int bucketIndex = i;
 			List<Pair<C, CC>> pairList = collect.stream().map(list -> list.get(bucketIndex))

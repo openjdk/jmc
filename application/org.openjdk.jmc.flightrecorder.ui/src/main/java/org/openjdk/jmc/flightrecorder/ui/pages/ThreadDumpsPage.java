@@ -426,10 +426,8 @@ public class ThreadDumpsPage extends AbstractDataPage {
 		IMemberAccessor<String, IItem> resultAccessor = JdkAttributes.THREAD_DUMP_RESULT.getAccessor(is.getType());
 		IMemberAccessor<IQuantity, IItem> stAccessor = JfrAttributes.END_TIME.getAccessor(is.getType());
 
-		return is.stream()
-				.map(i -> parseCollection(stAccessor.getMember(i).displayUsing(IDisplayable.AUTO),
-						resultAccessor.getMember(i)))
-				.toArray(ThreadDumpCollection[]::new);
+		return is.stream().map(i -> parseCollection(stAccessor.getMember(i).displayUsing(IDisplayable.AUTO),
+				resultAccessor.getMember(i))).toArray(ThreadDumpCollection[]::new);
 	}
 
 	private static ThreadDumpCollection parseCollection(String title, String str) {

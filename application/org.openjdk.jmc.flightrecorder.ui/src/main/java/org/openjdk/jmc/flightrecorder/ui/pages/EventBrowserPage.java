@@ -253,8 +253,8 @@ public class EventBrowserPage extends AbstractDataPage {
 			typeFilterTree.getViewer().getControl().setRedraw(false);
 			TreePath[] expansion = typeFilterTree.getViewer().getExpandedTreePaths();
 			ISelection selection = typeFilterTree.getViewer().getSelection();
-			typeFilterTree.setInput(getDataSource().getTypeTree((selectionItems.stream()
-					.filter(ii -> showTypesWithoutEvents || ii.hasItems()))));
+			typeFilterTree.setInput(getDataSource()
+					.getTypeTree((selectionItems.stream().filter(ii -> showTypesWithoutEvents || ii.hasItems()))));
 			typeFilterTree.getViewer().setExpandedTreePaths(expansion);
 			typeFilterTree.getViewer().setSelection(selection);
 			typeFilterTree.getViewer().getControl().setRedraw(true);
