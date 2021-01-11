@@ -33,7 +33,7 @@
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 
 /**
  * A flavor that can be evaluated to item collections.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.ui;
+package org.openjdk.jmc.common.item;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -47,25 +47,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.openjdk.jmc.common.item.IAggregator;
-import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.item.IItem;
-import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemConsumer;
-import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.IItemIterable;
-import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.item.ItemToolkit;
+import org.openjdk.jmc.common.messages.internal.Messages;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
-import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
 /**
  * Toolkit class for working with IItemCollection instances
  */
 public class ItemCollectionToolkit {
+	public static final IItemCollection EMPTY = new StreamBackedItemCollection(() -> Stream.empty(),
+			Collections.emptySet());
 
 	private static class StreamBackedItemCollection implements IItemCollection {
 
@@ -108,9 +99,6 @@ public class ItemCollectionToolkit {
 		}
 
 	}
-
-	public static final IItemCollection EMPTY = new StreamBackedItemCollection(() -> Stream.empty(),
-			Collections.emptySet());
 
 	public static IItemCollection build(Stream<? extends IItem> items, Set<IRange<IQuantity>> chunkRanges) {
 		Map<IType<IItem>, List<IItem>> byTypeMap = items.collect(Collectors.groupingBy(ItemToolkit::getItemType));

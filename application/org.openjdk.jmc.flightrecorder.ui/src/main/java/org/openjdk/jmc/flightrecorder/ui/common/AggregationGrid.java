@@ -51,11 +51,11 @@ import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 
 public class AggregationGrid {
 
