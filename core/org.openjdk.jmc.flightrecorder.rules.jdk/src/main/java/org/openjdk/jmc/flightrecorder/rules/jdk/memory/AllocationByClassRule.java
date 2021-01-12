@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -92,26 +92,30 @@ public class AllocationByClassRule implements IRule {
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		List<IntEntry<IMCType>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
 				JdkAttributes.ALLOCATION_CLASS);
+		if (entries.size() > 1) {
+			double balance = RulesToolkit.calculateBalanceScore(entries);
+			IntEntry<IMCType> mostSignificant = entries.get(entries.size() - 1);
+			// FIXME: Configuration attribute instead of hard coded 1000 tlabs => relevance 50
+			double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
+			double score = balance * relevance * 0.74; // ceiling at 74;
 
-		double balance = RulesToolkit.calculateBalanceScore(entries);
-		IntEntry<IMCType> mostSignificant = entries.get(entries.size() - 1);
-		// FIXME: Configuration attribute instead of hard coded 1000 tlabs => relevance 50
-		double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
-		double score = balance * relevance * 0.74; // ceiling at 74;
-
-		IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
-				ItemFilters.equals(JdkAttributes.ALLOCATION_CLASS, mostSignificant.getKey()));
-		StacktraceModel stacktraceModel = new StacktraceModel(false,
-				new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
-		Fork rootFork = stacktraceModel.getRootFork();
-		List<IMCMethod> relevantFramesList = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
-				rootFork.getItemsInFork());
-		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-				.setSummary(Messages.getString(Messages.AllocationByClassRule_TEXT_MESSAGE))
-				.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_CLASS_INFO_LONG))
-				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-				.addResult(ALLOCATION_FRAMES, relevantFramesList)
-				.addResult(MOST_ALLOCATED_TYPE, mostSignificant.getKey()).build();
+			IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
+					ItemFilters.equals(JdkAttributes.ALLOCATION_CLASS, mostSignificant.getKey()));
+			StacktraceModel stacktraceModel = new StacktraceModel(false,
+					new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
+			Fork rootFork = stacktraceModel.getRootFork();
+			if (rootFork.getBranchCount() > 0) {
+				List<IMCMethod> relevantFramesList = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
+						rootFork.getItemsInFork());
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.AllocationByClassRule_TEXT_MESSAGE))
+						.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_CLASS_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(ALLOCATION_FRAMES, relevantFramesList)
+						.addResult(MOST_ALLOCATED_TYPE, mostSignificant.getKey()).build();
+			}
+		}
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA).build();
 	}
 
 	@Override

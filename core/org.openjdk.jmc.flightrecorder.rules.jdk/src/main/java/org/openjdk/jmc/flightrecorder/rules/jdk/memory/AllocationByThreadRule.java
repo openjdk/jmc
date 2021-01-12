@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -104,14 +104,16 @@ public class AllocationByThreadRule implements IRule {
 			StacktraceModel stacktraceModel = new StacktraceModel(false,
 					new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
 			Fork rootFork = stacktraceModel.getRootFork();
-			List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
-					rootFork.getItemsInFork());
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE))
-					.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
-					.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
+			if (rootFork.getBranchCount() > 0) {
+				List<IMCMethod> mostRelevantFrames = StacktraceDataProvider.getRelevantTraceList(rootFork.getBranch(0),
+						rootFork.getItemsInFork());
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.AllocationByThreadRule_TEXT_MESSAGE))
+						.setExplanation(Messages.getString(Messages.AllocationRuleFactory_TEXT_THREAD_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(MOST_ALLOCATING_THREAD, mostSignificant.getKey())
+						.addResult(ALLOCATION_FRAMES, mostRelevantFrames).build();
+			}
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA).build();
 	}
