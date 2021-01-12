@@ -229,13 +229,19 @@ function runAgentByClass() {
 
 
     local javaVersion=`java -version 2>&1 | head -1 | cut -d '"' -f 2 | sed 's/^1\.//' | cut -d '.' -f 1`
-    printf "Java Version:%d\n" "${javaVersion}"
+
+    if ! [ "$javaVersion" -eq "$javaVersion" ] 2> /dev/null; then
+         printf "%s\n" "WARNING: java version not recognized"
+         javaVersion=15
+    fi
+           
+    printf "Java Version:%s\n" "${javaVersion}"
     local pathToAgentTargetDir="${JMC_DIR}/agent/target"
     local pathToAgentJar="${pathToAgentTargetDir}/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar"
     printf "Agent path:%s\n" "${pathToAgentJar}"
-    if [ -f "${pathToAgentJar}" ]; then
+    if [ -f "${pathToAgentJar}" ]; then        
         if [ "$javaVersion" -lt "8" ]; then
-            echo "min. required java version is 8"
+            printf "min. required java version is 8"
             exit 1
         elif [ "$javaVersion" -eq "8" ]; then
             java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
