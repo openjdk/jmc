@@ -29,6 +29,8 @@ echo 	--testUi	to run the tests including UI tests
 echo 	--installCore to install JMC core
 echo 	--packageJmc	to package JMC
 echo 	--packageAgent to package Agent
+echo 	--runAgentExample to run Agent 'InstrumentMe' example, once it was packaged
+echo 	--runAgentConverterExample to run Agent 'InstrumentMeConverter' example, once it was packaged
 echo 	--clean	to run maven clean
 echo 	--run	to run JMC once it was packaged
 echo 	--help	to show this help dialog
@@ -41,6 +43,8 @@ if "%1" == "--testUi" goto testUi
 if "%1" == "--installCore" goto installCore
 if "%1" == "--packageJmc" goto packageJmc
 if "%1" == "--packageAgent" goto packageAgent
+if "%1" == "--runAgentExample" goto runAgentExample
+if "%1" == "--runAgentConverterExample" goto runAgentConverterExample
 if "%1" == "--clean" goto clean
 if "%1" == "--run" goto run
 echo unknown argument %1
@@ -142,6 +146,20 @@ if %ERRORLEVEL% == 0  (
 ) else {
 	exit /B 1
 }
+exit /B 0
+
+:runAgentExample
+echo %time% run Agent 'InstrumentMe' example
+set PATH_TO_AGENT_JAR=%cd%\agent\target\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
+set PATH_TO_AGENT_TARGET_DIR=%cd%\agent\target
+call java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:"%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp "%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
+exit /B 0
+
+:runAgentConverterExample
+echo %time% run Agent 'InstrumentMeConverter' example
+set PATH_TO_AGENT_JAR=%cd%\agent\target\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
+set PATH_TO_AGENT_TARGET_DIR=%cd%\agent\target
+call java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:"%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp "%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/ org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
 exit /B 0
 
 :clean
