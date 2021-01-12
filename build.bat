@@ -142,7 +142,8 @@ cd agent
 call mvn install --log-file "%PACKAGE_LOG%"
 cd ..
 if %ERRORLEVEL% == 0  (
-	echo You can run the agent, see agent/README.md
+	echo Agent library build complete. You can now run an example with the agent using --runAgentExample or --runAgentConverterExample
+	echo See agent/README.md for more information
 ) else {
 	exit /B 1
 }
