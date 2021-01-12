@@ -151,15 +151,15 @@ exit /B 0
 
 :runAgentExample
 echo %time% run Agent 'InstrumentMe' example
-set PATH_TO_AGENT_JAR=%cd%\agent\target\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
 set PATH_TO_AGENT_TARGET_DIR=%cd%\agent\target
+set PATH_TO_AGENT_JAR="%PATH_TO_AGENT_TARGET_DIR%"\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
 call java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:"%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp "%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/ org.openjdk.jmc.agent.test.InstrumentMe
 exit /B 0
 
 :runAgentConverterExample
 echo %time% run Agent 'InstrumentMeConverter' example
-set PATH_TO_AGENT_JAR=%cd%\agent\target\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
 set PATH_TO_AGENT_TARGET_DIR=%cd%\agent\target
+set PATH_TO_AGENT_JAR="%PATH_TO_AGENT_TARGET_DIR%"\org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
 call java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:"%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp "%PATH_TO_AGENT_JAR%"="%PATH_TO_AGENT_TARGET_DIR%"/test-classes/ org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
 exit /B 0
 
