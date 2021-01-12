@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -70,6 +71,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.ext.graphview.graph.DotGenerator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -181,6 +183,8 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private class NodeThresholdSelection extends Action implements IMenuCreator {
 		private Menu menu;
+		private final List<Pair<String, Integer>> items = List.of(new Pair<>("100", 100), new Pair<>("500", 500),
+				new Pair<>("1000", 1000));
 
 		NodeThresholdSelection() {
 			super("Max Nodes", IAction.AS_DROP_DOWN_MENU);
@@ -189,7 +193,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 		@Override
 		public void dispose() {
-			// TODO: understand when this needs to be called
+			// do nothing
 		}
 
 		@Override
@@ -211,10 +215,9 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		}
 
 		private void populate(Menu menu) {
-			int[] values = new int[] {1, 50, 100, 500, 1000};
-			for (int i : values) {
+			for (Pair<String, Integer> item : items) {
 				ActionContributionItem actionItem = new ActionContributionItem(
-						new SetNodeThreshold(i, i == maxNodesRendered));
+						new SetNodeThreshold(item, item.right == maxNodesRendered));
 				actionItem.fill(menu, -1);
 			}
 		}
@@ -223,9 +226,9 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	private class SetNodeThreshold extends Action {
 		private int value;
 
-		SetNodeThreshold(int value, boolean isSelected) {
-			super(String.valueOf(value), IAction.AS_RADIO_BUTTON);
-			this.value = value;
+		SetNodeThreshold(Pair<String, Integer> item, boolean isSelected) {
+			super(item.left, IAction.AS_RADIO_BUTTON);
+			this.value = item.right;
 			setChecked(isSelected);
 		}
 
