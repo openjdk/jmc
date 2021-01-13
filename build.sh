@@ -212,7 +212,7 @@ function run() {
 function runAgentByClass() {
     local agentExampleClass=$1
     if [[ -z "${agentExampleClass}" ]]; then
-        err_log "error: try to run undefiend agent class, empty class"
+        err_log "error: try to run undefined agent class, empty class"
         printHelp
         exit 1
     else
