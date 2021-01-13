@@ -99,7 +99,7 @@ fi
 function runTests() {
     local timestamp=$1
     startJetty $timestamp
-    echo "$${timestamp} running tests"
+    echo "${timestamp} running tests"
     mvn verify
 }
 
