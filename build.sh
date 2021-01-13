@@ -150,7 +150,7 @@ function packageAgent() {
        printf "%s\n" "Agent library build complete. You can now run an example with the agent using \"${PROGNAME} --runAgentExample or --runAgentConverterExample\""
        printf "%s\n" "See agent/README.md for more information"
     else
-        err_log "unknown OS type: \"${OSTYPE}\". Please coheck package in \"${JMC_DIR}/agent/target\""
+        err_log "unknown OS type: \"${OSTYPE}\". Please check package in \"${JMC_DIR}/agent/target\""
         exit 1
     fi
 }
@@ -223,7 +223,7 @@ function runAgentByClass() {
     if [[ "${OSTYPE}" =~ "linux"* ]] || [[ "${OSTYPE}" =~ "darwin"* ]]; then
        printf "%s\n" "try to execute an agent example"
     else
-        err_log "unknown OS type: \"${OSTYPE}\". Please coheck package ${JMC_DIR}/agent README.MD"
+        err_log "unknown OS type: \"${OSTYPE}\". Please check package ${JMC_DIR}/agent README.MD"
         exit 1
     fi
 
