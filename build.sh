@@ -84,9 +84,9 @@ function printHelp() {
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
-        printf " \t%s\t%s\n" "--run" "to run JMC once it was packaged"
-        printf " \t%s\t%s\n" "--runAgentExample" "to run Agent 'InstrumentMe' example, once it was packaged"
-        printf " \t%s\t%s\n" "--runAgentConverterExample" "to run Agent 'InstrumentMeConverter' example, once it was packaged"
+        printf " \t%s\t%s\n" "--run" "to run JMC, once it is packaged"
+        printf " \t%s\t%s\n" "--runAgentExample" "to run Agent 'InstrumentMe' example, once it is packaged"
+        printf " \t%s\t%s\n" "--runAgentConverterExample" "to run Agent 'InstrumentMeConverter' example, once it is packaged"
         printf " \t%s\t%s\n" "--help" "to show this help dialog"
     } | column -ts $'\t'
 }

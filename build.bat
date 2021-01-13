@@ -29,10 +29,10 @@ echo 	--testUi	to run the tests including UI tests
 echo 	--installCore to install JMC core
 echo 	--packageJmc	to package JMC
 echo 	--packageAgent to package Agent
-echo 	--runAgentExample to run Agent 'InstrumentMe' example, once it was packaged
-echo 	--runAgentConverterExample to run Agent 'InstrumentMeConverter' example, once it was packaged
+echo 	--runAgentExample to run Agent 'InstrumentMe' example, once it is packaged
+echo 	--runAgentConverterExample to run Agent 'InstrumentMeConverter' example, once it is packaged
 echo 	--clean	to run maven clean
-echo 	--run	to run JMC once it was packaged
+echo 	--run	to run JMC, once it is packaged
 echo 	--help	to show this help dialog
 exit /B 0
 
