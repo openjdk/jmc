@@ -80,7 +80,7 @@ function printHelp() {
     {
         printf " \t%s\t%s\n" "--test" "to run the tests"
         printf " \t%s\t%s\n" "--testUi" "to run the tests including UI tests"
-        printf " \t%s\t%s\n" "--installCore" "install JMC core"
+        printf " \t%s\t%s\n" "--installCore" "to install JMC core"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
