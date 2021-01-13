@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,11 @@
  */
 package org.openjdk.jmc.flightrecorder.uitest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -56,17 +60,15 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCText;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTextCanvas;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCToolBar;
 import org.openjdk.jmc.ui.UIPlugin;
+import org.openjdk.jmc.ui.misc.TimeFilter;
 
 public class JfrThreadsPageTest extends MCJemmyTestBase {
 
+	private static final int TIME_OFFSET = Calendar.SECOND * 7;
 	private static final String PLAIN_JFR = "plain_recording.jfr";
 	private static final String TABLE_COLUMN_HEADER = "Thread";
 	private static final String OK_BUTTON = "OK";
 	private static final String RESET_BUTTON = "Reset";
-	private static final String START_TIME = "08:06:19:489";
-	private static final String NEW_START_TIME = "08:06:19:500";
-	private static final String INVALID_START_TIME = "08:06:19:480";
-	private static final String INVALID_END_TIME = "08:07:19:733";
 	private static final String FOLD_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_FOLD_CHART_TOOLTIP;
 	private static final String FOLD_TABLE = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_FOLD_TABLE_TOOLTIP;
 	private static final String HIDE_THREAD = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_HIDE_THREAD_ACTION;
@@ -79,8 +81,11 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	private static MCSashForm sashForm;
 	private static MCTextCanvas textCanvas;
 	private static MCTable threadsTable;
+	private static MCText startTimeText;
+	private static MCText endTimeText;
 	private static MCToolBar toolbar;
 	private boolean selected;
+	private SimpleDateFormat sdf = new SimpleDateFormat(TimeFilter.timeFormat);
 
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {
@@ -95,6 +100,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 			selected = false;
 			sashForm = MCSashForm.getMCSashForm();
 			threadsTable = MCTable.getByColumnHeader(TABLE_COLUMN_HEADER);
+			startTimeText = MCText.getByName(TimeFilter.START_TIME_NAME);
+			endTimeText = MCText.getByName(TimeFilter.END_TIME_NAME);
 		}
 
 		@Override
@@ -130,64 +137,75 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testZoom() {
-		MCText startTimeField = MCText.getByText(START_TIME);
+		final String startTime = startTimeText.getText();
 		MCButton zoomInBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_IN));
 		MCButton zoomOutBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_OUT));
 
 		// zoom with display bar
-		Assert.assertEquals(START_TIME, startTimeField.getText());
 		zoomInBtn.click();
 		chartCanvas.clickChart();
-		Assert.assertNotEquals(START_TIME, startTimeField.getText());
+		Assert.assertNotEquals(startTime, startTimeText.getText());
 
 		zoomOutBtn.click();
 		chartCanvas.clickChart();
-		Assert.assertEquals(START_TIME, startTimeField.getText());
+		Assert.assertEquals(startTime, startTimeText.getText());
 
 		// zoom with controls
 		chartCanvas.clickChart();
 		chartCanvas.keyboardZoomIn();
-		Assert.assertNotEquals(START_TIME, startTimeField.getText());
+		Assert.assertNotEquals(startTime, startTimeText.getText());
 
 		chartCanvas.keyboardZoomOut();
-		Assert.assertEquals(START_TIME, startTimeField.getText());
+		Assert.assertEquals(startTime, startTimeText.getText());
 	}
 
 	@Test
-	public void testResetButtons() {
-		MCText StartTimeField = MCText.getByText(START_TIME);
+	public void testResetButtons() throws ParseException {
+		final String startTime = startTimeText.getText();
+		Date startDate = sdf.parse(startTime);
+		startDate.setTime(startDate.getTime() + TIME_OFFSET);
+		final String newStartTime = sdf.format(new Date(startDate.getTime()));
+
 		MCButton resetBtn = MCButton.getByLabel(RESET_BUTTON);
 		MCButton scaleToFitBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_SCALE_TO_FIT));
 
-		StartTimeField.setText(NEW_START_TIME);
-		Assert.assertNotEquals(START_TIME, StartTimeField.getText());
+		startTimeText.setText(newStartTime);
+		Assert.assertNotEquals(startTime, startTimeText.getText());
 
 		resetBtn.click();
-		Assert.assertEquals(START_TIME, StartTimeField.getText());
+		Assert.assertEquals(startTime, startTimeText.getText());
 
-		StartTimeField.setText(NEW_START_TIME);
-		Assert.assertNotEquals(START_TIME, StartTimeField.getText());
+		startTimeText.setText(newStartTime);
+		Assert.assertNotEquals(startTime, startTimeText.getText());
 
 		scaleToFitBtn.click();
-		Assert.assertEquals(START_TIME, StartTimeField.getText());
+		Assert.assertEquals(startTime, startTimeText.getText());
 	}
 
 	@Test
-	public void testTimeFilterInvalid() {
-		MCText startTimeField = MCText.getByText(START_TIME);
-		MCText endTimeField = MCText.getByText(START_TIME);
+	public void testTimeFilterInvalid() throws ParseException {
+		final String startTime = startTimeText.getText();
+		Date startDate = sdf.parse(startTime);
+		startDate.setTime(startDate.getTime() - TIME_OFFSET);
+		final String invalidStartTime = sdf.format(new Date(startDate.getTime()));
+
+		final String endTime = endTimeText.getText();
+		Date endDate = sdf.parse(endTime);
+		endDate.setTime(endDate.getTime() + TIME_OFFSET);
+		final String invalidEndTime = sdf.format(new Date(endDate.getTime()));
+
 		MCButton resetBtn = MCButton.getByLabel(RESET_BUTTON);
 
-		startTimeField.setText(INVALID_START_TIME);
+		startTimeText.setText(invalidStartTime);
 		MCButton okButton = MCButton.getByLabel(TIME_FILTER_ERROR, OK_BUTTON);
 		Assert.assertNotNull(okButton);
 		okButton.click();
 
 		MCButton.focusMc();
 		resetBtn.click();
-		Assert.assertEquals(START_TIME, startTimeField.getText());
+		Assert.assertEquals(startTime, startTimeText.getText());
 
-		endTimeField.setText(INVALID_END_TIME);
+		endTimeText.setText(invalidEndTime);
 		okButton = MCButton.getByLabel(TIME_FILTER_ERROR, OK_BUTTON);
 		Assert.assertNotNull(okButton);
 		okButton.click();

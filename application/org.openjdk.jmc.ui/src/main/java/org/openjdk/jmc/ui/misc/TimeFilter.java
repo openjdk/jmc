@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -62,8 +62,10 @@ public class TimeFilter extends Composite {
 		START, END
 	};
 
-	private static final String dateFormat = "yyyy-MM-dd ";
-	private static final String timeFormat = "HH:mm:ss:SSS";
+	public static final String START_TIME_NAME = "timefilter.startTime.text.name"; //$NON-NLS-1$
+	public static final String END_TIME_NAME = "timefilter.endTime.text.name"; //$NON-NLS-1$
+	public static final String dateFormat = "yyyy-MM-dd ";
+	public static final String timeFormat = "HH:mm:ss:SSS";
 	private boolean isMultiDayRecording = false;
 	public Calendar calendar;
 	private ChartCanvas chartCanvas;
@@ -156,6 +158,8 @@ public class TimeFilter extends Composite {
 			this.defaultTime = defaultTime;
 			this.setLayout(new GridLayout());
 			timeText = new Text(this, SWT.SEARCH | SWT.SINGLE);
+			timeText.setData("name", type == FilterType.START ? START_TIME_NAME : END_TIME_NAME); //$NON-NLS-1$
+
 			// if the recording spans multiple days, include the date in the time display
 			if (!isMultiDayRecording) {
 				timeText.setTextLimit(12);
