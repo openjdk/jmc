@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -81,6 +81,20 @@ public class FormatToolkit {
 			Function<Stream<String>, String> rowFormatter = getPreferredRowFormatter();
 			Function<Object, String> objectFormatter = o -> rowFormatter.apply(Stream.of(lps).map(lp -> lp.getText(o)));
 			return FormatToolkit.formatSelection(selection, objectFormatter);
+		};
+	}
+
+	public static Function<IStructuredSelection, Stream<String>> selectionFormatter(
+		List<String> headers, ILabelProvider ... lps) {
+		return selection -> {
+			Function<Stream<String>, String> rowFormatter = getPreferredRowFormatter();
+			Function<Object, String> objectFormatter = o -> rowFormatter.apply(Stream.of(lps).map(lp -> lp.getText(o)));
+			Stream<String> strings = FormatToolkit.formatSelection(selection, objectFormatter);
+			if (CopySettings.getInstance().shouldCopyColumnHeaders()) {
+				return Stream.concat(Stream.of(rowFormatter.apply(headers.stream())), strings);
+			} else {
+				return strings;
+			}
 		};
 	}
 

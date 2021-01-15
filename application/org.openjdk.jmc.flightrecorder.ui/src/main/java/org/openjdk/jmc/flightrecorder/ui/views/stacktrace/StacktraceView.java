@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2020, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,7 +88,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.ViewPart;
-
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IState;
@@ -505,8 +504,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 		new StacktraceViewToolTipSupport(viewer);
 		MCContextMenuManager mm = MCContextMenuManager.create(viewer.getControl());
-		CopySelectionAction copyAction = new CopySelectionAction(viewer,
-				FormatToolkit.selectionFormatter(stackTraceLabelProvider, countLabelProvider, percentageLabelProvider));
+		List<String> headers = Arrays.asList(Messages.STACKTRACE_VIEW_STACK_TRACE,
+				Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME);
+		CopySelectionAction copyAction = new CopySelectionAction(viewer, FormatToolkit.selectionFormatter(headers,
+				stackTraceLabelProvider, countLabelProvider, percentageLabelProvider));
 		InFocusHandlerActivator.install(viewer.getControl(), copyAction);
 		mm.appendToGroup(MCContextMenuManager.GROUP_EDIT, copyAction);
 		mm.appendToGroup(MCContextMenuManager.GROUP_EDIT, CopySettings.getInstance().createContributionItem());
