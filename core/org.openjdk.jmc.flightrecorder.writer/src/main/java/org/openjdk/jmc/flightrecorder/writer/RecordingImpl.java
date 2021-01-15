@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -105,25 +106,32 @@ public final class RecordingImpl extends Recording {
 		chunkDataMergingService.submit(() -> {
 			try {
 				while (!chunkDataMergingService.isShutdown()) {
-					LEB128Writer writer = chunkDataQueue.poll(500, TimeUnit.MILLISECONDS);
-					if (writer != null) {
-						List<LEB128Writer> writers = new ArrayList<>();
-						writers.add(writer);
-						chunkDataQueue.drainTo(writers);
-
-						for (LEB128Writer w : writers) {
-							globalWriter.writeBytes(w.export());
-						}
-					}
+					processChunkDataQueue(500, TimeUnit.MILLISECONDS);
 				}
+				// process any outstanding elements in the queue
+				processChunkDataQueue(1, TimeUnit.NANOSECONDS);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 		});
 	}
 
+	private void processChunkDataQueue(long pollTimeout, TimeUnit timeUnit) throws InterruptedException {
+		LEB128Writer writer = chunkDataQueue.poll(pollTimeout, timeUnit);
+		if (writer != null) {
+			List<LEB128Writer> writers = new ArrayList<>();
+			writers.add(writer);
+			chunkDataQueue.drainTo(writers);
+
+			for (LEB128Writer w : writers) {
+				globalWriter.writeBytes(w.export());
+			}
+		}
+	}
+
 	@Override
 	public RecordingImpl rotateChunk() {
+		System.err.println("=== rotate chunk");
 		Chunk chunk = getChunk();
 		activeChunks.remove(chunk);
 		threadChunk.remove();
@@ -139,7 +147,7 @@ public final class RecordingImpl extends Recording {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws IOException {
 		if (closed.compareAndSet(false, true)) {
 			try {
 				/*
@@ -158,7 +166,13 @@ public final class RecordingImpl extends Recording {
 				activeChunks.clear();
 
 				chunkDataMergingService.shutdown();
-				if (!chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS)) {
+				boolean flushed = false;
+				try {
+					flushed = chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+				if (!flushed) {
 					throw new RuntimeException("Unable to flush dangling JFR chunks");
 				}
 				finalizeRecording();

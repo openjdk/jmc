@@ -36,6 +36,7 @@ package org.openjdk.jmc.flightrecorder.writer.api;
 import org.openjdk.jmc.flightrecorder.writer.RecordingImpl;
 import org.openjdk.jmc.flightrecorder.writer.TypesImpl;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public abstract class Recording implements AutoCloseable {
@@ -161,4 +162,7 @@ public abstract class Recording implements AutoCloseable {
 	 * @return the associated {@linkplain Types} instance
 	 */
 	public abstract Types getTypes();
+
+	@Override
+	public abstract void close() throws IOException;
 }
