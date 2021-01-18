@@ -35,9 +35,11 @@ package org.openjdk.jmc.flightrecorder.writer.api;
 
 import org.openjdk.jmc.flightrecorder.writer.RecordingImpl;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -55,5 +57,9 @@ public final class Recordings {
 
 	public static Recording newRecording(File path) throws IOException {
 		return new RecordingImpl(new FileOutputStream(path));
+	}
+
+	public static Recording newRecording(OutputStream recordingStream) {
+		return new RecordingImpl(new BufferedOutputStream(recordingStream));
 	}
 }
