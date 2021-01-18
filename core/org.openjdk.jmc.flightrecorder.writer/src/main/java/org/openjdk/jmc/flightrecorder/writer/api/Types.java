@@ -41,8 +41,8 @@ import java.util.function.Consumer;
 
 public abstract class Types {
 	/**
-	 * Retrieve the given type or create it a-new if it hasn't been added yet.
-	 * The type values will be stored in an associated constant pool.
+	 * Retrieve the given type or create it a-new if it hasn't been added yet. The type values will
+	 * be stored in an associated constant pool.
 	 *
 	 * @param type
 	 *            the type to retrieve
@@ -74,7 +74,8 @@ public abstract class Types {
 	 *            will be called lazily when the type is about to be initialized
 	 * @return the corresponding {@link Type type} instance
 	 */
-	public abstract Type getOrAdd(String name, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback);
+	public abstract Type getOrAdd(
+		String name, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback);
 
 	/**
 	 * Retrieve the given type or create it a-new if it hasn't been added yet.
@@ -90,8 +91,8 @@ public abstract class Types {
 	public abstract Type getOrAdd(Predefined type, String supertype, Consumer<TypeStructureBuilder> builderCallback);
 
 	/**
-	 * Retrieve the given type or create it a-new if it hasn't been added yet.
-	 * The type values will be stored in an associated constant pool.
+	 * Retrieve the given type or create it a-new if it hasn't been added yet. The type values will
+	 * be stored in an associated constant pool.
 	 *
 	 * @param name
 	 *            the name of the type to retrieve
@@ -116,11 +117,12 @@ public abstract class Types {
 	 *            will be called lazily when the type is about to be initialized
 	 * @return the corresponding {@link Type type} instance
 	 */
-	public abstract Type getOrAdd(String name, String supertype, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback);
+	public abstract Type getOrAdd(
+		String name, String supertype, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback);
 
 	/**
-	 * Retrieve the given type or create it a-new if it hasn't been added yet.
-	 * The type values will be stored in an associated constant pool.
+	 * Retrieve the given type or create it a-new if it hasn't been added yet. The type values will
+	 * be stored in an associated constant pool.
 	 *
 	 * @param name
 	 *            the name of the type to retrieve
@@ -140,7 +142,7 @@ public abstract class Types {
 	 * @param supertype
 	 *            the super type name
 	 * @param withConstantPool
-	 * 			  should the type values use an associated constant pool
+	 *            should the type values use an associated constant pool
 	 * @param typeStructure
 	 *            the type structure definition
 	 * @return the corresponding {@link Type type} instance
@@ -181,7 +183,9 @@ public abstract class Types {
 	public abstract Type getType(Predefined type);
 
 	/**
-	 * A convenience accessor to {@linkplain TypeStructureBuilder} instance outside of the type configuration callback
+	 * A convenience accessor to {@linkplain TypeStructureBuilder} instance outside of the type
+	 * configuration callback
+	 * 
 	 * @return a new {@linkplain TypeStructureBuilder} instance
 	 */
 	public abstract TypeStructureBuilder typeStructureBuilder();

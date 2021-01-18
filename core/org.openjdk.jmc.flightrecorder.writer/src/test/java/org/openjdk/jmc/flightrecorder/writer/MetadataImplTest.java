@@ -162,7 +162,7 @@ public class MetadataImplTest {
 	void createCustomType() {
 		String typeName = "dummy.Test";
 		String superName = "super.Type";
-		for (boolean withCp : new boolean[]{true, false}) {
+		for (boolean withCp : new boolean[] {true, false}) {
 			TypeImpl type = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY, withCp);
 			assertNotNull(type);
 			assertFalse(type.isBuiltin());

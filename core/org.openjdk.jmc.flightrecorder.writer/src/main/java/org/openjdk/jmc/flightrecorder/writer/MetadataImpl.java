@@ -118,8 +118,8 @@ final class MetadataImpl {
 	}
 
 	/**
-	 * Register a {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance with values stored in
-	 * an associated constant pool.
+	 * Register a {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance with values
+	 * stored in an associated constant pool.
 	 *
 	 * @param typeName
 	 *            the type name
@@ -142,19 +142,21 @@ final class MetadataImpl {
 	 * @param supertype
 	 *            super type; may be {@literal null}
 	 * @param withConstantPool
-	 * 			  store the values in an associated constant pool
+	 *            store the values in an associated constant pool
 	 * @param typeStructureProvider
 	 *            type structure provider to be called lazily when a new type is created
 	 * @return registered type - either a new type or or a previously registered with the same name
 	 */
-	TypeImpl registerType(String typeName, String supertype, boolean withConstantPool, Supplier<TypeStructureImpl> typeStructureProvider) {
+	TypeImpl registerType(
+		String typeName, String supertype, boolean withConstantPool,
+		Supplier<TypeStructureImpl> typeStructureProvider) {
 		return registerType(typeName, supertype, withConstantPool,
 				typeStructureProvider != null ? typeStructureProvider.get() : TypeStructureImpl.EMPTY);
 	}
 
 	/**
-	 * Register a {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance with values stored in
-	 * an associated constant pool.
+	 * Register a {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance with values
+	 * stored in an associated constant pool.
 	 *
 	 * @param typeName
 	 *            the type name
@@ -176,12 +178,13 @@ final class MetadataImpl {
 	 * @param supertype
 	 *            super type; may be {@literal null}
 	 * @param withConstantPool
-	 * 			  store the values in an associated constant pool
+	 *            store the values in an associated constant pool
 	 * @param compositeType
 	 *            the composite type structure description
 	 * @return registered type - either a new type or or a previously registered with the same name
 	 */
-	TypeImpl registerType(String typeName, String supertype, boolean withConstantPool, TypeStructureImpl compositeType) {
+	TypeImpl registerType(
+		String typeName, String supertype, boolean withConstantPool, TypeStructureImpl compositeType) {
 		return metadata.computeIfAbsent(typeName, name -> {
 			TypeImpl t = createCustomType(name, supertype, compositeType, withConstantPool);
 			storeTypeStrings(t);
@@ -259,8 +262,9 @@ final class MetadataImpl {
 	 * @param asResolvable
 	 *            should a {@linkplain ResolvableType} wrapper be returned if the requested type is
 	 *            not present in the metadata storage yet?
-	 * @return the specified {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance or {@linkplain null} if that type is not in
-	 *         the metadata storage yet and 'asResolvable' was {@literal false}
+	 * @return the specified {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Type} instance or
+	 *         {@linkplain null} if that type is not in the metadata storage yet and 'asResolvable'
+	 *         was {@literal false}
 	 */
 	TypeImpl getType(NamedType type, boolean asResolvable) {
 		return getType(type.getTypeName(), asResolvable);

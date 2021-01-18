@@ -144,8 +144,11 @@ public interface TypeStructureBuilder {
 
 	/**
 	 * A shortcut to build-and-register functionality
-	 * @param name the type name
-	 * @param supertype the supertype name
+	 * 
+	 * @param name
+	 *            the type name
+	 * @param supertype
+	 *            the supertype name
 	 * @return a new {@linkplain Type} instance
 	 */
 	Type registerAs(String name, String supertype);

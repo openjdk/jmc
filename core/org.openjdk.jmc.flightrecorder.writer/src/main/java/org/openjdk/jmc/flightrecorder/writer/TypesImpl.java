@@ -162,7 +162,8 @@ public final class TypesImpl extends Types {
 	}
 
 	@Override
-	public TypeImpl getOrAdd(String name, String supertype, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback) {
+	public TypeImpl getOrAdd(
+		String name, String supertype, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback) {
 		return metadata.registerType(name, supertype, withConstantPool, () -> {
 			TypeStructureBuilderImpl builder = new TypeStructureBuilderImpl(this);
 			builderCallback.accept(builder);
