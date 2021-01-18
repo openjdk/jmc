@@ -34,8 +34,10 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 
@@ -82,6 +84,7 @@ class RecordingImplTest {
 		assertEquals(name, eventType.getTypeName());
 		assertEquals("jdk.jfr.Event", eventType.getSupertype());
 		assertNotNull(eventType.getField(fieldName));
+		assertFalse(eventType.hasConstantPool());
 	}
 
 	@Test
@@ -91,6 +94,7 @@ class RecordingImplTest {
 		assertNotNull(eventType);
 		assertEquals(name, eventType.getTypeName());
 		assertEquals("jdk.jfr.Event", eventType.getSupertype());
+		assertFalse(eventType.hasConstantPool());
 	}
 
 	@Test
@@ -125,6 +129,7 @@ class RecordingImplTest {
 		assertEquals(Annotation.ANNOTATION_SUPER_TYPE_NAME, annotationType.getSupertype());
 		assertEquals(1, annotationType.getFields().size());
 		assertNotNull(annotationType.getField(fieldName));
+		assertTrue(annotationType.hasConstantPool());
 	}
 
 	@Test
@@ -134,6 +139,7 @@ class RecordingImplTest {
 		assertNotNull(annotationType);
 		assertEquals(name, annotationType.getTypeName());
 		assertEquals(Annotation.ANNOTATION_SUPER_TYPE_NAME, annotationType.getSupertype());
+		assertTrue(annotationType.hasConstantPool());
 	}
 
 	@Test
@@ -167,6 +173,7 @@ class RecordingImplTest {
 	void getBuiltinJDKType(TypesImpl.JDK target) {
 		TypeImpl type = recording.getType(target);
 		assertNotNull(type);
+		assertFalse(type.hasConstantPool());
 	}
 
 	@Test

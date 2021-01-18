@@ -148,22 +148,22 @@ public final class TypesImpl extends Types {
 
 	@Override
 	public TypeImpl getOrAdd(Predefined type, Consumer<TypeStructureBuilder> builderCallback) {
-		return getOrAdd(type.getTypeName(), builderCallback);
+		return getOrAdd(type.getTypeName(), false, builderCallback);
 	}
 
 	@Override
-	public TypeImpl getOrAdd(String name, Consumer<TypeStructureBuilder> builderCallback) {
-		return getOrAdd(name, null, builderCallback);
+	public TypeImpl getOrAdd(String name, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback) {
+		return getOrAdd(name, null, withConstantPool, builderCallback);
 	}
 
 	@Override
 	public TypeImpl getOrAdd(Predefined type, String supertype, Consumer<TypeStructureBuilder> builderCallback) {
-		return getOrAdd(type.getTypeName(), supertype, builderCallback);
+		return getOrAdd(type.getTypeName(), supertype, false, builderCallback);
 	}
 
 	@Override
-	public TypeImpl getOrAdd(String name, String supertype, Consumer<TypeStructureBuilder> builderCallback) {
-		return metadata.registerType(name, supertype, () -> {
+	public TypeImpl getOrAdd(String name, String supertype, boolean withConstantPool, Consumer<TypeStructureBuilder> builderCallback) {
+		return metadata.registerType(name, supertype, withConstantPool, () -> {
 			TypeStructureBuilderImpl builder = new TypeStructureBuilderImpl(this);
 			builderCallback.accept(builder);
 			return (TypeStructureImpl) builder.build();
@@ -171,8 +171,23 @@ public final class TypesImpl extends Types {
 	}
 
 	@Override
+	public TypeImpl getOrAdd(String name, String supertype, boolean withConstantPool, TypeStructure typeStructure) {
+		return metadata.registerType(name, supertype, withConstantPool, (TypeStructureImpl) typeStructure);
+	}
+
+	@Override
+	public TypeImpl getOrAdd(String name, Consumer<TypeStructureBuilder> builderCallback) {
+		return getOrAdd(name, true, builderCallback);
+	}
+
+	@Override
+	public TypeImpl getOrAdd(String name, String supertype, Consumer<TypeStructureBuilder> builderCallback) {
+		return getOrAdd(name, supertype, true, builderCallback);
+	}
+
+	@Override
 	public TypeImpl getOrAdd(String name, String supertype, TypeStructure typeStructure) {
-		return metadata.registerType(name, supertype, (TypeStructureImpl) typeStructure);
+		return getOrAdd(name, supertype, true, typeStructure);
 	}
 
 	@Override
