@@ -46,7 +46,6 @@ import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.Attribute;
 import org.openjdk.jmc.agent.Field;
 import org.openjdk.jmc.agent.Parameter;
-import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.impl.MalformedConverterException;
 import org.openjdk.jmc.agent.impl.ResolvedConvertable;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
@@ -82,7 +81,7 @@ public class JFREventClassGenerator {
 			createField(cw, td, param, args[param.getIndex()]);
 		}
 		if (td.getReturnValue() != null) {
-			createField(cw, td, Type.getReturnType(td.getMethod().getSignature()));
+			createField(cw, td, td.getReturnValue(), Type.getReturnType(td.getMethod().getSignature()));
 		}
 
 		for (Field field : td.getFields()) {
@@ -104,7 +103,7 @@ public class JFREventClassGenerator {
 			ResolvedConvertable resolved;
 			try {
 				resolved = new ResolvedConvertable(attribute.getConverterDefinition(), type);
-				fieldType = getFieldType(Type.getType(resolved.getConverterMethod().getReturnType()));
+				fieldType = getFieldTypeDescriptor(Type.getType(resolved.getConverterMethod().getReturnType()));
 			} catch (MalformedConverterException e) {
 				Agent.getLogger()
 						.log(Level.SEVERE,
@@ -114,7 +113,7 @@ public class JFREventClassGenerator {
 				return;
 			}
 		} else {
-			fieldType = getFieldType(type);
+			fieldType = getFieldTypeDescriptor(type);
 		}
 
 		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, attribute.getFieldName(), fieldType, null, null);
@@ -133,46 +132,6 @@ public class JFREventClassGenerator {
 		// We support the old JDK 7 style content types transparently.
 		// We also support user defined content types and a single string value annotation parameter to the annotation.
 		String contentTypeAnnotation = getContentTypeAnnotation(attribute.getContentType());
-		if (contentTypeAnnotation != null) {
-			String[] contentTypeAnnotationInfo = contentTypeAnnotation.split(";");
-			av = fv.visitAnnotation(contentTypeAnnotationInfo[0] + ";", true);
-			if (contentTypeAnnotationInfo.length > 1) {
-				av.visit("value", contentTypeAnnotationInfo[1]);
-			}
-			av.visitEnd();
-		}
-
-		// FIXME: RelKey
-		fv.visitEnd();
-	}
-
-	private static void createField(ClassWriter cw, JFRTransformDescriptor td, Type type) {
-		ReturnValue returnValue = td.getReturnValue();
-		if (!td.isAllowedEventFieldType(returnValue, type)) {
-			Logger.getLogger(JFREventClassGenerator.class.getName())
-					.warning("Skipped generating field in event class for return value " + returnValue + " and type " //$NON-NLS-1$//$NON-NLS-2$
-							+ type + " because of configuration settings!"); //$NON-NLS-1$
-			return;
-		}
-
-		String fieldType = getFieldType(type);
-
-		FieldVisitor fv = cw.visitField(Opcodes.ACC_PROTECTED, returnValue.getFieldName(), fieldType, null, null);
-
-		// Name
-		AnnotationVisitor av = fv.visitAnnotation("Ljdk/jfr/Label;", true);
-		av.visit("value", returnValue.getName());
-		av.visitEnd();
-
-		// Description
-		av = fv.visitAnnotation("Ljdk/jfr/Description;", true);
-		av.visit("value", returnValue.getDescription());
-		av.visitEnd();
-
-		// "ContentType"
-		// We support the old JDK 7 style content types transparently.
-		// We also support user defined content types and a single string value annotation parameter to the annotation.
-		String contentTypeAnnotation = getContentTypeAnnotation(returnValue.getContentType());
 		if (contentTypeAnnotation != null) {
 			String[] contentTypeAnnotationInfo = contentTypeAnnotation.split(";");
 			av = fv.visitAnnotation(contentTypeAnnotationInfo[0] + ";", true);
@@ -220,8 +179,8 @@ public class JFREventClassGenerator {
 		}
 	}
 
-	private static String getFieldType(Type type) {
-		if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
+	private static String getFieldTypeDescriptor(Type type) {
+		if (!TypeUtils.isSupportedType(type)) {
 			return "Ljava/lang/String;"; //$NON-NLS-1$
 		}
 		return type.getDescriptor();

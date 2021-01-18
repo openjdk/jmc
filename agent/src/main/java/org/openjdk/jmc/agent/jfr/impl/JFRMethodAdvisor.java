@@ -150,9 +150,9 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 				if (param.hasConverter()) {
 					argumentType = convertify(mv, param, argumentType);
 				} else {
-					if (TypeUtils.shouldStringify(param, argumentType)) {
+					if (!TypeUtils.isSupportedType(argumentType) && transformDescriptor.isAllowToString()) {
 						TypeUtils.stringify(mv);
-						argumentType = TypeUtils.STRING_TYPE;
+						argumentType = TypeUtils.TYPE_STRING;
 					}
 				}
 				writeAttribute(param, argumentType);
@@ -176,9 +176,9 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 				if (field.hasConverter()) {
 					fieldType = convertify(mv, field, fieldType);
 				} else {
-					if (TypeUtils.shouldStringify(field, fieldType)) {
+					if (!TypeUtils.isSupportedType(fieldType) && transformDescriptor.isAllowToString()) {
 						TypeUtils.stringify(mv);
-						fieldType = TypeUtils.STRING_TYPE;
+						fieldType = TypeUtils.TYPE_STRING;
 					}
 				}
 
@@ -267,6 +267,11 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 
 	private Type convertify(MethodVisitor mv, Attribute convertable, Type type) throws MalformedConverterException {
 		ResolvedConvertable resolvedConvertable = new ResolvedConvertable(convertable.getConverterDefinition(), type);
+		return convertify(mv, resolvedConvertable, type);
+	}
+
+	private Type convertify(MethodVisitor mv, ResolvedConvertable resolvedConvertable, Type type)
+			throws MalformedConverterException {
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, Type.getInternalName(resolvedConvertable.getConverterClass()),
 				resolvedConvertable.getConverterMethod().getName(),
 				Type.getMethodDescriptor(resolvedConvertable.getConverterMethod()), false);
@@ -310,13 +315,13 @@ public class JFRMethodAdvisor extends AdviceAdapter {
 		if (returnValue.hasConverter()) {
 			returnType = convertify(mv, returnValue, returnType);
 		} else {
-			if (TypeUtils.shouldStringify(returnValue, returnType)) {
+			if (!TypeUtils.isSupportedType(returnType)) {
 				TypeUtils.stringify(mv);
-				returnType = TypeUtils.STRING_TYPE;
+				returnType = TypeUtils.TYPE_STRING;
 			}
 		}
 
-		writeAttribute(returnValue, returnTypeRef);
+		writeAttribute(returnValue, returnType);
 	}
 
 	private void commitEvent() {
