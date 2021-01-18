@@ -41,6 +41,8 @@
 	<artifactId>flightrecorder</artifactId>
 	<properties>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<maven.compiler.target>8</maven.compiler.target>
+		<maven.compiler.source>8</maven.compiler.source>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -261,11 +261,23 @@ public final class DotGenerator {
 	/**
 	 * Renders a {@link StacktraceGraphModel} in DOT format.
 	 */
-	public static String toDot(StacktraceGraphModel model, Map<ConfigurationKey, String> configuration) {
+	public static String toDot(
+		StacktraceGraphModel model, int maxNodesRendered, Map<ConfigurationKey, String> configuration) {
 		StringBuilder builder = new StringBuilder(2048);
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
 		builder.append(String.format("digraph \"%s\" {%n", graphName));
-
+		int nodeCount = model.getNodes().size();
+		if (nodeCount > maxNodesRendered) {
+			String message = String.format("Too many nodes in current selection%n(max: %d, actual: %d)",
+					maxNodesRendered, nodeCount);
+			emitMessage(builder, message, configuration);
+			builder.append("}");
+			return builder.toString();
+		} else if (nodeCount == 0) {
+			emitEmptyMessage(builder, "No graph data in current selection", configuration);
+			builder.append("}");
+			return builder.toString();
+		}
 		createDefaultNodeSettingsEntry(builder, configuration);
 		if (Boolean.valueOf(getConf(configuration, ConfigurationKey.TitleArea, "false"))) {
 			createSubgraphNode(builder, graphName, configuration, model);
@@ -353,6 +365,31 @@ public final class DotGenerator {
 		builder.append("\"]\n");
 	}
 
+	private static void emitMessage(
+		StringBuilder builder, String message, Map<ConfigurationKey, String> configuration) {
+		String shape = getConf(configuration, ConfigurationKey.NodeShape, DEFAULT_SHAPE);
+		String color = getConf(configuration, ConfigurationKey.NodeColor, "#b22b00");
+		String fillColor = getConf(configuration, ConfigurationKey.NodeFillColor, "#eddbd5");
+		builder.append("message [label=\"");
+		builder.append(message);
+		builder.append("\" id=\"message\"");
+		builder.append(" shape=");
+		builder.append(shape);
+		builder.append(" fontsize=5");
+		builder.append(" color=\"");
+		builder.append(color);
+		builder.append("\" fillcolor=\"");
+		builder.append(fillColor);
+		builder.append("\"]\n");
+	}
+
+	private static void emitEmptyMessage(
+		StringBuilder builder, String message, Map<ConfigurationKey, String> configuration) {
+		builder.append("label= <<font color='gray' point-size='1'>");
+		builder.append(message);
+		builder.append("</font>>");
+	}
+
 	private static void createSubgraphNode(
 		StringBuilder builder, String graphName, Map<ConfigurationKey, String> configuration,
 		StacktraceGraphModel model) {
@@ -419,6 +456,6 @@ public final class DotGenerator {
 		StacktraceGraphModel model = new StacktraceGraphModel(frameSeparator, filteredItems, null);
 		Map<ConfigurationKey, String> configuration = getDefaultConfiguration();
 		configuration.put(ConfigurationKey.Name, jfrFile.getName());
-		System.out.println(toDot(model, configuration));
+		System.out.println(toDot(model, 1000, configuration));
 	}
 }

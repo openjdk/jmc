@@ -239,7 +239,7 @@ public class JFRTransformDescriptor extends TransformDescriptor {
 		if (isAllowConverter() && convertable.hasConverter()) {
 			return true;
 		}
-		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;
+		return TypeUtils.isSupportedType(type);
 	}
 
 	public void matchFound(boolean matched) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -171,7 +171,7 @@
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
 			<method>
-				<name>printHelloWorldJFR11</name>
+				<name>printHelloWorldJFR13</name>
 				<descriptor>()V</descriptor>
 			</method>
 			<fields>
@@ -188,6 +188,45 @@
 					<expression>STATIC_NULL_FIELD.instanceStringField</expression>
 				</field>
 			</fields>
+		</event>
+		<event id="demo.jfr.test14">
+			<label>JFR Hello World Event 14 %TEST_NAME%</label>
+			<description>Defined in the xml file and added by the agent. Should
+				record the value of the thread argument
+			</description>
+			<path>demo/jfrhelloworldevent14</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR14</name>
+				<descriptor>(Ljava/lang/Thread;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>DoLittleThread</name>
+						<description>The Thread from the DoLittleContainer</description>
+					</parameter>
+				</parameters>
+			</method>
+		</event>
+		<event id="demo.jfr.test15">
+			<label>JFR Hello World Event 15 %TEST_NAME%</label>
+			<description>Defined in the xml file and added by the agent. Should
+				record the value of the class argument
+			</description>
+			<path>demo/jfrhelloworldevent15</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
+			<method>
+				<name>printHelloWorldJFR15</name>
+				<descriptor>(Ljava/lang/Class;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Instrumented Class</name>
+						<description>Simply the instrumented class, over and over again
+						</description>
+					</parameter>
+				</parameters>
+			</method>
 		</event>
 		<event id="demo.jfr.testI1">
 			<label>JFR Hello World Instance Event 1 %TEST_NAME%</label>
@@ -241,8 +280,8 @@
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
 			<method>
-				<name>printInstanceHelloWorldJFR3</name>
-				<descriptor>(Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<name>printHelloWorldJFR3</name>
+				<descriptor>(Lorg/openjdk/jmc/agent/test/Gurka;)V</descriptor>
 				<!-- Note that this will only work if we allow toString -->
 				<parameters>
 					<parameter index="0">
@@ -262,8 +301,8 @@
 			<stacktrace>true</stacktrace>
 			<class>org.openjdk.jmc.agent.test.InstrumentMe</class>
 			<method>
-				<name>printInstanceHelloWorldJFR4</name>
-				<descriptor>([Lorg/openjdk/jmc/bciagent/test/Gurka;)V</descriptor>
+				<name>printHelloWorldJFR4</name>
+				<descriptor>([Lorg/openjdk/jmc/agent/test/Gurka;)V</descriptor>
 				<!-- Note that this will only work if we allow toString -->
 				<parameters>
 					<parameter index="0">

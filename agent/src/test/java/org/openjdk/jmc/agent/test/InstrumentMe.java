@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,8 @@ public class InstrumentMe {
 	public static final MyPojo STATIC_NULL_FIELD = null;
 
 	public final String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.instanceStringField";
+
+	private static final int SLEEP_TIME = 500;
 
 	public static class MyPojo {
 		public String instanceStringField = "org.openjdk.jmc.agent.test.InstrumentMe.MyPojo.instanceStringField";
@@ -148,6 +150,10 @@ public class InstrumentMe {
 		printHelloWorldJFR11();
 		printHelloWorldJFR12();
 		printHelloWorldJFR13();
+		DoLittleContainer container = DoLittleContainer.createAndStart();
+		printHelloWorldJFR14(container.getThread());
+		container.shutdown();
+		printHelloWorldJFR15(InstrumentMe.class);
 	}
 
 	private static Collection<Gurka> createGurkList() {
@@ -160,69 +166,69 @@ public class InstrumentMe {
 
 	public static void printHelloWorld1() throws InterruptedException {
 		System.out.println("#S1. Hello World!"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static int printHelloWorld2(String str, long l) throws InterruptedException {
 		int returnval = TestToolkit.RND.nextInt(45);
 		System.out.println(String.format("#S2. Str:%s long:%d retval:%d", str, l, returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public static void printHelloWorld3(Gurka gurka) throws InterruptedException {
 		System.out.println(String.format("#S3. Got a gurka with id: %d", gurka.getID())); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorld4(Gurka[] gurkor) throws InterruptedException {
 		System.out.println(String.format("#S4. Got gurkor: %s", Arrays.toString(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorld5(Collection<Gurka> gurkor) throws InterruptedException {
 		System.out.println(String.format("#S5. Got gurkor: %s", String.valueOf(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorldJFR1() throws InterruptedException {
 		System.out.println("#SJFR1. Hello World!"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static int printHelloWorldJFR2(String str, long l) throws InterruptedException {
 		int returnval = TestToolkit.RND.nextInt(45);
 		System.out.println(String.format("#SJFR2. Str:%s long:%d retval:%d", str, l, returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public static void printHelloWorldJFR3(Gurka gurka) throws InterruptedException {
 		System.out.println(String.format("#SJFR3. Got a gurka with id: %d", gurka.getID())); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorldJFR4(Gurka[] gurkor) throws InterruptedException {
 		System.out.println(String.format("#SJFR4. Got gurkor: %s", Arrays.toString(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorldJFR5(Collection<Gurka> gurkor) throws InterruptedException {
 		System.out.println(String.format("#SJFR5. Got gurkor: %s", String.valueOf(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static double printHelloWorldJFR6() throws InterruptedException {
 		double returnval = TestToolkit.RND.nextDouble() * 100;
 		System.out.println(String.format("#SJFR6. retval:%3.3f", returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public static void printHelloWorldJFR7() throws InterruptedException {
 		try {
 			System.out.println("#SJFR7. Hello World!"); //$NON-NLS-1$
-			Thread.sleep(1000);
+			Thread.sleep(SLEEP_TIME);
 		} catch (Exception e) {
 			// intentionally empty
 		}
@@ -230,19 +236,19 @@ public class InstrumentMe {
 
 	public static void printHelloWorldJFR8() throws InterruptedException {
 		System.out.println("#SJFR8. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		(new ArrayList<>()).get(1);
 	}
 
 	public static void printHelloWorldJFR9() throws InterruptedException {
 		System.out.println("#SJFR9. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		(new ArrayList<>()).get(1);
 	}
 
 	public static void printHelloWorldJFR10() throws InterruptedException {
 		System.out.println("#SJFR10. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 
 		try {
 			(new ArrayList<>()).get(1);
@@ -254,86 +260,96 @@ public class InstrumentMe {
 
 	public static void printHelloWorldJFR11() throws InterruptedException {
 		System.out.println("#SJFR11. Capturing static field 'STATIC_STRING_FIELD'"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorldJFR12() throws InterruptedException {
 		System.out.println(
 				"#SJFR12. Capturing 'STATIC_OBJECT_FIELD.STATIC_STRING_FIELD' and 'STATIC_OBJECT_FIELD.instanceStringField'"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printHelloWorldJFR13() throws InterruptedException {
 		System.out.println(
 				"#SJFR13. Capturing 'STATIC_NULL_FIELD.STATIC_STRING_FIELD' and 'STATIC_NULL_FIELD.instanceStringField'"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printHelloWorldJFR14(Thread thread) throws InterruptedException {
+		System.out.println("#SJFR14. Capturing thread parameter " + thread.getId() + ":" + thread.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printHelloWorldJFR15(Class<?> clazz) throws InterruptedException {
+		System.out.println("#SJFR15. Capturing class parameter " + clazz.getName()); //$NON-NLS-1$
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorld1() throws InterruptedException {
 		System.out.println("#I1. Hello World!"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public int printInstanceHelloWorld2(String str, long l) throws InterruptedException {
 		int returnval = TestToolkit.RND.nextInt(45);
 		System.out.println(String.format("#I2. Str:%s long:%d retval:%d", str, l, returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public void printInstanceHelloWorld3(Gurka gurka) throws InterruptedException {
 		System.out.println(String.format("#I3. Got a gurka with id: %d", gurka.getID())); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorld4(Gurka[] gurkor) throws InterruptedException {
 		System.out.println(String.format("#I4. Got gurkor: %s", Arrays.toString(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorld5(Collection<Gurka> gurkor) throws InterruptedException {
 		System.out.println(String.format("#I5. Got gurkor: %s", String.valueOf(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorldJFR1() throws InterruptedException {
 		System.out.println("#IJFR1. Hello World!"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public int printInstanceHelloWorldJFR2(String str, long l) throws InterruptedException {
 		int returnval = TestToolkit.RND.nextInt(45);
 		System.out.println(String.format("#IJFR2. Str:%s long:%d retval:%d", str, l, returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public void printInstanceHelloWorldJFR3(Gurka gurka) throws InterruptedException {
 		System.out.println(String.format("#IJFR3. Got a gurka with id: %d", gurka.getID())); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorldJFR4(Gurka[] gurkor) throws InterruptedException {
 		System.out.println(String.format("#IJFR4. Got gurkor: %s", Arrays.toString(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorldJFR5(Collection<Gurka> gurkor) throws InterruptedException {
 		System.out.println(String.format("#IJFR5. Got gurkor: %s", String.valueOf(gurkor))); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public double printInstanceHelloWorldJFR6() throws InterruptedException {
 		double returnval = TestToolkit.RND.nextDouble();
 		System.out.println(String.format("#IJFR6. retval:%1.3f", returnval)); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		return returnval;
 	}
 
 	public void printInstanceHelloWorldJFR7() throws InterruptedException {
 		try {
 			System.out.println("#IJFR7. Hello World!"); //$NON-NLS-1$
-			Thread.sleep(1000);
+			Thread.sleep(SLEEP_TIME);
 		} catch (Exception e) {
 			// intentionally empty
 		}
@@ -341,19 +357,19 @@ public class InstrumentMe {
 
 	public void printInstanceHelloWorldJFR8() throws InterruptedException {
 		System.out.println("#IJFR8. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		(new ArrayList<>()).get(1);
 	}
 
 	public void printInstanceHelloWorldJFR9() throws InterruptedException {
 		System.out.println("#IJFR9. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 		(new ArrayList<>()).get(1);
 	}
 
 	public void printInstanceHelloWorldJFR10() throws InterruptedException {
 		System.out.println("#IJFR10. About to throw a RuntimeException"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 
 		try {
 			(new ArrayList<>()).get(1);
@@ -365,7 +381,7 @@ public class InstrumentMe {
 
 	public void printInstanceHelloWorldJFR11() throws InterruptedException {
 		System.out.println("#IJFR11. Capturing instance field 'instanceStringField'"); //$NON-NLS-1$
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public void printInstanceHelloWorldJFR12() throws InterruptedException {

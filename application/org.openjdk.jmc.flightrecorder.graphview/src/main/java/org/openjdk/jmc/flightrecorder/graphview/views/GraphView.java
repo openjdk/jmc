@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -46,6 +47,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -56,6 +62,8 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -64,6 +72,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.ext.graphview.graph.DotGenerator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -99,11 +108,14 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		private final FrameSeparator separator;
 		private IItemCollection items;
 		private volatile boolean isInvalid;
+		private final int maxNodesRendered;
 
-		private ModelRebuildRunnable(GraphView view, FrameSeparator separator, IItemCollection items) {
+		private ModelRebuildRunnable(GraphView view, FrameSeparator separator, IItemCollection items,
+				int maxNodesRendered) {
 			this.view = view;
 			this.items = items;
 			this.separator = separator;
+			this.maxNodesRendered = maxNodesRendered;
 		}
 
 		private void setInvalid() {
@@ -121,12 +133,12 @@ public class GraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			String json = GraphView.toDot(model);
+			String dotString = GraphView.toDot(model, maxNodesRendered);
 			if (isInvalid) {
 				return;
 			} else {
 				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, json));
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, dotString));
 			}
 		}
 	}
@@ -150,11 +162,16 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
+	private int maxNodesRendered = 100;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
+
+		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		toolBar.add(new NodeThresholdSelection());
+
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -162,6 +179,66 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	public void dispose() {
 		getSite().getPage().removeSelectionListener(this);
 		super.dispose();
+	}
+
+	private class NodeThresholdSelection extends Action implements IMenuCreator {
+		private Menu menu;
+		private final List<Pair<String, Integer>> items = List.of(new Pair<>("100", 100), new Pair<>("500", 500),
+				new Pair<>("1000", 1000));
+
+		NodeThresholdSelection() {
+			super("Max Nodes", IAction.AS_DROP_DOWN_MENU);
+			setMenuCreator(this);
+		}
+
+		@Override
+		public void dispose() {
+			// do nothing
+		}
+
+		@Override
+		public Menu getMenu(Control parent) {
+			if (menu == null) {
+				menu = new Menu(parent);
+				populate(menu);
+			}
+			return menu;
+		}
+
+		@Override
+		public Menu getMenu(Menu parent) {
+			if (menu == null) {
+				menu = new Menu(parent);
+				populate(menu);
+			}
+			return menu;
+		}
+
+		private void populate(Menu menu) {
+			for (Pair<String, Integer> item : items) {
+				ActionContributionItem actionItem = new ActionContributionItem(
+						new SetNodeThreshold(item, item.right == maxNodesRendered));
+				actionItem.fill(menu, -1);
+			}
+		}
+	}
+
+	private class SetNodeThreshold extends Action {
+		private int value;
+
+		SetNodeThreshold(Pair<String, Integer> item, boolean isSelected) {
+			super(item.left, IAction.AS_RADIO_BUTTON);
+			this.value = item.right;
+			setChecked(isSelected);
+		}
+
+		@Override
+		public void run() {
+			if (maxNodesRendered != value) {
+				maxNodesRendered = value;
+				triggerRebuildTask(currentItems);
+			}
+		}
 	}
 
 	@Override
@@ -207,7 +284,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, frameSeparator, items);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, frameSeparator, items, maxNodesRendered);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
@@ -241,15 +318,15 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		});
 	}
 
-	private static String toDot(StacktraceGraphModel model) {
+	private static String toDot(StacktraceGraphModel model, int maxNodesRendered) {
 		if (model == null) {
 			return "\"\"";
 		}
-		return render(model);
+		return render(model, maxNodesRendered);
 	}
 
-	private static String render(StacktraceGraphModel model) {
-		return DotGenerator.toDot(model, DotGenerator.getDefaultConfiguration());
+	private static String render(StacktraceGraphModel model, int maxNodesRendered) {
+		return DotGenerator.toDot(model, maxNodesRendered, DotGenerator.getDefaultConfiguration());
 	}
 
 	private static String loadLibraries(String ... libs) {

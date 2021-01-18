@@ -126,7 +126,7 @@ public class JFRLegacyMethodAdvisor extends AdviceAdapter {
 			if (transformDescriptor.isAllowedEventFieldType(param, argumentType)) {
 				mv.visitInsn(DUP);
 				loadArg(param.getIndex());
-				writeAttribute(param, argumentType);
+				writeAttribute(param, argumentType, transformDescriptor.isAllowToString());
 			}
 		}
 
@@ -141,7 +141,7 @@ public class JFRLegacyMethodAdvisor extends AdviceAdapter {
 			if (transformDescriptor.isAllowedEventFieldType(field, refChain.getType())) {
 				mv.visitInsn(DUP);
 				loadField(refChain);
-				writeAttribute(field, refChain.getType());
+				writeAttribute(field, refChain.getType(), transformDescriptor.isAllowToString());
 			}
 		}
 
@@ -220,10 +220,10 @@ public class JFRLegacyMethodAdvisor extends AdviceAdapter {
 						TypeUtils.getFrameVerificationType(type)});
 	}
 
-	private void writeAttribute(Attribute param, Type type) {
-		if (TypeUtils.shouldStringify(param, type)) {
+	private void writeAttribute(Attribute param, Type type, boolean allowToString) {
+		if (!TypeUtils.isSupportedType(type) && allowToString) {
 			TypeUtils.stringify(mv);
-			type = TypeUtils.STRING_TYPE;
+			type = TypeUtils.TYPE_STRING;
 		}
 		putField(Type.getObjectType(transformDescriptor.getEventClassName()), param.getFieldName(), type);
 	}
@@ -254,7 +254,7 @@ public class JFRLegacyMethodAdvisor extends AdviceAdapter {
 			dupX2();
 			pop();
 		}
-		writeAttribute(returnValue, returnTypeRef);
+		writeAttribute(returnValue, returnTypeRef, transformDescriptor.isAllowToString());
 	}
 
 	private void commitEvent() {

@@ -51,14 +51,13 @@ import org.openjdk.jmc.agent.jmx.AgentManagementFactory;
 import org.openjdk.jmc.agent.util.ModuleUtils;
 
 /**
- * Small ASM based byte code instrumentation agent for declaratively adding logging and JFR events.
- * Note: This agent is currently work in progress, and it is not supported for production use yet.
+ * Small ASM based byte code instrumentation agent for declaratively adding JFR events.
  */
 public class Agent {
 	/**
 	 * This should be generated as part of the build later.
 	 */
-	public static final String VERSION = "0.9.0"; //$NON-NLS-1$
+	public static final String VERSION = "1.0.0"; //$NON-NLS-1$
 	private static boolean loadedDynamically = false;
 
 	/**
