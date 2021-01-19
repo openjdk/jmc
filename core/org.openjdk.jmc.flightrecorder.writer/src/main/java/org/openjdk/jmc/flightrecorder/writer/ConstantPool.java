@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 
 import java.util.HashMap;
@@ -93,28 +94,30 @@ final class ConstantPool {
 		});
 	}
 
-	void writeValueType(LEB128Writer writer, TypedValueImpl typedValue, boolean useCp) {
+	void writeValueType(LEB128Writer writer, TypedValueImpl typedValue, boolean useConstantPoolReferences) {
 		if (typedValue == null) {
 			throw new NullPointerException();
 		}
 		TypeImpl type = typedValue.getType();
 		if (type.isBuiltin()) {
-			writeBuiltinType(writer, typedValue, useCp);
+			writeBuiltinType(writer, typedValue, useConstantPoolReferences);
 		} else {
 			if (typedValue.isNull()) {
 				writer.writeLong(0); // null value encoding
 			} else {
-				if (useCp) { // (assumption) all custom types have constant pool
+				if (type.hasConstantPool()) {
+					// only if cp-refs are allowed
 					writer.writeLong(typedValue.getConstantPoolIndex());
 				} else {
 					for (TypedFieldValueImpl fieldValue : typedValue.getFieldValues()) {
-						if (fieldValue.getField().isArray()) {
+						TypedField field = fieldValue.getField();
+						if (field.isArray()) {
 							writer.writeInt(fieldValue.getValues().length); // array length
 							for (TypedValueImpl t : fieldValue.getValues()) {
-								writeValueType(writer, t, true);
+								writeValueType(writer, t, t.getType().hasConstantPool());
 							}
 						} else {
-							writeValueType(writer, fieldValue.getValue(), true);
+							writeValueType(writer, fieldValue.getValue(), field.getType().hasConstantPool());
 						}
 					}
 				}
