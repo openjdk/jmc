@@ -47,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class RecordingImplTest {
 	private RecordingImpl recording;
@@ -173,7 +174,16 @@ class RecordingImplTest {
 	void getBuiltinJDKType(TypesImpl.JDK target) {
 		TypeImpl type = recording.getType(target);
 		assertNotNull(type);
-		assertFalse(type.hasConstantPool());
+		assertTrue(type.hasConstantPool());
+	}
+
+	@ParameterizedTest
+	@EnumSource(Types.Builtin.class)
+	void getBuiltinType(Types.Builtin target) {
+		TypeImpl type = recording.getType(target.getTypeName());
+		assertNotNull(type);
+		// only String 'primitive' values have constant pool associated with them
+		assertEquals(target.isSame(Types.Builtin.STRING), type.hasConstantPool());
 	}
 
 	@Test
