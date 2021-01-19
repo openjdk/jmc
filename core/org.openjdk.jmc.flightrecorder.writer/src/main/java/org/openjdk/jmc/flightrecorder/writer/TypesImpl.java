@@ -148,7 +148,7 @@ public final class TypesImpl extends Types {
 
 	@Override
 	public TypeImpl getOrAdd(Predefined type, Consumer<TypeStructureBuilder> builderCallback) {
-		return getOrAdd(type.getTypeName(), false, builderCallback);
+		return getOrAdd(type.getTypeName(), true, builderCallback);
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public final class TypesImpl extends Types {
 
 	@Override
 	public TypeImpl getOrAdd(Predefined type, String supertype, Consumer<TypeStructureBuilder> builderCallback) {
-		return getOrAdd(type.getTypeName(), supertype, false, builderCallback);
+		return getOrAdd(type.getTypeName(), supertype, true, builderCallback);
 	}
 
 	@Override
