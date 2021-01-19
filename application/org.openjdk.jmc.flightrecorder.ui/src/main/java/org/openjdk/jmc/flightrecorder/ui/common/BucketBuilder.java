@@ -99,7 +99,7 @@ public class BucketBuilder<C extends IItemConsumer<C>> {
 	}
 
 	private List<C> collectItems(IItemIterable is) {
-		return is.stream().collect(collector(is.getType()));
+		return is.parallelStream().collect(collector(is.getType()));
 	}
 
 	IQuantity[] buildBuckets(IItemCollection items) {

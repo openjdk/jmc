@@ -105,7 +105,7 @@ public class PairBucketBuilder<C extends IItemConsumer<C>, CC extends IItemConsu
 	}
 
 	private List<Pair<C, CC>> collectItems(IItemIterable is) {
-		return is.stream().collect(collector(is.getType()));
+		return is.parallelStream().collect(collector(is.getType()));
 	}
 
 	Pair<IQuantity[], IQuantity[]> buildBuckets(IItemCollection items) {
