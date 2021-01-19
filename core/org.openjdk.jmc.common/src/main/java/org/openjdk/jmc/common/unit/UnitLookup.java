@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,6 +47,7 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.YOCTO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -521,7 +522,8 @@ final public class UnitLookup {
 						try {
 							// NOTE: This used to return the floor value.
 							Date date = new Date(quantity.longValueIn(TimestampKind.MILLIS_UNIT));
-							return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date);
+							DateFormat df = new SimpleDateFormat("MM/dd/yyyy h:mm:ss:SSS a");
+							return df.format(date);
 						} catch (QuantityConversionException e) {
 							return Messages.getString(Messages.UnitLookup_TIMESTAMP_OUT_OF_RANGE);
 						}
