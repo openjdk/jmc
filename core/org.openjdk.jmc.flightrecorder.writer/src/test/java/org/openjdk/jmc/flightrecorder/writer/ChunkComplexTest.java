@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,19 +64,21 @@ import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class ChunkComplexTest {
 	private Recording recording;
-	private final Path jfrPath = Paths.get("/tmp", "test.jfr");
+	private Path jfrPath;
 
 	public static final String EVENT_NAME = "sample event";
 	public static final String EVENT_MSG = "Hello world";
 
 	@BeforeEach
 	void setup() throws Exception {
+		jfrPath = Files.createTempFile("jfr-writer-test-", ".jfr");
 		recording = Recordings.newRecording(jfrPath);
 	}
 
 	@AfterEach
 	void teardown() throws Exception {
 		recording.close();
+		Files.deleteIfExists(jfrPath);
 	}
 
 	@Test

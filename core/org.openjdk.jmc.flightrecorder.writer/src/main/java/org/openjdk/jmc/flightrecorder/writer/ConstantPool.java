@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 
 import java.util.HashMap;
@@ -93,28 +94,30 @@ final class ConstantPool {
 		});
 	}
 
-	void writeValueType(LEB128Writer writer, TypedValueImpl typedValue, boolean useCp) {
+	void writeValueType(LEB128Writer writer, TypedValueImpl typedValue, boolean useConstantPoolReferences) {
 		if (typedValue == null) {
 			throw new NullPointerException();
 		}
 		TypeImpl type = typedValue.getType();
 		if (type.isBuiltin()) {
-			writeBuiltinType(writer, typedValue, useCp);
+			writeBuiltinType(writer, typedValue, useConstantPoolReferences);
 		} else {
 			if (typedValue.isNull()) {
 				writer.writeLong(0); // null value encoding
 			} else {
-				if (useCp) { // (assumption) all custom types have constant pool
+				if (useConstantPoolReferences) {
+					// only if cp-refs are allowed
 					writer.writeLong(typedValue.getConstantPoolIndex());
 				} else {
 					for (TypedFieldValueImpl fieldValue : typedValue.getFieldValues()) {
-						if (fieldValue.getField().isArray()) {
+						TypedField field = fieldValue.getField();
+						if (field.isArray()) {
 							writer.writeInt(fieldValue.getValues().length); // array length
 							for (TypedValueImpl t : fieldValue.getValues()) {
-								writeValueType(writer, t, true);
+								writeValueType(writer, t, t.getType().hasConstantPool());
 							}
 						} else {
-							writeValueType(writer, fieldValue.getValue(), true);
+							writeValueType(writer, fieldValue.getValue(), field.getType().hasConstantPool());
 						}
 					}
 				}
@@ -133,15 +136,9 @@ final class ConstantPool {
 
 		TypeImpl type = typedValue.getType();
 		Object value = typedValue.getValue();
+
 		TypesImpl.Builtin builtin = TypesImpl.Builtin.ofType(type);
 
-		if (value == null && builtin != TypesImpl.Builtin.STRING) {
-			// skip the non-string built-in values but use CP index '0' if CP is requested
-			if (useCp) {
-				writer.writeLong(0L);
-			}
-			return;
-		}
 		switch (builtin) {
 		case STRING: {
 			if (useCp) {
@@ -159,35 +156,35 @@ final class ConstantPool {
 			break;
 		}
 		case BYTE: {
-			writer.writeBytes((byte) value);
+			writer.writeBytes(value != null ? (byte) value : 0);
 			break;
 		}
 		case CHAR: {
-			writer.writeChar((char) value);
+			writer.writeChar(value != null ? (char) value : 0);
 			break;
 		}
 		case SHORT: {
-			writer.writeShort((short) value);
+			writer.writeShort(value != null ? (short) value : 0);
 			break;
 		}
 		case INT: {
-			writer.writeInt((int) value);
+			writer.writeInt(value != null ? (int) value : 0);
 			break;
 		}
 		case LONG: {
-			writer.writeLong((long) value);
+			writer.writeLong(value != null ? (long) value : 0);
 			break;
 		}
 		case FLOAT: {
-			writer.writeFloat((float) value);
+			writer.writeFloat(value != null ? (float) value : 0);
 			break;
 		}
 		case DOUBLE: {
-			writer.writeDouble((double) value);
+			writer.writeDouble(value != null ? (double) value : 0);
 			break;
 		}
 		case BOOLEAN: {
-			writer.writeBoolean((boolean) value);
+			writer.writeBoolean(value != null && (boolean) value);
 			break;
 		}
 		default: {
