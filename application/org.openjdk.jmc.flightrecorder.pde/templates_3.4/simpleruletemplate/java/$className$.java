@@ -35,6 +35,7 @@ package $packageName$;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -48,9 +49,16 @@ import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.IResult;
+import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
-import org.openjdk.jmc.flightrecorder.rules.Result;
+import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
 /**
  * Simple JFR rule example. The rule will check the environment variable named JFR_RULE_TEST (by default) and 
@@ -73,29 +81,52 @@ public class $className$ implements IRule {
 		new TypedPreference<>("environmentVariable", "Environment Variable", "The name of the environment variable containing the floating point score", UnitLookup.PLAIN_TEXT.getPersister(), "JFR_RULE_TEST");
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = 
 		Arrays.<TypedPreference<?>> asList(PREFERENCE_ENVIRONMENT_VARIABLE_NAME);
+	
+	public static final TypedResult<String> VARIABLE_NAME = new TypedResult<>("variableName",
+			"Variable", "A description", UnitLookup.PLAIN_TEXT, String.class);
+	
+	private static final List<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(TypedResult.SCORE, VARIABLE_NAME);
+	
+	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.ENVIRONMENT_VARIABLE, EventAvailability.AVAILABLE).build();
 
-	private Result getResult(IItemCollection items, IPreferenceValueProvider valueProvider) {
+	private IResult getResult(IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String variableName = valueProvider.getPreferenceValue(PREFERENCE_ENVIRONMENT_VARIABLE_NAME);
 		String environmentVariableValue = getEnvironmentVariable(variableName, items);
 
 		if (environmentVariableValue == null) {
-			return new Result(this, 100, "Could not find the environment variable named " + variableName);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.WARNING)
+					.setSummary("Could not find the environment variable named {variableName}.")
+					.addResult(VARIABLE_NAME, variableName)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(100))
+					.build();
 		}
 
 		try {
 			double score = Double.parseDouble(environmentVariableValue);
-			return new Result(this, score, "The result from parsing the information in the environment variable named " + variableName + " was " + score);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.get(score))
+					.setSummary("The result from parsing the information in the environment variable named {variableName} was {core}.")
+					.addResult(VARIABLE_NAME, variableName)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.build();
 		} catch (NumberFormatException e) {
-			return new Result(this, 100, "Could not parse the value for the environment variable named " + variableName);
+			return ResultBuilder.createFor(this, valueProvider)
+					.setSeverity(Severity.WARNING)
+					.setSummary("Could not parse the value for the environment variable named {variableName}.")
+					.addResult(VARIABLE_NAME, variableName)
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(100))
+					.build();
 		}
 	}
 
 	@Override
-	public RunnableFuture<Result> evaluate(final IItemCollection items, final IPreferenceValueProvider valueProvider) {
-		FutureTask<Result> evaluationTask = new FutureTask<>(new Callable<Result>() {
+	public RunnableFuture<IResult> createEvaluation(final IItemCollection items, final IPreferenceValueProvider valueProvider, final IResultValueProvider resultProvider) {
+		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
-			public Result call() throws Exception {
-				return getResult(items, valueProvider);
+			public IResult call() throws Exception {
+				return getResult(items, valueProvider, resultProvider);
 			}
 		});
 		return evaluationTask;
@@ -110,6 +141,16 @@ public class $className$ implements IRule {
 	@Override
 	public Collection<TypedPreference<?>> getConfigurationAttributes() {
 		return CONFIG_ATTRIBUTES;
+	}
+	
+	@Override
+	public Collection<TypedResult<?>> getResults() {
+		return RESULT_ATTRIBUTES;
+	}
+	
+	@Override
+	public Map<String, EventAvailability> getRequiredEvents() {
+		return REQUIRED_EVENTS;
 	}
 
 	@Override
