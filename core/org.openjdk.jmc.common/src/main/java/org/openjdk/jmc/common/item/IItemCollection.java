@@ -43,7 +43,7 @@ import org.openjdk.jmc.common.unit.IRange;
 /**
  * An immutable collection of items.
  */
-public interface IItemCollection extends Iterable<IItemIterable>, Supplier<Stream<IItemIterable>> {
+public interface IItemCollection extends Iterable<IItemIterable> {
 
 	/**
 	 * Creates a new item collection with all items in this collection that pass through the filter.
@@ -81,18 +81,6 @@ public interface IItemCollection extends Iterable<IItemIterable>, Supplier<Strea
 	 *         IItemCollection
 	 */
 	Set<IRange<IQuantity>> getAvailableTimeRanges();
-
-//	/**
-//	 * Returns a new item collection with all items in this collection that pass the filter and is
-//	 * within the provided range.
-//	 * 
-//	 * @param range
-//	 *            the matching range.
-//	 * @param filter
-//	 *            the matching filter.
-//	 * @return an item collection matching the range and filter.
-//	 */
-//	IItemCollection getItems(IRange<IQuantity> range, IItemFilter filter);
 
 	/**
 	 * Creates a new sequential {@code Stream} of {@link IItemIterable} from the
@@ -132,10 +120,5 @@ public interface IItemCollection extends Iterable<IItemIterable>, Supplier<Strea
 				return Stream.empty();
 			}
 		});
-	}
-
-	@Override
-	default Stream<IItemIterable> get() {
-		return stream();
 	}
 }

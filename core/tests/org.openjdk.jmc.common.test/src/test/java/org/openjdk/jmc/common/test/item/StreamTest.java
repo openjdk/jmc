@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -55,8 +56,6 @@ public class StreamTest {
 		List<IItemIterable> iterables = mockDoubleCollection.stream().collect(Collectors.toList());
 		List<String> ids = mockDoubleCollection.stream().map(iterable -> iterable.getType().getIdentifier())
 				.collect(Collectors.toList());
-
-		// Reference value from excel
 		Assert.assertEquals(1, iterables.size());
 		assertEquals("mock/MockNumberItem", ids.get(0));
 	}
@@ -67,7 +66,6 @@ public class StreamTest {
 				.getNumberCollection(MockCollections.generateNumberArray(999, 100));
 		List<IItem> items = mockDoubleCollection.stream().flatMap((iterable) -> iterable.stream())
 				.collect(Collectors.toList());
-		// Reference value from excel
 		Assert.assertEquals(999, items.size());
 	}
 
