@@ -219,7 +219,7 @@ class EventCollection implements IItemCollection {
 	}
 
 	@Override
-	public Set<IRange<IQuantity>> getAvailableTimeRanges() {
+	public Set<IRange<IQuantity>> getUnfilteredTimeRanges() {
 		return chunkRanges;
 	}
 }

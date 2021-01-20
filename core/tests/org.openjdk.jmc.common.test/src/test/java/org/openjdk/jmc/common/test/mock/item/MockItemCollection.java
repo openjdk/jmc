@@ -127,7 +127,7 @@ public class MockItemCollection<T, CT extends IType<?>> implements IItemCollecti
 	}
 
 	@Override
-	public Set<IRange<IQuantity>> getAvailableTimeRanges() {
+	public Set<IRange<IQuantity>> getUnfilteredTimeRanges() {
 		return Collections.emptySet();
 	}
 }

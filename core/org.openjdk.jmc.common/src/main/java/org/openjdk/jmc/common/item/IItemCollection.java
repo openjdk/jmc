@@ -79,8 +79,10 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 * 
 	 * @return a set of IRange objects representing the time ranges available in this
 	 *         IItemCollection
+	 * @deprecated see https://bugs.openjdk.java.net/browse/JMC-7103.
 	 */
-	Set<IRange<IQuantity>> getAvailableTimeRanges();
+	@Deprecated
+	Set<IRange<IQuantity>> getUnfilteredTimeRanges();
 
 	/**
 	 * Creates a new sequential {@code Stream} of {@link IItemIterable} from the
