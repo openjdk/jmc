@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
@@ -87,7 +86,6 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
@@ -428,10 +426,8 @@ public class ThreadDumpsPage extends AbstractDataPage {
 		IMemberAccessor<String, IItem> resultAccessor = JdkAttributes.THREAD_DUMP_RESULT.getAccessor(is.getType());
 		IMemberAccessor<IQuantity, IItem> stAccessor = JfrAttributes.END_TIME.getAccessor(is.getType());
 
-		return ItemIterableToolkit.stream(is)
-				.map(i -> parseCollection(stAccessor.getMember(i).displayUsing(IDisplayable.AUTO),
-						resultAccessor.getMember(i)))
-				.toArray(ThreadDumpCollection[]::new);
+		return is.stream().map(i -> parseCollection(stAccessor.getMember(i).displayUsing(IDisplayable.AUTO),
+				resultAccessor.getMember(i))).toArray(ThreadDumpCollection[]::new);
 	}
 
 	private static ThreadDumpCollection parseCollection(String title, String str) {

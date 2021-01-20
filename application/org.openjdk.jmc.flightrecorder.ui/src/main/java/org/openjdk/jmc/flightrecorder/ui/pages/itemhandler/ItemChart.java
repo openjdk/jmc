@@ -78,7 +78,6 @@ import org.openjdk.jmc.common.util.TypeHandling;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.BucketBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.HistogramSelection;
@@ -352,7 +351,7 @@ class ItemChart {
 						rows.addAll(updateSpanChart(histogramSelection));
 					}
 				}
-				if (ItemCollectionToolkit.stream(chartItems).count() > 0 && !attributesToLineChart.isEmpty()) {
+				if (chartItems.stream().count() > 0 && !attributesToLineChart.isEmpty()) {
 					rows.addAll(updateLineChart(chartItems));
 				}
 				rows.addAll(updateBarChart(itemsToChart));

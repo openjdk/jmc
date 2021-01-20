@@ -34,11 +34,14 @@ package org.openjdk.jmc.common.item;
 
 import java.util.Iterator;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A supplier of {@link Iterator} over {@link IItem} where all items are of the same type.
  */
-public interface IItemIterable extends Iterable<IItem> {
+public interface IItemIterable extends Iterable<IItem>, Supplier<Stream<IItem>> {
 
 	/**
 	 * @return The type for all items in the iterator
@@ -65,4 +68,26 @@ public interface IItemIterable extends Iterable<IItem> {
 	 */
 	IItemIterable apply(Predicate<IItem> predicate);
 
+	/**
+	 * Creates a new sequential {@code Stream} of {@link IItem} from the {@link IItemIterable}.
+	 *
+	 * @return a new sequential {@code Stream}
+	 */
+	default Stream<IItem> stream() {
+		return StreamSupport.stream(this.spliterator(), false);
+	}
+
+	/**
+	 * Creates a new parallel {@code Stream} of {@link IItem} from the {@link IItemIterable}.
+	 *
+	 * @return a new parallel {@code Stream}
+	 */
+	default Stream<IItem> parallelStream() {
+		return StreamSupport.stream(this.spliterator(), true);
+	}
+
+	@Override
+	default Stream<IItem> get() {
+		return stream();
+	}
 }

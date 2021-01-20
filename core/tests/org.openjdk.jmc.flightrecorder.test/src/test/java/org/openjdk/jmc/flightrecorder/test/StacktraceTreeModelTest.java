@@ -35,8 +35,6 @@ package org.openjdk.jmc.flightrecorder.test;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;

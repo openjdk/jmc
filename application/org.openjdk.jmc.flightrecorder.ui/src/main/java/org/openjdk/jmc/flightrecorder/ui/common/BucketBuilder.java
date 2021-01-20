@@ -48,8 +48,6 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.ui.charts.IQuantitySeries;
 import org.openjdk.jmc.ui.charts.SubdividedQuantityRange;
 import org.openjdk.jmc.ui.charts.XYQuantities;
@@ -101,13 +99,13 @@ public class BucketBuilder<C extends IItemConsumer<C>> {
 	}
 
 	private List<C> collectItems(IItemIterable is) {
-		return ItemIterableToolkit.parallelStream(is).collect(collector(is.getType()));
+		return is.parallelStream().collect(collector(is.getType()));
 	}
 
 	IQuantity[] buildBuckets(IItemCollection items) {
 		IQuantity[] q = new IQuantity[bucketCount];
-		List<List<C>> collect = ItemCollectionToolkit.parallelStream(items).filter(this::acceptItems)
-				.map(this::collectItems).collect(Collectors.toList());
+		List<List<C>> collect = items.parallelStream().filter(this::acceptItems).map(this::collectItems)
+				.collect(Collectors.toList());
 		for (int i = 0; i < bucketCount; i++) {
 			int bucketIndex = i;
 			Iterator<C> iterator = collect.stream().map(list -> list.get(bucketIndex)).iterator();

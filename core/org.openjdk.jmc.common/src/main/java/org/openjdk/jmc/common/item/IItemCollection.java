@@ -33,6 +33,9 @@
 package org.openjdk.jmc.common.item;
 
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -74,8 +77,50 @@ public interface IItemCollection extends Iterable<IItemIterable> {
 	 * collection. This set is not affected by any filtering operations on the item collection since
 	 * its use is to show the time ranges in which events could possibly have been occurred.
 	 * 
-	 * @return a set of IRange objects representing the time ranges of represented by this
+	 * @return a set of IRange objects representing the time ranges available in this
 	 *         IItemCollection
+	 * @deprecated see https://bugs.openjdk.java.net/browse/JMC-7103.
 	 */
-	Set<IRange<IQuantity>> getTimeRanges();
+	@Deprecated
+	Set<IRange<IQuantity>> getUnfilteredTimeRanges();
+
+	/**
+	 * Creates a new sequential {@code Stream} of {@link IItemIterable} from the
+	 * {@link IItemCollection}.
+	 *
+	 * @return a new sequential {@code Stream}
+	 */
+	default Stream<IItemIterable> stream() {
+		return StreamSupport.stream(this.spliterator(), false);
+	}
+
+	/**
+	 * Creates a new parallel {@code Stream} of {@link IItemIterable} from the
+	 * {@link IItemCollection}.
+	 *
+	 * @return a new parallel {@code Stream}
+	 */
+	default Stream<IItemIterable> parallelStream() {
+		return StreamSupport.stream(this.spliterator(), true);
+	}
+
+	/**
+	 * Returns the values for the supplied attribute from this IItemCollection.
+	 * 
+	 * @param <T>
+	 *            the type of the attribute, e.g. IQuantity.
+	 * @param attribute
+	 *            the attribute to retrieve values for.
+	 * @return a stream of values.
+	 */
+	default <T> Supplier<Stream<T>> values(IAttribute<T> attribute) {
+		return () -> this.stream().flatMap(itemStream -> {
+			IMemberAccessor<T, IItem> accessor = attribute.getAccessor(itemStream.getType());
+			if (accessor != null) {
+				return itemStream.stream().map(accessor::getMember);
+			} else {
+				return Stream.empty();
+			}
+		});
+	}
 }

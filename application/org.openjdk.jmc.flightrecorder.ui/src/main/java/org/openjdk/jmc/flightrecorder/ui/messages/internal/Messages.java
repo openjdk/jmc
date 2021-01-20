@@ -234,7 +234,6 @@ public class Messages extends NLS {
 	public static String ITEM_CHART_SHOW_IN_BAR_CHART;
 	public static String ITEM_CHART_SHOW_IN_LINE_CHART;
 	public static String ITEM_CHART_TIMELINE_SELECTION;
-	public static String ITEM_COLLECTION_DESC;
 	public static String ITEM_LIST_ELLIPSIS_TEXT;
 	public static String ITEM_LIST_SIZE_LESS_THAN_ZERO;
 	public static String ITEM_LIST_SIZE_PREF;

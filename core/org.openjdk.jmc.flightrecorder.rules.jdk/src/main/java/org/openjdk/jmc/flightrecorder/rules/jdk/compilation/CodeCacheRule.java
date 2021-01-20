@@ -110,10 +110,6 @@ public class CodeCacheRule implements IRule {
 			return ratio;
 		}
 
-		public String getName() {
-			return name;
-		}
-
 		@Override
 		public String toString() {
 			return name + "(" + ratio.displayUsing(IDisplayable.AUTO) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -183,7 +179,6 @@ public class CodeCacheRule implements IRule {
 		IQuantity infoPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_INFO_PERCENT);
 		IQuantity warningPreferenceValue = valueProvider.getPreferenceValue(CODE_CACHE_SIZE_WARN_PERCENT);
 		double allocationRatioScore = 0;
-		String shortDescription = null;
 		String longDescription = null;
 		ResultBuilder builder = ResultBuilder.createFor(this, valueProvider);
 		if (hasSegmentedCodeCache(items)) {

@@ -48,6 +48,7 @@ import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketWriteRule;
 
+@SuppressWarnings("restriction")
 public class TestSocketReadWriteRule {
 	private static final String ADDRESS_1 = "123.45.67.78";
 	private static final String ADDRESS_2 = "123.102.103.104";

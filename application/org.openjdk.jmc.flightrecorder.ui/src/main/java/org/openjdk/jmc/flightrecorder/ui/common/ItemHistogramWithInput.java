@@ -38,7 +38,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.HistogramSelection;
 
 public class ItemHistogramWithInput {

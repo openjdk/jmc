@@ -48,6 +48,8 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.util.PredicateToolkit;
@@ -164,6 +166,6 @@ public class StreamModel {
 	}
 
 	public EventTypeFolderNode getTypeTree() {
-		return getTypeTree(ItemCollectionToolkit.stream(getItems()));
+		return getTypeTree(getItems().stream());
 	}
 }

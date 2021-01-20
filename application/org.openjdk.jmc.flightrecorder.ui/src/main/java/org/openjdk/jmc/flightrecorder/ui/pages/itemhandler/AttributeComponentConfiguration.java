@@ -44,7 +44,6 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList;
 
 /**
@@ -80,7 +79,7 @@ class AttributeComponentConfiguration {
 	@SuppressWarnings("deprecation")
 	private void forEachType(IItemCollection items) {
 		if (items != null) {
-			ItemCollectionToolkit.stream(items).map(IItemIterable::getType).forEach(type -> {
+			items.stream().map(IItemIterable::getType).forEach(type -> {
 				allTypes.put(type.getIdentifier(), type);
 				for (IAttribute<?> a : type.getAttributes()) {
 					if (!a.equals(JfrAttributes.EVENT_STACKTRACE)) {

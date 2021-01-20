@@ -57,8 +57,6 @@ import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.util.SortedHead;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
@@ -156,7 +154,7 @@ public class ItemList {
 	}
 
 	public void show(IItemCollection items) {
-		show(ItemCollectionToolkit.stream(items).flatMap(ItemIterableToolkit::stream).iterator());
+		show(items.stream().flatMap(iterable -> iterable.stream()).iterator());
 	}
 
 	public void show(Iterator<? extends IItem> it) {

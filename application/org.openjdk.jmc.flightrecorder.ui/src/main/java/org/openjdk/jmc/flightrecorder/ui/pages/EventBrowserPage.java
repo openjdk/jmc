@@ -77,7 +77,6 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.RuleManager;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
@@ -254,8 +253,8 @@ public class EventBrowserPage extends AbstractDataPage {
 			typeFilterTree.getViewer().getControl().setRedraw(false);
 			TreePath[] expansion = typeFilterTree.getViewer().getExpandedTreePaths();
 			ISelection selection = typeFilterTree.getViewer().getSelection();
-			typeFilterTree.setInput(getDataSource().getTypeTree((ItemCollectionToolkit.stream(selectionItems)
-					.filter(ii -> showTypesWithoutEvents || ii.hasItems()))));
+			typeFilterTree.setInput(getDataSource()
+					.getTypeTree((selectionItems.stream().filter(ii -> showTypesWithoutEvents || ii.hasItems()))));
 			typeFilterTree.getViewer().setExpandedTreePaths(expansion);
 			typeFilterTree.getViewer().setSelection(selection);
 			typeFilterTree.getViewer().getControl().setRedraw(true);
@@ -291,7 +290,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			Iterator<? extends IType<?>> types = selectedTypes.iterator();
 			IItemCollection filteredItems = getFilteredItems();
 			if (selectedTypes.isEmpty()) {
-				types = ItemCollectionToolkit.stream(selectionItems).map(is -> is.getType()).distinct().iterator();
+				types = selectionItems.stream().map(is -> is.getType()).distinct().iterator();
 			}
 
 			// FIXME: Possibly move to attribute toolkit/handler?

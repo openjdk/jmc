@@ -40,7 +40,7 @@ import java.util.stream.Stream.Builder;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
