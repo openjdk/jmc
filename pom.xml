@@ -36,7 +36,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol</artifactId>
-	<version>${revision}</version>
+	<version>${revision}${changelist}</version>
 	<packaging>pom</packaging>
 	<name>JDK Mission Control</name>
 	<description>JDK Mission Control is an advanced set of tools that enables 
@@ -75,7 +75,8 @@
 		<module>releng</module>
 	</modules>
 	<properties>
-		<revision>8.1.0-SNAPSHOT</revision>
+		<revision>8.1.0</revision>
+		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.version>2.0.0</tycho.version>
@@ -124,7 +125,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-12</artifactId>
-									<version>${revision}</version>
+									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -148,7 +149,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-09</artifactId>
-									<version>${revision}</version>
+									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -169,7 +170,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-06</artifactId>
-									<version>${revision}</version>
+									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -190,7 +191,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-03</artifactId>
-									<version>${revision}</version>
+									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
 						</configuration>

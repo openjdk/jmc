@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.application</artifactId>
-		<version>${revision}</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>missioncontrol.application.l10n</artifactId>
 	<packaging>pom</packaging>

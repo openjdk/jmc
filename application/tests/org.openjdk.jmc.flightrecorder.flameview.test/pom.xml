@@ -37,7 +37,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.application.tests</artifactId>
-		<version>${revision}</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.flameview.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
