@@ -36,7 +36,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>JDK Mission Control</name>
 	<description>JDK Mission Control is an advanced set of tools that enables 
@@ -75,6 +75,7 @@
 		<module>releng</module>
 	</modules>
 	<properties>
+		<revision>8.1.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.version>2.0.0</tycho.version>
@@ -123,7 +124,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-12</artifactId>
-									<version>8.0.0-SNAPSHOT</version>
+									<version>${revision}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -147,7 +148,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-09</artifactId>
-									<version>8.0.0-SNAPSHOT</version>
+									<version>${revision}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -168,7 +169,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-06</artifactId>
-									<version>8.0.0-SNAPSHOT</version>
+									<version>${revision}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -189,7 +190,7 @@
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
 									<artifactId>platform-definition-2020-03</artifactId>
-									<version>8.0.0-SNAPSHOT</version>
+									<version>${revision}</version>
 								</artifact>
 							</target>
 						</configuration>
@@ -367,8 +368,8 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.3.1</version>
-									<message>Building JMC requires at least Maven 3.3.1</message>
+									<version>3.5.0</version>
+									<message>Building JMC requires at least Maven 3.5.0</message>
 								</requireMavenVersion>
 							</rules>
 						</configuration>

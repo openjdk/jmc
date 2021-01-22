@@ -35,7 +35,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>8.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -43,6 +43,25 @@
 		administrators to collect and analyze data from Java applications
 		running locally or deployed in production environments.
 	</description>
+	<properties>
+		<revision>8.1.0-SNAPSHOT</revision>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<manifest-location>META-INF</manifest-location>
+		<maven.jar.version>3.2.0</maven.jar.version>
+		<maven.bundle.version>5.1.1</maven.bundle.version>
+		<spotless.version>2.5.0</spotless.version>
+		<maven.directory.version>0.3.1</maven.directory.version>
+		<maven.resources.version>3.2.0</maven.resources.version>
+		<maven.source.version>3.2.1</maven.source.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<nexus.staging.version>1.6.8</nexus.staging.version>
+		<maven.gpg.version>1.6</maven.gpg.version>
+		<build.helper.maven.version>3.2.0</build.helper.maven.version>
+		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
@@ -68,24 +87,6 @@
 			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<manifest-location>META-INF</manifest-location>
-		<maven.jar.version>3.2.0</maven.jar.version>
-		<maven.bundle.version>5.1.1</maven.bundle.version>
-		<spotless.version>2.5.0</spotless.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<nexus.staging.version>1.6.8</nexus.staging.version>
-		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-	</properties>
 
 	<modules>
 		<module>org.openjdk.jmc.common</module>
