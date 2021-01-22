@@ -144,37 +144,37 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.test</artifactId>
-			<version>8.1.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
