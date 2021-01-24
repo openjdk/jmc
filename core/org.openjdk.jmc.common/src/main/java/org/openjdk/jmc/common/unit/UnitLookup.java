@@ -512,6 +512,16 @@ final public class UnitLookup {
 
 		return timeSpan;
 	}
+	
+	private static DateFormat patchTimestamp(DateFormat df) {
+		if (df instanceof SimpleDateFormat) {
+			SimpleDateFormat sdf = (SimpleDateFormat) df;
+			String pattern = sdf.toPattern();
+			String newPattern = pattern.replaceFirst("s{2,4}", "ss:SSS"); //$NON-NLS-1$ //$NON-NLS-2$
+			sdf.applyPattern(newPattern);
+		}
+		return df;
+	}
 
 	private static TimestampKind createTimestamp(LinearKindOfQuantity timespan) {
 		TimestampKind timestampContentType = TimestampKind.buildContentType(timespan);
@@ -522,7 +532,7 @@ final public class UnitLookup {
 						try {
 							// NOTE: This used to return the floor value.
 							Date date = new Date(quantity.longValueIn(TimestampKind.MILLIS_UNIT));
-							DateFormat df = new SimpleDateFormat("MM/dd/yyyy h:mm:ss:SSS a");
+							DateFormat df = patchTimestamp(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM));
 							return df.format(date);
 						} catch (QuantityConversionException e) {
 							return Messages.getString(Messages.UnitLookup_TIMESTAMP_OUT_OF_RANGE);

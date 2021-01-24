@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -140,8 +140,8 @@ class TimestampKind extends KindOfQuantity<TimestampUnit> {
 	}
 
 	static {
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy h:mm:ss:SSS a");
-		DATE_TIME_FORMATTER_HOLDER = new FormatThreadLocal<>(patchYear(df));
+		DateFormat df = patchYear(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM));
+		DATE_TIME_FORMATTER_HOLDER = new FormatThreadLocal<>(df);
 	}
 
 	private static DateFormat patchYear(DateFormat df) {
@@ -183,9 +183,8 @@ class TimestampKind extends KindOfQuantity<TimestampUnit> {
 		YEAR_TO_MILLIS_FORMATTER = new LegacyAndFractionFormatter(DATE_TIME_FORMATTER_HOLDER, MILLIS_UNIT);
 		YEAR_TO_MICROS_FORMATTER = new LegacyAndFractionFormatter(DATE_TIME_FORMATTER_HOLDER, MICROS_UNIT);
 		YEAR_TO_NANOS_FORMATTER = new LegacyAndFractionFormatter(DATE_TIME_FORMATTER_HOLDER, NANOS_UNIT);
-		
-		DateFormat dateFormat = new SimpleDateFormat("h:mm:ss:SSS a");
-		FormatThreadLocal<DateFormat> timeHolder = new FormatThreadLocal<>(dateFormat);
+		FormatThreadLocal<DateFormat> timeHolder = new FormatThreadLocal<>(
+				DateFormat.getTimeInstance(DateFormat.MEDIUM));
 		HOUR_TO_SECONDS_FORMATTER = new LegacyFormatter(timeHolder);
 		HOUR_TO_MILLIS_FORMATTER = new LegacyAndFractionFormatter(timeHolder, MILLIS_UNIT);
 		HOUR_TO_MICROS_FORMATTER = new LegacyAndFractionFormatter(timeHolder, MICROS_UNIT);
