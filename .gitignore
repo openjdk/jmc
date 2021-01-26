@@ -32,6 +32,7 @@ workspace/
 
 # Ignore dependency reduced pom
 dependency-reduced-pom.xml
+.flattened-pom.xml
 
 # Ignore coverage report
 core/coverage/coverage-report
