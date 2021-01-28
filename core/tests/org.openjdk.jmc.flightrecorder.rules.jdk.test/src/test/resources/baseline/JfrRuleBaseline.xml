@@ -2037,7 +2037,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
 <id>ManyRunningProcesses</id>
 <severity>OK</severity>
 <summary>137 processes were running while this Flight Recording was made.</summary>
-<explanation>At 4/4/14 11:17:10 AM, a total of 137 other processes were running on the host machine that this Flight Recording was made on.</explanation>
+<explanation>At 4/4/14 11:17:10:326 AM, a total of 137 other processes were running on the host machine that this Flight Recording was made on.</explanation>
 <solution>If this is a server environment, it may be good to only run other critical processes on that machine.</solution>
 </rule>
 <rule>
@@ -2322,7 +2322,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
 <id>ManyRunningProcesses</id>
 <severity>OK</severity>
 <summary>137 processes were running while this Flight Recording was made.</summary>
-<explanation>At 4/4/14 8:54:38 AM, a total of 137 other processes were running on the host machine that this Flight Recording was made on.</explanation>
+<explanation>At 4/4/14 8:54:38:623 AM, a total of 137 other processes were running on the host machine that this Flight Recording was made on.</explanation>
 <solution>If this is a server environment, it may be good to only run other critical processes on that machine.</solution>
 </rule>
 <rule>
