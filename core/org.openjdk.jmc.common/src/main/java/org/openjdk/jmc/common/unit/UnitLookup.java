@@ -512,7 +512,7 @@ final public class UnitLookup {
 
 		return timeSpan;
 	}
-	
+
 	private static DateFormat patchTimestamp(DateFormat df) {
 		if (df instanceof SimpleDateFormat) {
 			SimpleDateFormat sdf = (SimpleDateFormat) df;
@@ -532,7 +532,8 @@ final public class UnitLookup {
 						try {
 							// NOTE: This used to return the floor value.
 							Date date = new Date(quantity.longValueIn(TimestampKind.MILLIS_UNIT));
-							DateFormat df = patchTimestamp(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM));
+							DateFormat df = patchTimestamp(
+									DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM));
 							return df.format(date);
 						} catch (QuantityConversionException e) {
 							return Messages.getString(Messages.UnitLookup_TIMESTAMP_OUT_OF_RANGE);
