@@ -517,7 +517,7 @@ final public class UnitLookup {
 		if (df instanceof SimpleDateFormat) {
 			SimpleDateFormat sdf = (SimpleDateFormat) df;
 			String pattern = sdf.toPattern();
-			String newPattern = pattern.replaceFirst("s{2,4}", "ss:SSS"); //$NON-NLS-1$ //$NON-NLS-2$
+			String newPattern = pattern.replaceFirst("s{2,4}", "ss.SSS"); //$NON-NLS-1$ //$NON-NLS-2$
 			sdf.applyPattern(newPattern);
 		}
 		return df;
