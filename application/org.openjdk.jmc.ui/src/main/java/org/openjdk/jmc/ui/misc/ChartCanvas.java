@@ -714,6 +714,7 @@ public class ChartCanvas extends Canvas {
 	public void setChart(XYChart awtChart) {
 		this.awtChart = awtChart;
 		notifyListener();
+		redrawChart();
 	}
 
 	public void setTextCanvas(ChartTextCanvas textCanvas) {
