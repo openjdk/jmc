@@ -1370,6 +1370,7 @@ public class RulesToolkit {
 	 * @return the earliest start time in the provided collection
 	 */
 	public static IQuantity getEarliestStartTime(IItemCollection items) {
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
 		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
 			IQuantity earliestStartTime = null;
 			for (IItemIterable iItemIterable : items) {
@@ -1406,6 +1407,7 @@ public class RulesToolkit {
 	 * @return the earliest end time in the provided collection
 	 */
 	public static IQuantity getEarliestEndTime(IItemCollection items) {
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
 		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
 			IQuantity earliestEndTime = null;
 			for (IItemIterable iItemIterable : items) {
@@ -1442,6 +1444,7 @@ public class RulesToolkit {
 	 * @return the latest end time in the provided collection
 	 */
 	public static IQuantity getLatestEndTime(IItemCollection items) {
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
 		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
 			IQuantity latestEndTime = null;
 			for (IItemIterable iItemIterable : items) {
