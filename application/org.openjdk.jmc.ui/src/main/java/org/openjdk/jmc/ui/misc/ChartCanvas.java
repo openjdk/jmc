@@ -287,8 +287,9 @@ public class ChartCanvas extends Canvas {
 	}
 
 	protected int initMinLaneHeight() {
+		// if there are no items, or
 		// if the min readable lane height * the number of items exceeds the screen, then use min readable height
-		if (minReadableLaneHeight * getNumItems() > getParent().getSize().y) {
+		if (getNumItems() == 0 || minReadableLaneHeight * getNumItems() > getParent().getSize().y) {
 			return minReadableLaneHeight;
 		} else { // if the minimum readable lane height * the number of items leaves extra space, then the min height is the height / number of items
 			return getParent().getSize().y / getNumItems();
