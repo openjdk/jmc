@@ -1360,7 +1360,7 @@ public class RulesToolkit {
 	}
 
 	private static final IAggregator<IQuantity, ?> EARLIEST_START_TIME = Aggregators.min(JfrAttributes.START_TIME);
-	
+
 	/**
 	 * Returns the earliest start time in the provided item collection. This method is based on the
 	 * assumption that item collection lanes are sorted by timestamp.
@@ -1396,7 +1396,7 @@ public class RulesToolkit {
 	}
 
 	private static final IAggregator<IQuantity, ?> EARLIEST_END_TIME = Aggregators.min(JfrAttributes.END_TIME);
-	
+
 	/**
 	 * Returns the earliest end time in the provided item collection. This method is based on the
 	 * assumption that item collection lanes are sorted by timestamp and are not overlapping.
@@ -1430,9 +1430,9 @@ public class RulesToolkit {
 			return items.getAggregate(EARLIEST_END_TIME);
 		}
 	}
-	
+
 	private static final IAggregator<IQuantity, ?> LATEST_END_TIME = Aggregators.max(JfrAttributes.END_TIME);
-	
+
 	/**
 	 * Returns the latest end time in the provided item collection. This method is based on the
 	 * assumption that item collection lanes are sorted by timestamp and are not overlapping.
