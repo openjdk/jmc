@@ -85,6 +85,7 @@ import org.openjdk.jmc.ui.misc.TimelineCanvas;
 abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 
 	private static final double Y_SCALE = Display.getCurrent().getDPI().y / Environment.getNormalDPI();
+	private static final String SCROLLED_COMPOSITE_NAME = Messages.ThreadsPage_SCROLLED_COMPOSITE_NAME; //$NON-NLS-1$
 	private static final String TABLE = "table"; //$NON-NLS-1$
 	private static final String CHART = "chart"; //$NON-NLS-1$
 	private static final String CANVAS_SASH = "canvasSash"; //$NON-NLS-1$
@@ -202,6 +203,7 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 	private void setupChartContainers(FormToolkit toolkit) {
 		// Scrolled Composite containing all of the chart-related components
 		ScrolledComposite scChartContainer = new ScrolledComposite(sash, SWT.H_SCROLL | SWT.V_SCROLL);
+		scChartContainer.setData("name", SCROLLED_COMPOSITE_NAME ); //$NON-NLS-1$
 		scChartContainer.setAlwaysShowScrollBars(false);
 		scChartContainer.setExpandHorizontal(true);
 		scChartContainer.setExpandVertical(true);

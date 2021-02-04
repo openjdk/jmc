@@ -45,6 +45,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
@@ -55,6 +56,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.JfrUi;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCMenu;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCSashForm;
+import org.openjdk.jmc.test.jemmy.misc.wrappers.MCScrolledComposite;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCText;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTextCanvas;
@@ -73,18 +75,23 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	private static final String FOLD_TABLE = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_FOLD_TABLE_TOOLTIP;
 	private static final String HIDE_THREAD = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_HIDE_THREAD_ACTION;
 	private static final String RESET_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
+	private static final String SCROLLED_COMPOSITE_NAME = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_SCROLLED_COMPOSITE_NAME;
 	private static final String SHOW_CHART = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_SHOW_CHART_TOOLTIP;
 	private static final String SHOW_TABLE = org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages.ThreadsPage_SHOW_TABLE_TOOLTIP;
 	private static final String TIME_FILTER_ERROR = org.openjdk.jmc.ui.misc.Messages.TimeFilter_ERROR;
 
 	private static MCChartCanvas chartCanvas;
 	private static MCSashForm sashForm;
+	private static MCScrolledComposite scrolledComposite;
 	private static MCTextCanvas textCanvas;
 	private static MCTable threadsTable;
 	private static MCText startTimeText;
 	private static MCText endTimeText;
 	private static MCToolBar toolbar;
+	private boolean scHorizontalBarVisible;
 	private boolean selected;
+	private final int numLanesSelection = 5;
+	private final int minLaneHeight = 25;
 	private SimpleDateFormat sdf = new SimpleDateFormat(TimeFilter.timeFormat);
 
 	@Rule
@@ -93,6 +100,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		public void before() {
 			JfrUi.openJfr(materialize("jfr", PLAIN_JFR, JfrThreadsPageTest.class));
 			JfrNavigator.selectTab(JfrUi.Tabs.THREADS);
+			scrolledComposite = MCScrolledComposite.getByName(SCROLLED_COMPOSITE_NAME);
+			scHorizontalBarVisible = scrolledComposite.isHorizontalBarVisible();
 			toolbar = MCToolBar.getByToolTip(SHOW_TABLE);
 			toolbar.clickToolItem(SHOW_TABLE);
 			chartCanvas = MCChartCanvas.getChartCanvas();
@@ -107,13 +116,28 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 		@Override
 		public void after() {
 			selected = false;
+			scHorizontalBarVisible = false;
 			toolbar.clickToolItem(FOLD_TABLE);
 			MCMenu.closeActiveEditor();
 		}
 	};
 
+	/**
+	 * Some tests require interaction with the chart canvas, and may not work if widgets are obstructed.
+	 *
+	 * If the scrolled composite has a horizontal scrollbar, some widgets may not be visible.
+	 * If the chart canvas is too short, then the tests might not be able to interact with the required lanes.
+	 *
+	 * @return true if all the controls required are visible
+	 */
+	private boolean isControlsVisible() {
+		return !scHorizontalBarVisible && (chartCanvas.getHeight() >= numLanesSelection * minLaneHeight);
+	}
+
 	@Test
 	public void testTextCanvasSelection() throws InterruptedException, ExecutionException, TimeoutException {
+		Assume.assumeTrue(isControlsVisible());
+
 		threadsTable.selectItems(0, 0);
 		Assert.assertEquals(1, threadsTable.getSelectionCount());
 
@@ -137,6 +161,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testZoom() {
+		Assume.assumeTrue(isControlsVisible());
+
 		final String startTime = startTimeText.getText();
 		MCButton zoomInBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_IN));
 		MCButton zoomOutBtn = MCButton.getByImage(UIPlugin.getDefault().getImage(UIPlugin.ICON_FA_ZOOM_OUT));
@@ -161,6 +187,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testResetButtons() throws ParseException {
+		Assume.assumeTrue(isControlsVisible());
+
 		final String startTime = startTimeText.getText();
 		Date startDate = sdf.parse(startTime);
 		startDate.setTime(startDate.getTime() + TIME_OFFSET);
@@ -184,6 +212,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testTimeFilterInvalid() throws ParseException {
+		Assume.assumeTrue(isControlsVisible());
+
 		final String startTime = startTimeText.getText();
 		Date startDate = sdf.parse(startTime);
 		startDate.setTime(startDate.getTime() - TIME_OFFSET);
@@ -213,6 +243,8 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testMenuItemEnablement() {
+		Assume.assumeTrue(isControlsVisible());
+
 		final int numThreads = threadsTable.getItemCount();
 
 		Assert.assertTrue(numThreads > 0);
@@ -234,19 +266,19 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 
 	@Test
 	public void testHideAllThreads() {
-		final int numSelection = 7;
+		Assume.assumeTrue(isControlsVisible());
 
 		final int numThreads = threadsTable.getItemCount();
 
-		Assert.assertTrue(numThreads > 0 && numThreads >= numSelection);
+		Assert.assertTrue(numThreads > 0 && numThreads >= numLanesSelection);
 		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
 
 		// Select a limited number of threads in the chart using the table
-		threadsTable.selectItems(0, numSelection - 1);
+		threadsTable.selectItems(0, numLanesSelection - 1);
 
 		// Hide all the threads from the chart
-		for (int i = 0; i < numSelection; i++) {
+		for (int i = 0; i < numLanesSelection; i++) {
 			chartCanvas.clickContextMenuItem(HIDE_THREAD);
 		}
 
