@@ -203,7 +203,7 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 	private void setupChartContainers(FormToolkit toolkit) {
 		// Scrolled Composite containing all of the chart-related components
 		ScrolledComposite scChartContainer = new ScrolledComposite(sash, SWT.H_SCROLL | SWT.V_SCROLL);
-		scChartContainer.setData("name", SCROLLED_COMPOSITE_NAME ); //$NON-NLS-1$
+		scChartContainer.setData("name", SCROLLED_COMPOSITE_NAME); //$NON-NLS-1$
 		scChartContainer.setAlwaysShowScrollBars(false);
 		scChartContainer.setExpandHorizontal(true);
 		scChartContainer.setExpandVertical(true);
