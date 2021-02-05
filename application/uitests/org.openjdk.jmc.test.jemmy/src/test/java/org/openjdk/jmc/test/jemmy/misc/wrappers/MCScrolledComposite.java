@@ -78,7 +78,8 @@ public class MCScrolledComposite extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public static MCScrolledComposite getByName(Wrap<? extends Shell> shell, String name, StringComparePolicy policy) {
-		return new MCScrolledComposite(shell.as(Parent.class, ScrolledComposite.class).lookup(ScrolledComposite.class, new ByName<>(name, policy)).wrap());
+		return new MCScrolledComposite(shell.as(Parent.class, ScrolledComposite.class)
+				.lookup(ScrolledComposite.class, new ByName<>(name, policy)).wrap());
 	}
 
 	/**

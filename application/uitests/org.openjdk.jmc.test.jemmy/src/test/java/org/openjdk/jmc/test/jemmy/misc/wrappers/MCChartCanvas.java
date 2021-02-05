@@ -152,7 +152,7 @@ public class MCChartCanvas extends MCJemmyBase {
 	 *
 	 * @return the height of the Chart Canvas
 	 */
-	public int getHeight()  {
+	public int getHeight() {
 		Fetcher<Integer> fetcher = new Fetcher<Integer>() {
 			@Override
 			public void run() {

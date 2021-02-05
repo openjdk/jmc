@@ -123,10 +123,10 @@ public class JfrThreadsPageTest extends MCJemmyTestBase {
 	};
 
 	/**
-	 * Some tests require interaction with the chart canvas, and may not work if widgets are obstructed.
-	 *
-	 * If the scrolled composite has a horizontal scrollbar, some widgets may not be visible.
-	 * If the chart canvas is too short, then the tests might not be able to interact with the required lanes.
+	 * Some tests require interaction with the chart canvas, and may not work if widgets are
+	 * obstructed. If the scrolled composite has a horizontal scrollbar, some widgets may not be
+	 * visible. If the chart canvas is too short, then the tests might not be able to interact with
+	 * the required lanes.
 	 *
 	 * @return true if all the controls required are visible
 	 */
