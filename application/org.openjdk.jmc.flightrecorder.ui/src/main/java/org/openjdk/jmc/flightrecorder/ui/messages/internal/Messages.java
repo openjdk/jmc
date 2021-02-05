@@ -525,6 +525,7 @@ public class Messages extends NLS {
 	public static String ThreadsPage_NAME;
 	public static String ThreadsPage_NAME_LEGACY;
 	public static String ThreadsPage_RESET_CHART_TO_SELECTION_ACTION;
+	public static String ThreadsPage_SCROLLED_COMPOSITE_NAME;
 	public static String ThreadsPage_SHOW_CHART_TOOLTIP;
 	public static String ThreadsPage_SHOW_TABLE_TOOLTIP;
 	public static String ThreadsPage_TABLE_POPUP_DESCRIPTION;
