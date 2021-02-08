@@ -248,8 +248,6 @@ public class EventBrowserPage extends AbstractDataPage {
 		}
 
 		private void refreshTree() {
-			boolean noTypesWereSelected = selectedTypes.isEmpty();
-
 			typeFilterTree.getViewer().getControl().setRedraw(false);
 			TreePath[] expansion = typeFilterTree.getViewer().getExpandedTreePaths();
 			ISelection selection = typeFilterTree.getViewer().getSelection();
@@ -259,11 +257,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			typeFilterTree.getViewer().setSelection(selection);
 			typeFilterTree.getViewer().getControl().setRedraw(true);
 			typeFilterTree.getViewer().getControl().redraw();
-
-			if (noTypesWereSelected) {
-				// force re-interpretation of empty type selection
-				rebuildItemList();
-			}
+			rebuildItemList();
 		}
 
 		private IItemCollection getFilteredItems() {
