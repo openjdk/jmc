@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.collection.IteratorToolkit;
@@ -53,11 +54,12 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
+import org.openjdk.jmc.flightrecorder.internal.parser.ParserStats;
 
 /**
  * Implementation of {@link IItemCollection} using {@link IItemIterable} iterators.
  */
-class EventCollection implements IItemCollection {
+class EventCollection implements IItemCollection, IParserStats {
 
 	private static class EventTypeEntry implements IItemIterable {
 
@@ -114,6 +116,7 @@ class EventCollection implements IItemCollection {
 	private final Set<IType<IItem>> types = new HashSet<>();
 	private final ArrayList<EventTypeEntry> items;
 	private final Set<IRange<IQuantity>> chunkRanges;
+	private final ParserStats parserStats;
 
 	static IItemCollection build(EventArrays events) {
 		ArrayList<EventTypeEntry> items = new ArrayList<>(events.getArrays().length);
@@ -121,12 +124,14 @@ class EventCollection implements IItemCollection {
 			EventTypeEntry entry = new EventTypeEntry(ea);
 			items.add(entry);
 		}
-		return new EventCollection(items, events.getChunkTimeranges());
+		return new EventCollection(items, events.getChunkTimeranges(), events.getParserStats());
 	}
 
-	private EventCollection(ArrayList<EventTypeEntry> items, Set<IRange<IQuantity>> chunkRanges) {
+	private EventCollection(ArrayList<EventTypeEntry> items, Set<IRange<IQuantity>> chunkRanges,
+			ParserStats parserStats) {
 		this.items = items;
 		this.chunkRanges = chunkRanges;
+		this.parserStats = parserStats;
 		for (EventTypeEntry e : items) {
 			types.add(e.events.getType());
 		}
@@ -143,7 +148,7 @@ class EventCollection implements IItemCollection {
 				newEntries.add(newEntry);
 			}
 		}
-		return new EventCollection(newEntries, chunkRanges);
+		return new EventCollection(newEntries, chunkRanges, parserStats);
 	}
 
 	private static Iterator<IItem> buildIterator(IItem[] array, Predicate<? super IItem> filter) {
@@ -221,5 +226,40 @@ class EventCollection implements IItemCollection {
 	@Override
 	public Set<IRange<IQuantity>> getUnfilteredTimeRanges() {
 		return chunkRanges;
+	}
+
+	@Override
+	public void forEachEventType(Consumer<IEventStats> consumer) {
+		parserStats.forEachEventType(consumer);
+	}
+
+	@Override
+	public short getMajorVersion() {
+		return parserStats.getMajorVersion();
+	}
+
+	@Override
+	public short getMinorVersion() {
+		return parserStats.getMinorVersion();
+	}
+
+	@Override
+	public int getChunkCount() {
+		return parserStats.getChunkCount();
+	}
+
+	@Override
+	public long getSkippedEventCount() {
+		return parserStats.getSkippedEventCount();
+	}
+
+	@Override
+	public long getEventCountByType(String eventTypeName) {
+		return parserStats.getCount(eventTypeName);
+	}
+
+	@Override
+	public long getEventTotalSizeByType(String eventTypeName) {
+		return parserStats.getTotalSize(eventTypeName);
 	}
 }

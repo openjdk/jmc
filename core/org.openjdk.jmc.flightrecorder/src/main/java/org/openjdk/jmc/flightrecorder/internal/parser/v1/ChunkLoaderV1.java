@@ -62,7 +62,7 @@ public class ChunkLoaderV1 implements IChunkLoader {
 	@Override
 	public byte[] call() throws Exception {
 		SeekableInputStream input = SeekableInputStream.build(data, header.isIntegersCompressed());
-
+		context.incChunkCount();
 		// Read metadata
 		input.seek(header.getMetadataOffset());
 		List<ClassElement> classes = ChunkMetadata.readMetadata(input).metadata.classes;
@@ -89,10 +89,11 @@ public class ChunkLoaderV1 implements IChunkLoader {
 				throw new CouldNotLoadRecordingException("Found event with invalid size (0)"); //$NON-NLS-1$
 			}
 			if (type != CONSTANT_POOL_EVENT_TYPE && type != ChunkMetadata.METADATA_EVENT_TYPE) {
-				manager.readEvent(type, input);
+				manager.readEvent(type, input, size);
 			}
 			index += size;
 		}
+		context.setSkippedEventCount(manager.getSkippedEventCount());
 		return data;
 	}
 

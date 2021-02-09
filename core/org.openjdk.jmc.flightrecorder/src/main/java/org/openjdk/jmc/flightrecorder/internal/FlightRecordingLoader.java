@@ -294,6 +294,7 @@ public final class FlightRecordingLoader {
 		try {
 			Chunk chunk = chunkSupplier.getNextChunk(buffer);
 			if (chunk != null) {
+				context.setVersion(chunk.getMajorVersion(), chunk.getMinorVersion());
 				switch (chunk.getMajorVersion()) {
 				case VERSION_0:
 					return ChunkLoaderV0.create(chunk, context);

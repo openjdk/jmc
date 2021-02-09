@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.openjdk.jmc.common.IDescribable;
@@ -59,6 +61,7 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 import org.openjdk.jmc.flightrecorder.parser.filter.FilterExtension;
@@ -88,6 +91,11 @@ public final class RecordingPrinter {
 	 * Only write one line per event
 	 */
 	LOW,
+
+	/**
+	 * Write only a summary of the recording
+	 */
+	SUMMARY,
 	}
 
 	private final Verbosity verbosity;
@@ -141,6 +149,10 @@ public final class RecordingPrinter {
 	}
 
 	public void print(IItemCollection events) {
+		if (verbosity == Verbosity.SUMMARY) {
+			printSummary((IParserStats) events);
+			return;
+		}
 		out.println("<?xml version=\"1.0\"?>"); //$NON-NLS-1$
 		Iterator<IItemIterable> itemIterable = events.iterator();
 		while (itemIterable.hasNext()) {
@@ -151,6 +163,39 @@ public final class RecordingPrinter {
 			}
 		}
 		out.flush();
+	}
+
+	private void printSummary(IParserStats parserStats) {
+		out.printf("Version: %d.%d\n", parserStats.getMajorVersion(), parserStats.getMinorVersion());
+		out.printf("Chunks: %d\n", parserStats.getChunkCount());
+		// Order descending by event count
+		Set<IEventStats> eventStatsSet = new TreeSet<>((o1, o2) -> Long.compare(o2.getCount(), o1.getCount()));
+		parserStats.forEachEventType((eventStats) -> {
+			eventStatsSet.add(eventStats);
+		});
+		int minWidth = 0;
+		for (IEventStats eventStats : eventStatsSet) {
+			minWidth = Math.max(minWidth, eventStats.getName().length());
+		}
+		out.println();
+		String header = "      Count  Size (bytes) ";
+		String typeHeader = " Event Type";
+		minWidth = Math.max(minWidth, typeHeader.length());
+		out.println(typeHeader + pad(minWidth - typeHeader.length(), ' ') + header);
+		out.println(pad(minWidth + header.length(), '='));
+		for (IEventStats eventStats : eventStatsSet) {
+			out.printf(" %-" + minWidth + "s%10d  %12d\n", eventStats.getName(), eventStats.getCount(),
+					eventStats.getTotalSize());
+		}
+		out.flush();
+	}
+
+	private String pad(int count, char c) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < count; i++) {
+			sb.append(c);
+		}
+		return sb.toString();
 	}
 
 	private static RecordingPrinter buildFromOptions(PrintWriter output, String[] args) throws ParseException {
@@ -164,6 +209,8 @@ public final class RecordingPrinter {
 				verbosity = Verbosity.LOW;
 			} else if (args[n].equals("-includeevents")) { //$NON-NLS-1$
 				recordingFilter = OnLoadFilters.includeEvents(Arrays.asList(args[++n].split(","))); //$NON-NLS-1$
+			} else if (args[n].equals("-summary")) {
+				verbosity = Verbosity.SUMMARY;
 			} else {
 				throw new ParseException("Unknown command " + args[n], n); //$NON-NLS-1$
 			}

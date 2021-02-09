@@ -59,6 +59,7 @@ public class ChunkLoaderV0 implements IChunkLoader {
 
 	@Override
 	public byte[] call() throws Exception {
+		context.incChunkCount();
 		// Read constants
 		ReaderFactory readerFactory = new ReaderFactory(metadata, data, context, structure);
 
