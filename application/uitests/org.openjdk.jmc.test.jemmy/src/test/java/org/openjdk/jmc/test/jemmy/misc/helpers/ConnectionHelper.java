@@ -53,7 +53,6 @@ public class ConnectionHelper {
 
 	private static final JavaVersion JDK_9_EA = new JavaVersion("9-ea");
 
-
 	/**
 	 * Find out if the connection is of a specific JDK release or later
 	 * 
