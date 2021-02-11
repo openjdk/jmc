@@ -67,7 +67,8 @@ public class JfrComponentTests extends MCJemmyTestBase {
 	private static String[] COPY_VISIBLE = new String[] {CLIPBOARD_SETTINGS, "Copy Visible"};
 	private static String[] COPY_HEADERS = new String[] {CLIPBOARD_SETTINGS, "Copy Column Headers"};
 	private static String[] END_TIME_COLUMN_VISIBILITY = new String[] {"Visible Columns", "End Time"};
-	private static String[] events = new String[] {"Class Load", "File Write", "Java Thread Statistics", "Thread Dump"};
+	private static String[] events = new String[] {"Class Loading Statistics", "File Write", "Java Thread Statistics",
+			"Thread Dump"};
 
 	@ClassRule
 	public static MCUITestRule classTestRule = new MCUITestRule(verboseRuleOutput) {
@@ -150,9 +151,15 @@ public class JfrComponentTests extends MCJemmyTestBase {
 		for (JfrUi.Tabs tab : new JfrUi.Tabs[] {JfrUi.Tabs.JVM_INTERNALS, JfrUi.Tabs.GC_CONFIG,
 				JfrUi.Tabs.ENVIRONMENT}) {
 			JfrNavigator.selectTab(tab);
+			int testCount = 0;
 			for (MCText textControl : MCText.getVisible()) {
 				String textValue = normalizeString(textControl.getText());
 				if (!"".equals(textValue)) {
+					// Since it doesn't seem to work well for components not visible in a scroll pane,
+					// we only do it for the first five components on the JVM_INTERNALS tab
+					if (tab.equals(JfrUi.Tabs.JVM_INTERNALS) && testCount++ > 5) {
+						break;
+					}
 					String clipboardValue = "";
 					int maxRetries = 5;
 					boolean textsAreEqual = false;

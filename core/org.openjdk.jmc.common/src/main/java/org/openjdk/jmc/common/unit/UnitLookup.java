@@ -513,7 +513,7 @@ final public class UnitLookup {
 		return timeSpan;
 	}
 
-	private static DateFormat patchTimestamp(DateFormat df) {
+	static DateFormat patchTimestamp(DateFormat df) {
 		if (df instanceof SimpleDateFormat) {
 			SimpleDateFormat sdf = (SimpleDateFormat) df;
 			String pattern = sdf.toPattern();

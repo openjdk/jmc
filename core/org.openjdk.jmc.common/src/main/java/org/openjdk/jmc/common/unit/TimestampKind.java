@@ -332,7 +332,7 @@ class TimestampKind extends KindOfQuantity<TimestampUnit> {
 	public ITypedQuantity<TimestampUnit> parseInteractive(String interactiveQuantity)
 			throws QuantityConversionException {
 		try {
-			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+			DateFormat df = UnitLookup.patchTimestamp(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM));
 			ParsePosition pos = new ParsePosition(0);
 			Date date = df.parse(interactiveQuantity, pos);
 			if (date != null) {
