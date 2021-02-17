@@ -1,0 +1,521 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Mission Control 8.0 - New and Noteworthy</title>
+</head>
+<style type="text/css">
+  		p, table, td, th {  font-family: verdana, arial, helvetica, geneva; font-size: 10pt}
+		h2 { font-family: verdana, arial, helvetica, geneva; font-size: 16pt; font-weight: bold ; line-height: 14px}
+		h3 {  font-family: verdana, arial, helvetica, geneva; font-size: 12pt; font-weight: bold}
+		h1 {  font-family: verdana, arial, helvetica, geneva; font-size: 18pt; font-weight: bold}
+		body {  font-family: verdana, arial, helvetica, geneva; font-size: 9pt; margin-top: 5mm; margin-left: 3mm}
+	</style>
+<body>
+<h2>Mission Control 8.0 - New and Noteworthy</h2>
+<table border="0" cellpadding="10" cellspacing="0" width="80%">
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>General</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>JMC 8.0 for JDK 8+ - Major New Release!</b></td><td width="70%" valign="top">
+				This is a major new release of Java Mission Control. The JMC application now requires JDK 11+ to run, but can be used with OpenJDK 8u272+ and
+				Oracle JDK 7u40+. It can also open and visualize flight recordings from JDK 7 and 8.  
+			<p>
+<a href="
+  						images/general/jmc.png"><img src="
+	  						smallimages/general/jmc.png" alt="JMC 8.0 for JDK 8+ - Major New Release!"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Eclipse 4.16 support</b></td><td width="70%" valign="top">
+				The Mission Control client is now built to run optimally on Eclipse 2020-06 and later. To install Java Mission Control into Eclipse, 
+				go to the Java Mission Control update site.
+			<p>
+<a href="
+  						images/general/eclipse.png"><img src="
+	  						smallimages/general/eclipse.png" alt="Eclipse 4.16 support"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Supported Plug-ins</b></td><td width="70%" valign="top">
+				There are now several supported plug-ins for use with Java Mission Control. Go to "Install New Software" in Java Mission Control 
+				(or Eclipse) to install. If running as plug-ins inside of Eclipse, do not forget to add the 
+				update site for supported plug-ins.
+			<p>
+<a href="
+  						images/general/supported.png"><img src="
+	  						smallimages/general/supported.png" alt="Supported Plug-ins"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Experimental Plug-ins</b></td><td width="70%" valign="top">
+				The JMC team is still sharing experimental plug-ins on the experimental update site. Go to "Install New Software" in Java Mission Control 
+				(or Eclipse) to install. If running as plug-ins inside of Eclipse, do not forget to add the 
+				update site for experimental plug-ins.
+			<p>
+<a href="
+  						images/general/experimental.png"><img src="
+	  						smallimages/general/experimental.png" alt="Experimental Plug-ins"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Minor bugfixes and improvements</b></td><td width="70%" valign="top">
+				There are hundreds of minor fixes and improvements in this release.
+			<p>
+<a href="
+  						images/general/bugs.png"><img src="
+	  						smallimages/general/bugs.png" alt="Minor bugfixes and improvements"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>Java Flight Recorder (JFR)</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Automated Analysis of Flight Recordings</b></td><td width="70%" valign="top">
+				Java Mission Control now supports automated analysis of flight recordings. The provided rules and heuristics will help you find troubling functional and 
+				performance problems in your application and help provide tuning tips. Some rules that operate with relatively unknown concepts, like safe points, will provide 
+				explanations and links to further information. Some rules are parameterized and can be configured to make more sense in your particular environment. Individual 
+				rules can be enabled/disabled as you see fit. This is the very first cut - more rules and improved heuristics will be provided as part of JMC updates over time. 
+			<p>
+<a href="
+  						images/jfr/analysis.png"><img src="
+	  						smallimages/jfr/analysis.png" alt="Automated Analysis of Flight Recordings"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Running the Automated Analysis Headless</b></td><td width="70%" valign="top">
+				The Mission Control base jars required for the automated analysis are all JDK 7 (and later) compatible, and built to be useable outside of Eclipse. This means that 
+				you can perform the automated analysis from the command line. Try running:
+				com.oracle.jmc.flightrecorder.rules.report.JfrRulesReport -min info -format text C:\recordings\JMC-5033\while_installing_from_updatesite.jfr -verbose 
+				when having the following JMC plug-ins on your class path:
+				com.oracle.jmc.common, com.oracle.jmc.flightrecorder, com.oracle.jmc.flightrecorder.rules, com.oracle.jmc.flightrecorder.rules.jdk
+				If you wish to have the WebLogic Server rules, also add:
+				com.oracle.jmc.flightrecorder.ext.wls.parser, com.oracle.jmc.flightrecorder.ext.wls.rules
+			<p>
+<a href="
+  						images/jfr/textanalysis.png"><img src="
+	  						smallimages/jfr/textanalysis.png" alt="Running the Automated Analysis Headless"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Use the PDE Plug-in for Creating Custom Rules</b></td><td width="70%" valign="top">
+				It is possible to create custom plug-ins providing one or more rules to participate in the automated analysis of recordings. The easiest way to start creating your 
+				own custom rules is to install the PDE plug-in into Eclipse from the experimental update site.
+			<p>
+<a href="
+  						images/console/pde.png"><img src="
+	  						smallimages/console/pde.png" alt="Use the PDE Plug-in for Creating Custom Rules"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>New Navigation</b></td><td width="70%" valign="top">
+				The navigation between pages has moved from being inside of the JFR editor, to now be in the Outline view. Individual analysis rules can
+				be associated with pages, and an overlay on the page icons will show if a rule has found something interesting that relates to a specific page. 
+			<p>
+<a href="
+  						images/jfr/outline.png"><img src="
+	  						smallimages/jfr/outline.png" alt="New Navigation"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>New Configurable Stacktrace View</b></td><td width="70%" valign="top">
+					The Stack Trace view has become a separate, configurable, view. When you select something that can be represented as an aggregation of 
+					stack traces in the user interface, it will be shown in the Stack Trace view. By default the most commonly taken path will be displayed, 
+					and you can switch between branches using the buttons or arrow keys. Should you want to, you can still configure the view to work in 
+					the old tree style. By default the tree depth will be reduced by just listing frames vertically until a branch is hit. That too can be disabled
+					if you really want to get back to the old style of representing trees. That said, the default style saves a lot of screen estate, and shows the most 
+					commonly sought information by default.
+				<p>
+<a href="
+  						images/jfr/stacktrace.png"><img src="
+	  						smallimages/jfr/stacktrace.png" alt="New Configurable Stacktrace View"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Custom Pages</b></td><td width="70%" valign="top">
+				Custom pages can now be created from the Event Browser page. Simply select the event types of interest and click the Create New Page button. 
+				The custom page features a filter box at the top which allows you to perform complex filtering. Grouping, sorting and charting can also be 
+				accomplished with a few simple context clicks in the view. Once you are happy with the page, it can be exported and shared.
+			<p>
+<a href="
+  						images/jfr/custompage.png"><img src="
+	  						smallimages/jfr/custompage.png" alt="Custom Pages"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Stored Selections</b></td><td width="70%" valign="top">
+				It is now possible to focus the user interface on a selection, and to store and re-use the selection in other pages. The selection captures all kinds of aspects 
+				associated with the selection, such a the event types, the actual events represented by the selection or the time range spanning the selection. Different selections can be stored,
+				and you can switch between them using the selection drop down. You can also select which aspect of the selection you wish for a page to focus on.
+				Different pages may chose different default aspects to focus on from a selection, and they may also select an aspect depending on what is in the actual selection.  
+			<p>
+<a href="
+  						images/jfr/setselection.png"><img src="
+	  						smallimages/jfr/setselection.png" alt="Stored Selections"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The Results View</b></td><td width="70%" valign="top">
+				When the selected page has one or more results associated with it, the Results view will display those results.
+			<p>
+<a href="
+  						images/jfr/resultsview.png"><img src="
+	  						smallimages/jfr/resultsview.png" alt="The Results View"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The Properties View</b></td><td width="70%" valign="top">
+				The new Properties view shows the attributes for the current selection, usually one or more events. It is quite useful for setting the focus selection to 
+				something very specific, such as the value of the attribute of a specific event.
+			<p>
+<a href="
+  						images/jfr/properties.png"><img src="
+	  						smallimages/jfr/properties.png" alt="The Properties View"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>Management Console</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>Extending the Console</b></td><td width="70%" valign="top">
+				The API for extending the management console has been simplified and improved. The easiest way to see the new API in action is to create a 
+				console extension using the Mission Control PDE plug-in inside of Eclipse.
+			<p>
+<a href="
+  						images/console/pde.png"><img src="
+	  						smallimages/console/pde.png" alt="Extending the Console"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>Supported Plug-ins</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The Metadata Plug-in (JFR)</b></td><td width="70%" valign="top">
+				This plug-in shows the metadata available in a recording. This is quite useful when developing rules, as information such as the event type identifiers 
+				are typically required. That said, sometimes just looking at the description for an attribute or event type can be helpful to better understand the data.
+			<p>
+<a href="
+  						images/supported/metadata.png"><img src="
+	  						smallimages/supported/metadata.png" alt="The Metadata Plug-in (JFR)"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The JavaFX Plug-in (JFR)</b></td><td width="70%" valign="top">
+				This plug-in provides a special page for improved visualization of JavaFX events. It will show information from the pulse logger. For each individual 
+				pulse details, such as the name and duration of the phases, will be shown. 
+			<p>
+<a href="
+  						images/supported/javafx.png"><img src="
+	  						smallimages/supported/javafx.png" alt="The JavaFX Plug-in (JFR)"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The WebLogic Plug-in (JFR)</b></td><td width="70%" valign="top">
+				This plug-in provides a set of pages for analysis of applications deployed in WebLogic Server. A wide range of information is available, such as servlet executions, 
+				EJB calls, JDBC calls, JTA transactions and much more. Of course, all that information can be correlated to what is going on in the Java runtime, providing a powerful
+				diagnostics and profiling environment for WebLogic Server. This plug-in also contains JFR parser extensions and rules for automated analysis of WLS performance.
+			<p>
+<a href="
+  						images/supported/wls.png"><img src="
+	  						smallimages/supported/wls.png" alt="The WebLogic Plug-in (JFR)"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>Experimental Plug-ins</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The G1 Plug-in (JFR)</b></td><td width="70%" valign="top">
+				This experimental plug-in shows detailed information about the G1 garbage collector.
+				Note: This plug-in only works with JDK 9 recordings.
+			<p>
+<a href="
+  						images/experimental/g1.png"><img src="
+	  						smallimages/experimental/g1.png" alt="The G1 Plug-in (JFR)"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td width="30%" valign="top" align="left"><b>The Usual Suspects</b></td><td width="70%" valign="top">
+				Note that most of the old experimental plug-ins are still available, such as JOverflow (heap waste analysis of hprof dumps), 
+				the JMX Console Subscription plug-in (see what is actually fetched), the Flight Recorder Launch Configuration plug-in (control the flight recorder
+				as part of launching your apps from within Eclipse), the PDE plug-in (wizards for quickly extending JMC), and more. Since they are not new, they did not 
+				get their own entries in this section.
+			<p>
+<a href="
+  						images/experimental/joverflow.png"><img src="
+	  						smallimages/experimental/joverflow.png" alt="The Usual Suspects"></a>
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<h2>Bug Fixes</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>General</p>
+<p>
+<b>Synopsis: </b>Better input parsing</p>
+<p>
+				Mission Control is now using its framework for physical quantities and units of measurement 
+				in more places. This provides a more consistent and coherent way of both entering and visualizing values,
+				as well as services like auto completion. 
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>Can now have more recordings open simultaneously</p>
+<p>
+				In previous versions of JMC the entire UI was generated in one go, requiring massive amounts of native UI handles. Now the UI is generated on the fly, 
+				making it possible to have more flight recordings open at the same time.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>Proper handling of reused OS thread ids</p>
+<p>
+				Previous versions of JMC did not handle reused OS thread ids properly. Now such thread id reuse will be handled properly
+				as separate threads.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>No more clipping problems with large stack traces</p>
+<p>
+				The way we rendered stack traces previously could lead to clipping problems when the tree grew quite big.
+				The new stack trace view makes it unlikely to encounter the condition when such clipping occurs in the native component.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>Will now provide a visual hint if not showing all events</p>
+<p>
+				Previously, if there were more events than could fit a table, the table would cut off at a certain number of events. 
+				Now the last row of the table will indicate if such a cut off is taking place, as well as show both the limit and how many events would have been available in total. 
+				Also, the maximum number of events to show can now be configured in the preferences.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<br>
+<hr>
+<h2>Known Issues</h2>
+<hr>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>General</p>
+<p>
+<b>Synopsis: </b>Hibernation and time</p>
+<p>
+				After the bugfix of https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the RuntimeMXBean#getUptime() attribute was re-implemented
+				to mean "Elapsed time of JVM process", whilst it previously was implemented as time since start of the JVM process. The uptime attribute is used by JMC,
+				together with RuntimeMXBean#getStartTime(), to estimate the actual server time. This means that time stamps, as well as remaining time for a flight recording, 
+				can be wrong for processes on machines that have been hibernated.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>General</p>
+<p>
+<b>Synopsis: </b>Tooltip overflow and clipping on OS X with HiDPI screens</p>
+<p>
+				The tooltip displayed when hovering over data points or chart elements can be clipped, and the information within is not always possible to read, if you are using a HiDPI monitor
+				on OS X. As a workaround, the same information is sometimes available from the Properties view if you first make a selection in the chart.	
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>Problem drag-and-dropping recordings to the analysis page</p>
+<p>
+				It is possible to drag and drop flight recordings in to Mission Control to open them. However, in JMC 8.0.0, dragging a recording to the Automated Analysis Results page will not work. 
+				The Automated Analysis Results page is using a browser component, and that component will be reacting in platform depended ways on drops. A workaround is to drag it to the top of the page or 
+				to any other page.
+			</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<p>
+<b>Area: </b>JFR</p>
+<p>
+<b>Synopsis: </b>Problem with clipping of tooltips on HiDPI monitors</p>
+<p>
+				The tooltip that is displayed when hovering over data points or chart elements 
+				can be clipped, and the information within is not always possible to read if you 
+				are using a HiDPI monitor. As a workaround, you can sometimes get the same information 
+				from the Properties view if you first make a selection in the chart.
+			</p>
+</td>
+</tr>
+</table>
+</body>
+</html>
