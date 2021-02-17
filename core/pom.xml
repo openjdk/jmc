@@ -31,11 +31,12 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>${revision}${changelist}</version>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -43,6 +44,26 @@
 		administrators to collect and analyze data from Java applications
 		running locally or deployed in production environments.
 	</description>
+	<properties>
+		<revision>8.1.0</revision>
+		<changelist>-SNAPSHOT</changelist>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<manifest-location>META-INF</manifest-location>
+		<maven.jar.version>3.2.0</maven.jar.version>
+		<maven.bundle.version>5.1.1</maven.bundle.version>
+		<spotless.version>2.5.0</spotless.version>
+		<maven.directory.version>0.3.1</maven.directory.version>
+		<maven.resources.version>3.2.0</maven.resources.version>
+		<maven.source.version>3.2.1</maven.source.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<nexus.staging.version>1.6.8</nexus.staging.version>
+		<maven.gpg.version>1.6</maven.gpg.version>
+		<build.helper.maven.version>3.2.0</build.helper.maven.version>
+		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
@@ -68,24 +89,6 @@
 			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<manifest-location>META-INF</manifest-location>
-		<maven.jar.version>3.2.0</maven.jar.version>
-		<maven.bundle.version>5.1.1</maven.bundle.version>
-		<spotless.version>2.5.0</spotless.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<nexus.staging.version>1.6.8</nexus.staging.version>
-		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-	</properties>
 
 	<modules>
 		<module>org.openjdk.jmc.common</module>
@@ -126,45 +129,45 @@
 					</configuration>
 				</plugin>
 				<plugin>
-  					<groupId>com.diffplug.spotless</groupId>
-  					<artifactId>spotless-maven-plugin</artifactId>
-  					<version>${spotless.version}</version>
-  					<configuration>
-    					<java>
-      						<eclipse>
-        							<file>${spotless.config.path}</file>
-        							<version>4.8.0</version>
-      						</eclipse>
-    					</java>
-  					</configuration>
+					<groupId>com.diffplug.spotless</groupId>
+					<artifactId>spotless-maven-plugin</artifactId>
+					<version>${spotless.version}</version>
+					<configuration>
+						<java>
+							<eclipse>
+								<file>${spotless.config.path}</file>
+								<version>4.8.0</version>
+							</eclipse>
+						</java>
+					</configuration>
 				</plugin>
 				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.resources.version}</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}</outputDirectory>
-							<resources>
-								<resource>
-									<targetPath>${basedir}/target/classes</targetPath>
-									<directory>${rootDir}/license</directory>
-								</resource>
-								<resource>
-									<targetPath>${basedir}/target/apidocs</targetPath>
-									<directory>${rootDir}/license</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven.resources.version}</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<resources>
+									<resource>
+										<targetPath>${basedir}/target/classes</targetPath>
+										<directory>${rootDir}/license</directory>
+									</resource>
+									<resource>
+										<targetPath>${basedir}/target/apidocs</targetPath>
+										<directory>${rootDir}/license</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -265,6 +268,31 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -148,6 +148,22 @@ public class MCChartCanvas extends MCJemmyBase {
 	}
 
 	/**
+	 * Fetches the height of the Chart Canvas
+	 *
+	 * @return the height of the Chart Canvas
+	 */
+	public int getHeight() {
+		Fetcher<Integer> fetcher = new Fetcher<Integer>() {
+			@Override
+			public void run() {
+				setOutput(control.getControl().getParent().getSize().y);
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return fetcher.getOutput();
+	}
+
+	/**
 	 * Calculates the click point of the Chart Canvas
 	 *
 	 * @return the Point of the Chart Canvas

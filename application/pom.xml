@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
@@ -144,42 +144,42 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.test</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.3</version>
+			<version>0.8.6</version>
 		</dependency>
 	</dependencies>
 	<build>

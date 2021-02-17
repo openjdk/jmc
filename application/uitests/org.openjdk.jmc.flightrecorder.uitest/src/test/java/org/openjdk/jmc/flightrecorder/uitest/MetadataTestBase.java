@@ -87,7 +87,9 @@ public abstract class MetadataTestBase extends MCJemmyTestBase {
 				ConnectionHelper.is8u0orLater(TEST_CONNECTION));
 		doRecording();
 
-		if (ConnectionHelper.is9u0EAorLater(TEST_CONNECTION)) {
+		if (ConnectionHelper.is11orLater(TEST_CONNECTION)) {
+			handleRecording(BASELINE_JFR_FILE + "11");
+		} else if (ConnectionHelper.is9u0EAorLater(TEST_CONNECTION)) {
 			handleRecording(BASELINE_JFR_FILE + "9");
 		} else {
 			handleRecording(BASELINE_JFR_FILE + "8");
