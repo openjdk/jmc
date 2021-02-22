@@ -37,7 +37,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.application</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>8.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>coverage</artifactId>
 	<name>Code coverage report jmc/application</name>
@@ -343,13 +343,13 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.updatesite.ide</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>8.0.1-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.updatesite.rcp</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>8.0.1-SNAPSHOT</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
@@ -480,7 +480,7 @@
 					<groupId>org.openjdk.jmc</groupId>
 					<artifactId>org.openjdk.jmc.test.jemmy</artifactId>
 					<scope>test</scope>
-					<version>8.0.0-SNAPSHOT</version>
+					<version>8.0.1-SNAPSHOT</version>
 				</dependency>
 			</dependencies>
 		</profile>

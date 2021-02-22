@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.updatesite.ide"
       label="JDK Mission Control Site"
-      version="8.0.0">
+      version="8.0.1">
 
    <description>
       This is a release engineering internal &quot;feature&quot;. It just happen

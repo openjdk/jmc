@@ -37,7 +37,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>platform-definitions</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>8.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>platform-definition-2020-03</artifactId>
 	<packaging>eclipse-target-definition</packaging>
