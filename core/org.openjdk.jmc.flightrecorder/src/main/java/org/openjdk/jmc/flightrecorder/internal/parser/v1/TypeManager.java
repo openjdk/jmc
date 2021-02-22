@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IUnit;
@@ -144,18 +143,20 @@ class TypeManager {
 		private static final String STRUCT_TYPE_THREAD_GROUP_2 = "jdk.types.ThreadGroup"; //$NON-NLS-1$
 
 		final ClassElement element;
+		final LoaderContext context;
 		final FastAccessNumberMap<Object> constants;
 		private IValueReader reader;
 
-		TypeEntry(ClassElement element) {
-			this(element, new FastAccessNumberMap<>());
+		TypeEntry(ClassElement element, LoaderContext context) {
+			this(element, context, new FastAccessNumberMap<>());
 		}
 
 		/**
 		 * Temporary constructor for sharing constants. Only used for Strings.
 		 */
-		TypeEntry(ClassElement element, FastAccessNumberMap<Object> constants) {
+		TypeEntry(ClassElement element, LoaderContext context, FastAccessNumberMap<Object> constants) {
 			this.element = element;
+			this.context = context;
 			this.constants = constants;
 		}
 
@@ -281,10 +282,12 @@ class TypeManager {
 					// FIXME: During resolve, some constants may become equal. Should we ensure canonical constants?
 				}
 			}
+			context.addTypeConstantPool(element.classId, element.typeIdentifier, constants);
 		}
 
 		void readConstant(IDataInput input) throws InvalidJfrFileException, IOException {
 			// FIXME: Constant lookup can perhaps be optimized (across chunks)
+			long start = input.getPosition();
 			long constantIndex = input.readLong();
 			Object value = constants.get(constantIndex);
 			if (value == null) {
@@ -293,6 +296,8 @@ class TypeManager {
 			} else {
 				getReader().skip(input);
 			}
+			long end = input.getPosition();
+			context.addEntryPoolSize(element.typeIdentifier, end - start);
 		}
 	}
 
@@ -389,7 +394,7 @@ class TypeManager {
 			if (ce.isEventType()) {
 				eventTypes.put(ce.classId, new EventTypeEntry(ce));
 			} else {
-				otherTypes.put(ce.classId, new TypeEntry(ce));
+				otherTypes.put(ce.classId, new TypeEntry(ce, context));
 			}
 		}
 		for (ClassElement ce : classList) {
