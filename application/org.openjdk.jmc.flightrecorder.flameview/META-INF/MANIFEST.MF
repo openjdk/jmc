@@ -7,7 +7,15 @@ Bundle-Version: 8.1.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.flightrecorder.rules,
- org.openjdk.jmc.common
+ org.openjdk.jmc.common,
+ javax.servlet,
+ org.eclipse.jetty.http,
+ org.eclipse.jetty.server,
+ org.eclipse.jetty.websocket.api;bundle-version="9.4.35",
+ org.eclipse.jetty.websocket.server,
+ org.eclipse.jetty.websocket.servlet,
+ org.eclipse.jetty.servlet,
+ org.eclipse.jetty.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Oracle Corporation
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flameview

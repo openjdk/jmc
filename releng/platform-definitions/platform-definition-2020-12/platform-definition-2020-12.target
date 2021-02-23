@@ -32,8 +32,7 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<?pde version="3.8"?>
-<target name="jmc-target-2020-12" sequenceNumber="47">
+<?pde version="3.8"?><target name="jmc-target-2020-12" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
@@ -47,6 +46,9 @@
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
             <repository location="http://localhost:8080/site"/>
+	        <unit id="javax.websocket-api" version="1.1.0"/>
+	        <unit id="org.eclipse.jetty.websocket.server" version="9.4.35.v20201120"/>
+	        <unit id="org.eclipse.jetty.websocket.api" version="9.4.35.v20201120"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1000.v20200915-1508"/>

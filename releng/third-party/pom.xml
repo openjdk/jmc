@@ -45,6 +45,8 @@
 		<hdrhistogram.version>2.1.12</hdrhistogram.version>
 		<jakarta.activation.version>1.2.1</jakarta.activation.version>
 		<jakarta.mail.version>1.6.5</jakarta.mail.version>
+		<javax.websocket.version>1.1</javax.websocket.version>
+		<jetty.version>9.4.35.v20201120</jetty.version>
 		<jemmy.version>2.0.0</jemmy.version>
 		<jetty-maven-plugin.version>9.4.33.v20201020</jetty-maven-plugin.version>
 		<lz4.version>1.7.1</lz4.version>
@@ -82,6 +84,12 @@
 								</artifact>
 								<artifact>
 									<id>com.sun.activation:jakarta.activation:${jakarta.activation.version}</id>
+								</artifact>
+								<artifact>
+									<id>javax.websocket:javax.websocket-api:${javax.websocket.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:javax-websocket-server-impl:${jetty.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.owasp.encoder:encoder:${owasp.encoder.version}</id>
