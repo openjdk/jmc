@@ -174,18 +174,6 @@
 	<!--  ******************************* Bugfixes ****************************************** -->
 	<bugfixes>
 		<bugfix>
-			<area>General</area>
-			<synopsis>Better input parsing</synopsis>
-			<description>
-				Mission Control is now using its framework for physical quantities and units of measurement
-				in more
-				places. This provides a more consistent and coherent way of both entering and visualizing values,
-				as well as
-				services
-				like auto completion.
-			</description>
-		</bugfix>
-		<bugfix>
 			<area>JFR</area>
 			<bugid>5734</bugid>
 			<synopsis>Overflow in stacktrace tooltips fixed</synopsis>
