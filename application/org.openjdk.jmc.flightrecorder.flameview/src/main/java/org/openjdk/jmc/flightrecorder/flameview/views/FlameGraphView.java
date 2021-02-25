@@ -306,6 +306,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 				return;
 			}
 			String flameGraphJson = FlameGraphJsonMarshaller.toJson(treeModel);
+			WS_SERVER.broadcast(flameGraphJson);
 			if (isInvalid) {
 				return;
 			} else {
