@@ -185,13 +185,19 @@
 				like auto completion.
 			</description>
 		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>5734</bugid>
+			<synopsis>Overflow in stacktrace tooltips fixed</synopsis>
+			<description>On Mac, the tooltips shown for the stacktraces could overflow. This is now fixed.</description>
+		</bugfix>
 	</bugfixes>
 	<!--  ******************************* Known issues ****************************************** -->
 	<knownissues>
 		<issue>
 			<area>General</area>
+			<bugid>4270</bugid>
 			<synopsis>Hibernation and time</synopsis>
-			<bugid></bugid>
 			<description>
 				After the bugfix of https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
 				RuntimeMXBean#getUptime() attribute was re-implemented to mean "Elapsed time of JVM process", whilst it previously
@@ -202,45 +208,69 @@
 		</issue>
 		<issue>
 			<area>General</area>
-			<synopsis>Tooltip overflow and clipping on OS X with HiDPI screens</synopsis>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
 			<description>
-				The tooltip displayed when hovering over data points or chart elements can be clipped, and the
-				information within is not always possible to read, if you are using a HiDPI monitor
-				on OS X. As a workaround, the
-				same information is sometimes available from the Properties view if you first make a selection in the chart.
+				After the bugfix of https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean "Elapsed time of JVM process", whilst it previously
+				was implemented as time since start of the JVM process. The uptime attribute is used by JMC, together with
+				RuntimeMXBean#getStartTime(), to estimate the actual server time. This means that time stamps, as well as remaining
+				time for a flight recording, can be wrong for processes on machines that have been hibernated.
 			</description>
 		</issue>
 		<issue>
 			<area>JFR</area>
-			<synopsis>Problem drag-and-dropping recordings to the analysis page</synopsis>
-			<description>
-				It is possible to drag and drop flight recordings in to Mission Control to open them. However, in JMC
-				8.0.0, dragging a recording to the Automated Analysis Results page will not work.
-				The Automated Analysis Results page
-				is using a browser component, and that component will be reacting in platform
-				depended ways on drops. A workaround is
-				to drag it to the top of the page or
-				to any other page.
+			<bugid>7122</bugid>
+			<synopsis>Rules evaluation never complete</synopsis>
+			<description>Sometimes the rules evaluation may never complete for the GC rules.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>This one is still under investigation, but it seems JMC can't attach to certain jlinked images.
 			</description>
 		</issue>
 		<issue>
 			<area>JFR</area>
-			<synopsis>Problem with clipping of tooltips on HiDPI monitors</synopsis>
-			<description>
-				The tooltip that is displayed when hovering over data points or chart elements
-				can be clipped, and the
-				information within is not always possible to read if you
-				are using a HiDPI monitor. As a workaround, you can
-				sometimes get the same information
-				from the Properties view if you first make a selection in the chart.
+			<bugid>7068</bugid>
+			<synopsis>JfrRecordingTest (uitest) hangs on the automated analysis page</synopsis>
+			<description>Trying to run uitests on Fedora hangs on JfrRecordingTest.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7007</bugid>
+			<synopsis>Unable to edit run configurations for eclipse project after installing JMC plugin</synopsis>
+			<description>Avoid installing the experimental JMC launcher plug-in into Eclipse until this problem has been
+				resolved.
 			</description>
 		</issue>
 		<issue>
 			<area>JFR</area>
-			<synopsis>The Graph View doesn't work on Windows</synopsis>
-			<description>
-				Due to an issue with the Chromium based browser component, the Graph View currently does not work on
-				Windows. See https://github.com/maketechnology/chromium.swt/issues/89 for further information.
+			<bugid>7003</bugid>
+			<synopsis>The graph view does not work on Windows</synopsis>
+			<description>This is due to a bug in the chromium browser plug-in used by JMC on Windows. See the issue for more
+				information.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>6265</bugid>
+			<synopsis>JMC crashes with Webkit2+GTK 4</synopsis>
+			<description>See the issue for more information.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>6265</bugid>
+			<synopsis>JMC crashes with Webkit2+GTK 4</synopsis>
+			<description>See the issue for more information.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>5412</bugid>
+			<synopsis>Dragging and dropping a JFR file into an open analysis page does not work</synopsis>
+			<description>The expected behaviour would be to open the recording whenever a file is dropped in the editor area, but
+				the behaviour will be defined by the embedded browser component, and not very useful.
 			</description>
 		</issue>
 	</knownissues>
