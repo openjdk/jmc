@@ -17,44 +17,27 @@
 			<title>Eclipse 4.16 support</title>
 			<description>
 				The Mission Control client is now built to run optimally on Eclipse 2020-06 and later. To install Java Mission
-				Control into Eclipse, go to the
-				<a href="http://download.oracle.com/technology/products/missioncontrol/updatesites/base/8.0.0/eclipse/">Java Mission Control update site</a>
-				.
+				Control into Eclipse, go to the update site (Help | Install New Software...). The URL to the update site will be
+				vendor specific, and some vendors will instead provide an archive with the update site.
 			</description>
 			<image>general/eclipse.png</image>
 		</note>
 		<note version="8.0">
-			<title>Supported Plug-ins</title>
+			<title>JOverflow in the Base Distribution</title>
 			<description>
-				There are now several
-				<em>supported</em>
-				plug-ins for use with Java Mission Control. Go to "Install New Software" in Java Mission Control
-				(or Eclipse) to
-				install. If running as plug-ins inside of Eclipse, do not forget to add the
-				<a href="http://jrpgftp.se.oracle.com/jmc/updatesites/supported/8.0.0/eclipse/">update site for supported plug-ins</a>
-				.
+				JOverflow is now part of the base distribution of Mission Control, and has been converted to SWT. It also has a brand  
+				new TreeMap visualization of the heap occupied by type. To open the new view, go to Window | Show view |
+				Other... and start typing JOverflow, and select JOverflow TreeMap.
 			</description>
-			<image>general/supported.png</image>
-		</note>
-		<note version="8.0">
-			<title>Experimental Plug-ins</title>
-			<description>
-				The JMC team is still sharing
-				<em>experimental</em>
-				plug-ins on the experimental update site. Go to "Install New Software" in Java Mission Control
-				(or Eclipse) to
-				install. If running as plug-ins inside of Eclipse, do not forget to add the
-				<a href="http://jrpgftp.se.oracle.com/jmc/updatesites/experimental/8.0.0/eclipse/">update site for experimental plug-ins</a>
-				.
-			</description>
-			<image>general/experimental.png</image>
+			<image>general/joverflow.png</image>
 		</note>
 		<note version="8.0">
 			<title>Minor bugfixes and improvements</title>
 			<description>
-				There are hundreds of minor fixes and improvements in this release.
+				There are over two hundred fixes and improvements in this release. Check out the JMC 8 Result Dashboard 
+				(https://bugs.openjdk.java.net/secure/Dashboard.jspa?selectPageId=19536") for more information.
 			</description>
-			<image>general/bugs.png</image>
+			<image>general/issues.png</image>
 		</note>
 	</component>
 	
@@ -69,7 +52,7 @@
 				representing a selection of events to get the aggregate of stack traces represented by that selection rendered in
 				the Flame Graph View.
 			</description>
-			<image>jfr/flamegraph.png</image>
+			<image>jfr/flameview.gif</image>
 		</note>
 		<note version="8.0">
 			<title>New Graph View</title>
@@ -83,7 +66,7 @@
 				no graph pruning, and large graph will take a very long time to layout and render, during which the UI will freeze.
 				Therefore we've imposed a user configurable limit on the number of nodes a graph can have for now.
 			</description>
-			<image>jfr/graph.png</image>
+			<image>jfr/graphview.gif</image>
 		</note>
 		<note version="8.0">
 			<title>Predecessors and Successors</title>
@@ -93,60 +76,7 @@
 				called from that method. This is a temporary solution until we have a separate Butterfly/Sandwich view where any
 				selection of a method in a set of events can be rendered in a separately configured view.
 			</description>
-			<image>jfr/predsucc.png</image>
-		</note>
-	</component>
-	<component>
-		<!--  ******************************* MANAGEMENT CONSOLE ******************************* -->
-		<name>Management Console</name>
-		<note version="6.0">
-			<title>Extending the Console</title>
-			<description>
-				The API for extending the management console has been simplified and improved. The easiest way to see
-				the new API in action is to create a
-				console extension using the Mission Control PDE plug-in inside of Eclipse.
-			</description>
-			<image>console/pde.png</image>
-		</note>
-	</component>
-
-	<component>
-		<!--  ******************************* Supported Plugins ****************************************** -->
-		<name>Supported Plug-ins</name>
-		<note version="6.0">
-			<title>The Metadata Plug-in (JFR)</title>
-			<description>
-				This plug-in shows the metadata available in a recording. This is quite useful when developing rules, as
-				information such as the event type identifiers
-				are typically required. That said, sometimes just looking at the
-				description for an attribute or event type can be
-				helpful to better understand the data.
-			</description>
-			<image>supported/metadata.png</image>
-		</note>
-		<note version="6.0">
-			<title>The JavaFX Plug-in (JFR)</title>
-			<description>
-				This plug-in provides a special page for improved visualization of JavaFX events. It will show
-				information from the pulse logger. For each individual
-				pulse details, such as the name and duration of the phases,
-				will be shown.
-			</description>
-			<image>supported/javafx.png</image>
-		</note>
-		<note version="6.0">
-			<title>The WebLogic Plug-in (JFR)</title>
-			<description>
-				This plug-in provides a set of pages for analysis of applications deployed in WebLogic Server. A wide
-				range of information is available, such as servlet executions,
-				EJB calls, JDBC calls, JTA transactions and much more.
-				Of course, all that information can be correlated to what is
-				going on in the Java runtime, providing a powerful
-				diagnostics and profiling environment for WebLogic Server. This
-				plug-in also contains JFR parser extensions and rules
-				for automated analysis of WLS performance.
-			</description>
-			<image>supported/wls.png</image>
+			<image>jfr/predsuc.png</image>
 		</note>
 	</component>
 	<component>
@@ -156,11 +86,11 @@
 			<title>Agent 1.0.0</title>
 			<description>
 				This is the first version where we build and release the JMC agent. The JMC agent is a byte code
-				instrumentation agent, making it easy to declaratively generate JFR events from most methods, even methods for which
-				you do not have the source code available. Either configure the agent with an XML configuration field, or use the
+				instrumentation agent, providing an easy way to declaratively generate JFR events from most methods, even methods 
+				for which the source code is not available. Either configure the agent with an XML configuration file, or use the
 				MBean to dynamically change the instrumentation whilst the application is running.
 			</description>
-			<image>agent/firstrelease.png</image>
+			<image>agent/agent.png</image>
 		</note>
 		<note version="1.0.0">
 			<title>Converter Functions</title>
@@ -168,7 +98,7 @@
 				Now any public static method can be used to convert objects of a specific type to one of the types
 				supported by flight recorder. The converter to use must be explicitly declared per recorded data.
 			</description>
-			<image>agent/converters.png</image>
+			<image>agent/converter.png</image>
 		</note>
 	</component>
 	<!--  ******************************* Bugfixes ****************************************** -->
