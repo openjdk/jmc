@@ -53,7 +53,7 @@ import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.parser.IEventSink;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
 import org.openjdk.jmc.flightrecorder.parser.ValueField;
-import org.openjdk.jmc.flightrecorder.parser.synthetic.JdkTypeIDsPreJdk11;
+import org.openjdk.jmc.flightrecorder.parser.synthetic.OracleJdkTypeIDsPre11;
 
 class EventParserManager {
 	// Event types
@@ -97,7 +97,7 @@ class EventParserManager {
 				category = Arrays.copyOf(category, category.length - 1);
 				IEventSink sink = context.getSinkFactory().create(id, etd.getLabel(), category, etd.getDescription(),
 						eventSpec.getValueFields());
-				String typeId = JdkTypeIDsPreJdk11.translate(id);
+				String typeId = OracleJdkTypeIDsPre11.translate(id);
 				eventTypes.put(etd.getIdentifier(),
 						new EventTypeEntry(typeId, sink, etd.hasStartTime(), eventSpec.getValueReaders()));
 			}
