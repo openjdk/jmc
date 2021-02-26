@@ -1,0 +1,3992 @@
+{
+  "recording": {
+    "events": [{
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121932046805098,
+        "duration": 71265428893,
+        "eventThread": "Common-Cleaner",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "java.lang.ref.ReferenceQueue#remove(J)Ljava/lang/ref/Reference;",
+            "line": 155,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.internal.ref.CleanerImpl#run()V",
+            "line": 148,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.internal.misc.InnocuousThread#run()V",
+            "line": 134,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.ref.ReferenceQueue$Lock",
+        "notifier": "Reference Handler",
+        "timeout": 60000,
+        "timedOut": false,
+        "address": 2401837647112
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121961751161093,
+        "duration": 41145289032,
+        "eventThread": "JMX server connection timeout 34",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "com.sun.jmx.remote.internal.ServerCommunicatorAdmin$Timeout#run()V",
+            "line": 171,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "null.int[]",
+        "notifier": "RMI TCP Connection(1)-169.254.80.80",
+        "timeout": 120000,
+        "timedOut": false,
+        "address": 2401864309768
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121978938434180,
+        "duration": 25037451,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121978966086266,
+        "duration": 25597410,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121978976888943,
+        "duration": 25952814,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121978997832145,
+        "duration": 25972232,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979018792703,
+        "duration": 25941102,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979039737442,
+        "duration": 26095580,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979050745621,
+        "duration": 25872769,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979071637769,
+        "duration": 26013297,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979112574058,
+        "duration": 26136333,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979143592669,
+        "duration": 25812424,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979164486338,
+        "duration": 26054019,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979175471613,
+        "duration": 25894902,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979196577007,
+        "duration": 25541499,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979237309665,
+        "duration": 26065596,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979248299708,
+        "duration": 26041683,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979269245572,
+        "duration": 25856262,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979290196453,
+        "duration": 25939974,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979301142378,
+        "duration": 26022855,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979322109578,
+        "duration": 25965462,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979363025596,
+        "duration": 26084304,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979374052001,
+        "duration": 25749866,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979394990765,
+        "duration": 25928607,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979406028222,
+        "duration": 25730166,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979416896065,
+        "duration": 26105882,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979428035186,
+        "duration": 25616563,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979448949553,
+        "duration": 25763595,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979459811068,
+        "duration": 25976121,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979470760472,
+        "duration": 25973743,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979491738572,
+        "duration": 25906290,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979502663337,
+        "duration": 26097819,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979523682713,
+        "duration": 25976031,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979544590681,
+        "duration": 26242980,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979555655430,
+        "duration": 25888806,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979566568815,
+        "duration": 26040705,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979577560930,
+        "duration": 26078324,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121979588682345,
+        "duration": 25638537,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864328456
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121920506626028,
+        "duration": 27704242128,
+        "eventThread": "RMI TCP Connection(2)-169.254.80.80",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "com.sun.jmx.remote.internal.ArrayNotificationBuffer#fetchNotifications(Lcom/sun/jmx/remote/internal/NotificationBufferFilter;JJI)Ljavax/management/remote/NotificationResult;",
+            "line": 449,
+            "type": "INTERPRETED"
+          }, {
+            "name": "com.sun.jmx.remote.internal.ArrayNotificationBuffer$ShareBuffer#fetchNotifications(Lcom/sun/jmx/remote/internal/NotificationBufferFilter;JJI)Ljavax/management/remote/NotificationResult;",
+            "line": 227,
+            "type": "INTERPRETED"
+          }, {
+            "name": "com.sun.jmx.remote.internal.ServerNotifForwarder#fetchNotifs(JJI)Ljavax/management/remote/NotificationResult;",
+            "line": 274,
+            "type": "INTERPRETED"
+          }, {
+            "name": "javax.management.remote.rmi.RMIConnectionImpl$4#run()Ljavax/management/remote/NotificationResult;",
+            "line": 1268,
+            "type": "INTERPRETED"
+          }, {
+            "name": "javax.management.remote.rmi.RMIConnectionImpl$4#run()Ljava/lang/Object;",
+            "line": 1266,
+            "type": "INTERPRETED"
+          }, {
+            "name": "javax.management.remote.rmi.RMIConnectionImpl#fetchNotifications(JIJ)Ljavax/management/remote/NotificationResult;",
+            "line": 1272,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.internal.reflect.NativeMethodAccessorImpl#invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.internal.reflect.NativeMethodAccessorImpl#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+            "line": 62,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.internal.reflect.DelegatingMethodAccessorImpl#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+            "line": 43,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "java.lang.reflect.Method#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+            "line": 567,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "sun.rmi.server.UnicastServerRef#dispatch(Ljava/rmi/Remote;Ljava/rmi/server/RemoteCall;)V",
+            "line": 359,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.Transport$1#run()Ljava/lang/Void;",
+            "line": 200,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.Transport$1#run()Ljava/lang/Object;",
+            "line": 197,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.security.AccessController#doPrivileged(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "sun.rmi.transport.Transport#serviceCall(Ljava/rmi/server/RemoteCall;)Z",
+            "line": 196,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V",
+            "line": 562,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V",
+            "line": 796,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#lambda$run$0()Ljava/lang/Void;",
+            "line": 677,
+            "type": "INTERPRETED"
+          }, {
+            "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$110.837736284#run()Ljava/lang/Object;",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.security.AccessController#doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V",
+            "line": 676,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V",
+            "line": 1128,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V",
+            "line": 628,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "com.sun.jmx.remote.internal.ArrayNotificationBuffer",
+        "notifier": "Service Thread",
+        "timeout": 34181,
+        "timedOut": false,
+        "address": 2401837688200
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121932067748168,
+        "duration": 31894058855,
+        "eventThread": "JMX server connection timeout 34",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "com.sun.jmx.remote.internal.ServerCommunicatorAdmin$Timeout#run()V",
+            "line": 171,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "null.int[]",
+        "notifier": "RMI TCP Connection(3)-169.254.80.80",
+        "timeout": 120000,
+        "timedOut": false,
+        "address": 2401864309768
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945370757276,
+        "duration": 26076926,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945391725030,
+        "duration": 25848307,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945412672543,
+        "duration": 25907898,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945433632974,
+        "duration": 25823112,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945454573998,
+        "duration": 25951822,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945475496330,
+        "duration": 26036175,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945486476203,
+        "duration": 26026200,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945497446610,
+        "duration": 26043768,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945508432467,
+        "duration": 26105327,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945529398913,
+        "duration": 26072019,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945550370245,
+        "duration": 25806372,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945581279690,
+        "duration": 25895746,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945592223925,
+        "duration": 25923390,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945603182214,
+        "duration": 25967439,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945634152005,
+        "duration": 26017014,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945645140141,
+        "duration": 25841809,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945676015703,
+        "duration": 25993413,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945686971778,
+        "duration": 26008235,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945707933741,
+        "duration": 26010282,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945738929771,
+        "duration": 25933011,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945749904556,
+        "duration": 25827288,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945770789780,
+        "duration": 25975596,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945846973003,
+        "duration": 25099815,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945867562198,
+        "duration": 26104419,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945878551920,
+        "duration": 25945356,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945899543025,
+        "duration": 25935126,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945910504725,
+        "duration": 25951247,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945921459391,
+        "duration": 25970028,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945942396984,
+        "duration": 25994976,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121945983336968,
+        "duration": 26055771,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946014270999,
+        "duration": 26050377,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946025294719,
+        "duration": 25919946,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946036225869,
+        "duration": 25911813,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946067185043,
+        "duration": 25829043,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946078090450,
+        "duration": 25933653,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946099050180,
+        "duration": 25965221,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946110032560,
+        "duration": 25913403,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946131023263,
+        "duration": 25814310,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946171935466,
+        "duration": 25798970,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946192833800,
+        "duration": 26020581,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946223783363,
+        "duration": 26062299,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946244736553,
+        "duration": 25991199,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946265686330,
+        "duration": 26062869,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946286653500,
+        "duration": 25894029,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946297577068,
+        "duration": 26030367,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946318579556,
+        "duration": 25902627,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946329550395,
+        "duration": 25840906,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946350448906,
+        "duration": 26109402,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946361776120,
+        "duration": 25318658,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946372477672,
+        "duration": 25966557,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946393399165,
+        "duration": 25917720,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946404342652,
+        "duration": 25987771,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946425324685,
+        "duration": 25851699,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946456258295,
+        "duration": 25844484,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946467168951,
+        "duration": 26037798,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946488177236,
+        "duration": 25922334,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946519075741,
+        "duration": 25974561,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946540098617,
+        "duration": 25947435,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946561008922,
+        "duration": 25979671,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946571971531,
+        "duration": 25937799,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }, {
+      "type": "jdk.JavaMonitorWait",
+      "values": {
+        "startTime": 1542121946592974624,
+        "duration": 25756392,
+        "eventThread": "JFR Periodic Tasks",
+        "stackTrace": {
+          "frames": [{
+            "name": "java.lang.Object#wait(J)V",
+            "line": -1,
+            "type": "UNKNOWN"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#takeNap(J)V",
+            "line": 454,
+            "type": "JIT_COMPILED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#periodicTask()V",
+            "line": 447,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder#lambda$startDiskMonitor$1()V",
+            "line": 386,
+            "type": "INTERPRETED"
+          }, {
+            "name": "jdk.jfr.internal.PlatformRecorder$$Lambda$149.1414836103#run()V",
+            "line": -1,
+            "type": "INTERPRETED"
+          }, {
+            "name": "java.lang.Thread#run()V",
+            "line": 835,
+            "type": "INTERPRETED"
+          }]
+        },
+        "monitorClass": "java.lang.Object",
+        "notifier": null,
+        "timeout": 10,
+        "timedOut": true,
+        "address": 2401864329224
+      }
+    }]
+  }
+}
