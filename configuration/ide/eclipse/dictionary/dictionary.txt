@@ -71,3 +71,4 @@ wildcards
 zip
 zipped
 datadog
+xml
