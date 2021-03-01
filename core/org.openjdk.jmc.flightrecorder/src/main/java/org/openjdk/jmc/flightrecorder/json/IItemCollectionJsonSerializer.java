@@ -8,13 +8,19 @@ import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCStackTrace;
-import org.openjdk.jmc.common.item.*;
+import org.openjdk.jmc.common.item.IAccessorKey;
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.item.ItemToolkit;
 
 /**
  * <ol>
- *     <li>Serialize JFR event collections (i.e. JMC {@link IItemCollection}) to JSON.</li>
- *     <li>???</li>
- *     <li>Profit!</li>
+ * <li>Serialize JFR event collections (i.e. JMC {@link IItemCollection}) to JSON.</li>
+ * <li>???</li>
+ * <li>Profit!</li>
  * </ol>
  */
 public class IItemCollectionJsonSerializer extends JsonWriter {
@@ -31,12 +37,12 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		int count = 0;
 		for (IItemIterable events : eventCollection) {
 			for (IItem event : events) {
-				if (count > 100) {
-					break;
-				}
-				if (!event.getType().getIdentifier().equals("jdk.JavaMonitorWait")) {
-					continue;
-				}
+//				if (count > 100) {
+//					break;
+//				}
+//				if (!event.getType().getIdentifier().equals("jdk.JavaMonitorWait")) {
+//					continue;
+//				}
 				nextElement(count == 0);
 				writeEvent(event);
 				count++;
@@ -54,7 +60,7 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		writeField(true, "type", type.getIdentifier());
 //            printValue(false, false, "startTime", e.getStartTime());
 //            printValue(false, false, "duration", e.getDuration());
-		nextField( false, "values");
+		nextField(false, "values");
 		writeObjectBegin();
 		writeValues(event);
 		writeObjectEnd();
@@ -62,7 +68,7 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 	}
 
 	private void writeTrace(boolean first, IMCStackTrace trace) {
-		nextField(first,  "stackTrace");
+		nextField(first, "stackTrace");
 		writeObjectBegin();
 		nextField(true, "frames");
 		writeArrayBegin();
@@ -81,9 +87,9 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		IMCMethod method = frame.getMethod();
 
 		writeObjectBegin();
-		writeField(true,  "name", method != null ? stringifyMethod(method) : null);
+		writeField(true, "name", method != null ? stringifyMethod(method) : null);
 		writeField(false, "line", lineNumber);
-		writeField(false,  "type", frame.getType());
+		writeField(false, "type", frame.getType());
 		writeObjectEnd();
 	}
 

@@ -20,7 +20,10 @@ import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
 public class WebSocketServer {
 	private static int PORT = 8029;
 
-	private final List<WebSocketConnectionHandler> handlers = new ArrayList<>();
+	private final List<WebSocketConnectionHandler> treeModelHandlers = new ArrayList<>();
+	private final List<WebSocketConnectionHandler> eventModelHandlers = new ArrayList<>();
+	private String lastTreeBroadcast = null;
+	private String lastEventsBroadcast = null;
 
 	public WebSocketServer() {
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -45,13 +48,29 @@ public class WebSocketServer {
 					// set idle timeout
 
 					// Configure default max size
-					nativeWebSocketConfiguration.getPolicy().setMaxTextMessageBufferSize(65535);
+					nativeWebSocketConfiguration.getPolicy().setMaxTextMessageBufferSize(1024 * 1024 * 1024);
 
 					// Add websockets
-					nativeWebSocketConfiguration.addMapping("/events/*", (req, resp) -> {
-						WebSocketConnectionHandler handler = new WebSocketConnectionHandler();
+					nativeWebSocketConfiguration.addMapping("/tree/*", (req, resp) -> {
+						WebSocketConnectionHandler handler = new WebSocketConnectionHandler(lastTreeBroadcast);
 						// FIXME: this is a memory leak, handlers are not cleared after clients disconnect
-						handlers.add(handler);
+						treeModelHandlers.add(handler);
+						return handler;
+					});
+
+					nativeWebSocketConfiguration.addMapping("/events/*", (req, resp) -> {
+						WebSocketConnectionHandler handler = new WebSocketConnectionHandler(lastEventsBroadcast);
+						// FIXME: this is a memory leak, handlers are not cleared after clients disconnect
+						eventModelHandlers.add(handler);
+						// try to send the last broadcast when the client connects
+						if (lastEventsBroadcast != null) {
+							try {
+								handler.sendMessage(lastEventsBroadcast);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 						return handler;
 					});
 				});
@@ -66,8 +85,8 @@ public class WebSocketServer {
 		}
 	}
 
-	public void broadcast(String message) {
-		handlers.forEach(handler -> {
+	public void broadcastTree(String message) {
+		treeModelHandlers.forEach(handler -> {
 			try {
 				handler.sendMessage(message);
 			} catch (IOException e) {
@@ -75,14 +94,34 @@ public class WebSocketServer {
 				e.printStackTrace();
 			}
 		});
+		lastTreeBroadcast = message;
+	}
+
+	public void broadcastEvents(String message) {
+		eventModelHandlers.forEach(handler -> {
+			try {
+				handler.sendMessage(message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		lastEventsBroadcast = message;
 	}
 
 	private class WebSocketConnectionHandler extends WebSocketAdapter {
 		private CountDownLatch closureLatch = new CountDownLatch(1);
+		private String lastSent;
+
+		WebSocketConnectionHandler(String lastEventsBroadcast) {
+			this.lastSent = lastEventsBroadcast;
+		}
 
 		public void sendMessage(String message) throws IOException {
 			if (getSession() != null) {
+				System.out.println("sending message to " + getSession().getRemoteAddress().toString());
 				getSession().getRemote().sendString(message);
+				lastSent = message;
 			} else {
 				System.out.println("session no longer available");
 			}
@@ -94,7 +133,9 @@ public class WebSocketServer {
 			System.out.println("Socket Connected: " + sess);
 			// TODO: handle multiple connections
 			try {
-				getSession().getRemote().sendString("welcome!");
+				if (lastSent != null) {
+					getSession().getRemote().sendString(lastSent);
+				}
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 				ex.printStackTrace();
