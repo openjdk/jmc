@@ -49,12 +49,18 @@ public final class TypesImpl extends Types {
 	private final MetadataImpl metadata;
 
 	TypesImpl(MetadataImpl metadata) {
+		this(metadata, true);
+	}
+
+	TypesImpl(MetadataImpl metadata, boolean initialize) {
 		metadata.setTypes(this);
 		this.metadata = metadata;
 
 		registerBuiltins();
-		registerJdkTypes();
-		this.metadata.resolveTypes(); // resolve all back-referenced types
+		if (initialize) {
+			registerJdkTypes();
+			this.metadata.resolveTypes(); // resolve all back-referenced types
+		}
 	}
 
 	private void registerBuiltins() {
