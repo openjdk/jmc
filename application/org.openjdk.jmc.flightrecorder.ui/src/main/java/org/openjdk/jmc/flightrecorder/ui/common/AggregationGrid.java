@@ -51,11 +51,11 @@ import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemIterableToolkit;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 
 public class AggregationGrid {
 
@@ -219,7 +219,7 @@ public class AggregationGrid {
 			}
 			// It seems Eclipse 4.5 has trouble inferring the correct type of this function ...
 			Function<IItem, T> getMemberFunc = accessor::getMember;
-			return ItemIterableToolkit.parallelStream(is).collect(KeyedStream.collector(getMemberFunc));
+			return is.parallelStream().collect(KeyedStream.collector(getMemberFunc));
 		});
 		return flatMap.collect(Collector.of(HashMap<T, List<IItem[]>>::new, AggregationGrid::addStream,
 				AggregationGrid::merge, Characteristics.UNORDERED));
@@ -240,7 +240,7 @@ public class AggregationGrid {
 	}
 
 	public <T> Object[] buildRows(IItemCollection items, IAccessorFactory<T> classifier) {
-		Map<T, List<IItem[]>> itemsMap = mapItems(ItemCollectionToolkit.stream(items), classifier);
+		Map<T, List<IItem[]>> itemsMap = mapItems(items.stream(), classifier);
 		AggregationModel model = new AggregationModel(createdColumns, itemsMap.size(), items);
 		int index = 0;
 		for (Entry<T, List<IItem[]>> e : itemsMap.entrySet()) {

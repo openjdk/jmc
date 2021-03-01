@@ -109,11 +109,6 @@ public class MethodProfilingRule implements IRule {
 	private static final double SAMPLES_PER_PERIOD = 5;
 
 	/**
-	 * Constant value of the maximum number of stack frames to display for the hottest path.
-	 */
-	private static final int MAX_STACK_DEPTH = 10;
-
-	/**
 	 * A simple class for storing execution sample period settings, allowing the sliding window to
 	 * get the correct samples for each time slice.
 	 */

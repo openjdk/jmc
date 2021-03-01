@@ -59,7 +59,6 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
@@ -188,8 +187,7 @@ public class MetadataPage extends AbstractDataPage {
 			tableFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 			// FIXME: Would like the event types tree here, but still in one table
-			viewer.setInput(buildTree(
-					ItemCollectionToolkit.stream(getDataSource().getItems()).map(IItemIterable::getType).distinct()));
+			viewer.setInput(buildTree(getDataSource().getItems().stream().map(IItemIterable::getType).distinct()));
 
 			viewer.setSelection(selection);
 			if (treeExpansion != null) {

@@ -55,9 +55,9 @@
             <repository location="http://download.eclipse.org/releases/2020-06/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.16.0.v20200711020001"/>
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.0/2020-06/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.16.0.v20201226013120"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.16.0.v20201226013120"/>
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.2/2020-06/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.202005172227"/>

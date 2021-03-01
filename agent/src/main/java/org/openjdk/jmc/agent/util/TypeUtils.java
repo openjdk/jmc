@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,7 +44,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.Agent;
-import org.openjdk.jmc.agent.Convertable;
 import org.openjdk.jmc.agent.jfrlegacy.impl.JFRUtils;
 
 /**
@@ -56,11 +55,14 @@ public final class TypeUtils {
 	 * The internal name of this class.
 	 */
 	public static final String INAME = Type.getInternalName(TypeUtils.class);
-	public static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object"); //$NON-NLS-1$
-	public static final Type OBJECT_ARRAY_TYPE = Type.getObjectType("[Ljava/lang/Object;"); //$NON-NLS-1$
-	public static final Type STRING_TYPE = Type.getType("Ljava/lang/String;"); //$NON-NLS-1$
 
-	public static final Object STRING_INTERNAL_NAME = "java/lang/String"; //$NON-NLS-1$
+	public static final Type TYPE_OBJECT = Type.getObjectType("java/lang/Object"); //$NON-NLS-1$
+	public static final Type TYPE_OBJECT_ARRAY = Type.getObjectType("[Ljava/lang/Object;"); //$NON-NLS-1$
+	public static final Type TYPE_STRING = Type.getType("Ljava/lang/String;"); //$NON-NLS-1$
+
+	public static final String INTERNAL_NAME_STRING = "java/lang/String"; //$NON-NLS-1$
+	public static final String INTERNAL_NAME_THREAD = Type.getInternalName(Thread.class);
+	public static final String INTERNAL_NAME_CLASS = Type.getInternalName(Class.class);
 
 	private static final String UNSAFE_JDK_7_CLASS = "sun.misc.Unsafe"; //$NON-NLS-1$
 	private static final String UNSAFE_JDK_11_CLASS = "jdk.internal.misc.Unsafe"; //$NON-NLS-1$
@@ -218,13 +220,6 @@ public final class TypeUtils {
 				"(Ljava/lang/Object;)Ljava/lang/String;", false); //$NON-NLS-1$
 	}
 
-	public static boolean shouldStringify(Convertable convertable, Type argumentType) {
-		if (argumentType.getSort() == Type.ARRAY || argumentType.getSort() == Type.OBJECT) {
-			return !argumentType.getInternalName().equals(STRING_INTERNAL_NAME);
-		}
-		return false;
-	}
-
 	/**
 	 * Transforms a FQN in internal form, so that it can be used in e.g. formal descriptors.
 	 *
@@ -298,8 +293,8 @@ public final class TypeUtils {
 	 * frame verification of a given type.
 	 * 
 	 * @param type
-	 *            the type of the element on the operand stack or in the local variable table
-	 * @return a array element for <code>MethodVisitor.visitFrame()</code>'s parameter
+	 *            the type of the element on the operand stack or in the local variable table.
+	 * @return a array element for <code>MethodVisitor.visitFrame()</code>'s parameter.
 	 */
 	public static Object getFrameVerificationType(Type type) {
 		switch (type.getSort()) {
@@ -324,6 +319,21 @@ public final class TypeUtils {
 		default:
 			throw new AssertionError();
 		}
+	}
+
+	/**
+	 * Returns true if the type provided is supported for a JFR event field.
+	 * 
+	 * @param type
+	 *            the type to check.
+	 * @return true if the type provided is supported for a JFR event field.
+	 */
+	public static boolean isSupportedType(Type type) {
+		if (INTERNAL_NAME_THREAD.equals(type.getInternalName()) || INTERNAL_NAME_CLASS.equals(type.getInternalName())
+				|| INTERNAL_NAME_STRING.equals(type.getInternalName())) {
+			return true;
+		}
+		return type.getSort() != Type.OBJECT && type.getSort() != Type.ARRAY;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -68,6 +68,7 @@ import org.openjdk.jmc.ui.common.jvm.Connectable;
 import org.openjdk.jmc.ui.common.jvm.JVMArch;
 import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.jvm.JVMType;
+import org.openjdk.jmc.ui.common.util.Environment;
 
 import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
@@ -373,13 +374,15 @@ public class LocalJVMToolkit {
 						// This leaks one thread handle due to Sun bug in j2se/src/windows/native/sun/tools/attach/WindowsVirtualMachine.c
 						Properties props = null;
 						try {
-							try {
-								// try to force finish init the attached JVM
-								// to ensure properties are correctly populated
-								// see JMC-4454 for details
-								((HotSpotVirtualMachine) vm).startLocalManagementAgent();
-							} catch (Exception ex) {
-								// swallow exceptions
+							if (Integer.parseInt(vmd.id()) != Environment.getThisPID()) {
+								try {
+									// try to force finish init the attached JVM
+									// to ensure properties are correctly populated
+									// see JMC-4454 for details
+									((HotSpotVirtualMachine) vm).startLocalManagementAgent();
+								} catch (Exception ex) {
+									// swallow exceptions
+								}
 							}
 							props = vm.getSystemProperties();
 						} catch (IOException e) {

@@ -48,6 +48,7 @@ import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule;
 
+@SuppressWarnings("restriction")
 public class TestFileReadWriteRule {
 	private static final String FILE_NAME_1 = "/user/dir/file1.dat";
 	private static final String FILE_NAME_2 = "/user/dir/file2.dat";

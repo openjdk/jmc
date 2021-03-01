@@ -48,8 +48,6 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.Pair;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.ui.charts.IQuantitySeries;
 import org.openjdk.jmc.ui.charts.SubdividedQuantityRange;
 import org.openjdk.jmc.ui.charts.XYQuantities;
@@ -107,14 +105,14 @@ public class PairBucketBuilder<C extends IItemConsumer<C>, CC extends IItemConsu
 	}
 
 	private List<Pair<C, CC>> collectItems(IItemIterable is) {
-		return ItemIterableToolkit.parallelStream(is).collect(collector(is.getType()));
+		return is.parallelStream().collect(collector(is.getType()));
 	}
 
 	Pair<IQuantity[], IQuantity[]> buildBuckets(IItemCollection items) {
 		IQuantity[] q1 = new IQuantity[bucketCount];
 		IQuantity[] q2 = new IQuantity[bucketCount];
-		List<List<Pair<C, CC>>> collect = ItemCollectionToolkit.parallelStream(items).filter(this::acceptItems)
-				.map(this::collectItems).collect(Collectors.toList());
+		List<List<Pair<C, CC>>> collect = items.parallelStream().filter(this::acceptItems).map(this::collectItems)
+				.collect(Collectors.toList());
 		for (int i = 0; i < bucketCount; i++) {
 			int bucketIndex = i;
 			List<Pair<C, CC>> pairList = collect.stream().map(list -> list.get(bucketIndex))

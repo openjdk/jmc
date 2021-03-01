@@ -60,6 +60,7 @@ import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -67,7 +68,6 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.ui.EventTypeFolderNode;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.LaneEditor.LaneDefinition;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -100,8 +100,8 @@ public class ThreadGraphLanes {
 		this.dataSourceSupplier = dataSourceSupplier;
 		this.buildChart = buildChart;
 		this.actions = new ArrayList<>();
-		this.typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		this.typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 	}
 
 	protected EventTypeFolderNode getTypeTree() {
@@ -110,8 +110,8 @@ public class ThreadGraphLanes {
 
 	public void openEditLanesDialog(MCContextMenuManager mm, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
@@ -121,8 +121,8 @@ public class ThreadGraphLanes {
 
 	public void openEditLanesDialog(MCContextMenuManager[] mms, boolean isLegendMenu) {
 		// FIXME: Might there be other interesting events that don't really have duration?
-		typeTree = dataSourceSupplier.get().getTypeTree(ItemCollectionToolkit
-				.stream(dataSourceSupplier.get().getItems()).filter(this::typeWithThreadAndDuration));
+		typeTree = dataSourceSupplier.get()
+				.getTypeTree(dataSourceSupplier.get().getItems().stream().filter(this::typeWithThreadAndDuration));
 		laneDefs = LaneEditor.openDialog(typeTree, laneDefs.stream().collect(Collectors.toList()),
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_TITLE,
 				Messages.JavaApplicationPage_EDIT_THREAD_LANES_DIALOG_MESSAGE);
@@ -208,10 +208,8 @@ public class ThreadGraphLanes {
 	private IQuantitySeries<?> threadRanges(String threadName, IItemCollection items) {
 		IItemCollection startEvents = items.apply(ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START));
 		IItemCollection endEvents = items.apply(ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END));
-		Iterator<IQuantity> start = ItemCollectionToolkit.values(startEvents, JfrAttributes.START_TIME).get().sorted()
-				.iterator();
-		Iterator<IQuantity> end = ItemCollectionToolkit.values(endEvents, JfrAttributes.END_TIME).get().sorted()
-				.iterator();
+		Iterator<IQuantity> start = startEvents.values(JfrAttributes.START_TIME).get().sorted().iterator();
+		Iterator<IQuantity> end = endEvents.values(JfrAttributes.END_TIME).get().sorted().iterator();
 
 		ArrayList<IQuantity> startList = new ArrayList<>();
 		ArrayList<IQuantity> endList = new ArrayList<>();

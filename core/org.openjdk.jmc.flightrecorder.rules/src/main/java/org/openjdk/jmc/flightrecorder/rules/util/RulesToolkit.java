@@ -1359,6 +1359,8 @@ public class RulesToolkit {
 		return sortedMap;
 	}
 
+	private static final IAggregator<IQuantity, ?> EARLIEST_START_TIME = Aggregators.min(JfrAttributes.START_TIME);
+
 	/**
 	 * Returns the earliest start time in the provided item collection. This method is based on the
 	 * assumption that item collection lanes are sorted by timestamp.
@@ -1368,26 +1370,33 @@ public class RulesToolkit {
 	 * @return the earliest start time in the provided collection
 	 */
 	public static IQuantity getEarliestStartTime(IItemCollection items) {
-		IQuantity earliestStartTime = null;
-		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME
-					.getAccessor(iItemIterable.getType());
-			if (iItemIterable.iterator().hasNext()) {
-				IItem next = iItemIterable.iterator().next();
-				if (next != null && startTimeAccessor != null) {
-					IQuantity startTime = startTimeAccessor.getMember(next);
-					if (earliestStartTime == null) {
-						earliestStartTime = startTime;
-					} else {
-						if (earliestStartTime.compareTo(startTime) >= 0) {
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
+		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
+			IQuantity earliestStartTime = null;
+			for (IItemIterable iItemIterable : items) {
+				IMemberAccessor<IQuantity, IItem> startTimeAccessor = JfrAttributes.START_TIME
+						.getAccessor(iItemIterable.getType());
+				if (iItemIterable.iterator().hasNext()) {
+					IItem next = iItemIterable.iterator().next();
+					if (next != null && startTimeAccessor != null) {
+						IQuantity startTime = startTimeAccessor.getMember(next);
+						if (earliestStartTime == null) {
 							earliestStartTime = startTime;
+						} else {
+							if (earliestStartTime.compareTo(startTime) >= 0) {
+								earliestStartTime = startTime;
+							}
 						}
 					}
 				}
 			}
+			return earliestStartTime;
+		} else {
+			return items.getAggregate(EARLIEST_START_TIME);
 		}
-		return earliestStartTime;
 	}
+
+	private static final IAggregator<IQuantity, ?> EARLIEST_END_TIME = Aggregators.min(JfrAttributes.END_TIME);
 
 	/**
 	 * Returns the earliest end time in the provided item collection. This method is based on the
@@ -1398,26 +1407,33 @@ public class RulesToolkit {
 	 * @return the earliest end time in the provided collection
 	 */
 	public static IQuantity getEarliestEndTime(IItemCollection items) {
-		IQuantity earliestEndTime = null;
-		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
-					.getAccessor(iItemIterable.getType());
-			if (iItemIterable.iterator().hasNext()) {
-				IItem next = iItemIterable.iterator().next();
-				if (next != null && endTimeAccessor != null) {
-					IQuantity endTime = endTimeAccessor.getMember(next);
-					if (earliestEndTime == null) {
-						earliestEndTime = endTime;
-					} else {
-						if (earliestEndTime.compareTo(endTime) >= 0) {
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
+		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
+			IQuantity earliestEndTime = null;
+			for (IItemIterable iItemIterable : items) {
+				IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
+						.getAccessor(iItemIterable.getType());
+				if (iItemIterable.iterator().hasNext()) {
+					IItem next = iItemIterable.iterator().next();
+					if (next != null && endTimeAccessor != null) {
+						IQuantity endTime = endTimeAccessor.getMember(next);
+						if (earliestEndTime == null) {
 							earliestEndTime = endTime;
+						} else {
+							if (earliestEndTime.compareTo(endTime) >= 0) {
+								earliestEndTime = endTime;
+							}
 						}
 					}
 				}
 			}
+			return earliestEndTime;
+		} else {
+			return items.getAggregate(EARLIEST_END_TIME);
 		}
-		return earliestEndTime;
 	}
+
+	private static final IAggregator<IQuantity, ?> LATEST_END_TIME = Aggregators.max(JfrAttributes.END_TIME);
 
 	/**
 	 * Returns the latest end time in the provided item collection. This method is based on the
@@ -1428,26 +1444,32 @@ public class RulesToolkit {
 	 * @return the latest end time in the provided collection
 	 */
 	public static IQuantity getLatestEndTime(IItemCollection items) {
-		IQuantity latestEndTime = null;
-		for (IItemIterable iItemIterable : items) {
-			IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
-					.getAccessor(iItemIterable.getType());
-			Iterator<IItem> iterator = iItemIterable.iterator();
-			IItem next = null;
-			while (iterator.hasNext()) {
-				next = iterator.next();
-			}
-			if (next != null && endTimeAccessor != null) {
-				IQuantity startTime = endTimeAccessor.getMember(next);
-				if (latestEndTime == null) {
-					latestEndTime = startTime;
-				} else {
-					if (latestEndTime.compareTo(startTime) <= 0) {
-						latestEndTime = startTime;
+		// JMC-7088: We use this check to disable the optimisation for IItemCollection implementations that don't contain sorted event lanes.
+		if (items.getClass().getName().equals("EventCollection")) { //$NON-NLS-1$
+			IQuantity latestEndTime = null;
+			for (IItemIterable iItemIterable : items) {
+				IMemberAccessor<IQuantity, IItem> endTimeAccessor = JfrAttributes.END_TIME
+						.getAccessor(iItemIterable.getType());
+				Iterator<IItem> iterator = iItemIterable.iterator();
+				IItem next = null;
+				while (iterator.hasNext()) {
+					next = iterator.next();
+				}
+				if (next != null && endTimeAccessor != null) {
+					IQuantity endTime = endTimeAccessor.getMember(next);
+					if (latestEndTime == null) {
+						latestEndTime = endTime;
+					} else {
+						if (latestEndTime.compareTo(endTime) <= 0) {
+							latestEndTime = endTime;
+						}
 					}
 				}
 			}
+			return latestEndTime;
+		} else {
+			return items.getAggregate(LATEST_END_TIME);
 		}
-		return latestEndTime;
+
 	}
 }

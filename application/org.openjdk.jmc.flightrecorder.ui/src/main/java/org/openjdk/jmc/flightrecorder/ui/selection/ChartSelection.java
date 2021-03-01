@@ -41,12 +41,12 @@ import java.util.stream.Stream.Builder;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 

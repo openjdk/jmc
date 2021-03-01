@@ -144,13 +144,13 @@ public class MetadataImplTest {
 	void createCustomTypeForBuiltin() {
 		String typeName = TypesImpl.Builtin.BYTE.getTypeName();
 		assertThrows(IllegalArgumentException.class,
-				() -> instance.createCustomType(typeName, null, TypeStructureImpl.EMPTY));
+				() -> instance.createCustomType(typeName, null, TypeStructureImpl.EMPTY, true));
 	}
 
 	@Test
 	void createCustomTypeNullStructure() {
 		String typeName = "dummy.Test";
-		TypeImpl type = instance.createCustomType(typeName, null, null);
+		TypeImpl type = instance.createCustomType(typeName, null, null, true);
 		assertNotNull(type);
 		assertFalse(type.isBuiltin());
 		assertEquals(typeName, type.getTypeName());
@@ -162,13 +162,16 @@ public class MetadataImplTest {
 	void createCustomType() {
 		String typeName = "dummy.Test";
 		String superName = "super.Type";
-		TypeImpl type = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY);
-		assertNotNull(type);
-		assertFalse(type.isBuiltin());
-		assertEquals(typeName, type.getTypeName());
-		assertNotNull(type.getFields());
-		assertNotNull(type.getAnnotations());
-		assertEquals(superName, type.getSupertype());
+		for (boolean withCp : new boolean[] {true, false}) {
+			TypeImpl type = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY, withCp);
+			assertNotNull(type);
+			assertFalse(type.isBuiltin());
+			assertEquals(typeName, type.getTypeName());
+			assertNotNull(type.getFields());
+			assertNotNull(type.getAnnotations());
+			assertEquals(superName, type.getSupertype());
+			assertEquals(withCp, type.hasConstantPool());
+		}
 	}
 
 	@Test
@@ -176,11 +179,11 @@ public class MetadataImplTest {
 		String typeName = "dummy.Test";
 		String superName = "super.Type";
 
-		TypeImpl type1 = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY);
+		TypeImpl type1 = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY, true);
 		assertNotNull(type1);
 		assertFalse(type1.isBuiltin());
 
-		TypeImpl type2 = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY);
+		TypeImpl type2 = instance.createCustomType(typeName, superName, TypeStructureImpl.EMPTY, true);
 		assertNotNull(type2);
 		assertFalse(type2.isBuiltin());
 		assertEquals(type1.getTypeName(), type2.getTypeName());

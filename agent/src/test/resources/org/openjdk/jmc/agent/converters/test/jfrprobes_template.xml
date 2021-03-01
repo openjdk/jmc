@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -343,6 +343,97 @@
 				</parameters>
 			</method>
 			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.printThread">
+			<label>ConverterEventThread</label>
+			<description>Testing converting to thread.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printThread</name>
+				<descriptor>(Lorg/openjdk/jmc/agent/test/DoLittleContainer;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>DoLittleThread</name>
+						<description>The converted DoLittleContainer</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.DoLittleContainerThreadConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>	
+		<event id="demo.jfr.convertertest.printClass">
+			<label>ConverterEventClass</label>
+			<description>Testing converting to class.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printClassGurka</name>
+				<descriptor>(Lorg/openjdk/jmc/agent/test/Gurka;)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>Gurk Class</name>
+						<description>The converted Gurka</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.ObjectConverterClass
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>	
+
+		<!-- Converters for return values and fields -->
+		<event id="demo.jfr.convertertest.printReturnGurka">
+			<label>ConverterEventReturnGurka</label>
+			<description>Testing converting to class.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printReturnGurka</name>
+				<descriptor>()Lorg/openjdk/jmc/agent/test/Gurka;</descriptor>
+				<returnvalue>
+					<description>The ID of the Gurka returned (double)</description>
+					<contenttype>None</contenttype>
+					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterDouble
+					</converter>
+				</returnvalue>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.printInnerClassField">
+			<label>ConverterEventInnerClassField</label>
+			<description>Testing converting a field in a class.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter$InnerClass
+			</class>
+			<method>
+				<name>instrumentationPoint</name>
+				<descriptor>()V</descriptor>
+			</method>
+			<fields>
+				<field>
+					<name>CurrentGurka</name>
+					<description>Capturing inner class field with complex type, transformed by converter to int
+					</description>
+					<expression>currentGurka</expression>
+					<converter>org.openjdk.jmc.agent.converters.test.GurkConverterDouble
+					</converter>
+				</field>
+			</fields>
 		</event>
 	</events>
 </jfragent>

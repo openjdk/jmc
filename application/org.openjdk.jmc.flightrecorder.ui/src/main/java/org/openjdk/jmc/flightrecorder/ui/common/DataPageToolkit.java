@@ -106,6 +106,7 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -126,8 +127,6 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.ItemIterableToolkit;
 import org.openjdk.jmc.flightrecorder.ui.PageManager;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.CompositeKeyHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
@@ -919,8 +918,7 @@ public class DataPageToolkit {
 	// FIXME: Move to some AttributeToolkit?
 	@SuppressWarnings("deprecation")
 	private static Stream<IAttribute<?>> getAttributes(IItemCollection items) {
-		return ItemCollectionToolkit.stream(items).filter(IItemIterable::hasItems)
-				.flatMap(is -> is.getType().getAttributes().stream());
+		return items.stream().filter(IItemIterable::hasItems).flatMap(is -> is.getType().getAttributes().stream());
 	}
 
 	public static Stream<IAttribute<?>> getPersistableAttributes(Stream<IAttribute<?>> attributes) {
@@ -964,8 +962,8 @@ public class DataPageToolkit {
 	 */
 	@SuppressWarnings("unchecked")
 	private static <V> V findValueForFilter(IItemCollection items, ICanonicalAccessorFactory<V> attribute) {
-		IItem firstItem = ItemCollectionToolkit.stream(items).filter(is -> is.getType().hasAttribute(attribute))
-				.flatMap(ItemIterableToolkit::stream)
+		IItem firstItem = items.stream().filter(is -> is.getType().hasAttribute(attribute))
+				.flatMap(iterable -> iterable.stream())
 				.filter(i -> ((IMemberAccessor<V, IItem>) attribute.getAccessor(i.getType())).getMember(i) != null)
 				.findFirst().orElse(null);
 		if (firstItem != null) {

@@ -52,11 +52,12 @@ public class FileTestEvent extends TestEvent {
 		this.bytesProcessed = bytesProcessed;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
 		if ("duration".equals(attribute.getIdentifier())) {
-			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit
-					.<IItem, IQuantity, IQuantity> constant(UnitLookup.MILLISECOND.quantity(duration));
+			return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit
+					.<IItem, IQuantity, IQuantity> constant(UnitLookup.MILLISECOND.quantity(duration)));
 		}
 		if ("path".equals(attribute.getIdentifier())) {
 			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(fileName);

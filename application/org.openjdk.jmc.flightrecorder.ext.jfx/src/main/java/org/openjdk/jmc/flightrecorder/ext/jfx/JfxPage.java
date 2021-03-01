@@ -52,6 +52,7 @@ import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -61,7 +62,6 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.AggregationGrid;
@@ -302,8 +302,8 @@ public class JfxPage extends AbstractDataPage {
 
 		private void buildChart() {
 			List<IXDataRenderer> rows = new ArrayList<>();
-			Stream<IXDataRenderer> phaseRows = AggregationGrid.mapItems(ItemCollectionToolkit.stream(phaseItems),
-					JfrAttributes.EVENT_THREAD, JfxPage::buildThreadRenderer);
+			Stream<IXDataRenderer> phaseRows = AggregationGrid.mapItems(phaseItems.stream(), JfrAttributes.EVENT_THREAD,
+					JfxPage::buildThreadRenderer);
 			phaseRows.forEach(rows::add);
 
 			HistogramSelection inputSelection = inputTable.getSelection();

@@ -107,7 +107,6 @@ public class MCTextCanvas extends MCJemmyBase {
 	/**
 	 * Click the middle thread listed in the Text Canvas
 	 */
-	@SuppressWarnings("unchecked")
 	public void clickTextCanvas() {
 		Display.getDefault().syncExec(() -> {
 			control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);

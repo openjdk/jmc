@@ -58,6 +58,7 @@ import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.RangeMatchPolicy;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -75,7 +76,6 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
-import org.openjdk.jmc.flightrecorder.ui.ItemCollectionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
@@ -273,8 +273,7 @@ public class ClassLoadingPage extends AbstractDataPage {
 				// The standard aggregators will skip the null classloader, so we need to do this manually.
 				IItemCollection selection = ItemCollectionToolkit
 						.build(classLoaderStatisticsTable.getSelection().get());
-				Stream<IMCClassLoader> stream = ItemCollectionToolkit.values(selection, JdkAttributes.CLASSLOADER).get()
-						.distinct();
+				Stream<IMCClassLoader> stream = selection.values(JdkAttributes.CLASSLOADER).get().distinct();
 				Set<IMCClassLoader> selected = stream.collect(Collectors.toSet());
 				IItemFilter selectionFilter = ItemFilters.and(
 						ItemFilters.or(JdkFilters.CLASS_LOAD_OR_UNLOAD, JdkFilters.CLASS_DEFINE),

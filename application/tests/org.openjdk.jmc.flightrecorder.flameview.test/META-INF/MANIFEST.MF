@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Version: 8.0.0.qualifier
+Bundle-Version: 8.1.0.qualifier
 Bundle-Name: Flameview Tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flameview.test;singleton:=true

@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.core.tests</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>flightrecorder.rules.test</artifactId>
 	<properties>
@@ -75,7 +75,7 @@
            <dependency>
                    <groupId>junit</groupId>
                    <artifactId>junit</artifactId>
-                   <version>${junit.version}</version>
+                   <version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
                    <scope>test</scope>
            </dependency>
    </dependencies>
@@ -85,7 +85,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>${maven.jar.version}</version>
+            <version>${maven.jar.version}</version><!--$NO-MVN-MAN-VER$-->
             <executions>
                <execution>
                   <goals>

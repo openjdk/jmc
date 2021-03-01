@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.ui;
+package org.openjdk.jmc.common.item;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -42,16 +42,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import org.openjdk.jmc.common.item.IAggregator;
-import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.item.IItem;
-import org.openjdk.jmc.common.item.IItemConsumer;
-import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.IItemIterable;
-import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 
 /**
@@ -122,7 +113,7 @@ public class ItemIterableToolkit {
 
 	public static <V, C extends IItemConsumer<C>> V aggregate(
 		IAggregator<V, C> a, Stream<? extends IItemIterable> items) {
-		Function<IItemIterable, C> itemsToValue = itemsStream -> ItemIterableToolkit.parallelStream(itemsStream)
+		Function<IItemIterable, C> itemsToValue = itemsStream -> itemsStream.stream()
 				.collect(valueCollector(a, itemsStream.getType()));
 		Stream<C> consumers = items.filter(is -> a.acceptType(is.getType())).map(itemsToValue);
 		return a.getValue(consumers.iterator());
@@ -137,14 +128,6 @@ public class ItemIterableToolkit {
 	public static <V> Stream<? extends IItem> sorted(
 		IItemIterable items, IAttribute<V> onAttribute, Comparator<? super V> valueComparator) {
 		IMemberAccessor<V, IItem> va = onAttribute.getAccessor(items.getType());
-		return stream(items).sorted((i1, i2) -> Objects.compare(va.getMember(i1), va.getMember(i2), valueComparator));
-	}
-
-	public static Stream<IItem> stream(IItemIterable items) {
-		return StreamSupport.stream(items.spliterator(), false);
-	}
-
-	public static Stream<IItem> parallelStream(IItemIterable items) {
-		return StreamSupport.stream(items.spliterator(), true);
+		return items.stream().sorted((i1, i2) -> Objects.compare(va.getMember(i1), va.getMember(i2), valueComparator));
 	}
 }

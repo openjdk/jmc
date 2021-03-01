@@ -37,7 +37,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.application</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>coverage</artifactId>
 	<name>Code coverage report jmc/application</name>
@@ -343,13 +343,13 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.updatesite.ide</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.updatesite.rcp</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
@@ -480,7 +480,7 @@
 					<groupId>org.openjdk.jmc</groupId>
 					<artifactId>org.openjdk.jmc.test.jemmy</artifactId>
 					<scope>test</scope>
-					<version>8.0.0-SNAPSHOT</version>
+					<version>${revision}${changelist}</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -490,7 +490,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.3</version>
+				<version>0.8.6</version>
 				<executions>
 					<execution>
 						<id>report-aggregate</id>

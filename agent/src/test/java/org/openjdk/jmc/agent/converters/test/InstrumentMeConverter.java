@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2020, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,10 +38,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.openjdk.jmc.agent.test.DoLittleContainer;
 import org.openjdk.jmc.agent.test.Gurka;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class InstrumentMeConverter {
+	private static final int SLEEP_TIME = 500;
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Thread runner = new Thread(new Runner(), "InstrumentMeConverter Runner");
@@ -53,6 +55,8 @@ public class InstrumentMeConverter {
 	}
 
 	private static final class Runner implements Runnable {
+		InnerClass innerClass = new InnerClass();
+
 		public void run() {
 			while (true) {
 				try {
@@ -68,6 +72,11 @@ public class InstrumentMeConverter {
 					printDoubleMultiCustom(Gurka.createGurka());
 					printLongMultiDefault(TestToolkit.randomLong());
 					printDoubleMultiDefault(TestToolkit.randomLong() / 2.0d);
+					printReturnGurka();
+					printThread(DoLittleContainer.createAndStart());
+					printClassGurka(Gurka.createGurka());
+					innerClass.switchGurka();
+					innerClass.instrumentationPoint();
 				} catch (InterruptedException e) {
 				} catch (URISyntaxException e) {
 				}
@@ -75,63 +84,93 @@ public class InstrumentMeConverter {
 		}
 	}
 
+	public static class InnerClass {
+		private volatile Gurka currentGurka = Gurka.createGurka();
+
+		public void instrumentationPoint() {
+			System.out.println("InnerClass: currentGurka field is " + currentGurka);
+		}
+
+		public void switchGurka() {
+			currentGurka = Gurka.createGurka();
+		}
+	}
+
 	public static void printGurkaToString(Gurka gurka) throws InterruptedException {
 		System.out.println("C String: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printGurkaToInt(Gurka gurka) throws InterruptedException {
 		System.out.println("C Int: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printGurkaToLong(Gurka gurka) throws InterruptedException {
 		System.out.println("C Long: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printGurkaToFloat(Gurka gurka) throws InterruptedException {
 		System.out.println("C Float: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printGurkaToDouble(Gurka gurka) throws InterruptedException {
 		System.out.println("C Double: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printFileToString(File file) throws InterruptedException {
 		System.out.println("C File: " + file);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printUriToString(URI someUri) throws InterruptedException {
 		System.out.println("C URI: " + someUri);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printNumber(Number number) throws InterruptedException {
 		System.out.println("C Number: " + number.doubleValue());
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	private static void printIntMultiCustom(Gurka gurka) throws InterruptedException {
 		System.out.println("C int MC: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printDoubleMultiCustom(Gurka gurka) throws InterruptedException {
 		System.out.println("C Long MC: " + gurka);
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printLongMultiDefault(Long value) throws InterruptedException {
 		System.out.println("C Long MD: " + value.longValue());
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	public static void printDoubleMultiDefault(Double value) throws InterruptedException {
 		System.out.println("C Long MD: " + value.doubleValue());
-		Thread.sleep(1000);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static Gurka printReturnGurka() throws InterruptedException {
+		Gurka gurka = Gurka.createGurka();
+		System.out.println("C Gurka returned: " + gurka.toString());
+		return gurka;
+	}
+
+	public static void printThread(DoLittleContainer doLittleContainer) throws InterruptedException {
+		System.out.println("C Thread ID: " + doLittleContainer.getThread().getId() + " Name: "
+				+ doLittleContainer.getThread().getName());
+		Thread.sleep(SLEEP_TIME);
+		doLittleContainer.shutdown();
+	}
+
+	public static void printClassGurka(Gurka createGurka) throws InterruptedException {
+		System.out.println("C The class of Gurka is: " + createGurka.getClass().getName());
+		Thread.sleep(SLEEP_TIME);
 	}
 }

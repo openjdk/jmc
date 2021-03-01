@@ -53,6 +53,7 @@ public class SocketTestEvent extends TestEvent {
 		this.bytesProcessed = bytesProcessed;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
 		if ("duration".equals(attribute.getIdentifier())) {

@@ -81,6 +81,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -221,7 +222,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 					if (relatedProperties != null) {
 						// Collect values from items related to selection (only items of types that has the attribute), and add as filter
 						PropertySheetRow av = buildProperty(dstAttribute,
-								ItemCollectionToolkit.stream(itemsRelatedToSelection)
+								itemsRelatedToSelection.stream()
 										.filter(is -> dstAttribute.getAccessor(is.getType()) != null).iterator(),
 								Integer.MAX_VALUE);
 						if (av != null) {
@@ -584,8 +585,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 		if (dstAttributes != null && !dstAttributes.isEmpty()) {
 			commonAttributes = commonAttributes(srcItems.iterator()).filter(a -> dstAttributes.contains(a));
 		} else {
-			Stream<? extends IItemIterable> items = Stream.concat(ItemCollectionToolkit.stream(srcItems),
-					ItemCollectionToolkit.stream(dstItems));
+			Stream<? extends IItemIterable> items = Stream.concat(srcItems.stream(), dstItems.stream());
 			commonAttributes = commonAttributes(items.iterator());
 		}
 		Stream<IAttribute<?>> persistableAttributes = DataPageToolkit.getPersistableAttributes(commonAttributes)
