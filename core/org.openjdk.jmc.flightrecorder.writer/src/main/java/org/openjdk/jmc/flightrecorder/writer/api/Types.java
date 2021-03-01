@@ -288,7 +288,9 @@ public abstract class Types {
 		ANNOTATION_DESCRIPTION("jdk.jfr.Description"),
 		ANNOTATION_TIMESTAMP("jdk.jfr.Timestamp"),
 		ANNOTATION_TIMESPAN("jdk.jfr.Timespan"),
-		ANNOTATION_UNSIGNED("jdk.jfr.Unsigned");
+		ANNOTATION_UNSIGNED("jdk.jfr.Unsigned"),
+		ANNOTATION_CATEGORY("jdk.jfr.Category");
+		;
 
 		private final String typeName;
 

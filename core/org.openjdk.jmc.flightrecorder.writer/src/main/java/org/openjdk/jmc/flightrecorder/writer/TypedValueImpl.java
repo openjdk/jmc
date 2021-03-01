@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-final class TypedValueImpl implements TypedValue {
+public final class TypedValueImpl implements TypedValue {
 	private int hashcode = 0;
 
 	private final TypeImpl type;

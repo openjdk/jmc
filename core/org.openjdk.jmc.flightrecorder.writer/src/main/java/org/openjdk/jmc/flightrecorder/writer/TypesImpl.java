@@ -85,18 +85,22 @@ public final class TypesImpl extends Types {
 				});
 		getOrAdd(JDK.ANNOTATION_TIMESTAMP, ANNOTATION_SUPER_TYPE_NAME, builder -> {
 			builder.addField("value", Builtin.STRING).addAnnotation(annotationNameType, "jdk.jfr.Timestamp")
-					.addAnnotation(annotationContentTypeType, null).addAnnotation(annotationLabelType, "Timestamp")
+					.addAnnotation(annotationContentTypeType).addAnnotation(annotationLabelType, "Timestamp")
 					.addAnnotation(annotationDescriptionType, "A point in time");
 		});
 		getOrAdd(JDK.ANNOTATION_TIMESPAN, ANNOTATION_SUPER_TYPE_NAME, builder -> {
 			builder.addField("value", Builtin.STRING).addAnnotation(annotationNameType, "jdk.jfr.Timespan")
-					.addAnnotation(annotationContentTypeType, null).addAnnotation(annotationLabelType, "Timespan")
+					.addAnnotation(annotationContentTypeType).addAnnotation(annotationLabelType, "Timespan")
 					.addAnnotation(annotationDescriptionType, "A duration, measured in nanoseconds by default");
 		});
 		getOrAdd(JDK.ANNOTATION_UNSIGNED, ANNOTATION_SUPER_TYPE_NAME, builder -> {
 			builder.addField("value", Builtin.STRING).addAnnotation(annotationNameType, "jdk.jfr.Unsigned")
-					.addAnnotation(annotationContentTypeType, null).addAnnotation(annotationLabelType, "Unsigned value")
+					.addAnnotation(annotationContentTypeType).addAnnotation(annotationLabelType, "Unsigned value")
 					.addAnnotation(annotationDescriptionType, "Value should be interpreted as unsigned data type");
+		});
+		getOrAdd(JDK.ANNOTATION_CATEGORY, ANNOTATION_SUPER_TYPE_NAME, builder -> {
+			builder.addField("value", STRING, TypedFieldBuilder::asArray).addAnnotation(annotationNameType,
+					"jdk.jfr.Category");
 		});
 
 		getOrAdd(JDK.TICKSPAN, builder -> {

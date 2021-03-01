@@ -45,6 +45,8 @@ import java.util.function.Supplier;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 /** JFR type repository class. */
@@ -304,8 +306,21 @@ final class MetadataImpl {
 
 	private void storeAnnotationStrings(List<Annotation> annotations) {
 		for (Annotation annotation : annotations) {
-			if (annotation.getValue() != null) {
-				storeString(annotation.getValue());
+			for (Map.Entry<String, ? extends TypedFieldValue> entry : annotation.getAttributes().entrySet()) {
+				TypedFieldValue typedValue = entry.getValue();
+				// value arrays are encoded as 'attributeName-N' where N starts at 0
+				if (typedValue.getField().isArray()) {
+					TypedValue[] vals = typedValue.getValues();
+					for (int i = 0; i < vals.length; i++) {
+						TypedValue val = vals[i];
+						storeString(entry.getKey() + "-" + i);
+						storeString(Objects.toString(val.getValue()));
+					}
+				} else {
+					Object val = typedValue.getValue() != null ? typedValue.getValue().getValue() : null;
+					storeString(entry.getKey());
+					storeString(Objects.toString(val));
+				}
 			}
 		}
 	}
@@ -433,10 +448,28 @@ final class MetadataImpl {
 	private void writeAnnotation(LEB128Writer writer, Annotation annotation) {
 		writer.writeInt(stringIndex(ANNOTATION_KEY));
 
-		writer.writeInt(annotation.getValue() != null ? 2 : 1) // number of attributes
-				.writeInt(stringIndex(CLASS_KEY)).writeInt(stringIndex(String.valueOf(annotation.getType().getId())));
-		if (annotation.getValue() != null) {
-			writer.writeInt(stringIndex(VALUE_KEY)).writeInt(stringIndex(annotation.getValue()));
+		int len = 1 + annotation.getAttributes().size();
+		for (TypedFieldValue value : annotation.getAttributes().values()) {
+			if (value.getField().isArray()) {
+				len += (value.getValues().length - 1); // add the number of synthetic attributes and remove the base one
+			}
+		}
+		writer.writeInt(len).writeInt(stringIndex(CLASS_KEY))
+				.writeInt(stringIndex(String.valueOf(annotation.getType().getId())));
+		for (Map.Entry<String, ? extends TypedFieldValue> entry : annotation.getAttributes().entrySet()) {
+			TypedFieldValue typedValue = entry.getValue();
+			if (typedValue.getField().isArray()) {
+				// value arrays are encoded as 'attributeName-N' where N starts at 0
+				TypedValue[] vals = typedValue.getValues();
+				for (int i = 0; i < vals.length; i++) {
+					TypedValue val = vals[i];
+					writer.writeInt(stringIndex(entry.getKey() + "-" + i))
+							.writeInt(stringIndex(Objects.toString(val.getValue())));
+				}
+			} else {
+				Object val = typedValue.getValue() != null ? typedValue.getValue().getValue() : null;
+				writer.writeInt(stringIndex(entry.getKey())).writeInt(stringIndex(Objects.toString(val)));
+			}
 		}
 		writer.writeInt(0); // no sub-elements
 	}
