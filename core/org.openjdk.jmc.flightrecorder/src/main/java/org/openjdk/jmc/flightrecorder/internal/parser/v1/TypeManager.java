@@ -302,6 +302,7 @@ class TypeManager {
 		private Object[] reusableStruct;
 		private IEventSink eventSink;
 		private LabeledIdentifier eventType;
+		private LoaderContext context;
 
 		EventTypeEntry(ClassElement element) {
 			this.element = element;
@@ -324,6 +325,7 @@ class TypeManager {
 		}
 
 		void init(LoaderContext context) throws InvalidJfrFileException, IOException {
+			this.context = context;
 			if (context.hideExperimentals() && element.experimental) {
 				eventSink = new NopEventSink();
 			} else {
@@ -367,6 +369,10 @@ class TypeManager {
 				}
 			}
 		}
+
+		void updateEventStats(long size) {
+			context.updateEventStats(element.typeIdentifier, size);
+		}
 	}
 
 	// NOTE: Using constant pool id as identifier.
@@ -374,6 +380,7 @@ class TypeManager {
 	private final FastAccessNumberMap<TypeEntry> otherTypes = new FastAccessNumberMap<>();
 	private final FastAccessNumberMap<EventTypeEntry> eventTypes = new FastAccessNumberMap<>();
 	private final ChunkStructure header;
+	private long skippedEventCount;
 
 	TypeManager(List<ClassElement> classList, LoaderContext context, ChunkStructure header)
 			throws InvalidJfrFileException, IOException {
@@ -397,14 +404,16 @@ class TypeManager {
 		}
 	}
 
-	void readEvent(long typeId, IDataInput input) throws InvalidJfrFileException, IOException {
+	void readEvent(long typeId, IDataInput input, long size) throws InvalidJfrFileException, IOException {
 		EventTypeEntry entry = eventTypes.get(typeId);
 		if (entry == null) {
 			// We don't need to do anything here, as the chunk loader will skip to the next event for us.
 			Logger.getLogger(getClass().getName()).log(Level.WARNING,
 					"Event type with id " + typeId + " was not declared"); //$NON-NLS-1$ //$NON-NLS-2$
+			skippedEventCount++;
 		} else {
 			entry.readEvent(input);
+			entry.updateEventStats(size);
 		}
 	}
 
@@ -419,6 +428,10 @@ class TypeManager {
 		for (TypeEntry classEntry : otherTypes) {
 			classEntry.resolveConstants();
 		}
+	}
+
+	long getSkippedEventCount() {
+		return skippedEventCount;
 	}
 
 	private TypeEntry getTypeEntry(long typeId) throws InvalidJfrFileException {

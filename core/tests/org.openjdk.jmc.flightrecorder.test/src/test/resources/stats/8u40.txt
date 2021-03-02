@@ -1,0 +1,12 @@
+jdk.CPUInformation;1;1782
+jdk.ExecuteVMOperation;2;56
+jdk.ExecutionSampling;6;144
+jdk.SocketRead;9;756
+jdk.CPULoad;10;200
+jdk.ObjectAllocationOutsideTLAB;18;648
+jdk.ExecutionSample;19;418
+jdk.ThreadAllocationStatistics;49;980
+jdk.ObjectAllocationInNewTLAB;51;2244
+jdk.ActiveSetting;85;10428
+jdk.JavaMonitorWait;142;8094
+jdk.ThreadPark;165;8580

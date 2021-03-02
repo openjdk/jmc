@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,11 +32,15 @@
  */
 package org.openjdk.jmc.flightrecorder.test.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -95,6 +99,16 @@ public class RecordingToolkit {
 		IOToolkit.closeSilently(os);
 		IOToolkit.closeSilently(is);
 		return JfrLoaderToolkit.loadEvents(tmpRecording);
+	}
+
+	public static List<String> getStats(IOResourceSet resourceSet) throws IOException {
+		IOResource resource = resourceSet.getResource(0);
+		String recordingFileName = resource.getName();
+		String statsFileName = recordingFileName.replace(".jfr", ".txt");
+		IOResource statsResource = TestToolkit.getNamedResource(RecordingToolkit.class, "stats", statsFileName);
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(statsResource.open()))) {
+			return reader.lines().collect(Collectors.toList());
+		}
 	}
 
 	public static File createResultFile(String prefix, String suffix, boolean deleteTempOnExit) throws IOException {
