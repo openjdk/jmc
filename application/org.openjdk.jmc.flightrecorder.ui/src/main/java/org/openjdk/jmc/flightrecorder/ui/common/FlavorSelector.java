@@ -528,7 +528,7 @@ public class FlavorSelector implements SelectionStoreListener {
 			painter.current = range.orElse(null);
 			canvas.setVisible(painter.current != null);
 			canvas.setToolTipText(range.map(FlavorSelector::formatRange).orElse(null));
-			container.layout();
+			container.redraw();
 
 			// FIXME: Always use concurrent if (all?) items can't be displayed on page?
 			IItemCollection itemsToUse = null;
