@@ -30,31 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
-
 /**
- * Enum describing different JVM connectability possibilities.
+ * This package contains classes used in Mission Control to JVM architectures and types.
  */
-public enum Connectable {
-	/**
-	 * The JVM can be connected to using attach.
-	 */
-	ATTACHABLE,
-	/**
-	 * The JVM can be connected to using the management agent.
-	 */
-	MGMNT_AGENT_STARTED,
-	/**
-	 * The JVM can't be connected to.
-	 */
-	NO,
-	UNKNOWN;
-
-	public boolean isUnconnectable() {
-		return this == NO;
-	}
-
-	public boolean isAttachable() {
-		return this == ATTACHABLE;
-	}
-}
+package org.openjdk.jmc.common.jvm;

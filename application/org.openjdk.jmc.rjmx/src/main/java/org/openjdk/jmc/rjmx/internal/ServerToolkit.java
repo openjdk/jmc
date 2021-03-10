@@ -32,9 +32,9 @@
  */
 package org.openjdk.jmc.rjmx.internal;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 public class ServerToolkit {
 

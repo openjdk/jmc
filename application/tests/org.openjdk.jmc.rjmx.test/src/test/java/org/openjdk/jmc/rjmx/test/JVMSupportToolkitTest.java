@@ -36,14 +36,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
 import org.openjdk.jmc.rjmx.internal.ServerHandle;
 import org.openjdk.jmc.rjmx.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 @SuppressWarnings("nls")
 public class JVMSupportToolkitTest {

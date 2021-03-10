@@ -45,6 +45,10 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.browser.jdp.preferences.PreferenceConstants;
+import org.openjdk.jmc.common.jvm.Connectable;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.jdp.client.DiscoveryEvent;
 import org.openjdk.jmc.jdp.client.DiscoveryListener;
 import org.openjdk.jmc.jdp.client.JDPClient;
@@ -52,10 +56,6 @@ import org.openjdk.jmc.jdp.jmx.JMXDataKeys;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.AbstractDescriptorProvider;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
-import org.openjdk.jmc.ui.common.jvm.Connectable;
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 
 /**

@@ -34,8 +34,8 @@ package org.openjdk.jmc.ui.common.labelingrules;
 
 import java.util.HashMap;
 
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.ui.common.labelingrules.NameConverter.ValueArrayInfo;
 
 /**

@@ -32,9 +32,9 @@
  */
 package org.openjdk.jmc.browser.attach;
 
-import static org.openjdk.jmc.ui.common.jvm.Connectable.ATTACHABLE;
-import static org.openjdk.jmc.ui.common.jvm.Connectable.MGMNT_AGENT_STARTED;
-import static org.openjdk.jmc.ui.common.jvm.Connectable.NO;
+import static org.openjdk.jmc.common.jvm.Connectable.ATTACHABLE;
+import static org.openjdk.jmc.common.jvm.Connectable.MGMNT_AGENT_STARTED;
+import static org.openjdk.jmc.common.jvm.Connectable.NO;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,13 +62,13 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.openjdk.jmc.attach.AttachToolkit;
 import org.openjdk.jmc.browser.attach.internal.ExecuteTunnler;
 import org.openjdk.jmc.browser.attach.preferences.PreferenceConstants;
+import org.openjdk.jmc.common.jvm.Connectable;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
-import org.openjdk.jmc.ui.common.jvm.Connectable;
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
 import org.openjdk.jmc.ui.common.util.Environment;
 
 import com.sun.tools.attach.AgentLoadException;

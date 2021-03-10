@@ -68,6 +68,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionException;
@@ -83,7 +84,6 @@ import org.openjdk.jmc.rjmx.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.internal.AttributeValueToolkit;
 import org.openjdk.jmc.rjmx.subscription.internal.InvoluntaryDisconnectException;
 import org.openjdk.jmc.rjmx.subscription.internal.MBeanMRIMetadataDB;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 /**
  * This class simplifies and hides some of the complexity of connecting to a JVM (supporting JSR-174

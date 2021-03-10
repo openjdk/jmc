@@ -44,10 +44,10 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.openjdk.jmc.common.jvm.JVMCommandLineToolkit;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.CorePlugin;
 import org.openjdk.jmc.ui.common.idesupport.IDESupportFactory;
-import org.openjdk.jmc.ui.common.jvm.JVMCommandLineToolkit;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.resource.Resource;
 import org.openjdk.jmc.ui.common.util.Environment;
 

@@ -53,10 +53,10 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 import javax.management.remote.JMXServiceURL;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.rjmx.internal.RJMXConnection;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 /**
  * Toolkit providing utility methods to retrieve MBean proxy objects, invoke JMX operations and

@@ -30,28 +30,55 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
+package org.openjdk.jmc.common.jvm;
 
-import java.util.Properties;
+import java.util.StringTokenizer;
 
-/**
- * Enum for the different JVM architectures.
- */
-public enum JVMArch {
-	BIT32, BIT64, UNKNOWN, OTHER;
+public class JVMCommandLineToolkit {
 
-	public static JVMArch getCurrentJVMArch() {
-		return getJVMArch(System.getProperties());
+	/**
+	 * @param commandLine
+	 * @return the class/jar that is being run.
+	 */
+	public static String getMainClassOrJar(String commandLine) {
+		if (commandLine == null || commandLine.length() == 0) {
+			return commandLine;
+		}
+		// Does not handle the case where directory name contains ' -'.
+		String[] s = commandLine.split(" -"); //$NON-NLS-1$
+		return s[0];
 	}
 
-	public static JVMArch getJVMArch(Properties props) {
-		String jreArch = System.getProperty("sun.arch.data.model"); //$NON-NLS-1$
-		if (jreArch.contains("64")) { //$NON-NLS-1$
-			return JVMArch.BIT64;
-		} else if (jreArch.contains("32")) { //$NON-NLS-1$
-			return JVMArch.BIT32;
-		} else {
-			return OTHER;
+	/**
+	 * Removes jvm flags from full commandline Does not handle space in paths.
+	 *
+	 * @param cmdLine
+	 *            Full commandline of jvm
+	 * @return Commandline with only main class or jar file, and args to the java application.
+	 */
+	public static String getJavaCommandLine(String cmdLine) {
+		if (cmdLine == null || cmdLine.length() == 0) {
+			return cmdLine;
 		}
+		StringTokenizer tokenizer = new StringTokenizer(cmdLine, " "); //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
+		boolean foundJava = false;
+		String token = ""; //$NON-NLS-1$
+		String previousToken;
+		while (tokenizer.hasMoreElements()) {
+			previousToken = token;
+			token = tokenizer.nextToken();
+			if (!foundJava) {
+				// Find the first token that does not start with -, or is the first after -cp or -classpath, that should
+				// be the classname or jarfile
+				if (!token.startsWith("-") && !previousToken.equals("-cp") && !previousToken.equals("-classpath")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					foundJava = true;
+					sb.append(token).append(" "); //$NON-NLS-1$
+				}
+			} else {
+				sb.append(token).append(" "); //$NON-NLS-1$
+			}
+		}
+		return sb.toString().trim();
 	}
 }
