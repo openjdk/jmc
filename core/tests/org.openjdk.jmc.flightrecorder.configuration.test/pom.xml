@@ -35,11 +35,35 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application.tests</artifactId>
+		<artifactId>missioncontrol.core.tests</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.configuration.test</artifactId>
-	<packaging>eclipse-test-plugin</packaging>
+	<!-- <packaging>eclipse-test-plugin</packaging> -->
+
+    <dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.configuration</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<properties>
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
