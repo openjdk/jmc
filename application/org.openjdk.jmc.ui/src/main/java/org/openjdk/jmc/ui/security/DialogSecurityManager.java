@@ -41,13 +41,12 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
+import org.openjdk.jmc.common.security.ActionNotGrantedException;
+import org.openjdk.jmc.common.security.FailedToSaveException;
+import org.openjdk.jmc.common.security.ISecurityManager;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.security.ActionNotGrantedException;
-import org.openjdk.jmc.ui.common.security.FailedToSaveException;
-import org.openjdk.jmc.ui.common.security.ISecurityManager;
 import org.openjdk.jmc.ui.common.security.SecureStore;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.wizards.OnePageWizardDialog;
 

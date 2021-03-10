@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.ui.common.security;
 
+import org.openjdk.jmc.common.security.SecurityException;
+
 /**
  * An object holding a username and a password.
  */

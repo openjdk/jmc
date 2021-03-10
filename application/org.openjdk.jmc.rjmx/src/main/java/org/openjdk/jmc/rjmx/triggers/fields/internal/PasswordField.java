@@ -35,10 +35,9 @@ package org.openjdk.jmc.rjmx.triggers.fields.internal;
 import java.util.logging.Level;
 
 import org.w3c.dom.Element;
-
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 
 /**

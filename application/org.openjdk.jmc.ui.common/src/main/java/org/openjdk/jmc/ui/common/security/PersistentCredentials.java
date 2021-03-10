@@ -34,6 +34,8 @@ package org.openjdk.jmc.ui.common.security;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.openjdk.jmc.common.security.ISecurityManager;
+import org.openjdk.jmc.common.security.SecurityException;
 
 /**
  * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy

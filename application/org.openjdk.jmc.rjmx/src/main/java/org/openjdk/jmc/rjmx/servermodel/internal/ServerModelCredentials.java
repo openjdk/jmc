@@ -32,10 +32,10 @@
  */
 package org.openjdk.jmc.rjmx.servermodel.internal;
 
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.security.ICredentials;
 import org.openjdk.jmc.ui.common.security.InMemoryCredentials;
 import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 
 public class ServerModelCredentials implements ICredentials {
 

@@ -49,6 +49,8 @@ import org.eclipse.core.runtime.Assert;
 import org.osgi.service.prefs.Preferences;
 
 import org.openjdk.jmc.common.io.ValidatingObjectInputStream;
+import org.openjdk.jmc.common.security.FailedToSaveException;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.CorePlugin;
 
 /**

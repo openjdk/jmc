@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.ui.common.security;
 
+import org.openjdk.jmc.common.security.SecurityException;
+
 /**
  * Exception thrown when credentials cannot be loaded
  */

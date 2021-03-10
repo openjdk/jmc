@@ -9,6 +9,7 @@ Export-Package: org.openjdk.jmc.common,
  org.openjdk.jmc.common.collection,
  org.openjdk.jmc.common.io,
  org.openjdk.jmc.common.item,
+ org.openjdk.jmc.common.security,
  org.openjdk.jmc.common.unit,
  org.openjdk.jmc.common.util,
  org.openjdk.jmc.common.version

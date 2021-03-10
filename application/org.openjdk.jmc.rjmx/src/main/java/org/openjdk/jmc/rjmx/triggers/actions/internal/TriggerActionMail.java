@@ -46,7 +46,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import org.eclipse.osgi.util.NLS;
-
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
 import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
@@ -54,7 +54,6 @@ import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationToolkit;
 import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.util.Environment;
 
 /**

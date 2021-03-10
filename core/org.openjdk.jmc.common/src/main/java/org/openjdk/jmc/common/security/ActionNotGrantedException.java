@@ -30,28 +30,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
 
 /**
- * This is the main exception thrown by the Security API.
+ * Exception thrown when an action is not permitted
  */
-public class SecurityException extends Exception {
-	private static final long serialVersionUID = 6644781676988195632L;
+public class ActionNotGrantedException extends SecurityException {
 
-	public SecurityException() {
-		super();
-	}
+	private static final long serialVersionUID = 4241246317937726872L;
 
-	public SecurityException(String message, Throwable cause) {
-		super(message);
-		initCause(cause);
-	}
-
-	public SecurityException(String message) {
-		super(message);
-	}
-
-	public SecurityException(Throwable cause) {
-		initCause(cause);
-	}
 }

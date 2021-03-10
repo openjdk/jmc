@@ -44,7 +44,7 @@ import javax.management.remote.JMXServiceURL;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
@@ -53,7 +53,6 @@ import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
 import org.openjdk.jmc.ui.common.security.ICredentials;
 import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 
 class ModelPersistence {

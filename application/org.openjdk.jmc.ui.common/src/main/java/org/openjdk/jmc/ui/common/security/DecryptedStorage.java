@@ -54,6 +54,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.openjdk.jmc.common.io.ValidatingObjectInputStream;
+import org.openjdk.jmc.common.security.SecurityException;
 
 class DecryptedStorage {
 	private static final String HMAC_ALGORITHM = "HmacSHA1"; //$NON-NLS-1$
