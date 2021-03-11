@@ -130,8 +130,7 @@ final class MetadataImpl {
 	 * @return registered type - either a new type or or a previously registered with the same name
 	 */
 	TypeImpl registerType(String typeName, String supertype, Supplier<TypeStructureImpl> typeStructureProvider) {
-		return registerType(typeName, supertype, true,
-				typeStructureProvider != null ? typeStructureProvider.get() : TypeStructureImpl.EMPTY);
+		return registerType(typeName, supertype, true, typeStructureProvider);
 	}
 
 	/**
@@ -168,7 +167,8 @@ final class MetadataImpl {
 		 */
 		TypeImpl registered = metadata.computeIfAbsent(typeName, k -> new ResolvableType(k, this));
 		if (!registered.isResolved()) {
-			TypeStructureImpl structure = typeStructureProvider.get();
+			TypeStructureImpl structure = typeStructureProvider != null ? typeStructureProvider.get()
+					: TypeStructureImpl.EMPTY;
 			TypeImpl concreteType = createCustomType(typeName, supertype, structure, withConstantPool);
 			storeTypeStrings(concreteType);
 			metadata.replace(typeName, registered, concreteType);
