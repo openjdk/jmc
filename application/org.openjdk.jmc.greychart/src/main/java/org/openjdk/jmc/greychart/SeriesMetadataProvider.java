@@ -34,8 +34,7 @@ package org.openjdk.jmc.greychart;
 
 import java.awt.Color;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.data.RenderingMode;
 
 public interface SeriesMetadataProvider {

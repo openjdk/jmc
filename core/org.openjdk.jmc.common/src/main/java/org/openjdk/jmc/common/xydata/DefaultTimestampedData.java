@@ -30,12 +30,50 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.xydata;
+
+import org.openjdk.jmc.common.collection.BoundedList;
+import org.openjdk.jmc.common.collection.BoundedList.INode;
 
 /**
- * A data point on an X/Y chart where the X axis is a timestamp in epoch ns and the Y axis is a
- * natural number.
+ * A default implementation of {@link ITimestampedData} (which is an {@link IXYData} of epoch ns and
+ * natural numbers).
+ * <p>
+ * It implements {@link INode} in order to save some memory when placed in a {@link BoundedList}
+ * although this dependency is not really clean and should eventually be fixed.
  */
-public interface ITimestampedData extends IXYData<Long, Number> {
+public class DefaultTimestampedData extends DefaultXYData<Long, Number>
+		implements ITimestampedData, INode<DefaultTimestampedData> {
 
+	private INode<DefaultTimestampedData> next;
+
+	/**
+	 * @param x
+	 *            a timestamp in epoch ns
+	 * @param y
+	 *            a natural number
+	 */
+	public DefaultTimestampedData(Long x, Number y) {
+		super(x, y);
+	}
+
+	@Override
+	public String toString() {
+		return "Time: " + getX() + " Y: " + getY(); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	@Override
+	public INode<DefaultTimestampedData> getNext() {
+		return next;
+	}
+
+	@Override
+	public void setNext(INode<DefaultTimestampedData> next) {
+		this.next = next;
+	}
+
+	@Override
+	public DefaultTimestampedData getValue() {
+		return this;
+	}
 }

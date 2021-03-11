@@ -41,9 +41,9 @@ import java.io.RandomAccessFile;
 import java.util.Comparator;
 import java.util.Locale;
 
+import org.openjdk.jmc.common.xydata.DefaultTimestampedData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.ui.common.xydata.DefaultTimestampedData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 class PersistenceFile {
 

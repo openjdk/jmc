@@ -30,20 +30,27 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.xydata;
 
 /**
- * Interface for data points on an X/Y chart.
- * 
- * @param <X>
- *            X axis data type
- * @param <Y>
- *            Y axis data type
+ * A default implementation of {@link IXYData} that simply holds a final value for X and Y.
  */
-public interface IXYData<X, Y> {
+public class DefaultXYData<X, Y> implements IXYData<X, Y> {
+	private final X x;
+	private final Y y;
 
-	X getX();
+	public DefaultXYData(X x, Y y) {
+		this.x = x;
+		this.y = y;
+	}
 
-	Y getY();
+	@Override
+	public X getX() {
+		return x;
+	}
 
+	@Override
+	public Y getY() {
+		return y;
+	}
 }

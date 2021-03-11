@@ -35,8 +35,7 @@ package org.openjdk.jmc.greychart.providers;
 import java.awt.Polygon;
 import java.util.Iterator;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.YAxis;
 import org.openjdk.jmc.greychart.impl.LongWorldToDeviceConverter;
 import org.openjdk.jmc.greychart.impl.OptimizingProvider;

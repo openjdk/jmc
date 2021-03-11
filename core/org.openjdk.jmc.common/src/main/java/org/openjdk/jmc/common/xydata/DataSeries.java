@@ -30,27 +30,28 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.xydata;
+
+import java.util.Iterator;
 
 /**
- * A default implementation of {@link IXYData} that simply holds a final value for X and Y.
+ * Interface for objects that can produce a series of data points arranged on an X axis.
+ * 
+ * @param <T>
+ *            Data type of the data points. In order to implement the interval checking of
+ *            {@link #createIterator(long, long)}, it can be desirable that an X value can somehow
+ *            be retrieved from the objects of this type.
  */
-public class DefaultXYData<X, Y> implements IXYData<X, Y> {
-	private final X x;
-	private final Y y;
-
-	public DefaultXYData(X x, Y y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public X getX() {
-		return x;
-	}
-
-	@Override
-	public Y getY() {
-		return y;
-	}
+public interface DataSeries<T> {
+	/**
+	 * Return an iterator with data points matching a specified X interval. The X interval is only a
+	 * hint and the iterator may contain data points outside of the interval.
+	 * 
+	 * @param min
+	 *            the minimum X value of returned data points
+	 * @param max
+	 *            the maximum X value of returned data points
+	 * @return an iterator of data points
+	 */
+	Iterator<T> createIterator(long min, long max);
 }

@@ -38,8 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
+import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 
 /**
  * Simplified version to help add timestamped data to a series. Will keep references to all the data

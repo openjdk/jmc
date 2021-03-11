@@ -59,6 +59,8 @@ import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.common.util.Environment.OSType;
+import org.openjdk.jmc.common.xydata.DefaultXYData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.AxisContentType;
 import org.openjdk.jmc.greychart.TickDensity;
 import org.openjdk.jmc.greychart.TickFormatter;
@@ -79,8 +81,6 @@ import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.AccessibilityConstants;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.accessibility.MCAccessibleListener;
-import org.openjdk.jmc.ui.common.xydata.DefaultXYData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 /**
  * The GUI for an attribute chart

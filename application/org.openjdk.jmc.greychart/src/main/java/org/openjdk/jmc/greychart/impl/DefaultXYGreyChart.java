@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.AbstractGreyChart;
 import org.openjdk.jmc.greychart.AxisListener;
 import org.openjdk.jmc.greychart.ChartChangeEvent;
@@ -58,7 +59,6 @@ import org.openjdk.jmc.greychart.providers.IntermediateStackingProvider;
 import org.openjdk.jmc.greychart.providers.SampleCountingProvider;
 import org.openjdk.jmc.greychart.providers.SubsamplingProvider;
 import org.openjdk.jmc.greychart.util.Messages;
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
 
 /**
  * The default little XY chart. This class currently implements rather much. Whenever there is a

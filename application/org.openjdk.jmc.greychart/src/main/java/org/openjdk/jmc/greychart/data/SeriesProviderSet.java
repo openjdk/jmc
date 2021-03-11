@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.DataSeries;
 
 public class SeriesProviderSet<T> extends Observable implements DataSeriesProvider<T> {
 	private final Set<DataSeries<T>> dataSeries = new HashSet<>();

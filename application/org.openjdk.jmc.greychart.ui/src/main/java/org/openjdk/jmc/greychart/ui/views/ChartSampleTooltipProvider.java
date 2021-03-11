@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.greychart.ui.views;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.DataSeries;
 
 public interface ChartSampleTooltipProvider {
 

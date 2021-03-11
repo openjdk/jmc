@@ -37,11 +37,9 @@ import java.util.Iterator;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-import org.openjdk.jmc.ui.common.xydata.DefaultTimestampedData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.DefaultTimestampedData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.testutil.DefaultSignalGenerator;
 
 /**

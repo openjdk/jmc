@@ -35,7 +35,7 @@ package org.openjdk.jmc.greychart.data;
 import java.util.Observer;
 
 import org.openjdk.jmc.common.util.IObservable;
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.DataSeries;
 
 public class SeriesProvider<T> implements IObservable, DataSeriesProvider<T> {
 

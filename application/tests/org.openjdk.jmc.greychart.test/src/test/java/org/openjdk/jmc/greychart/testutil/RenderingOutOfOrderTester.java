@@ -39,9 +39,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openjdk.jmc.ui.common.xydata.DefaultTimestampedData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
-
+import org.openjdk.jmc.common.xydata.DefaultTimestampedData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
 import org.openjdk.jmc.greychart.GreyChartPanel;
 import org.openjdk.jmc.greychart.YAxis.Position;

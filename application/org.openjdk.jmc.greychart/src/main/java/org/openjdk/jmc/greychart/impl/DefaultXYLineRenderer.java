@@ -46,9 +46,8 @@ import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-import org.openjdk.jmc.ui.common.xydata.IXYData;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.IXYData;
 import org.openjdk.jmc.greychart.AbstractGreyChart;
 import org.openjdk.jmc.greychart.AbstractSeriesPlotRenderer;
 import org.openjdk.jmc.greychart.GreyChartPanel;
