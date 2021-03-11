@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.rjmx.services;
 
-import org.openjdk.jmc.ui.common.tree.IChild;
+import org.openjdk.jmc.common.tree.IChild;
 
 public interface IAttributeChild extends IChild<IReadOnlyAttribute> {
 

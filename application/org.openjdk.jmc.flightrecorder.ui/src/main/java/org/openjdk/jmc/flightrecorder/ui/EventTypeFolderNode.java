@@ -40,10 +40,10 @@ import java.util.stream.Stream;
 
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.tree.IParent;
 
 public class EventTypeFolderNode implements IParent<Object> {
 

@@ -34,7 +34,7 @@ package org.openjdk.jmc.ui.common.action;
 
 import java.util.Collection;
 
-import org.openjdk.jmc.ui.common.tree.IParent;
+import org.openjdk.jmc.common.tree.IParent;
 
 /**
  * A tree of {@link IUserAction}.

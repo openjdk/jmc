@@ -46,7 +46,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-
 import org.openjdk.jmc.ui.common.tree.ITreeNode;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
 import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;

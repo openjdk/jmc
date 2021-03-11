@@ -30,24 +30,18 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.tree;
-
-import java.util.Collection;
+package org.openjdk.jmc.common.tree;
 
 /**
- * An interface for objects that are parents of other objects.
+ * Interface for objects that are children of another object.
  * 
  * @param <T>
- *            child object type
+ *            parent object type
  */
-public interface IParent<T> {
-	/**
-	 * @return {@code true} if {@link #getChildren()} would return a non-empty collection
-	 */
-	boolean hasChildren();
+public interface IChild<T> {
 
 	/**
-	 * @return a collection with the child objects
+	 * @return the parent object
 	 */
-	Collection<? extends T> getChildren();
+	T getParent();
 }

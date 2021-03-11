@@ -44,10 +44,10 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistable;
 
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.tree.IArray;
 import org.openjdk.jmc.rjmx.servermodel.IDiscoveryInfo;
 import org.openjdk.jmc.rjmx.servermodel.internal.Server;
 import org.openjdk.jmc.rjmx.servermodel.internal.ServerModel;
-import org.openjdk.jmc.ui.common.tree.IArray;
 
 public class FolderStructure implements IArray<Object>, IPersistable {
 	private final static String EMPTY_FOLDER_MEMENTO_TYPE = "EmptyFolder"; //$NON-NLS-1$

@@ -68,6 +68,7 @@ import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.tree.IArray;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
@@ -90,7 +91,6 @@ import org.openjdk.jmc.rjmx.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
 import org.openjdk.jmc.rjmx.ui.attributes.EditDisplayNameAction;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.tree.IArray;
 import org.openjdk.jmc.ui.common.xydata.DataSeries;
 import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
