@@ -48,6 +48,7 @@ import java.util.TreeSet;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.unit.IConstrainedMap;
 import org.openjdk.jmc.common.unit.IOptionDescriptor;
@@ -60,7 +61,6 @@ import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
 import org.openjdk.jmc.rjmx.services.jfr.IEventTypeInfo;
 import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.misc.IGraphical;
 
 /**

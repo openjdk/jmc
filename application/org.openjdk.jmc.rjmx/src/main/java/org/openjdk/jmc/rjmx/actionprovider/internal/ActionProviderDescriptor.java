@@ -43,8 +43,8 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.resource.IImageResource;
 import org.openjdk.jmc.ui.common.resource.Resource;
 

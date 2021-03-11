@@ -48,6 +48,8 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity.DualUnitFormatter;
@@ -67,8 +69,6 @@ import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor;
 import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor.RecordingState;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.resource.MCFile;
 import org.openjdk.jmc.ui.misc.IGraphical;
 

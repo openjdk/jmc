@@ -33,10 +33,9 @@
 package org.openjdk.jmc.rjmx.actionprovider.internal;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 
 /**
  * Adapt {@link IActionProvider} and {@link IServer} to {@link IUserAction} to invoke their default

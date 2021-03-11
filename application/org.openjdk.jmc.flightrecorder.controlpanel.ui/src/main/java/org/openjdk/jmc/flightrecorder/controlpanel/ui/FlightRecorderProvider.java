@@ -43,6 +43,8 @@ import java.util.Set;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.actions.DumpAnyRecordingAction;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.actions.StartRecordingAction;
@@ -55,8 +57,6 @@ import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
 import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor;
 import org.openjdk.jmc.rjmx.ui.misc.SimpleActionProvider;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.util.IDisconnectable;
 import org.openjdk.jmc.ui.misc.IGraphical;
 import org.openjdk.jmc.ui.misc.IRefreshable;

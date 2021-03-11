@@ -6,6 +6,7 @@ Bundle-SymbolicName: org.openjdk.jmc.common;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.common,
+ org.openjdk.jmc.common.action,
  org.openjdk.jmc.common.collection,
  org.openjdk.jmc.common.io,
  org.openjdk.jmc.common.item,
