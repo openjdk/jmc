@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,36 +30,66 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.rjmx.servermodel.internal;
+package org.openjdk.jmc.common.security;
 
-import org.openjdk.jmc.common.security.ICredentials;
-import org.openjdk.jmc.common.security.InMemoryCredentials;
-import org.openjdk.jmc.common.security.PersistentCredentials;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.openjdk.jmc.common.security.ISecurityManager;
 import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 
-public class ServerModelCredentials implements ICredentials {
+/**
+ * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy
+ * loaded on demand.
+ */
+public class PersistentCredentials implements ICredentials {
 
-	private final ICredentials wrapped;
+	private final String id;
+	private String[] wrapped;
 
-	public ServerModelCredentials(String username, String password, boolean exportPassword) throws SecurityException {
-		wrapped = exportPassword
-				? new PersistentCredentials(username, password, ModelPersistence.SERVER_CREDENTIALS_FAMILY)
-				: new InMemoryCredentials(username, password);
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
+
+	public PersistentCredentials(String id) {
+		this.id = id;
+	}
+
+	public PersistentCredentials(String username, String password) throws SecurityException {
+		this(username, password, null);
+	}
+
+	public PersistentCredentials(String username, String password, String family) throws SecurityException {
+		wrapped = new String[] {username, password};
+		id = SecurityManagerFactory.getSecurityManager().storeInFamily(family, wrapped);
 	}
 
 	@Override
 	public String getUsername() throws SecurityException {
-		return wrapped.getUsername();
+		return getCredentials()[0];
 	}
 
 	@Override
 	public String getPassword() throws SecurityException {
-		return wrapped.getPassword();
+		return getCredentials()[1];
+	}
+
+	private String[] getCredentials() throws SecurityException {
+		if (wrapped == null) {
+			wrapped = (String[]) SecurityManagerFactory.getSecurityManager().get(id);
+		}
+		if (wrapped == null || wrapped.length != 2) {
+			throw new CredentialsNotAvailableException();
+		}
+		return wrapped;
 	}
 
 	@Override
 	public String getExportedId() {
-		return wrapped.getExportedId();
+		return id;
 	}
 
+	public static boolean isPasswordValid(final String password) {
+		Matcher matcher = PASSWORD_PATTERN.matcher(password);
+		return matcher.matches();
+	}
 }

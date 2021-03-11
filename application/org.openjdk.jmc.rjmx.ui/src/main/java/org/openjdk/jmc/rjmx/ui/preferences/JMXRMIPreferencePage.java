@@ -51,9 +51,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.rjmx.preferences.JMXRMIPreferences;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.PasswordFieldEditor;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,29 +30,50 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
 
-public class SecurelyStoredByteArray {
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-	private final String id;
+import org.openjdk.jmc.common.security.ISecurityManager;
 
-	public SecurelyStoredByteArray(String id) {
-		this.id = id;
+/**
+ * This is the global security manager factory for Mission Control. You can only have one
+ * SecurityManager, and it is initialized at start. It can not be changed once initialized. The only
+ * way to change security manager is to set the system property
+ * org.openjdk.jmc.rjmx.security.manager=&lt;class&gt; before this factory class is instantiated.
+ * The class must implement ISecurityManager, and it must have a default constructor.
+ */
+public final class SecurityManagerFactory {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.common.security"); //$NON-NLS-1$
+
+	private static ISecurityManager instance;
+
+	static {
+		String className = System.getProperty("org.openjdk.jmc.common.security.manager"); //$NON-NLS-1$
+		try {
+			if (className != null) {
+				Class<? extends Object> c = Class.forName(className);
+				instance = (ISecurityManager) c.newInstance();
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Could not create Security manager for className. Using default! Exception was:", //$NON-NLS-1$
+					e);
+		}
 	}
 
-	public boolean exists() {
-		return SecurityManagerFactory.getSecurityManager().hasKey(id);
+	public synchronized final static void setDefaultSecurityManager(ISecurityManager manager) {
+		if (instance == null) {
+			instance = manager;
+		}
 	}
 
-	public byte[] get() throws Exception {
-		return (byte[]) SecurityManagerFactory.getSecurityManager().get(id);
+	public synchronized final static ISecurityManager getSecurityManager() {
+		return instance;
 	}
 
-	public void set(byte ... value) throws Exception {
-		SecurityManagerFactory.getSecurityManager().storeWithKey(id, value);
+	private SecurityManagerFactory() {
+		throw new AssertionError("This class is not to be instantiated!"); //$NON-NLS-1$
 	}
 
-	public void remove() throws Exception {
-		SecurityManagerFactory.getSecurityManager().withdraw(id);
-	}
 }

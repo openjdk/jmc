@@ -36,7 +36,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.openjdk.jmc.ui.common.security.SecurelyStoredByteArray;
+import org.openjdk.jmc.common.security.SecurelyStoredByteArray;
 
 public class JMXRMIPreferences extends SecurelyStoredByteArray {
 

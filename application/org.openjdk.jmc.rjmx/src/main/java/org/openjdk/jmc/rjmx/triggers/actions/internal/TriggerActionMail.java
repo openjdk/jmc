@@ -46,6 +46,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import org.eclipse.osgi.util.NLS;
+import org.openjdk.jmc.common.security.PersistentCredentials;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
@@ -54,7 +55,6 @@ import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationToolkit;
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 
 /**
  * NotificationAction that emails a certain target the NotificationEvent and the details of what has

@@ -30,32 +30,31 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
 
-/**
- * Credentials only stored in memory
- */
-public class InMemoryCredentials implements ICredentials {
-	private final String username;
-	private final String password;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 
-	public InMemoryCredentials(String username, String password) {
-		this.username = username;
-		this.password = password;
+public class SecurelyStoredByteArray {
+
+	private final String id;
+
+	public SecurelyStoredByteArray(String id) {
+		this.id = id;
 	}
 
-	@Override
-	public String getUsername() {
-		return username;
+	public boolean exists() {
+		return SecurityManagerFactory.getSecurityManager().hasKey(id);
 	}
 
-	@Override
-	public String getPassword() {
-		return password;
+	public byte[] get() throws Exception {
+		return (byte[]) SecurityManagerFactory.getSecurityManager().get(id);
 	}
 
-	@Override
-	public String getExportedId() {
-		return null;
+	public void set(byte ... value) throws Exception {
+		SecurityManagerFactory.getSecurityManager().storeWithKey(id, value);
+	}
+
+	public void remove() throws Exception {
+		SecurityManagerFactory.getSecurityManager().withdraw(id);
 	}
 }
