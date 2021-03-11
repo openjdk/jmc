@@ -39,6 +39,8 @@ import javax.management.remote.JMXServiceURL;
 
 import org.openjdk.jmc.common.action.IActionProvider;
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.resource.IImageResource;
+import org.openjdk.jmc.common.resource.Resource;
 import org.openjdk.jmc.common.security.ICredentials;
 import org.openjdk.jmc.common.util.ICopyable;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
@@ -51,8 +53,6 @@ import org.openjdk.jmc.rjmx.internal.ServerHandle;
 import org.openjdk.jmc.rjmx.servermodel.IDiscoveryInfo;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.ui.common.labelingrules.NameConverter;
-import org.openjdk.jmc.ui.common.resource.IImageResource;
-import org.openjdk.jmc.ui.common.resource.Resource;
 
 public class Server implements IServer, ICopyable, IImageResource {
 	private final ICredentials credentials;

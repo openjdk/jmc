@@ -30,32 +30,12 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.resource;
+package org.openjdk.jmc.common.resource;
 
 /**
- * Class identifying a resource in an Eclipse plugin.
+ * Interface for classes that can provide an image resource.
  */
-public class Resource {
+public interface IImageResource {
 
-	private final String pluginId;
-	private final String resource;
-
-	/**
-	 * @param pluginId
-	 *            id of the Eclipse plugin containing the resource
-	 * @param resource
-	 *            resource path within the Eclipse plugin
-	 */
-	public Resource(String pluginId, String resource) {
-		this.pluginId = pluginId;
-		this.resource = resource;
-	}
-
-	public String getPluginId() {
-		return pluginId;
-	}
-
-	public String getResourcePath() {
-		return resource;
-	}
+	public Resource getImageResource();
 }

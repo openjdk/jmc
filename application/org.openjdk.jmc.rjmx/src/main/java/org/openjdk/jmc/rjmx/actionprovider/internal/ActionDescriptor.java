@@ -42,10 +42,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.openjdk.jmc.common.action.Executable;
 import org.openjdk.jmc.common.action.IUserAction;
+import org.openjdk.jmc.common.resource.IImageResource;
+import org.openjdk.jmc.common.resource.Resource;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.actionprovider.IActionFactory;
-import org.openjdk.jmc.ui.common.resource.IImageResource;
-import org.openjdk.jmc.ui.common.resource.Resource;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 
 public class ActionDescriptor implements IUserAction, IAdaptable, IImageResource {

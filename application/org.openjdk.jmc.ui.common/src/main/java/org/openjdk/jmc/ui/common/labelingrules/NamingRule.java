@@ -34,7 +34,7 @@ package org.openjdk.jmc.ui.common.labelingrules;
 
 import java.util.StringTokenizer;
 
-import org.openjdk.jmc.ui.common.resource.Resource;
+import org.openjdk.jmc.common.resource.Resource;
 
 /**
  */
