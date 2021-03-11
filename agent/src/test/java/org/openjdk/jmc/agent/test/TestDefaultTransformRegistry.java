@@ -124,8 +124,14 @@ public class TestDefaultTransformRegistry {
 		assertNotNull(registry);
 		final String initialConfiguration = registry.getCurrentConfiguration();
 		final String invalidSnippet = XML_EVENT_DESCRIPTION;
-		Set<String> modifiedClassNames = registry.modify(invalidSnippet);
-		assertNull(modifiedClassNames);
+		boolean exceptionThrown = false;
+		try {
+			Set<String> modifiedClassNames = registry.modify(invalidSnippet);
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			exceptionThrown = true;
+		}
+		assertTrue(exceptionThrown);
 		assertEquals(registry.getCurrentConfiguration(), initialConfiguration);
 	}
 

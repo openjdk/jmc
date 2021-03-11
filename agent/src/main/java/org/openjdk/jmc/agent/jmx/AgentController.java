@@ -66,14 +66,15 @@ public class AgentController implements AgentControllerMXBean {
 			registry.setCurrentConfiguration("");
 		} else {
 			Set<String> initialClasses = new HashSet<>(registry.getClassNames());
-			Set<String> modifiedClasses = registry.modify(xmlDescription);
-			if (modifiedClasses == null) {
-				logger.log(Level.SEVERE, "Failed to identify transformations: " + xmlDescription);
-				return;
-			} else {
-				modifiedClasses.addAll(initialClasses);
-				classesToRetransformArray = retransformClasses(modifiedClasses);
+			Set<String> modifiedClasses;
+			try {
+				modifiedClasses = registry.modify(xmlDescription);
+			} catch (Exception e) {
+				logger.severe("Failed to identify transformations: " + xmlDescription);
+				throw e;
 			}
+			modifiedClasses.addAll(initialClasses);
+			classesToRetransformArray = retransformClasses(modifiedClasses);
 		}
 		registry.setRevertInstrumentation(true);
 		instrumentation.retransformClasses(classesToRetransformArray);

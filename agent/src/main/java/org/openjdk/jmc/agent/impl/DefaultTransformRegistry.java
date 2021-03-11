@@ -484,7 +484,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	}
 
 	@Override
-	public Set<String> modify(String xmlDescription) {
+	public Set<String> modify(String xmlDescription) throws XMLStreamException {
 		try {
 			validateProbeDefinition(xmlDescription);
 
@@ -517,7 +517,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			return modifiedClasses;
 		} catch (XMLStreamException xse) {
 			logger.log(Level.SEVERE, "Failed to create XML Stream Reader", xse);
-			return null;
+			throw xse;
 		}
 	}
 

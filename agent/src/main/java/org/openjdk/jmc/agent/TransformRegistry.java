@@ -35,6 +35,8 @@ package org.openjdk.jmc.agent;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.stream.XMLStreamException;
+
 public interface TransformRegistry {
 	/**
 	 * The named class has transforms that have not been executed yet.
@@ -83,8 +85,10 @@ public interface TransformRegistry {
 	 * @param xmlDescription
 	 *            an XML snippet describing the wanted modifications.
 	 * @return a set of class names associated with modified {@link TransformDescriptor}s.
+	 * @throws XMLStreamException
+	 *             if the supplied XML fails to validate.
 	 */
-	Set<String> modify(String xmlDescription);
+	Set<String> modify(String xmlDescription) throws XMLStreamException;
 
 	/**
 	 * Clears all classes and their corresponding transforms in the registry.
