@@ -136,7 +136,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 					new TableSettings(state.getChild(TABLE)));
 			MCContextMenuManager mm = MCContextMenuManager.create(byTypeTable.getManager().getViewer().getControl());
 			ColumnMenusFactory.addDefaultMenus(byTypeTable.getManager(), mm);
-			byTypeFilter = FilterComponent.createFilterComponent(byTypeTable, byTypeItemFilter, constPoolItems,
+			byTypeFilter = FilterComponent.createFilterComponent(byTypeTable, null, constPoolItems,
 					pageContainer.getSelectionStore()::getSelections, this::onTypeFilterChange);
 			//mm.add(byTypeFilter.getShowFilterAction());
 			mm.add(byTypeFilter.getShowSearchAction());
@@ -145,7 +145,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 					new TableSettings(state.getChild(CONSTANT_TABLE)));
 			mm = MCContextMenuManager.create(constantValueTable.getManager().getViewer().getControl());
 			ColumnMenusFactory.addDefaultMenus(constantValueTable.getManager(), mm);
-			constantValueFilter = FilterComponent.createFilterComponent(constantValueTable, constantValueItemFilter,
+			constantValueFilter = FilterComponent.createFilterComponent(constantValueTable, null,
 					getDataSource().getConstants(), pageContainer.getSelectionStore()::getSelections,
 					this::onValueFilterChange);
 			//mm.add(constantValueFilter.getShowFilterAction());
