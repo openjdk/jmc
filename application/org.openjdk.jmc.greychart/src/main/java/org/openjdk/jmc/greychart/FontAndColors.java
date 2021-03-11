@@ -41,8 +41,8 @@ import java.util.logging.Level;
 import javax.swing.UIManager;
 import javax.swing.text.StyleContext;
 
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 
 public final class FontAndColors {
 	private static Color bgcolor = createDefaultBackgroundColor();

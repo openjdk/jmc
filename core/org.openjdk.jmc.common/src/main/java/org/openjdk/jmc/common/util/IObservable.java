@@ -30,25 +30,32 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.util;
+package org.openjdk.jmc.common.util;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
- * Interface for objects that may be copied. This is similar to {@link Cloneable}, but with the
- * addition of {@link ICopyable#isCopyable()} that can tell if the object is truly copyable or not.
+ * An observable object. This is a solution to make interface observable since {@link Observable} is
+ * not an interface. Actual instance will probably (but not necessarily) extend the class
+ * {@link Observable}.
  */
-public interface ICopyable {
+public interface IObservable {
 
 	/**
-	 * @return {@code true} if this object can be copied
+	 * Adds an observer to the set of observers. The order in which notifications will be delivered
+	 * to multiple observers is not specified.
+	 *
+	 * @param o
+	 *            an observer to be added
 	 */
-	boolean isCopyable();
+	void addObserver(Observer o);
 
 	/**
-	 * Create a deep copy of this object. If the object is not copyable, then the behavior is
-	 * undefined. {@link ICopyable#isCopyable()} should be called before copying to determine
-	 * whether it is safe.
-	 * 
-	 * @return a deep copy of this object
+	 * Deletes an observer from the set of observers.
+	 *
+	 * @param o
+	 *            the observer to be deleted
 	 */
-	Object copy();
+	void deleteObserver(Observer o);
 }

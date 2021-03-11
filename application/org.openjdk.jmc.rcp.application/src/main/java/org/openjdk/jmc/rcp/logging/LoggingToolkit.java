@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Platform;
 
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 
 /**
  * Class for handling the java.util.logging subsystem.

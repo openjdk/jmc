@@ -42,9 +42,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 
 /**
  * Class for inputs that consists of a path

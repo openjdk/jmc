@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 
 /**
  * Simple JComponent containing a GreyChart. Thanks to: Janne Andersson @ MINQ

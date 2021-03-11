@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.services;
 
 import java.util.List;
 
-import org.openjdk.jmc.ui.common.util.IObservable;
+import org.openjdk.jmc.common.util.IObservable;
 
 public interface IAttributeStorage extends IObservable {
 

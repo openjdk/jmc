@@ -41,11 +41,11 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import org.openjdk.jmc.common.util.Filename;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
-import org.openjdk.jmc.ui.common.util.Filename;
 
 /**
  * This notification action triggers a hprof dump.

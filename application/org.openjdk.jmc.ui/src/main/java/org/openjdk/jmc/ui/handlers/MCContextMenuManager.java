@@ -40,8 +40,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Control;
-
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 
 /**
  * Context menu filled with standard group ids.

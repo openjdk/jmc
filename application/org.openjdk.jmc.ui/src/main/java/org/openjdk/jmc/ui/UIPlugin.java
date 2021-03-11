@@ -37,9 +37,9 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.misc.TrayManager;
 import org.openjdk.jmc.ui.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.security.DialogSecurityManager;

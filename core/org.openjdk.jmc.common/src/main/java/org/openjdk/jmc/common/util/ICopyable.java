@@ -30,50 +30,25 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.util;
-
-import java.text.SimpleDateFormat;
-import java.util.Random;
+package org.openjdk.jmc.common.util;
 
 /**
- * Class for handling file names. Primarily used for creating unique file names.
+ * Interface for objects that may be copied. This is similar to {@link Cloneable}, but with the
+ * addition of {@link ICopyable#isCopyable()} that can tell if the object is truly copyable or not.
  */
-public class Filename {
+public interface ICopyable {
 
-	private static Random RAND = new Random();
-	private final String name;
-	private final String ext;
+	/**
+	 * @return {@code true} if this object can be copied
+	 */
+	boolean isCopyable();
 
-	public Filename(String name, String ext) {
-		this.name = name;
-		this.ext = ext;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getExtension() {
-		return ext;
-	}
-
-	public Filename asRandomFilename() {
-		int nextInt = RAND.nextInt();
-		SimpleDateFormat sf = new SimpleDateFormat("_yyyy-MM-dd_HH-mm-ss_"); //$NON-NLS-1$
-		return new Filename(name + sf.format(System.currentTimeMillis()) + Integer.toHexString(nextInt), ext);
-	}
-
-	@Override
-	public String toString() {
-		return ext.isEmpty() ? name : name + "." + ext; //$NON-NLS-1$
-	}
-
-	public static Filename splitFilename(String name) {
-		int lastPeriod = name.lastIndexOf('.');
-		if (lastPeriod < 0) {
-			return new Filename(name, ""); //$NON-NLS-1$
-		} else {
-			return new Filename(name.substring(0, lastPeriod), name.substring(lastPeriod + 1));
-		}
-	}
+	/**
+	 * Create a deep copy of this object. If the object is not copyable, then the behavior is
+	 * undefined. {@link ICopyable#isCopyable()} should be called before copying to determine
+	 * whether it is safe.
+	 * 
+	 * @return a deep copy of this object
+	 */
+	Object copy();
 }

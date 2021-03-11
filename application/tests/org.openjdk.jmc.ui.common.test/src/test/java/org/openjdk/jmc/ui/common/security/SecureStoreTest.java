@@ -46,7 +46,7 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.security.SecurityException;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 import org.osgi.service.prefs.Preferences;
 
 @SuppressWarnings("nls")

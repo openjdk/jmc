@@ -66,13 +66,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.XYChart;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 

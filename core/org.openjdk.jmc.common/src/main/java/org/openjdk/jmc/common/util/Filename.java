@@ -30,32 +30,50 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.util;
+package org.openjdk.jmc.common.util;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.text.SimpleDateFormat;
+import java.util.Random;
 
 /**
- * An observable object. This is a solution to make interface observable since {@link Observable} is
- * not an interface. Actual instance will probably (but not necessarily) extend the class
- * {@link Observable}.
+ * Class for handling file names. Primarily used for creating unique file names.
  */
-public interface IObservable {
+public class Filename {
 
-	/**
-	 * Adds an observer to the set of observers. The order in which notifications will be delivered
-	 * to multiple observers is not specified.
-	 *
-	 * @param o
-	 *            an observer to be added
-	 */
-	void addObserver(Observer o);
+	private static Random RAND = new Random();
+	private final String name;
+	private final String ext;
 
-	/**
-	 * Deletes an observer from the set of observers.
-	 *
-	 * @param o
-	 *            the observer to be deleted
-	 */
-	void deleteObserver(Observer o);
+	public Filename(String name, String ext) {
+		this.name = name;
+		this.ext = ext;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getExtension() {
+		return ext;
+	}
+
+	public Filename asRandomFilename() {
+		int nextInt = RAND.nextInt();
+		SimpleDateFormat sf = new SimpleDateFormat("_yyyy-MM-dd_HH-mm-ss_"); //$NON-NLS-1$
+		return new Filename(name + sf.format(System.currentTimeMillis()) + Integer.toHexString(nextInt), ext);
+	}
+
+	@Override
+	public String toString() {
+		return ext.isEmpty() ? name : name + "." + ext; //$NON-NLS-1$
+	}
+
+	public static Filename splitFilename(String name) {
+		int lastPeriod = name.lastIndexOf('.');
+		if (lastPeriod < 0) {
+			return new Filename(name, ""); //$NON-NLS-1$
+		} else {
+			return new Filename(name.substring(0, lastPeriod), name.substring(lastPeriod + 1));
+		}
+	}
 }

@@ -66,10 +66,10 @@ import org.openjdk.jmc.common.jvm.Connectable;
 import org.openjdk.jmc.common.jvm.JVMArch;
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.jvm.JVMType;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
-import org.openjdk.jmc.ui.common.util.Environment;
 
 import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;

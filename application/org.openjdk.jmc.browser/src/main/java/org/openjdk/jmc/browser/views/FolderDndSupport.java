@@ -41,7 +41,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
-import org.openjdk.jmc.ui.common.util.ICopyable;
+import org.openjdk.jmc.common.util.ICopyable;
 
 public class FolderDndSupport implements DropTargetListener, DragSourceListener {
 

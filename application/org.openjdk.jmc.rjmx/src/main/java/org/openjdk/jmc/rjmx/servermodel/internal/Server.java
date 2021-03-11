@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import javax.management.remote.JMXServiceURL;
 
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.util.ICopyable;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
@@ -52,7 +53,6 @@ import org.openjdk.jmc.ui.common.labelingrules.NameConverter;
 import org.openjdk.jmc.ui.common.resource.IImageResource;
 import org.openjdk.jmc.ui.common.resource.Resource;
 import org.openjdk.jmc.ui.common.security.ICredentials;
-import org.openjdk.jmc.ui.common.util.ICopyable;
 
 public class Server implements IServer, ICopyable, IImageResource {
 	private final ICredentials credentials;

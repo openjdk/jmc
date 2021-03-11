@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.subscription;
 
+import org.openjdk.jmc.common.util.IObservable;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.ui.common.util.IObservable;
 
 /**
  * Manages {@link IMRIMetadata}s and metadata associated with {@link IMRIMetadata}s. This is one of

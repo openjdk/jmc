@@ -46,11 +46,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.flightrecorder.ui.common.LaneEditor.EditLanesContainer;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 
 public class DropdownLaneFilter extends Composite {

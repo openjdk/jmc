@@ -37,7 +37,7 @@ import java.io.File;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.openjdk.jmc.ui.common.util.Filename;
+import org.openjdk.jmc.common.util.Filename;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 
 /**
