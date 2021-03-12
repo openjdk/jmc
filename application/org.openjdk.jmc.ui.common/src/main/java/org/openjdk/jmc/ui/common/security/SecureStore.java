@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -63,6 +63,8 @@ public class SecureStore {
 	private static final String XML_ELEMENT_CIPHER = "secureStoreCipher"; //$NON-NLS-1$
 	private static final String[] PREFERRED_CIPHERS = new String[] {"PBEWithHmacSHA512AndAES_256", //$NON-NLS-1$
 			"PBEWithHmacSHA512AndAES_128"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] WEAK_CIPHERS = new String[] {"PBEWithMD5AndDES",  "PBEWithMD5AndTripleDES",  "PBEWithSHA1AndRC2_40", "PBEWithSHA1AndRC4_40" };
+	private static final Set<String> weekCiphers = new HashSet<> (); //$NON-NLS-1$
 	private static final String SEP = "_"; //$NON-NLS-1$
 	private DecryptedStorage storage;
 	private String pwd;
@@ -71,6 +73,7 @@ public class SecureStore {
 	private Set<String> keys;
 
 	static {
+		weekCiphers.addAll(Arrays.asList(WEAK_CIPHERS));
 		Set<String> ciphers = new HashSet<>();
 		String pwdForTest = "pwd"; //$NON-NLS-1$
 		byte[] saltForTest = new byte[DecryptedStorage.SALT_LEN];
@@ -80,8 +83,8 @@ public class SecureStore {
 		// that are known to be useless.
 		for (Provider provider : Security.getProviders()) {
 			for (Service service : provider.getServices()) {
-				if ("cipher".equalsIgnoreCase(service.getType())) { //$NON-NLS-1$
-					String algorithm = service.getAlgorithm();
+				String algorithm = service.getAlgorithm();
+				if ("cipher".equalsIgnoreCase(service.getType()) && (weekCiphers.contains(algorithm) == false)) { //$NON-NLS-1$
 					try {
 						DecryptedStorage testStore = new DecryptedStorage();
 						String encrypted = testStore.getEncrypted(algorithm, pwdForTest, saltForTest,
