@@ -59,6 +59,11 @@
 			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.configuration</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
