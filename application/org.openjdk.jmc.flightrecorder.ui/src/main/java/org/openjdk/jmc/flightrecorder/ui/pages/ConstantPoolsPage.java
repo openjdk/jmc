@@ -118,8 +118,6 @@ public class ConstantPoolsPage extends AbstractDataPage {
 		private final ItemHistogram constantValueTable;
 		private FilterComponent byTypeFilter;
 		private FilterComponent constantValueFilter;
-		private IItemFilter byTypeItemFilter;
-		private IItemFilter constantValueItemFilter;
 		private IItemCollection selectionConstPoolItems;
 		private IItemCollection selectionConstantItems;
 		private ItemHistogramWithInput byTypeHistogram;
@@ -169,12 +167,10 @@ public class ConstantPoolsPage extends AbstractDataPage {
 
 		private void onTypeFilterChange(IItemFilter filter) {
 			byTypeFilter.filterChangeHelper(filter, byTypeTable, selectionConstPoolItems);
-			byTypeItemFilter = filter;
 		}
 
 		private void onValueFilterChange(IItemFilter filter) {
 			constantValueFilter.filterChangeHelper(filter, constantValueTable, selectionConstantItems);
-			constantValueItemFilter = filter;
 		}
 
 		@Override
