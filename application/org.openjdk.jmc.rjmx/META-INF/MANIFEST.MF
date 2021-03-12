@@ -7,7 +7,10 @@ Bundle-Version: 8.0.1.qualifier
 Bundle-Activator: org.openjdk.jmc.rjmx.RJMXPlugin
 Eclipse-BuddyPolicy: app
 Import-Package: javax.mail,
- javax.mail.internet
+ javax.mail.internet,
+ org.eclipse.jface.dialogs,
+ org.eclipse.swt.widgets,
+ org.openjdk.jmc.ui.misc
 Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.actionprovider;
   x-friends:="org.openjdk.jmc.console.ui,
