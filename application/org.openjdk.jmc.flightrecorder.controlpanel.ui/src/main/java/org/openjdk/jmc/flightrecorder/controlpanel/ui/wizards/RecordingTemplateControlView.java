@@ -41,12 +41,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui.ErrorTracker;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui.GUIModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui.ProducerEnvironment;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui.WidgetNode;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
 
 /**
  * Creates a view of the control in a recording template/configuration.

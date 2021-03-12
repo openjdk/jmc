@@ -30,11 +30,11 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml;
+package org.openjdk.jmc.flightrecorder.configuration.model.xml;
 
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL_MANDATORY;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_NAME;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_CONFIGURATION_V1;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL_MANDATORY;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_NAME;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_CONFIGURATION_V1;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -47,8 +47,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
-
-import org.openjdk.jmc.ui.UIPlugin;
+import java.util.logging.Logger;
 
 /**
  * A stateless validator of {@link XMLModel}s used for Flight Recording Configurations. Should
@@ -56,6 +55,8 @@ import org.openjdk.jmc.ui.UIPlugin;
  */
 public final class JFCXMLValidator implements IXMLValidator {
 	private static final JFCXMLValidator SHARED = new JFCXMLValidator();
+
+	private static final Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui");
 
 	interface IXMLNodeValidator {
 		XMLValidationResult validate(Object parentNode, Object node);
@@ -175,7 +176,7 @@ public final class JFCXMLValidator implements IXMLValidator {
 		} else {
 			label = model.getRoot().getValue(ATTRIBUTE_LABEL_MANDATORY);
 		}
-		UIPlugin.getDefault().getLogger().log(Level.FINE, "Running JFC validation on " + label); //$NON-NLS-1$
+		LOGGER.log(Level.FINE, "Running JFC validation on " + label); //$NON-NLS-1$
 		List<XMLValidationResult> errors = new ArrayList<>();
 		XMLTagInstance configuration = model.getRoot();
 		List<XMLTagInstance> producers = configuration.getTagsInstances(JFCGrammar.TAG_PRODUCER);
@@ -261,4 +262,5 @@ public final class JFCXMLValidator implements IXMLValidator {
 		}
 		return URI.create(uri + '/');
 	}
+
 }

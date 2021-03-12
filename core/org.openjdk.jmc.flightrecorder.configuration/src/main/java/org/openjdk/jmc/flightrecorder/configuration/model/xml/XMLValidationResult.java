@@ -30,65 +30,30 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml;
+package org.openjdk.jmc.flightrecorder.configuration.model.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+public final class XMLValidationResult {
+	public static final XMLValidationResult OK = new XMLValidationResult(null, "OK", false); //$NON-NLS-1$
 
-public class XMLTag extends XMLNode {
-	static class Predicated extends XMLTag {
-		private final String key;
-		private final String value;
+	private final Object m_object;
+	private final boolean m_error;
+	private final String m_text;
 
-		public Predicated(String name, XMLAttribute attribute, String value) {
-			super(name);
-			key = attribute.getName();
-			this.value = value;
-		}
-
-		@Override
-		public boolean accepts(Map<String, String> attributes) {
-			return value.equals(attributes.get(key));
-		}
+	XMLValidationResult(Object object, String text, boolean error) {
+		m_object = object;
+		m_error = error;
+		m_text = text;
 	}
 
-	private final List<XMLTag> m_tags = new ArrayList<>();
-	private final List<XMLAttribute> m_attributes = new ArrayList<>();
-
-	public XMLTag(String name) {
-		super(name, XMLNodeType.ELEMENT);
+	public Object getObject() {
+		return m_object;
 	}
 
-	public XMLTag(String name, XMLNodeType type) {
-		super(name, type);
+	public String getText() {
+		return m_text;
 	}
 
-	public List<XMLTag> getTags() {
-		return m_tags;
-	}
-
-	public List<XMLAttribute> getAttributes() {
-		return m_attributes;
-	}
-
-	public void add(XMLNode ... nodes) {
-		for (XMLNode node : nodes) {
-			if (node instanceof XMLTag) {
-				m_tags.add((XMLTag) node);
-			}
-			if (node instanceof XMLAttribute) {
-				m_attributes.add((XMLAttribute) node);
-			}
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "Tag: " + getName(); //$NON-NLS-1$
-	}
-
-	public boolean accepts(Map<String, String> attributes) {
-		return true;
+	public boolean isError() {
+		return m_error;
 	}
 }

@@ -9,6 +9,7 @@ Require-Bundle: org.openjdk.jmc.common
 Export-Package: org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.flightrecorder.configuration.events,
  org.openjdk.jmc.flightrecorder.configuration.internal,
+ org.openjdk.jmc.flightrecorder.configuration.model.xml,
  org.openjdk.jmc.flightrecorder.configuration.recording,
  org.openjdk.jmc.flightrecorder.configuration.spi
 Import-Package: org.openjdk.jmc.flightrecorder.internal

@@ -36,9 +36,8 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLTagInstance;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;
 
 public abstract class WidgetNode extends Node {
 	private final XMLTagInstance m_inputElement;

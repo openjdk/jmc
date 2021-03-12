@@ -30,38 +30,22 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml;
+package org.openjdk.jmc.flightrecorder.configuration.model.xml;
 
-import java.util.List;
-import java.util.Set;
+abstract class XMLNode {
+	private final String m_name;
+	private final XMLNodeType m_type;
 
-/**
- * Stateless validator of {@link XMLModel}s. Preliminary interface until generic XML validation has
- * been separated from schema specifics. Currently also provides the starting point for the XML
- * grammar.
- */
-interface IXMLValidator {
-	/**
-	 * Validate all aspects of the given model.
-	 *
-	 * @param model
-	 * @return
-	 */
-	List<XMLValidationResult> validate(XMLModel model);
+	protected XMLNode(String name, XMLNodeType type) {
+		m_name = name;
+		m_type = type;
+	}
 
-	/**
-	 * The expected root element type for models this validator validates.
-	 *
-	 * @return an XML element type
-	 */
-	XMLTag getRootElementType();
+	public final String getName() {
+		return m_name;
+	}
 
-	/**
-	 * A set of {@link XMLTag}s that should be output on one line to make the XML more readable.
-	 * (This may seem out of place in the validator. It was put here mostly because it was simplest,
-	 * but it was also thought that it might be useful when outputting validation problems.)
-	 *
-	 * @return
-	 */
-	Set<XMLTag> getElementsTooKeepOnOneLine();
+	public final XMLNodeType getType() {
+		return m_type;
+	}
 }

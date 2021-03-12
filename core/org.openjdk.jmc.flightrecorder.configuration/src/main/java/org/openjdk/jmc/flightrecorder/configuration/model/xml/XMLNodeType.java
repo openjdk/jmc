@@ -30,22 +30,15 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml;
+package org.openjdk.jmc.flightrecorder.configuration.model.xml;
 
-abstract class XMLNode {
-	private final String m_name;
-	private final XMLNodeType m_type;
-
-	protected XMLNode(String name, XMLNodeType type) {
-		m_name = name;
-		m_type = type;
-	}
-
-	public final String getName() {
-		return m_name;
-	}
-
-	public final XMLNodeType getType() {
-		return m_type;
-	}
+public enum XMLNodeType {
+	DEFINITION,
+	REFERENCE,
+	URI,
+	TEXT,
+	ELEMENT,
+	ELEMENT_WITH_CONTENT,
+	ELEMENT_WITH_OPTIONAL_CHILDREN,
+	ELEMENT_WITH_AT_LEAST_ONE_CHILD
 }

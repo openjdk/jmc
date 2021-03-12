@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration;
 
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.PERIOD_EVERY_CHUNK;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.SETTING_PERIOD;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.PERIOD_EVERY_CHUNK;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.SETTING_PERIOD;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.FontDescriptor;

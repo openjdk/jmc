@@ -49,7 +49,7 @@ import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.configuration.internal.EventTypeIDV2;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationModel;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;

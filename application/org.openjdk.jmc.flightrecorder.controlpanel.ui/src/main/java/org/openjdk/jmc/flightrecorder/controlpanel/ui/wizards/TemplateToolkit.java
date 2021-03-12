@@ -42,7 +42,7 @@ import java.util.List;
 import org.eclipse.swt.widgets.Display;
 
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationRepository;

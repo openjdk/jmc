@@ -45,10 +45,10 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IConfigurationStorageDelegate;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IStorageProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
 
 /**
  * Factory to create a {@link EventConfigurationRepository} with local templates as well as

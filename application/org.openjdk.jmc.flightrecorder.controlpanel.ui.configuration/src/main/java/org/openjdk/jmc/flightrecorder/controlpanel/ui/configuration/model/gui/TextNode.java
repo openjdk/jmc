@@ -46,8 +46,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.unit.IConstraint;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLTagInstance;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;
 import org.openjdk.jmc.ui.misc.ControlDecorationToolkit;
 import org.openjdk.jmc.ui.misc.QuantityKindProposal;
 

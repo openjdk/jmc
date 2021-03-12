@@ -40,6 +40,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLAttribute;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLNodeType;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTag;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;
 
 @SuppressWarnings("nls")
 public class XMLTagInstanceTest {
