@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,8 +34,6 @@ package org.openjdk.jmc.agent;
 
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.stream.XMLStreamException;
 
 public interface TransformRegistry {
 	/**
@@ -85,10 +83,10 @@ public interface TransformRegistry {
 	 * @param xmlDescription
 	 *            an XML snippet describing the wanted modifications.
 	 * @return a set of class names associated with modified {@link TransformDescriptor}s.
-	 * @throws XMLStreamException
+	 * @throws XMLValidationException
 	 *             if the supplied XML fails to validate.
 	 */
-	Set<String> modify(String xmlDescription) throws XMLStreamException;
+	Set<String> modify(String xmlDescription) throws XMLValidationException;
 
 	/**
 	 * Clears all classes and their corresponding transforms in the registry.

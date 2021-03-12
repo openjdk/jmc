@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,6 +52,7 @@ import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
 import org.openjdk.jmc.agent.TransformRegistry;
 import org.openjdk.jmc.agent.Transformer;
+import org.openjdk.jmc.agent.XMLValidationException;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
@@ -63,7 +64,8 @@ public class TestConverterTransforms {
 	}
 
 	@Test
-	public void testRunConverterTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
+	public void testRunConverterTransforms()
+			throws XMLStreamException, IllegalClassFormatException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(),
 				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 
@@ -84,7 +86,8 @@ public class TestConverterTransforms {
 		reader.accept(checkAdapter, 0);
 	}
 
-	public static void main(String[] args) throws XMLStreamException, IOException, IllegalClassFormatException {
+	public static void main(String[] args)
+			throws XMLStreamException, IOException, IllegalClassFormatException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(),
 				"testRunConverterTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 
