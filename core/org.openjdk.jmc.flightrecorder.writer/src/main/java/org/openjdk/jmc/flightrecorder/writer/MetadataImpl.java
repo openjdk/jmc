@@ -130,8 +130,7 @@ final class MetadataImpl {
 	 * @return registered type - either a new type or or a previously registered with the same name
 	 */
 	TypeImpl registerType(String typeName, String supertype, Supplier<TypeStructureImpl> typeStructureProvider) {
-		return registerType(typeName, supertype, true,
-				typeStructureProvider != null ? typeStructureProvider.get() : TypeStructureImpl.EMPTY);
+		return registerType(typeName, supertype, true, typeStructureProvider);
 	}
 
 	/**
@@ -150,8 +149,33 @@ final class MetadataImpl {
 	TypeImpl registerType(
 		String typeName, String supertype, boolean withConstantPool,
 		Supplier<TypeStructureImpl> typeStructureProvider) {
-		return registerType(typeName, supertype, withConstantPool,
-				typeStructureProvider != null ? typeStructureProvider.get() : TypeStructureImpl.EMPTY);
+		/*
+		 * This needs to be slightly more involved than just calling 'computeIfAbsent' because the
+		 * actual computation may (and will) call 'registerType' recursively which will make the
+		 * next call to 'computeIfAbsent' to fail.
+		 *
+		 * The solution is a multi-step registration while still maintaining the atomicity of the
+		 * updates.
+		 * @formatter:off
+		 * 1. Put atomically an unresolved resolvable instance as a placeholder if the map doesn't
+		 * contain the resolved type yet
+		 * 2. Build the type structure (which might involve calling registerType recursively)
+		 * 3. Materialize the type
+		 * 4. Replace the resolvable placeholder with the actual type in the type metadata map
+		 * 5. Resolve the resolvable type so any other types linking to it will have access to the real type
+		 * @formatter:on
+		 */
+		TypeImpl registered = metadata.computeIfAbsent(typeName, k -> new ResolvableType(k, this));
+		if (!registered.isResolved()) {
+			TypeStructureImpl structure = typeStructureProvider != null ? typeStructureProvider.get()
+					: TypeStructureImpl.EMPTY;
+			TypeImpl concreteType = createCustomType(typeName, supertype, structure, withConstantPool);
+			storeTypeStrings(concreteType);
+			metadata.replace(typeName, registered, concreteType);
+			((ResolvableType) registered).resolve();
+			registered = concreteType;
+		}
+		return registered;
 	}
 
 	/**
