@@ -249,6 +249,9 @@ public class GCConfigurationPage extends AbstractDataPage {
 	// Straw man flag filter, need to support CMS, Serial, ParallelGC, Epsilon
 	// Looking at the old collector name in order to inspect/load a single event.
 	private IItemFilter collectorFlags(String oldCollector) {
+		if(oldCollector == null) {
+			return ItemFilters.all();
+		}
 		switch (oldCollector) {
 		case "G1Old":
 			return ItemFilters.matches(JdkAttributes.FLAG_NAME, "UseG1GC|^G1.+"); //$NON-NLS-1$
