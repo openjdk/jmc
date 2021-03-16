@@ -33,24 +33,68 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
-/**
- * The composite of {@linkplain TypedField} and corresponding {@link TypedValue TypedValue(s)}
- */
-public interface TypedFieldValue {
-	/** @return the corresponding {@linkplain TypedField} */
-	TypedField getField();
+import java.util.function.Consumer;
+
+public interface AnnotatedElementBuilder<T extends AnnotatedElementBuilder<?>> {
+	/**
+	 * Add an annotation of the given type
+	 *
+	 * @param type
+	 *            the annotation type
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
+	 */
+	T addAnnotation(Type type);
 
 	/**
-	 * @return the associated value
-	 * @throws IllegalArgumentException
-	 *             if the field is an array
+	 * Add an annotation of the given type and with the given value
+	 *
+	 * @param type
+	 *            the annotation type
+	 * @param value
+	 *            the annotation value
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
 	 */
-	TypedValue getValue();
+	T addAnnotation(Type type, String value);
 
 	/**
-	 * @return the associated values
-	 * @throws IllegalArgumentException
-	 *             if the field is not an array
+	 * Add a predefined annotation
+	 *
+	 * @param type
+	 *            predefined annotation type
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
 	 */
-	TypedValue[] getValues();
+	T addAnnotation(Types.Predefined type);
+
+	/**
+	 * Add a predefined annotation with a value
+	 *
+	 * @param type
+	 *            predefined annotation type
+	 * @param value
+	 *            annotation value
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
+	 */
+	T addAnnotation(Types.Predefined type, String value);
+
+	/**
+	 * Add an annotation of the given type and with the given values array
+	 *
+	 * @param type
+	 *            the annotation type
+	 * @param builderCallback
+	 *            the annotation attributes builder callback
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
+	 */
+	T addAnnotation(Type type, Consumer<TypedValueBuilder> builderCallback);
+
+	/**
+	 * Add an annotation of the given type and with the given values array
+	 *
+	 * @param type
+	 *            the annotation type
+	 * @param builderCallback
+	 *            the annotation attributes builder callback
+	 * @return a {@linkplain AnnotatedElementBuilder} instance for invocation chaining
+	 */
+	T addAnnotation(Types.Predefined type, Consumer<TypedValueBuilder> builderCallback);
 }

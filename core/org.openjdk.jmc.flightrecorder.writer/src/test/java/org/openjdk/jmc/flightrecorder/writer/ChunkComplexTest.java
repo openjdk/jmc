@@ -94,7 +94,10 @@ class ChunkComplexTest {
 		TypedField messageField = types.fieldBuilder("message", customSimpleType).build();
 
 		Type eventType = recording.registerEventType("dd.SampleEvent", eventTypeBuilder -> {
-			eventTypeBuilder.addFields(nameField, messageField);
+			eventTypeBuilder.addFields(nameField, messageField).addAnnotation(Types.JDK.ANNOTATION_CATEGORY,
+					builder -> {
+						builder.putField("value", new String[] {"cat1", "cat2", "cat3"});
+					});
 		});
 
 		TypedValue eventValue = eventType.asValue(access -> {

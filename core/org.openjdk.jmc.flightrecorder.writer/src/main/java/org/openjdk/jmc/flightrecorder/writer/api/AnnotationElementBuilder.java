@@ -33,24 +33,38 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
+import java.util.function.Consumer;
+
 /**
- * The composite of {@linkplain TypedField} and corresponding {@link TypedValue TypedValue(s)}
+ * Builder for {@linkplain Annotation} instances
  */
-public interface TypedFieldValue {
-	/** @return the corresponding {@linkplain TypedField} */
-	TypedField getField();
+public interface AnnotationElementBuilder {
+	/**
+	 * Add annotation argument
+	 * 
+	 * @param name
+	 *            the argument name
+	 * @param value
+	 *            the argument value
+	 * @return this instance for chaining
+	 */
+	AnnotationElementBuilder addArgument(String name, TypedValue value);
 
 	/**
-	 * @return the associated value
-	 * @throws IllegalArgumentException
-	 *             if the field is an array
+	 * Add annotation argument
+	 * 
+	 * @param name
+	 *            the argument name
+	 * @param builderCallback
+	 *            the argument value customization callback
+	 * @return this instance for chaining
 	 */
-	TypedValue getValue();
+	AnnotationElementBuilder addArgument(String name, Consumer<TypedValueBuilder> builderCallback);
 
 	/**
-	 * @return the associated values
-	 * @throws IllegalArgumentException
-	 *             if the field is not an array
+	 * Build a new {@linkplain Annotation} instance
+	 * 
+	 * @return {@linkplain Annotation} instance
 	 */
-	TypedValue[] getValues();
+	Annotation build();
 }

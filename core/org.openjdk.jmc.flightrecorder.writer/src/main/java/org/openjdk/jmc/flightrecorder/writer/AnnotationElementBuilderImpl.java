@@ -34,72 +34,32 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.AnnotationElementBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
-final class TypedFieldBuilderImpl implements TypedFieldBuilder {
-	private final TypesImpl types;
-	private final List<Annotation> annotations = new ArrayList<>();
-	private final TypeImpl type;
-	private final String name;
-	private boolean asArray;
+final class AnnotationElementBuilderImpl implements AnnotationElementBuilder {
+	private final Type type;
 
-	TypedFieldBuilderImpl(String name, TypeImpl type, TypesImpl types) {
+	AnnotationElementBuilderImpl(Type type) {
 		this.type = type;
-		this.name = name;
-		this.types = types;
 	}
 
 	@Override
-	public TypedFieldBuilderImpl addAnnotation(Type type) {
-		return addAnnotation(type, (String) null);
-	}
-
-	@Override
-	public TypedFieldBuilderImpl addAnnotation(Type type, String value) {
-		annotations.add(new Annotation(type, value));
+	public AnnotationElementBuilder addArgument(String name, TypedValue value) {
 		return this;
 	}
 
 	@Override
-	public TypedFieldBuilderImpl addAnnotation(TypesImpl.Predefined type) {
-		return addAnnotation(types.getType(type));
-	}
-
-	@Override
-	public TypedFieldBuilderImpl addAnnotation(Types.Predefined type, String value) {
-		return addAnnotation(types.getType(type), value);
-	}
-
-	@Override
-	public TypedFieldBuilder addAnnotation(Type type, Consumer<TypedValueBuilder> builderCallback) {
-		TypedValueBuilderImpl impl = new TypedValueBuilderImpl((TypeImpl) type);
-		if (builderCallback != null) {
-			builderCallback.accept(impl);
-		}
-		annotations.add(new Annotation(type, impl.build()));
+	public AnnotationElementBuilder addArgument(String name, Consumer<TypedValueBuilder> builderCallback) {
 		return this;
 	}
 
 	@Override
-	public TypedFieldBuilder addAnnotation(Types.Predefined type, Consumer<TypedValueBuilder> builderCallback) {
-		return addAnnotation(types.getType(type), builderCallback);
-	}
-
-	@Override
-	public TypedFieldBuilderImpl asArray() {
-		asArray = true;
-		return this;
-	}
-
-	@Override
-	public TypedFieldImpl build() {
-		return new TypedFieldImpl(type, name, asArray, annotations);
+	public Annotation build() {
+		return new Annotation(type, (String) null);
 	}
 }
