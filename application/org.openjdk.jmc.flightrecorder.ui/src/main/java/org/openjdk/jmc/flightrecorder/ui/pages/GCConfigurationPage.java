@@ -48,6 +48,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAccessorFactory;
+import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
@@ -105,10 +106,8 @@ public class GCConfigurationPage extends AbstractDataPage {
 		}
 
 	}
-	
-	
-	
-	private static final String JVM_FLAGS = "jvmFlags"; //$NON-NLS-1$
+
+	private static final String JVM_GC_FLAGS = "jvmFlags"; //$NON-NLS-1$
 	private static final String JVM_FLAGS_FILTER = "jvmFlagsFilter"; //$NON-NLS-1$s
 	private static final Set<String> FLAGS;
 
@@ -123,7 +122,9 @@ public class GCConfigurationPage extends AbstractDataPage {
 		types.add(JdkTypeIDs.UINT_FLAG);
 		FLAGS = Collections.unmodifiableSet(types);
 	}
-	private static final IItemFilter FLAGS_FILTER = ItemFilters.and(ItemFilters.type(FLAGS), ItemFilters.contains(JdkAttributes.FLAG_NAME, "Shenandoah"));
+
+	private static final IItemFilter FLAGS_FILTER = ItemFilters.type(FLAGS);
+
 	private static final IAccessorFactory<?> FLAG_VALUE_FIELD = new IAccessorFactory<Object>() {
 
 		@Override
@@ -155,16 +156,16 @@ public class GCConfigurationPage extends AbstractDataPage {
 	}
 	private SashForm flagSash;
 	private ItemHistogram allFlagsTable;
-	private IItemFilter flagsFilter;
+	private IItemFilter perGCFagsFilter;
+	private IItemFilter userInputFlagsFilter;
 	private FilterComponent allFlagsFilter;
 	private SelectionState flagsSelection;
-
 
 	@Override
 	public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 		Form form = DataPageToolkit.createForm(parent, toolkit, getName(), getIcon());
 		SashForm container = new SashForm(form.getBody(), SWT.VERTICAL);
-		
+
 		SashForm gcConfigSash = new SashForm(container, SWT.HORIZONTAL);
 		gcConfigSash.setSashWidth(5);
 		gcConfigSash.addTraverseListener(new SimpleTraverseListener());
@@ -210,48 +211,59 @@ public class GCConfigurationPage extends AbstractDataPage {
 		gcConfig.setValues(getDataSource().getItems());
 		heapConfig.setValues(getDataSource().getItems());
 		ycConfig.setValues(getDataSource().getItems());
-		
-		
+
 		flagSash = new SashForm(container, SWT.VERTICAL);
 		toolkit.adapt(flagSash);
 
-		
-		IItemFilter FLAGS_FILTER = ItemFilters.and(ItemFilters.type(FLAGS), ItemFilters.contains(JdkAttributes.FLAG_NAME, "Shenandoah"));
-		
+		String oldCollector = getDataSource().getItems().getAggregate(JdkAggregators.OLD_COLLECTOR);
+		perGCFagsFilter = ItemFilters.and(FLAGS_FILTER, collectorFlags(oldCollector));
+
 		Section allFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
 				Messages.JVMInformationPage_SECTION_JVM_FLAGS);
 		allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(allFlagsSection,
-				new TableSettings(state.getChild(JVM_FLAGS)));
-		allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, flagsFilter,
-				getDataSource().getItems().apply(FLAGS_FILTER), pageContainer.getSelectionStore()::getSelections,
+				new TableSettings(state.getChild(JVM_GC_FLAGS)));
+		allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, userInputFlagsFilter,
+				getDataSource().getItems().apply(perGCFagsFilter), pageContainer.getSelectionStore()::getSelections,
 				this::onFlagsFilterChange);
-		MCContextMenuManager flagsMm = MCContextMenuManager
-				.create(allFlagsTable.getManager().getViewer().getControl());
+		MCContextMenuManager flagsMm = MCContextMenuManager.create(allFlagsTable.getManager().getViewer().getControl());
 		ColumnMenusFactory.addDefaultMenus(allFlagsTable.getManager(), flagsMm);
 		flagsMm.add(allFlagsFilter.getShowFilterAction());
 		flagsMm.add(allFlagsFilter.getShowSearchAction());
 		allFlagsSection.setClient(allFlagsFilter.getComponent());
 
 		ColumnViewer flagViewer = allFlagsTable.getManager().getViewer();
-		flagViewer.addSelectionChangedListener(
-				e -> pageContainer.showSelection(allFlagsTable.getSelection().getItems()));
-		
+		flagViewer
+				.addSelectionChangedListener(e -> pageContainer.showSelection(allFlagsTable.getSelection().getItems()));
+
 		allFlagsFilter.loadState(getState().getChild(JVM_FLAGS_FILTER));
-		
-		allFlagsTable.show(getDataSource().getItems().apply(FLAGS_FILTER));
-		onFlagsFilterChange(flagsFilter);
+
+		allFlagsTable.show(getDataSource().getItems().apply(perGCFagsFilter));
+		onFlagsFilterChange(userInputFlagsFilter);
 		allFlagsTable.getManager().setSelectionState(flagsSelection);
-		
+
 		addResultActions(form);
 
 		return null;
 	}
-	
-	private void onFlagsFilterChange(IItemFilter filter) {
-		allFlagsFilter.filterChangeHelper(filter, allFlagsTable, getDataSource().getItems().apply(FLAGS_FILTER));
-		flagsFilter = filter;
+
+	// Straw man flag filter, need to support CMS, Serial, ParallelGC, Epsilon
+	// Looking at the old collector name in order to inspect/load a single event.
+	private IItemFilter collectorFlags(String oldCollector) {
+		switch (oldCollector) {
+		case "G1Old":
+			return ItemFilters.matches(JdkAttributes.FLAG_NAME, "UseG1GC|^G1.+"); //$NON-NLS-1$
+
+		case "Z":
+			return ItemFilters.matches(JdkAttributes.FLAG_NAME, "UseZGC|^Z[A-Z].+"); //$NON-NLS-1$
+		}
+
+		return ItemFilters.contains(JdkAttributes.FLAG_NAME, oldCollector);
 	}
 
+	private void onFlagsFilterChange(IItemFilter filter) {
+		allFlagsFilter.filterChangeHelper(filter, allFlagsTable, getDataSource().getItems().apply(perGCFagsFilter));
+		userInputFlagsFilter = filter;
+	}
 
 	public GCConfigurationPage(IPageDefinition dpd, StreamModel items, IPageContainer editor) {
 		super(dpd, items, editor);
