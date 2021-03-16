@@ -279,7 +279,7 @@ public abstract class Types {
 		FRAME_TYPE("jdk.types.FrameType"),
 		CLASS("java.lang.Class"),
 		SYMBOL("jdk.types.Symbol"),
-		CLASS_LOADER("jdk.type.ClassLoader"),
+		CLASS_LOADER("jdk.types.ClassLoader"),
 		PACKAGE("jdk.types.Package"),
 		MODULE("jdk.types.Module"),
 		ANNOTATION_LABEL("jdk.jfr.Label"),
