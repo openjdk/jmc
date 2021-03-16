@@ -64,7 +64,7 @@ public class SecureStore {
 	private static final String[] PREFERRED_CIPHERS = new String[] {"PBEWithHmacSHA512AndAES_256", //$NON-NLS-1$
 			"PBEWithHmacSHA512AndAES_128"}; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String[] WEAK_CIPHERS = new String[] {"PBEWithMD5AndDES",  "PBEWithMD5AndTripleDES",  "PBEWithSHA1AndRC2_40", "PBEWithSHA1AndRC4_40" };
-	private static final Set<String> weekCiphers = new HashSet<> (); //$NON-NLS-1$
+	private static final Set<String> weakCiphers = new HashSet<> (); //$NON-NLS-1$
 	private static final String SEP = "_"; //$NON-NLS-1$
 	private DecryptedStorage storage;
 	private String pwd;
@@ -73,7 +73,7 @@ public class SecureStore {
 	private Set<String> keys;
 
 	static {
-		weekCiphers.addAll(Arrays.asList(WEAK_CIPHERS));
+		weakCiphers.addAll(Arrays.asList(WEAK_CIPHERS));
 		Set<String> ciphers = new HashSet<>();
 		String pwdForTest = "pwd"; //$NON-NLS-1$
 		byte[] saltForTest = new byte[DecryptedStorage.SALT_LEN];
@@ -84,7 +84,7 @@ public class SecureStore {
 		for (Provider provider : Security.getProviders()) {
 			for (Service service : provider.getServices()) {
 				String algorithm = service.getAlgorithm();
-				if ("cipher".equalsIgnoreCase(service.getType()) && (weekCiphers.contains(algorithm) == false)) { //$NON-NLS-1$
+				if ("cipher".equalsIgnoreCase(service.getType()) && (weakCiphers.contains(algorithm) == false)) { //$NON-NLS-1$
 					try {
 						DecryptedStorage testStore = new DecryptedStorage();
 						String encrypted = testStore.getEncrypted(algorithm, pwdForTest, saltForTest,
