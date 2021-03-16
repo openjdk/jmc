@@ -776,6 +776,15 @@
 		</page>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.gcconfiguration"
 			id="org.openjdk.jmc.flightrecorder.ui.gcconfiguration">
+			<state>
+				<jvmFlags sortColumn="name:text">
+					<column id="name:text" width="200" />
+					<column id="value" width="110" />
+					<column id="origin:text" width="110" />
+				</jvmFlags>
+				<jvmFlagsFilter showFilter="false" showSearch="true" />
+			</state>
+			
 		</page>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.compilations" id="org.openjdk.jmc.flightrecorder.ui.compilations">
 			<state>

@@ -76,6 +76,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.accessibility.SimpleTraverseListener;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
+import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
@@ -108,6 +109,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 	
 	
 	private static final String JVM_FLAGS = "jvmFlags"; //$NON-NLS-1$
+	private static final String JVM_FLAGS_FILTER = "jvmFlagsFilter"; //$NON-NLS-1$s
 	private static final Set<String> FLAGS;
 
 	static {
@@ -121,7 +123,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 		types.add(JdkTypeIDs.UINT_FLAG);
 		FLAGS = Collections.unmodifiableSet(types);
 	}
-	private static final IItemFilter FLAGS_FILTER = ItemFilters.type(FLAGS);
+	private static final IItemFilter FLAGS_FILTER = ItemFilters.and(ItemFilters.type(FLAGS), ItemFilters.contains(JdkAttributes.FLAG_NAME, "Shenandoah"));
 	private static final IAccessorFactory<?> FLAG_VALUE_FIELD = new IAccessorFactory<Object>() {
 
 		@Override
@@ -144,7 +146,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 		}
 
 	};
-    private static final String FLAG_VALUE_COL_ID = "value"; //$NON-NLS-1$
+	private static final String FLAG_VALUE_COL_ID = "value"; //$NON-NLS-1$
 	private static final CompositeKeyHistogramBuilder FLAG_HISTOGRAM = new CompositeKeyHistogramBuilder();
 	static {
 		FLAG_HISTOGRAM.addKeyColumn(JdkAttributes.FLAG_NAME);
@@ -155,6 +157,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 	private ItemHistogram allFlagsTable;
 	private IItemFilter flagsFilter;
 	private FilterComponent allFlagsFilter;
+	private SelectionState flagsSelection;
 
 
 	@Override
@@ -212,12 +215,13 @@ public class GCConfigurationPage extends AbstractDataPage {
 		flagSash = new SashForm(container, SWT.VERTICAL);
 		toolkit.adapt(flagSash);
 
-		// put below (sashform)
+		
+		IItemFilter FLAGS_FILTER = ItemFilters.and(ItemFilters.type(FLAGS), ItemFilters.contains(JdkAttributes.FLAG_NAME, "Shenandoah"));
+		
 		Section allFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
 				Messages.JVMInformationPage_SECTION_JVM_FLAGS);
 		allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(allFlagsSection,
-				null);
-//				new TableSettings(state.getChild(JVM_FLAGS)));
+				new TableSettings(state.getChild(JVM_FLAGS)));
 		allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, flagsFilter,
 				getDataSource().getItems().apply(FLAGS_FILTER), pageContainer.getSelectionStore()::getSelections,
 				this::onFlagsFilterChange);
@@ -232,11 +236,11 @@ public class GCConfigurationPage extends AbstractDataPage {
 		flagViewer.addSelectionChangedListener(
 				e -> pageContainer.showSelection(allFlagsTable.getSelection().getItems()));
 		
-		
+		allFlagsFilter.loadState(getState().getChild(JVM_FLAGS_FILTER));
 		
 		allFlagsTable.show(getDataSource().getItems().apply(FLAGS_FILTER));
 		onFlagsFilterChange(flagsFilter);
-		// allFlagsTable.getManager().setSelectionState(flagsSelection);
+		allFlagsTable.getManager().setSelectionState(flagsSelection);
 		
 		addResultActions(form);
 
