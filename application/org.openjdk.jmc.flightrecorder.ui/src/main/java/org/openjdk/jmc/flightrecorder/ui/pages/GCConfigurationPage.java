@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -72,9 +71,9 @@ import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.CompositeKeyHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.accessibility.SimpleTraverseListener;
+import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
-import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 
@@ -249,10 +248,20 @@ public class GCConfigurationPage extends AbstractDataPage {
 		if(oldCollector == null) {
 			return ItemFilters.all();
 		}
+
 		
 		// Flags like ParallelGCThreads, ConcGCThreads, Xmx, NewRatio are left as this information is contained in the gc configuration event
+		// from https://github.com/openjdk/jdk11u/blob/master/src/hotspot/share/gc/shared/gc_globals.hpp
 		switch (oldCollector) {
+		// https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/epsilon/epsilon_globals.hpp
+		// TODO
+//		case "Epsilon":
+//			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/serial/serial_globals.hpp
+//			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseEpsilonGC"), //$NON-NLS-1$
+//					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Epsilon.+")); //$NON-NLS-1$
+
 		case "G1Old":
+			// https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/g1/g1_globals.hpp
 			return ItemFilters.or(
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseG1GC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "InitiatingHeapOccupancyPercent"), //$NON-NLS-1$
@@ -264,9 +273,10 @@ public class GCConfigurationPage extends AbstractDataPage {
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseTransparentHugePages"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
-					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^G1.+")) ; //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^G1.+")); //$NON-NLS-1$
 
 		case "Z":
+			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/z/z_globals.hpp
 			return ItemFilters.or(
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseZGC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
@@ -276,9 +286,10 @@ public class GCConfigurationPage extends AbstractDataPage {
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
-					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")) ; //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")); //$NON-NLS-1$
 			
 		case "Shenandoah":
+			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/shenandoah/shenandoah_globals.hpp
 			return ItemFilters.or(
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseShenandoahGC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
@@ -288,7 +299,38 @@ public class GCConfigurationPage extends AbstractDataPage {
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
-					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")) ; //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")); //$NON-NLS-1$
+			
+		case "SerialOld":
+			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/serial/serial_globals.hpp
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseSerialGC")); //$NON-NLS-1$
+
+		case "ParallelOld":
+			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/parallel/parallel_globals.hpp
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseParallelGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "HeapMaximumCompactionInterval"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "HeapFirstMaximumCompactionCount"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseMaximumCompactionOnSystemGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ParallelOldDeadWoodLimiterMean"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ParallelOldDeadWoodLimiterStdDev"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "GCWorkerDelayMillis"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "PSChunkLargeArrays"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "HeapMaximumCompactionInterval"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^CMS[A-Z].+")); //$NON-NLS-1$
+
+		case "ConcurrentMarkSweep":
+			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/cms/cms_globals.hpp
+			return ItemFilters.or(
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseConcMarkSweepGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseCMSInitiatingOccupancyOnly"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "BindCMSThreadToCPU"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "CPUForCMSThread"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ParallelRefProcEnabled"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ScavengeBeforeFullGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^(CMS|FLS|ParGC)[A-Z_].+")); //$NON-NLS-1$
 		}
 
 		return ItemFilters.contains(JdkAttributes.FLAG_NAME, oldCollector);
