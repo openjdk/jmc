@@ -46,14 +46,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import org.openjdk.jmc.common.IState;
-import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAccessorFactory;
-import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -80,7 +77,6 @@ import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
-import org.openjdk.jmc.ui.misc.PersistableSashForm;
 
 public class GCConfigurationPage extends AbstractDataPage {
 	public static class GCConfigurationPageFactory implements IDataPageFactory {
@@ -152,7 +148,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 	static {
 		FLAG_HISTOGRAM.addKeyColumn(JdkAttributes.FLAG_NAME);
 		FLAG_HISTOGRAM.addKeyColumn(JdkAttributes.FLAG_ORIGIN);
-		FLAG_HISTOGRAM.addKeyColumn(FLAG_VALUE_COL_ID, Messages.JVMInformationPage_COLUMN_VALUE, FLAG_VALUE_FIELD);
+		FLAG_HISTOGRAM.addKeyColumn(FLAG_VALUE_COL_ID, Messages.GCConfigurationPage_COLUMN_VALUE, FLAG_VALUE_FIELD);
 	}
 	private SashForm flagSash;
 	private ItemHistogram allFlagsTable;
@@ -218,9 +214,9 @@ public class GCConfigurationPage extends AbstractDataPage {
 		String oldCollector = getDataSource().getItems().getAggregate(JdkAggregators.OLD_COLLECTOR);
 		perGCFagsFilter = ItemFilters.and(FLAGS_FILTER, collectorFlags(oldCollector));
 
-		Section allFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
-				Messages.JVMInformationPage_SECTION_JVM_FLAGS);
-		allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(allFlagsSection,
+		Section gcFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
+				Messages.GCConfigurationPage_SECTION_JVM_GC_FLAGS);
+		allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(gcFlagsSection,
 				new TableSettings(state.getChild(JVM_GC_FLAGS)));
 		allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, userInputFlagsFilter,
 				getDataSource().getItems().apply(perGCFagsFilter), pageContainer.getSelectionStore()::getSelections,
@@ -229,7 +225,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 		ColumnMenusFactory.addDefaultMenus(allFlagsTable.getManager(), flagsMm);
 		flagsMm.add(allFlagsFilter.getShowFilterAction());
 		flagsMm.add(allFlagsFilter.getShowSearchAction());
-		allFlagsSection.setClient(allFlagsFilter.getComponent());
+		gcFlagsSection.setClient(allFlagsFilter.getComponent());
 
 		ColumnViewer flagViewer = allFlagsTable.getManager().getViewer();
 		flagViewer
@@ -249,15 +245,50 @@ public class GCConfigurationPage extends AbstractDataPage {
 	// Straw man flag filter, need to support CMS, Serial, ParallelGC, Epsilon
 	// Looking at the old collector name in order to inspect/load a single event.
 	private IItemFilter collectorFlags(String oldCollector) {
+		// THis may happen for JFR files without GC configuration events, like those of async-profiler
 		if(oldCollector == null) {
 			return ItemFilters.all();
 		}
+		
+		// Flags like ParallelGCThreads, ConcGCThreads, Xmx, NewRatio are left as this information is contained in the gc configuration event
 		switch (oldCollector) {
 		case "G1Old":
-			return ItemFilters.matches(JdkAttributes.FLAG_NAME, "UseG1GC|^G1.+"); //$NON-NLS-1$
+			return ItemFilters.or(
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseG1GC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "InitiatingHeapOccupancyPercent"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ParallelRefProcEnabled"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "MaxGCPauseMillis"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "GCPauseIntervalMillis"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseLargePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseTransparentHugePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^G1.+")) ; //$NON-NLS-1$
 
 		case "Z":
-			return ItemFilters.matches(JdkAttributes.FLAG_NAME, "UseZGC|^Z[A-Z].+"); //$NON-NLS-1$
+			return ItemFilters.or(
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseZGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseLargePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseTransparentHugePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")) ; //$NON-NLS-1$
+			
+		case "Shenandoah":
+			return ItemFilters.or(
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseShenandoahGC"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseLargePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseTransparentHugePages"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseNUMA"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
+					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
+					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")) ; //$NON-NLS-1$
 		}
 
 		return ItemFilters.contains(JdkAttributes.FLAG_NAME, oldCollector);
