@@ -78,7 +78,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 
 		@Override
 		public ImageDescriptor getImageDescriptor(IState state) {
-			return FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.PAGE_RECORDING);
+			return FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.PAGE_CONSTANT_POOL);
 		}
 
 		@Override
