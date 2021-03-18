@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,6 +52,7 @@ import org.objectweb.asm.util.TraceClassVisitor;
 import org.openjdk.jmc.agent.Agent;
 import org.openjdk.jmc.agent.TransformRegistry;
 import org.openjdk.jmc.agent.Transformer;
+import org.openjdk.jmc.agent.XMLValidationException;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
@@ -59,7 +60,8 @@ public class TestJFRTransformer {
 	private static AtomicInteger runCount = new AtomicInteger(0);
 
 	@Test
-	public void testRunTransforms() throws XMLStreamException, IllegalClassFormatException, IOException {
+	public void testRunTransforms()
+			throws XMLStreamException, XMLValidationException, IllegalClassFormatException, IOException {
 		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit.getProbesXMLFromTemplate(
 				TestDefaultTransformRegistry.getTemplate(), "RunTransforms" + runCount.getAndIncrement())); //$NON-NLS-1$
 

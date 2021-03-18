@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021, Red Hat Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,6 +80,8 @@ public class TestDefineEventProbes {
 			+ EVENT_PATH + "</path>" + "<stacktrace>true</stacktrace>" + "<class>" + EVENT_CLASS_NAME + "</class>"
 			+ "<method>" + "<name>" + METHOD_NAME + "</name>" + "<descriptor>" + METHOD_DESCRIPTOR + "</descriptor>"
 			+ "</method>" + "<location>WRAP</location>" + "</event>" + "</events>" + "</jfragent>";
+	private static final String MALFORMED_XML = "<this>" + "<is>" + "<not>" + "<a>" + "<valid>" + "<probe>"
+			+ "<definition>" + "</definition>" + "</probe>" + "</valid>" + "</a>" + "</not>" + "</is>" + "</this>";
 
 	@Test
 	public void testDefineEventProbes() throws Exception {
@@ -110,6 +112,18 @@ public class TestDefineEventProbes {
 			e.printStackTrace(System.err);
 		}
 		assertFalse(exceptionThrown);
+	}
+
+	@Test
+	public void testMalformedProbeDefinition() throws Exception {
+		boolean exceptionThrown = false;
+		try {
+			doDefineEventProbes(MALFORMED_XML);
+		} catch (Exception e) {
+			exceptionThrown = true;
+			e.printStackTrace(System.err);
+		}
+		assertTrue(exceptionThrown);
 	}
 
 	private void injectFailingEvent() throws Exception {
