@@ -268,11 +268,10 @@ public class GCConfigurationPage extends AbstractDataPage {
 	// Looking at the old collector name in order to inspect/load a single event.
 	private IItemFilter collectorFlags(String oldCollector) {
 		// THis may happen for JFR files without GC configuration events, like those of async-profiler
-		if(oldCollector == null) {
+		if (oldCollector == null) {
 			return ItemFilters.all();
 		}
 
-		
 		// Flags like ParallelGCThreads, ConcGCThreads, Xmx, NewRatio are left as this information is contained in the gc configuration event
 		// Most flags from https://github.com/openjdk/jdk11u/blob/master/src/hotspot/share/gc/shared/gc_globals.hpp
 		// are not added at this time.
@@ -285,8 +284,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 		case "G1Old":
 			// https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/g1/g1_globals.hpp
-			return ItemFilters.or(
-					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseG1GC"), //$NON-NLS-1$
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseG1GC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "InitiatingHeapOccupancyPercent"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "ParallelRefProcEnabled"), //$NON-NLS-1$
@@ -300,8 +298,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 		case "Z":
 			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/z/z_globals.hpp
-			return ItemFilters.or(
-					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseZGC"), //$NON-NLS-1$
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseZGC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseLargePages"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseTransparentHugePages"), //$NON-NLS-1$
@@ -310,11 +307,10 @@ public class GCConfigurationPage extends AbstractDataPage {
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
 					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")); //$NON-NLS-1$
-			
+
 		case "Shenandoah":
 			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/shenandoah/shenandoah_globals.hpp
-			return ItemFilters.or(
-					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseShenandoahGC"), //$NON-NLS-1$
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseShenandoahGC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftMaxHeapSize"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseStringDeduplication"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseLargePages"), //$NON-NLS-1$
@@ -323,7 +319,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "SoftRefLRUPolicyMSPerMB"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "AlwaysPreTouch"), //$NON-NLS-1$
 					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Z[A-Z].+")); //$NON-NLS-1$
-			
+
 		case "SerialOld":
 			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/serial/serial_globals.hpp
 			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseSerialGC")); //$NON-NLS-1$
@@ -345,8 +341,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 		case "ConcurrentMarkSweep":
 			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/cms/cms_globals.hpp
-			return ItemFilters.or(
-					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseConcMarkSweepGC"), //$NON-NLS-1$
+			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseConcMarkSweepGC"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseCMSInitiatingOccupancyOnly"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "BindCMSThreadToCPU"), //$NON-NLS-1$
 					ItemFilters.equals(JdkAttributes.FLAG_NAME, "CPUForCMSThread"), //$NON-NLS-1$
