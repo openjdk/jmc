@@ -45,6 +45,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.openjdk.jmc.common.IState;
+import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
@@ -76,6 +77,7 @@ import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
+import org.openjdk.jmc.ui.misc.PersistableSashForm;
 
 public class GCConfigurationPage extends AbstractDataPage {
 	public static class GCConfigurationPageFactory implements IDataPageFactory {
@@ -102,6 +104,7 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 	}
 
+	private static final String GC_FLAG_SASH = "gcFlagSash"; //$NON-NLS-1$
 	private static final String JVM_GC_FLAGS = "jvmFlags"; //$NON-NLS-1$
 	private static final String JVM_FLAGS_FILTER = "jvmFlagsFilter"; //$NON-NLS-1$s
 	private static final Set<String> FLAGS;
@@ -149,96 +152,116 @@ public class GCConfigurationPage extends AbstractDataPage {
 		FLAG_HISTOGRAM.addKeyColumn(JdkAttributes.FLAG_ORIGIN);
 		FLAG_HISTOGRAM.addKeyColumn(FLAG_VALUE_COL_ID, Messages.GCConfigurationPage_COLUMN_VALUE, FLAG_VALUE_FIELD);
 	}
-	private SashForm flagSash;
-	private ItemHistogram allFlagsTable;
 	private IItemFilter perGCFagsFilter;
 	private IItemFilter userInputFlagsFilter;
-	private FilterComponent allFlagsFilter;
 	private SelectionState flagsSelection;
+
+	private class GCInformationUi implements IPageUI {
+		private final SashForm flagSash;
+		private final ItemHistogram allFlagsTable;
+		private final FilterComponent allFlagsFilter;
+
+		public GCInformationUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+			Form form = DataPageToolkit.createForm(parent, toolkit, getName(), getIcon());
+			SashForm container = new SashForm(form.getBody(), SWT.VERTICAL);
+
+			SashForm gcConfigSash = new SashForm(container, SWT.HORIZONTAL);
+			gcConfigSash.setSashWidth(5);
+			gcConfigSash.addTraverseListener(new SimpleTraverseListener());
+
+			Section gcConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
+					Messages.GCConfigurationPage_SECTION_GC_CONFIG);
+			ItemAggregateViewer gcConfig = new ItemAggregateViewer(gcConfigSection, toolkit);
+			gcConfig.addAggregate(JdkAggregators.YOUNG_COLLECTOR);
+			gcConfig.addAggregate(JdkAggregators.OLD_COLLECTOR);
+			gcConfig.addAggregate(JdkAggregators.CONCURRENT_GC_THREAD_COUNT_MIN);
+			gcConfig.addAggregate(JdkAggregators.PARALLEL_GC_THREAD_COUNT_MIN);
+			gcConfig.addAggregate(JdkAggregators.EXPLICIT_GC_CONCURRENT);
+			gcConfig.addAggregate(JdkAggregators.EXPLICIT_GC_DISABLED);
+			gcConfig.addAggregate(JdkAggregators.USE_DYNAMIC_GC_THREADS);
+			gcConfig.addAggregate(JdkAggregators.GC_TIME_RATIO_MIN);
+			gcConfigSection.setClient(gcConfig.getControl());
+
+			Section heapConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
+					Messages.GCConfigurationPage_SECTION_HEAP_CONFIG);
+			ItemAggregateViewer heapConfig = new ItemAggregateViewer(heapConfigSection, toolkit);
+			heapConfig.addAggregate(JdkAggregators.HEAP_CONF_INITIAL_SIZE_MIN);
+			heapConfig.addAggregate(JdkAggregators.HEAP_CONF_MIN_SIZE);
+			heapConfig.addAggregate(JdkAggregators.HEAP_CONF_MAX_SIZE);
+			heapConfig.addAggregate(JdkAggregators.USE_COMPRESSED_OOPS);
+			heapConfig.addAggregate(JdkAggregators.COMPRESSED_OOPS_MODE);
+			heapConfig.addAggregate(JdkAggregators.HEAP_ADDRESS_SIZE_MIN);
+			heapConfig.addAggregate(JdkAggregators.HEAP_OBJECT_ALIGNMENT_MIN);
+			heapConfigSection.setClient(heapConfig.getControl());
+
+			Section ycConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
+					Messages.GCConfigurationPage_SECTION_YOUNG_CONFIG);
+			ItemAggregateViewer ycConfig = new ItemAggregateViewer(ycConfigSection, toolkit);
+			ycConfig.addAggregate(JdkAggregators.YOUNG_GENERATION_MIN_SIZE);
+			ycConfig.addAggregate(JdkAggregators.YOUNG_GENERATION_MAX_SIZE);
+			ycConfig.addAggregate(JdkAggregators.NEW_RATIO_MIN);
+			ycConfig.addAggregate(JdkAggregators.TENURING_THRESHOLD_INITIAL_MIN);
+			ycConfig.addAggregate(JdkAggregators.TENURING_THRESHOLD_MAX);
+			ycConfig.addAggregate(JdkAggregators.USES_TLABS);
+			ycConfig.addAggregate(JdkAggregators.TLAB_MIN_SIZE);
+			ycConfig.addAggregate(JdkAggregators.TLAB_REFILL_WASTE_LIMIT_MIN);
+			ycConfigSection.setClient(ycConfig.getControl());
+
+			gcConfig.setValues(getDataSource().getItems());
+			heapConfig.setValues(getDataSource().getItems());
+			ycConfig.setValues(getDataSource().getItems());
+
+			flagSash = new SashForm(container, SWT.VERTICAL);
+			toolkit.adapt(flagSash);
+
+			String oldCollector = getDataSource().getItems().getAggregate(JdkAggregators.OLD_COLLECTOR);
+			perGCFagsFilter = ItemFilters.and(FLAGS_FILTER, collectorFlags(oldCollector));
+
+			Section gcFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
+					Messages.GCConfigurationPage_SECTION_JVM_GC_FLAGS);
+			allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(gcFlagsSection,
+					new TableSettings(state.getChild(JVM_GC_FLAGS)));
+			allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, userInputFlagsFilter,
+					getDataSource().getItems().apply(perGCFagsFilter), pageContainer.getSelectionStore()::getSelections,
+					this::onFlagsFilterChange);
+			MCContextMenuManager flagsMm = MCContextMenuManager
+					.create(allFlagsTable.getManager().getViewer().getControl());
+			ColumnMenusFactory.addDefaultMenus(allFlagsTable.getManager(), flagsMm);
+			flagsMm.add(allFlagsFilter.getShowFilterAction());
+			flagsMm.add(allFlagsFilter.getShowSearchAction());
+			gcFlagsSection.setClient(allFlagsFilter.getComponent());
+
+			ColumnViewer flagViewer = allFlagsTable.getManager().getViewer();
+			flagViewer.addSelectionChangedListener(
+					e -> pageContainer.showSelection(allFlagsTable.getSelection().getItems()));
+
+			PersistableSashForm.loadState(flagSash, state.getChild(GC_FLAG_SASH));
+			allFlagsFilter.loadState(getState().getChild(JVM_FLAGS_FILTER));
+
+			allFlagsTable.show(getDataSource().getItems().apply(perGCFagsFilter));
+			onFlagsFilterChange(userInputFlagsFilter);
+			addResultActions(form);
+			allFlagsTable.getManager().setSelectionState(flagsSelection);
+		}
+
+		@Override
+		public void saveTo(IWritableState memento) {
+			allFlagsTable.getManager().getSettings().saveState(memento.createChild(JVM_GC_FLAGS));
+			allFlagsFilter.saveState(memento.createChild(JVM_FLAGS_FILTER));
+			PersistableSashForm.saveState(flagSash, memento.createChild(GC_FLAG_SASH));
+
+			flagsSelection = allFlagsTable.getManager().getSelectionState();
+		}
+
+		private void onFlagsFilterChange(IItemFilter filter) {
+			allFlagsFilter.filterChangeHelper(filter, allFlagsTable, getDataSource().getItems().apply(perGCFagsFilter));
+			userInputFlagsFilter = filter;
+		}
+	}
 
 	@Override
 	public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
-		Form form = DataPageToolkit.createForm(parent, toolkit, getName(), getIcon());
-		SashForm container = new SashForm(form.getBody(), SWT.VERTICAL);
-
-		SashForm gcConfigSash = new SashForm(container, SWT.HORIZONTAL);
-		gcConfigSash.setSashWidth(5);
-		gcConfigSash.addTraverseListener(new SimpleTraverseListener());
-
-		Section gcConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
-				Messages.GCConfigurationPage_SECTION_GC_CONFIG);
-		ItemAggregateViewer gcConfig = new ItemAggregateViewer(gcConfigSection, toolkit);
-		gcConfig.addAggregate(JdkAggregators.YOUNG_COLLECTOR);
-		gcConfig.addAggregate(JdkAggregators.OLD_COLLECTOR);
-		gcConfig.addAggregate(JdkAggregators.CONCURRENT_GC_THREAD_COUNT_MIN);
-		gcConfig.addAggregate(JdkAggregators.PARALLEL_GC_THREAD_COUNT_MIN);
-		gcConfig.addAggregate(JdkAggregators.EXPLICIT_GC_CONCURRENT);
-		gcConfig.addAggregate(JdkAggregators.EXPLICIT_GC_DISABLED);
-		gcConfig.addAggregate(JdkAggregators.USE_DYNAMIC_GC_THREADS);
-		gcConfig.addAggregate(JdkAggregators.GC_TIME_RATIO_MIN);
-		gcConfigSection.setClient(gcConfig.getControl());
-
-		Section heapConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
-				Messages.GCConfigurationPage_SECTION_HEAP_CONFIG);
-		ItemAggregateViewer heapConfig = new ItemAggregateViewer(heapConfigSection, toolkit);
-		heapConfig.addAggregate(JdkAggregators.HEAP_CONF_INITIAL_SIZE_MIN);
-		heapConfig.addAggregate(JdkAggregators.HEAP_CONF_MIN_SIZE);
-		heapConfig.addAggregate(JdkAggregators.HEAP_CONF_MAX_SIZE);
-		heapConfig.addAggregate(JdkAggregators.USE_COMPRESSED_OOPS);
-		heapConfig.addAggregate(JdkAggregators.COMPRESSED_OOPS_MODE);
-		heapConfig.addAggregate(JdkAggregators.HEAP_ADDRESS_SIZE_MIN);
-		heapConfig.addAggregate(JdkAggregators.HEAP_OBJECT_ALIGNMENT_MIN);
-		heapConfigSection.setClient(heapConfig.getControl());
-
-		Section ycConfigSection = CompositeToolkit.createSection(gcConfigSash, toolkit,
-				Messages.GCConfigurationPage_SECTION_YOUNG_CONFIG);
-		ItemAggregateViewer ycConfig = new ItemAggregateViewer(ycConfigSection, toolkit);
-		ycConfig.addAggregate(JdkAggregators.YOUNG_GENERATION_MIN_SIZE);
-		ycConfig.addAggregate(JdkAggregators.YOUNG_GENERATION_MAX_SIZE);
-		ycConfig.addAggregate(JdkAggregators.NEW_RATIO_MIN);
-		ycConfig.addAggregate(JdkAggregators.TENURING_THRESHOLD_INITIAL_MIN);
-		ycConfig.addAggregate(JdkAggregators.TENURING_THRESHOLD_MAX);
-		ycConfig.addAggregate(JdkAggregators.USES_TLABS);
-		ycConfig.addAggregate(JdkAggregators.TLAB_MIN_SIZE);
-		ycConfig.addAggregate(JdkAggregators.TLAB_REFILL_WASTE_LIMIT_MIN);
-		ycConfigSection.setClient(ycConfig.getControl());
-
-		gcConfig.setValues(getDataSource().getItems());
-		heapConfig.setValues(getDataSource().getItems());
-		ycConfig.setValues(getDataSource().getItems());
-
-		flagSash = new SashForm(container, SWT.VERTICAL);
-		toolkit.adapt(flagSash);
-
-		String oldCollector = getDataSource().getItems().getAggregate(JdkAggregators.OLD_COLLECTOR);
-		perGCFagsFilter = ItemFilters.and(FLAGS_FILTER, collectorFlags(oldCollector));
-
-		Section gcFlagsSection = CompositeToolkit.createSection(flagSash, toolkit,
-				Messages.GCConfigurationPage_SECTION_JVM_GC_FLAGS);
-		allFlagsTable = FLAG_HISTOGRAM.buildWithoutBorder(gcFlagsSection,
-				new TableSettings(state.getChild(JVM_GC_FLAGS)));
-		allFlagsFilter = FilterComponent.createFilterComponent(allFlagsTable, userInputFlagsFilter,
-				getDataSource().getItems().apply(perGCFagsFilter), pageContainer.getSelectionStore()::getSelections,
-				this::onFlagsFilterChange);
-		MCContextMenuManager flagsMm = MCContextMenuManager.create(allFlagsTable.getManager().getViewer().getControl());
-		ColumnMenusFactory.addDefaultMenus(allFlagsTable.getManager(), flagsMm);
-		flagsMm.add(allFlagsFilter.getShowFilterAction());
-		flagsMm.add(allFlagsFilter.getShowSearchAction());
-		gcFlagsSection.setClient(allFlagsFilter.getComponent());
-
-		ColumnViewer flagViewer = allFlagsTable.getManager().getViewer();
-		flagViewer
-				.addSelectionChangedListener(e -> pageContainer.showSelection(allFlagsTable.getSelection().getItems()));
-
-		allFlagsFilter.loadState(getState().getChild(JVM_FLAGS_FILTER));
-
-		allFlagsTable.show(getDataSource().getItems().apply(perGCFagsFilter));
-		onFlagsFilterChange(userInputFlagsFilter);
-		allFlagsTable.getManager().setSelectionState(flagsSelection);
-
-		addResultActions(form);
-
-		return null;
+		return new GCInformationUi(parent, toolkit, pageContainer, state);
 	}
 
 	// Straw man flag filter, need to support CMS, Serial, ParallelGC, Epsilon
@@ -251,12 +274,12 @@ public class GCConfigurationPage extends AbstractDataPage {
 
 		
 		// Flags like ParallelGCThreads, ConcGCThreads, Xmx, NewRatio are left as this information is contained in the gc configuration event
-		// from https://github.com/openjdk/jdk11u/blob/master/src/hotspot/share/gc/shared/gc_globals.hpp
+		// Most flags from https://github.com/openjdk/jdk11u/blob/master/src/hotspot/share/gc/shared/gc_globals.hpp
+		// are not added at this time.
 		switch (oldCollector) {
-		// https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/epsilon/epsilon_globals.hpp
-		// TODO
+		// TODO Cannot discover EpsilonGC via the old collector name, because Epsilon reports the same as SerialGC
 //		case "Epsilon":
-//			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/serial/serial_globals.hpp
+//			// from https://github.com/openjdk/jdk11u/blob/6c31ac2acdc2b2efa63fe92de8368ab964d847e9/src/hotspot/share/gc/epsilon/epsilon_globals.hpp
 //			return ItemFilters.or(ItemFilters.equals(JdkAttributes.FLAG_NAME, "UseEpsilonGC"), //$NON-NLS-1$
 //					ItemFilters.matches(JdkAttributes.FLAG_NAME, "^Epsilon.+")); //$NON-NLS-1$
 
@@ -334,11 +357,6 @@ public class GCConfigurationPage extends AbstractDataPage {
 		}
 
 		return ItemFilters.contains(JdkAttributes.FLAG_NAME, oldCollector);
-	}
-
-	private void onFlagsFilterChange(IItemFilter filter) {
-		allFlagsFilter.filterChangeHelper(filter, allFlagsTable, getDataSource().getItems().apply(perGCFagsFilter));
-		userInputFlagsFilter = filter;
 	}
 
 	public GCConfigurationPage(IPageDefinition dpd, StreamModel items, IPageContainer editor) {
