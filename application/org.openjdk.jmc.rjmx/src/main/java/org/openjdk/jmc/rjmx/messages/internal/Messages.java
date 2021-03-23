@@ -46,8 +46,6 @@ public class Messages extends NLS {
 	public static String ConnectionException_UNABLE_TO_CREATE_INITIAL_CONTEXT;
 	public static String ConnectionException_UNABLE_TO_RESOLVE_CREDENTIALS;
 	public static String ConnectionException_UNRESOLVED;
-	public static String ConnectionWarning_PREFERENCES_NOT_SET_TITLE;
-	public static String ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE;
 	public static String JVMSupport_FLIGHT_RECORDER_DISABLED;
 	public static String JVMSupport_FLIGHT_RECORDER_DISABLED_SHORT;
 	public static String JVMSupport_FLIGHT_RECORDER_NOT_ENABLED;

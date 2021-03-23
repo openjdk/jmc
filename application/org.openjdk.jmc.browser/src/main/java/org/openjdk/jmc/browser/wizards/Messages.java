@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,6 +50,8 @@ public class Messages extends NLS {
 	public static String ConnectionImportWizard_SELECT_CONNECTION_FILE_FOR_IMPORT_TEXT;
 	public static String ConnectionWizardPage_BUTTON_CUSTOM_JMX_SERVICE_URL_TEXT;
 	public static String ConnectionWizardPage_CAPTION_JAVA_COMMAND;
+	public static String ConnectionWarning_PREFERENCES_NOT_SET_TITLE;
+	public static String ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE;
 	public static String ConnectionWizardPage_CAPTION_JVMARGS;
 	public static String ConnectionWizardPage_CAPTION_PID;
 	public static String ConnectionWizardPage_CONNECTION_NAME_CAPTION;
