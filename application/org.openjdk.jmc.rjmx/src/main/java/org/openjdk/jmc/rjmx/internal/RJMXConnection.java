@@ -68,8 +68,6 @@ import javax.management.remote.JMXServiceURL;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionException;
@@ -77,7 +75,6 @@ import org.openjdk.jmc.rjmx.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.rjmx.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.services.IOperation;
 import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.subscription.IMBeanServerChangeListener;
@@ -87,7 +84,6 @@ import org.openjdk.jmc.rjmx.subscription.internal.AttributeValueToolkit;
 import org.openjdk.jmc.rjmx.subscription.internal.InvoluntaryDisconnectException;
 import org.openjdk.jmc.rjmx.subscription.internal.MBeanMRIMetadataDB;
 import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.misc.DialogToolkit;
 
 /**
  * This class simplifies and hides some of the complexity of connecting to a JVM (supporting JSR-174
@@ -553,12 +549,6 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	 */
 	private void establishConnection(JMXServiceURL serviceURL, Map<String, Object> env) throws IOException {
 		try {
-			if (!JMXRMISystemPropertiesProvider.isKeyStoreConfigured()) {
-			   DialogToolkit.openOnUiThread(MessageDialog.WARNING,
-					   Messages.ConnectionWarning_PREFERENCES_NOT_SET_TITLE,
-					   NLS.bind(Messages.ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE,
-							   ConnectionToolkit.getHostName(serviceURL)));
-			}
 			connectJmxConnector(serviceURL, env);
 		} catch (IOException exception) {
 			try {

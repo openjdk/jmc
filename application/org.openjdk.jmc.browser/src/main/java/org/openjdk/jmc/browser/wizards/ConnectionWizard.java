@@ -33,13 +33,17 @@
 package org.openjdk.jmc.browser.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.openjdk.jmc.browser.JVMBrowserPlugin;
+import org.openjdk.jmc.rjmx.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.internal.JMXRMISystemPropertiesProvider;
 import org.openjdk.jmc.rjmx.servermodel.internal.Server;
 import org.openjdk.jmc.ui.common.action.UserActionJob;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
@@ -113,6 +117,17 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 			}
 		}
 		if (serverConnectModel.createdServer != null) {
+			String hostName = ConnectionToolkit.getHostName(serverConnectModel.createdServer.getConnectionUrl());
+			if (hostName != null && (!hostName.equals("localhost")  && //$NON-NLS-1$
+					ConnectionToolkit.getPort(serverConnectModel.createdServer.getConnectionUrl()) != 0) )
+			{
+				if (!JMXRMISystemPropertiesProvider.isKeyStoreConfigured()) {
+					DialogToolkit.openOnUiThread(MessageDialog.WARNING,
+							Messages.ConnectionWarning_PREFERENCES_NOT_SET_TITLE,
+							NLS.bind(Messages.ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE,
+									ConnectionToolkit.getHostName(serverConnectModel.createdServer.getConnectionUrl())));
+				}
+			}
 			serverConnectModel.serverModel.insert(serverConnectModel.createdServer);
 		}
 		return true;
