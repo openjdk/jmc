@@ -189,7 +189,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			protected void onImportFilesButtonSelected(IStructuredSelection selection) {
 				String[] files = openFileDialog(Messages.PresetManagerPage_MESSAGE_IMPORT_EXTERNAL_PRESET_FILES,
 						new String[] {PRESET_XML_EXTENSION}, SWT.OPEN | SWT.MULTI);
-				if (files != null) {
+				if (files.length != 0) {
 					for (String path : files) {
 						File file = new File(path);
 						try {
@@ -209,7 +209,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			protected void onExportFileButtonSelected(IStructuredSelection selection) {
 				String[] files = openFileDialog(Messages.PresetManagerPage_MESSAGE_EXPORT_PRESET_TO_A_FILE,
 						new String[] {PRESET_XML_EXTENSION}, SWT.SAVE | SWT.SINGLE);
-				if (files == null || files.length == 0) {
+				if (files.length == 0) {
 					return;
 				}
 

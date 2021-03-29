@@ -262,7 +262,7 @@ public abstract class BaseWizardPage extends WizardPage {
 		dialog.setFilterExtensions(extensions);
 
 		if (dialog.open() == null) {
-			return null;
+			return new String[] {};
 		}
 
 		return Arrays.stream(dialog.getFileNames()).map(name -> dialog.getFilterPath() + File.separator + name)

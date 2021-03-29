@@ -33,61 +33,26 @@
 -->
 <FindBugsFilter>
     <!-- copied from jmc-agent-plugin -->
-    <Match>
+    <!-- The API here returns null as a meaningful value, this is fine. -->
+	<Match>
 		<Class name="org.openjdk.jmc.console.ext.agent.AgentJmxHelper"/>
 		<Method name="retrieveCurrentTransforms"/>
 		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
 	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentEditorBak"/>
-		<Method name="doAddPages"/>
-		<Bug pattern="REC_CATCH_EXCEPTION"/>
-	</Match>
+	<!-- this is a fire and forget method, we don't need the return value. -->
 	<Match>
 		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentEditorUi"/>
 		<Method name="refresh"/>
 		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
 	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentFormPage"/>
-		<Bug pattern="UWF_UNWRITTEN_FIELD"/>
-	</Match>
+	<!-- We don't need the return value of createNewFile, if something went wrong the exception will be caught and handled -->
 	<Match>
 		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.XmlDocumentProvider"/>
 		<Method name="doSaveDocument"/>
 		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
 	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.XmlDocumentProvider"/>
-		<Method name="doSaveDocument"/>
-		<Bug pattern="DM_DEFAULT_ENCODING"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.presets.EditAgentSection" />
-		<Bug pattern="DM_DEFAULT_ENCODING"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.liveconfig.EventTableInspector"/>
-		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.overview.OverviewTab"/>
-		<Method name="loadAgentListener"/>
-		<Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.overview.OverviewTab"/>
-		<Bug pattern="URF_UNREAD_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.overview.OverviewTab"/>
-		<Bug pattern="UUF_UNUSED_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.wizards.BaseWizardPage" />
-		<Method name="openFileDialog"/>
-		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
-	</Match>
+	<!-- The double check is intentional here for synchronization, verify that we need to create
+		the singleton before acquiring the lock. -->
 	<Match>
 		<Class name="org.openjdk.jmc.console.ext.agent.manager.model.PresetRepositoryFactory" />
 		<Method name="createSingleton"/>
@@ -117,27 +82,7 @@
 		<Method name="loadAgentListener"/>
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
 	</Match>
-	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentEditorBak"/>
-		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
-	</Match>
-    <!-- There is a blanket exclude on these types of bugs in JMC.
-     in UI classes the memory overhead is minimal and reworking it isn't really worth it -->
-    <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.sections.EventDetailSection" />
-		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
-    </Match>
-    <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.sections.EventListSection" />
-		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
-    </Match>
-    <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.sections.GlobalConfigSection" />
-		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
-    </Match>
-    <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.actions.AgentEditorOpener$ConnectJob" />
-    </Match>
+	
     <!-- Skip I18n -->
     <Match>
         <Bug pattern="DM_DEFAULT_ENCODING"/>

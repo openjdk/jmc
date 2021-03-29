@@ -141,14 +141,14 @@ public class StartAgentWizardPage extends BaseWizardPage {
 		agentJarBrowseButton.addListener(SWT.Selection, e -> {
 			String[] path = openFileDialog(Messages.StartAgentWizardPage_DIALOG_BROWSER_FOR_AGENT_JAR,
 					new String[] {FILE_OPEN_JAR_EXTENSION}, SWT.OPEN | SWT.SINGLE);
-			if (path != null && path.length != 0) {
+			if (path.length != 0) {
 				setText(agentJarText, path[0]);
 			}
 		});
 		agentXmlBrowseButton.addListener(SWT.Selection, e -> {
 			String[] path = openFileDialog(Messages.StartAgentWizardPage_DIALOG_BROWSER_FOR_AGENT_CONFIG,
 					new String[] {FILE_OPEN_XML_EXTENSION}, SWT.OPEN | SWT.SINGLE);
-			if (path != null && path.length != 0) {
+			if (path.length != 0) {
 				setText(agentXmlText, path[0]);
 			}
 		});
