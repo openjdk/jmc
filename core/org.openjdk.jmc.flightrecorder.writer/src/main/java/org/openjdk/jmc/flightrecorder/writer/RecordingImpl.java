@@ -50,8 +50,10 @@ import java.util.function.Consumer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Recording;
+import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.TypeStructureBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 /**
  * The main entry point to JFR recording functionality. Allows to define custom types and initiate
@@ -95,12 +97,13 @@ public final class RecordingImpl extends Recording {
 
 	private final ConstantPools constantPools = new ConstantPools();
 	private final MetadataImpl metadata = new MetadataImpl(constantPools);
-	private final TypesImpl types = new TypesImpl(metadata);
+	private final TypesImpl types;
 
-	public RecordingImpl(OutputStream output) {
-		this.startTicks = System.nanoTime();
-		this.startNanos = System.currentTimeMillis() * 1_000_000L;
+	public RecordingImpl(OutputStream output, RecordingSettings settings) {
+		this.startTicks = settings.getStartTimestamp();
+		this.startNanos = settings.getStartTimestamp();
 		this.outputStream = output;
+		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
 		writeFileHeader();
 
 		chunkDataMergingService.submit(() -> {
@@ -131,7 +134,6 @@ public final class RecordingImpl extends Recording {
 
 	@Override
 	public RecordingImpl rotateChunk() {
-		System.err.println("=== rotate chunk");
 		Chunk chunk = getChunk();
 		activeChunks.remove(chunk);
 		threadChunk.remove();
@@ -211,7 +213,7 @@ public final class RecordingImpl extends Recording {
 		return registerType(name, "jdk.jfr.Event", builder -> {
 			builder.addField("stackTrace", TypesImpl.JDK.STACK_TRACE).addField("eventThread", TypesImpl.JDK.THREAD)
 					.addField("startTime", TypesImpl.Builtin.LONG,
-							field -> field.addAnnotation(TypesImpl.JDK.ANNOTATION_TIMESTAMP, "TICKS"));
+							field -> field.addAnnotation(Types.JDK.ANNOTATION_TIMESTAMP, "TICKS"));
 			builderCallback.accept(builder);
 		});
 	}
@@ -269,9 +271,10 @@ public final class RecordingImpl extends Recording {
 		globalWriter.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(0L) // size placeholder
 				.writeLongRaw(0L) // CP event offset
 				.writeLongRaw(0L) // meta event offset
-				.writeLongRaw(startNanos) // start timestamp
+				.writeLongRaw(startNanos) // start time in nanoseconds
 				.writeLongRaw(0L) // duration placeholder
-				.writeLongRaw(startTicks).writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
+				.writeLongRaw(startTicks) // start time in ticks
+				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
 				.writeIntRaw(1); // use compressed integers
 	}
 

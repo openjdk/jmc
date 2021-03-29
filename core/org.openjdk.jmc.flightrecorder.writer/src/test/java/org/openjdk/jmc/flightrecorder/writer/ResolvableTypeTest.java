@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,9 +43,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class ResolvableTypeTest {
-	private static final String FIELD_NAME = "field";
+	private static final String FIELD_1_NAME = "field_1";
+	private static final String FIELD_2_NAME = "field_2";
 
 	private ResolvableType resolvableType;
 	private final String targetTypeName = "custom.Type";
@@ -202,9 +205,9 @@ class ResolvableTypeTest {
 
 	@Test
 	void getField() {
-		assertThrows(IllegalStateException.class, () -> resolvableType.getField(FIELD_NAME));
+		assertThrows(IllegalStateException.class, () -> resolvableType.getField(FIELD_1_NAME));
 		resolve();
-		assertEquals(targetType.getField(FIELD_NAME), resolvableType.getField(FIELD_NAME));
+		assertEquals(targetType.getField(FIELD_1_NAME), resolvableType.getField(FIELD_1_NAME));
 	}
 
 	@Test
@@ -258,8 +261,9 @@ class ResolvableTypeTest {
 	}
 
 	private void resolve() {
-		List<TypedFieldImpl> fields = Collections
-				.singletonList(new TypedFieldImpl(types.getType(TypesImpl.Builtin.STRING), FIELD_NAME));
+		List<TypedFieldImpl> fields = Arrays.asList(
+				new TypedFieldImpl(types.getType(TypesImpl.Builtin.STRING), FIELD_1_NAME),
+				new TypedFieldImpl(types.getType(Types.Builtin.LONG), FIELD_2_NAME));
 
 		targetType = metadata.registerType(targetTypeName, null,
 				() -> new TypeStructureImpl(fields, Collections.emptyList()));

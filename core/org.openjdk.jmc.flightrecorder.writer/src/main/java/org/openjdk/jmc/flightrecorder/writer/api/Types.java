@@ -279,7 +279,7 @@ public abstract class Types {
 		FRAME_TYPE("jdk.types.FrameType"),
 		CLASS("java.lang.Class"),
 		SYMBOL("jdk.types.Symbol"),
-		CLASS_LOADER("jdk.type.ClassLoader"),
+		CLASS_LOADER("jdk.types.ClassLoader"),
 		PACKAGE("jdk.types.Package"),
 		MODULE("jdk.types.Module"),
 		ANNOTATION_LABEL("jdk.jfr.Label"),
@@ -288,7 +288,9 @@ public abstract class Types {
 		ANNOTATION_DESCRIPTION("jdk.jfr.Description"),
 		ANNOTATION_TIMESTAMP("jdk.jfr.Timestamp"),
 		ANNOTATION_TIMESPAN("jdk.jfr.Timespan"),
-		ANNOTATION_UNSIGNED("jdk.jfr.Unsigned");
+		ANNOTATION_UNSIGNED("jdk.jfr.Unsigned"),
+		ANNOTATION_CATEGORY("jdk.jfr.Category");
+		;
 
 		private final String typeName;
 

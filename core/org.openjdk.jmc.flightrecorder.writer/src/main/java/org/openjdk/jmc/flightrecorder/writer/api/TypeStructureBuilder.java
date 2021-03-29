@@ -38,7 +38,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.Types.Predefined;
 import java.util.function.Consumer;
 
 /** A fluent API for building composite types lazily. */
-public interface TypeStructureBuilder {
+public interface TypeStructureBuilder extends AnnotatedElementBuilder<TypeStructureBuilder> {
 	/**
 	 * Add a field of the given name and (predefined) type
 	 *
@@ -108,26 +108,6 @@ public interface TypeStructureBuilder {
 	 * @return a {@linkplain TypeStructureBuilder} instance for invocation chaining
 	 */
 	TypeStructureBuilder addFields(TypedField field1, TypedField field2, TypedField ... fields);
-
-	/**
-	 * Add an annotation of the given type
-	 *
-	 * @param type
-	 *            the annotation type
-	 * @return a {@linkplain TypeStructureBuilder} instance for invocation chaining
-	 */
-	TypeStructureBuilder addAnnotation(Type type);
-
-	/**
-	 * Add an annotation of the given type and with the given value
-	 *
-	 * @param type
-	 *            the annotation type
-	 * @param value
-	 *            the annotation value
-	 * @return a {@linkplain TypeStructureBuilder} instance for invocation chaining
-	 */
-	TypeStructureBuilder addAnnotation(Type type, String value);
 
 	/**
 	 * A special placeholder type to refer to the type being currently built (otherwise impossible
