@@ -1,4 +1,4 @@
-![JMC Next](https://github.com/openjdk/jmc/.github/workflows/validate.yml/badge.svg) ![JMC 8](https://github.com/openjdk/jmc/.github/workflows/validate.yml/badge.svg?branch=jmc8)
+![JMC Next](https://github.com/thegreystone/jmc/blob/master/.github/workflows/validate.yml/badge.svg) ![JMC 8](https://github.com/thegreystone/jmc/blob/master/.github/workflows/validate.yml/badge.svg?branch=jmc8)
 
 # Mission Control
 
