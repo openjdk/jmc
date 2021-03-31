@@ -1,5 +1,4 @@
-![JMC Next](https://github.com/thegreystone/jmc/blob/master/.github/workflows/validate.yml/badge.svg) ![JMC 8](https://github.com/thegreystone/jmc/blob/master/.github/workflows/validate.yml/badge.svg?branch=jmc8)
-
+![JMC Build](https://github.com/openjdk/jmc/blob/master/.github/workflows/validate.yml/badge.svg) 
 # Mission Control
 
 Mission Control is an open source production time profiling and diagnostics tool for Java.
