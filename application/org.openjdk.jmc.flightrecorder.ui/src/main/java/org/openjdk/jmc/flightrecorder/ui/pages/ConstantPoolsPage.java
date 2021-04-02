@@ -154,6 +154,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 			constantHistogram = new ItemHistogramWithInput(constantValueTable);
 			byTypeHistogram.addListener(this::typeHistogramListener);
 
+			PersistableSashForm.loadState(sash, state.getChild(SASH_ELEMENT));
 			byTypeFilter.loadState(state.getChild(TYPE_FILTER));
 			constantValueFilter.loadState(state.getChild(VALUE_FILTER));
 		}
