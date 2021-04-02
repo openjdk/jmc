@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,9 +34,9 @@
 package org.openjdk.jmc.agent.test;
 
 import org.junit.Test;
+import org.openjdk.jmc.agent.XMLValidationException;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 
-import javax.xml.stream.XMLStreamException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
@@ -45,7 +45,7 @@ public class TestProbeDefinitionValidation {
 	private final String GLOBAL_POSTFIX = "</events></jfragent>";
 
 	@Test
-	public void testValidatingProbeDefinition() throws XMLStreamException {
+	public void testValidatingProbeDefinition() throws XMLValidationException {
 		// a partially defined event with all optional elements unset
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
@@ -60,7 +60,7 @@ public class TestProbeDefinitionValidation {
 	}
 
 	@Test
-	public void testValidatingFullyDefinedProbe() throws XMLStreamException {
+	public void testValidatingFullyDefinedProbe() throws XMLValidationException {
 		// a fully defined event with all optional elements set
 		String probe = "<event id=\"demo.event1\">\n" + "            <label>Event 1</label>\n"
 				+ "            <class>com.company.project.MyDemoClass</class>\n"
@@ -92,18 +92,18 @@ public class TestProbeDefinitionValidation {
 		DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + probe + GLOBAL_POSTFIX);
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingEmptyString() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingEmptyString() throws XMLValidationException {
 		DefaultTransformRegistry.validateProbeDefinition("");
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingNonXmlInput() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingNonXmlInput() throws XMLValidationException {
 		DefaultTransformRegistry.validateProbeDefinition("This is not an XML string");
 	}
 
 	@Test
-	public void testValidatingCorrectClassNames() throws XMLStreamException {
+	public void testValidatingCorrectClassNames() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>{0}</class>\n" // 
@@ -120,8 +120,8 @@ public class TestProbeDefinitionValidation {
 		}
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingEmptyClassName() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingEmptyClassName() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <method>\n" // 
@@ -133,8 +133,8 @@ public class TestProbeDefinitionValidation {
 		DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + probe + GLOBAL_POSTFIX);
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingIncorrectClassPattern() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingIncorrectClassPattern() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>not a validate full-qualified-class-name</class>\n" //
@@ -148,7 +148,7 @@ public class TestProbeDefinitionValidation {
 	}
 
 	@Test
-	public void testValidatingMethodDescriptor() throws XMLStreamException {
+	public void testValidatingMethodDescriptor() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>org.company.project.MyDemoClass</class>\n" // 
@@ -167,8 +167,8 @@ public class TestProbeDefinitionValidation {
 		}
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingEmptyDescriptor() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingEmptyDescriptor() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>org.company.project.MyDemoClass</class>" //
@@ -180,8 +180,8 @@ public class TestProbeDefinitionValidation {
 		DefaultTransformRegistry.validateProbeDefinition(GLOBAL_PREFIX + probe + GLOBAL_POSTFIX);
 	}
 
-	@Test(expected = XMLStreamException.class)
-	public void testValidatingIncorrectDescriptor() throws XMLStreamException {
+	@Test(expected = XMLValidationException.class)
+	public void testValidatingIncorrectDescriptor() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>org.company.project.MyDemoClass</class>" //
@@ -195,7 +195,7 @@ public class TestProbeDefinitionValidation {
 	}
 
 	@Test
-	public void testValidatingExpressions() throws XMLStreamException {
+	public void testValidatingExpressions() throws XMLValidationException {
 		String probe = "<event id=\"demo.event2\">\n" // 
 				+ "    <label>Event 2</label>\n" //
 				+ "    <class>org.company.project.MyDemoClass</class>\n" // 

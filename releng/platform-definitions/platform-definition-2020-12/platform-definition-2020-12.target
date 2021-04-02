@@ -59,10 +59,6 @@
             <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.18.0.v20210327075149"/>
             <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.3/2020-12/"/>
         </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.202005172227"/>
-            <repository location="https://equo-chromium-cef.ams3.digitaloceanspaces.com/rls/repository"/>
-        </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 </target>

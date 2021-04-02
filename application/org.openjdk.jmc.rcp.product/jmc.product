@@ -57,7 +57,7 @@
       </vmArgsLin>
       <vmArgsMac>--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
-      <vmArgsWin>-Dorg.eclipse.swt.browser.DefaultType=chromium --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED
+      <vmArgsWin>--add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED
       </vmArgsWin>
    </launcherArgs>
 

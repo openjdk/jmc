@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -66,14 +66,15 @@ public class AgentController implements AgentControllerMXBean {
 			registry.setCurrentConfiguration("");
 		} else {
 			Set<String> initialClasses = new HashSet<>(registry.getClassNames());
-			Set<String> modifiedClasses = registry.modify(xmlDescription);
-			if (modifiedClasses == null) {
-				logger.log(Level.SEVERE, "Failed to identify transformations: " + xmlDescription);
-				return;
-			} else {
-				modifiedClasses.addAll(initialClasses);
-				classesToRetransformArray = retransformClasses(modifiedClasses);
+			Set<String> modifiedClasses;
+			try {
+				modifiedClasses = registry.modify(xmlDescription);
+			} catch (Exception e) {
+				logger.severe("Failed to identify transformations: " + xmlDescription);
+				throw e;
 			}
+			modifiedClasses.addAll(initialClasses);
+			classesToRetransformArray = retransformClasses(modifiedClasses);
 		}
 		registry.setRevertInstrumentation(true);
 		instrumentation.retransformClasses(classesToRetransformArray);
