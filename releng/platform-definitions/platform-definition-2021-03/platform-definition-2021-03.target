@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2020, 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2020, 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -33,7 +33,7 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2020-12" sequenceNumber="47">
+<target name="jmc-target-2021-03" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
@@ -49,15 +49,15 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1000.v20200915-1508"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.600.v20201202-1800"/>
-            <unit id="org.eclipse.platform.sdk" version="4.18.0.I20201202-1800"/>
-            <repository location="http://download.eclipse.org/releases/2020-12/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1100.v20210209-1541"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.700.v20210303-1800"/>
+            <unit id="org.eclipse.platform.sdk" version="4.19.0.I20210303-1800"/>
+            <repository location="http://download.eclipse.org/releases/2021-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.18.0.v20210327075149"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.18.0.v20210327075149"/>
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.3/2020-12/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.19.0.v20210327020002"/>
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.3/2021-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.202005172227"/>
