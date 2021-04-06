@@ -262,4 +262,14 @@ class EventCollection implements IItemCollection, IParserStats {
 	public long getEventTotalSizeByType(String eventTypeName) {
 		return parserStats.getTotalSize(eventTypeName);
 	}
+
+	@Override
+	public IItemCollection getConstantPools() {
+		return parserStats.getConstantPools();
+	}
+
+	@Override
+	public IItemCollection getConstants() {
+		return parserStats.getConstants();
+	}
 }

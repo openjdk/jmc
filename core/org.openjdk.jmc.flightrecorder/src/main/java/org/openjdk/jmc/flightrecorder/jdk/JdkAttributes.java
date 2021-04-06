@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -1267,4 +1267,17 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_BASE_ADDRESS), ADDRESS);
 	public static final IAttribute<IQuantity> TOP_ADDRESS = attr("topAddress", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TOP_ADDRESS), ADDRESS);
+
+	public static final IAttribute<String> CONSTANT_POOLS_NAME = attr("name", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_NAME), PLAIN_TEXT);
+	public static final IAttribute<IQuantity> CONSTANT_POOLS_COUNT = attr("count", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_COUNT), NUMBER);
+	public static final IAttribute<IQuantity> CONSTANT_POOLS_SIZE = attr("size", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_SIZE), MEMORY);
+	public static final IAttribute<String> CONSTANT_TYPE = attr("typeName", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_TYPE), PLAIN_TEXT);
+
+	public static final IAttribute<String> CONSTANT_VALUE = attr("constant", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
+
 }

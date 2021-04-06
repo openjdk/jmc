@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -99,6 +99,9 @@ public class Messages extends NLS {
 	public static String CompilationsPage_ROW_DURATIONS;
 	public static String CompilationsPage_TAB_COMPILATIONS;
 	public static String CompilationsPage_TAB_COMPILATIONS_FAILED;
+	public static String ConstantPoolsPage_PAGE_NAME;
+	public static String ConstantPoolsPage_SIZE_TOTAL_PERCENTAGE;
+	public static String ConstantPoolsPage_SIZE_TOTAL_PERCENTAGE_DESC;
 	public static String DropdownLaneFilter_QUICK_FILTER;
 	public static String DropdownLaneFilter_THREAD_STATE_SELECTION;
 	public static String DUMP_RECORDING_DEFAULT_TIMESPAN_TO_DUMP;

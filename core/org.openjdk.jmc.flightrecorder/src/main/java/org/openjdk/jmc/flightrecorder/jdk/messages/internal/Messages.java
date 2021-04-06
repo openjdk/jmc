@@ -197,6 +197,11 @@ public class Messages {
 	public static final String ATTR_COMPILER_STANDARD_COUNT = "ATTR_COMPILER_STANDARD_COUNT"; //$NON-NLS-1$
 	public static final String ATTR_CONCURRENT_GC_THREADS = "ATTR_CONCURRENT_GC_THREADS"; //$NON-NLS-1$
 	public static final String ATTR_CONCURRENT_GC_THREADS_DESC = "ATTR_CONCURRENT_GC_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_NAME = "ATTR_CONSTANT_POOLS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_COUNT = "ATTR_CONSTANT_POOLS_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_SIZE = "ATTR_CONSTANT_POOLS_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_TYPE = "ATTR_CONSTANT_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_VALUE = "ATTR_CONSTANT_VALUE"; //$NON-NLS-1$
 	public static final String ATTR_COUNT = "ATTR_COUNT"; //$NON-NLS-1$
 	public static final String ATTR_CPU_DESCRIPTION = "ATTR_CPU_DESCRIPTION"; //$NON-NLS-1$
 	public static final String ATTR_CPU_DESCRIPTION_DESC = "ATTR_CPU_DESCRIPTION_DESC"; //$NON-NLS-1$
