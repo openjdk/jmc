@@ -88,7 +88,6 @@ public final class TypedFieldImpl implements org.openjdk.jmc.flightrecorder.writ
 		return annotations;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

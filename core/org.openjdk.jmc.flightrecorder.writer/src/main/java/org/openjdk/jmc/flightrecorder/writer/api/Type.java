@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
-import org.openjdk.jmc.flightrecorder.writer.TypedFieldImpl;
-
 import java.util.List;
 import java.util.function.Consumer;
 
