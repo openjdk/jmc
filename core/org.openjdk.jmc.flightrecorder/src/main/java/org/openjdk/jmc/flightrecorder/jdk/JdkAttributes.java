@@ -1280,4 +1280,6 @@ public final class JdkAttributes {
 	public static final IAttribute<String> CONSTANT_VALUE = attr("constant", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
 
+	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
 }
