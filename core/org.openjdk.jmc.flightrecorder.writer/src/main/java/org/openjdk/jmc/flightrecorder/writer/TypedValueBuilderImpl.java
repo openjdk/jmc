@@ -259,7 +259,7 @@ public final class TypedValueBuilderImpl implements TypedValueBuilder {
 		if (field != null) {
 			TypeImpl type = field.getType();
 			if (type.isSimple()) {
-				typedValue = wrapSimpleValue(type, typedValue);
+				typedValue = TypedValueImpl.wrapSimpleValueField(type, typedValue);
 			}
 			if (field.getType().canAccept(typedValue)) {
 				fieldValueMap.put(name, new TypedFieldValueImpl(field, typedValue));
@@ -268,18 +268,6 @@ public final class TypedValueBuilderImpl implements TypedValueBuilder {
 			}
 		}
 		return this;
-	}
-
-	private TypedValueImpl wrapSimpleValue(TypeImpl targetType, TypedValueImpl value) {
-		TypedFieldImpl valueField = targetType.getFields().get(0);
-		TypeImpl fieldType = valueField.getType();
-		if (fieldType.canAccept(value)) {
-			value = targetType
-					.asValue(new SingleFieldMap(valueField.getName(), new TypedFieldValueImpl(valueField, value)));
-		} else {
-			throw new IllegalArgumentException();
-		}
-		return value;
 	}
 
 	@Override

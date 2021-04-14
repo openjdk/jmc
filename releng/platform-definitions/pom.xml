@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -46,6 +46,7 @@
 	</properties>
 
 	<modules>
+		<module>platform-definition-2021-03</module>
 		<module>platform-definition-2020-12</module>
 		<module>platform-definition-2020-09</module>
 		<module>platform-definition-2020-06</module>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -62,10 +62,22 @@ public class StreamModel {
 
 	private final EventArray[] eventsByType;
 	private final Set<IRange<IQuantity>> chunkRanges;
+	private final IItemCollection constantPools;
+	private final IItemCollection constants;
 
 	StreamModel(EventArrays eventsByType) {
 		this.eventsByType = eventsByType.getArrays();
 		this.chunkRanges = eventsByType.getChunkTimeranges();
+		this.constantPools = eventsByType.getConstantPools();
+		this.constants = eventsByType.getConstants();
+	}
+
+	public IItemCollection getConstantPools() {
+		return constantPools;
+	}
+
+	public IItemCollection getConstants() {
+		return constants;
 	}
 
 	public IItemCollection getItems(IRange<IQuantity> range, IItemFilter filter) {

@@ -45,6 +45,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class TypedFieldBuilderImplTest {
 	private static final String FIELD_NAME = "field";
@@ -60,7 +61,7 @@ class TypedFieldBuilderImplTest {
 	@BeforeEach
 	void setUp() {
 		TypesImpl types = Mockito.mock(TypesImpl.class);
-		ConstantPools constantPools = Mockito.mock(ConstantPools.class);
+		ConstantPools constantPools = new ConstantPools();
 
 		stringType = new BuiltinType(1, TypesImpl.Builtin.STRING, constantPools, types);
 
@@ -128,7 +129,7 @@ class TypedFieldBuilderImplTest {
 
 	@Test
 	void addPredefinedAnnotationValue() {
-		TypedFieldImpl field = instance.addAnnotation(TypesImpl.JDK.ANNOTATION_LABEL, ANNOTATION_LABEL).build();
+		TypedFieldImpl field = instance.addAnnotation(Types.JDK.ANNOTATION_LABEL, ANNOTATION_LABEL).build();
 
 		assertNotNull(field);
 		assertEquals(FIELD_NAME, field.getName());

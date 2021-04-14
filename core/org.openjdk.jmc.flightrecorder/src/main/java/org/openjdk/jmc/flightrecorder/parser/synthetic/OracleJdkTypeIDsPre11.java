@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
  * Contains type IDs for events that are produced by JDK 7 and 8.
  */
 @SuppressWarnings({"nls", "unused"})
-final class JdkTypeIDsPreJdk11 {
+public final class OracleJdkTypeIDsPre11 {
 	/**
 	 * The prefix used for JDK 11 and later
 	 */

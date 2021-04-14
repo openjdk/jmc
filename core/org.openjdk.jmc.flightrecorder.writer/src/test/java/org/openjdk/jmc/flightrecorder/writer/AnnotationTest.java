@@ -33,14 +33,15 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class AnnotationTest {
 	private TypesImpl types;
@@ -55,8 +56,7 @@ class AnnotationTest {
 	@Test
 	void validAnnotationTypeNullValue() {
 		TypeImpl type = types.getType(TypesImpl.JDK.ANNOTATION_LABEL);
-		Annotation annotation = new Annotation(type, null);
-		assertNotNull(annotation);
+		Annotation annotation = new Annotation(type);
 		assertNull(annotation.getValue());
 		assertEquals(type, annotation.getType());
 	}
@@ -66,14 +66,24 @@ class AnnotationTest {
 		String value = "value";
 		TypeImpl type = types.getType(TypesImpl.JDK.ANNOTATION_LABEL);
 		Annotation annotation = new Annotation(type, value);
-		assertNotNull(annotation);
-		assertEquals(value, annotation.getValue());
 		assertEquals(type, annotation.getType());
+		assertEquals(value, annotation.getValue());
+	}
+
+	@Test
+	void validAnnotationWithArrayValue() {
+		String[] values = new String[] {"value1", "value2"};
+		TypeImpl type = types.getType(Types.JDK.ANNOTATION_CATEGORY);
+		Annotation annotation = new Annotation(type, access -> {
+			access.putField("value", values);
+		});
+		assertEquals(type, annotation.getType());
+		assertArrayEquals(values, annotation.getValue(String[].class, "value"));
 	}
 
 	@Test
 	void invalidAnnotationType() {
 		TypeImpl type = types.getType(TypesImpl.Builtin.STRING);
-		assertThrows(IllegalArgumentException.class, () -> new Annotation(type, null));
+		assertThrows(IllegalArgumentException.class, () -> new Annotation(type));
 	}
 }

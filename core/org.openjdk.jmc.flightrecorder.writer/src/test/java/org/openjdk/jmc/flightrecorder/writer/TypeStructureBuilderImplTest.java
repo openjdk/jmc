@@ -60,7 +60,7 @@ class TypeStructureBuilderImplTest {
 
 	@BeforeEach
 	void setUp() {
-		ConstantPools constantPools = Mockito.mock(ConstantPools.class);
+		ConstantPools constantPools = new ConstantPools();
 		TypesImpl types = Mockito.mock(TypesImpl.class);
 
 		stringType = new BuiltinType(1, TypesImpl.Builtin.STRING, constantPools, types);

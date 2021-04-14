@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -985,6 +985,22 @@
 				</eventSettings>
 				<eventSettingsFilter showFilter="false" showSearch="true" />
 			</state>
+			<page factory="org.openjdk.jmc.flightrecorder.ui.constantpools" id="org.openjdk.jmc.flightrecorder.ui.constantpools">
+				<state>
+					<table sortColumn="count">
+						<column id="itemhistogram.key" width="420" />
+						<column id="count" hidden="false" sortAscending="false" width="100" />
+						<column id="size" hidden="false" width="100" />
+						<column id="percentPools" width="100" />
+					</table>
+					<constantTable>
+						<column id="itemhistogram.key" width="420" />
+						<column id="itemhistogram.count" hidden="true" width="100" sortAscending="false" />
+					</constantTable>
+					<typeFilter showFilter="false" showSearch="true" />
+					<valueFilter showFilter="false" showSearch="true" />
+				</state>
+			</page>
 		</page>
 	</page>
 	<page factory="org.openjdk.jmc.flightrecorder.ui.eventbrowser" id="org.openjdk.jmc.flightrecorder.ui.eventbrowser">

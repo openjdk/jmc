@@ -322,14 +322,13 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 		this.timeRange = timeRange;
 		table.show(getItems());
 
-		if (selectionItems != null) {
-			Object[] tableInput = (Object[]) table.getManager().getViewer().getInput();
-			if (tableInput != null) {
-				table.getManager().getViewer().setSelection(new StructuredSelection(tableInput));
-			} else {
-				table.getManager().getViewer().setSelection(null);
-			}
+		Object[] tableInput = ((Object[]) table.getManager().getViewer().getInput());
+		if (selectionItems != null && tableInput != null) {
+			table.getManager().getViewer().setSelection(new StructuredSelection(tableInput));
+		} else {
+			table.getManager().getViewer().setSelection(null);
 		}
+		chart.setVisibleRange(timeRange.getStart(), timeRange.getEnd());
 	}
 
 	protected void buildChart(boolean resetLaneHeightControls) {
