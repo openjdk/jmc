@@ -464,7 +464,13 @@ public class Messages {
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; //$NON-NLS-1$
-	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$	
+	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$
+	public static final String ATTR_SYSTEM_LOAD = "ATTR_SYSTEM_LOAD"; //$NON-NLS-1$
+	public static final String ATTR_SYSTEM_LOAD_DESC = "ATTR_SYSTEM_LOAD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_USER_LOAD = "ATTR_USER_LOAD"; //$NON-NLS-1$
+	public static final String ATTR_USER_LOAD_DESC = "ATTR_USER_LOAD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_JAVA_THREAD = "ATTR_JAVA_THREAD"; //$NON-NLS-1$
+	public static final String ATTR_JAVA_THREAD_DESC = "ATTR_JAVA_THREAD_DESC"; //$NON-NLS-1$
 
 	private Messages() {
 	}
