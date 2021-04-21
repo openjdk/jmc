@@ -771,7 +771,7 @@ public class Snapshot {
 			}
 
 			// Create fake instance class
-			return new JavaClass(name, 0, 0, 0, 0, fields, JavaClass.NO_FIELDS, JavaClass.NO_VALUES, instSize,
+			return new JavaClass(classID, name, 0, 0, 0, 0, fields, JavaClass.NO_FIELDS, JavaClass.NO_VALUES, instSize,
 					getInMemoryInstanceSize(instSize));
 		}
 
