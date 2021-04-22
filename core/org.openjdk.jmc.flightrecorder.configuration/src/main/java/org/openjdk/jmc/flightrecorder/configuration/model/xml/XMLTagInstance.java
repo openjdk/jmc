@@ -49,7 +49,7 @@ public final class XMLTagInstance {
 
 	private String m_content = ""; //$NON-NLS-1$
 
-	XMLTagInstance(XMLTagInstance parent, XMLTag tag) {
+	public XMLTagInstance(XMLTagInstance parent, XMLTag tag) {
 		m_parent = parent;
 		m_tag = tag;
 	}

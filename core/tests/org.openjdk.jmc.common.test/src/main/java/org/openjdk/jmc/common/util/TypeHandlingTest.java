@@ -35,6 +35,7 @@ package org.openjdk.jmc.common.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.openjdk.jmc.common.util.TypeHandling;
 
 @SuppressWarnings("nls")
 public class TypeHandlingTest {

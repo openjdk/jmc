@@ -39,6 +39,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 import org.junit.Test;
+import org.openjdk.jmc.common.util.SortedHead;
 
 @SuppressWarnings("nls")
 public class SortedHeadTest {

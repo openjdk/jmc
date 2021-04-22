@@ -38,8 +38,7 @@
 		<artifactId>missioncontrol.core.tests</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>org.openjdk.jmc.flightrecorder.configuration.test</artifactId>
-	<!-- <packaging>eclipse-test-plugin</packaging> -->
+	<artifactId>flightrecorder.configuration.test</artifactId>
 
     <dependencies>
 		<dependency>
