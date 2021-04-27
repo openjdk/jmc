@@ -2,7 +2,7 @@
 <feature
       id="org.openjdk.jmc.feature.console.ext.agent"
       label="JMC Agent Plugin"
-      version="8.0.0.qualifier">
+      version="8.1.0.qualifier">
 
    <description url="http://www.example.com/description">
       a Mission Control plug-in to control JMC agents
@@ -11,7 +11,7 @@
    <requires>
       <import feature="org.openjdk.jmc.feature.core" version="8.0.0.qualifier"/>
       <import feature="org.openjdk.jmc.feature.console" version="8.0.0.qualifier"/>
-      <import plugin="org.openjdk.jmc.console.ext.agent"/>
+      <import plugin="org.openjdk.jmc.console.agent"/>
    </requires>
 
 </feature>

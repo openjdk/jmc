@@ -69,7 +69,7 @@
 
    <includes
          id="org.openjdk.jmc.feature.joverflow"
-	   version="0.0.0"/>
+         version="0.0.0"/>
 
    <includes
          id="org.openjdk.jmc.feature.console.ext.agent"
@@ -95,7 +95,7 @@
       <import plugin="org.eclipse.equinox.p2.director.app"/>
    </requires>
 
-  <plugin
+   <plugin
          id="org.openjdk.jmc.osgi.extension"
          download-size="0"
          install-size="0"
