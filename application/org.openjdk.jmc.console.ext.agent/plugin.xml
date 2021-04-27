@@ -36,7 +36,7 @@
 <plugin>
     <extension point="org.openjdk.jmc.rjmx.actionProvider">
         <action
-            factory="org.openjdk.jmc.console.ext.agent.actions.AgentEditorOpener"
+            factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
             icon="icons/agent-16.png"
             label="Agent Plugin">
         </action>
@@ -48,7 +48,7 @@
             priority="101"
             doubleClickActionIndex="0">
             <action
-                factory="org.openjdk.jmc.console.ext.agent.actions.AgentEditorOpener"
+                factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
                 icon="icons/agent-16.png"
                 label="Open the JMC Agent Plugin">
             </action>

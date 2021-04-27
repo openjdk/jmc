@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JMC Agent Plugin
-Bundle-SymbolicName: org.openjdk.jmc.console.ext.agent;singleton:=true
-Bundle-Version: 8.0.0.qualifier
+Bundle-SymbolicName: org.openjdk.jmc.console.agent;singleton:=true
+Bundle-Version: 8.1.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.jface.text,
@@ -18,5 +18,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.inject,
  org.eclipse.debug.core.sourcelookup.containers
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.openjdk.jmc.console.ext.agent.AgentPlugin
+Bundle-Activator: org.openjdk.jmc.console.agent.AgentPlugin
 Automatic-Module-Name: org.openjdk.jmc.console.ext.agent
