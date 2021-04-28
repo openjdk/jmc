@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.openjdk.jmc.feature.console.ext.agent"
+      id="org.openjdk.jmc.feature.console.agent"
       label="JMC Agent Plugin"
       version="8.1.0.qualifier">
 

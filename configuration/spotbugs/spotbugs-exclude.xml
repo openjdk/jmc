@@ -35,50 +35,50 @@
     <!-- copied from jmc-agent-plugin -->
     <!-- The API here returns null as a meaningful value, this is fine. -->
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.AgentJmxHelper"/>
+		<Class name="org.openjdk.jmc.console.agent.AgentJmxHelper"/>
 		<Method name="retrieveCurrentTransforms"/>
 		<Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
 	</Match>
 	<!-- this is a fire and forget method, we don't need the return value. -->
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentEditorUi"/>
+		<Class name="org.openjdk.jmc.console.agent.editor.AgentEditorUi"/>
 		<Method name="refresh"/>
 		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
 	</Match>
 	<!-- We don't need the return value of createNewFile, if something went wrong the exception will be caught and handled -->
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.XmlDocumentProvider"/>
+		<Class name="org.openjdk.jmc.console.agent.raweditor.internal.XmlDocumentProvider"/>
 		<Method name="doSaveDocument"/>
 		<Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
 	</Match>
 	<!-- The double check is intentional here for synchronization, verify that we need to create
 		the singleton before acquiring the lock. -->
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.manager.model.PresetRepositoryFactory" />
+		<Class name="org.openjdk.jmc.console.agent.manager.model.PresetRepositoryFactory" />
 		<Method name="createSingleton"/>
 		<Bug pattern="DC_DOUBLECHECK" />
 	</Match>
 	<!-- This is a false positive. Eclipse handles initialization of critical components elsewhere -->
     <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.editor.AgentEditor" />
+		<Class name="org.openjdk.jmc.console.agent.editor.AgentEditor" />
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
     </Match>
     <Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.NonRuleBasedDamagerRepairer"/>
+		<Class name="org.openjdk.jmc.console.agent.raweditor.internal.NonRuleBasedDamagerRepairer"/>
 		<Method name="endOfLineOf"/>
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
 	</Match>
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.NonRuleBasedDamagerRepairer"/>
+		<Class name="org.openjdk.jmc.console.agent.raweditor.internal.NonRuleBasedDamagerRepairer"/>
 		<Method name="getDamageRegion"/>
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
 	</Match>
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.raweditor.internal.XmlDoubleClickStrategy"/>
+		<Class name="org.openjdk.jmc.console.agent.raweditor.internal.XmlDoubleClickStrategy"/>
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
 	</Match>
 	<Match>
-		<Class name="org.openjdk.jmc.console.ext.agent.tabs.overview.OverviewTab"/>
+		<Class name="org.openjdk.jmc.console.agent.tabs.overview.OverviewTab"/>
 		<Method name="loadAgentListener"/>
 		<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
 	</Match>
