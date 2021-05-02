@@ -771,12 +771,11 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID_DESC), PLAIN_TEXT);
 			
 	public static final IAttribute<IQuantity> THREAD_SYSTEM_CPU_LOAD = Attribute.attr("system", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_SYSTEM_LOAD), Messages.getString(Messages.ATTR_SYSTEM_LOAD_DESC),PERCENTAGE);
+			Messages.getString(Messages.ATTR_SYSTEM_LOAD), Messages.getString(Messages.ATTR_SYSTEM_LOAD_DESC), PERCENTAGE);
 	public static final IAttribute<IQuantity> THREAD_USER_CPU_LOAD = Attribute.attr("user", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_USER_LOAD), Messages.getString(Messages.ATTR_USER_LOAD_DESC),PERCENTAGE);
-	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.attr("thread",
-			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), UnitLookup.THREAD);			   
-		
+			Messages.getString(Messages.ATTR_USER_LOAD), Messages.getString(Messages.ATTR_USER_LOAD_DESC), PERCENTAGE);
+	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.attr("thread", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD);
 
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
