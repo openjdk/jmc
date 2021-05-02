@@ -147,7 +147,7 @@ public final class JdkFilters {
 	public static final IItemFilter THREAD_CPU_LOAD = ItemFilters.type(JdkTypeIDs.THREAD_CPU_LOAD);
 	public static final IItemFilter NATIVE_METHOD_SAMPLE = ItemFilters.type(JdkTypeIDs.NATIVE_METHOD_SAMPLE);
 	public static final IItemFilter THREAD_START = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START);
-	public static final IItemFilter THREAD_END = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END);		
+	public static final IItemFilter THREAD_END = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END);
 
 	public static class MethodFilter implements IItemFilter {
 
