@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -108,6 +108,8 @@ public class Messages {
 	public static final String AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC = "AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC"; //$NON-NLS-1$
 	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS = "AGGR_NUMBER_OF_DISTINCT_PORTS"; //$NON-NLS-1$
 	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS_DESC = "AGGR_NUMBER_OF_DISTINCT_PORTS_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJ_ALLOC_SUM = "AGGR_OBJ_ALLOC_SUM"; //$NON-NLS-1$
+	public static final String AGGR_OBJ_ALLOC_SUM_DESC = "AGGR_OBJ_ALLOC_SUM_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES = "AGGR_OBJECT_COUNT_MAX_INSTANCES"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC = "AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE = "AGGR_OBJECT_COUNT_MAX_SIZE"; //$NON-NLS-1$
@@ -421,6 +423,7 @@ public class Messages {
 	public static final String ATTR_REVOKED_CLASS_DESC = "ATTR_REVOKED_CLASS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT = "ATTR_SAFEPOINT"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT_DESC = "ATTR_SAFEPOINT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_SAMPLE_WEIGHT = "ATTR_SAMPLE_WEIGHT"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME = "ATTR_STACK_TRACE_BOTTOM_FRAME"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME_DESC = "ATTR_STACK_TRACE_BOTTOM_FRAME_DESC"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_METHOD = "ATTR_STACK_TRACE_BOTTOM_METHOD"; //$NON-NLS-1$
