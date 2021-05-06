@@ -65,7 +65,7 @@ public interface IMCType {
 	String getFullName();
 
 	/**
-	 * Returns whether or not the type is hidden or not.
+	 * Returns whether or not the type is hidden.
 	 * 
 	 * @return {@code true} if hidden, {@code false} if not
 	 */
