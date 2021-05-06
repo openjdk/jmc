@@ -63,7 +63,7 @@ public interface IMCType {
 	 * @return the fully qualified name (both package and type name)
 	 */
 	String getFullName();
-	
+
 	/**
 	 * Returns whether or not the type is hidden or not.
 	 * 

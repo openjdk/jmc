@@ -316,7 +316,7 @@ class StructTypes {
 			}
 			return (String) name;
 		}
-		
+
 		@Override
 		public Boolean isHidden() {
 			return (Boolean) hidden;
