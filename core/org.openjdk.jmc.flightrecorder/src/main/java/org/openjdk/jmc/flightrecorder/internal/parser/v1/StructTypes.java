@@ -280,6 +280,7 @@ class StructTypes {
 		public Object classLoader;
 		public Object modifiers;
 		public Object _package;
+		public Object hidden;
 		// Never use this field directly, make sure to always use a method to get the converted value
 		public Object name;
 		private boolean convertedNames;
@@ -314,6 +315,11 @@ class StructTypes {
 				convertNames();
 			}
 			return (String) name;
+		}
+		
+		@Override
+		public Boolean isHidden() {
+			return (Boolean) hidden;
 		}
 
 		private void convertNames() {
