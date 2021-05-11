@@ -194,8 +194,7 @@ public class SyntheticAttributeExtension implements IParserExtension {
 						Messages.getString(Messages.SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE),
 						UnitLookup.FREQUENCY);
 
-			} else if (eventTypeId
-					.equalsIgnoreCase("http://www.oracle.com/hotspot/jvm/os/processor/context_switch_rate")) {
+			} else if (OracleJdkTypeIDsPre11.CONTEXT_SWITCH_RATE.equals(eventTypeId)) {
 				JdkAttributes.OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
 						Messages.getString(Messages.SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE),
 						UnitLookup.NUMBER);

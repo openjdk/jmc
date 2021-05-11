@@ -178,7 +178,7 @@ public final class OracleJdkTypeIDsPre11 {
 	private final static String VM_OPERATIONS = JVM_EVENT_ID_ROOT + "vm/runtime/execute_vm_operation";
 
 	private final static String THREAD_STATISTICS = JVM_EVENT_ID_ROOT + "java/statistics/threads";
-	private final static String CONTEXT_SWITCH_RATE = JVM_EVENT_ID_ROOT + "os/processor/context_switch_rate";
+	final static String CONTEXT_SWITCH_RATE = JVM_EVENT_ID_ROOT + "os/processor/context_switch_rate";
 
 	private final static String COMPILER_CONFIG = JVM_EVENT_ID_ROOT + "vm/compiler/config";
 	private final static String CODE_CACHE_CONFIG = JVM_EVENT_ID_ROOT + "vm/code_cache/config";
