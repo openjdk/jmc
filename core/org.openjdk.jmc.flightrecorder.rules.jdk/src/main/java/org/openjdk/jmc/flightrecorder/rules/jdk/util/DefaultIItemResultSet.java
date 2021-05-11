@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -66,12 +69,17 @@ final class DefaultIItemResultSet implements IItemResultSet {
 		aggregators.addAll(query.getAggregators());
 		info = new HashMap<>(attributes.size() + aggregators.size());
 		initializeMetadata();
-		calculateData(items);
+		try {
+			calculateData(items);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void calculateData(IItemCollection input) {
+	private void calculateData(IItemCollection input) throws InterruptedException {
 		input = input.apply(query.getFilter());
+		final IItemCollection newInput = input;
 		if (query.getGroupBy() == null) {
 			for (IItemIterable iterable : input) {
 				IType<IItem> type = iterable.getType();
@@ -96,20 +104,34 @@ final class DefaultIItemResultSet implements IItemResultSet {
 			IAggregator<?, ?> aggregator = Aggregators.distinct(query.getGroupBy());
 			Set<?> aggregate = input.getAggregate((IAggregator<Set<?>, ?>) aggregator);
 			if (aggregate != null) {
-				for (Object o : aggregate) {
-					IItemCollection rowCollection = input.apply(ItemFilters.equals((IAttribute) query.getGroupBy(), o));
-					Object[] row = newRow();
-					int column = 0;
-					for (; column < attributes.size(); column++) {
-						// Optimization - it is too expensive to do aggregation for these. You simply
-						// get first non-null matching attribute - we're only using this for the group by today.
-						row[column] = getFirstNonNull(rowCollection, attributes.get(column));
+				int SUM_NUM_THREADS = Runtime.getRuntime().availableProcessors();
+				ExecutorService exec = Executors.newFixedThreadPool(SUM_NUM_THREADS);
+				try {
+					for (final Object o : aggregate) {
+						exec.submit(new Runnable() {
+							@Override
+							public void run() {
+								IItemCollection rowCollection = newInput
+										.apply(ItemFilters.equals((IAttribute) query.getGroupBy(), o));
+								Object[] row = newRow();
+								int column = 0;
+								for (; column < attributes.size(); column++) {
+									// Optimization - it is too expensive to do aggregation for these. You simply
+									// get first non-null matching attribute - we're only using this for the group by today.
+									row[column] = getFirstNonNull(rowCollection, attributes.get(column));
+								}
+								for (int j = 0; j < aggregators.size(); j++) {
+									row[column + j] = rowCollection.getAggregate(aggregators.get(j));
+								}
+								data.add(row);
+							}
+						});
 					}
-					for (int j = 0; j < aggregators.size(); j++) {
-						row[column + j] = rowCollection.getAggregate(aggregators.get(j));
-					}
-					data.add(row);
+				} finally {
+					exec.shutdown();
 				}
+				// Higher timeout value added for worst case
+				exec.awaitTermination(1, TimeUnit.HOURS);
 			}
 		}
 	}
