@@ -1146,8 +1146,7 @@ public final class JdkAttributes {
 	public static final IAttribute<IMCThread> MONITOR_PREVIOUS_OWNER = attr("previousOwner", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_MONITOR_PREVIOUS_OWNER), THREAD);
 
-	public static final IAttribute<IQuantity> OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), NUMBER);
+	public static IAttribute<IQuantity> OS_SWITCH_RATE;
 	public static final IAttribute<String> REFERENCE_STATISTICS_TYPE = attr("type", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_TYPE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = attr("count", //$NON-NLS-1$
