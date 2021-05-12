@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -183,7 +184,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private class NodeThresholdSelection extends Action implements IMenuCreator {
 		private Menu menu;
-		private final List<Pair<String, Integer>> items = List.of(new Pair<>("100", 100), new Pair<>("500", 500),
+		private final List<Pair<String, Integer>> items = Arrays.asList(new Pair<>("100", 100), new Pair<>("500", 500),
 				new Pair<>("1000", 1000));
 
 		NodeThresholdSelection() {

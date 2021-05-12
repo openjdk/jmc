@@ -47,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 class RecordingImplTest {
@@ -56,7 +57,7 @@ class RecordingImplTest {
 	@BeforeEach
 	void setUp() {
 		bos = new ByteArrayOutputStream();
-		recording = new RecordingImpl(bos);
+		recording = new RecordingImpl(bos, new RecordingSettings());
 	}
 
 	@AfterEach

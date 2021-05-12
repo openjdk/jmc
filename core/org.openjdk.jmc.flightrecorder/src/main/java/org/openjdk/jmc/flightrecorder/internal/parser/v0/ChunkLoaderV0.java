@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -59,6 +59,7 @@ public class ChunkLoaderV0 implements IChunkLoader {
 
 	@Override
 	public byte[] call() throws Exception {
+		context.incChunkCount();
 		// Read constants
 		ReaderFactory readerFactory = new ReaderFactory(metadata, data, context, structure);
 

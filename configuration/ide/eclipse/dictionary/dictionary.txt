@@ -74,3 +74,4 @@ datadog
 websocket
 jetty
 websockets
+xml

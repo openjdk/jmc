@@ -45,6 +45,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 @SuppressWarnings("unchecked")
 class TypedValueBuilderImplTest {
@@ -57,6 +58,7 @@ class TypedValueBuilderImplTest {
 	private TypeImpl simpleType;
 	private TypeImpl customType;
 	private TypeImpl stringType;
+	private TypeImpl longType;
 
 	@BeforeAll
 	static void init() {
@@ -71,6 +73,7 @@ class TypedValueBuilderImplTest {
 		// not mocking here since we will need quite a number of predefined types anyway
 		TypesImpl types = new TypesImpl(new MetadataImpl(new ConstantPools()));
 
+		longType = types.getType(Types.Builtin.LONG);
 		stringType = types.getType(TypesImpl.Builtin.STRING);
 
 		simpleType = types.getOrAdd("custom.Simple", builder -> {
@@ -169,8 +172,8 @@ class TypedValueBuilderImplTest {
 
 	@Test
 	void putFieldCustomArrayInvalidValues() {
-		assertThrows(IllegalArgumentException.class, () -> instance.putField(CUSTOM_FIELD_ARRAY_NAME,
-				stringType.asValue("value1"), stringType.asValue("value2")));
+		assertThrows(IllegalArgumentException.class,
+				() -> instance.putField(CUSTOM_FIELD_ARRAY_NAME, longType.asValue(1), longType.asValue(2)));
 	}
 
 	@Test

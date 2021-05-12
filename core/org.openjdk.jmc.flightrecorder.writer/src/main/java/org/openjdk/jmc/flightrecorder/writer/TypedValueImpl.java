@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-final class TypedValueImpl implements TypedValue {
+public final class TypedValueImpl implements TypedValue {
 	private int hashcode = 0;
 
 	private final TypeImpl type;
@@ -58,9 +58,14 @@ final class TypedValueImpl implements TypedValue {
 		if (!type.canAccept(value)) {
 			throw new IllegalArgumentException();
 		}
+		Map<String, TypedFieldValueImpl> valueMap = value instanceof Map ? (Map<String, TypedFieldValueImpl>) value
+				: null;
+		if (valueMap == null && type.isSimple()) {
+			valueMap = wrapSimpleValueField(type, value);
+		}
 		this.type = type;
-		this.value = value instanceof Map ? null : value;
-		this.fields = value instanceof Map ? (Map<String, TypedFieldValueImpl>) value : Collections.emptyMap();
+		this.value = valueMap == null ? value : null;
+		this.fields = valueMap != null ? valueMap : Collections.emptyMap();
 		this.isNull = value == null;
 		this.cpIndex = cpIndex;
 	}
@@ -90,7 +95,7 @@ final class TypedValueImpl implements TypedValue {
 		}
 		this.type = other.type;
 		this.value = other.value;
-		this.fields = Collections.unmodifiableMap(other.fields);
+		this.fields = other.fields;
 		this.isNull = other.isNull;
 		this.hashcode = other.hashcode;
 		this.cpIndex = cpIndex;
@@ -171,5 +176,30 @@ final class TypedValueImpl implements TypedValue {
 	public String toString() {
 		return "TypedValueImpl{" + "type=" + type + ", value=" + value + ", fields=" + fields + ", isNull=" + isNull
 				+ ", cpIndex=" + cpIndex + '}';
+	}
+
+	static TypedValueImpl wrapSimpleValueField(TypeImpl targetType, TypedValueImpl value) {
+		if (value.getType().isBuiltin()) {
+			TypedFieldImpl valueField = targetType.getFields().get(0);
+			TypeImpl fieldType = valueField.getType();
+			if (fieldType.canAccept(value)) {
+				value = targetType
+						.asValue(new SingleFieldMap(valueField.getName(), new TypedFieldValueImpl(valueField, value)));
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+		return value;
+	}
+
+	static Map<String, TypedFieldValueImpl> wrapSimpleValueField(TypeImpl targetType, Object value) {
+		TypedFieldImpl valueField = targetType.getFields().get(0);
+		TypeImpl fieldType = valueField.getType();
+		if (fieldType.canAccept(value)) {
+			return new SingleFieldMap(valueField.getName(),
+					new TypedFieldValueImpl(valueField, fieldType.asValue(value)));
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 }

@@ -1,0 +1,7 @@
+jdk.CPUInformation;1;1782
+jdk.PhysicalMemory;2;48
+jdk.ObjectAllocationInNewTLAB;8;352
+jdk.ClassLoadingStatistics;9;216
+jdk.ThreadAllocationStatistics;46;920
+jdk.ActiveSetting;72;8836
+jdk.JavaMonitorWait;106;6042

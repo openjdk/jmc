@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
  * Contains type IDs for events that are produced by JDK 7 and 8.
  */
 @SuppressWarnings({"nls", "unused"})
-final class JdkTypeIDsPreJdk11 {
+public final class OracleJdkTypeIDsPre11 {
 	/**
 	 * The prefix used for JDK 11 and later
 	 */
@@ -178,7 +178,7 @@ final class JdkTypeIDsPreJdk11 {
 	private final static String VM_OPERATIONS = JVM_EVENT_ID_ROOT + "vm/runtime/execute_vm_operation";
 
 	private final static String THREAD_STATISTICS = JVM_EVENT_ID_ROOT + "java/statistics/threads";
-	private final static String CONTEXT_SWITCH_RATE = JVM_EVENT_ID_ROOT + "os/processor/context_switch_rate";
+	final static String CONTEXT_SWITCH_RATE = JVM_EVENT_ID_ROOT + "os/processor/context_switch_rate";
 
 	private final static String COMPILER_CONFIG = JVM_EVENT_ID_ROOT + "vm/compiler/config";
 	private final static String CODE_CACHE_CONFIG = JVM_EVENT_ID_ROOT + "vm/code_cache/config";

@@ -39,6 +39,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.TypeStructureBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 import java.util.ArrayList;
@@ -98,13 +99,38 @@ final class TypeStructureBuilderImpl implements TypeStructureBuilder {
 
 	@Override
 	public TypeStructureBuilderImpl addAnnotation(Type type) {
-		return addAnnotation(type, null);
+		return addAnnotation(type, (String) null);
 	}
 
 	@Override
 	public TypeStructureBuilderImpl addAnnotation(Type type, String value) {
 		annotations.add(new Annotation(type, value));
 		return this;
+	}
+
+	@Override
+	public TypeStructureBuilderImpl addAnnotation(Types.Predefined type) {
+		return addAnnotation(types.getType(type));
+	}
+
+	@Override
+	public TypeStructureBuilderImpl addAnnotation(Types.Predefined type, String value) {
+		return addAnnotation(types.getType(type), value);
+	}
+
+	@Override
+	public TypeStructureBuilderImpl addAnnotation(Type type, Consumer<TypedValueBuilder> builderCallback) {
+		TypedValueBuilderImpl impl = new TypedValueBuilderImpl((TypeImpl) type);
+		if (builderCallback != null) {
+			builderCallback.accept(impl);
+		}
+		annotations.add(new Annotation(type, impl.build()));
+		return this;
+	}
+
+	@Override
+	public TypeStructureBuilderImpl addAnnotation(Types.Predefined type, Consumer<TypedValueBuilder> builderCallback) {
+		return addAnnotation(types.getType(type), builderCallback);
 	}
 
 	@Override

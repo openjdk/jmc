@@ -101,6 +101,10 @@
 		<module>coverage</module>
 	</modules>
 	<distributionManagement>
+		<repository>
+			<id>jmc-publish</id>
+			<url>${release.repo}</url>
+		</repository>
 		<snapshotRepository>
 			<id>jmc-publish-snapshot</id>
 			<url>${snapshot.repo}</url>
@@ -239,16 +243,6 @@
 					<excludePackageNames>*.internal</excludePackageNames>
 					<quiet>true</quiet>
 					<failOnError>false</failOnError>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>${nexus.staging.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>jmc-publish-snapshot</serverId>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 			<plugin>

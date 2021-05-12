@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -208,6 +208,10 @@ class SeekableInputStream implements IDataInput {
 			throw new IOException();
 		}
 		}
+	}
+
+	public long getPosition() {
+		return pos;
 	}
 
 	private static class CompressedIntsDataInput extends SeekableInputStream {
