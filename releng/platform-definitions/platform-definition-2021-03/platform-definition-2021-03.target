@@ -46,6 +46,9 @@
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
+            <unit id="org.eclipse.jetty.websocket.api" version="9.4.35.v20201120"/>
+            <unit id="org.eclipse.jetty.websocket.server" version="9.4.35.v20201120"/>
+            <unit id="org.eclipse.jetty.websocket.servlet" version="9.4.35.v20201120"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
