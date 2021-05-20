@@ -187,6 +187,8 @@ public class Messages extends NLS {
 	public static String GCConfigurationPage_SECTION_GC_CONFIG;
 	public static String GCConfigurationPage_SECTION_HEAP_CONFIG;
 	public static String GCConfigurationPage_SECTION_YOUNG_CONFIG;
+	public static String GCConfigurationPage_SECTION_JVM_GC_FLAGS;
+	public static String GCConfigurationPage_COLUMN_VALUE;
 	public static String GarbageCollectionsPage_COMMITTED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_COMMITTED_METASPACE_DELTA;
 	public static String GarbageCollectionsPage_DISABLED_TOOLTIP;

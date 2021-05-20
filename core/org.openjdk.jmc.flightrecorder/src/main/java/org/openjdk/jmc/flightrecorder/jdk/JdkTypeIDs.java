@@ -64,6 +64,7 @@ public final class JdkTypeIDs {
 	public static final String HEAP_SUMMARY = PREFIX + "GCHeapSummary";
 	public static final String ALLOC_INSIDE_TLAB = PREFIX + "ObjectAllocationInNewTLAB";
 	public static final String ALLOC_OUTSIDE_TLAB = PREFIX + "ObjectAllocationOutsideTLAB";
+	public static final String OBJ_ALLOC_SAMPLE = PREFIX + "ObjectAllocationSample";
 	public static final String VM_INFO = PREFIX + "JVMInformation";
 	public static final String CLASS_DEFINE = PREFIX + "ClassDefine";
 	public static final String CLASS_LOAD = PREFIX + "ClassLoad";
