@@ -42,7 +42,7 @@ function startJetty() {
     local timestamp=$1
     local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
     local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
-    
+
 
     pushd releng/third-party 1> /dev/null || {
         err_log "directory releng/third-party not found"
@@ -112,7 +112,7 @@ function runUiTests() {
 }
 
 function packageJmc() {
-    local timestamp=$1    
+    local timestamp=$1
     startJetty $timestamp
     installCore $timestamp
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
@@ -137,7 +137,7 @@ function packageAgent() {
         err_log "directory agent not found"
         exit 1
     }
-    
+
     echo "$(date +%T) packaging jmc agent - logging output to ${packageLog}"
     mvn package --log-file "${packageLog}"
 
@@ -234,20 +234,20 @@ function runAgentByClass() {
          printf "%s\n" "WARNING: java version not recognized"
          javaVersion=15
     fi
-           
+
     printf "Java Version:%s\n" "${javaVersion}"
     local pathToAgentTargetDir="${JMC_DIR}/agent/target"
     local pathToAgentJar="${pathToAgentTargetDir}/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar"
     printf "Agent path:%s\n" "${pathToAgentJar}"
-    if [ -f "${pathToAgentJar}" ]; then        
+    if [ -f "${pathToAgentJar}" ]; then
         if [ "$javaVersion" -lt "8" ]; then
             printf "min. required java version is 8"
             exit 1
         elif [ "$javaVersion" -eq "8" ]; then
             java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
-        elif [ "$javaVersion" -lt "13" ]; then 
+        elif [ "$javaVersion" -lt "13" ]; then
             java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
-        else 
+        else
             java --add-opens java.base/jdk.internal.misc=ALL-UNNAMED -javaagent:${pathToAgentJar}=${pathToAgentTargetDir}/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml -cp ${pathToAgentJar}:${pathToAgentTargetDir}/test-classes/ ${agentExampleClass}
         fi
     else
@@ -302,7 +302,7 @@ function parseArgs() {
 }
 
 function checkJava() {
-    if [[ -z "$JAVA_HOME" ]]; then 
+    if [[ -z "$JAVA_HOME" ]]; then
         echo "JAVA_HOME is not defined"
     fi
 

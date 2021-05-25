@@ -15,7 +15,7 @@ Install it, start it and create a new workspace for your JMC work. Creating a ne
 ![Workspace Selection](images/workspace.png)
 
 ## Installing JDKs
-If you haven't already, you should now first build JMC using the instructions in the [README.md](../../README.md). 
+If you haven't already, you should now first build JMC using the instructions in the [README.md](../../README.md).
 
 Next set up your JDKs in your Eclipse. Download and install a JDK 8 and JDK 11 (or the very latest update of the latest JDK), then open Window | Preferences and then select Java / Installed JREs. Add your favourite JKD 8 and JDK 11 JDKs (Add…) and then use Java / Installed JREs / Execution Environments to set them as defaults for the JDK 8 and JDK 11 execution environments.
 
