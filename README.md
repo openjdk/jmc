@@ -328,7 +328,7 @@ Once build has finished the results will be in the `target` directory
 ## Running the Locally Built JMC
 The built JMC will end up in the `target` folder in the root. The launcher is located in `target/products/org.openjdk.jmc/<platform>`. By default whichever JRE is on the path 
 will be used. Remember to set it to a JDK (rather than a JRE) if you want the launched mission control to automatically discover locally running JVMs. To override which JVM 
-to use when launching, add -vm and the path to a directory where a JDK java launcher is located, for example -vm $JAVA_HOME/bin.
+to use when launching, add `-vm` and the path to a directory where a JDK java launcher is located, for example `-vm $JAVA_HOME/bin`.
 
 Here is an example for Mac OS X:
 
