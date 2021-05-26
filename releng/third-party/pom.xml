@@ -54,6 +54,7 @@
 		<owasp.encoder.version>1.2.2</owasp.encoder.version>
 		<p2-maven-plugin.version>1.5.0</p2-maven-plugin.version>
 		<twitter4j.core.version>4.0.7</twitter4j.core.version>
+		<fastjson.version>1.2.76</fastjson.version>
 	</properties>
 
 	<build>
@@ -87,6 +88,9 @@
 								</artifact>
 								<artifact>
 									<id>javax.websocket:javax.websocket-api:${javax.websocket.version}</id>
+								</artifact>
+								<artifact>
+									<id>com.alibaba:fastjson:${fastjson.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.eclipse.jetty.websocket:javax-websocket-server-impl:${jetty.version}</id>
