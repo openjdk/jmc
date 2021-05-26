@@ -1,6 +1,7 @@
 package org.openjdk.jmc.flightrecorder.json;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -23,12 +24,24 @@ import org.openjdk.jmc.common.item.ItemToolkit;
  * <li>Profit!</li>
  * </ol>
  */
-public class IItemCollectionJsonSerializer extends JsonWriter {
-	public IItemCollectionJsonSerializer(Writer w) {
+public class AdHocIItemCollectionJsonMarshaller extends JsonWriter {
+	public static String toJsonString(IItemCollection items) {
+		StringWriter sw = new StringWriter();
+		AdHocIItemCollectionJsonMarshaller marshaler = new AdHocIItemCollectionJsonMarshaller(sw);
+		try {
+			marshaler.writeEventCollection(items);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sw.getBuffer().toString();
+	}
+
+	private AdHocIItemCollectionJsonMarshaller(Writer w) {
 		super(w);
 	}
 
-	public void writeEventCollection(IItemCollection eventCollection) throws IOException {
+	private void writeEventCollection(IItemCollection eventCollection) throws IOException {
 		writeObjectBegin();
 		nextField(true, "recording");
 		writeObjectBegin();
@@ -37,12 +50,6 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		int count = 0;
 		for (IItemIterable events : eventCollection) {
 			for (IItem event : events) {
-//				if (count > 100) {
-//					break;
-//				}
-//				if (!event.getType().getIdentifier().equals("jdk.JavaMonitorWait")) {
-//					continue;
-//				}
 				nextElement(count == 0);
 				writeEvent(event);
 				count++;
@@ -54,12 +61,10 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		flush();
 	}
 
-	public void writeEvent(IItem event) {
+	private void writeEvent(IItem event) {
 		writeObjectBegin();
 		IType<?> type = event.getType();
 		writeField(true, "type", type.getIdentifier());
-//            printValue(false, false, "startTime", e.getStartTime());
-//            printValue(false, false, "duration", e.getDuration());
 		nextField(false, "values");
 		writeObjectBegin();
 		writeValues(event);

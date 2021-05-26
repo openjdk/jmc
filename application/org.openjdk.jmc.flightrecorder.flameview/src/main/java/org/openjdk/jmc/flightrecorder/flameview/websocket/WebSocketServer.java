@@ -109,7 +109,7 @@ public class WebSocketServer {
 		lastEventsBroadcast = message;
 	}
 
-	private class WebSocketConnectionHandler extends WebSocketAdapter {
+	private static class WebSocketConnectionHandler extends WebSocketAdapter {
 		private CountDownLatch closureLatch = new CountDownLatch(1);
 		private String lastSent;
 

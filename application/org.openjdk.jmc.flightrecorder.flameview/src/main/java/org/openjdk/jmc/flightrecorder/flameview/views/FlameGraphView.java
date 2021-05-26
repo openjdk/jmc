@@ -51,7 +51,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.concurrent.CancellationException;
@@ -101,7 +100,7 @@ import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJsonMarshaller;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
 import org.openjdk.jmc.flightrecorder.flameview.websocket.WebSocketServer;
-import org.openjdk.jmc.flightrecorder.json.IItemCollectionJsonSerializer;
+import org.openjdk.jmc.flightrecorder.json.FastJsonIItemCollectionJsonMarshaller;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
@@ -303,15 +302,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			StringWriter sw = new StringWriter();
-			IItemCollectionJsonSerializer serializer = new IItemCollectionJsonSerializer(sw);
-			try {
-				serializer.writeEventCollection(items);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String eventsJson = sw.getBuffer().toString();
+			String eventsJson = FastJsonIItemCollectionJsonMarshaller.toJsonString(items);
 			WS_SERVER.broadcastEvents(eventsJson);
 			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
 			if (isInvalid) {

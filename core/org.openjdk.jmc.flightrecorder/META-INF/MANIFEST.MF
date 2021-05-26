@@ -18,7 +18,8 @@ Export-Package: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.stacktrace.graph,
  org.openjdk.jmc.flightrecorder.stacktrace.messages.internal,
  org.openjdk.jmc.flightrecorder.util
-Require-Bundle: org.openjdk.jmc.common;visibility:=reexport
+Require-Bundle: org.openjdk.jmc.common;visibility:=reexport,
+ com.alibaba.fastjson
 Eclipse-BuddyPolicy: app
 Eclipse-ExtensibleAPI: true
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder
