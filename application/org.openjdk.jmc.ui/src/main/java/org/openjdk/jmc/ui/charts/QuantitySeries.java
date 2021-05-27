@@ -37,6 +37,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
@@ -89,13 +91,13 @@ public class QuantitySeries<T> {
 	public static IQuantitySeries<?> all(
 		Iterator<? extends IItem> items, IMemberAccessor<? extends IQuantity, IItem> xValueAccessor,
 		IMemberAccessor<? extends IQuantity, IItem> yValueAccessor) {
-		List<IQuantity> xValues = new ArrayList<>(100);
-		List<IQuantity> yValues = new ArrayList<>(100);
+		SortedMap<IQuantity, IQuantity> sortedMap = new TreeMap<>();
 		while (items.hasNext()) {
 			IItem item = items.next();
-			xValues.add(xValueAccessor.getMember(item));
-			yValues.add(yValueAccessor.getMember(item));
+			sortedMap.put(xValueAccessor.getMember(item), yValueAccessor.getMember(item));
 		}
+		List<IQuantity> xValues = new ArrayList<>(sortedMap.keySet());
+		List<IQuantity> yValues = new ArrayList<>(sortedMap.values());
 		return all(xValues, yValues);
 	}
 

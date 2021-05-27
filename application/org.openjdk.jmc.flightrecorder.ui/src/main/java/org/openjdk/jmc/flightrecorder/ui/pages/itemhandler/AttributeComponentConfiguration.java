@@ -33,7 +33,6 @@
 package org.openjdk.jmc.flightrecorder.ui.pages.itemhandler;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -73,7 +72,7 @@ class AttributeComponentConfiguration {
 		uncommonChartableAttributes = new HashMap<>();
 		lineChartableAttributes = new HashMap<>();
 		forEachType(items);
-		populateAttributeMaps(isSuitableForLineCharts(items, allTypes));
+		populateAttributeMaps();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -91,7 +90,7 @@ class AttributeComponentConfiguration {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void populateAttributeMaps(boolean allowLineCharts) {
+	private void populateAttributeMaps() {
 		for (Entry<String, IAttribute<?>> a : allAttributes.entrySet()) {
 			if (!commonAttributes.containsKey(a.getKey()) && !uncommonAttributes.containsKey(a.getKey())
 					&& allTypes.values().stream().allMatch(t -> {
@@ -102,9 +101,7 @@ class AttributeComponentConfiguration {
 					@SuppressWarnings("unchecked")
 					IAttribute<IQuantity> qa = (IAttribute<IQuantity>) a.getValue();
 					commonChartableAttributes.put(a.getKey(), qa);
-					if (allowLineCharts) {
-						lineChartableAttributes.put(a.getKey(), qa);
-					}
+					lineChartableAttributes.put(a.getKey(), qa);
 				}
 			} else {
 				uncommonAttributes.put(a.getKey(), a.getValue());
@@ -112,21 +109,10 @@ class AttributeComponentConfiguration {
 					@SuppressWarnings("unchecked")
 					IAttribute<IQuantity> qa = (IAttribute<IQuantity>) a.getValue();
 					uncommonChartableAttributes.put(a.getKey(), qa);
+					lineChartableAttributes.put(a.getKey(), qa);
 				}
 			}
 		}
-	}
-
-	private static boolean isSuitableForLineCharts(IItemCollection items, Map<String, IType<?>> types) {
-		// NOTE: JMC-4520 - Only allowing line charts for one event type, which only has one event array. 
-		if (types.values().size() == 1) {
-			Iterator<IItemIterable> iterator = items.iterator();
-			if (iterator.hasNext()) {
-				iterator.next();
-				return !iterator.hasNext();
-			}
-		}
-		return false;
 	}
 
 	public Map<String, IAttribute<?>> getAllAttributes() {
