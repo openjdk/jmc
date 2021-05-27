@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.utils.releasenotes;
 
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.exists;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.newOutputStream;
 
@@ -43,6 +43,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -57,11 +58,11 @@ import javax.xml.transform.stream.StreamSource;
 public class Transform {
 
 	public static void main(String[] args) {
-		final ArrayDeque<String> deque = new ArrayDeque<>(Arrays.asList(args));
+		final Deque<String> deque = new ArrayDeque<>(Arrays.asList(args));
 		Path inputFile = null;
 		Path outputFile = null;
 		Path sylesheetFile = null;
-		for (; !deque.isEmpty();) {
+		while (!deque.isEmpty()) {
 			switch (deque.poll()) {
 			case "-IN":
 				inputFile = checkedToPath(deque.poll(), "input file", true);
