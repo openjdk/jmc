@@ -218,7 +218,7 @@ Prerequisites for building Mission Control:
 
 2. Install Maven (version 3.3.x. or above)
 
-On Linux you can use the build.sh script to build JMC:
+On Linux or macOS you can use the build.sh script to build JMC:
 ```
 usage: call ./build.sh with the following options:
    --installCore to install the core artifacts
