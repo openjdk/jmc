@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2020, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021, sDatadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,21 +31,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameview;
+package org.openjdk.jmc.flightrecorder.serializers.json;
 
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_MORE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_EVENT;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_EVENTS;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_ROOT_NODE_TYPES;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER;
-import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN;
-import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
-import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getStacktraceMessage;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_HTML_MORE;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_HTML_TABLE_EVENT_PATTERN;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_HTML_TABLE_EVENT_REST_PATTERN;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_ROOT_NODE;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_ROOT_NODE_EVENT;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_ROOT_NODE_EVENTS;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_ROOT_NODE_TYPE;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_ROOT_NODE_TYPES;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_STACKTRACE_NOT_AVAILABLE;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_TITLE_EVENT_MORE_DELIMITER;
+import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAMEGRAPH_SELECT_TITLE_EVENT_PATTERN;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
@@ -58,15 +56,18 @@ import java.util.stream.Collectors;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.flightrecorder.serializers.internal.Messages;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 
-public class FlameGraphJsonMarshaller {
-
-	private static final String UNCLASSIFIABLE_FRAME = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME);
-	private static final String UNCLASSIFIABLE_FRAME_DESC = getStacktraceMessage(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
+/**
+ * Produces a tree model suitable for rendering flame graphs.
+ */
+public class FlameGraphJsonSerializer {
+	private static final String UNCLASSIFIABLE_FRAME = Messages.getString(STACKTRACE_UNCLASSIFIABLE_FRAME);
+	private static final String UNCLASSIFIABLE_FRAME_DESC = Messages.getString(STACKTRACE_UNCLASSIFIABLE_FRAME_DESC);
 	private final static int MAX_TYPES_IN_ROOT_TITLE = 2;
 	private final static int MAX_TYPES_IN_ROOT_DESCRIPTION = 10;
 
@@ -161,34 +162,34 @@ public class FlameGraphJsonMarshaller {
 		int eventsInTitle = Math.min(eventCountsByType.size(), MAX_TYPES_IN_ROOT_TITLE);
 		long totalEvents = eventCountsByType.values().stream().mapToLong(Long::longValue).sum();
 		if (totalEvents == 0) {
-			return getFlameviewMessage(FLAMEVIEW_SELECT_STACKTRACE_NOT_AVAILABLE);
+			return Messages.getString(FLAMEGRAPH_SELECT_STACKTRACE_NOT_AVAILABLE);
 		}
 		StringBuilder title = new StringBuilder(createRootNodeTitlePrefix(totalEvents, eventCountsByType.size()));
 		int i = 0;
 		for (Map.Entry<String, Long> entry : eventCountsByType.entrySet()) {
-			String eventType = getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_PATTERN, entry.getKey(),
+			String eventType = Messages.getFormattedMessage(FLAMEGRAPH_SELECT_TITLE_EVENT_PATTERN, entry.getKey(),
 					String.valueOf(entry.getValue()));
 			title.append(eventType);
 			if (i < eventsInTitle) {
-				title.append(getFlameviewMessage(FLAMEVIEW_SELECT_TITLE_EVENT_MORE_DELIMITER));
+				title.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_TITLE_EVENT_MORE_DELIMITER));
 			} else {
 				break;
 			}
 			i++;
 		}
 		if (eventCountsByType.size() > MAX_TYPES_IN_ROOT_TITLE) {
-			title.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_MORE)); // $NON-NLS-1$
+			title.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_HTML_MORE)); // $NON-NLS-1$
 		}
 		return title.toString();
 	}
 
 	private static String createRootNodeTitlePrefix(long events, int types) {
-		String eventText = getFlameviewMessage(
-				events > 1 ? FLAMEVIEW_SELECT_ROOT_NODE_EVENTS : FLAMEVIEW_SELECT_ROOT_NODE_EVENT);
-		String typeText = getFlameviewMessage(
-				types > 1 ? FLAMEVIEW_SELECT_ROOT_NODE_TYPES : FLAMEVIEW_SELECT_ROOT_NODE_TYPE);
-		return getFlameviewMessage(FLAMEVIEW_SELECT_ROOT_NODE, String.valueOf(events), eventText, String.valueOf(types),
-				typeText);
+		String eventText = Messages.getFormattedMessage(
+				events > 1 ? FLAMEGRAPH_SELECT_ROOT_NODE_EVENTS : FLAMEGRAPH_SELECT_ROOT_NODE_EVENT);
+		String typeText = Messages
+				.getFormattedMessage(types > 1 ? FLAMEGRAPH_SELECT_ROOT_NODE_TYPES : FLAMEGRAPH_SELECT_ROOT_NODE_TYPE);
+		return Messages.getFormattedMessage(FLAMEGRAPH_SELECT_ROOT_NODE, String.valueOf(events), eventText,
+				String.valueOf(types), typeText);
 	}
 
 	private static String createRootNodeDescription(Map<String, Long> eventCountsByType) {
@@ -197,7 +198,7 @@ public class FlameGraphJsonMarshaller {
 		long remainingEvents = 0;
 		for (Map.Entry<String, Long> entry : eventCountsByType.entrySet()) {
 			if (i < MAX_TYPES_IN_ROOT_DESCRIPTION) {
-				description.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_PATTERN,
+				description.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_HTML_TABLE_EVENT_PATTERN,
 						String.valueOf(entry.getValue()), entry.getKey()));
 			} else {
 				remainingEvents = Long.sum(remainingEvents, entry.getValue());
@@ -207,7 +208,7 @@ public class FlameGraphJsonMarshaller {
 
 		if (remainingEvents > 0) {
 			int remainingTypes = eventCountsByType.size() - MAX_TYPES_IN_ROOT_DESCRIPTION;
-			description.append(getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
+			description.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_HTML_TABLE_EVENT_REST_PATTERN,
 					String.valueOf(remainingEvents), String.valueOf(remainingTypes)));
 		}
 		return description.toString();

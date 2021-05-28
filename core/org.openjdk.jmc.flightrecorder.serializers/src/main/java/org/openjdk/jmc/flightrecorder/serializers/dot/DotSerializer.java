@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.ext.graphview.graph;
+package org.openjdk.jmc.flightrecorder.serializers.dot;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
  * Converts a {@link StacktraceGraphModel} to DOT format text. This format can, for example, be used
  * by d3-graphviz, to visualize the graphs.
  */
-public final class DotGenerator {
+public final class DotSerializer {
 	private static final String DEFAULT_NAME = "Unnamed";
 	private static final String DEFAULT_SHAPE = "box";
 	private static final String DEFAULT_STYLE = "filled";
