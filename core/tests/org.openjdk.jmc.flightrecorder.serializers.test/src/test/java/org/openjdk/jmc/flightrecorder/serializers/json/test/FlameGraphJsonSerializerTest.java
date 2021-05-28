@@ -68,8 +68,7 @@ public class FlameGraphJsonSerializerTest {
 		IOResourceSet resourceSet = testResources[0];
 		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
 	}
-	
-	
+
 	@Test
 	public void testSerializeKnownRecording() throws IOException, CouldNotLoadRecordingException {
 		IItemCollection collection = RecordingToolkit.getFlightRecording(
