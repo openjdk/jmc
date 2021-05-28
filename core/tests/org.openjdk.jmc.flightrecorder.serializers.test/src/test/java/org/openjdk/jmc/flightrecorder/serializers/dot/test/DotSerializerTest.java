@@ -51,8 +51,8 @@ public class DotSerializerTest {
 
 	@Test
 	public void testGetRecording() throws IOException, CouldNotLoadRecordingException {
-		IItemCollection collection = RecordingToolkit
-				.getFlightRecording(TestToolkit.getNamedResource(DotSerializerTest.class, "recordings", "hotmethods.jfr"));
+		IItemCollection collection = RecordingToolkit.getFlightRecording(
+				TestToolkit.getNamedResource(DotSerializerTest.class, "recordings", "hotmethods.jfr"));
 		assertNotNull(collection);
 		String dot = DotSerializer
 				.toDot(new StacktraceGraphModel(new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false),

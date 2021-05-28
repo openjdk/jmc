@@ -33,24 +33,45 @@
  */
 package org.openjdk.jmc.flightrecorder.serializers.json.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.TestToolkit;
+import org.openjdk.jmc.common.test.io.IOResourceSet;
+import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
+import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 
 public class FlameGraphJsonSerializerTest {
+	private static final boolean INVERTED_STACKS = true;
+	private static final boolean REGULAR_STACKS = false;
+	private static final FrameSeparator METHOD_SEPARATOR = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
+			false);
 
+	private static IItemCollection testRecording;
+
+	@BeforeClass
+	public static void beforeAll() throws IOException, CouldNotLoadRecordingException {
+		IOResourceSet[] testResources = StacktraceTestToolkit.getTestResources();
+		IOResourceSet resourceSet = testResources[0];
+		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
+	}
+	
+	
 	@Test
-	public void testGetRecording() throws IOException, CouldNotLoadRecordingException {
+	public void testSerializeKnownRecording() throws IOException, CouldNotLoadRecordingException {
 		IItemCollection collection = RecordingToolkit.getFlightRecording(
 				TestToolkit.getNamedResource(FlameGraphJsonSerializerTest.class, "recordings", "hotmethods.jfr"));
 		assertNotNull(collection);
@@ -58,6 +79,53 @@ public class FlameGraphJsonSerializerTest {
 				new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false)));
 		assertTrue("JSon file should contain Method Profiling Sample[24526]",
 				json.contains("Method Profiling Sample[24526]"));
+	}
+
+	@Test
+	public void testRenderedJsonWithAttribute() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, REGULAR_STACKS,
+				JdkAttributes.ALLOCATION_SIZE);
+		String flameGraphJson = FlameGraphJsonSerializer.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-attribute.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	@Test
+	public void testRenderedJsonWithAttributeInvertedStacks() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, INVERTED_STACKS,
+				JdkAttributes.ALLOCATION_SIZE);
+		String flameGraphJson = FlameGraphJsonSerializer.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-attribute-inverted.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	@Test
+	public void testRenderedJsonWithCounts() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording);
+		String flameGraphJson = FlameGraphJsonSerializer.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-counts.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	@Test
+	public void testRenderedJsonWithCountsInvertedStacks() throws Exception {
+		StacktraceTreeModel model = new StacktraceTreeModel(testRecording, METHOD_SEPARATOR, INVERTED_STACKS);
+		String flameGraphJson = FlameGraphJsonSerializer.toJson(model);
+
+		String expectedJson = readResource("/flamegraph-counts-inverted.json");
+		assertEquals(expectedJson, flameGraphJson);
+	}
+
+	private String readResource(String resourcePath) throws IOException {
+		try (InputStream is = FlameGraphJsonSerializer.class.getResourceAsStream(resourcePath)) {
+			if (is == null) {
+				throw new IllegalArgumentException(resourcePath + " not found");
+			}
+			return StringToolkit.readString(is);
+		}
 	}
 
 }
