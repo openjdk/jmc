@@ -442,13 +442,24 @@ public final class DotSerializer {
 	}
 
 	/**
-	 * Generates a dot file for the CPU profiling events available in the recording.
+	 * Generates a DOT file for the execution sample (CPU profiling) events available in the
+	 * recording.
+	 * <p>
+	 * TODO: This could easily be made highly configurable to allow the user to configure which
+	 * event type to filter for, what attribute to use for weight, and what frame separator to use.
 	 * 
 	 * @param args
+	 *            takes one argument - the file name of the JFR file to serialize into DOT.
 	 * @throws IOException
 	 * @throws CouldNotLoadRecordingException
 	 */
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
+		if (args.length != 1) {
+			System.out.println("Usage: DotSerializer <filename>\n");
+			System.out.println(
+					"Serializes the execution sample events in a JFR file into a DOT file, suitable for visualizing with GraphViz.");
+			System.exit(2);
+		}
 		File jfrFile = new File(args[0]);
 		IItemCollection items = JfrLoaderToolkit.loadEvents(jfrFile);
 		IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);

@@ -47,6 +47,8 @@ import static org.openjdk.jmc.flightrecorder.serializers.internal.Messages.FLAME
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME;
 import static org.openjdk.jmc.flightrecorder.stacktrace.Messages.STACKTRACE_UNCLASSIFIABLE_FRAME_DESC;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -56,8 +58,13 @@ import java.util.stream.Collectors;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.serializers.internal.Messages;
 import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
@@ -71,6 +78,13 @@ public class FlameGraphJsonSerializer {
 	private final static int MAX_TYPES_IN_ROOT_TITLE = 2;
 	private final static int MAX_TYPES_IN_ROOT_DESCRIPTION = 10;
 
+	/**
+	 * Serializes a {@link StacktraceTreeModel} to JSON.
+	 * 
+	 * @param model
+	 *            the {@link StacktraceTreeModel} to serialize to JSON.
+	 * @return a String containing the serialized model.
+	 */
 	public static String toJson(StacktraceTreeModel model) {
 		return toJson(model, model.getRoot());
 	}
@@ -135,7 +149,7 @@ public class FlameGraphJsonSerializer {
 		return String.format("\"%s\"", str);
 	}
 
-	public static Map<String, Long> countEventsByType(IItemCollection items) {
+	private static Map<String, Long> countEventsByType(IItemCollection items) {
 		final HashMap<String, Long> eventCountByType = new HashMap<>();
 		for (IItemIterable eventIterable : items) {
 			if (eventIterable.getItemCount() == 0) {
@@ -212,5 +226,32 @@ public class FlameGraphJsonSerializer {
 					String.valueOf(remainingEvents), String.valueOf(remainingTypes)));
 		}
 		return description.toString();
+	}
+
+	/**
+	 * Generates a JSON file for the execution sample (CPU profiling) events available in the
+	 * recording.
+	 * <p>
+	 * TODO: This could easily be made highly configurable to allow the user to configure which
+	 * event type to filter for, what attribute to use for weight, and what frame separator to use.
+	 * 
+	 * @param args
+	 *            takes one argument - the file name of the JFR file to serialize into JSON.
+	 * @throws IOException
+	 * @throws CouldNotLoadRecordingException
+	 */
+	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
+		if (args.length != 1) {
+			System.out.println("Usage: FlameGraphJsonSerializer <filename>\n");
+			System.out.println(
+					"Serializes the execution sample events a JFR file into a JSON file, suitable for visualizing with flame graph library.");
+			System.exit(2);
+		}
+		File jfrFile = new File(args[0]);
+		IItemCollection items = JfrLoaderToolkit.loadEvents(jfrFile);
+		IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);
+		FrameSeparator frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
+		StacktraceTreeModel model = new StacktraceTreeModel(filteredItems, frameSeparator);
+		System.out.println(toJson(model));
 	}
 }
