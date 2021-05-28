@@ -36,6 +36,7 @@
 <target name="jmc-target-2020-09" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="com.alibaba.fastjson" version="1.2.76"/>
             <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
             <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
             <unit id="org.owasp.encoder" version="1.2.2"/>

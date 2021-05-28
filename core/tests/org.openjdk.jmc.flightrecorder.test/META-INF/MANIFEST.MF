@@ -9,6 +9,7 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.common.test,
  org.openjdk.jmc.flightrecorder,
- org.openjdk.jmc.flightrecorder.rules
+ org.openjdk.jmc.flightrecorder.rules,
+ com.alibaba.fastjson
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.test
 Export-Package: org.openjdk.jmc.flightrecorder.test.util

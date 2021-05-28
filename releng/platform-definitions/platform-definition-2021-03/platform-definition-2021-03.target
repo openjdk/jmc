@@ -36,6 +36,7 @@
 <target name="jmc-target-2021-03" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="com.alibaba.fastjson" version="1.2.76"/>
             <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
             <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
             <unit id="org.owasp.encoder" version="1.2.2"/>
@@ -46,6 +47,9 @@
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
+            <unit id="org.eclipse.jetty.websocket.api" version="9.4.35.v20201120"/>
+            <unit id="org.eclipse.jetty.websocket.server" version="9.4.35.v20201120"/>
+            <unit id="org.eclipse.jetty.websocket.servlet" version="9.4.35.v20201120"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

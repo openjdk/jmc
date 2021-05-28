@@ -71,4 +71,7 @@ wildcards
 zip
 zipped
 datadog
+websocket
+jetty
+websockets
 xml
