@@ -32,7 +32,7 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * This bundle contains various easy to use serializers to convert jfr data to other formats, such
- * as JSon and DOT.
+ * This bundle contains various serializers to convert JFR data to other formats, such as JSON and
+ * DOT.
  */
 package org.openjdk.jmc.flightrecorder.serializers;
