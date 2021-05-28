@@ -32,7 +32,23 @@
  */
 package org.openjdk.jmc.utils.releasenotes;
 
-import com.sun.org.apache.xalan.internal.xslt.Process;
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.newInputStream;
+import static java.nio.file.Files.newOutputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * Wrapper for Xalan to do an XSLT. Used to generate the release notes HTML.
@@ -40,7 +56,67 @@ import com.sun.org.apache.xalan.internal.xslt.Process;
  * Example: Transform -IN notes.xml -XSL stylesheet.xsl -OUT new_and_noteworthy.html
  */
 public class Transform {
+
 	public static void main(String[] args) {
-		Process._main(args);
+		final Deque<String> deque = new ArrayDeque<>(Arrays.asList(args));
+		Path inputFile = null;
+		Path outputFile = null;
+		Path sylesheetFile = null;
+		while (!deque.isEmpty()) {
+			switch (deque.poll()) {
+			case "-IN":
+				inputFile = checkedToPath(deque.poll(), "input file", true);
+				break;
+			case "-OUT":
+				outputFile = checkedToPath(deque.poll(), "output file", false);
+				break;
+			case "-XSL":
+				sylesheetFile = checkedToPath(deque.poll(), "stylesheet file", true);
+				break;
+			default:
+				break;
+			}
+		}
+		if (inputFile != null && outputFile != null && sylesheetFile != null) {
+			try {
+				transform(inputFile, outputFile, sylesheetFile);
+				System.exit(0);
+			} catch (IOException | TransformerException e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+		} else {
+			usage();
+			System.exit(1);
+		}
+	}
+
+	private static void usage() {
+		System.out.println("Usage: Transform -IN <input file> -XSL <stylesheet file> -OUT <output file>");
+	}
+
+	private static Path checkedToPath(String arg, String fileDescription, boolean isInputFile) {
+		if (arg == null) {
+			System.err.format("%s not given", fileDescription).println();
+		} else {
+			Path file = Paths.get(arg);
+			if (isInputFile && exists(file)) {
+				return file;
+			} else {
+				System.err.format("%s '%s' not found", fileDescription, file).println();
+			}
+		}
+		return null;
+	}
+
+	private static void transform(Path inputFile, Path outputFile, Path sylesheetFile)
+			throws IOException, TransformerException {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		try (InputStream xslIn = newInputStream(sylesheetFile);
+				InputStream in = newInputStream(inputFile);
+				OutputStream out = newOutputStream(outputFile)) {
+			transformerFactory.newTransformer(new StreamSource(xslIn)).transform(new StreamSource(in),
+					new StreamResult(out));
+		}
 	}
 }
