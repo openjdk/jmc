@@ -50,6 +50,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -120,6 +121,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	public JfrLaunchModel() {
 		this(DEFAULT_ENABLED, DEFAULT_AUTO_OPEN);
+		//TODO: find how to get proper variables dynamically
 	}
 
 	@Override
