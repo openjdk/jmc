@@ -102,8 +102,7 @@ public class JfrPeriodicEventsFixRule implements IRule {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.addResult(JDK_VERSION, jvmVersion)
 					.setSummary(Messages.getString(Messages.JfrPeriodicEventsFixRule_TEXT_WARN_SHORT))
-					.setExplanation(Messages.getString(Messages.JfrPeriodicEventsFixRule_TEXT_WARN_LONG))
-					.build();
+					.setExplanation(Messages.getString(Messages.JfrPeriodicEventsFixRule_TEXT_WARN_LONG)).build();
 		}
 
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
