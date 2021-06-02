@@ -75,7 +75,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.ext.graphview.graph.DotGenerator;
+import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
@@ -327,7 +327,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static String render(StacktraceGraphModel model, int maxNodesRendered) {
-		return DotGenerator.toDot(model, maxNodesRendered, DotGenerator.getDefaultConfiguration());
+		return DotSerializer.toDot(model, maxNodesRendered, DotSerializer.getDefaultConfiguration());
 	}
 
 	private static String loadLibraries(String ... libs) {

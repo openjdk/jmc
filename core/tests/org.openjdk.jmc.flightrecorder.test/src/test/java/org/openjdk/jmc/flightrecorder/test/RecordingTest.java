@@ -32,7 +32,6 @@
  */
 package org.openjdk.jmc.flightrecorder.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -40,12 +39,10 @@ import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runners.parameterized.TestWithParameters;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.IParserStats;
-import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
 import org.openjdk.jmc.flightrecorder.test.util.PrintoutsToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
