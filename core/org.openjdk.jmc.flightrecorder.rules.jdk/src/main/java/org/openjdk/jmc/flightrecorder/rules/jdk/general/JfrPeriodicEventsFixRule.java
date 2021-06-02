@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,13 +40,13 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
-import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
@@ -75,13 +76,10 @@ public class JfrPeriodicEventsFixRule implements IRule {
 
 	private static final JavaVersion JDK_8_U_302 = new JavaVersion(8, 0, 302);
 
-	private static final Pattern OPENJDK_VM_NAME_REGEX = Pattern.compile("^OpenJDK.*$");
-
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		String vmName = items.getAggregate(Aggregators.distinctAsString(JdkTypeIDs.VM_INFO, JdkAttributes.JVM_NAME));
-		boolean isOpenJdk = OPENJDK_VM_NAME_REGEX.matcher(vmName).matches();
-		if (!isOpenJdk) {
+		if (!JavaVMVersionToolkit.isOpenJDKJVMName(vmName)) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.JfrPeriodicEventsFixRule_TEXT_OK)).build();
 		}

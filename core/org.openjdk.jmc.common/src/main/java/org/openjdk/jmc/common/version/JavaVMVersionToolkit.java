@@ -113,7 +113,22 @@ public class JavaVMVersionToolkit {
 		if (vmName == null) {
 			return false;
 		}
-		return vmName.startsWith("Java HotSpot") || vmName.startsWith("OpenJDK") || vmName.startsWith("SAP"); //$NON-NLS-1$ //$NON-NLS-2$;
+		return vmName.startsWith("Java HotSpot") || isOpenJDKJVMName(vmName) || vmName.startsWith("SAP"); //$NON-NLS-1$ //$NON-NLS-2$;
+	}
+
+	/**
+	 * Returns whether this is a OpenJDK JVM or not.
+	 *
+	 * @param vmName
+	 *            the JVM name to check.
+	 * @return <code>true</code> if it is a OpenJDK JVM, <code>false</code> if it isn't or if was
+	 *         not possible to tell.
+	 */
+	public static boolean isOpenJDKJVMName(String vmName) {
+		if (vmName == null) {
+			return false;
+		}
+		return vmName.startsWith("OpenJDK"); //$NON-NLS-1$ //$NON-NLS-2$;
 	}
 
 }
