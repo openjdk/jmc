@@ -117,7 +117,7 @@
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -415,7 +415,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -679,7 +679,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -945,7 +945,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -1993,7 +1993,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2283,7 +2283,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2561,7 +2561,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2869,7 +2869,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -3179,7 +3179,7 @@ You can read more about string deduplication in the java options documentation o
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -3496,7 +3496,7 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         <rule>
             <id>JfrPeriodicEventsFix</id>
             <severity>OK</severity>
-            <summary>The version of OpenJDK you are running is not affected by a perfomance issue related to periodic events.</summary>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>JavaBlocking</id>
@@ -3737,7 +3737,7 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
             <id>JfrPeriodicEventsFix</id>
             <severity>Warning</severity>
             <summary>The version of OpenJDK 8 you are running is lacking an important performance fix.</summary>
-            <explanation>The version of OpenJDK 8 you are running is lacking an important performance fix. Upgrading to version 8u302 or later can, in some cases, improve your performance quite radically. See JDK-8266723 for more information. An alternative can be to disable any periodic events not needed, such as the NativeExecutionSample event.</explanation>
+            <explanation>The version of OpenJDK (OpenJDK 64-Bit Server VM (25.292-b10) for linux-amd64 JRE (1.8.0_292-b10), built on Apr  9 2021 02:15:01 by &amp;#34;openjdk&amp;#34; with gcc 4.4.7 20120313 (Red Hat 4.4.7-23)) you are running is lacking an important performance fix. Upgrading to version 8u302 or later can, in some cases, improve your performance quite radically. See JDK-8266723 for more information. An alternative can be to disable any periodic events not needed, such as the NativeExecutionSample event.</explanation>
         </rule>
         <rule>
             <id>JavaBlocking</id>
