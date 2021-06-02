@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -417,6 +417,7 @@ public class StacktraceModel {
 		private final int itemOffset;
 		private final int itemsInFork;
 		private Integer selectedBranchIndex;
+		private final SimpleArray<IItem> allItems;
 
 		private Fork(Branch parentBranch) {
 			this(parentBranch.getLastFrame().getItems(),
@@ -437,15 +438,23 @@ public class StacktraceModel {
 			List<FrameEntry> branchHeadFrames = getDistinctFrames(countFramesOnOrAbove(parentBranch), items);
 			Collections.sort(branchHeadFrames, COUNT_CMP);
 			int itemsInFork = 0;
+
+			SimpleArray<IItem> allItems = new SimpleArray<IItem>(new IItem[0]);
 			SimpleArray<Branch> branches = new SimpleArray<>(new Branch[branchHeadFrames.size()]);
 			for (FrameEntry fe : branchHeadFrames) {
 				Branch b = new Branch(Fork.this, fe.items, fe.frame, branches.size(), itemsInFork);
 				itemsInFork += fe.items.size();
+				if (allItems != null) {
+					allItems.addAll(fe.items.elements());
+				} else {
+					allItems = new SimpleArray<IItem>(fe.items.elements());
+				}
 				branches.add(b);
 			}
 			selectedBranchIndex = branches.size() > 0 ? 0 : null; // To disable default branch selection: always set null
 			this.branches = branches.elements();
 			this.itemsInFork = itemsInFork;
+			this.allItems = allItems;
 		}
 
 		public int getItemOffset() {
@@ -454,6 +463,10 @@ public class StacktraceModel {
 
 		public int getItemsInFork() {
 			return itemsInFork;
+		}
+
+		public SimpleArray<IItem> getAllItemsInFork() {
+			return allItems;
 		}
 
 		public Branch getParentBranch() {
