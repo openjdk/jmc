@@ -192,7 +192,7 @@ public class FlameGraphJsonSerializer {
 			i++;
 		}
 		if (eventCountsByType.size() > MAX_TYPES_IN_ROOT_TITLE) {
-			title.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_HTML_MORE)); // $NON-NLS-1$
+			title.append(Messages.getFormattedMessage(FLAMEGRAPH_SELECT_HTML_MORE));
 		}
 		return title.toString();
 	}
