@@ -210,7 +210,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private IAction[] layoutActions;
 	private ViewerAction[] viewerActions;
 	private int[] columnWidths;
-	private Map<IItemCollection, Object[]> itemsExpanded = new WeakHashMap<>();
+	private Map<IItemCollection, Object[]> treeViewerExpandedItems = new WeakHashMap<>();
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -710,7 +710,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			// persist the older items expandedElements
 			Object[] expandedElements = ((TreeViewer) viewer).getExpandedElements();
 			if (expandedElements.length > 0) {
-				itemsExpanded.put(itemsToShow, expandedElements);
+				treeViewerExpandedItems.put(itemsToShow, expandedElements);
 			}
 		}
 		itemsToShow = items;
@@ -757,8 +757,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(Fork rootFork) {
 		// NOTE: will be slow for TreeViewer if number of roots or children of a node are more than ~1000
-		if (rootFork != null && viewer instanceof TreeViewer && itemsExpanded.containsKey(itemsToShow)) {
-			Object[] expandedElements = itemsExpanded.get(itemsToShow);
+		if (rootFork != null && viewer instanceof TreeViewer && treeViewerExpandedItems.containsKey(itemsToShow)) {
+			Object[] expandedElements = treeViewerExpandedItems.get(itemsToShow);
 			viewer.setInput(rootFork);
 			((TreeViewer) viewer).setExpandedElements(expandedElements);
 		} else {
