@@ -50,6 +50,7 @@ public final class JdkTypeIDs {
 	private final static String PREFIX = "jdk.";
 
 	public static final String CPU_LOAD = PREFIX + "CPULoad";
+	public static final String THREAD_CPU_LOAD = PREFIX + "ThreadCPULoad";
 	public static final String EXECUTION_SAMPLE = PREFIX + "ExecutionSample";
 	public static final String EXECUTION_SAMPLING_INFO_EVENT_ID = PREFIX + "ExecutionSampling";
 	public static final String NATIVE_METHOD_SAMPLE = PREFIX + "NativeMethodSample";
@@ -63,6 +64,7 @@ public final class JdkTypeIDs {
 	public static final String HEAP_SUMMARY = PREFIX + "GCHeapSummary";
 	public static final String ALLOC_INSIDE_TLAB = PREFIX + "ObjectAllocationInNewTLAB";
 	public static final String ALLOC_OUTSIDE_TLAB = PREFIX + "ObjectAllocationOutsideTLAB";
+	public static final String OBJ_ALLOC_SAMPLE = PREFIX + "ObjectAllocationSample";
 	public static final String VM_INFO = PREFIX + "JVMInformation";
 	public static final String CLASS_DEFINE = PREFIX + "ClassDefine";
 	public static final String CLASS_LOAD = PREFIX + "ClassLoad";

@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -74,7 +75,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.ext.graphview.graph.DotGenerator;
+import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
@@ -183,7 +184,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private class NodeThresholdSelection extends Action implements IMenuCreator {
 		private Menu menu;
-		private final List<Pair<String, Integer>> items = List.of(new Pair<>("100", 100), new Pair<>("500", 500),
+		private final List<Pair<String, Integer>> items = Arrays.asList(new Pair<>("100", 100), new Pair<>("500", 500),
 				new Pair<>("1000", 1000));
 
 		NodeThresholdSelection() {
@@ -326,7 +327,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	}
 
 	private static String render(StacktraceGraphModel model, int maxNodesRendered) {
-		return DotGenerator.toDot(model, maxNodesRendered, DotGenerator.getDefaultConfiguration());
+		return DotSerializer.toDot(model, maxNodesRendered, DotSerializer.getDefaultConfiguration());
 	}
 
 	private static String loadLibraries(String ... libs) {

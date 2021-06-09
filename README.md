@@ -1,3 +1,4 @@
+![JMC Build](../../workflows/validate/badge.svg) 
 # Mission Control
 
 Mission Control is an open source production time profiling and diagnostics tool for Java.
@@ -33,7 +34,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 * Integrated (in-app) update site
 * Eclipse update site
 
-[http://jdk.java.net/jmc](http://jdk.java.net/jmc)
+[https://www.oracle.com/java/technologies/jdk-mission-control.html](https://www.oracle.com/java/technologies/jdk-mission-control.html)
 
 ### Red Hat
 * Released version
@@ -217,7 +218,7 @@ Prerequisites for building Mission Control:
 
 2. Install Maven (version 3.3.x. or above)
 
-On Linux you can use the build.sh script to build JMC:
+On Linux or macOS you can use the build.sh script to build JMC:
 ```
 usage: call ./build.sh with the following options:
    --installCore to install the core artifacts

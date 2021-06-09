@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -139,6 +139,21 @@ public class JavaVersion {
 	 * @return {@code true} if this instance is greater than or equal to {@code otherVersion}
 	 */
 	public boolean isGreaterOrEqualThan(JavaVersion otherVersion) {
+		return isGreaterOrEqualThan(otherVersion, true);
+	}
+
+	/**
+	 * Compare another version instance with this instance disregarding early access status.
+	 *
+	 * @param otherVersion
+	 *            version to compare with
+	 * @return {@code true} if this instance is greater than or equal to {@code otherVersion}
+	 */
+	public boolean isGreaterOrEqualThanDisregardEa(JavaVersion otherVersion) {
+		return isGreaterOrEqualThan(otherVersion, false);
+	}
+
+	private boolean isGreaterOrEqualThan(JavaVersion otherVersion, boolean compareEa) {
 		int maxLength = Math.max(versionNumbers.length, otherVersion.versionNumbers.length);
 		for (int i = 0; i < maxLength; i++) {
 			int thisNumber = versionNumbers.length > i ? versionNumbers[i] : 0;
@@ -147,7 +162,8 @@ public class JavaVersion {
 				return thisNumber > otherNumber;
 			}
 		}
-		return !this.isEarlyAccess || otherVersion.isEarlyAccess;
+
+		return !compareEa || !this.isEarlyAccess || otherVersion.isEarlyAccess;
 	}
 
 	/**

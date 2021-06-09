@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -120,7 +121,8 @@ public class HeapPage extends AbstractDataPage {
 
 	}
 
-	private static final IItemFilter TABLE_ITEMS = ItemFilters.or(JdkFilters.OBJECT_COUNT, JdkFilters.ALLOC_ALL);
+	private static final IItemFilter TABLE_ITEMS = ItemFilters.or(JdkFilters.OBJECT_COUNT, JdkFilters.ALLOC_ALL,
+			JdkFilters.OBJ_ALLOC);
 	private static final String INSTANCES_COL = "instances"; //$NON-NLS-1$
 	private static final String SIZE_COL = "size"; //$NON-NLS-1$
 	private static final String INCREASE_COL = "increase"; //$NON-NLS-1$
@@ -129,19 +131,6 @@ public class HeapPage extends AbstractDataPage {
 	private static final String INSIDE_TLAB_COL = "insideTlabSize"; //$NON-NLS-1$
 	private static final String OUTSIDE_TLAB_COL = "outsideTlabSize"; //$NON-NLS-1$
 	private static final String GC_PAUSE_ID = "gcPause"; //$NON-NLS-1$
-
-	private static final ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
-
-	static {
-		HISTOGRAM.addColumn(INSTANCES_COL, JdkAggregators.OBJECT_COUNT_MAX_INSTANCES);
-		HISTOGRAM.addColumn(SIZE_COL, JdkAggregators.OBJECT_COUNT_MAX_SIZE);
-		HISTOGRAM.addColumn(INCREASE_COL, ObjectStatisticsDataProvider.getIncreaseAggregator());
-		HISTOGRAM.addColumn(ALLOCATION_COL, JdkAggregators.ALLOCATION_TOTAL);
-		HISTOGRAM.addPercentageColumn(ALLOCATION_PERCENT_COL, JdkAggregators.ALLOCATION_TOTAL,
-				Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE, Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC);
-		HISTOGRAM.addColumn(INSIDE_TLAB_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
-		HISTOGRAM.addColumn(OUTSIDE_TLAB_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
-	}
 
 	private class ObjectStatisticsUi extends ChartAndTableUI {
 
@@ -176,6 +165,17 @@ public class HeapPage extends AbstractDataPage {
 
 		@Override
 		protected ItemHistogram buildHistogram(Composite parent, IState state, IAttribute<?> classifier) {
+			ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
+			IAggregator<IQuantity, ?> allocTotalAggregator = hasObjectAllocSampleEvent()
+					? JdkAggregators.OBJ_ALLOC_TOTAL_SUM : JdkAggregators.ALLOCATION_TOTAL;
+			HISTOGRAM.addColumn(INSTANCES_COL, JdkAggregators.OBJECT_COUNT_MAX_INSTANCES);
+			HISTOGRAM.addColumn(SIZE_COL, JdkAggregators.OBJECT_COUNT_MAX_SIZE);
+			HISTOGRAM.addColumn(INCREASE_COL, ObjectStatisticsDataProvider.getIncreaseAggregator());
+			HISTOGRAM.addColumn(ALLOCATION_COL, allocTotalAggregator);
+			HISTOGRAM.addPercentageColumn(ALLOCATION_PERCENT_COL, allocTotalAggregator,
+					Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE, Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC);
+			HISTOGRAM.addColumn(INSIDE_TLAB_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
+			HISTOGRAM.addColumn(OUTSIDE_TLAB_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
 			return HISTOGRAM.buildWithoutBorder(parent, classifier, getTableSettings(state));
 		}
 
@@ -187,9 +187,13 @@ public class HeapPage extends AbstractDataPage {
 			String classCount = classCount(selection.getRowCount());
 			IItemCollection selectedItems = selection.getRowCount() == 0 ? itemsInTable : selection.getItems();
 			if (allocationAction.isChecked()) {
+				boolean hasObjectAllocSampleEvent = hasObjectAllocSampleEvent();
+				IAggregator<IQuantity, ?> allocTotalAggregator = hasObjectAllocSampleEvent
+						? JdkAggregators.OBJ_ALLOC_TOTAL_SUM : JdkAggregators.ALLOCATION_TOTAL;
+				IItemFilter selectedFilter = hasObjectAllocSampleEvent ? JdkFilters.OBJ_ALLOC : JdkFilters.ALLOC_ALL;
 				rows.add(DataPageToolkit.buildTimestampHistogram(Messages.HeapPage_ROW_ALLOCATION + classCount,
-						JdkAggregators.ALLOCATION_TOTAL.getDescription(), selectedItems.apply(JdkFilters.ALLOC_ALL),
-						JdkAggregators.ALLOCATION_TOTAL, DataPageToolkit.ALLOCATION_COLOR));
+						allocTotalAggregator.getDescription(), selectedItems.apply(selectedFilter),
+						allocTotalAggregator, DataPageToolkit.ALLOCATION_COLOR));
 			}
 
 			XYDataRenderer heapRenderer = new XYDataRenderer(UnitLookup.MEMORY.getDefaultUnit().quantity(0),
@@ -245,8 +249,10 @@ public class HeapPage extends AbstractDataPage {
 			sizeAction = DataPageToolkit.createCheckAction(Messages.HeapPage_ROW_LIVE_SIZE,
 					Messages.HeapPage_ROW_LIVE_SIZE_DESC, SIZE_COL,
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.PAGE_HEAP), b -> buildChart());
-			allocationAction = DataPageToolkit.createAggregatorCheckAction(JdkAggregators.ALLOCATION_TOTAL,
-					ALLOCATION_COL, DataPageToolkit.ALLOCATION_COLOR, b -> buildChart());
+			IAggregator<IQuantity, ?> allocTotalAggregator = hasObjectAllocSampleEvent()
+					? JdkAggregators.OBJ_ALLOC_TOTAL_SUM : JdkAggregators.ALLOCATION_TOTAL;
+			allocationAction = DataPageToolkit.createAggregatorCheckAction(allocTotalAggregator, ALLOCATION_COL,
+					DataPageToolkit.ALLOCATION_COLOR, b -> buildChart());
 			Stream<IAction> attributeActions = Stream
 					.concat(HEAP_SUMMARY.getAttributes().stream(), OS_MEMORY_SUMMARY.getAttributes().stream())
 					.map(a -> DataPageToolkit.createAttributeCheckAction(a, b -> buildChart()));
@@ -279,6 +285,10 @@ public class HeapPage extends AbstractDataPage {
 		default:
 			return " (" + NLS.bind(Messages.HeapPage_SELECTED_CLASSES, count) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private boolean hasObjectAllocSampleEvent() {
+		return getDataSource().getItems().apply(ItemFilters.type(JdkTypeIDs.OBJ_ALLOC_SAMPLE)).hasItems();
 	}
 
 	private IRange<IQuantity> visibleRange;

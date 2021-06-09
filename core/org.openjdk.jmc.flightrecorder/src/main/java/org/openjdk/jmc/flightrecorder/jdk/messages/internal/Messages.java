@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -108,6 +108,8 @@ public class Messages {
 	public static final String AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC = "AGGR_NUMBER_OF_DISTINCT_HOSTS_DESC"; //$NON-NLS-1$
 	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS = "AGGR_NUMBER_OF_DISTINCT_PORTS"; //$NON-NLS-1$
 	public static final String AGGR_NUMBER_OF_DISTINCT_PORTS_DESC = "AGGR_NUMBER_OF_DISTINCT_PORTS_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJ_ALLOC_SUM = "AGGR_OBJ_ALLOC_SUM"; //$NON-NLS-1$
+	public static final String AGGR_OBJ_ALLOC_SUM_DESC = "AGGR_OBJ_ALLOC_SUM_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES = "AGGR_OBJECT_COUNT_MAX_INSTANCES"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC = "AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE = "AGGR_OBJECT_COUNT_MAX_SIZE"; //$NON-NLS-1$
@@ -197,6 +199,11 @@ public class Messages {
 	public static final String ATTR_COMPILER_STANDARD_COUNT = "ATTR_COMPILER_STANDARD_COUNT"; //$NON-NLS-1$
 	public static final String ATTR_CONCURRENT_GC_THREADS = "ATTR_CONCURRENT_GC_THREADS"; //$NON-NLS-1$
 	public static final String ATTR_CONCURRENT_GC_THREADS_DESC = "ATTR_CONCURRENT_GC_THREADS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_NAME = "ATTR_CONSTANT_POOLS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_COUNT = "ATTR_CONSTANT_POOLS_COUNT"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_POOLS_SIZE = "ATTR_CONSTANT_POOLS_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_TYPE = "ATTR_CONSTANT_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_CONSTANT_VALUE = "ATTR_CONSTANT_VALUE"; //$NON-NLS-1$
 	public static final String ATTR_COUNT = "ATTR_COUNT"; //$NON-NLS-1$
 	public static final String ATTR_CPU_DESCRIPTION = "ATTR_CPU_DESCRIPTION"; //$NON-NLS-1$
 	public static final String ATTR_CPU_DESCRIPTION_DESC = "ATTR_CPU_DESCRIPTION_DESC"; //$NON-NLS-1$
@@ -416,6 +423,7 @@ public class Messages {
 	public static final String ATTR_REVOKED_CLASS_DESC = "ATTR_REVOKED_CLASS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT = "ATTR_SAFEPOINT"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT_DESC = "ATTR_SAFEPOINT_DESC"; //$NON-NLS-1$
+	public static final String ATTR_SAMPLE_WEIGHT = "ATTR_SAMPLE_WEIGHT"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME = "ATTR_STACK_TRACE_BOTTOM_FRAME"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_FRAME_DESC = "ATTR_STACK_TRACE_BOTTOM_FRAME_DESC"; //$NON-NLS-1$
 	public static final String ATTR_STACK_TRACE_BOTTOM_METHOD = "ATTR_STACK_TRACE_BOTTOM_METHOD"; //$NON-NLS-1$
@@ -459,7 +467,13 @@ public class Messages {
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; //$NON-NLS-1$
-	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$	
+	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$
+	public static final String ATTR_SYSTEM_LOAD = "ATTR_SYSTEM_LOAD"; //$NON-NLS-1$
+	public static final String ATTR_SYSTEM_LOAD_DESC = "ATTR_SYSTEM_LOAD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_USER_LOAD = "ATTR_USER_LOAD"; //$NON-NLS-1$
+	public static final String ATTR_USER_LOAD_DESC = "ATTR_USER_LOAD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_JAVA_THREAD = "ATTR_JAVA_THREAD"; //$NON-NLS-1$
+	public static final String ATTR_JAVA_THREAD_DESC = "ATTR_JAVA_THREAD_DESC"; //$NON-NLS-1$
 
 	private Messages() {
 	}

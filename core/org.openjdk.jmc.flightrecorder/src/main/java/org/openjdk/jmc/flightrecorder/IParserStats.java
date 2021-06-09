@@ -35,6 +35,8 @@ package org.openjdk.jmc.flightrecorder;
 
 import java.util.function.Consumer;
 
+import org.openjdk.jmc.common.item.IItemCollection;
+
 public interface IParserStats {
 
 	public interface IEventStats {
@@ -58,4 +60,8 @@ public interface IParserStats {
 	long getEventCountByType(String eventTypeName);
 
 	long getEventTotalSizeByType(String eventTypeName);
+
+	IItemCollection getConstantPools();
+
+	IItemCollection getConstants();
 }

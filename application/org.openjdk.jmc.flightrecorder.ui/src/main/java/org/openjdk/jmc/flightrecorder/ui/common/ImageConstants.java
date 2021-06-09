@@ -112,6 +112,7 @@ public class ImageConstants {
 
 	public static final String ICON_MAGNIFIER = "magnifier.png"; //$NON-NLS-1$
 
+	public static final String PAGE_CONSTANT_POOL = "pages/cpool.png"; //$NON-NLS-1$
 	public static final String PAGE_JAVA_APPLICATION = "pages/methodprofiling.png"; //$NON-NLS-1$
 	public static final String PAGE_METHOD = "pages/method.png"; //$NON-NLS-1$
 	public static final String PAGE_HEAP = "pages/objectstatistics.png"; //$NON-NLS-1$

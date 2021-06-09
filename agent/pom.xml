@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -36,10 +36,42 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
-	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>org.openjdk.jmc.agent</artifactId>
+	<version>${revision}${changelist}</version>
 	<packaging>jar</packaging>
+	<name>JDK Mission Control Agent</name>
+	<description>The JMC agent allows users to add JFR instrumentation declaratively to a
+	    running program. The agent can, for example, be used to add flight recorder events
+	    to third party code for which the source is not available.
+	</description>
+	<url>http://jdk.java.net/jmc</url>
+	<licenses>
+		<license>
+			<name>Universal Permissive License Version 1.0</name>
+			<url>http://oss.oracle.com/licenses/upl</url>
+			<distribution>repo</distribution>
+			<comments>Copyright (c) 2018, 2021, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+		</license>
+	</licenses>
+	<organization>
+		<name>Oracle</name>
+		<url>https://www.oracle.com</url>
+	</organization>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+	</issueManagement>
+	<mailingLists>
+		<mailingList>
+			<name>jmc dev</name>
+			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+		</mailingList>
+	</mailingLists>
 	<properties>
+		<revision>1.0.0</revision>
+		<changelist>-SNAPSHOT</changelist>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<asm.version>8.0.1</asm.version>
@@ -48,6 +80,19 @@
 		<spotless.version>1.26.0</spotless.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
+	<scm>
+		<connection>${scmConnection}</connection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>jmc-publish</id>
+			<url>${release.repo}</url>
+		</repository>
+		<snapshotRepository>
+			<id>jmc-publish-snapshot</id>
+			<url>${snapshot.repo}</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
