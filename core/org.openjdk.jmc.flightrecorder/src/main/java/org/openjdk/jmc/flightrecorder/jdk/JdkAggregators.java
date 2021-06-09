@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -335,6 +335,9 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> OBJ_ALLOC_TOTAL_SUM = Aggregators.sum(
+			Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM), Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM_DESC),
+			JdkTypeIDs.OBJ_ALLOC_SAMPLE, JdkAttributes.SAMPLE_WEIGHT);
 	public static final IAggregator<IQuantity, ?> SWEEP_METHOD_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM), Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM_DESC),
 			JdkTypeIDs.SWEEP_CODE_CACHE, JdkAttributes.SWEEP_METHOD_SWEPT);

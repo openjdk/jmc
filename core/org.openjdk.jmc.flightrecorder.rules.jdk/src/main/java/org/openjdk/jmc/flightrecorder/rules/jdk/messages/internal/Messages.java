@@ -393,6 +393,11 @@ public class Messages {
 	public static final String JavaBlockingRule_TEXT_MOST_BLOCKED_THREAD = "JavaBlockingRule_TEXT_MOST_BLOCKED_THREAD"; //$NON-NLS-1$
 	public static final String JavaBlockingRule_TEXT_OK = "JavaBlockingRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String JavaBlocking_RULE_NAME = "JavaBlocking_RULE_NAME"; //$NON-NLS-1$
+	public static final String JfrPeriodicEventsFixRule_NO_JVM_VERSION_EVENTS_TEXT = "JfrPeriodicEventsFixRule_NO_JVM_VERSION_EVENTS_TEXT"; //$NON-NLS-1$
+	public static final String JfrPeriodicEventsFixRule_RULE_NAME = "JfrPeriodicEventsFixRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String JfrPeriodicEventsFixRule_TEXT_OK = "JfrPeriodicEventsFixRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String JfrPeriodicEventsFixRule_TEXT_WARN_LONG = "JfrPeriodicEventsFixRule_TEXT_WARN_LONG"; //$NON-NLS-1$
+	public static final String JfrPeriodicEventsFixRule_TEXT_WARN_SHORT = "JfrPeriodicEventsFixRule_TEXT_WARN_SHORT"; //$NON-NLS-1$
 	public static final String LongGcPauseRuleFactory_RULE_NAME = "LongGcPauseRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String LongGcPauseRuleFactory_TEXT_INFO = "LongGcPauseRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String LongGcPauseRuleFactory_TEXT_INFO_G1 = "LongGcPauseRuleFactory_TEXT_INFO_G1"; //$NON-NLS-1$

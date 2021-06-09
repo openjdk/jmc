@@ -770,6 +770,14 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID),
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID_DESC), PLAIN_TEXT);
 
+	public static final IAttribute<IQuantity> THREAD_SYSTEM_CPU_LOAD = Attribute.attr("system", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SYSTEM_LOAD), Messages.getString(Messages.ATTR_SYSTEM_LOAD_DESC),
+			PERCENTAGE);
+	public static final IAttribute<IQuantity> THREAD_USER_CPU_LOAD = Attribute.attr("user", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_USER_LOAD), Messages.getString(Messages.ATTR_USER_LOAD_DESC), PERCENTAGE);
+	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.attr("thread", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD);
+
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);
@@ -1146,8 +1154,7 @@ public final class JdkAttributes {
 	public static final IAttribute<IMCThread> MONITOR_PREVIOUS_OWNER = attr("previousOwner", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_MONITOR_PREVIOUS_OWNER), THREAD);
 
-	public static final IAttribute<IQuantity> OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), NUMBER);
+	public static IAttribute<IQuantity> OS_SWITCH_RATE;
 	public static final IAttribute<String> REFERENCE_STATISTICS_TYPE = attr("type", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_TYPE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = attr("count", //$NON-NLS-1$
@@ -1280,4 +1287,6 @@ public final class JdkAttributes {
 	public static final IAttribute<String> CONSTANT_VALUE = attr("constant", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
 
+	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
 }

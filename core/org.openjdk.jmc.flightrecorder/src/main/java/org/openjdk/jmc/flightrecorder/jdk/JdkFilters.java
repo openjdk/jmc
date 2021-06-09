@@ -78,6 +78,7 @@ public final class JdkFilters {
 	public static final IItemFilter ALLOC_INSIDE_TLAB = ItemFilters.type(JdkTypeIDs.ALLOC_INSIDE_TLAB);
 	public static final IItemFilter ALLOC_ALL = ItemFilters.type(JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
+	public static final IItemFilter OBJ_ALLOC = ItemFilters.type(JdkTypeIDs.OBJ_ALLOC_SAMPLE);
 	public static final IItemFilter REFERENCE_STATISTICS = ItemFilters.type(JdkTypeIDs.GC_REFERENCE_STATISTICS);
 	public static final IItemFilter GARBAGE_COLLECTION = ItemFilters.type(JdkTypeIDs.GARBAGE_COLLECTION);
 	public static final IItemFilter OLD_GARBAGE_COLLECTION = ItemFilters
@@ -144,6 +145,10 @@ public final class JdkFilters {
 	public static final IItemFilter BIASED_LOCKING_REVOCATIONS = ItemFilters.type(
 			JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION, JdkTypeIDs.BIASED_LOCK_REVOCATION,
 			JdkTypeIDs.BIASED_LOCK_SELF_REVOCATION);
+	public static final IItemFilter THREAD_CPU_LOAD = ItemFilters.type(JdkTypeIDs.THREAD_CPU_LOAD);
+	public static final IItemFilter NATIVE_METHOD_SAMPLE = ItemFilters.type(JdkTypeIDs.NATIVE_METHOD_SAMPLE);
+	public static final IItemFilter THREAD_START = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START);
+	public static final IItemFilter THREAD_END = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END);
 
 	public static class MethodFilter implements IItemFilter {
 

@@ -57,7 +57,6 @@ class TypedValueBuilderImplTest {
 	private TypedValueBuilderImpl instance;
 	private TypeImpl simpleType;
 	private TypeImpl customType;
-	private TypeImpl stringType;
 	private TypeImpl longType;
 
 	@BeforeAll
@@ -74,7 +73,6 @@ class TypedValueBuilderImplTest {
 		TypesImpl types = new TypesImpl(new MetadataImpl(new ConstantPools()));
 
 		longType = types.getType(Types.Builtin.LONG);
-		stringType = types.getType(TypesImpl.Builtin.STRING);
 
 		simpleType = types.getOrAdd("custom.Simple", builder -> {
 			builder.addField(SIMPLE_FIELD_NAME, TypesImpl.Builtin.STRING);

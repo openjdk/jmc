@@ -60,7 +60,7 @@
        point="org.eclipse.ui.editors">
       <editor
             class="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
-            extensions="jfr"
+            extensions="jfr,lz4"
             icon="icons/jfr.png"
             id="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
             name="Flight Recording">

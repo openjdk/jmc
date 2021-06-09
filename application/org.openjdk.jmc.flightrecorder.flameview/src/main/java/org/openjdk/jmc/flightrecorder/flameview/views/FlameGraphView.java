@@ -97,8 +97,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.flameview.FlameGraphJsonMarshaller;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
+import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
@@ -302,7 +302,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			String flameGraphJson = FlameGraphJsonMarshaller.toJson(treeModel);
+			String flameGraphJson = FlameGraphJsonSerializer.toJson(treeModel);
 			if (isInvalid) {
 				return;
 			} else {
