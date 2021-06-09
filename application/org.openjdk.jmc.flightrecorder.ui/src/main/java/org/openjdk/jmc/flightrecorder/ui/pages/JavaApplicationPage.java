@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -159,6 +159,7 @@ public class JavaApplicationPage extends AbstractDataPage {
 	private static final String CLASSLOAD_TIME_COL = "classloadingTime"; //$NON-NLS-1$
 	private static final String APPLICATION_PAUSE_ID = "applicationPause"; //$NON-NLS-1$
 	private static final String ACTIVITY_LANES_ID = "threadActivityLanes"; //$NON-NLS-1$
+	private static final String PROFILING_PERCENTAGE_COL = "profilingCount.Percentage"; //$NON-NLS-1$
 
 	private static final ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
 
@@ -205,6 +206,8 @@ public class JavaApplicationPage extends AbstractDataPage {
 			return null;
 		}, Messages.JavaApplicationPage_COLUMN_THREAD_DURATION,
 				Messages.JavaApplicationPage_COLUMN_THREAD_DURATION_DESC);
+		HISTOGRAM.addPercentageColumn(PROFILING_PERCENTAGE_COL, JdkAggregators.EXECUTION_SAMPLE_COUNT, "Percentage",
+				"Percentage over total Profiling samples");
 	}
 
 	private class JavaApplicationUi extends ChartAndTableUI {
