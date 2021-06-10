@@ -72,7 +72,6 @@ public class SyntheticAttributeExtension implements IParserExtension {
 	static final IAttribute<LabeledIdentifier> REC_SETTING_EVENT_ID_ATTRIBUTE = attr("id", //$NON-NLS-1$
 			Messages.getString(Messages.SyntheticAttributeExtension_REC_SETTING_EVENT_ID_ATTRIBUTE),
 			UnitLookup.LABELED_IDENTIFIER);
-	private static final String SWITCH_RATE = "switchRate";
 
 	@Override
 	public IEventSinkFactory getEventSinkFactory(final IEventSinkFactory sf) {
@@ -188,17 +187,6 @@ public class SyntheticAttributeExtension implements IParserExtension {
 						|| OracleJdkTypeIDsPre11.JDK9_RECORDING_SETTING.equals(eventTypeId)
 						|| JdkTypeIDs.RECORDING_SETTING.equals(eventTypeId))) {
 			return JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION;
-		} else if (SWITCH_RATE.equals(fieldId)) {
-			if (eventTypeId.equalsIgnoreCase("jdk.ThreadContextSwitchRate")) {
-				JdkAttributes.OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
-						Messages.getString(Messages.SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE),
-						UnitLookup.FREQUENCY);
-
-			} else if (OracleJdkTypeIDsPre11.CONTEXT_SWITCH_RATE.equals(eventTypeId)) {
-				JdkAttributes.OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
-						Messages.getString(Messages.SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE),
-						UnitLookup.NUMBER);
-			}
 		}
 		return null;
 	}
