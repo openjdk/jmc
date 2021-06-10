@@ -1159,15 +1159,16 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), FREQUENCY);
 	private static final IAttribute<IQuantity> OS_SWITCH_RATE_NUMBER = attr("switchRate", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), NUMBER);
-	public static final IAttribute<IQuantity> OS_SWITCH_RATE = Attribute.canonicalize(new Attribute<IQuantity>(
-			"oldObjectClass", Messages.getString(Messages.ATTR_OS_SWITCH_RATE), "", FREQUENCY) { //$NON-NLS-1$ //$NON-NLS-2$
-		@Override
-		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
-			final IMemberAccessor<IQuantity, U> rateNumberAccessor = OS_SWITCH_RATE_NUMBER.getAccessor(type);
-			final IMemberAccessor<IQuantity, U> rateFrequencyAccessor = OS_SWITCH_RATE_FREQUENCY.getAccessor(type);
-			return rateNumberAccessor == null ? rateFrequencyAccessor : rateNumberAccessor;
-		}
-	});
+	public static final IAttribute<IQuantity> OS_SWITCH_RATE = Attribute.canonicalize(
+			new Attribute<IQuantity>("(switchRate)", Messages.getString(Messages.ATTR_OS_SWITCH_RATE), "", FREQUENCY) { //$NON-NLS-1$ //$NON-NLS-2$
+				@Override
+				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IQuantity, U> rateNumberAccessor = OS_SWITCH_RATE_NUMBER.getAccessor(type);
+					final IMemberAccessor<IQuantity, U> rateFrequencyAccessor = OS_SWITCH_RATE_FREQUENCY
+							.getAccessor(type);
+					return rateNumberAccessor == null ? rateFrequencyAccessor : rateNumberAccessor;
+				}
+			});
 	public static final IAttribute<String> REFERENCE_STATISTICS_TYPE = attr("type", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_TYPE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = attr("count", //$NON-NLS-1$
