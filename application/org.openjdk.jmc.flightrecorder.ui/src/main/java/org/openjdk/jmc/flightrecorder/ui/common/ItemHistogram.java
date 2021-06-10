@@ -381,11 +381,11 @@ public class ItemHistogram {
 		public Image getImage(Object key) {
 			if (key instanceof IMCMethod) {
 				IMCMethod method = (IMCMethod) key;
-				if ((method.getModifier() & Modifier.PUBLIC) > 0) {
+				if ((method.getModifier() & Modifier.PUBLIC) != 0) {
 					return publicMethodImage;
-				} else if ((method.getModifier() & Modifier.PROTECTED) > 0) {
+				} else if ((method.getModifier() & Modifier.PROTECTED) != 0) {
 					return protectedMethodImage;
-				} else if ((method.getModifier() & Modifier.PRIVATE) > 0) {
+				} else if ((method.getModifier() & Modifier.PRIVATE) != 0) {
 					return privateMethodImage;
 				}
 				return defaultMethodImage;
