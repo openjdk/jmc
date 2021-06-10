@@ -48,7 +48,6 @@ public class Messages {
 	public static final String SyntheticAttributeExtension_EXECUTION_SAMPLES_STACKTRACE = "SyntheticAttributeExtension_EXECUTION_SAMPLES_STACKTRACE"; //$NON-NLS-1$
 	public static final String SyntheticAttributeExtension_EXECUTION_SAMPLES_THREAD = "SyntheticAttributeExtension_EXECUTION_SAMPLES_THREAD"; //$NON-NLS-1$
 	public static final String SyntheticAttributeExtension_REC_SETTING_EVENT_ID_ATTRIBUTE = "SyntheticAttributeExtension_REC_SETTING_EVENT_ID_ATTRIBUTE"; //$NON-NLS-1$
-	public static final String SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE = "SyntheticAttributeExtension_ATTR_OS_SWITCH_RATE"; //$NON-NLS-1$
 
 	private Messages() {
 	}

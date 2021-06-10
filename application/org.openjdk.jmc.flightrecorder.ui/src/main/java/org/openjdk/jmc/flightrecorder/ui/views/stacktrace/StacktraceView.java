@@ -34,7 +34,9 @@ package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -208,6 +210,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private IAction[] layoutActions;
 	private ViewerAction[] viewerActions;
 	private int[] columnWidths;
+	private Map<IItemCollection, Object[]> treeViewerExpandedItems = new WeakHashMap<>();
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -703,6 +706,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setItems(IItemCollection items) {
+		if (viewer.getInput() != null && viewer instanceof TreeViewer && itemsToShow.hasItems()) {
+			// persist the older items expandedElements
+			Object[] expandedElements = ((TreeViewer) viewer).getExpandedElements();
+			if (expandedElements.length > 0) {
+				treeViewerExpandedItems.put(itemsToShow, expandedElements);
+			}
+		}
 		itemsToShow = items;
 		rebuildModel();
 	}
@@ -747,7 +757,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	private void setViewerInput(Fork rootFork) {
 		// NOTE: will be slow for TreeViewer if number of roots or children of a node are more than ~1000
-		viewer.setInput(rootFork);
+		if (rootFork != null && viewer instanceof TreeViewer && treeViewerExpandedItems.containsKey(itemsToShow)) {
+			Object[] expandedElements = treeViewerExpandedItems.get(itemsToShow);
+			viewer.setInput(rootFork);
+			((TreeViewer) viewer).setExpandedElements(expandedElements);
+		} else {
+			viewer.setInput(rootFork);
+		}
 	}
 
 	private ITreeContentProvider createTreeContentProvider() {

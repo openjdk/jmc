@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -98,6 +98,44 @@ public class StacktraceFrame {
 	 */
 	public int getItemCount() {
 		return items.size();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((frame == null) ? 0 : frame.hashCode());
+		result = prime * result + indexInBranch;
+		result = prime * result + ((items == null) ? 0 : items.size());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StacktraceFrame other = (StacktraceFrame) obj;
+
+		if (branch == null) {
+			if (other.branch != null)
+				return false;
+		}
+		if (frame == null) {
+			if (other.frame != null) {
+				return false;
+			}
+		}
+		if (indexInBranch != other.indexInBranch)
+			return false;
+		if (items == null || other.items == null) {
+			return false;
+		} else if (items.size() != other.items.size())
+			return false;
+		return true;
 	}
 
 }
