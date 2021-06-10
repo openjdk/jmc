@@ -1160,7 +1160,7 @@ public final class JdkAttributes {
 	private static final IAttribute<IQuantity> OS_SWITCH_RATE_NUMBER = attr("switchRate", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), NUMBER);
 	public static final IAttribute<IQuantity> OS_SWITCH_RATE = Attribute.canonicalize(new Attribute<IQuantity>(
-			"oldObjectClass", Messages.getString(Messages.ATTR_OS_SWITCH_RATE), "", FREQUENCY) { //$NON-NLS-1$ //$NON-NLS-2$
+			"(switchRate)", Messages.getString(Messages.ATTR_OS_SWITCH_RATE), "", FREQUENCY) { //$NON-NLS-1$ //$NON-NLS-2$
 		@Override
 		public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
 			final IMemberAccessor<IQuantity, U> rateNumberAccessor = OS_SWITCH_RATE_NUMBER.getAccessor(type);
