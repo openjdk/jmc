@@ -56,7 +56,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testNoArgsrIfJfrDisabled() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(false, false, okDuration, okDelay, okSettings, okFilename, okName,
-				false);
+				false, false);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals("", jfrArgs);
 	}
@@ -64,7 +64,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfEnabledDurationDelayProfileNameFilename() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, false, okDuration, okDelay, okSettings, okFilename, okName,
-				false);
+				false, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=settings=default,duration=10s,name=kossa,filename=apa.jfr",
@@ -74,7 +74,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfContinuousDefaultSettingsPre8u20() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, false, okDuration, okDelay, okSettings, okFilename, okName,
-				true);
+				true, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=defaultrecording=true -XX:FlightRecorderOptions=dumponexit=true,dumponexitpath=apa.jfr",
@@ -84,7 +84,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfContinuousOtherSettingsPre8u20() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, false, okDuration, okDelay, otherSettings, okFilename, okName,
-				true);
+				true, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=defaultrecording=true -XX:FlightRecorderOptions=dumponexit=true,dumponexitpath=apa.jfr",
@@ -94,7 +94,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfContinuousDefaultSettingsPost8u20() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, true, okDuration, okDelay, okSettings, okFilename, okName,
-				true);
+				true, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=settings=default,dumponexit=true,name=kossa,filename=apa.jfr",
@@ -104,7 +104,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfContinuousOtherSettingsPost8u20() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, true, okDuration, okDelay, otherSettings, okFilename, okName,
-				true);
+				true, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(false));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=settings=profile,dumponexit=true,name=kossa,filename=apa.jfr",
@@ -114,10 +114,20 @@ public class JfrArgsBuilderJfrArgsTest {
 	@Test
 	public void testJfrArgsIfQuotedSpacePaths() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, true, okDuration, okDelay, spaceProfile, spaceFilename,
-				okName, true);
+				okName, true, true);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(true));
 		Assert.assertEquals(
 				"-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=settings=\"default foobar\",dumponexit=true,name=kossa,filename=\"Kossa Apa/apa.jfr\"",
+				jfrArgs);
+	}
+
+	@Test
+	public void testJfrArgsIfQuotedSpacePathsDefaultSettingsJdkHigherThen11() throws Exception {
+		JfrArgsBuilder options = new JfrArgsBuilder(true, true, okDuration, okDelay, spaceProfile, spaceFilename,
+				okName, true, false);
+		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(true));
+		Assert.assertEquals(
+				"-XX:+FlightRecorder -XX:StartFlightRecording=settings=\"default foobar\",dumponexit=true,name=kossa,filename=\"Kossa Apa/apa.jfr\"",
 				jfrArgs);
 	}
 
