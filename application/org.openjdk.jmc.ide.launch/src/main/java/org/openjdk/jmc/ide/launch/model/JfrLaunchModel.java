@@ -50,7 +50,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -87,6 +86,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	private static final boolean DEFAULT_ENABLED = false;
 	private static final boolean DEFAULT_AUTO_OPEN = false;
+	private static final boolean DEFAULT_ORACLE_JDK_LESS_THAN_11 = false;
 
 	// TODO: Should this be changed to "profile"?
 	private static final String DEFAULT_SETTINGS = "default"; //$NON-NLS-1$
@@ -95,6 +95,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	private static final String ENABLED_ATTRIBUTE = "jmc.jfr.launching.JFR.ENABLED"; //$NON-NLS-1$
 	private static final String AUTO_OPEN_ATTRIBUTE = "jmc.jfr.launching.JFR.AUTO_OPEN"; //$NON-NLS-1$
+	private static final String ORACLE_JDK_LESS_THAN_11 = "jmc.jfr.launching.JFR.ORACLE_JDK_LESS_THAN_11"; //$NON-NLS-1$
 	private static final String DURATION_ATTRIBUTE = "jmc.jfr.launching.JFR.DURATION"; //$NON-NLS-1$
 	private static final String DELAY_ATTRIBUTE = "jmc.jfr.launching.JFR.DELAY"; //$NON-NLS-1$
 	private static final String SETTINGS_ATTRIBUTE = "jmc.jfr.launching.JFR.SETTINGS"; //$NON-NLS-1$
@@ -108,6 +109,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	private boolean m_autoOpen;
 	private boolean m_jfrEnabled = true;
+	private boolean m_oracleJdkLessThan11;
 	private boolean jreSupportsDumpOnExitWithoutDefaultRecording;
 
 	public JfrLaunchModel(boolean jfrEnabled, boolean autoOpen) {
@@ -299,6 +301,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 			throws CoreException, QuantityConversionException {
 		setJfrEnabled(configuration.getAttribute(ENABLED_ATTRIBUTE, DEFAULT_ENABLED));
 		setAutoOpen(configuration.getAttribute(AUTO_OPEN_ATTRIBUTE, DEFAULT_AUTO_OPEN));
+		setOracleJdkLessThan11(configuration.getAttribute(ORACLE_JDK_LESS_THAN_11, DEFAULT_ORACLE_JDK_LESS_THAN_11));
 		setName(configuration.getAttribute(NAME_ATTRIBUTE, DEFAULT_NAME));
 		String filePath = configuration.getAttribute(FILENAME_ATTRIBUTE, (String) null);
 		if (filePath != null) {
@@ -353,6 +356,7 @@ public class JfrLaunchModel extends RecordingWizardModel {
 	public void updateToConfiguration(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(ENABLED_ATTRIBUTE, isJfrEnabled());
 		configuration.setAttribute(AUTO_OPEN_ATTRIBUTE, getAutoOpen());
+		configuration.setAttribute(ORACLE_JDK_LESS_THAN_11, getOracleJdkLessThan11());
 		configuration.setAttribute(DURATION_ATTRIBUTE, getDurationString());
 		configuration.setAttribute(DELAY_ATTRIBUTE, getDelayString());
 		configuration.setAttribute(SETTINGS_ATTRIBUTE, getTemplatePath());
@@ -379,9 +383,19 @@ public class JfrLaunchModel extends RecordingWizardModel {
 		onChange();
 	}
 
+	public void setOracleJdkLessThan11(boolean oracleJdkLessThan11) {
+		m_oracleJdkLessThan11 = oracleJdkLessThan11;
+		onChange();
+	}
+
+	public boolean getOracleJdkLessThan11() {
+		return m_oracleJdkLessThan11;
+	}
+
 	public JfrArgsBuilder createArgsBuilder() throws Exception {
 		return new JfrArgsBuilder(isJfrEnabled(), jreSupportsDumpOnExitWithoutDefaultRecording, getDuration(),
-				getDelay(), getTemplatePath(), getRecordingFile().getAbsolutePath(), getName(), isContinuous());
+				getDelay(), getTemplatePath(), getRecordingFile().getAbsolutePath(), getName(), isContinuous(),
+				getOracleJdkLessThan11());
 	}
 
 	public File getRecordingFile() throws FileNotFoundException {
