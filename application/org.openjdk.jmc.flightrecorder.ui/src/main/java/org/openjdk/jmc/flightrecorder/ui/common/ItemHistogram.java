@@ -220,7 +220,7 @@ public class ItemHistogram {
 			List<IColumn> columns = new ArrayList<>();
 			IMemberAccessor<?, Object> keyAccessor = AggregationGrid::getKey;
 			ColumnLabelProvider keyLp = null;
-			if (keyType.getIdentifier().equals("method")) {
+			if (keyType.getIdentifier().equals(UnitLookup.METHOD.getIdentifier())) {
 				keyLp = new DelegatingLabelProvider(new MethodLabelProvider(), keyAccessor);
 			} else {
 				keyLp = new DelegatingLabelProvider(new KeyLabelProvider(keyType), keyAccessor);
