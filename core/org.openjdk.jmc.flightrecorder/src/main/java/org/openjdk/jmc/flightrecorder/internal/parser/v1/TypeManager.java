@@ -214,7 +214,7 @@ class TypeManager {
 			case STRUCT_TYPE_METHOD_2:
 				return new ReflectiveReader(JfrMethod.class, fieldCount, UnitLookup.METHOD);
 			case STRUCT_TYPE_STACK_FRAME_2:
-				return new ReflectiveReader(JfrFrame.class, fieldCount, UnitLookup.STACKTRACE_FRAME);
+				return new SpecificReaders.StackFrame2Reader(JfrFrame.class, fieldCount, UnitLookup.STACKTRACE_FRAME);
 			case STRUCT_TYPE_STACK_TRACE_2:
 				return new ReflectiveReader(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
 			case STRUCT_TYPE_MODULE_2:
