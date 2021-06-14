@@ -38,21 +38,57 @@ import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 public class SpecificReaders {
+	private static Logger LOG = Logger.getLogger(SpecificReaders.class.getName());
+
 	static class StackFrame2Reader extends ValueReaders.ReflectiveReader {
+		boolean fallback;
+		int methodIdx;
+		int lineNumberIdx;
+		int bytecodeIndexIdx;
+		int typeIdx;
+
 		<T> StackFrame2Reader(Class<T> klass, int fieldCount, ContentType<? super T> ct) {
 			super(klass, fieldCount, ct);
 		}
 
 		@Override
+		void addField(String identifier, String name, String description, ValueReaders.IValueReader reader)
+				throws InvalidJfrFileException {
+			super.addField(identifier, name, description, reader);
+			int currentIdx = valueReaders.size() - 1;
+			switch (identifier) {
+			case "method":
+				methodIdx = currentIdx;
+				break;
+			case "lineNumber":
+				lineNumberIdx = currentIdx;
+				break;
+			case "bytecodeIndex":
+				bytecodeIndexIdx = currentIdx;
+				break;
+			case "type":
+				typeIdx = currentIdx;
+				break;
+			default:
+				fallback = true; // invalid expected format, falling back to ReflectiveReader
+				LOG.warning("unexpected fields for StackFrame2Reader: " + identifier);
+			}
+		}
+
+		@Override
 		public Object read(IDataInput in, boolean allowUnresolvedReference)
 				throws IOException, InvalidJfrFileException {
+			if (fallback) {
+				return super.read(in, allowUnresolvedReference);
+			}
 			StructTypes.JfrFrame jfrFrame = new StructTypes.JfrFrame();
-			jfrFrame.method = valueReaders.get(0).read(in, allowUnresolvedReference);
-			jfrFrame.lineNumber = valueReaders.get(1).read(in, allowUnresolvedReference);
-			jfrFrame.bytecodeIndex = valueReaders.get(2).read(in, allowUnresolvedReference);
-			jfrFrame.type = valueReaders.get(3).read(in, allowUnresolvedReference);
+			jfrFrame.method = valueReaders.get(methodIdx).read(in, allowUnresolvedReference);
+			jfrFrame.lineNumber = valueReaders.get(lineNumberIdx).read(in, allowUnresolvedReference);
+			jfrFrame.bytecodeIndex = valueReaders.get(bytecodeIndexIdx).read(in, allowUnresolvedReference);
+			jfrFrame.type = valueReaders.get(typeIdx).read(in, allowUnresolvedReference);
 			return jfrFrame;
 		}
 
