@@ -135,8 +135,7 @@ public class AgentEditorUi {
 					preset[0].deserialize(probes);
 				} catch (IOException | SAXException e) {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					DialogToolkit.showException(window.getShell(),
-							Messages.AgentEditorUI_MESSAGE_FAILED_TO_LOAD_PRESET,
+					DialogToolkit.showException(window.getShell(), Messages.AgentEditorUI_MESSAGE_FAILED_TO_LOAD_PRESET,
 							e);
 					e.printStackTrace();
 				}
@@ -188,8 +187,7 @@ public class AgentEditorUi {
 		} catch (IOException | SAXException e) {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			DialogToolkit.showException(window.getShell(),
-					Messages.PresetSelectorWizardPage_MESSAGE_FAILED_TO_SAVE_PRESET,
-					e);
+					Messages.PresetSelectorWizardPage_MESSAGE_FAILED_TO_SAVE_PRESET, e);
 			e.printStackTrace();
 		}
 		DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_SAVE_PRESET_TITLE,
@@ -258,7 +256,7 @@ public class AgentEditorUi {
 
 							IPreset preset = (IPreset) element;
 							return preset.getFileName() + " - " + preset.getEvents().length + " "
-									+ Messages.PresetSelectorWizardPage_MESSAGE_EVENTS; 
+									+ Messages.PresetSelectorWizardPage_MESSAGE_EVENTS;
 						}
 
 						@Override
@@ -299,7 +297,8 @@ public class AgentEditorUi {
 			byte[] bytes = Files.readAllBytes(Paths.get(path));
 			String validationMessage = validateProbeDefinition(new String(bytes, StandardCharsets.UTF_8));
 			if (!validationMessage.isEmpty()) {
-				DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_ERROR_PAGE_TITLE, validationMessage);
+				DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_ERROR_PAGE_TITLE,
+						validationMessage);
 				return;
 			}
 			helper.defineEventProbes(new String(bytes, StandardCharsets.UTF_8));

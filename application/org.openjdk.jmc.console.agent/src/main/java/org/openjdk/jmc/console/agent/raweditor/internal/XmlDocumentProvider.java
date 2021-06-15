@@ -72,7 +72,7 @@ public class XmlDocumentProvider extends StorageDocumentProvider {
 			throws CoreException {
 		IStorageEditorInput ei = (IStorageEditorInput) element;
 		File out = ei.getStorage().getFullPath().toFile();
-		
+
 		if (!out.exists()) {
 			try {
 				Files.createFile(out.toPath());

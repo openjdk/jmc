@@ -98,10 +98,8 @@ public class AgentEditorOpener implements IActionFactory {
 				return ret;
 			} catch (ConnectionException e) {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				DialogToolkit.showException(window.getShell(),
-						Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
-						e);
-						
+				DialogToolkit.showException(window.getShell(), Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT, e);
+
 				return new Status(IStatus.ERROR, AgentPlugin.PLUGIN_ID, IStatus.ERROR,
 						NLS.bind(Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
 								serverHandle.getServerDescriptor().getDisplayName(), e.getMessage()),

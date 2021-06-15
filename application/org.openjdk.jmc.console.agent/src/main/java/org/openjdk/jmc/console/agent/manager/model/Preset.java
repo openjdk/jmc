@@ -68,7 +68,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Preset implements IPreset {
-	
+
 	private static final String FILE_NAME_EXTENSION = ".xml"; // $NON-NLS-1$
 	private static final String DEFAULT_FILE_NAME = "new_file.xml"; // $NON-NLS-1$
 	private static final String DEFAULT_CLASS_PREFIX = "__JFREvent"; // $NON-NLS-1$
