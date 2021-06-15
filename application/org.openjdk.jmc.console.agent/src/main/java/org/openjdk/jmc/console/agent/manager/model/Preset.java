@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.console.agent.manager.model;
 
+import org.openjdk.jmc.console.agent.AgentPlugin;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.console.agent.utils.ProbeValidator;
 import org.openjdk.jmc.console.agent.utils.ValidationResult;
@@ -60,6 +61,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,7 +69,6 @@ import java.util.stream.Collectors;
 
 public class Preset implements IPreset {
 	
-	private static Logger logger = Logger.getLogger(Preset.class.getName());
 	private static final String FILE_NAME_EXTENSION = ".xml"; // $NON-NLS-1$
 	private static final String DEFAULT_FILE_NAME = "new_file.xml"; // $NON-NLS-1$
 	private static final String DEFAULT_CLASS_PREFIX = "__JFREvent"; // $NON-NLS-1$
@@ -515,7 +516,7 @@ public class Preset implements IPreset {
 		try {
 			return storageDelegate.save(fileName, serialize());
 		} catch (IOException e) {
-			logger.warning(e.getMessage());
+			AgentPlugin.getDefault().getLogger().log(Level.WARNING, "Failed to save preset", e);
 			e.printStackTrace();
 			return false;
 		}
