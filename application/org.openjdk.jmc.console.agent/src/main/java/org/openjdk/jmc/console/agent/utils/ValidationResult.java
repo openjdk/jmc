@@ -44,25 +44,25 @@ public class ValidationResult {
 	private List<SAXParseException> errors = new ArrayList<>();
 	private SAXParseException fatalError;
 
-	/* package-private */ ValidationResult(ArrayList<SAXParseException> warnings, ArrayList<SAXParseException> errors,
+	public ValidationResult(ArrayList<SAXParseException> warnings, ArrayList<SAXParseException> errors,
 			SAXParseException fatalError) {
 		this.warnings = Objects.requireNonNull(warnings);
 		this.errors = Objects.requireNonNull(errors);
 		this.fatalError = fatalError;
 	}
 
-	/* package-private */ ValidationResult() {
+	public ValidationResult() {
 	}
 
-	/* package-private */ void addError(SAXParseException error) {
+	public void addError(SAXParseException error) {
 		errors.add(error);
 	}
 
-	/* package-private */ void addWarning(SAXParseException warning) {
+	public void addWarning(SAXParseException warning) {
 		warnings.add(warning);
 	}
 
-	/* package-private */ void setFatalError(SAXParseException fatalError) {
+	public void setFatalError(SAXParseException fatalError) {
 		this.fatalError = fatalError;
 	}
 

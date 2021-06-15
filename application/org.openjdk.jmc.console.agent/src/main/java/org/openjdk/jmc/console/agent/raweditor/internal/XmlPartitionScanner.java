@@ -40,8 +40,8 @@ import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.Token;
 
 public class XmlPartitionScanner extends RuleBasedPartitionScanner {
-	public final static String XML_COMMENT = "__xml_comment";
-	public final static String XML_TAG = "__xml_tag";
+	public final static String XML_COMMENT = "__xml_comment"; // $NON-NLS-1$
+	public final static String XML_TAG = "__xml_tag"; // $NON-NLS-1$
 
 	public XmlPartitionScanner() {
 

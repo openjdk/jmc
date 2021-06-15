@@ -36,6 +36,11 @@ package org.openjdk.jmc.console.agent.raweditor.internal;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,21 +70,20 @@ public class XmlDocumentProvider extends StorageDocumentProvider {
 	@Override
 	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
 			throws CoreException {
-		// TODO: Prototype implementation that most likely requires revise
 		IStorageEditorInput ei = (IStorageEditorInput) element;
 		File out = ei.getStorage().getFullPath().toFile();
-
+		
 		if (!out.exists()) {
 			try {
-				out.createNewFile();
+				Files.createFile(out.toPath());
 			} catch (IOException | SecurityException e) {
 				IStatus s = new Status(IStatus.ERROR, EditorsUI.PLUGIN_ID, IStatus.OK, e.getMessage(), e);
 				throw new CoreException(s);
 			}
 		}
 
-		try (FileOutputStream fos = new FileOutputStream(out)) {
-			fos.write(document.get().getBytes()); // TODO: encoding?
+		try (Writer writer = new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
+			writer.write(document.get());
 		} catch (IOException e) {
 			IStatus s = new Status(IStatus.ERROR, EditorsUI.PLUGIN_ID, IStatus.OK, e.getMessage(), e);
 			throw new CoreException(s);

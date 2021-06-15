@@ -36,7 +36,7 @@ package org.openjdk.jmc.console.agent.messages.internal;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.console.ext.agent.messages.internal.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.console.agent.messages.internal.messages"; //$NON-NLS-1$
 	public static String AgentEditorOpener_JOB_NAME;
 	public static String AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT;
 	public static String AgentEditorOpener_MESSAGE_STARTING_AGENT_ON_REMOTE_JVM_NOT_SUPPORTED;
@@ -44,6 +44,10 @@ public class Messages extends NLS {
 	public static String AgentEditorOpener_MESSAGE_FAILED_TO_OPEN_AGENT_EDITOR;
 	public static String AgentEditor_CONNECTION_LOST;
 	public static String AgentEditor_AGENT_EDITOR_TITLE;
+	public static String AgentEditorAction_MESSAGE_REFRESH;
+	public static String AgentEditorAction_MESSAGE_LOAD_PRESET;
+	public static String AgentEditorAction_MESSAGE_SAVE_AS_PRESET;
+	public static String AgentEditorUI_MESSAGE_FAILED_TO_LOAD_PRESET;
 	public static String CapturedValue_ERROR_RELATION_KEY_HAS_INCORRECT_SYNTAX;
 	public static String CapturedValue_ERROR_CONVERTER_HAS_INCORRECT_SYNTAX;
 	public static String Event_ERROR_ID_CANNOT_BE_EMPTY_OR_NULL;
@@ -126,6 +130,15 @@ public class Messages extends NLS {
 	public static String EventEditingWizardParameterPage_ID_INDEX;
 	public static String EventEditingWizardParameterPage_ID_NAME;
 	public static String EventEditingWizardParameterPage_ID_DESCRIPTION;
+	public static String PresetSelectorWizardPage_PAGE_NAME;
+	public static String PresetSelectorWizardPage_MESSAGE_FAILED_TO_SAVE_PRESET;
+	public static String PresetSelectorWizardPage_MESSAGE_PAGE_TITLE;
+	public static String PresetSelectorWizardPage_MESSAGE_PAGE_DESCRIPTION;
+	public static String PresetSelectorWizardPage_ID_PRESET;
+	public static String PresetSelectorWizardPage_MESSAGE_EVENTS;
+	public static String PresetSelectorWizardPage_ERROR_PAGE_TITLE;
+	public static String PresetSelectorWizardPage_SAVE_PRESET_TITLE;
+	public static String PresetSelectorWizardPage_SAVE_PRESET_MESSAGE;
 	public static String PresetEditingWizardConfigPage_PAGE_NAME;
 	public static String PresetEditingWizardConfigPage_MESSAGE_PRESET_EDITING_WIZARD_CONFIG_PAGE_TITLE;
 	public static String PresetEditingWizardConfigPage_MESSAGE_PRESET_EDITING_WIZARD_CONFIG_PAGE_DESCRIPTION;

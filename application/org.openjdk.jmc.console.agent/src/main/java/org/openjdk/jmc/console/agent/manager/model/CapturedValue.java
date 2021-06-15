@@ -46,6 +46,7 @@ class CapturedValue implements ICapturedValue {
 
 	private static final String DEFAULT_STRING_FIELD = ""; // $NON-NLS-1$
 	private static final Object DEFAULT_OBJECT_TYPE = null;
+	// Regex for matching converter names e.g. someClass.converter
 	private static final String CONVERTER_REGEX = "([a-zA-Z_$][a-zA-Z0-9_$]*\\.)*([a-zA-Z_$][a-zA-Z0-9_$]*)"; // $NON-NLS-1$
 
 	private static final String XML_TAG_CAPTURED_VALUE = "capturedvalue"; // $NON-NLS-1$

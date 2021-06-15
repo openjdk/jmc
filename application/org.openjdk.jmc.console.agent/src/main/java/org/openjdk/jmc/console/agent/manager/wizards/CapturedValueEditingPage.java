@@ -219,7 +219,6 @@ public class CapturedValueEditingPage extends BaseWizardPage {
 	private void convertParameterToReturnValue() {
 		IMethodParameter parameter = (IMethodParameter) capturedValue;
 
-		// TODO: do this is in model instead
 		IMethodReturnValue returnValue = event.createMethodReturnValue();
 		returnValue.setName(parameter.getName());
 		returnValue.setDescription(parameter.getDescription());
@@ -233,7 +232,6 @@ public class CapturedValueEditingPage extends BaseWizardPage {
 	private void convertReturnValueToParameter() {
 		IMethodReturnValue returnValue = (IMethodReturnValue) capturedValue;
 
-		// TODO: do this is in model instead
 		IMethodParameter parameter = event.createMethodParameter();
 		parameter.setIndex(0);
 		parameter.setName(returnValue.getName());

@@ -114,7 +114,7 @@ public class PresetManagerPage extends BaseWizardPage {
 
 					@Override
 					public Image getImage(Object element) {
-						return AgentPlugin.getDefault().getImage(AgentPlugin.ICON_AGENT); // TODO: replace the icon in the future
+						return AgentPlugin.getDefault().getImage(AgentPlugin.ICON_AGENT);
 					}
 				});
 			}

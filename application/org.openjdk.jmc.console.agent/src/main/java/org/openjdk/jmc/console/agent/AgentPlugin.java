@@ -38,7 +38,7 @@ import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class AgentPlugin extends MCAbstractUIPlugin {
-	public static final String PLUGIN_ID = "org.openjdk.jmc.console.ext.agent"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.openjdk.jmc.console.agent"; //$NON-NLS-1$
 
 	public static final String ICON_AGENT = "agent.png"; //$NON-NLS-1$
 

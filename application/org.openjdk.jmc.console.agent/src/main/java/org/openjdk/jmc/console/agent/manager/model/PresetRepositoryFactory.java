@@ -82,7 +82,7 @@ public class PresetRepositoryFactory {
 
 		for (File file : files) {
 			if (file.length() == 0) {
-				// FIXME: delete or just ignore empty files? 
+				AgentPlugin.getDefault().getLogger().log(Level.FINE, "Empty file in preset storage directory: " + file.getPath());
 			} else {
 				IPreset preset;
 				IPresetStorageDelegate delegate = LocalStorageDelegate.getDelegate(file);

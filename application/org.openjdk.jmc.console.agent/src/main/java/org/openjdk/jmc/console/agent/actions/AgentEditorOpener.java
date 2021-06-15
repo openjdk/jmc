@@ -97,7 +97,11 @@ public class AgentEditorOpener implements IActionFactory {
 				helper.removeConnectionChangedListener(this);
 				return ret;
 			} catch (ConnectionException e) {
-				// FIXME: Show stacktrace? (Need to show our own ExceptionDialog in that case, or maybe create our own DetailsAreaProvider, see WorkbenchStatusDialogManager.setDetailsAreaProvider)
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				DialogToolkit.showException(window.getShell(),
+						Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
+						e);
+						
 				return new Status(IStatus.ERROR, AgentPlugin.PLUGIN_ID, IStatus.ERROR,
 						NLS.bind(Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
 								serverHandle.getServerDescriptor().getDisplayName(), e.getMessage()),

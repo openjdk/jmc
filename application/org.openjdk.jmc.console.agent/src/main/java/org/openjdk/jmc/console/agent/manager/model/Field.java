@@ -42,6 +42,7 @@ public class Field extends CapturedValue implements IField {
 
 	private static final String DEFAULT_FIELD_NAME = "New Field"; // $NON-NLS-1$
 	private static final String DEFAULT_FIELD_EXPRESSION = "myField"; // $NON-NLS-1$
+	// Regex for matching expressions for locating fields to capture (e.g. InstrumentMe.STATIC_STRING_FIELD)
 	private static final String EXPRESSION_REGEX = "([a-zA-Z_$][a-zA-Z0-9_$]*\\.)*([a-zA-Z_$][a-zA-Z0-9_$]*)(\\.[a-zA-Z_$][a-zA-Z_$]*)*"; // $NON-NLS-1$
 
 	private static final String XML_TAG_FIELD = "field"; // $NON-NLS-1$

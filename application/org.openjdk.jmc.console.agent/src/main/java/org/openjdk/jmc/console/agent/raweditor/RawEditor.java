@@ -36,5 +36,5 @@ package org.openjdk.jmc.console.agent.raweditor;
 import org.openjdk.jmc.console.agent.raweditor.internal.XmlEditor;
 
 public class RawEditor extends XmlEditor {
-	public static final String EDITOR_ID = "org.openjdk.jmc.console.ext.agent.tabs.raweditor.RawEditor"; //$NON-NLS-1$
+	public static final String EDITOR_ID = "org.openjdk.jmc.console.agent.tabs.raweditor.RawEditor"; //$NON-NLS-1$
 }

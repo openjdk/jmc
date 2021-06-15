@@ -59,7 +59,7 @@ import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import java.util.stream.Stream;
 
 public class AgentEditor extends EditorPart implements IConnectionListener {
-	public static final String EDITOR_ID = "org.openjdk.jmc.console.ext.agent.editor.AgentEditor"; //$NON-NLS-1$
+	public static final String EDITOR_ID = "org.openjdk.jmc.console.agent.editor.AgentEditor"; //$NON-NLS-1$
 
 	private Composite parentComposite;
 	private FormToolkit formToolkit;

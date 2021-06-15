@@ -37,11 +37,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.openjdk.jmc.ui.UIPlugin;
+import org.openjdk.jmc.console.agent.messages.internal.Messages;
 
 public class AgentEditorAction extends Action {
-	private static final String MESSAGE_REFRESH = "Refresh";
-	private static final String MESSAGE_LOAD_PRESET = "Load a preset...";
-	private static final String MESSAGE_SAVE_AS_PRESET = "Save as a preset...";
 
 	private final AgentEditorActionType actionType;
 	private Runnable runnable = () -> {
@@ -68,11 +66,11 @@ public class AgentEditorAction extends Action {
 	}
 
 	enum AgentEditorActionType {
-		REFRESH(MESSAGE_REFRESH, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
+		REFRESH(Messages.AgentEditorAction_MESSAGE_REFRESH, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
 				.getMCImageDescriptor(UIPlugin.ICON_REFRESH)), // 
-		LOAD_PRESET(MESSAGE_LOAD_PRESET, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
+		LOAD_PRESET(Messages.AgentEditorAction_MESSAGE_LOAD_PRESET, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
 				.getMCImageDescriptor(UIPlugin.ICON_CHANGE)), //
-		SAVE_AS_PRESET(MESSAGE_SAVE_AS_PRESET, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
+		SAVE_AS_PRESET(Messages.AgentEditorAction_MESSAGE_SAVE_AS_PRESET, IAction.AS_PUSH_BUTTON, UIPlugin.getDefault()
 				.getMCImageDescriptor(UIPlugin.ICON_SAVE));
 
 		private final String message;

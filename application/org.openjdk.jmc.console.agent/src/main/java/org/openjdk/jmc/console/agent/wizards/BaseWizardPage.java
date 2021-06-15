@@ -113,7 +113,7 @@ public abstract class BaseWizardPage extends WizardPage {
 	protected static Text createMultiText(Composite parent, String hint) {
 		Text text = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		// FIXME: Multi line Text field (SWT.MULTI) does not support Text.setMessage
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=328832
+		// See https://bugs.openjdk.java.net/browse/JMC-7298
 		text.setMessage(hint);
 		text.setEnabled(true);
 		return text;

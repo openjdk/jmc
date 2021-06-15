@@ -11,7 +11,7 @@
    <requires>
       <import feature="org.openjdk.jmc.feature.core" version="8.0.0.qualifier"/>
       <import feature="org.openjdk.jmc.feature.console" version="8.0.0.qualifier"/>
-      <import plugin="org.openjdk.jmc.console.agent"/>
+      <import plugin="org.openjdk.jmc.console.agent" version="8.0.0.qualifier"/>
    </requires>
 
 </feature>

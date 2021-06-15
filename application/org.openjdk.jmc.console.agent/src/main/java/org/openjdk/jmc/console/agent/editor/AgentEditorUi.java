@@ -57,6 +57,7 @@ import org.openjdk.jmc.console.agent.manager.model.IEvent;
 import org.openjdk.jmc.console.agent.manager.model.IPreset;
 import org.openjdk.jmc.console.agent.manager.model.PresetRepository;
 import org.openjdk.jmc.console.agent.manager.model.PresetRepositoryFactory;
+import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.console.agent.utils.ProbeValidator;
 import org.openjdk.jmc.console.agent.utils.ValidationResult;
 import org.openjdk.jmc.console.agent.wizards.BaseWizardPage;
@@ -76,6 +77,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -132,7 +134,10 @@ public class AgentEditorUi {
 				try {
 					preset[0].deserialize(probes);
 				} catch (IOException | SAXException e) {
-					// TODO: display error dialog
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					DialogToolkit.showException(window.getShell(),
+							Messages.AgentEditorUI_MESSAGE_FAILED_TO_LOAD_PRESET,
+							e);
 					e.printStackTrace();
 				}
 			}
@@ -181,9 +186,14 @@ public class AgentEditorUi {
 			preset.deserialize(helper.retrieveEventProbes());
 			presetRepository.addPreset(preset);
 		} catch (IOException | SAXException e) {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			DialogToolkit.showException(window.getShell(),
+					Messages.PresetSelectorWizardPage_MESSAGE_FAILED_TO_SAVE_PRESET,
+					e);
 			e.printStackTrace();
 		}
-		DialogToolkit.openConfirmOnUiThread("Saved to Preset", "Configuration saved to " + preset.getFileName());
+		DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_SAVE_PRESET_TITLE,
+				MessageFormat.format(Messages.PresetSelectorWizardPage_SAVE_PRESET_MESSAGE, preset.getFileName()));
 	}
 
 	private void bindAgentEditorActions() {
@@ -203,25 +213,20 @@ public class AgentEditorUi {
 	}
 
 	private class PresetSelectorWizardPage extends BaseWizardPage {
-		private static final String PAGE_NAME = "Apply Preset";
-		private static final String MESSAGE_PAGE_TITLE = "Apply Preset";
-		private static final String MESSAGE_PAGE_DESCRIPTION = "Select a preset to apply";
-		private static final String ID_PRESET = "preset"; // $NON-NLS-1$
-		private static final String MESSAGE_EVENTS = "event(s)";
 
 		private TableInspector tableInspector;
 		private IPreset selectedPreset;
 
 		public PresetSelectorWizardPage() {
-			super(PAGE_NAME);
+			super(Messages.PresetSelectorWizardPage_PAGE_NAME);
 		}
 
 		@Override
 		public void createControl(Composite parent) {
 			initializeDialogUnits(parent);
 
-			setTitle(MESSAGE_PAGE_TITLE);
-			setDescription(MESSAGE_PAGE_DESCRIPTION);
+			setTitle(Messages.PresetSelectorWizardPage_MESSAGE_PAGE_TITLE);
+			setDescription(Messages.PresetSelectorWizardPage_MESSAGE_PAGE_DESCRIPTION);
 
 			ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 			Composite container = new Composite(sc, SWT.NONE);
@@ -244,7 +249,7 @@ public class AgentEditorUi {
 			tableInspector = new TableInspector(container, TableInspector.MULTI) {
 				@Override
 				protected void addColumns() {
-					addColumn(ID_PRESET, new ColumnLabelProvider() {
+					addColumn(Messages.PresetSelectorWizardPage_ID_PRESET, new ColumnLabelProvider() {
 						@Override
 						public String getText(Object element) {
 							if (!(element instanceof IPreset)) {
@@ -252,12 +257,13 @@ public class AgentEditorUi {
 							}
 
 							IPreset preset = (IPreset) element;
-							return preset.getFileName() + " - " + preset.getEvents().length + " " + MESSAGE_EVENTS;
+							return preset.getFileName() + " - " + preset.getEvents().length + " "
+									+ Messages.PresetSelectorWizardPage_MESSAGE_EVENTS; 
 						}
 
 						@Override
 						public Image getImage(Object element) {
-							return AgentPlugin.getDefault().getImage(AgentPlugin.ICON_AGENT); // TODO: replace the icon in the future
+							return AgentPlugin.getDefault().getImage(AgentPlugin.ICON_AGENT);
 						}
 					});
 				}
@@ -288,14 +294,12 @@ public class AgentEditorUi {
 		}
 	}
 
-	private static final String ERROR_PAGE_TITLE = "Error in Configuration";
-
 	private void applyConfig(String path) {
 		try {
 			byte[] bytes = Files.readAllBytes(Paths.get(path));
 			String validationMessage = validateProbeDefinition(new String(bytes, StandardCharsets.UTF_8));
 			if (!validationMessage.isEmpty()) {
-				DialogToolkit.openConfirmOnUiThread(ERROR_PAGE_TITLE, validationMessage);
+				DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_ERROR_PAGE_TITLE, validationMessage);
 				return;
 			}
 			helper.defineEventProbes(new String(bytes, StandardCharsets.UTF_8));

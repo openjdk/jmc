@@ -37,19 +37,19 @@
     <extension point="org.openjdk.jmc.rjmx.actionProvider">
         <action
             factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
-            icon="icons/agent-16.png"
+            icon="icons/agent.png"
             label="Agent Plugin">
         </action>
         <provider
-            icon="icons/agent-16.png"
-            id="org.openjdk.jmc.console.ext.agent"
-            description="The JMC Agent Plugin can be used to add JFR instrumentation declaratively to a running program"
+            icon="icons/agent.png"
+            id="org.openjdk.jmc.console.agent"
+            description="The JMC Agent Plugin can be used to declaratively add JFR instrumentation to a running program"
             label="Agent Plugin"
             priority="101"
             doubleClickActionIndex="0">
             <action
                 factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
-                icon="icons/agent-16.png"
+                icon="icons/agent.png"
                 label="Open the JMC Agent Plugin">
             </action>
         </provider>
@@ -57,28 +57,28 @@
 
     <extension point="org.eclipse.ui.editors">
         <editor
-            class="org.openjdk.jmc.console.ext.agent.editor.AgentEditor"
+            class="org.openjdk.jmc.console.agent.editor.AgentEditor"
             default="true"
-            id="org.openjdk.jmc.console.ext.agent.editor.AgentEditor"
-            icon="icons/agent-16.png"
+            id="org.openjdk.jmc.console.agent.editor.AgentEditor"
+            icon="icons/agent.png"
             name="Agent Plugin"/>
     </extension>
     
     <extension point="org.eclipse.ui.editors">
       	<editor
-            id="org.openjdk.jmc.console.ext.agent.tabs.raweditor.RawEditor"
+            id="org.openjdk.jmc.console.agent.tabs.raweditor.RawEditor"
             name="Agent XML Editor"
-            icon="icons/agent-16.png"
+            icon="icons/agent.png"
             extensions="xml"
-            class="org.openjdk.jmc.console.ext.agent.tabs.raweditor.RawEditor"
+            class="org.openjdk.jmc.console.agent.tabs.raweditor.RawEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor">
       	</editor>
    </extension>
 
     <extension point="org.eclipse.ui.commands">
 		<command
-        id="org.openjdk.jmc.console.ext.agent.openPresetManagerHandler"
-		defaultHandler="org.openjdk.jmc.console.ext.agent.manager.OpenPresetManagerHandler"
+        id="org.openjdk.jmc.console.agent.openPresetManagerHandler"
+		defaultHandler="org.openjdk.jmc.console.agent.manager.OpenPresetManagerHandler"
 		name="Open Agent Preset Manager">
 		</command>
     </extension>
@@ -89,8 +89,8 @@
         allPopups="false"
         locationURI="menu:window?after=additions">
       <command
-            commandId="org.openjdk.jmc.console.ext.agent.openPresetManagerHandler"
-            icon="icons/agent-16.png"
+            commandId="org.openjdk.jmc.console.agent.openPresetManagerHandler"
+            icon="icons/agent.png"
             label="Agent Preset Manager"
             style="push">
       </command>

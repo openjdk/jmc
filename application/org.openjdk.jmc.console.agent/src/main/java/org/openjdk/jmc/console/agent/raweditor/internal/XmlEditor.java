@@ -66,7 +66,7 @@ public class XmlEditor extends TextEditor {
 
 	@Override
 	protected void createActions() {
-//		super.createActions();
+		// Intentionally empty
 	}
 
 	@Override
