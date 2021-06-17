@@ -43,13 +43,16 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCFrame.Type;
 import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.common.util.TypeHandling;
+import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.misc.OverlayImageDescriptor;
 
 /**
- * This label provider will render {@link MethodWithFrameType} objects. It is similar to how
- * {@link IMCMethod}'s will be rendered, but with an additional overlay version of the images. The
+ * This label provider will render {@link MethodWithFrameType} objects. It can also be used for
+ * {@link IMCMethod} and {@link IMCFrame}. It is similar to how {@link IMCMethod}'s will be rendered
+ * by default in {@link ItemHistogram}, but with an additional overlay version of the images. The
  * overlay (a little flash) will be used if the method {@link IMCFrame.Type} is not
  * {@link Type#INTERPRETED}.
  */
@@ -123,13 +126,13 @@ public class MethodWithFrameTypeLabelProvider extends ColumnLabelProvider {
 		if (key instanceof MethodWithFrameType) {
 			MethodWithFrameType mwft = (MethodWithFrameType) key;
 			key = mwft.getMethod();
-		}
-		if (key instanceof IMCFrame) {
+		} else if (key instanceof IMCFrame) {
 			key = ((IMCFrame) key).getMethod();
 		}
 		if (key instanceof IDisplayable) {
 			return ((IDisplayable) key).displayUsing(IDisplayable.EXACT);
 		}
+		// IMCMethod falling through to TypeHandling
 		return TypeHandling.getValueString(key);
 	};
 
@@ -138,9 +141,26 @@ public class MethodWithFrameTypeLabelProvider extends ColumnLabelProvider {
 		if (key == null) {
 			return "null";
 		}
+		IMCMethod method = null;
+		IMCFrame.Type frameType = null;
+		if (key instanceof MethodWithFrameType) {
+			MethodWithFrameType mwft = (MethodWithFrameType) key;
+			method = mwft.getMethod();
+			frameType = mwft.getFrameType();
+		} else if (key instanceof IMCFrame) {
+			IMCFrame frame = (IMCFrame) key;
+			method = ((IMCFrame) key).getMethod();
+			frameType = frame.getType();
+		} else if (key instanceof IMCMethod) {
+			method = (IMCMethod) key;
+		}
+		if (method != null) {
+			return FormatToolkit.getHumanReadable(method, true, false, true, true, true, false, true)
+					+ ((frameType != null) ? (" [" + frameType + "]") : "");
+		}
 		if (key instanceof IDisplayable) {
 			return ((IDisplayable) key).displayUsing(IDisplayable.VERBOSE);
 		}
-		return key.toString();
+		return TypeHandling.getValueString(key);
 	}
 }
