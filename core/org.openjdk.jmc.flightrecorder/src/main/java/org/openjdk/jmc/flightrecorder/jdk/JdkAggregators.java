@@ -184,6 +184,8 @@ public final class JdkAggregators {
 	public static final IAggregator<Boolean, ?> USES_TLABS = or(GC_CONF_TLAB, JdkAttributes.USES_TLABS);
 	public static final IAggregator<IQuantity, ?> TLAB_MIN_SIZE = min(JdkAttributes.TLAB_MIN_SIZE.getName(), null,
 			GC_CONF_TLAB, JdkAttributes.TLAB_MIN_SIZE);
+	public static final IAggregator<IQuantity, ?> TLAB_MAX_SIZE = max(JdkAttributes.TLAB_MAX_SIZE.getName(), null,
+			GC_CONF_TLAB, JdkAttributes.TLAB_MAX_SIZE);
 	public static final IAggregator<IQuantity, ?> TLAB_REFILL_WASTE_LIMIT_MIN = min(TLAB_REFILL_WASTE_LIMIT.getName(),
 			null, GC_CONF_TLAB, TLAB_REFILL_WASTE_LIMIT);
 	// Other
@@ -323,9 +325,28 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_TLAB_AVG = Aggregators.avg(
+			Messages.getString(Messages.AGGR_ALLOC_TLAB_AVG), Messages.getString(Messages.AGGR_ALLOC_TLAB_AVG_DESC),
+			JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkAttributes.TLAB_SIZE);
 	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_AVG = Aggregators.avg(
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
+			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_MAX = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MAX),
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MAX_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
+			JdkAttributes.TLAB_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_MAX = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MAX),
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MAX_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
+			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_MIN = Aggregators.min(
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MIN),
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MIN_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
+			JdkAttributes.TLAB_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_MIN = Aggregators.min(
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MIN),
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MIN_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
 	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM),

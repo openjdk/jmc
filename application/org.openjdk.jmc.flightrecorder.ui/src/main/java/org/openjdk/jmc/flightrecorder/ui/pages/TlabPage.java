@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,9 +41,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
+import org.eclipse.ui.forms.widgets.Section;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAttribute;
@@ -69,15 +71,18 @@ import org.openjdk.jmc.flightrecorder.ui.common.BucketBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
+import org.openjdk.jmc.flightrecorder.ui.common.ItemAggregateViewer;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.HistogramSelection;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.ItemHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemRow;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.ui.accessibility.SimpleTraverseListener;
 import org.openjdk.jmc.ui.charts.AWTChartToolkit;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.XYDataRenderer;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
+import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.column.TableSettings;
 
 public class TlabPage extends AbstractDataPage {
@@ -136,11 +141,65 @@ public class TlabPage extends AbstractDataPage {
 				Messages.TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE, Messages.TlabPage_OUTSIDE_TLAB_SUM_PERCENTAGE_DESC);
 	}
 
+	private class TlabSummaryUI implements IPageUI {
+
+		protected Form form;
+
+		TlabSummaryUI(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+			display(parent, toolkit, pageContainer, state);
+		}
+
+		public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+			form = DataPageToolkit.createForm(parent, toolkit, getName(), getIcon());
+			SashForm container = new SashForm(form.getBody(), SWT.HORIZONTAL);
+			container.setSashWidth(5);
+			container.addTraverseListener(new SimpleTraverseListener());
+
+			Section insideSummarySection = CompositeToolkit.createSection(container, toolkit,
+					Messages.TlabPage_SUMMARY_TAB_INSIDE_ALLOCATION);
+			ItemAggregateViewer insideSummary = new ItemAggregateViewer(insideSummarySection, toolkit);
+			insideSummary.addAggregate(JdkAggregators.INSIDE_TLAB_COUNT);
+			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_MAX);
+			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_MIN);
+			insideSummary.addAggregate(JdkAggregators.ALLOC_TLAB_AVG);
+			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
+			insideSummarySection.setClient(insideSummary.getControl());
+
+			Section outsideSummarySection = CompositeToolkit.createSection(container, toolkit,
+					Messages.TlabPage_SUMMARY_TAB_OUTSIDE_ALLOCATION);
+			ItemAggregateViewer outsideSummary = new ItemAggregateViewer(outsideSummarySection, toolkit);
+			outsideSummary.addAggregate(JdkAggregators.OUTSIDE_TLAB_COUNT);
+			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_MAX);
+			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_MIN);
+			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_AVG);
+			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
+			outsideSummarySection.setClient(outsideSummary.getControl());
+
+			insideSummary.setValues(getDataSource().getItems());
+			outsideSummary.setValues(getDataSource().getItems());
+
+			addResultActions(form);
+
+			return null;
+		}
+
+		public Form getComponent() {
+			return this.form;
+		}
+
+		@Override
+		public void saveTo(IWritableState state) {
+			this.saveTo(state);
+		}
+	}
+
 	private class TlabUI implements IPageUI {
 
 		private CTabFolder tabFolder;
 		private TlabChartTable threadsCT;
 		private TlabChartTable methodsCT;
+		private TlabChartTable classCT;
+		private TlabSummaryUI summaryCT;
 
 		private int tabFolderIndex = 0;
 
@@ -153,6 +212,12 @@ public class TlabPage extends AbstractDataPage {
 			methodsCT = new TlabChartTable(tabFolder, toolkit, editor, state, JdkAttributes.STACK_TRACE_TOP_METHOD);
 			DataPageToolkit.addTabItem(tabFolder, methodsCT.getComponent(), Messages.TlabPage_METHODS_TAB_NAME);
 
+			classCT = new TlabChartTable(tabFolder, toolkit, editor, state, JdkAttributes.ALLOCATION_CLASS);
+			DataPageToolkit.addTabItem(tabFolder, classCT.getComponent(), Messages.TlabPage_CLASS_TAB_NAME);
+
+			summaryCT = new TlabSummaryUI(tabFolder, toolkit, editor, state);
+			DataPageToolkit.addTabItem(tabFolder, summaryCT.getComponent(), Messages.TlabPage_SUMMARY_TAB_NAME);
+
 			tabFolder.setSelection(tabFolderIndex);
 		}
 
@@ -160,7 +225,8 @@ public class TlabPage extends AbstractDataPage {
 		public void saveTo(IWritableState state) {
 			threadsCT.saveTo(state);
 			methodsCT.saveTo(state);
-
+			classCT.saveTo(state);
+			summaryCT.saveTo(state);
 			this.saveToLocal();
 		}
 

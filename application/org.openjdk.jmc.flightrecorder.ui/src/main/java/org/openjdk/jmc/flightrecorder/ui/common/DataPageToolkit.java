@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -1165,6 +1165,12 @@ public class DataPageToolkit {
 	public static void addTabItem(CTabFolder tabFolder, Control section, String name) {
 		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
 		tabItem.setControl(section);
+		tabItem.setText(name);
+	}
+
+	public static void addTabItem(CTabFolder tabFolder, Object data, String name) {
+		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
+		tabItem.setData(data);
 		tabItem.setText(name);
 	}
 

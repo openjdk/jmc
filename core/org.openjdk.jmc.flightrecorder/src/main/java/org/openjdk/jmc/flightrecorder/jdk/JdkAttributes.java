@@ -675,6 +675,8 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_USES_TLABS_DESC), FLAG);
 	public static final IAttribute<IQuantity> TLAB_MIN_SIZE = attr("minTLABSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TLAB_MIN_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> TLAB_MAX_SIZE = attr("maxTLABSize", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TLAB_MAX_SIZE), MEMORY);
 	public static final IAttribute<IQuantity> TLAB_REFILL_WASTE_LIMIT = attr("tlabRefillWasteLimit", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TLAB_REFILL_WASTE_LIMIT), MEMORY);
 
