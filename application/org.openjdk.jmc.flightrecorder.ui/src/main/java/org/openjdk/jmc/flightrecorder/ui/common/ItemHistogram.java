@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -217,14 +218,22 @@ public class ItemHistogram {
 		public <T> ItemHistogram build(
 			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
 			TableSettings tableSettings, int border) {
+			ColumnLabelProvider lp = null;
+			if (UnitLookup.METHOD.getIdentifier().equals(keyType.getIdentifier())
+					|| UnitLookup.STACKTRACE_FRAME.getIdentifier().equals(keyType.getIdentifier())) {
+				lp = new MethodLabelProvider();
+			} else {
+				lp = new KeyLabelProvider(keyType);
+			}
+			return build(container, colLabel, keyType, classifier, tableSettings, border, lp);
+		}
+
+		public <T> ItemHistogram build(
+			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
+			TableSettings tableSettings, int border, ColumnLabelProvider labelProvider) {
 			List<IColumn> columns = new ArrayList<>();
 			IMemberAccessor<?, Object> keyAccessor = AggregationGrid::getKey;
-			ColumnLabelProvider keyLp = null;
-			if (UnitLookup.METHOD.getIdentifier().equals(keyType.getIdentifier())) {
-				keyLp = new DelegatingLabelProvider(new MethodLabelProvider(), keyAccessor);
-			} else {
-				keyLp = new DelegatingLabelProvider(new KeyLabelProvider(keyType), keyAccessor);
-			}
+			ColumnLabelProvider keyLp = new DelegatingLabelProvider(labelProvider, keyAccessor);
 			columns.add(new ColumnBuilder(colLabel, KEY_COL_ID, keyAccessor).labelProvider(keyLp).build());
 			columns.addAll(this.columns);
 			return build(container, columns, classifier, tableSettings, border);
@@ -243,6 +252,18 @@ public class ItemHistogram {
 			return new ItemHistogram(ColumnManager.build(tableViewer, columns, tableSettings), classifier, grid);
 		}
 
+		public <T> ItemHistogram buildWithoutBorder(
+			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
+			TableSettings tableSettings, ColumnLabelProvider labelProvider) {
+			return build(container, colLabel, keyType, classifier, tableSettings, SWT.NONE, labelProvider);
+		}
+
+		public <T> ItemHistogram buildWithoutBorder(
+			Composite container, IAttribute<T> classifier, TableSettings tableSettings,
+			ColumnLabelProvider labelProvider) {
+			return build(container, classifier.getName(), classifier.getContentType(), classifier, tableSettings,
+					SWT.NONE, labelProvider);
+		}
 	}
 
 	/**
@@ -379,8 +400,13 @@ public class ItemHistogram {
 
 		@Override
 		public Image getImage(Object key) {
+			IMCMethod method = null;
 			if (key instanceof IMCMethod) {
-				IMCMethod method = (IMCMethod) key;
+				method = (IMCMethod) key;
+			} else if (key instanceof IMCFrame) {
+				method = ((IMCFrame) key).getMethod();
+			}
+			if (method != null) {
 				if ((method.getModifier() & Modifier.PUBLIC) != 0) {
 					return publicMethodImage;
 				} else if ((method.getModifier() & Modifier.PROTECTED) != 0) {
@@ -395,6 +421,9 @@ public class ItemHistogram {
 
 		@Override
 		public String getText(Object key) {
+			if (key instanceof IMCFrame) {
+				key = ((IMCFrame) key).getMethod();
+			}
 			if (key instanceof IDisplayable) {
 				return ((IDisplayable) key).displayUsing(IDisplayable.EXACT);
 			}

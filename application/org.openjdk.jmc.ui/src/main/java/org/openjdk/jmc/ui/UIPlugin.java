@@ -116,6 +116,7 @@ public class UIPlugin extends MCAbstractUIPlugin {
 	public static final String ICON_METHOD_PROTECTED = "method-protected.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_NON_OPTIMIZED = "method-non-optimized.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_OPTIMZED = "method-optimized.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_JITOVERLAY = "method-jitoverlay.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_CALLER = "caller.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_CALLEE = "callee.png"; //$NON-NLS-1$
 
