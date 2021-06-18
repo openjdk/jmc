@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 
 public interface ICapturedValue {
 	enum ContentType {
-		NONE, BYTES, TIMESTAMP, MILLIS, NANOS, TICKS, ADDRESS, OS_THREAD, JAVA_THREAD, STACK_TRACE, CLASS, PERCENTAGE
+		None, Bytes, Timestamp, Millis, Nanos, Ticks, Address, OSThread, JavaThread, StackTrace, Class, Percentage
 	}
 
 	String getName();

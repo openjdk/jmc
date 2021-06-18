@@ -181,9 +181,8 @@ public class CapturedValueEditingPage extends BaseWizardPage {
 		}
 		descriptionText.addModifyListener(
 				handleExceptionIfAny((ModifyListener) e -> capturedValue.setDescription(descriptionText.getText())));
-		contentTypeCombo.addModifyListener(handleExceptionIfAny(
-				(ModifyListener) e -> capturedValue.setContentType(contentTypeCombo.getSelectionIndex() == -1 ? null
-						: ContentType.valueOf(contentTypeCombo.getText().toUpperCase(Locale.ENGLISH)))));
+		contentTypeCombo.addModifyListener(handleExceptionIfAny((ModifyListener) e -> capturedValue.setContentType(
+				contentTypeCombo.getSelectionIndex() == -1 ? null : ContentType.valueOf(contentTypeCombo.getText()))));
 		contentTypeClearButton.addListener(SWT.Selection,
 				handleExceptionIfAny((Listener) e -> contentTypeCombo.deselectAll()));
 		relationalKeyText.addModifyListener(

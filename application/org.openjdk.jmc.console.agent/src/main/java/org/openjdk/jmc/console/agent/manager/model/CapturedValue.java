@@ -86,7 +86,7 @@ class CapturedValue implements ICapturedValue {
 
 		elements = element.getElementsByTagName(XML_TAG_CONTENT_TYPE);
 		if (elements.getLength() != 0) {
-			contentType = ContentType.valueOf(elements.item(0).getTextContent().toUpperCase(Locale.ENGLISH));
+			contentType = ContentType.valueOf(elements.item(0).getTextContent());
 		}
 
 		elements = element.getElementsByTagName(XML_TAG_RELATION_KEY);
