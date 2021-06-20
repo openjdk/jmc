@@ -189,7 +189,6 @@ public class TlabPage extends AbstractDataPage {
 
 		@Override
 		public void saveTo(IWritableState state) {
-			this.saveTo(state);
 		}
 	}
 
