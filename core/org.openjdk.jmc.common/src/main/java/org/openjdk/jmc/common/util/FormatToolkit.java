@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.common.util;
 
+import java.lang.reflect.Modifier;
+
 import org.openjdk.jmc.common.IMCClassLoader;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
@@ -111,6 +113,58 @@ public class FormatToolkit {
 			return null;
 		}
 		return ret;
+	}
+
+	/**
+	 * Get a human readable string representing a method.
+	 *
+	 * @param method
+	 *            the method to get a string for
+	 * @param showReturnValue
+	 *            {@code true} if the return value type should be included
+	 * @param showReturnValuePackage
+	 *            {@code true} if the package name of the return value type should be included. Only
+	 *            relevant if {@code showReturnValue} is {@code true}.
+	 * @param showClassName
+	 *            {@code true} if the class name for the method should be included
+	 * @param showClassPackageName
+	 *            {@code true} if the package name of the class for the method should be included.
+	 *            Only relevant if {@code showClassName} is {@code true}.
+	 * @param showArguments
+	 *            {@code true} if the class names for the method arguments should be included
+	 * @param showArgumentsPackage
+	 *            {@code true} if the package names of the classes for the method arguments should
+	 *            be included. Only relevant if {@code showArguments} is {@code true}.
+	 * @param showModifiers
+	 *            {@code true} if the modifiers for the method should be included. Only relevant if
+	 *            {@code showModifiers} is {@code true}.
+	 * @return a human readable string representing the method
+	 */
+	public static String getHumanReadable(
+		IMCMethod method, boolean showReturnValue, boolean showReturnValuePackage, boolean showClassName,
+		boolean showClassPackageName, boolean showArguments, boolean showArgumentsPackage, boolean showModifiers) {
+		String humanReadable = "";
+		try {
+			if (showModifiers) {
+				humanReadable += getModifiers(method) + ' ';
+			}
+			humanReadable += getHumanReadable(method, showReturnValue, showReturnValuePackage, showClassName,
+					showClassPackageName, showArguments, showArgumentsPackage);
+		} catch (Exception e) {
+			return null;
+		}
+		return humanReadable;
+	}
+
+	/**
+	 * Returns the modifiers for a method, as a human readable string.
+	 *
+	 * @param method
+	 *            the methods to get the modifiers for.
+	 * @return the modifiers for a method, as a human readable string.
+	 */
+	private static String getModifiers(IMCMethod method) {
+		return Modifier.toString(method.getModifier());
 	}
 
 	/**

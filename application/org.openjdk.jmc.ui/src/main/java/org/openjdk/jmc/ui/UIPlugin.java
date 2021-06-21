@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -110,12 +110,13 @@ public class UIPlugin extends MCAbstractUIPlugin {
 	public static final String ICON_RUNTIME_EXCEPTION = "jexceptiond_obj.png"; //$NON-NLS-1$
 
 	// method
-	public static final String ICON_METHOD_DEFAULT = "methdef_obj.gif"; //$NON-NLS-1$
-	public static final String ICON_METHOD_PRIVATE = "methpri_obj.gif"; //$NON-NLS-1$
-	public static final String ICON_METHOD_PUBLIC = "methpub_obj.gif"; //$NON-NLS-1$
-	public static final String ICON_METHOD_PROTECTED = "methpro_obj.gif"; //$NON-NLS-1$
-	public static final String ICON_METHOD_NON_OPTIMIZED = "non-optimized-method-16.png"; //$NON-NLS-1$
-	public static final String ICON_METHOD_OPTIMZED = "optimized-method-16.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_DEFAULT = "method-default.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_PRIVATE = "method-private.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_PUBLIC = "method-public.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_PROTECTED = "method-protected.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_NON_OPTIMIZED = "method-non-optimized.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_OPTIMZED = "method-optimized.png"; //$NON-NLS-1$
+	public static final String ICON_METHOD_JITOVERLAY = "method-jitoverlay.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_CALLER = "caller.png"; //$NON-NLS-1$
 	public static final String ICON_METHOD_CALLEE = "callee.png"; //$NON-NLS-1$
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,7 +52,7 @@ public class TypeAppearance {
 		APPEARANCE.put(UnitLookup.CLASS.getIdentifier(), CoreImages.CLASS_PUBLIC);
 		APPEARANCE.put(UnitLookup.PACKAGE.getIdentifier(), CoreImages.PACKAGE);
 		APPEARANCE.put(UnitLookup.MODULE.getIdentifier(), CoreImages.MODULE);
-		APPEARANCE.put(UnitLookup.METHOD.getIdentifier(), CoreImages.METHOD_DEFAULT);
+		APPEARANCE.put(UnitLookup.METHOD.getIdentifier(), CoreImages.METHOD_NON_OPTIMIZED);
 		APPEARANCE.put(UnitLookup.TIMESPAN.getIdentifier(), CoreImages.TIMESPAN);
 		APPEARANCE.put(UnitLookup.TIMESTAMP.getIdentifier(), CoreImages.CLOCK);
 		// FIXME: If this should be visible, make sure all time related icons are unique.

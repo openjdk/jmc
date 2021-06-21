@@ -36,8 +36,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
-	<artifactId>org.openjdk.jmc.agent</artifactId>
 	<version>${revision}${changelist}</version>
+	<artifactId>agent</artifactId>
 	<packaging>jar</packaging>
 	<name>JDK Mission Control Agent</name>
 	<description>The JMC agent allows users to add JFR instrumentation declaratively to a
@@ -70,7 +70,7 @@
 		</mailingList>
 	</mailingLists>
 	<properties>
-		<revision>1.0.0</revision>
+		<revision>1.0.1</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -176,8 +176,8 @@
 					</goals>
 						<configuration>
 							<argLine> -Djava.security.manager -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy
-								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
-								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestPermissionChecks.java</includes>
 						</configuration>
 					</execution>
@@ -189,8 +189,8 @@
             			</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
-								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestDefineEventProbes.java</includes>
 						</configuration>
 					</execution>
@@ -202,8 +202,8 @@
 						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
-								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
+								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestCustomClassloader.java</includes>
 						</configuration>
 					</execution>
@@ -215,8 +215,8 @@
 						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar
-								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar
+								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestRetrieveEventProbes.java</includes>
 						</configuration>
 					</execution>
@@ -228,8 +228,8 @@
 						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple.xml
-								 -cp target/org.openjdk.jmc.agent-1.0.0-SNAPSHOT.jar:target/test-classes/ </argLine>
+								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple.xml
+								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestRetrieveCurrentTransforms.java</includes>
 						</configuration>
 					</execution>

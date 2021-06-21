@@ -299,6 +299,8 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_COLUMN_THREAD_DURATION_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_END;
 	public static String JavaApplicationPage_COLUMN_THREAD_END_DESC;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_START;
 	public static String JavaApplicationPage_COLUMN_THREAD_START_DESC;
 	public static String JavaApplicationPage_EDIT_THREAD_LANES_ACTION;
@@ -357,6 +359,9 @@ public class Messages extends NLS {
 	public static String MemoryLeakPage_RELEVANCE_COLUMN_HEADER;
 	public static String MemoryLeakPage_STEPS_SKIPPED;
 	public static String MethodProfilingPage_CLASS_HISTOGRAM_SELECTION;
+	public static String MethodProfilingPage_METHOD_CONTENT_TYPE_DESCRIPTION;
+	public static String MethodProfilingPage_METHOD_DESCRIPTION;
+	public static String MethodProfilingPage_METHOD_TITLE;
 	public static String MethodProfilingPage_PACKAGE_HISTOGRAM_SELECTION;
 	public static String MethodProfilingPage_PAGE_NAME;
 	public static String MethodProfilingPage_PREDECESSORS_DESCRIPTION;
