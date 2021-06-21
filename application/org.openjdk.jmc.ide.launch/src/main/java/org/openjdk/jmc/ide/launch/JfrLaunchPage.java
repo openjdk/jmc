@@ -51,7 +51,7 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 	private Button enabledCheckbox;
 	private Button autoOpenCheckbox;
-	private Button lessThenOracleJDK11Checkbox;
+	private Button lessThanOracleJDK11Checkbox;
 	private JfrLaunchModel model;
 
 	public JfrLaunchPage(JfrLaunchModel model) {
@@ -72,8 +72,6 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 		createEnabled(comp, cols);
 		createOpenAutomatically(comp, cols);
 		createLessThenOracleJdk11(comp, cols);
-		// TODO: Add info text and help text
-
 		createSeparator(comp, cols);
 
 		super.createControl(comp);
@@ -122,19 +120,19 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 	}
 
 	private void createLessThenOracleJdk11(Composite parent, int cols) {
-		lessThenOracleJDK11Checkbox = new Button(parent, SWT.CHECK);
-		lessThenOracleJDK11Checkbox.setText("Oracle JDK < 11");
-		lessThenOracleJDK11Checkbox
+		lessThanOracleJDK11Checkbox = new Button(parent, SWT.CHECK);
+		lessThanOracleJDK11Checkbox.setText("Oracle JDK < 11");
+		lessThanOracleJDK11Checkbox
 				.setToolTipText("Only check this if it really is an Oracle JDK. For OpenJDK, leave this unchecked.");
-		lessThenOracleJDK11Checkbox.addSelectionListener(new SelectionAdapter() {
+		lessThanOracleJDK11Checkbox.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				model.setOracleJdkLessThan11(lessThenOracleJDK11Checkbox.getSelection());
+				model.setOracleJdkLessThan11(lessThanOracleJDK11Checkbox.getSelection());
 			}
 		});
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false);
 		gd.horizontalSpan = cols - 1;
-		lessThenOracleJDK11Checkbox.setLayoutData(gd);
+		lessThanOracleJDK11Checkbox.setLayoutData(gd);
 	}
 
 	public void setJfrEnabled(boolean jfrEnabled) {

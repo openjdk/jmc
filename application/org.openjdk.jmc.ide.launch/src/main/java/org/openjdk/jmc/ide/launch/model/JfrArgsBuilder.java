@@ -98,7 +98,7 @@ public class JfrArgsBuilder {
 	private final String jfrFilename;
 	private final String name;
 	private final boolean continuous;
-	private final boolean lessThenOracleJdk11;
+	private final boolean lessThanOracleJdk11;
 	private boolean supportsDumpOnExitWithoutDefaultRecording;
 
 	public JfrArgsBuilder(boolean jfrEnabled, boolean supportsDumpOnExitWithoutDefaultRecording, IQuantity duration,
@@ -112,7 +112,7 @@ public class JfrArgsBuilder {
 		this.jfrFilename = jfrFilename;
 		this.name = name;
 		this.continuous = continuous;
-		this.lessThenOracleJdk11 = lessThenOracleJdk11;
+		this.lessThanOracleJdk11 = lessThenOracleJdk11;
 	}
 
 	public String[] getJfrArgs(boolean quotWhitespace) throws Exception {
@@ -120,7 +120,7 @@ public class JfrArgsBuilder {
 
 		if (jfrEnabled) {
 
-			if (lessThenOracleJdk11) {
+			if (lessThanOracleJdk11) {
 				jfrArgs.add(UNLOCKCOMMERCIAL_ARGUMENT);
 			}
 			jfrArgs.add(FLIGHTRECORDER_ARGUMENT);

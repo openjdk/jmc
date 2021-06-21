@@ -122,7 +122,7 @@ public class JfrArgsBuilderJfrArgsTest {
 	}
 
 	@Test
-	public void testJfrArgsIfQuotedSpacePathsDefaultSettingsJdkHigherThen11() throws Exception {
+	public void testJfrArgsIfQuotedSpacePathsDefaultSettingsJdkHigherThan11() throws Exception {
 		JfrArgsBuilder options = new JfrArgsBuilder(true, true, okDuration, okDelay, spaceProfile, spaceFilename,
 				okName, true, false);
 		String jfrArgs = JfrArgsBuilder.joinToCommandline(options.getJfrArgs(true));
