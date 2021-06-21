@@ -206,8 +206,8 @@ public class JavaApplicationPage extends AbstractDataPage {
 			return null;
 		}, Messages.JavaApplicationPage_COLUMN_THREAD_DURATION,
 				Messages.JavaApplicationPage_COLUMN_THREAD_DURATION_DESC);
-		HISTOGRAM.addPercentageColumn(PROFILING_PERCENTAGE_COL, JdkAggregators.EXECUTION_SAMPLE_COUNT, "Percentage",
-				"Percentage over total Profiling samples");
+		HISTOGRAM.addPercentageColumn(PROFILING_PERCENTAGE_COL, JdkAggregators.EXECUTION_SAMPLE_COUNT, Messages.JavaApplicationPage_COLUMN_THREAD_PERCENTAGE,
+				Messages.JavaApplicationPage_COLUMN_THREAD_PERCENTAGE_DESC);
 	}
 
 	private class JavaApplicationUi extends ChartAndTableUI {
