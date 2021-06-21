@@ -123,7 +123,6 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	public JfrLaunchModel() {
 		this(DEFAULT_ENABLED, DEFAULT_AUTO_OPEN);
-		//TODO: find how to get proper variables dynamically
 	}
 
 	@Override
