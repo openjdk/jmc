@@ -299,6 +299,8 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_COLUMN_THREAD_DURATION_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_END;
 	public static String JavaApplicationPage_COLUMN_THREAD_END_DESC;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_START;
 	public static String JavaApplicationPage_COLUMN_THREAD_START_DESC;
 	public static String JavaApplicationPage_EDIT_THREAD_LANES_ACTION;
