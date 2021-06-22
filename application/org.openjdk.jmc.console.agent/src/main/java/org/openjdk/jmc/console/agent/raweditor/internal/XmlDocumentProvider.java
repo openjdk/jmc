@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.console.agent.raweditor.internal;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +41,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -82,7 +82,8 @@ public class XmlDocumentProvider extends StorageDocumentProvider {
 			}
 		}
 
-		try (Writer writer = new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
+		try (Writer writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8))) {
 			writer.write(document.get());
 		} catch (IOException e) {
 			IStatus s = new Status(IStatus.ERROR, EditorsUI.PLUGIN_ID, IStatus.OK, e.getMessage(), e);
