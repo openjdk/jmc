@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
@@ -61,8 +60,6 @@ import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.console.agent.utils.ProbeValidator;
 import org.openjdk.jmc.console.agent.utils.ValidationResult;
 import org.openjdk.jmc.console.agent.wizards.BaseWizardPage;
-import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
@@ -99,7 +96,6 @@ public class AgentEditorUi {
 	public AgentEditorUi(AgentEditor editor, AgentEditorAction[] actions) {
 		helper = editor.getAgentEditorInput().getAgentJmxHelper();
 		this.actions = Arrays.copyOf(actions, actions.length);
-
 		bindAgentEditorActions();
 	}
 
@@ -182,16 +178,24 @@ public class AgentEditorUi {
 	private void savePreset() {
 		IPreset preset = presetRepository.createPreset();
 		try {
-			preset.deserialize(helper.retrieveEventProbes());
-			presetRepository.addPreset(preset);
+			// If there is no currently loaded instrumentation there is nothing to save.
+			if (!helper.retrieveEventProbes().isEmpty()) {
+				preset.deserialize(helper.retrieveEventProbes());
+				presetRepository.addPreset(preset);
+				DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_SAVE_PRESET_TITLE, MessageFormat
+						.format(Messages.PresetSelectorWizardPage_SAVE_PRESET_MESSAGE, preset.getFileName()));
+			} else {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				DialogToolkit.showWarning(window.getShell(), Messages.AgentEditorUI_MESSAGE_EMPTY_PRESET_TITLE,
+						Messages.AgentEditorUI_MESSAGE_EMPTY_PRESET);
+			}
 		} catch (IOException | SAXException e) {
+			System.out.println(preset.getFileName());
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			DialogToolkit.showException(window.getShell(),
 					Messages.PresetSelectorWizardPage_MESSAGE_FAILED_TO_SAVE_PRESET, e);
 			e.printStackTrace();
 		}
-		DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_SAVE_PRESET_TITLE,
-				MessageFormat.format(Messages.PresetSelectorWizardPage_SAVE_PRESET_MESSAGE, preset.getFileName()));
 	}
 
 	private void bindAgentEditorActions() {

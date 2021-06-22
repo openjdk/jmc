@@ -81,7 +81,6 @@ public class AgentEditorOpener implements IActionFactory {
 
 		private ConnectJob(IServerHandle serverHandle) {
 			super(Messages.AgentEditorOpener_JOB_NAME);
-
 			this.serverHandle = Objects.requireNonNull(serverHandle);
 		}
 
@@ -125,7 +124,6 @@ public class AgentEditorOpener implements IActionFactory {
 							finishButton.setText(Messages.StartAgentWizard_WIZARD_FINISH_BUTTON_TEXT);
 						}
 					};
-					dialog.setHelpAvailable(true);
 					dialog.create();
 					dialog.open();
 				});

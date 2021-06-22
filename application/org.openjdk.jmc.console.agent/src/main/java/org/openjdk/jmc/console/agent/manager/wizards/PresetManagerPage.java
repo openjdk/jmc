@@ -35,11 +35,14 @@ package org.openjdk.jmc.console.agent.manager.wizards;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.openjdk.jmc.console.agent.AgentPlugin;
 import org.openjdk.jmc.console.agent.manager.model.IPreset;
 import org.openjdk.jmc.console.agent.manager.model.PresetRepository;
@@ -122,7 +125,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			@Override
 			protected void onAddButtonSelected(IStructuredSelection selection) {
 				IPreset preset = repository.createPreset();
-				while (DialogToolkit.openWizardWithHelp(new PresetEditingWizard(preset))) {
+				while (displayWizard(preset)) {
 					try {
 						repository.addPreset(preset);
 					} catch (IllegalArgumentException | IOException e) {
@@ -143,7 +146,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			protected void onEditButtonSelected(IStructuredSelection selection) {
 				IPreset original = (IPreset) selection.getFirstElement();
 				IPreset workingCopy = original.createWorkingCopy();
-				while (DialogToolkit.openWizardWithHelp(new PresetEditingWizard(workingCopy))) {
+				while (displayWizard(workingCopy)) {
 					try {
 						repository.updatePreset(original, workingCopy);
 					} catch (IllegalArgumentException | IOException e) {
@@ -230,6 +233,13 @@ public class PresetManagerPage extends BaseWizardPage {
 
 	private void populateUi() {
 		tableInspector.setInput(repository);
+	}
+
+	private boolean displayWizard(IPreset preset) {
+		PresetEditingWizard wizard = new PresetEditingWizard(preset);
+		wizard.setHelpAvailable(false);
+		WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+		return dialog.open() == Window.OK;
 	}
 
 	private static class PresetTableContentProvider extends AbstractStructuredContentProvider {

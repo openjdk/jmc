@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.console.agent.wizards;
 
+import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
@@ -59,7 +61,6 @@ public class StartAgentWizardPage extends BaseWizardPage {
 
 	protected StartAgentWizardPage(AgentJmxHelper helper) {
 		super(Messages.StartAgentWizardPage_PAGE_NAME);
-
 		this.helper = helper;
 	}
 
@@ -121,6 +122,7 @@ public class StartAgentWizardPage extends BaseWizardPage {
 		GridLayout layout = new GridLayout(cols, false);
 		layout.horizontalSpacing = 8;
 		container.setLayout(layout);
+		TrayDialog.setDialogHelpAvailable(false);
 
 		agentJarText = createTextInput(container, cols - 2, Messages.StartAgentWizardPage_LABEL_AGENT_JAR,
 				Messages.StartAgentWizardPage_MESSAGE_PATH_TO_AN_AGENT_JAR);
@@ -133,7 +135,6 @@ public class StartAgentWizardPage extends BaseWizardPage {
 		agentXmlText.setEditable(false);
 		agentXmlBrowseButton = createButton(container, Messages.StartAgentWizardPage_LABEL_BROWSE);
 		agentXmlBrowseButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 0));
-
 		return container;
 	}
 

@@ -38,6 +38,7 @@ import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -61,6 +62,8 @@ public class StartAgentWizard extends Wizard {
 	public StartAgentWizard(AgentJmxHelper helper) {
 		this.helper = helper;
 		startAgentWizardPage = new StartAgentWizardPage(helper);
+		this.setHelpAvailable(false);
+		WizardDialog.setDialogHelpAvailable(false);
 	}
 
 	@Override

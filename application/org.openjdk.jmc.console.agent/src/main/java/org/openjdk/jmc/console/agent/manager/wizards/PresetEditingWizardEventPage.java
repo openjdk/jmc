@@ -34,12 +34,14 @@
 package org.openjdk.jmc.console.agent.manager.wizards;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.openjdk.jmc.console.agent.manager.model.IEvent;
 import org.openjdk.jmc.console.agent.manager.model.IPreset;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
@@ -111,7 +113,7 @@ public class PresetEditingWizardEventPage extends BaseWizardPage {
 			@Override
 			protected void onAddButtonSelected(IStructuredSelection selection) {
 				IEvent event = preset.createEvent();
-				while (DialogToolkit.openWizardWithHelp(new EventEditingWizard(event))) {
+				while (displayWizard(event)) {
 					try {
 						preset.addEvent(event);
 					} catch (IllegalArgumentException e) {
@@ -132,7 +134,7 @@ public class PresetEditingWizardEventPage extends BaseWizardPage {
 			protected void onEditButtonSelected(IStructuredSelection selection) {
 				IEvent original = (IEvent) selection.getFirstElement();
 				IEvent workingCopy = original.createWorkingCopy();
-				while (DialogToolkit.openWizardWithHelp(new EventEditingWizard(workingCopy))) {
+				while (displayWizard(workingCopy)) {
 					try {
 						preset.updateEvent(original, workingCopy);
 					} catch (IllegalArgumentException e) {
@@ -173,6 +175,13 @@ public class PresetEditingWizardEventPage extends BaseWizardPage {
 
 	private void populateUi() {
 		tableInspector.setInput(preset);
+	}
+
+	private boolean displayWizard(IEvent event) {
+		EventEditingWizard wizard = new EventEditingWizard(event);
+		wizard.setHelpAvailable(false);
+		WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+		return dialog.open() == Window.OK;
 	}
 
 	private static class EventTableContentProvider extends AbstractStructuredContentProvider {

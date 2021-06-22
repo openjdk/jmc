@@ -48,6 +48,8 @@ public class Messages extends NLS {
 	public static String AgentEditorAction_MESSAGE_LOAD_PRESET;
 	public static String AgentEditorAction_MESSAGE_SAVE_AS_PRESET;
 	public static String AgentEditorUI_MESSAGE_FAILED_TO_LOAD_PRESET;
+	public static String AgentEditorUI_MESSAGE_EMPTY_PRESET;
+	public static String AgentEditorUI_MESSAGE_EMPTY_PRESET_TITLE;
 	public static String CapturedValue_ERROR_RELATION_KEY_HAS_INCORRECT_SYNTAX;
 	public static String CapturedValue_ERROR_CONVERTER_HAS_INCORRECT_SYNTAX;
 	public static String Event_ERROR_ID_CANNOT_BE_EMPTY_OR_NULL;
