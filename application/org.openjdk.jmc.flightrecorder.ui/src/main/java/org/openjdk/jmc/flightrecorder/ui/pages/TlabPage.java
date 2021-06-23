@@ -149,10 +149,9 @@ public class TlabPage extends AbstractDataPage {
 			display(parent, toolkit, pageContainer, state);
 		}
 
-		public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+		public void display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 			form = DataPageToolkit.createForm(parent, toolkit, getName(), getIcon());
 			SashForm container = new SashForm(form.getBody(), SWT.HORIZONTAL);
-			container.setSashWidth(5);
 			container.addTraverseListener(new SimpleTraverseListener());
 
 			Section insideSummarySection = CompositeToolkit.createSection(container, toolkit,
@@ -179,8 +178,6 @@ public class TlabPage extends AbstractDataPage {
 			outsideSummary.setValues(getDataSource().getItems());
 
 			addResultActions(form);
-
-			return null;
 		}
 
 		public Form getComponent() {

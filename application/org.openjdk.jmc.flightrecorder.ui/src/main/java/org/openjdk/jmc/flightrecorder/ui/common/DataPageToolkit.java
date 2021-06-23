@@ -1168,12 +1168,6 @@ public class DataPageToolkit {
 		tabItem.setText(name);
 	}
 
-	public static void addTabItem(CTabFolder tabFolder, Object data, String name) {
-		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
-		tabItem.setData(data);
-		tabItem.setText(name);
-	}
-
 	public static TypeFilterBuilder buildEventTypeTree(
 		Composite parent, FormToolkit toolkit, Runnable onChange, boolean checkbox) {
 		// TODO: Make more accessible.
