@@ -118,14 +118,13 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 		}
 		if (serverConnectModel.createdServer != null) {
 			String hostName = ConnectionToolkit.getHostName(serverConnectModel.createdServer.getConnectionUrl());
-			if (hostName != null && (!hostName.equals("localhost")  && //$NON-NLS-1$
-					ConnectionToolkit.getPort(serverConnectModel.createdServer.getConnectionUrl()) != 0) )
-			{
+			if (hostName != null && (!hostName.equals("localhost") && //$NON-NLS-1$
+					ConnectionToolkit.getPort(serverConnectModel.createdServer.getConnectionUrl()) != 0)) {
 				if (!JMXRMISystemPropertiesProvider.isKeyStoreConfigured()) {
 					DialogToolkit.openOnUiThread(MessageDialog.WARNING,
 							Messages.ConnectionWarning_PREFERENCES_NOT_SET_TITLE,
-							NLS.bind(Messages.ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE,
-									ConnectionToolkit.getHostName(serverConnectModel.createdServer.getConnectionUrl())));
+							NLS.bind(Messages.ConnectionWarning_PREFERENCES_NOT_SET_MESSAGE, ConnectionToolkit
+									.getHostName(serverConnectModel.createdServer.getConnectionUrl())));
 				}
 			}
 			serverConnectModel.serverModel.insert(serverConnectModel.createdServer);

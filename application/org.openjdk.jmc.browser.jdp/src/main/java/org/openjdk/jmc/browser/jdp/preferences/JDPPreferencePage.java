@@ -95,7 +95,8 @@ public class JDPPreferencePage extends FieldEditorPreferencePage implements IWor
 	}
 
 	private boolean isJdpAutoDiscoveryEnabled() {
-		return JDPPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
+		return JDPPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
 	}
 
 	private void enableJdpFields(boolean enable) {

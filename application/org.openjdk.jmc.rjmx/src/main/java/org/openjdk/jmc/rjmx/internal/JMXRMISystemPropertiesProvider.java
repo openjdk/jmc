@@ -64,7 +64,7 @@ public final class JMXRMISystemPropertiesProvider {
 					System.clearProperty(prop);
 				}
 			}
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			RJMXPlugin.getDefault().getLogger().log(Level.FINE, "Failed to remove JMXRMI SystemProperties", e); //$NON-NLS-1$
 		}
 	}
