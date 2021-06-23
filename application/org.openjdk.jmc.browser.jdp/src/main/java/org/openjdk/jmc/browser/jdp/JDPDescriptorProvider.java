@@ -169,7 +169,8 @@ public class JDPDescriptorProvider extends AbstractDescriptorProvider implements
 	}
 
 	private boolean isJdpAutoDiscoveryEnabled() {
-		return JDPPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
+		return JDPPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.PROPERTY_KEY_JDP_AUTO_DISCOVERY);
 	}
 
 	@Override
