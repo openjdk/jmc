@@ -130,6 +130,7 @@ import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.PageManager;
+import org.openjdk.jmc.flightrecorder.ui.common.FilterEditor.AttributeValueProvider;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.CompositeKeyHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -159,8 +160,6 @@ import org.openjdk.jmc.ui.misc.ChartCanvas;
 import org.openjdk.jmc.ui.misc.ChartTextCanvas;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
-import org.openjdk.jmc.ui.misc.FilterEditor;
-import org.openjdk.jmc.ui.misc.FilterEditor.AttributeValueProvider;
 import org.openjdk.jmc.ui.misc.OverlayImageDescriptor;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 

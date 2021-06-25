@@ -36,7 +36,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import org.openjdk.jmc.ui.celleditors.ClearableTextCellEditor;
 import org.openjdk.jmc.ui.misc.ControlDecorationToolkit;
 
 public class ParsingCellEditor extends ClearableTextCellEditor {

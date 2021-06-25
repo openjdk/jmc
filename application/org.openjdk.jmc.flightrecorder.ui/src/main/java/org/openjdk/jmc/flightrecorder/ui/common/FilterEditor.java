@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.misc;
+package org.openjdk.jmc.flightrecorder.ui.common;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -118,13 +118,21 @@ import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.StateToolkit;
+import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.rjmx.ui.celleditors.CommonCellEditors;
 import org.openjdk.jmc.ui.TypeAppearance;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
-import org.openjdk.jmc.ui.celleditors.CommonCellEditors;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
+import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
+import org.openjdk.jmc.ui.misc.ClipboardManager;
+import org.openjdk.jmc.ui.misc.ControlDecorationToolkit;
+import org.openjdk.jmc.ui.misc.DelegatingLabelProvider;
+import org.openjdk.jmc.ui.misc.DndToolkit;
+import org.openjdk.jmc.ui.misc.SWTColorToolkit;
+import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
 public class FilterEditor {
 

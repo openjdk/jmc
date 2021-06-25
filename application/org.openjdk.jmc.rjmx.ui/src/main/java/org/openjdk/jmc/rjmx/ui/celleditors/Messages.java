@@ -37,6 +37,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.rjmx.ui.celleditors.messages"; //$NON-NLS-1$
 
+	public static String ClearableTextCellEditor_PRESS_BACKSPACE_TO_CLEAR_VALUE;
+	public static String MultiLineTextCellEditor_SHIFT_RETURN;
 	public static String UpdateIntervalCellEditor_INTERVAL_TOO_SMALL;
 
 	static {

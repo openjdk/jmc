@@ -38,8 +38,6 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 
-import org.openjdk.jmc.ui.celleditors.ClearableTextCellEditor;
-
 public class CharacterEditor extends ClearableTextCellEditor {
 
 	private static final String PREFIX = "\\u"; //$NON-NLS-1$
