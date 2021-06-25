@@ -91,6 +91,7 @@ import org.openjdk.jmc.flightrecorder.ui.RulesUiToolkit;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
+import org.openjdk.jmc.flightrecorder.ui.common.FilterEditor;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
@@ -105,7 +106,6 @@ import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.column.TableSettings.ColumnSettings;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
-import org.openjdk.jmc.ui.misc.FilterEditor;
 import org.openjdk.jmc.ui.misc.PersistableSashForm;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 
