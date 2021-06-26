@@ -71,7 +71,7 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 		createEnabled(comp, cols);
 		createOpenAutomatically(comp, cols);
-		createLessThenOracleJdk11(comp, cols);
+		createLessThanOracleJdk11(comp, cols);
 		createSeparator(comp, cols);
 
 		super.createControl(comp);
@@ -119,11 +119,10 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 		autoOpenCheckbox.setLayoutData(gd);
 	}
 
-	private void createLessThenOracleJdk11(Composite parent, int cols) {
+	private void createLessThanOracleJdk11(Composite parent, int cols) {
 		lessThanOracleJDK11Checkbox = new Button(parent, SWT.CHECK);
-		lessThanOracleJDK11Checkbox.setText("Oracle JDK < 11");
-		lessThanOracleJDK11Checkbox
-				.setToolTipText("Only check this if it really is an Oracle JDK. For OpenJDK, leave this unchecked.");
+		lessThanOracleJDK11Checkbox.setText(Messages.JfrLaunch_ORACLE_JDK_LESS_THAN_11);
+		lessThanOracleJDK11Checkbox.setToolTipText(Messages.JfrLaunch_ORACLE_JDK_CECHKBOX_MESSAGE);
 		lessThanOracleJDK11Checkbox.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
