@@ -97,7 +97,7 @@
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.configuration.test</artifactId>
 			<scope>test</scope>

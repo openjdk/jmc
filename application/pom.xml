@@ -164,7 +164,7 @@
 			<artifactId>flightrecorder</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.configuration</artifactId>
 			<version>${revision}${changelist}</version>

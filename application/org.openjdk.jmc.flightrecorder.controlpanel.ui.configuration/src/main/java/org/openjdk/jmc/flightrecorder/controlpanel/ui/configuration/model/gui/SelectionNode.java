@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;

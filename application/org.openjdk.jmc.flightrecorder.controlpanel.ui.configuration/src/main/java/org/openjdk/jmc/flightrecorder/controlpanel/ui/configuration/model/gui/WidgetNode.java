@@ -36,6 +36,7 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;
 

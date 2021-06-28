@@ -40,7 +40,7 @@
 	</parent>
 	<artifactId>flightrecorder.configuration.test</artifactId>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
@@ -51,15 +51,15 @@
 			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.configuration</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
