@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
+import org.openjdk.jmc.flightrecorder.configuration.model.VolatileStorageDelegate;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IConfigurationStorageDelegate;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IStorageProvider;

@@ -83,6 +83,7 @@ import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.configuration.internal.CommonConstraints;
+import org.openjdk.jmc.flightrecorder.configuration.model.VolatileStorageDelegate;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCXMLValidator;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLAttribute;
