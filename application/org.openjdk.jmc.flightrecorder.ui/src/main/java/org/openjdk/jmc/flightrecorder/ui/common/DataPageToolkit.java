@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -163,6 +165,7 @@ import org.openjdk.jmc.ui.misc.OverlayImageDescriptor;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 
 public class DataPageToolkit {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.ui.common"); //$NON-NLS-1$
 
 	public static final IColorProvider<IItem> ITEM_COLOR = item -> TypeLabelProvider
 			.getColorOrDefault(item.getType().getIdentifier());
@@ -1100,8 +1103,7 @@ public class DataPageToolkit {
 						imageLabel.getParent().layout();
 						setPageComplete(isPageComplete());
 					} catch (Exception e) {
-						// FIXME: Add proper logging
-						e.printStackTrace();
+						LOGGER.log(Level.SEVERE, "", e);
 					}
 				}
 

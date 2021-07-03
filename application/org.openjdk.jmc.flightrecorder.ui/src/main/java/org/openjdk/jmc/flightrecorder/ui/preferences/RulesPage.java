@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -208,7 +208,7 @@ public class RulesPage extends PreferencePage implements IWorkbenchPreferencePag
 			checkedRuleIDs.forEach(id -> ignoredState.createChild(IGNORED_RULES).putString(RULE_ID, id));
 			getPreferenceStore().setValue(IGNORED_RULES, ignoredState.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "", e);
 		}
 	}
 

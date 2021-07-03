@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.rjmx.triggers.extension.internal;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -50,6 +53,8 @@ import org.openjdk.jmc.rjmx.triggers.internal.RegistryEntry;
  */
 public class TriggerFactory implements INotificationFactory {
 	// FIXME: Important, we need to add better error handling.
+
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.triggers.extension.internal"); //$NON-NLS-1$
 
 	private static final String XML_CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
@@ -105,7 +110,7 @@ public class TriggerFactory implements INotificationFactory {
 			return element.createExecutableExtension(XML_CLASS_ATTRIBUTE);
 		} catch (CoreException e) {
 			// FIXME: We must have error handling here
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "", e);
 		}
 		return null;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,6 +45,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.remote.JMXServiceURL;
 
@@ -61,6 +62,7 @@ import com.sun.tools.attach.VirtualMachine;
  */
 public class LocalConnectionDescriptor implements IConnectionDescriptor {
 
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.browser.attach"); //$NON-NLS-1$
 	private static final String SELF_HOST_NAME = "localhost"; //$NON-NLS-1$
 	private static final String ATTACH_TIMED_OUT_ERROR_MESSAGE = "Timed out attempting to attach to target JVM!"; //$NON-NLS-1$
 	private static final String COULD_NOT_RETRIEVE_URL_ERROR_MESSAGE = "Could not retrieve the in-memory service URL after starting the in-memory agent!"; //$NON-NLS-1$
@@ -156,7 +158,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 				url = ConnectionToolkit.createServiceURL(SELF_HOST_NAME, 0);
 			} catch (MalformedURLException e) {
 				// Not going to happen...
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "", e);
 			}
 		} else {
 			try {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -57,6 +59,7 @@ import java.util.regex.Pattern;
  * flightrecorder.jdk package and perhaps rename it to something more related to path segments.
  */
 public class EventAppearance {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.internal"); //$NON-NLS-1$
 	private static final Pattern PATH_SPLIT_REGEX = Pattern.compile("\\/"); //$NON-NLS-1$
 	private static final Map<String, String> HUMAN_NAMES;
 	static {
@@ -80,11 +83,10 @@ public class EventAppearance {
 			if (in != null) {
 				properties.load(in);
 			} else {
-				System.err.println("Couldn't find file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+				LOGGER.severe("Couldn't find file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			System.err.println("Problem loading file '" + fileName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Problem loading file '" + fileName + "'", e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return properties;
 	}

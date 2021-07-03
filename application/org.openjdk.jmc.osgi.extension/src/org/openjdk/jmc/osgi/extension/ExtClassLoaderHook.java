@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,8 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.osgi.internal.framework.EquinoxConfiguration;
 import org.eclipse.osgi.internal.hookregistry.ClassLoaderHook;
@@ -52,7 +54,8 @@ import org.osgi.framework.wiring.BundleWiring;
  * Hook javafx-swt.jar to OSGi default classloader
  */
 public class ExtClassLoaderHook extends ClassLoaderHook {
-
+	
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.osgi.extension"); //$NON-NLS-1$
 	private static final String SWT_SYMBOLIC_NAME = "org.eclipse.swt";
 	private static final String FX_SWT_SYMBOLIC_NAME = "javafx.swt";
 	private static final String JAVAFX_SWT_JAR__NAME = "javafx-swt.jar";
@@ -90,7 +93,7 @@ public class ExtClassLoaderHook extends ClassLoaderHook {
 					this.classLoader = (ClassLoader) moduleLayerClass.getMethod("findLoader", String.class)
 							.invoke(newModuleLayer, FX_SWT_SYMBOLIC_NAME);
 				} catch (Throwable t) {
-					System.err.println(t.getMessage());
+					LOGGER.severe(t.getMessage());
 				}
 			}
 			return this.classLoader.loadClass(name);
@@ -118,7 +121,7 @@ public class ExtClassLoaderHook extends ClassLoaderHook {
 							try {
 								bundle.start();
 							} catch (BundleException e) {
-								e.printStackTrace();
+								LOGGER.log(Level.SEVERE, "", e);
 							}
 						}
 						return bundle.adapt(BundleWiring.class).getClassLoader();
@@ -126,7 +129,7 @@ public class ExtClassLoaderHook extends ClassLoaderHook {
 				}
 			}
 		} catch (Throwable t) {
-			System.err.println(t.getMessage());
+			LOGGER.severe(t.getMessage());
 		}
 		return null;
 	}

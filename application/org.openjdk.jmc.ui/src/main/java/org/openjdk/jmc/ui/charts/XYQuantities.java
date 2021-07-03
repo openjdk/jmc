@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,8 @@ import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -55,6 +57,8 @@ import org.openjdk.jmc.ui.charts.IChartInfoVisitor.ISpan;
  * @param <P>
  */
 public abstract class XYQuantities<P> implements IXYDisplayableSet<P, IQuantity> {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.charts"); //$NON-NLS-1$
+
 	private final P payload;
 	protected final SubdividedQuantityRange xRange;
 	protected IQuantity maxY;
@@ -352,7 +356,7 @@ public abstract class XYQuantities<P> implements IXYDisplayableSet<P, IQuantity>
 			try {
 				return (ISpan) clone();
 			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "", e);
 				return this;
 			}
 		}

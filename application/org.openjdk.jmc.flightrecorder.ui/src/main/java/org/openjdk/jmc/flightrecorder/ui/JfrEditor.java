@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -380,7 +380,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			try {
 				getSite().getPage().showView(CONTENT_OUTLINE_VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
 			} catch (PartInitException e) {
-				e.printStackTrace();
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "", e);
 			}
 			ruleEngine.setStreamModel(items);
 			refreshPages();

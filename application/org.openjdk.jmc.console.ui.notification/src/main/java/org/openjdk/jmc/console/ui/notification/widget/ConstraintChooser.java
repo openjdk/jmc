@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,8 @@ package org.openjdk.jmc.console.ui.notification.widget;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -68,6 +70,8 @@ import org.openjdk.jmc.ui.uibuilder.IUIBuilder;
  * Component that selects NotificationConstraints. Uses a StackLayout
  */
 public class ConstraintChooser {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.console.ui.notification.widget"); //$NON-NLS-1$
+
 	public class TriggerContentProvider extends AbstractStructuredContentProvider {
 		@Override
 		public Object[] getElements(Object inputElement) {
@@ -141,7 +145,7 @@ public class ConstraintChooser {
 				ITriggerConstraint nc = af.createConstraint(name);
 				m_constraintCache.put(nc.getName(), nc);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "", e);
 			}
 		}
 

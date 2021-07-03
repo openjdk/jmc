@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,6 +43,8 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
@@ -57,6 +59,7 @@ import org.openjdk.jmc.flightrecorder.internal.util.DataInputToolkit;
  * {@link ByteArrayInputStream} and using the {@link JfrLoaderToolkit}.
  */
 public final class ChunkReader {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.util"); //$NON-NLS-1$
 	private static final byte[] JFR_MAGIC_BYTES = new byte[] {'F', 'L', 'R', 0};
 	private static final int[] JFR_MAGIC = new int[] {'F', 'L', 'R', 0};
 	private static final int ZIP_MAGIC[] = new int[] {31, 139};
@@ -116,7 +119,7 @@ public final class ChunkReader {
 					file.close();
 				} catch (IOException e) {
 					// Shouldn't happen.
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, "", e);
 				}
 			}
 			return hasNext;

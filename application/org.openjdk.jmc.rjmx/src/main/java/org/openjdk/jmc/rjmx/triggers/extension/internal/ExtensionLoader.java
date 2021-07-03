@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,8 @@ package org.openjdk.jmc.rjmx.triggers.extension.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -48,6 +50,8 @@ import org.eclipse.core.runtime.Platform;
  * Helper class for loading extensions
  */
 public class ExtensionLoader<T> {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.triggers.extension.internal"); //$NON-NLS-1$
+
 	private final String m_extensionPoint;
 	private final String m_extensionName;
 	private final HashMap<String, IConfigurationElement> m_extensions = new HashMap<>();
@@ -85,9 +89,7 @@ public class ExtensionLoader<T> {
 				}
 			}
 		} catch (InvalidRegistryObjectException iroe) {
-			// FIXME: Better error handling
-			System.err.println("Extension point not valid."); //$NON-NLS-1$
-			System.err.println(iroe.getMessage());
+			LOGGER.log(Level.SEVERE, "Extension point not valid.", iroe); //$NON-NLS-1$
 		}
 	}
 
@@ -104,7 +106,7 @@ public class ExtensionLoader<T> {
 			m_extensions.put(className, element);
 			m_prototypes.add(prototype);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "", e);
 		}
 	}
 

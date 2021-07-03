@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -48,6 +50,7 @@ import org.eclipse.core.runtime.Platform;
  * Class that creates a list of the available commands in the system.
  */
 class CommandFactory {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.commands"); //$NON-NLS-1$
 	private static final String DESCRIPTION = "description"; //$NON-NLS-1$
 	private static final String IDENTIFIER = "identifier"; //$NON-NLS-1$
 	private static final String NAME = "name"; //$NON-NLS-1$
@@ -84,7 +87,7 @@ class CommandFactory {
 				try {
 					commands.add(createCommand(configurationElement));
 				} catch (Exception e) {
-					System.err.println(e.getMessage());
+					LOGGER.severe(e.getMessage());
 				}
 			}
 		}
@@ -119,7 +122,7 @@ class CommandFactory {
 					command.setCommandHelper((ICommandHelper) o);
 				}
 			} catch (CoreException e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "", e);
 				throw new Exception("Error creating type completion object", e); //$NON-NLS-1$
 			}
 		}
