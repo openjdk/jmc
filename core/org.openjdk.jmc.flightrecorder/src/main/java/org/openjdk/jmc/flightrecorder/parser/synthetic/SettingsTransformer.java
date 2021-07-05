@@ -59,7 +59,7 @@ import org.openjdk.jmc.flightrecorder.parser.ValueField;
  */
 class SettingsTransformer implements IEventSink {
 	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.parser.synthetic"); //$NON-NLS-1$
-	
+
 	/**
 	 * Fix for JDK-8157024, the code cache stats unallocatedCapacity event is written as KiB but
 	 * reported as B. This is fixed in JDK9, but we need to perform this transformation for
