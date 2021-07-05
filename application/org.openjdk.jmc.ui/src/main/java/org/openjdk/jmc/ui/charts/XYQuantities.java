@@ -356,7 +356,7 @@ public abstract class XYQuantities<P> implements IXYDisplayableSet<P, IQuantity>
 			try {
 				return (ISpan) clone();
 			} catch (CloneNotSupportedException e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to clone span", e);
 				return this;
 			}
 		}

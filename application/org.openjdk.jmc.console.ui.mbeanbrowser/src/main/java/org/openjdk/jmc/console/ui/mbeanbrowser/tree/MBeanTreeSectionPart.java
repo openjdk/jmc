@@ -155,8 +155,8 @@ public class MBeanTreeSectionPart extends MCSectionPart implements IMBeanPropert
 			}
 			MBeanBrowserPlugin.getDefault().getLogger().warning("Couldn't find " + bean + " in MBean tree"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception e) {
-			MBeanBrowserPlugin.getDefault().getLogger().log(Level.SEVERE, "", e);
-			MBeanBrowserPlugin.getDefault().getLogger().warning("Failed to select OperatingSystem bean: " + e); //$NON-NLS-1$
+			MBeanBrowserPlugin.getDefault().getLogger().log(Level.WARNING, "Failed to select OperatingSystem bean: ", //$NON-NLS-1$
+					e);
 		}
 	}
 

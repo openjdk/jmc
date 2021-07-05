@@ -110,7 +110,7 @@ public class PrintRecordingDescriptorAction implements IUserAction, IGraphical {
 			printDivider(writer);
 			writer.flush();
 		} catch (Throwable t) {
-			LOGGER.log(Level.SEVERE, "", t);
+			LOGGER.log(Level.SEVERE, "Failed to print recording info", t);
 		}
 	}
 
@@ -222,11 +222,11 @@ public class PrintRecordingDescriptorAction implements IUserAction, IGraphical {
 				printRecordingInfo(System.err);
 			}
 		} catch (IllegalArgumentException e) {
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} catch (ConnectionException e) {
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} catch (ServiceNotAvailableException e) {
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} finally {
 			IOToolkit.closeSilently(handle);
 			IOToolkit.closeSilently(newOut);

@@ -110,7 +110,7 @@ public class TriggerFactory implements INotificationFactory {
 			return element.createExecutableExtension(XML_CLASS_ATTRIBUTE);
 		} catch (CoreException e) {
 			// FIXME: We must have error handling here
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to create executable extension", e);
 		}
 		return null;
 	}

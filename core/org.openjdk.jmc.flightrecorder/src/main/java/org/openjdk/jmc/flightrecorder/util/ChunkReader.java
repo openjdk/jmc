@@ -119,7 +119,7 @@ public final class ChunkReader {
 					file.close();
 				} catch (IOException e) {
 					// Shouldn't happen.
-					LOGGER.log(Level.SEVERE, "", e);
+					LOGGER.log(Level.SEVERE, "Failed to close file", e);
 				}
 			}
 			return hasNext;

@@ -106,7 +106,7 @@ public class ExtensionLoader<T> {
 			m_extensions.put(className, element);
 			m_prototypes.add(prototype);
 		} catch (CoreException e) {
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to initialize extension", e);
 		}
 	}
 

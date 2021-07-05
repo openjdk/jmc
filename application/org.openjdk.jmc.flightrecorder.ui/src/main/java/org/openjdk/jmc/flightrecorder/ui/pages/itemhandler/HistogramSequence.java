@@ -162,7 +162,7 @@ class HistogramSequence {
 				try {
 					buildHistogram();
 				} catch (Exception e) {
-					LOGGER.log(Level.SEVERE, "", e);
+					LOGGER.log(Level.SEVERE, "Failed to build histogram", e);
 				}
 			}
 			refreshViewer();
@@ -179,7 +179,7 @@ class HistogramSequence {
 			try {
 				buildHistogram();
 			} catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to build histogram", e);
 			}
 			refreshViewer();
 			onGroup();

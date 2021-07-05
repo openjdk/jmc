@@ -121,7 +121,7 @@ public class ExtClassLoaderHook extends ClassLoaderHook {
 							try {
 								bundle.start();
 							} catch (BundleException e) {
-								LOGGER.log(Level.SEVERE, "", e);
+								LOGGER.log(Level.SEVERE, "Failed to start bundle", e);
 							}
 						}
 						return bundle.adapt(BundleWiring.class).getClassLoader();

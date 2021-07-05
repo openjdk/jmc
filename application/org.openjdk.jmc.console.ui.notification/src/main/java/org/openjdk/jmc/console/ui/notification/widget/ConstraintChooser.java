@@ -145,7 +145,7 @@ public class ConstraintChooser {
 				ITriggerConstraint nc = af.createConstraint(name);
 				m_constraintCache.put(nc.getName(), nc);
 			} catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to create trigger constraint", e);
 			}
 		}
 

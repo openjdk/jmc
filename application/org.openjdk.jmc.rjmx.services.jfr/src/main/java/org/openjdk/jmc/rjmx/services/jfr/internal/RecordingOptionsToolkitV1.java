@@ -127,7 +127,7 @@ public final class RecordingOptionsToolkitV1 {
 			return new CompositeType("RecordingOptions", "Recording Options", names, descriptions, openTypes); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception e) {
 			// Will not ever happen!
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to create composite type", e);
 			return null;
 		}
 	}
@@ -149,7 +149,7 @@ public final class RecordingOptionsToolkitV1 {
 				try {
 					values[i] = toOpenTypeWithCast(converter, value);
 				} catch (QuantityConversionException e) {
-					LOGGER.log(Level.SEVERE, "", e);
+					LOGGER.log(Level.SEVERE, "Failed to convert to open type", e);
 				}
 			}
 		}
@@ -193,7 +193,7 @@ public final class RecordingOptionsToolkitV1 {
 					EventOptionsToolkitV1.putWithCast(options, key, converter, openValue);
 				}
 			} catch (QuantityConversionException e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to convert options", e);
 			}
 		}
 		return options;

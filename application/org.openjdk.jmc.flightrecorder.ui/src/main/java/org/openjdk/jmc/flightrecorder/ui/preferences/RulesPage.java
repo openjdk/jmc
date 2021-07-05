@@ -208,7 +208,7 @@ public class RulesPage extends PreferencePage implements IWorkbenchPreferencePag
 			checkedRuleIDs.forEach(id -> ignoredState.createChild(IGNORED_RULES).putString(RULE_ID, id));
 			getPreferenceStore().setValue(IGNORED_RULES, ignoredState.toString());
 		} catch (IOException e) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "", e);
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to store ignored rules", e);
 		}
 	}
 

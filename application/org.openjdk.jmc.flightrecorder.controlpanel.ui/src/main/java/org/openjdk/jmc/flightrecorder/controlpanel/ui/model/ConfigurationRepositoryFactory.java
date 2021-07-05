@@ -110,10 +110,12 @@ public class ConfigurationRepositoryFactory {
 					repository.add(template);
 				} catch (IOException e) {
 					// FIXME: Better exception handling
-					ControlPanel.getDefault().getLogger().log(Level.SEVERE, "", e);
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE,
+							"Failed to load local template file " + file, e);
 				} catch (ParseException e) {
 					// FIXME: Better exception handling
-					ControlPanel.getDefault().getLogger().log(Level.SEVERE, "", e);
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE,
+							"Failed to parse local template file " + file, e);
 				}
 			}
 		}

@@ -380,7 +380,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			try {
 				getSite().getPage().showView(CONTENT_OUTLINE_VIEW_ID, null, IWorkbenchPage.VIEW_VISIBLE);
 			} catch (PartInitException e) {
-				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "", e);
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to show outline view", e);
 			}
 			ruleEngine.setStreamModel(items);
 			refreshPages();

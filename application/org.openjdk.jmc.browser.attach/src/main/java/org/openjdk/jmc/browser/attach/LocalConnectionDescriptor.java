@@ -158,7 +158,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 				url = ConnectionToolkit.createServiceURL(SELF_HOST_NAME, 0);
 			} catch (MalformedURLException e) {
 				// Not going to happen...
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to parse url", e);
 			}
 		} else {
 			try {

@@ -176,7 +176,7 @@ public class ActionChooser {
 				ITriggerAction na = af.createAction(name);
 				m_actionsCache.put(na.getName(), na);
 			} catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to create trigger action", e);
 			}
 		}
 		if (notificationRule.getAction() != null) {

@@ -1103,7 +1103,7 @@ public class DataPageToolkit {
 						imageLabel.getParent().layout();
 						setPageComplete(isPageComplete());
 					} catch (Exception e) {
-						LOGGER.log(Level.SEVERE, "", e);
+						LOGGER.log(Level.SEVERE, "Failed to load image " + filename, e);
 					}
 				}
 

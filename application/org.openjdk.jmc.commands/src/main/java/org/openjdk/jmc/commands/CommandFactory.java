@@ -122,7 +122,7 @@ class CommandFactory {
 					command.setCommandHelper((ICommandHelper) o);
 				}
 			} catch (CoreException e) {
-				LOGGER.log(Level.SEVERE, "", e);
+				LOGGER.log(Level.SEVERE, "Failed to create type completion object", e);
 				throw new Exception("Error creating type completion object", e); //$NON-NLS-1$
 			}
 		}

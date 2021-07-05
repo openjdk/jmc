@@ -152,7 +152,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 			}
 		} catch (URISyntaxException e) {
 			// Should never happen...
-			LOGGER.log(Level.SEVERE, "", e);
+			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
 		}
 		return new TwitterFactory(cb.build());
 	}

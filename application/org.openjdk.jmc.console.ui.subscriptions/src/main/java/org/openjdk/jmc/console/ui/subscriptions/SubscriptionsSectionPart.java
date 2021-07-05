@@ -216,7 +216,7 @@ public class SubscriptionsSectionPart extends MCSectionPart {
 					try {
 						Thread.sleep(DEFAULT_REFRESH_TIME);
 					} catch (InterruptedException e) {
-						LOGGER.log(Level.SEVERE, "", e);
+						LOGGER.log(Level.SEVERE, "Sleep interrupted", e);
 					}
 				}
 			}
