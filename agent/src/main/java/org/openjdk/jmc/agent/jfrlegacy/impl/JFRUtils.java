@@ -76,7 +76,9 @@ public class JFRUtils {
 			return producerClass.getDeclaredMethod("addEvent", Class.class);
 		} catch (NoSuchMethodException | SecurityException e) {
 			// This should never happen
-			Agent.getLogger().log(Level.SEVERE, "Failed to find the addEvent method of the producer. No BCI generated JFR events will be available.", e);
+			Agent.getLogger().log(Level.SEVERE,
+					"Failed to find the addEvent method of the producer. No BCI generated JFR events will be available.",
+					e);
 		}
 		return null;
 	}
@@ -90,7 +92,9 @@ public class JFRUtils {
 			registerMethod.invoke(producer);
 			return producer;
 		} catch (Exception e) {
-			Agent.getLogger().log(Level.SEVERE, "Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder. No BCI generated JFR events will be available.", e);
+			Agent.getLogger().log(Level.SEVERE,
+					"Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder. No BCI generated JFR events will be available.",
+					e);
 		}
 		return null;
 	}
