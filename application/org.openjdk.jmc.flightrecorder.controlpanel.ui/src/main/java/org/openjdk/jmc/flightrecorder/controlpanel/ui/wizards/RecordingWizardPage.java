@@ -220,8 +220,8 @@ public class RecordingWizardPage extends WizardPage {
 		 * considered a quick & dirty fix as this may well happen in other dialogs too.
 		 */
 		if (Environment.getOSType() == Environment.OSType.LINUX) {
-			Shell shell = getShell(); 
-			if(shell != null ) {
+			Shell shell = getShell();
+			if (shell != null) {
 				shell.layout();
 			}
 		}
