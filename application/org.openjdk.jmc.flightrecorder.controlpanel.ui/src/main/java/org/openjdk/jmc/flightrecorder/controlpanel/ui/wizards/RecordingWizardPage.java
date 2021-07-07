@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -219,7 +220,10 @@ public class RecordingWizardPage extends WizardPage {
 		 * considered a quick & dirty fix as this may well happen in other dialogs too.
 		 */
 		if (Environment.getOSType() == Environment.OSType.LINUX) {
-			getShell().layout();
+			Shell shell = getShell(); 
+			if(shell != null ) {
+				shell.layout();
+			}
 		}
 
 		if (m_displayHelp) {
