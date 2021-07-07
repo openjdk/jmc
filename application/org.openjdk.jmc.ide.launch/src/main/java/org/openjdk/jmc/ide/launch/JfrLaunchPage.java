@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.RecordingWizardPage;
 import org.openjdk.jmc.ide.launch.model.JfrLaunchModel;
 
@@ -148,6 +147,14 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 	public boolean getAutoOpen() {
 		return autoOpenCheckbox.getSelection();
+	}
+
+	public void setLessThanOracleJdk11(boolean lessThanOracleJdk11) {
+		lessThanOracleJDK11Checkbox.setSelection(lessThanOracleJdk11);
+	}
+
+	public boolean getLessThanOracleJdk11() {
+		return lessThanOracleJDK11Checkbox.getSelection();
 	}
 
 	@Override

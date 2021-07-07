@@ -384,6 +384,11 @@ public class JfrLaunchModel extends RecordingWizardModel {
 
 	public void setOracleJdkLessThan11(boolean oracleJdkLessThan11) {
 		m_oracleJdkLessThan11 = oracleJdkLessThan11;
+		if (oracleJdkLessThan11) {
+			setVersion(SchemaVersion.V1);
+		} else {
+			setVersion(SchemaVersion.V2);
+		}
 		onChange();
 	}
 
