@@ -71,6 +71,10 @@
          id="org.openjdk.jmc.feature.joverflow"
          version="0.0.0"/>
 
+   <includes
+         id="org.openjdk.jmc.feature.console.agent"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="3.8.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.help" version="1.4.0" match="greaterOrEqual"/>
@@ -91,7 +95,7 @@
       <import plugin="org.eclipse.equinox.p2.director.app"/>
    </requires>
 
-  <plugin
+   <plugin
          id="org.openjdk.jmc.osgi.extension"
          download-size="0"
          install-size="0"

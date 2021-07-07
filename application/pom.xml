@@ -82,6 +82,7 @@
 		<module>org.openjdk.jmc.feature.rcp</module>
 		<module>org.openjdk.jmc.feature.rcp.update</module>
 		<module>org.openjdk.jmc.feature.twitter</module>
+		<module>org.openjdk.jmc.feature.console.agent</module>
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
@@ -114,6 +115,7 @@
 		<module>org.openjdk.jmc.ui.common</module>
 		<module>org.openjdk.jmc.updatesite.ide</module>
 		<module>org.openjdk.jmc.updatesite.rcp</module>
+		<module>org.openjdk.jmc.console.agent</module>
 		<module>l10n</module>
 		<module>tests</module>
 		<module>coverage</module>

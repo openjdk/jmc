@@ -199,6 +199,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menu.add(createItem(window, IWorkbenchCommandConstants.EDIT_DELETE));
 		menu.add(createItem(window, IWorkbenchCommandConstants.EDIT_SELECT_ALL));
 		menu.add(new GroupMarker(IWorkbenchActionConstants.EDIT_END));
+		if (menu.indexOf(IWorkbenchActionConstants.FIND_EXT) == -1) {
+			menu.add(new GroupMarker(IWorkbenchActionConstants.FIND_EXT));
+		}
 		return menu;
 	}
 
