@@ -55,6 +55,7 @@ public final class JfrRuleTopics {
 	public static final String NATIVE_LIBRARY = "native_library"; //$NON-NLS-1$
 	public static final String PROCESSES = "processes"; //$NON-NLS-1$
 	public static final String RECORDING = "recording"; //$NON-NLS-1$
+	public static final String CONSTANT_POOLS = "constant_pools"; //$NON-NLS-1$
 	public static final String SOCKET_IO = "socket_io"; //$NON-NLS-1$
 	public static final String SYSTEM_INFORMATION = "system_information"; //$NON-NLS-1$
 	public static final String SYSTEM_PROPERTIES = "system_properties"; //$NON-NLS-1$

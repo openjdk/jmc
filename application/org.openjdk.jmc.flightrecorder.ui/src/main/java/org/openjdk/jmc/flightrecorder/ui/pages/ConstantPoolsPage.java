@@ -83,7 +83,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 
 		@Override
 		public String[] getTopics(IState state) {
-			return new String[] {JfrRuleTopics.RECORDING};
+			return new String[] {JfrRuleTopics.CONSTANT_POOLS};
 		}
 
 		@Override
