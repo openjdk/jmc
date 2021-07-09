@@ -47,7 +47,7 @@ import org.openjdk.jmc.console.agent.AgentJmxHelper;
 import org.openjdk.jmc.console.agent.editor.AgentEditor;
 import org.openjdk.jmc.console.agent.editor.AgentEditorInput;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 
 import java.io.IOException;
