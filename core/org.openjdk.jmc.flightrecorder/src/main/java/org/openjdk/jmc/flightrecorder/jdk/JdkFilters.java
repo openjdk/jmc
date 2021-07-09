@@ -83,6 +83,8 @@ public final class JdkFilters {
 	public static final IItemFilter GARBAGE_COLLECTION = ItemFilters.type(JdkTypeIDs.GARBAGE_COLLECTION);
 	public static final IItemFilter OLD_GARBAGE_COLLECTION = ItemFilters
 			.type(JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION);
+	public static final IItemFilter YOUNG_GARBAGE_COLLECTION = ItemFilters
+			.type(JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION);
 	public static final IItemFilter CONCURRENT_MODE_FAILURE = ItemFilters.type(JdkTypeIDs.CONCURRENT_MODE_FAILURE);
 	public static final IItemFilter ERRORS = ItemFilters.type(JdkTypeIDs.ERRORS_THROWN);
 	public static final IItemFilter EXCEPTIONS = ItemFilters.type(JdkTypeIDs.EXCEPTIONS_THROWN);

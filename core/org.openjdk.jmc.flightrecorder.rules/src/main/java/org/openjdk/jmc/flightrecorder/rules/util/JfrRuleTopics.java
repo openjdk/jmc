@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,7 @@ public final class JfrRuleTopics {
 	public static final String FILE_IO = "file_io"; //$NON-NLS-1$
 	public static final String GARBAGE_COLLECTION = "garbage_collection"; //$NON-NLS-1$
 	public static final String GC_CONFIGURATION = "gc_configuration"; //$NON-NLS-1$
+	public static final String GC_SUMMARY = "gc_summary"; //$NON-NLS-1$
 	public static final String HEAP = "heap"; //$NON-NLS-1$
 	public static final String JAVA_APPLICATION = "java_application"; //$NON-NLS-1$
 	public static final String JVM_INFORMATION = "jvm_information"; //$NON-NLS-1$
