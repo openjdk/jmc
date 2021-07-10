@@ -129,10 +129,12 @@ public class MethodWithFrameTypeLabelProvider extends ColumnLabelProvider {
 		} else if (key instanceof IMCFrame) {
 			key = ((IMCFrame) key).getMethod();
 		}
+		if (key instanceof IMCMethod) {
+			return FormatToolkit.getHumanReadable((IMCMethod) key, false, false, true, true, true, false, false);
+		}
 		if (key instanceof IDisplayable) {
 			return ((IDisplayable) key).displayUsing(IDisplayable.EXACT);
 		}
-		// IMCMethod falling through to TypeHandling
 		return TypeHandling.getValueString(key);
 	};
 

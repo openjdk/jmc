@@ -48,7 +48,6 @@ import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.EventTypeDescript
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ProducerDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ValueDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.util.JfrInternalConstants;
-import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.parser.IEventSink;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
