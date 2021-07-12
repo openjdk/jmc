@@ -33,12 +33,11 @@
  */
 package org.openjdk.jmc.flightrecorder.internal.parser.v1;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
 
 public class SpecificReaders {
 	private static Logger LOG = Logger.getLogger(SpecificReaders.class.getName());

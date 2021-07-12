@@ -234,7 +234,7 @@ public class ItemHistogram {
 			List<IColumn> columns = new ArrayList<>();
 			IMemberAccessor<?, Object> keyAccessor = AggregationGrid::getKey;
 			ColumnLabelProvider keyLp = new DelegatingLabelProvider(labelProvider, keyAccessor);
-			columns.add(new ColumnBuilder(colLabel, KEY_COL_ID, keyAccessor).labelProvider(keyLp).build());
+			columns.add(new ColumnBuilder(colLabel, KEY_COL_ID, keyAccessor, keyLp).build());
 			columns.addAll(this.columns);
 			return build(container, columns, classifier, tableSettings, border);
 		}

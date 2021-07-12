@@ -210,6 +210,7 @@ public class ParserStats {
 			return false;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
 			if ("name".equals(attribute.getIdentifier())) {
@@ -265,6 +266,7 @@ public class ParserStats {
 			return false;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
 			if ("typeName".equals(attribute.getIdentifier())) {
