@@ -106,7 +106,7 @@ public class MethodWithFrameTypeLabelProvider extends ColumnLabelProvider {
 			} else if (key instanceof IMCFrame) {
 				method = ((IMCFrame) key).getMethod();
 			}
-			if (method != null) {
+			if ((method != null) & (method.getModifier() != null)) {
 				if ((method.getModifier() & Modifier.PUBLIC) != 0) {
 					return mwft.getFrameType() != Type.INTERPRETED ? publicJitMethodImage : publicMethodImage;
 				} else if ((method.getModifier() & Modifier.PROTECTED) != 0) {
