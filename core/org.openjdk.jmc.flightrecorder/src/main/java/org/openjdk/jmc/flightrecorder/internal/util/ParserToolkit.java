@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -79,6 +79,15 @@ public final class ParserToolkit {
 		}
 		if ("Inlined".equals(type)) { //$NON-NLS-1$
 			return IMCFrame.Type.INLINED;
+		}
+		if ("Native".equals(type)) { //$NON-NLS-1$
+			return IMCFrame.Type.NATIVE;
+		}
+		if ("C++".equals(type)) { //$NON-NLS-1$
+			return IMCFrame.Type.CPP;
+		}
+		if ("Kernel".equals(type)) { //$NON-NLS-1$
+			return IMCFrame.Type.KERNEL;
 		}
 		return IMCFrame.Type.UNKNOWN;
 	}
