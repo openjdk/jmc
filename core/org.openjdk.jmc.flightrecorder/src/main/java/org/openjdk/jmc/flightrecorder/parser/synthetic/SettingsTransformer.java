@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -57,6 +58,7 @@ import org.openjdk.jmc.flightrecorder.parser.ValueField;
  * data will be passed through mostly untouched.
  */
 class SettingsTransformer implements IEventSink {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.parser.synthetic"); //$NON-NLS-1$
 
 	/**
 	 * Fix for JDK-8157024, the code cache stats unallocatedCapacity event is written as KiB but
@@ -286,9 +288,7 @@ class SettingsTransformer implements IEventSink {
 							|| (OracleJdkTypeIDsPre11.JDK9_RECORDING_SETTING.equals(identifier) && st.isValidV1())) {
 						return st;
 					} else {
-						// FIXME: Avoid System.err.println
-						System.err
-								.println("Cannot create SettingsTransformer from fields: " + dataStructure.toString()); //$NON-NLS-1$
+						LOGGER.severe("Cannot create SettingsTransformer from fields: " + dataStructure.toString()); //$NON-NLS-1$
 					}
 				} else if (OracleJdkTypeIDsPre11.RECORDINGS.equals(identifier)) {
 					/*

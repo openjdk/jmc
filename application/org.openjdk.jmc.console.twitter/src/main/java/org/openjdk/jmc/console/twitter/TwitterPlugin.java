@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -152,7 +152,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 			}
 		} catch (URISyntaxException e) {
 			// Should never happen...
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
 		}
 		return new TwitterFactory(cb.build());
 	}

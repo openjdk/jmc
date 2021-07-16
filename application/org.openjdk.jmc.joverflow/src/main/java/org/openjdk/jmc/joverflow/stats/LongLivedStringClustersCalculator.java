@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.joverflow.stats;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.joverflow.batch.BatchProblemRecorder;
 import org.openjdk.jmc.joverflow.batch.DetailedStats;
@@ -50,6 +51,8 @@ import org.openjdk.jmc.joverflow.support.ReferenceChain;
  * the same cluster shows up in two out of three dumps.
  */
 public class LongLivedStringClustersCalculator {
+	private static final Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.stats"); //$NON-NLS-1$
+
 	private final int numDumps;
 	private final List<ReferencedObjCluster.DupStrings> dupStringsToFields[];
 
@@ -106,9 +109,9 @@ public class LongLivedStringClustersCalculator {
 			}
 		}
 
-		System.out.println("\nLONG-LIVED FIELDS:");
+		LOGGER.info("\nLONG-LIVED FIELDS:");
 		for (String longLivedField : longLivedFields) {
-			System.out.println(longLivedField);
+			LOGGER.info(longLivedField);
 		}
 	}
 

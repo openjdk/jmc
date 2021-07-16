@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.alert;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -51,6 +52,7 @@ import org.openjdk.jmc.ui.common.resource.MCFile;
  * notification and shows the thread dump as an application alert, logs the thread dump, or both.
  */
 public class TriggerActionThreadStackDump extends TriggerAction {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.alert"); //$NON-NLS-1$
 	private static final String XML_ELEMENT_LOG_TO_FILE = "log_to_file"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_SHOW_APPLICATION_ALERT = "show_application_alert"; //$NON-NLS-1$
 	private static final String XML_ELEMENT_APPEND = "append"; //$NON-NLS-1$
@@ -82,7 +84,7 @@ public class TriggerActionThreadStackDump extends TriggerAction {
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 			IDESupportToolkit.writeAsJob(jobName, file, stream, isAppend());
 		} else {
-			System.out.println(data);
+			LOGGER.info(data);
 		}
 	}
 

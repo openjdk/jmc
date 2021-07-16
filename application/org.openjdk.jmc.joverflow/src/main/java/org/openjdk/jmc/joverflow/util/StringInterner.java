@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.joverflow.util;
 
 import java.lang.ref.WeakReference;
+import java.util.logging.Logger;
 
 /**
  * Functionality for custom interning (deduplicating) strings. The main API, internString() and
@@ -51,6 +52,7 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("unchecked")
 public class StringInterner {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.util"); //$NON-NLS-1$
 
 	private static final WeakReference<String> table[];
 	private static int size;
@@ -158,9 +160,9 @@ public class StringInterner {
 				}
 			}
 		}
-		System.out.println("Table size: " + table.length + ", null entries: " + numNullEntries);
-		System.out.println("Num calls (may be off due to overflowing): " + numCalls);
-		System.out.println("Num resets: " + numResets);
+		LOGGER.info("Table size: " + table.length + ", null entries: " + numNullEntries);
+		LOGGER.info("Num calls (may be off due to overflowing): " + numCalls);
+		LOGGER.info("Num resets: " + numResets);
 	}
 
 	/**

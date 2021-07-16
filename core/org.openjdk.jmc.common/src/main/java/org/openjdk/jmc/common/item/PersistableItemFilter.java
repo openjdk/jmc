@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,9 @@
 package org.openjdk.jmc.common.item;
 
 import static org.openjdk.jmc.common.item.Attribute.attr;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IStateful;
@@ -112,6 +115,7 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 		}
 	};
 
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.common.item"); //$NON-NLS-1$
 	private static final String KEY_KIND = "kind"; //$NON-NLS-1$
 	static final String KEY_FILTER = "filter"; //$NON-NLS-1$
 	// FIXME: Rename "field" identifier which is now an attribute id
@@ -249,7 +253,7 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 			try {
 				return persister.parsePersisted(persistedValue);
 			} catch (QuantityConversionException e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
 			}
 		}
 		return null;

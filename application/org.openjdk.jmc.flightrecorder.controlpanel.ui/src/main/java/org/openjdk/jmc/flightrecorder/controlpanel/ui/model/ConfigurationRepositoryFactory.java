@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -110,10 +110,12 @@ public class ConfigurationRepositoryFactory {
 					repository.add(template);
 				} catch (IOException e) {
 					// FIXME: Better exception handling
-					e.printStackTrace();
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE,
+							"Failed to load local template file " + file, e);
 				} catch (ParseException e) {
 					// FIXME: Better exception handling
-					e.printStackTrace();
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE,
+							"Failed to parse local template file " + file, e);
 				}
 			}
 		}

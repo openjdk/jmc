@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,11 +34,15 @@ package org.openjdk.jmc.joverflow.heap.parser;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of ReadBuffer using a RandomAccessFile
  */
 class FileReadBuffer extends ReadBuffer {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.heap.parser"); //$NON-NLS-1$
+
 	/** underlying file to read */
 	private RandomAccessFile file;
 
@@ -96,7 +100,7 @@ class FileReadBuffer extends ReadBuffer {
 		try {
 			file.close();
 		} catch (IOException ex) {
-			System.err.println("Failed to close file " + file + ": " + ex);
+			LOGGER.severe("Failed to close file " + file + ": " + ex);
 		}
 	}
 }

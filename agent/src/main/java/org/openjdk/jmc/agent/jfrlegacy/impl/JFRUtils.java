@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -76,9 +76,9 @@ public class JFRUtils {
 			return producerClass.getDeclaredMethod("addEvent", Class.class);
 		} catch (NoSuchMethodException | SecurityException e) {
 			// This should never happen
-			Agent.getLogger().severe("Failed to find the addEvent method of the producer.");
-			Agent.getLogger().severe("No BCI generated JFR events will be available.");
-			e.printStackTrace();
+			Agent.getLogger().log(Level.SEVERE,
+					"Failed to find the addEvent method of the producer. No BCI generated JFR events will be available.",
+					e);
 		}
 		return null;
 	}
@@ -92,10 +92,9 @@ public class JFRUtils {
 			registerMethod.invoke(producer);
 			return producer;
 		} catch (Exception e) {
-			Agent.getLogger().severe(
-					"Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder.");
-			Agent.getLogger().severe("No BCI generated JFR events will be available.");
-			e.printStackTrace();
+			Agent.getLogger().log(Level.SEVERE,
+					"Failed to create producer for Oracle JDK7/8 JVM. Ensure that the JVM was started with -XX:+UnlockCommercialFeatures and -XX:+FlightRecorder. No BCI generated JFR events will be available.",
+					e);
 		}
 		return null;
 	}

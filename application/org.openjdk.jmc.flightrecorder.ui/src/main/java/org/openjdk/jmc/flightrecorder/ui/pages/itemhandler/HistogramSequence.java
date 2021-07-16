@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,6 +71,7 @@ import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 
 class HistogramSequence {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.ui.pages.itemhandler"); //$NON-NLS-1$
 
 	private static final ImageDescriptor IMAGE_DESCRIPTOR_GROUP_BY = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_GROUP_BY);
@@ -159,7 +162,7 @@ class HistogramSequence {
 				try {
 					buildHistogram();
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, "Failed to build histogram", e);
 				}
 			}
 			refreshViewer();
@@ -176,7 +179,7 @@ class HistogramSequence {
 			try {
 				buildHistogram();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "Failed to build histogram", e);
 			}
 			refreshViewer();
 			onGroup();

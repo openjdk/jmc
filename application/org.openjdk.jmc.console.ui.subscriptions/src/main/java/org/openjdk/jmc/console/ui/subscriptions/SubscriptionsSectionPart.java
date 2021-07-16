@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TableViewer;
@@ -64,6 +66,7 @@ import org.openjdk.jmc.ui.misc.MCSectionPart;
 import org.openjdk.jmc.ui.misc.MementoToolkit;
 
 public class SubscriptionsSectionPart extends MCSectionPart {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.console.ui.subscriptions"); //$NON-NLS-1$
 
 	private class ClearStatisticsAction extends Action {
 		public ClearStatisticsAction() {
@@ -213,7 +216,7 @@ public class SubscriptionsSectionPart extends MCSectionPart {
 					try {
 						Thread.sleep(DEFAULT_REFRESH_TIME);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOGGER.log(Level.SEVERE, "Sleep interrupted", e);
 					}
 				}
 			}

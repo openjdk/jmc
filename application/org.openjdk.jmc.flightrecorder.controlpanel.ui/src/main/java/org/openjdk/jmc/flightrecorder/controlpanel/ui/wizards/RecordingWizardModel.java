@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -237,13 +237,13 @@ public class RecordingWizardModel extends Observable {
 					repo.add(new EventConfiguration(EventConfiguration.createModel(templateXML),
 							VolatileStorageDelegate.getOnServerDelegate()));
 				} catch (ParseException e) {
-					e.printStackTrace();
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE, "Failed to parse template", e);
 				} catch (IOException e) {
-					e.printStackTrace();
+					ControlPanel.getDefault().getLogger().log(Level.SEVERE, "Failed to load template", e);
 				}
 			}
 		} catch (FlightRecorderException e) {
-			e.printStackTrace();
+			ControlPanel.getDefault().getLogger().log(Level.SEVERE, "Failed to load server templates", e);
 		}
 		// Force sorting and changes to be cleared. No one is actually listening.
 		repo.notifyObservers();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.joverflow.stats;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.joverflow.descriptors.CollectionClassDescriptor;
 import org.openjdk.jmc.joverflow.descriptors.CollectionDescriptors;
@@ -486,16 +487,18 @@ class InterimRefChainStack extends InterimRefChain {
 
 	/** Debugging: print all the elements of the current reference chain as-is. */
 	public void printFullRefChain() {
-		System.out.print(curRootRefChainElement.getRoot().getTypeName());
-		System.out.print("  ");
+		Logger logger = Logger.getLogger("org.openjdk.jmc.joverflow.stats"); //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
+		sb.append(curRootRefChainElement.getRoot().getTypeName());
+		sb.append("  ");
 
 		int chainSizeMinusOne = refChain.size() - 1;
 		for (int i = 0; i < chainSizeMinusOne; i++) {
 			JavaHeapObject javaHeapObj = (JavaHeapObject) refChain.get(i++);
 			int idx = ((IndexContainer) refChain.get(i)).get();
-			System.out.print("-->" + getFullLinkDesc(javaHeapObj, idx));
+			sb.append("-->" + getFullLinkDesc(javaHeapObj, idx));
 		}
-		System.out.println();
+		logger.fine(sb.toString());
 	}
 
 	/**

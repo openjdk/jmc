@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,8 @@ package org.openjdk.jmc.console.ui.notification.widget;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
@@ -73,6 +75,7 @@ import org.openjdk.jmc.ui.uibuilder.IUIBuilder;
  * Component that chooses a NotificationAction. Uses a StackLayout for each action
  */
 public class ActionChooser {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.console.ui.notification.widget"); //$NON-NLS-1$
 
 	public interface ComponentFactory {
 		Composite createComponent(Composite parent, ITriggerAction action);
@@ -173,7 +176,7 @@ public class ActionChooser {
 				ITriggerAction na = af.createAction(name);
 				m_actionsCache.put(na.getName(), na);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "Failed to create trigger action", e);
 			}
 		}
 		if (notificationRule.getAction() != null) {

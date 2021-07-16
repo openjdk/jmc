@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.rjmx.triggers.fields.internal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 
@@ -47,6 +48,8 @@ import org.openjdk.jmc.rjmx.triggers.ISetting;
  * This class is responsible for capturing configuration options. Clients should not subclass
  */
 abstract public class Field implements ISetting {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.triggers.fields.internal"); //$NON-NLS-1$
+
 	private final String m_id;
 	private final String m_name;
 	private final String m_description;
@@ -224,7 +227,7 @@ abstract public class Field implements ISetting {
 		try {
 			XmlToolkit.setSetting(node, getId(), object);
 		} catch (Exception e) {
-			System.out.println('|' + object + '|');
+			LOGGER.severe('|' + object + '|');
 		}
 	}
 
