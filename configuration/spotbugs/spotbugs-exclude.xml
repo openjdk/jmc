@@ -657,7 +657,7 @@
 
 	<!-- This is an enum! -->
 	<Match>
-		<Class name="org.openjdk.jmc.ui.misc.FilterEditor" />
+		<Class name="org.openjdk.jmc.flightrecorder.ui.common.FilterEditor" />
 		<Bug pattern="VO_VOLATILE_REFERENCE_TO_ARRAY" />
 	</Match>
 

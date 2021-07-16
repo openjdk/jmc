@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.celleditors;
+package org.openjdk.jmc.rjmx.ui.celleditors;
 
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.viewers.CellEditor;
@@ -46,7 +46,6 @@ import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.ui.misc.ControlDecorationToolkit;
 import org.openjdk.jmc.ui.misc.QuantityKindProposal;
 
-// FIXME: JMC-5904 - Should be merged with cell editors in org.openjdk.jmc.rjmx.ui.celleditors
 public class CommonCellEditors {
 
 	public static class MultiLineTextCellEditor extends TextCellEditor {

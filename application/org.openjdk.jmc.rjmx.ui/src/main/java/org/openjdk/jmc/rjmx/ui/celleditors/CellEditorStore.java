@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import org.openjdk.jmc.common.util.TypeHandling;
 import org.openjdk.jmc.rjmx.services.IUpdateInterval;
-import org.openjdk.jmc.ui.celleditors.NullableTextCellEditor;
 
 public class CellEditorStore {
 

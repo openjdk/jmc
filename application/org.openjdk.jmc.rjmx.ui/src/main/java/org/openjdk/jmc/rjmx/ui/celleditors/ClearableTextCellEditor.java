@@ -30,13 +30,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.celleditors;
+package org.openjdk.jmc.rjmx.ui.celleditors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import org.openjdk.jmc.ui.celleditors.CommonCellEditors.MultiLineTextCellEditor;
+import org.openjdk.jmc.rjmx.ui.celleditors.CommonCellEditors.MultiLineTextCellEditor;
 
 public class ClearableTextCellEditor extends MultiLineTextCellEditor {
 
