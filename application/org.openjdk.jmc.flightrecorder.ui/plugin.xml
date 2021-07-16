@@ -270,6 +270,10 @@
             class="org.openjdk.jmc.flightrecorder.ui.pages.GCConfigurationPage$GCConfigurationPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.gcconfiguration">
       </factory>
+       <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.GCSummaryPage$GCSummaryPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.gcsummary">
+      </factory>
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.CompilationsPage$CompilationsPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.compilations">

@@ -189,6 +189,11 @@ public class Messages extends NLS {
 	public static String GCConfigurationPage_SECTION_YOUNG_CONFIG;
 	public static String GCConfigurationPage_SECTION_JVM_GC_FLAGS;
 	public static String GCConfigurationPage_COLUMN_VALUE;
+	public static String GCSummaryPage_PAGE_NAME;
+	public static String GCSummaryPage_SECTION_YOUNG_COLLECTION;
+	public static String GCSummaryPage_SECTION_OLD_COLLECTION;
+	public static String GCSummaryPage_SECTION_ALL_COLLECTION;
+	public static String GCSummaryPage_SECTION_ALL_COLLECTION_PAUSE;
 	public static String GarbageCollectionsPage_COMMITTED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_COMMITTED_METASPACE_DELTA;
 	public static String GarbageCollectionsPage_DISABLED_TOOLTIP;

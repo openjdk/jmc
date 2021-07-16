@@ -82,6 +82,9 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_SURVIVOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_TLAB;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_YOUNG_GENERATION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_PAUSE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GARBAGE_COLLECTION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.HEAP_CONF;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.HEAP_SUMMARY;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.OBJECT_COUNT;
@@ -285,9 +288,57 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> LONGEST_GC_PAUSE = Aggregators.max(
 			Messages.getString(Messages.AGGR_LONGEST_GC_PAUSE), Messages.getString(Messages.AGGR_LONGEST_GC_PAUSE_DESC),
 			GC_PAUSE, DURATION);
+	public static final IAggregator<IQuantity, ?> AVERAGE_GC_PAUSE = Aggregators.avg(
+			Messages.getString(Messages.AGGR_AVERAGE_GC_PAUSE), Messages.getString(Messages.AGGR_AVERAGE_GC_PAUSE_DESC),
+			GC_PAUSE, DURATION);
 	public static final IAggregator<IQuantity, ?> TOTAL_GC_PAUSE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_TOTAL_GC_PAUSE), Messages.getString(Messages.AGGR_TOTAL_GC_PAUSE_DESC),
 			GC_PAUSE, DURATION);
+	//Young Collection GC
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_GC_COUNT_DESC), JdkFilters.YOUNG_GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_MAX_GC_TIME_DESC), GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_AVG_GC_TIME_DESC), GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_TOTAL_GC_TIME_DESC),
+			GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION, DURATION);
+	//Old Collection GC
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_GC_COUNT_DESC), JdkFilters.OLD_GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_MAX_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_AVG_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_TOTAL_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	//All Collection GC
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_GC_COUNT_DESC), JdkFilters.GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_MAX_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_AVG_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_TOTAL_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
 
 	public static final IAggregator<IQuantity, ?> JFR_DATA_LOST_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_JFR_DATA_LOST_COUNT),
