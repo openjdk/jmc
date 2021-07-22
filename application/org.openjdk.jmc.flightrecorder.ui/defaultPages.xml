@@ -786,6 +786,9 @@
 			</state>
 			
 		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.gcsummary"
+			id="org.openjdk.jmc.flightrecorder.ui.gcsummary">
+		</page>
 		<page factory="org.openjdk.jmc.flightrecorder.ui.compilations" id="org.openjdk.jmc.flightrecorder.ui.compilations">
 			<state>
 				<compilationsTable sortColumn="duration">
