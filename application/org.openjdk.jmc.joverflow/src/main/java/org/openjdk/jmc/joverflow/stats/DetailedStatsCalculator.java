@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -248,7 +248,6 @@ class DetailedStatsCalculator implements ProblemChecker, Constants {
 			}
 			classDesc.addProblematicCollection(problemKind, implSize);
 			refChain.recordCurrentRefChainForColCluster(col, colDesc, problemKind, implSize);
-//			System.out.println("Empty collection, impl size = " + implSize);
 			return colDesc;
 		}
 
@@ -273,8 +272,6 @@ class DetailedStatsCalculator implements ProblemChecker, Constants {
 				}
 				classDesc.addProblematicCollection(problemKind, ovhd);
 				refChain.recordCurrentRefChainForColCluster(col, colDesc, problemKind, ovhd);
-//				System.out.println(
-//						problemKind + " collection, nEls = " + nEls + ", capacity = " + capacity + ", ovhd = " + ovhd);
 			}
 		}
 
