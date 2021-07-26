@@ -33,8 +33,11 @@
  */
 package org.openjdk.jmc.console.agent.manager.wizards;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -53,10 +56,6 @@ import org.openjdk.jmc.console.agent.wizards.BaseWizardPage;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.wizards.OnePageWizardDialog;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class EventEditingWizardParameterPage extends BaseWizardPage {
 

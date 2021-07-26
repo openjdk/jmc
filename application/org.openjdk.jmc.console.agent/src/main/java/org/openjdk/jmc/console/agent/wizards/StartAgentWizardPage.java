@@ -34,7 +34,6 @@
 package org.openjdk.jmc.console.agent.wizards;
 
 import org.eclipse.jface.dialogs.TrayDialog;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;

@@ -98,6 +98,7 @@ public class EventDetailSection extends MCSectionPart {
 
 		List<IColumn> columns = new ArrayList<>();
 		columns.add(new ColumnBuilder(HEADER_KEY, HEADER_KEY, new ColumnLabelProvider() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
 				Map.Entry<String, ?> entry = (Map.Entry<String, ?>) element;
@@ -105,6 +106,7 @@ public class EventDetailSection extends MCSectionPart {
 			}
 		}).build());
 		columns.add(new ColumnBuilder(HEADER_VALUE, HEADER_VALUE, new ColumnLabelProvider() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
 				Map.Entry<String, ?> entry = (Map.Entry<String, ?>) element;
@@ -201,6 +203,7 @@ public class EventDetailSection extends MCSectionPart {
 			return serializeEvent((IEvent) o).entrySet().toArray(new Map.Entry[0]);
 		}
 
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		@Override
 		public Object[] getChildren(Object o) {
 			Map.Entry<String, ?> entry = (Map.Entry<String, ?>) o;
@@ -216,6 +219,7 @@ public class EventDetailSection extends MCSectionPart {
 			return null;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean hasChildren(Object o) {
 			Map.Entry<String, ?> entry = (Map.Entry<String, ?>) o;

@@ -90,6 +90,7 @@ public class XmlEditor extends TextEditor {
 			};
 
 			return new IStorageEditorInput() {
+				@SuppressWarnings("unchecked")
 				public <T> T getAdapter(Class<T> adapter) {
 					if (adapter.equals(ILocationProvider.class)) {
 						return (T) (ILocationProvider) element -> p;

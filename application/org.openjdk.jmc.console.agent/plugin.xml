@@ -70,7 +70,7 @@
             name="Agent XML Editor"
             icon="icons/agent.png"
             extensions="xml"
-            class="org.openjdk.jmc.console.agent.tabs.raweditor.RawEditor"
+            class="org.openjdk.jmc.console.agent.raweditor.RawEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor">
       	</editor>
    </extension>

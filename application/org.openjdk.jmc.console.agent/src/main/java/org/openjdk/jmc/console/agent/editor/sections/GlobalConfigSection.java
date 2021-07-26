@@ -98,12 +98,14 @@ public class GlobalConfigSection extends MCSectionPart {
 
 		List<IColumn> columns = new ArrayList<>(2);
 		columns.add(new ColumnBuilder(HEADER_OPTION, HEADER_OPTION, new ColumnLabelProvider() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
 				return ((Map.Entry<String, String>) element).getKey();
 			}
 		}).build());
 		columns.add(new ColumnBuilder(HEADER_VALUE, HEADER_VALUE, new ColumnLabelProvider() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
 				return ((Map.Entry<String, String>) element).getValue();
