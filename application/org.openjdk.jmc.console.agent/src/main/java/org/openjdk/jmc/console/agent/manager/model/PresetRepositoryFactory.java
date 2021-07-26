@@ -50,7 +50,7 @@ public class PresetRepositoryFactory {
 	public static PresetRepository createSingleton() {
 		if (singleton == null) {
 			synchronized (PresetRepositoryFactory.class) {
-					singleton = create();
+				singleton = create();
 			}
 		}
 
