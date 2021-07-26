@@ -187,7 +187,9 @@ public class AutoBoxingRule extends AbstractRule {
 					} else if (firstBranch.getEndFork().getBranchCount() > 0) {
 						secondFrame = firstBranch.getEndFork().getBranch(0).getFirstFrame();
 					}
-					secondFrameFromMostAllocated = secondFrame.getFrame();
+					if (secondFrame != null) {
+						secondFrameFromMostAllocated = secondFrame.getFrame();
+					}
 				}
 				allocationSizeByType.put(method.getType(), total);
 			}
