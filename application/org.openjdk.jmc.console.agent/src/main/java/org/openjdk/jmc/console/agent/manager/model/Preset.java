@@ -33,14 +33,18 @@
  */
 package org.openjdk.jmc.console.agent.manager.model;
 
-import org.openjdk.jmc.console.agent.AgentPlugin;
-import org.openjdk.jmc.console.agent.messages.internal.Messages;
-import org.openjdk.jmc.console.agent.utils.ProbeValidator;
-import org.openjdk.jmc.console.agent.utils.ValidationResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,19 +57,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+import org.openjdk.jmc.console.agent.AgentPlugin;
+import org.openjdk.jmc.console.agent.messages.internal.Messages;
+import org.openjdk.jmc.console.agent.utils.ProbeValidator;
+import org.openjdk.jmc.console.agent.utils.ValidationResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class Preset implements IPreset {
 

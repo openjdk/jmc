@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.console.agent.actions;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,8 +66,7 @@ import org.openjdk.jmc.ui.common.action.Executable;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-import java.util.Objects;
-
+@SuppressWarnings("restriction")
 public class AgentEditorOpener implements IActionFactory {
 
 	@Override

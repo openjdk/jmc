@@ -33,14 +33,13 @@
  */
 package org.openjdk.jmc.console.agent.manager.model;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Locale;
 
 class CapturedValue implements ICapturedValue {
 

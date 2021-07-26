@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.console.agent.manager.wizards;
 
+import java.util.stream.Stream;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyListener;
@@ -45,16 +47,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.openjdk.jmc.console.agent.manager.model.ICapturedValue;
+import org.openjdk.jmc.console.agent.manager.model.ICapturedValue.ContentType;
 import org.openjdk.jmc.console.agent.manager.model.IEvent;
 import org.openjdk.jmc.console.agent.manager.model.IField;
 import org.openjdk.jmc.console.agent.manager.model.IMethodParameter;
 import org.openjdk.jmc.console.agent.manager.model.IMethodReturnValue;
-import org.openjdk.jmc.console.agent.manager.model.ICapturedValue.ContentType;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.console.agent.wizards.BaseWizardPage;
-
-import java.util.Locale;
-import java.util.stream.Stream;
 
 public class CapturedValueEditingPage extends BaseWizardPage {
 
