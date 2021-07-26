@@ -38,19 +38,19 @@
         <action
             factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
             icon="icons/agent.png"
-            label="Agent Plugin">
+            label="JMC Agent">
         </action>
         <provider
             icon="icons/agent.png"
             id="org.openjdk.jmc.console.agent"
-            description="The JMC Agent Plugin can be used to declaratively add JFR instrumentation to a running program"
-            label="Agent Plugin"
+            description="The JMC Agent can be used to declaratively add JFR instrumentation to a running program"
+            label="JMC Agent"
             priority="101"
             doubleClickActionIndex="0">
             <action
                 factory="org.openjdk.jmc.console.agent.actions.AgentEditorOpener"
                 icon="icons/agent.png"
-                label="Open the JMC Agent Plugin">
+                label="Open the JMC Agent Plug-in">
             </action>
         </provider>
     </extension>
@@ -61,13 +61,13 @@
             default="true"
             id="org.openjdk.jmc.console.agent.editor.AgentEditor"
             icon="icons/agent.png"
-            name="Agent Plugin"/>
+            name="JMC Agent"/>
     </extension>
     
     <extension point="org.eclipse.ui.editors">
       	<editor
             id="org.openjdk.jmc.console.agent.tabs.raweditor.RawEditor"
-            name="Agent XML Editor"
+            name="JMC Agent XML Editor"
             icon="icons/agent.png"
             extensions="xml"
             class="org.openjdk.jmc.console.agent.raweditor.RawEditor"
@@ -79,7 +79,7 @@
 		<command
         id="org.openjdk.jmc.console.agent.openPresetManagerHandler"
 		defaultHandler="org.openjdk.jmc.console.agent.manager.OpenPresetManagerHandler"
-		name="Open Agent Preset Manager">
+		name="Open JMC Agent Preset Manager">
 		</command>
     </extension>
 
@@ -91,7 +91,7 @@
       <command
             commandId="org.openjdk.jmc.console.agent.openPresetManagerHandler"
             icon="icons/agent.png"
-            label="Agent Preset Manager"
+            label="JMC Agent Preset Manager"
             style="push">
       </command>
     </menuContribution>
