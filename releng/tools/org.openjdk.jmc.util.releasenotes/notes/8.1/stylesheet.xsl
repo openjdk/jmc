@@ -5,7 +5,7 @@
 			<head>
 				<meta http-equiv="Content-Language" content="en-us" />
 				<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-				<title>Mission Control 8.0 - New and Noteworthy</title>
+				<title>Mission Control 8.1 - New and Noteworthy</title>
 			</head>
 			<style type="text/css">
 				p, table, td, th { font-family: verdana, arial, helvetica, geneva; font-size: 10pt}
@@ -15,7 +15,7 @@
 				body { font-family: verdana, arial, helvetica, geneva; font-size: 9pt; margin-top: 5mm; margin-left: 3mm}
 			</style>
 			<body>
-				<h2>Mission Control 8.0 - New and Noteworthy</h2>
+				<h2>Mission Control 8.1 - New and Noteworthy</h2>
 				<table border="0" cellpadding="10" cellspacing="0" width="80%">
 					<tr>
 						<td colspan="2">

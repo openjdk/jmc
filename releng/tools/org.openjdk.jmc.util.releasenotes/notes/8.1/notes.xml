@@ -49,22 +49,18 @@
 			<title>New Serializers Core Bundle</title>
 			<description>
 				There is now a new core bundle making it easy to
-				serialize flight recording
-				data to DOT (Graphviz) and JSon. This
-				bundle will be expanded upon in
-				future
-				versions.
+				serialize flight recording data to DOT (Graphviz) and JSon. This
+				bundle will be expanded upon in future versions.
 			</description>
-			<image>core/graph.png</image>
+			<image>core/serializers.png</image>
 		</note>
 		<note version="8.1">
 			<title>Improved JFR parser performance</title>
 			<description>
 				The performance of the JFR parser has been improved.
-				More improvements
-				are coming in 8.2.
+				More improvements are coming in 8.2.
 			</description>
-			<image>core/clock.png</image>
+			<image>core/parserperf.png</image>
 		</note>
 	</component>
 	<component>
@@ -88,7 +84,7 @@
 				useful when creating custom events to see where all that storage and
 				memory is being used.
 			</description>
-			<image>jfr/constantpools.png</image>
+			<image>jfr/constantpool.png</image>
 		</note>
 		<note version="8.1">
 			<title>Open Recordings with .lz4 extension</title>
@@ -97,6 +93,7 @@
 				be attempted to be opened as flight recordings. This is since lz4 is
 				a common compression to use with flight recordings.
 			</description>
+			<image>jfr/lz4.png</image>
 		</note>
 	</component>
 	<!-- ******************************* Agent ******************************* -->
@@ -120,7 +117,8 @@
 			<bugid>6939</bugid>
 			<synopsis>Time range indicator update problem fixed</synopsis>
 			<description>
-				Sometimes the time range indicator wasn't updated when setting the time
+				Sometimes the time range indicator wasn't updated when
+				setting the time
 				range. This is now fixed.
 			</description>
 		</bugfix>
@@ -128,12 +126,15 @@
 			<area>JFR</area>
 			<bugid>7007</bugid>
 			<synopsis>
-				Unable to edit run configurations for eclipse project after installing JMC
+				Unable to edit run configurations for eclipse project after
+				installing JMC
 				plugin fixed
 			</synopsis>
 			<description>
-				Previously it would not be possible to edit run configuration after installing
-				the experimental JMC launcher plug-in. This has now been resolve.
+				Previously it would not be possible to edit run
+				configuration after installing
+				the experimental JMC launcher plug-in.
+				This has now been resolve.
 			</description>
 		</bugfix>
 	</bugfixes>
