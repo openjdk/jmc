@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule;
 
 /**
  * The default implementation of an {@link IItemResultSet}.
@@ -130,8 +131,8 @@ final class DefaultIItemResultSet implements IItemResultSet {
 				} finally {
 					exec.shutdown();
 				}
-				// Higher timeout value added for worst case
-				exec.awaitTermination(1, TimeUnit.HOURS);
+				// Timeout can be configured in prefrences (default value is set to 5 minutes)
+				exec.awaitTermination(ClassLeakingRule.CONFIGURED_TIMEOUT, TimeUnit.MINUTES);
 			}
 		}
 	}
