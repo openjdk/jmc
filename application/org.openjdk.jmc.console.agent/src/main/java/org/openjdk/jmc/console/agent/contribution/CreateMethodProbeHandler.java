@@ -93,7 +93,6 @@ public class CreateMethodProbeHandler extends ObjectContributionMenuSelectionLis
 	private void openUserDialog(IPreset preset) {
 		Shell shell = Display.getCurrent().getActiveShell();
 		Dialog dialog = CreateMethodProbeDialog.create(shell, preset);
-		// Make sure we get the preset name before saving it
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 	}
