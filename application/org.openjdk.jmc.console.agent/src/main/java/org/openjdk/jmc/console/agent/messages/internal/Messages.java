@@ -170,6 +170,10 @@ public class Messages extends NLS {
 	public static String PresetManagerPage_MESSAGE_IMPORT_EXTERNAL_PRESET_FILES;
 	public static String PresetManagerPage_MESSAGE_EXPORT_PRESET_TO_A_FILE;
 	public static String PresetManagerPage_MESSAGE_EVENTS;
+	public static String ProbeCreationPage_MESSAGE_PROBE_CREATION_PAGE_TITLE;
+	public static String ProbeCreationPage_MESSAGE_PROBE_CREATION_PAGE_DESCRIPTION;
+	public static String ProbeCreationPage_MESSAGE_PROBE_CREATION_SET_NAME_MESSAGE;
+	public static String ProbeCreationPage_MESSAGE_PROBE_CREATION_SET_NAME_DESCRIPTION;
 	public static String EditorTab_TITLE;
 	public static String ActionButtons_LABEL_SAVE_TO_PRESET_BUTTON;
 	public static String ActionButtons_LABEL_SAVE_TO_FILE_BUTTON;
