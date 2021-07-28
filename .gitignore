@@ -10,6 +10,9 @@ bin/
 application/tests/org.openjdk.jmc.rjmx.services.jfr.test/recording.jfr
 application/uitests/org.openjdk.jmc.flightrecorder.uitest/recording.jfr
 
+# Ignore generated new and noteworthy
+new_and_noteworthy.html
+
 # Ignore build workspace
 workspace/
 
