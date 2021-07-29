@@ -284,7 +284,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				streamReader.next();
 			}
 		} catch (XMLStreamException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to parse global config", e);
 		}
 	}
 

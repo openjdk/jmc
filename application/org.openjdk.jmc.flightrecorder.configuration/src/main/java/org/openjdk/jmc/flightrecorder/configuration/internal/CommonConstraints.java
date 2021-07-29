@@ -40,6 +40,7 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.NONE;
 import static org.openjdk.jmc.common.unit.UnitLookup.BYTE;
 import static org.openjdk.jmc.common.unit.UnitLookup.DAY;
 import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_MS;
+import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_NS;
 import static org.openjdk.jmc.common.unit.UnitLookup.HOUR;
 import static org.openjdk.jmc.common.unit.UnitLookup.MEMORY;
 import static org.openjdk.jmc.common.unit.UnitLookup.MINUTE;
@@ -270,7 +271,7 @@ public class CommonConstraints {
 	}
 
 	public final static IConstraint<IQuantity> POSITIVE_TIMESPAN = new ComparableConstraint<>(
-			new TimePersisterBrokenSI(), SECOND.quantity(0), YEAR.quantity(200));
+			new TimePersisterBrokenSI(), SECOND.quantity(0), EPOCH_NS.quantity(Long.MAX_VALUE));
 	public final static IConstraint<IQuantity> PERIOD_V1 = new ComparableConstraint<>(new PeriodPersister(),
 			NANOSECOND.quantity(1), YEAR.quantity(1));
 	public final static IConstraint<IQuantity> PERIOD_V2 = new ComparableConstraint<>(new PeriodPersisterV2(),

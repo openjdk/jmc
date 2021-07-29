@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.rjmx.triggers.actions.internal;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
@@ -50,6 +51,8 @@ import org.openjdk.jmc.ui.common.util.Filename;
  * This notification action triggers a hprof dump.
  */
 public class TriggerActionHPROF extends TriggerAction {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.triggers.actions.internal"); //$NON-NLS-1$
+
 	private final static ObjectName HOTSPOT;
 	private final static String HPROF_OPERATION_NAME = "dumpHeap"; //$NON-NLS-1$
 
@@ -59,8 +62,7 @@ public class TriggerActionHPROF extends TriggerAction {
 			hs = new ObjectName("com.sun.management:type=HotSpotDiagnostic"); //$NON-NLS-1$
 		} catch (Exception e) {
 			// This should really never ever happen!
-			System.out.println("Could not create the HotSpotDiagnostic MBean ObjectName!"); //$NON-NLS-1$
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not create the HotSpotDiagnostic MBean ObjectName!", e); //$NON-NLS-1$
 		}
 		HOTSPOT = hs;
 	}

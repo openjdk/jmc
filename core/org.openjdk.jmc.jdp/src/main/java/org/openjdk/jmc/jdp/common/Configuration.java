@@ -43,6 +43,7 @@ public interface Configuration {
 	public static final short DEFAULT_TTL = 0;
 	public static final String DEFAULT_MULTICAST_ADDRESS = "224.0.23.178"; //$NON-NLS-1$
 	public static final int DEFAULT_MAX_HEART_BEAT_TIMEOUT = 12000;
+	public static final boolean DEFAULT_JDP_ENABLE_AUTO_DISCOVERY = false;
 
 	/**
 	 * The multicast group to join.

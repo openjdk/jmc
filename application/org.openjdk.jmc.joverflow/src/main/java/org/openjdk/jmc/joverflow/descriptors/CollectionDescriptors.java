@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaLazyReadObject;
@@ -49,6 +50,7 @@ import org.openjdk.jmc.joverflow.util.ClassUtils;
 /**
  */
 public class CollectionDescriptors implements Constants {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.descriptors"); //$NON-NLS-1$
 
 	private static final String[] EMPTY_STRS = new String[] {};
 	private static final JavaClass[] EMPTY_CLZ = new JavaClass[] {};
@@ -439,7 +441,7 @@ public class CollectionDescriptors implements Constants {
 					}
 				}
 				if (clazz == null) {
-					System.err.println("CollectionDescriptors: Class " + classNames[i] + " not found");
+					LOGGER.severe("CollectionDescriptors: Class " + classNames[i] + " not found");
 				}
 			}
 			if (clazz != null) {

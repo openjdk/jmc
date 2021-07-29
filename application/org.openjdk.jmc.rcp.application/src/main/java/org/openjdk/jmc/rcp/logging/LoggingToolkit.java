@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -90,6 +90,7 @@ public final class LoggingToolkit {
 			} catch (Exception e) {
 				getLogger().log(Level.WARNING, "Could not initialize debug logger", e); //$NON-NLS-1$
 				System.err.println("WARNING: Could not initialize debug logger"); //$NON-NLS-1$
+				getLogger().log(Level.WARNING, "", e);
 				e.printStackTrace();
 			}
 		} else if (file == null || file.trim().equals("")) //$NON-NLS-1$
@@ -99,6 +100,7 @@ public final class LoggingToolkit {
 			} catch (Exception e) {
 				getLogger().log(Level.WARNING, "Could not initialize default logger", e); //$NON-NLS-1$
 				System.err.println("WARNING: Could not initialize default logger"); //$NON-NLS-1$
+				getLogger().log(Level.WARNING, "", e);
 				e.printStackTrace();
 			}
 		} else {
@@ -114,6 +116,7 @@ public final class LoggingToolkit {
 			} catch (Exception e) {
 				getLogger().log(Level.WARNING, "Could not initialize user logger", e); //$NON-NLS-1$
 				System.err.println("WARNING: Could not initialize user logger"); //$NON-NLS-1$
+				getLogger().log(Level.WARNING, "", e);
 				e.printStackTrace();
 			}
 		}

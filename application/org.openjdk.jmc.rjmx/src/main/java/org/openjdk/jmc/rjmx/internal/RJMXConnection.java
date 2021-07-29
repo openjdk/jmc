@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -94,6 +94,7 @@ import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 public class RJMXConnection implements Closeable, IMBeanHelperService {
 
 	public static final String KEY_SOCKET_FACTORY = "com.sun.jndi.rmi.factory.socket"; //$NON-NLS-1$
+	public static final String KEY_JMXREMOTE_SSL = "com.sun.management.jmxremote.ssl"; //$NON-NLS-1$
 
 	/**
 	 * The default port JMX
@@ -572,6 +573,7 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 		JMXRMISystemPropertiesProvider.setup();
 		// According to javadocs, has to pass env here too (which mSA RMI took literally).
 		m_jmxc.connect(env);
+		JMXRMISystemPropertiesProvider.clearJMXRMISystemProperties();
 	}
 
 	/**

@@ -49,6 +49,8 @@ public class Messages extends NLS {
 	public static String JfrLaunch_RECORDING_WAITER_INTERRUPTED;
 	public static String JfrLaunch_UNKNOWN_JRE_NAME;
 	public static String JfrLaunch_UNKNOWN_JRE_VERSION;
+	public static String JfrLaunch_ORACLE_JDK_LESS_THAN_11;
+	public static String JfrLaunch_ORACLE_JDK_CECHKBOX_MESSAGE;
 	public static String VOLATILE_CONFIGURATION_IN_JRE;
 
 	static {

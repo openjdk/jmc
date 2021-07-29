@@ -137,6 +137,10 @@ public class JfrLaunchConfigurationTab extends AbstractLaunchConfigurationTab im
 				jfrLaunchPage.setAutoOpen(tempModel.getAutoOpen());
 				model.setAutoOpen(tempModel.getAutoOpen());
 			}
+			if (model.getOracleJdkLessThan11() != tempModel.getOracleJdkLessThan11()) {
+				jfrLaunchPage.setLessThanOracleJdk11(tempModel.getOracleJdkLessThan11());
+				model.setOracleJdkLessThan11(tempModel.getOracleJdkLessThan11());
+			}
 			if (model.isContinuous() != tempModel.isContinuous()) {
 				jfrLaunchPage.setContinuous(tempModel.isContinuous());
 				model.setFixedRecording(!tempModel.isContinuous());

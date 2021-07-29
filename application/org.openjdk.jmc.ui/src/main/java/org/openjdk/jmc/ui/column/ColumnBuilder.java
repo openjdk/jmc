@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -155,9 +155,20 @@ public class ColumnBuilder {
 
 	@SuppressWarnings("unchecked")
 	public <T> ColumnBuilder(String name, String id, IMemberAccessor<?, T> cellAccessor) {
+		this(name, id, cellAccessor,
+				new DelegatingLabelProvider(DEFAULT_LP, (IMemberAccessor<?, Object>) cellAccessor));
+	}
+
+	/**
+	 * Users of this method must ensure that all elements in the tree/table is of type T. This
+	 * constructor will ensure that the comparator is aligned with the label provider.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> ColumnBuilder(String name, String id, IMemberAccessor<?, T> cellAccessor,
+			ColumnLabelProvider labelProvider) {
 		column = new Column(name, id);
 		column.cellAccessor = (IMemberAccessor<?, Object>) cellAccessor;
-		column.labelProvider = new DelegatingLabelProvider(DEFAULT_LP, column.cellAccessor);
+		column.labelProvider = labelProvider;
 		column.comparator = new OptimisticComparator(column.cellAccessor, column.labelProvider);
 	}
 

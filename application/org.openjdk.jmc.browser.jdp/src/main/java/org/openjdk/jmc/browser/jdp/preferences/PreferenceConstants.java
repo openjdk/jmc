@@ -37,6 +37,7 @@ package org.openjdk.jmc.browser.jdp.preferences;
  */
 public class PreferenceConstants {
 	public static final String PROPERTY_KEY_JDP_ADDRESS = "org.openjdk.jmc.jdp.address"; //$NON-NLS-1$
+	public static final String PROPERTY_KEY_JDP_AUTO_DISCOVERY = "org.openjdk.jmc.jdp.auto.discovery"; //$NON-NLS-1$
 	public static final String PROPERTY_KEY_JDP_PORT = "org.openjdk.jmc.jdp.port"; //$NON-NLS-1$
 	public static final String PROPERTY_KEY_HEART_BEAT_TIMEOUT = "org.openjdk.jmc.jdp.hbtimeout"; //$NON-NLS-1$
 }

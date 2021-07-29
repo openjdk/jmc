@@ -189,6 +189,11 @@ public class Messages extends NLS {
 	public static String GCConfigurationPage_SECTION_YOUNG_CONFIG;
 	public static String GCConfigurationPage_SECTION_JVM_GC_FLAGS;
 	public static String GCConfigurationPage_COLUMN_VALUE;
+	public static String GCSummaryPage_PAGE_NAME;
+	public static String GCSummaryPage_SECTION_YOUNG_COLLECTION;
+	public static String GCSummaryPage_SECTION_OLD_COLLECTION;
+	public static String GCSummaryPage_SECTION_ALL_COLLECTION;
+	public static String GCSummaryPage_SECTION_ALL_COLLECTION_PAUSE;
 	public static String GarbageCollectionsPage_COMMITTED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_COMMITTED_METASPACE_DELTA;
 	public static String GarbageCollectionsPage_DISABLED_TOOLTIP;
@@ -299,6 +304,8 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_COLUMN_THREAD_DURATION_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_END;
 	public static String JavaApplicationPage_COLUMN_THREAD_END_DESC;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE;
+	public static String JavaApplicationPage_COLUMN_THREAD_PERCENTAGE_DESC;
 	public static String JavaApplicationPage_COLUMN_THREAD_START;
 	public static String JavaApplicationPage_COLUMN_THREAD_START_DESC;
 	public static String JavaApplicationPage_EDIT_THREAD_LANES_ACTION;
@@ -357,6 +364,9 @@ public class Messages extends NLS {
 	public static String MemoryLeakPage_RELEVANCE_COLUMN_HEADER;
 	public static String MemoryLeakPage_STEPS_SKIPPED;
 	public static String MethodProfilingPage_CLASS_HISTOGRAM_SELECTION;
+	public static String MethodProfilingPage_METHOD_CONTENT_TYPE_DESCRIPTION;
+	public static String MethodProfilingPage_METHOD_DESCRIPTION;
+	public static String MethodProfilingPage_METHOD_TITLE;
 	public static String MethodProfilingPage_PACKAGE_HISTOGRAM_SELECTION;
 	public static String MethodProfilingPage_PAGE_NAME;
 	public static String MethodProfilingPage_PREDECESSORS_DESCRIPTION;
@@ -541,6 +551,10 @@ public class Messages extends NLS {
 	public static String TlabPage_PAGE_NAME;
 	public static String TlabPage_THREADS_TAB_NAME;
 	public static String TlabPage_METHODS_TAB_NAME;
+	public static String TlabPage_CLASS_TAB_NAME;
+	public static String TlabPage_SUMMARY_TAB_NAME;
+	public static String TlabPage_SUMMARY_TAB_INSIDE_ALLOCATION;
+	public static String TlabPage_SUMMARY_TAB_OUTSIDE_ALLOCATION;
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS;
 	public static String TlabPage_ROW_TLAB_ALLOCATIONS_DESC;
 	public static String TlabPage_SELECTED_ONE;

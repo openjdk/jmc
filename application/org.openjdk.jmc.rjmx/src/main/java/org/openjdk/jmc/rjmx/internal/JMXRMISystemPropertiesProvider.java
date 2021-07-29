@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -56,4 +56,37 @@ public final class JMXRMISystemPropertiesProvider {
 		}
 	}
 
+	public static void clearJMXRMISystemProperties() {
+		try {
+			Properties jmxRmiProperties = JMXRMIPreferences.getInstance().getProperties();
+			if (jmxRmiProperties != null) {
+				for (String prop : jmxRmiProperties.stringPropertyNames()) {
+					System.clearProperty(prop);
+				}
+			}
+		} catch (Exception e) {
+			RJMXPlugin.getDefault().getLogger().log(Level.FINE, "Failed to remove JMXRMI SystemProperties", e); //$NON-NLS-1$
+		}
+	}
+
+	public static boolean isKeyStoreConfigured() {
+		try {
+			Properties jmxRmiProperties = JMXRMIPreferences.getInstance().getProperties();
+			if (jmxRmiProperties != null) {
+				int totalPrefCnt = 0;
+				for (String prop : jmxRmiProperties.stringPropertyNames()) {
+					Object val = jmxRmiProperties.get(prop);
+					if (val != null && !val.toString().isEmpty()) {
+						++totalPrefCnt;
+					}
+				}
+				if (totalPrefCnt == 4) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			RJMXPlugin.getDefault().getLogger().log(Level.FINE, "Did not load jmxRmiProperties", e); //$NON-NLS-1$
+		}
+		return false;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.joverflow.stats;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaHeapObject;
@@ -46,6 +47,7 @@ import org.openjdk.jmc.joverflow.heap.parser.HprofParsingCancelledException;
  * Base functionality that's common for all heap scaners.
  */
 abstract class HeapScaner {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.stats"); //$NON-NLS-1$
 
 	protected final Snapshot snapshot;
 	private final InterimRefChain refChain;
@@ -136,8 +138,8 @@ abstract class HeapScaner {
 		}
 
 		if (REPORT_UNVISITED) {
-			System.out.println("\rDebug info:");
-			System.out.println("Objects unreachable from GC roots: " + (currentProcessedObjNo - nObjsBefore));
+			LOGGER.info("\rDebug info:");
+			LOGGER.info("Objects unreachable from GC roots: " + (currentProcessedObjNo - nObjsBefore));
 		}
 	}
 

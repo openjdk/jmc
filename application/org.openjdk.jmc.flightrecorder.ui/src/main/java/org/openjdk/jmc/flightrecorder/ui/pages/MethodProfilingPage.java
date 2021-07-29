@@ -66,13 +66,17 @@ import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.Attribute;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemToolkit;
+import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -108,6 +112,8 @@ import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.ItemHistogramBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.flightrecorder.ui.pages.internal.MethodWithFrameType;
+import org.openjdk.jmc.flightrecorder.ui.pages.internal.MethodWithFrameTypeLabelProvider;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
@@ -128,6 +134,23 @@ public class MethodProfilingPage extends AbstractDataPage {
 	private static final Color SIBLINGS_COUNT_COLOR = SWTColorToolkit.getColor(new RGB(170, 250, 170));
 	private static final Color COUNT_COLOR = SWTColorToolkit.getColor(new RGB(100, 200, 100));
 
+	// Same as STACK_TRACE_TOP_METHOD but includes information about the frame type for the sample (and will distinguish methods on this)
+	private static final IAttribute<MethodWithFrameType> STACK_TRACE_TOP_METHOD_WITH_FRAME_TYPE = new Attribute<MethodWithFrameType>(
+			"(stackTrace).topMethodOptimization", Messages.MethodProfilingPage_METHOD_TITLE, //$NON-NLS-1$
+			Messages.MethodProfilingPage_METHOD_DESCRIPTION, new ContentType<MethodWithFrameType>("methodwithframetype", //$NON-NLS-1$
+					Messages.MethodProfilingPage_METHOD_CONTENT_TYPE_DESCRIPTION)) {
+		@Override
+		public <U> IMemberAccessor<MethodWithFrameType, U> customAccessor(IType<U> type) {
+			final IMemberAccessor<IMCFrame, U> accessor = JdkAttributes.STACK_TRACE_TOP_FRAME.getAccessor(type);
+			return accessor == null ? null : new IMemberAccessor<MethodWithFrameType, U>() {
+				@Override
+				public MethodWithFrameType getMember(U i) {
+					IMCFrame frame = accessor.getMember(i);
+					return frame == null ? null : new MethodWithFrameType(frame.getMethod(), frame.getType());
+				}
+			};
+		}
+	};
 	private static final Listener PERCENTAGE_BACKGROUND_DRAWER = new Listener() {
 		@Override
 		public void handleEvent(Event event) {
@@ -228,8 +251,8 @@ public class MethodProfilingPage extends AbstractDataPage {
 			sash = new SashForm(form.getBody(), SWT.VERTICAL);
 			toolkit.adapt(sash);
 
-			table = HOT_METHODS_HISTOGRAM.buildWithoutBorder(sash, JdkAttributes.STACK_TRACE_TOP_METHOD,
-					getTableSettings(state.getChild(TABLE_ELEMENT)));
+			table = HOT_METHODS_HISTOGRAM.buildWithoutBorder(sash, STACK_TRACE_TOP_METHOD_WITH_FRAME_TYPE,
+					getTableSettings(state.getChild(TABLE_ELEMENT)), new MethodWithFrameTypeLabelProvider());
 			MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
 			ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
 			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
