@@ -41,7 +41,6 @@
 			<image>general/issues.png</image>
 		</note>
 	</component>
-
 	<component>
 		<!-- ******************************* JMC Core ************************** -->
 		<name>Core</name>
@@ -154,15 +153,6 @@
 				actual server time. This means that time stamps, as well as
 				remaining time for a flight recording, can be wrong for processes on
 				machines that have been hibernated.
-			</description>
-		</issue>
-		<issue>
-			<area>JFR</area>
-			<bugid>7122</bugid>
-			<synopsis>Rules evaluation never complete</synopsis>
-			<description>
-				Sometimes the rules evaluation may never complete for
-				the GC rules.
 			</description>
 		</issue>
 		<issue>
