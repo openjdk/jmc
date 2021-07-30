@@ -34,12 +34,19 @@
 -->
 <feature
       id="org.openjdk.jmc.feature.console.agent"
-      label="JMC Agent Plugin"
-      version="8.1.0.qualifier">
+      label="%name"
+      version="8.1.0.qualifier"
+      provider-name="%provider"
+      license-feature="org.openjdk.jmc.feature.license"
+      license-feature-version="8.1.0.qualifier">
 
-   <description url="http://www.example.com/description">
-      a Mission Control plug-in to control JMC agents
+   <description url="%descriptionUrl">
+      %description
    </description>
+
+   <copyright>
+      %copyright
+   </copyright>
 
    <requires>
       <import feature="org.openjdk.jmc.feature.core" match="equivalent"/>
