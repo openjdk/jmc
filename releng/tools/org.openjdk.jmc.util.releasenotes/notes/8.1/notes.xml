@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+	<component>
+		<!-- ******************************* GENERAL ****************************************** -->
+		<name>General</name>
+		<note version="8.1">
+			<title>JMC 8.1 - New Release!</title>
+			<description>
+				This is a new minor release of Java Mission Control. The
+				JMC application will now require JDK 11+ to run,
+				but can still be
+				used with OpenJDK 8u272+ and Oracle JDK 7u40+. It can
+				also still open
+				and visualize flight
+				recordings from JDK 7 and 8.
+			</description>
+			<image>general/jmc.png</image>
+		</note>
+		<note version="8.1">
+			<title>Eclipse 4.19 support</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2021-03 and later. To install Java Mission
+				Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be
+				vendor specific, and some vendors will
+				instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="8.1">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are more than 80 fixes and improvements in this release.
+				Check out the JMC 8.1 Result Dashboard
+				(https://bugs.openjdk.java.net/secure/Dashboard.jspa?selectPageId=20404)
+				for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JMC Core ************************** -->
+		<name>Core</name>
+		<note version="8.1">
+			<title>New Serializers Core Bundle</title>
+			<description>
+				There is now a new core bundle making it easy to
+				serialize flight recording data to DOT (Graphviz) and JSon. This
+				bundle will be expanded upon in future versions.
+			</description>
+			<image>core/serializers.png</image>
+		</note>
+		<note version="8.1">
+			<title>Improved JFR parser performance</title>
+			<description>
+				The performance of the JFR parser has been improved.
+				More improvements are coming in 8.2.
+			</description>
+			<image>core/parserperf.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JFR ******************************* -->
+		<name>Java Flight Recorder (JFR)</name>
+		<note version="8.1">
+			<title>Support for the new JDK 16 Allocation Events</title>
+			<description>
+				A new form of light weight allocation profiling was
+				introduced with JDK 16 (see
+				https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8257602).
+				This version of JMC supports this new type of allocation profiling.
+			</description>
+			<image>jfr/allocationprof.png</image>
+		</note>
+		<note version="8.1">
+			<title>New Page for Peeking into the Constant Pools</title>
+			<description>
+				There is a new page available for taking a look at what
+				constants are available in the recording. This can, for example, be
+				useful when creating custom events to see where all that storage and
+				memory is being used.
+			</description>
+			<image>jfr/constantpool.png</image>
+		</note>
+		<note version="8.1">
+			<title>Open Recordings with .lz4 extension</title>
+			<description>
+				For convenience, files with the .lz4 extension will now
+				be attempted to be opened as flight recordings. This is since lz4 is
+				a common compression to use with flight recordings.
+			</description>
+			<image>jfr/lz4.png</image>
+		</note>
+	</component>
+	<!-- ******************************* Agent ******************************* -->
+	<component>
+		<name>JMC Agent Plug-in</name>
+		<note version="8.1.0">
+			<title>New JMC Agent Plug-in</title>
+			<description>
+				There is now a new agent plug-in available for JMC,
+				which allows configuring where to emit flight recording
+				events in an
+				already running process.
+			</description>
+			<image>agent/agent.png</image>
+		</note>
+	</component>
+	<!-- ******************************* Bugfixes ****************************************** -->
+	<bugfixes>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>6939</bugid>
+			<synopsis>Time range indicator update problem fixed</synopsis>
+			<description>
+				Sometimes the time range indicator wasn't updated when
+				setting the time
+				range. This is now fixed.
+			</description>
+		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7007</bugid>
+			<synopsis>
+				Unable to edit run configurations for eclipse project after
+				installing JMC
+				plugin fixed
+			</synopsis>
+			<description>
+				Previously it would not be possible to edit run
+				configuration after installing
+				the experimental JMC launcher plug-in.
+				This has now been resolve.
+			</description>
+		</bugfix>
+	</bugfixes>
+	<!-- ******************************* Known issues ****************************************** -->
+	<knownissues>
+		<issue>
+			<area>General</area>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
+			<description>
+				After the bugfix of
+				https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean
+				"Elapsed time of JVM process", whilst it previously was implemented
+				as time since start of the JVM process. The uptime attribute is used
+				by JMC, together with RuntimeMXBean#getStartTime(), to estimate the
+				actual server time. This means that time stamps, as well as
+				remaining time for a flight recording, can be wrong for processes on
+				machines that have been hibernated.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>
+				This one is still under investigation, but it seems JMC
+				can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7068</bugid>
+			<synopsis>
+				JfrRecordingTest (uitest) hangs on the automated analysis
+				page
+			</synopsis>
+			<description>
+				Trying to run uitests on Fedora hangs on
+				JfrRecordingTest.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph and flame graph view does not work on Windows
+			</synopsis>
+			<description>
+				This is due to a bug with the Edge based browser
+				component in SWT. We'll look into it for 8.2.0.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>6265</bugid>
+			<synopsis>JMC crashes with Webkit2+GTK 4</synopsis>
+			<description>See the issue for more information.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>5412</bugid>
+			<synopsis>Dragging and dropping a JFR file into an open analysis page
+				does not work
+			</synopsis>
+			<description>
+				The expected behaviour would be to open the recording
+				whenever a file is dropped in the editor area, but the behaviour
+				will be defined by the embedded browser component, and not very
+				useful.
+			</description>
+		</issue>
+	</knownissues>
+</notes>

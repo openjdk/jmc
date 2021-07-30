@@ -100,7 +100,7 @@ public class Transform {
 			System.err.format("%s not given", fileDescription).println();
 		} else {
 			Path file = Paths.get(arg);
-			if (isInputFile && exists(file)) {
+			if (!isInputFile || (isInputFile && exists(file))) {
 				return file;
 			} else {
 				System.err.format("%s '%s' not found", fileDescription, file).println();
