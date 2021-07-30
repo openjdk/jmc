@@ -36,37 +36,85 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openjdk.jmc</groupId>
-        <artifactId>missioncontrol.core</artifactId>
+        <artifactId>missioncontrol.core.tests</artifactId>
         <version>${revision}${changelist}</version>
     </parent>
-    <artifactId>flightrecorder.writer</artifactId>
+    <artifactId>flightrecorder.writer.test</artifactId>
     <properties>
-        <spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+        <spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
         <maven.compiler.target>8</maven.compiler.target>
         <maven.compiler.source>8</maven.compiler.source>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M3</version>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>
             <groupId>org.openjdk.jmc</groupId>
             <artifactId>common</artifactId>
-            <version>${project.version}</version>
+            <version>${revision}${changelist}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmc</groupId>
+            <artifactId>flightrecorder.writer</artifactId>
+            <version>${revision}${changelist}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.api.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.jupiter.params.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.engine.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.inline.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmc</groupId>
             <artifactId>flightrecorder</artifactId>
-            <version>${project.version}</version>
+            <version>${revision}${changelist}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+      <testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven.jar.version}</version><!--$NO-MVN-MAN-VER$-->
+          <executions>
+             <execution>
+                <goals>
+                   <goal>test-jar</goal>
+                </goals>
+             </execution>
+          </executions>
+       </plugin>
+      </plugins>
+    </build>
 </project>
