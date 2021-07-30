@@ -203,11 +203,13 @@ public class SyntheticAttributeExtension implements IParserExtension {
 		@Override
 		public void addEvent(Object[] values) {
 			IMCPackage thePackage = (IMCPackage) values[packageFieldIndex];
-			IMCModule exportingModule = thePackage.getModule();
-			Object[] newValues = new Object[values.length + 1];
-			System.arraycopy(values, 0, newValues, 0, values.length);
-			newValues[values.length] = exportingModule;
-			subSink.addEvent(newValues);
+			if (thePackage != null) {
+				IMCModule exportingModule = thePackage.getModule();
+				Object[] newValues = new Object[values.length + 1];
+				System.arraycopy(values, 0, newValues, 0, values.length);
+				newValues[values.length] = exportingModule;
+				subSink.addEvent(newValues);
+			}
 		}
 	}
 }
