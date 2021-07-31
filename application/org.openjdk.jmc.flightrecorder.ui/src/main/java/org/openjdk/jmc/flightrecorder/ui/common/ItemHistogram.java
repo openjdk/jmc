@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.common;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IAccessorFactory;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
@@ -67,6 +70,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.CompositeKey;
 import org.openjdk.jmc.common.util.TypeHandling;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.TypeAppearance;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
@@ -214,10 +218,23 @@ public class ItemHistogram {
 		public <T> ItemHistogram build(
 			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
 			TableSettings tableSettings, int border) {
+			ColumnLabelProvider lp = null;
+			if (UnitLookup.METHOD.getIdentifier().equals(keyType.getIdentifier())
+					|| UnitLookup.STACKTRACE_FRAME.getIdentifier().equals(keyType.getIdentifier())) {
+				lp = new MethodLabelProvider();
+			} else {
+				lp = new KeyLabelProvider(keyType);
+			}
+			return build(container, colLabel, keyType, classifier, tableSettings, border, lp);
+		}
+
+		public <T> ItemHistogram build(
+			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
+			TableSettings tableSettings, int border, ColumnLabelProvider labelProvider) {
 			List<IColumn> columns = new ArrayList<>();
 			IMemberAccessor<?, Object> keyAccessor = AggregationGrid::getKey;
-			ColumnLabelProvider keyLp = new DelegatingLabelProvider(new KeyLabelProvider(keyType), keyAccessor);
-			columns.add(new ColumnBuilder(colLabel, KEY_COL_ID, keyAccessor).labelProvider(keyLp).build());
+			ColumnLabelProvider keyLp = new DelegatingLabelProvider(labelProvider, keyAccessor);
+			columns.add(new ColumnBuilder(colLabel, KEY_COL_ID, keyAccessor, keyLp).build());
 			columns.addAll(this.columns);
 			return build(container, columns, classifier, tableSettings, border);
 		}
@@ -235,6 +252,18 @@ public class ItemHistogram {
 			return new ItemHistogram(ColumnManager.build(tableViewer, columns, tableSettings), classifier, grid);
 		}
 
+		public <T> ItemHistogram buildWithoutBorder(
+			Composite container, String colLabel, ContentType<? super T> keyType, IAccessorFactory<T> classifier,
+			TableSettings tableSettings, ColumnLabelProvider labelProvider) {
+			return build(container, colLabel, keyType, classifier, tableSettings, SWT.NONE, labelProvider);
+		}
+
+		public <T> ItemHistogram buildWithoutBorder(
+			Composite container, IAttribute<T> classifier, TableSettings tableSettings,
+			ColumnLabelProvider labelProvider) {
+			return build(container, classifier.getName(), classifier.getContentType(), classifier, tableSettings,
+					SWT.NONE, labelProvider);
+		}
 	}
 
 	/**
@@ -340,6 +369,70 @@ public class ItemHistogram {
 				 * implemented throughout the application by comparing with getText(). Otherwise, it
 				 * may be considered a glitch by users.
 				 */
+				return ((IDisplayable) key).displayUsing(IDisplayable.VERBOSE);
+			}
+			return null;
+		}
+	};
+
+	static class MethodLabelProvider extends ColumnLabelProvider {
+
+		// The default fallback image
+		private final Image nonoptimizedMethodImage;
+		// Images for various modifiers
+		private final Image defaultMethodImage;
+		private final Image publicMethodImage;
+		private final Image protectedMethodImage;
+		private final Image privateMethodImage;
+
+		MethodLabelProvider() {
+			defaultMethodImage = CoreImages.METHOD_DEFAULT.createImage();
+			nonoptimizedMethodImage = CoreImages.METHOD_NON_OPTIMIZED.createImage();
+			publicMethodImage = CoreImages.METHOD_PUBLIC.createImage();
+			protectedMethodImage = CoreImages.METHOD_PROTECTED.createImage();
+			privateMethodImage = CoreImages.METHOD_PRIVATE.createImage();
+		}
+
+		@Override
+		public Font getFont(Object key) {
+			return JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+		}
+
+		@Override
+		public Image getImage(Object key) {
+			IMCMethod method = null;
+			if (key instanceof IMCMethod) {
+				method = (IMCMethod) key;
+			} else if (key instanceof IMCFrame) {
+				method = ((IMCFrame) key).getMethod();
+			}
+			if (method != null) {
+				if ((method.getModifier() & Modifier.PUBLIC) != 0) {
+					return publicMethodImage;
+				} else if ((method.getModifier() & Modifier.PROTECTED) != 0) {
+					return protectedMethodImage;
+				} else if ((method.getModifier() & Modifier.PRIVATE) != 0) {
+					return privateMethodImage;
+				}
+				return defaultMethodImage;
+			}
+			return nonoptimizedMethodImage;
+		}
+
+		@Override
+		public String getText(Object key) {
+			if (key instanceof IMCFrame) {
+				key = ((IMCFrame) key).getMethod();
+			}
+			if (key instanceof IDisplayable) {
+				return ((IDisplayable) key).displayUsing(IDisplayable.EXACT);
+			}
+			return TypeHandling.getValueString(key);
+		};
+
+		@Override
+		public String getToolTipText(Object key) {
+			if (key instanceof IDisplayable) {
 				return ((IDisplayable) key).displayUsing(IDisplayable.VERBOSE);
 			}
 			return null;

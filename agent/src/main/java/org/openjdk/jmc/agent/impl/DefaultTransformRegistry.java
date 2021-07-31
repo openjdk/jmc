@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -68,6 +68,7 @@ import org.openjdk.jmc.agent.Parameter;
 import org.openjdk.jmc.agent.ReturnValue;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.XMLValidationException;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.util.IOToolkit;
 import org.openjdk.jmc.agent.util.TypeUtils;
@@ -121,20 +122,20 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return new DefaultTransformRegistry();
 	}
 
-	public static void validateProbeDefinition(InputStream in) throws XMLStreamException {
+	public static void validateProbeDefinition(InputStream in) throws XMLValidationException {
 		try {
 			Validator validator = PROBE_SCHEMA.newValidator();
 			validator.validate(new StreamSource(in));
 		} catch (IOException | SAXException e) {
-			throw new XMLStreamException(e);
+			throw new XMLValidationException(e.getMessage(), e);
 		}
 	}
 
-	public static void validateProbeDefinition(String configuration) throws XMLStreamException {
+	public static void validateProbeDefinition(String configuration) throws XMLValidationException {
 		validateProbeDefinition(new ByteArrayInputStream(configuration.getBytes()));
 	}
 
-	public static TransformRegistry from(InputStream in) throws XMLStreamException {
+	public static TransformRegistry from(InputStream in) throws XMLStreamException, XMLValidationException {
 		byte[] buf;
 		InputStream configuration;
 		try {
@@ -145,6 +146,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			configuration.reset();
 		} catch (IOException e) {
 			throw new XMLStreamException(e);
+		} catch (XMLValidationException xve) {
+			throw xve;
 		}
 
 		HashMap<String, String> globalDefaults = new HashMap<>();
@@ -281,7 +284,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 				streamReader.next();
 			}
 		} catch (XMLStreamException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to parse global config", e);
 		}
 	}
 
@@ -484,7 +487,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	}
 
 	@Override
-	public Set<String> modify(String xmlDescription) {
+	public Set<String> modify(String xmlDescription) throws XMLValidationException {
 		try {
 			validateProbeDefinition(xmlDescription);
 
@@ -517,7 +520,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 			return modifiedClasses;
 		} catch (XMLStreamException xse) {
 			logger.log(Level.SEVERE, "Failed to create XML Stream Reader", xse);
-			return null;
+			throw new XMLValidationException(xse.getMessage(), xse);
 		}
 	}
 

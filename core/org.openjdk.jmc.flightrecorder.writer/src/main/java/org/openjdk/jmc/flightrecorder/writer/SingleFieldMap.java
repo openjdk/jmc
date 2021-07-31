@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
 import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 import java.util.Collection;
@@ -42,11 +41,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-final class SingleFieldMap implements Map<String, TypedFieldValue> {
+final class SingleFieldMap implements Map<String, TypedFieldValueImpl> {
 	private int hashCode = 0;
-	private final ImmutableMapEntry<String, TypedFieldValue> entry;
+	private final ImmutableMapEntry<String, TypedFieldValueImpl> entry;
 
-	SingleFieldMap(String name, TypedFieldValue value) {
+	SingleFieldMap(String name, TypedFieldValueImpl value) {
 		Objects.nonNull(name);
 		Objects.nonNull(value);
 		this.entry = new ImmutableMapEntry<>(name, value);
@@ -73,22 +72,22 @@ final class SingleFieldMap implements Map<String, TypedFieldValue> {
 	}
 
 	@Override
-	public TypedFieldValue get(Object o) {
+	public TypedFieldValueImpl get(Object o) {
 		return entry.getKey().equals(o) ? entry.getValue() : null;
 	}
 
 	@Override
-	public TypedFieldValue put(String s, TypedFieldValue typedFieldValue) {
+	public TypedFieldValueImpl put(String s, TypedFieldValueImpl typedFieldValue) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public TypedFieldValue remove(Object o) {
+	public TypedFieldValueImpl remove(Object o) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void putAll(Map<? extends String, ? extends TypedFieldValue> map) {
+	public void putAll(Map<? extends String, ? extends TypedFieldValueImpl> map) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -103,12 +102,12 @@ final class SingleFieldMap implements Map<String, TypedFieldValue> {
 	}
 
 	@Override
-	public Collection<TypedFieldValue> values() {
+	public Collection<TypedFieldValueImpl> values() {
 		return Collections.singleton(entry.getValue());
 	}
 
 	@Override
-	public Set<Entry<String, TypedFieldValue>> entrySet() {
+	public Set<Entry<String, TypedFieldValueImpl>> entrySet() {
 		return Collections.singleton(entry);
 	}
 

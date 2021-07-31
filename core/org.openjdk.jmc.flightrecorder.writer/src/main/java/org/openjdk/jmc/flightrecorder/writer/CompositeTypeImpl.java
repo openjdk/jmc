@@ -100,7 +100,14 @@ final class CompositeTypeImpl extends BaseType {
 			return true;
 		}
 		if (value instanceof TypedValueImpl) {
-			return ((TypedValueImpl) value).getType().equals(this);
+			if (((TypedValueImpl) value).getType().equals(this)) {
+				return true;
+			}
+		}
+		if (isSimple()) {
+			if (fields.get(0).getType().canAccept(value)) {
+				return true;
+			}
 		}
 		return value instanceof Map;
 	}

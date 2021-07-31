@@ -33,14 +33,12 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
-import org.openjdk.jmc.flightrecorder.writer.TypedFieldImpl;
-
 /**
- * The composite of {@linkplain TypedFieldImpl} and corresponding {@link TypedValue TypedValue(s)}
+ * The composite of {@linkplain TypedField} and corresponding {@link TypedValue TypedValue(s)}
  */
 public interface TypedFieldValue {
-	/** @return the corresponding {@linkplain TypedFieldImpl} */
-	TypedFieldImpl getField();
+	/** @return the corresponding {@linkplain TypedField} */
+	TypedField getField();
 
 	/**
 	 * @return the associated value

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, Datadog, Inc. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -36,7 +37,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.core</artifactId>
-		<version>8.0.1-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>missioncontrol.core.tests</artifactId>
 	<packaging>pom</packaging>
@@ -45,6 +46,8 @@
 		<module>org.openjdk.jmc.flightrecorder.test</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.test</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.jdk.test</module>
+		<module>org.openjdk.jmc.flightrecorder.writer.test</module>
+		<module>org.openjdk.jmc.flightrecorder.serializers.test</module>
 		<module>org.openjdk.jmc.jdp.test</module>
 	</modules>
 	<properties>
@@ -55,6 +58,13 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<junit.version>4.13.1</junit.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
+		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
+		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
+		<mockito.core.version>3.7.7</mockito.core.version>
+		<mockito.inline.version>3.7.7</mockito.inline.version>
+		<build.helper.maven.version>3.2.0</build.helper.maven.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -117,7 +127,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.3</version>
+				<version>0.8.6</version>
 				<executions>
 					<execution>
 						<id>pre-unit-test</id>
@@ -148,6 +158,41 @@
 					<failIfNoTests>${fail.if.no.tests}</failIfNoTests>
 					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc.version}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build.helper.maven.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>add-source</goal>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${basedir}/license</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-deploy-plugin</artifactId>
+			  <version>3.0.0-M1</version>
+			  <configuration>
+			    <skip>true</skip>
+			  </configuration>
 			</plugin>
 		</plugins>
 	</build>

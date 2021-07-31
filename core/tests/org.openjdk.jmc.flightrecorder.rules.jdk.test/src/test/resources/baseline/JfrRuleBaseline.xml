@@ -115,6 +115,11 @@
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>OK</severity>
             <summary>No Stop-the-World, Full GC events detected.</summary>
@@ -408,6 +413,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>OK</severity>
             <summary>No Stop-the-World, Full GC events detected.</summary>
@@ -665,6 +675,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -928,6 +943,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>Not Applicable</severity>
             <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
@@ -1171,6 +1191,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1427,6 +1451,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>Warning</severity>
             <summary>Full GC detected.</summary>
@@ -1677,6 +1705,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1957,6 +1989,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>Warning</severity>
             <summary>The recording is from an early access build.</summary>
             <explanation>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by &amp;#34;java_re&amp;#34; with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</explanation>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2244,6 +2281,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <explanation>This recording is from an early access build of the JRE (Java HotSpot(TM) Client VM (25.20-b08) for linux-x86 JRE (1.8.0_20-ea-b08), built on Apr  1 2014 19:40:24 by &amp;#34;java_re&amp;#34; with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</explanation>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>Not Applicable</severity>
             <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
@@ -2515,6 +2557,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -2818,6 +2865,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
         </rule>
         <rule>
             <id>FullGc</id>
@@ -3125,6 +3177,11 @@ You can read more about string deduplication in the java options documentation o
             <explanation>This recording is from an early access build of the JRE (Java HotSpot(TM) 64-Bit Server VM (9-ea+148) for windows-amd64 JRE (9-ea+148), built on Dec  7 2016 18:47:38 by &amp;#34;javare&amp;#34; with MS VC++ 12.0 (VS2013)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</explanation>
         </rule>
         <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
             <id>FullGc</id>
             <severity>Not Applicable</severity>
             <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
@@ -3262,6 +3319,782 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         <rule>
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
+        </rule>
+    </report>
+    <report>
+        <file>openjdk8u302ea.jfr</file>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with stack traces were recorded.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Warning</severity>
+            <summary>The recording is from an early access build.</summary>
+            <explanation>This recording is from an early access build of the JRE (OpenJDK 64-Bit Server VM (25.302-b04) for linux-amd64 JRE (1.8.0_302-ea-b04), built on May 27 2021 15:04:41 by &amp;#34;openjdk&amp;#34; with gcc 4.4.7 20120313 (Red Hat 4.4.7-23)). The automated analysis is not supported, and you may see errors when attempting to analyze the recording.</explanation>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>OK</severity>
+            <summary>The recording does not seem to contain passwords in the application arguments.</summary>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with JVM arguments were recorded.</summary>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>OK</severity>
+            <summary>There were no duplicate JVM flags on the command line.</summary>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>OK</severity>
+            <summary>The application ran with bytecode verification enabled.</summary>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+    </report>
+    <report>
+        <file>openjdk8u292.jfr</file>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with stack traces were recorded.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>OK</severity>
+            <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>OK</severity>
+            <summary>The recording does not seem to contain passwords in the application arguments.</summary>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with JVM arguments were recorded.</summary>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Warning</severity>
+            <summary>The version of OpenJDK 8 you are running is lacking an important performance fix.</summary>
+            <explanation>The version of OpenJDK (OpenJDK 64-Bit Server VM (25.292-b10) for linux-amd64 JRE (1.8.0_292-b10), built on Apr  9 2021 02:15:01 by &amp;#34;openjdk&amp;#34; with gcc 4.4.7 20120313 (Red Hat 4.4.7-23)) you are running is lacking an important performance fix. Upgrading to version 8u302 or later can, in some cases, improve your performance quite radically. See JDK-8266723 for more information. An alternative can be to disable any periodic events not needed, such as the NativeExecutionSample event.</explanation>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>OK</severity>
+            <summary>There were no duplicate JVM flags on the command line.</summary>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>OK</severity>
+            <summary>The application ran with bytecode verification enabled.</summary>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+    </report>
+    <report>
+        <file>flight_recording_17eaMonitoredVM10440_3.jfr</file>
+         <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>OK</severity>
+            <summary>No revocation of biased locks found.</summary>
+        </rule>
+        <rule>
+            <id>SystemGc</id>
+            <severity>OK</severity>
+            <summary>No garbage collections were caused by System.gc().</summary>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>OK</severity>
+            <summary>No excessively long VM operations were found in this recording (the longest was 54.343 ms).</summary>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>OK</severity>
+            <summary>The program allocated 3.08 % of the memory outside of TLABs.</summary>
+            <solution>Allocating objects outside of Thread Local Allocation Buffers (TLABs) is more expensive than allocating inside TLABs. This may be acceptable if the individual allocations are intended to be larger than a reasonable TLAB. It may be possible to avoid this by decreasing the size of the individual allocations. There are some TLAB related JVM flags that you can experiment with, but it is usually better to let the JVM manage TLAB sizes automatically.</solution>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Warning</severity>
+            <summary>Some stack traces were truncated in this recording.</summary>
+            <explanation>The Flight Recorder is configured with a maximum captured stack depth of 64. 10.5&#xA0;% of all traces were larger than this option, and were therefore truncated. If more detailed traces are required, increase the &#x27;&#x27;-XX:FlightRecorderOptions=stackdepth=&#x3C;value&#x3E;&#x27;&#x27; value.
+Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;li&#x3E;Allocation in new TLAB (2.41&#xA0;% truncated traces)&#x3C;/li&#x3E;&#x3C;li&#x3E;Allocation outside TLAB (1.45&#xA0;% truncated traces)&#x3C;/li&#x3E;&#x3C;li&#x3E;Object Allocation Sample (3.06&#xA0;% truncated traces)&#x3C;/li&#x3E;&#x3C;li&#x3E;Old Object Sample (44.4&#xA0;% truncated traces)&#x3C;/li&#x3E;&#x3C;li&#x3E;Socket Write (48.1&#xA0;% truncated traces)&#x3C;/li&#x3E;&#x3C;/ul&#x3E;</explanation>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>OK</severity>
+            <summary>The system did not run low on physical memory during this recording.</summary>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>OK</severity>
+            <summary>The class data does not seem to increase during the recording.</summary>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+            <summary>Too few events to calculate the result.</summary>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>OK</severity>
+            <summary>The JVM was paused for 100 % during 7/13/2021 6:23:56.617.000 AM – .630</summary>
+            <explanation>The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</explanation>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>OK</severity>
+            <summary>Application efficiency was not highly affected by GC pauses.</summary>
+            <explanation>The highest ratio between garbage collection pauses and execution time was 0.0311 % during 7/13/2021 6:23:54.000 AM – 6:24:54 AM. The garbage collection pause ratio of the entire recording was 0.00178 %.</explanation>
+            <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>OK</severity>
+            <summary>Only 6 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>OK</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>OK</severity>
+            <summary>No long file write pauses were found in this recording (the longest was 22.875 μs).</summary>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>OK</severity>
+            <summary>Application efficiency was not highly affected by halts.</summary>
+            <explanation>The highest ratio of application halts to execution time was 0.123 % during 7/13/2021 6:23:54.000 AM – 6:24:54 AM. 74.7 % of the halts were for reasons other than GC. The halts ratio for the entire recording was 0.00705 %. 74.7 % of the total halts were for reasons other than GC.</explanation>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>OK</severity>
+            <summary>The most allocations were likely done by thread &#x27;&#x27;RMI TCP Connection(19)-192.168.29.191&#x27;&#x27; at: &#x3C;ul&#x3E;&#x3C;li&#x3E;void java.io.ObjectOutputStream$HandleTable.growEntries()&#x3C;/li&#x3E;&#x3C;li&#x3E;int java.io.ObjectOutputStream$HandleTable.assign(Object)&#x3C;/li&#x3E;&#x3C;/ul&#x3E;</summary>
+            <explanation>Many allocations performed by the same thread might indicate a problem in a multi-threaded program. Look at the stack traces for the thread with the highest allocation rate. See if the allocation rate can be brought down, or balanced among the active threads.</explanation>
+        </rule>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>OK</severity>
+            <summary>The most allocated type is likely &#x27;&#x27;java.lang.Object[]&#x27;&#x27;, most commonly allocated by: &#x3C;ul&#x3E;&#x3C;li&#x3E;void java.io.ObjectOutputStream$HandleTable.growEntries()&#x3C;/li&#x3E;&#x3C;li&#x3E;int java.io.ObjectOutputStream$HandleTable.assign(Object)&#x3C;/li&#x3E;&#x3C;/ul&#x3E;</summary>
+            <explanation>Frequently allocated types are good places to start when trying to reduce garbage collections. Look at where the most common types are being allocated to see if many instances are created along the same call path. Try to reduce the number of instances created by invoking the most commonly taken paths less.</explanation>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>OK</severity>
+            <summary>There are no socket write events in this recording.</summary>
+            <explanation>Note that there are some socket write patterns with high duration writes that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication.</explanation>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>OK</severity>
+            <summary>SocketReadRuleFactory_TEXT_NO_EVENTS</summary>
+            <explanation>Note that there are some socket read patterns with high duration reads that we consider to be normal and are therefore excluded. Such patterns include JMX RMI communication and MQ series.</explanation>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>OK</severity>
+            <summary>No allocation was caused by conversion from primitive types to the corresponding object types.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>OK</severity>
+            <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>OK</severity>
+            <summary>The metaspace was not exhausted during this recording.</summary>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>OK</severity>
+            <summary>The longest GC pause was 13.480 ms.</summary>
+            <explanation/>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>OK</severity>
+            <summary>No excessive problems with lock contention found.</summary>
+            <explanation>The following regular expression was used to exclude threads from this rule: ''(.*weblogic\.socket\.Muxer.*)''</explanation>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>OK</severity>
+            <summary>No heap dump performed.</summary>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Warning</severity>
+            <summary>Most of the heap was used by only a few classes.</summary>
+            <explanation>If the heap usage needs to be reduced, then this would be a good place to start.</explanation>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>OK</severity>
+            <summary>No significant time was spent loading new classes during this recording.</summary>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>OK</severity>
+            <summary>No classes with identical names have been loaded more times than the limit.</summary>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+        <rule>
+            <id>HeapInspectionGc</id>
+            <severity>OK</severity>
+            <summary>The JVM did not perform any heap inspection GCs.</summary>
+            <explanation>This is good since they usually take a lot of time.</explanation>
+        </rule>
+        <rule>
+            <id>GcStall</id>
+            <severity>OK</severity>
+            <summary>No indications that the garbage collector could not keep up with the workload were detected.</summary>
+        </rule>
+        <rule>
+            <id>GcLocker</id>
+            <severity>OK</severity>
+            <summary>No GCs were affected by the GC Locker.</summary>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>OK</severity>
+            <summary>No revocation of biased locks found.</summary>
         </rule>
     </report>
 </reportcollection>

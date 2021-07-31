@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
 <!--   
    Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
    
@@ -31,9 +33,7 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<?pde version="3.5"?>
-
-<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="8.0.1" useFeatures="true" includeLaunchers="true">
+<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="8.1.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="../org.openjdk.jmc.rcp.application/icons/mission_control_abt_Oracle.gif"/>
@@ -46,16 +46,10 @@
    </configIni>
 
    <launcherArgs>
-      <!-- Note: if embedding a JDK, remember to override the -vm option on the various platforms to 
-           point to the relative path of your embedded JDK. e.g.
-           <programArgsMac>-ws cocoa -vm ../jdk/Contents/Home/bin/</programArgsMac> -->
       <programArgs>--launcher.appendVmargs
       </programArgs>
-      <programArgsLin></programArgsLin>
       <programArgsMac>-ws cocoa
       </programArgsMac>
-      <programArgsWin>
-      </programArgsWin>
       <vmArgs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:FlightRecorderOptions=stackdepth=128 -XX:+FlightRecorder -XX:StartFlightRecording=name=JMC_Default,maxsize=100m -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED
       -Dsun.java.command=JMC
       </vmArgs>
@@ -63,7 +57,7 @@
       </vmArgsLin>
       <vmArgsMac>--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
-      <vmArgsWin>-Dorg.eclipse.swt.browser.DefaultType=chromium --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED
+      <vmArgsWin>--add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED
       </vmArgsWin>
    </launcherArgs>
 
@@ -96,25 +90,25 @@
    </features>
 
    <configurations>
-      <plugin id="org.openjdk.jmc.rcp.application" autoStart="false" startLevel="5" />
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
-      <plugin id="org.openjdk.jmc.osgi.extension" fragment="true" startLevel="4" />
-      <property name="eclipse.application" value="org.openjdk.jmc.rcp.application.app" />
+      <plugin id="org.openjdk.jmc.osgi.extension" autoStart="false" startLevel="4" />
+      <plugin id="org.openjdk.jmc.rcp.application" autoStart="false" startLevel="5" />
+      <property name="osgi.signedcontent.support" value="true" />
       <property name="eclipse.home.location" value="$osgi.install.area$" />
+      <property name="osgi.splashPath" value="platform:/base/plugins/org.openjdk.jmc.rcp.application" />
+      <property name="eclipse.application" value="org.openjdk.jmc.rcp.application.app" />
       <property name="eclipse.p2.profile" value="JMC" />
       <property name="eclipse.p2.unsignedPolicy" value="prompt" />
       <property name="eclipse.product" value="org.openjdk.jmc.rcp.application.product" />
+      <property name="osgi.instance.area.default" value="@user.home/.jmc/8.1.0" />
       <property name="osgi.bundles.defaultStartLevel" value="4" />
-      <property name="osgi.instance.area.default" value="@user.home/.jmc/8.0.1" />
-      <property name="osgi.signedcontent.support" value="true" />
-      <property name="osgi.splashPath" value="platform:/base/plugins/org.openjdk.jmc.rcp.application" />
    </configurations>
 
    <preferencesInfo>

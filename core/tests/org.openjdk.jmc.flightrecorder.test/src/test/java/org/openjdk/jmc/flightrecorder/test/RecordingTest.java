@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,12 +34,16 @@ package org.openjdk.jmc.flightrecorder.test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.IParserStats;
+import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
 import org.openjdk.jmc.flightrecorder.test.util.PrintoutsToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 
@@ -69,6 +73,32 @@ public class RecordingTest {
 				}
 			} catch (Exception e) {
 				Assert.fail(resourceSet.getResource(0).getName() + ": Could not read baseline file: " + e.getMessage());
+			}
+		}
+	}
+
+	@Test
+	public void testParserStats() throws IOException, CouldNotLoadRecordingException {
+		for (IOResourceSet resourceSet : PrintoutsToolkit.getTestResources()) {
+			IItemCollection items = RecordingToolkit.getFlightRecording(resourceSet);
+			IParserStats parserStats = (IParserStats) items;
+			Set<IEventStats> eventStatsSet = new TreeSet<>((o1, o2) -> Long.compare(o1.getCount(), o2.getCount()));
+			parserStats.forEachEventType((eventStats) -> {
+				eventStatsSet.add(eventStats);
+			});
+			List<String> statsLine = null;
+			try {
+				statsLine = RecordingToolkit.getStats(resourceSet);
+			} catch (IOException ex) {
+				continue;
+			}
+			int i = 0;
+			for (IEventStats eventStats : eventStatsSet) {
+				String[] cols = statsLine.get(i).split(";");
+				Assert.assertEquals(cols[0], eventStats.getName());
+				Assert.assertEquals(Long.parseLong(cols[1]), eventStats.getCount());
+				Assert.assertEquals(Long.parseLong(cols[2]), eventStats.getTotalSize());
+				i++;
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -280,6 +280,7 @@ class StructTypes {
 		public Object classLoader;
 		public Object modifiers;
 		public Object _package;
+		public Object hidden;
 		// Never use this field directly, make sure to always use a method to get the converted value
 		public Object name;
 		private boolean convertedNames;
@@ -314,6 +315,11 @@ class StructTypes {
 				convertNames();
 			}
 			return (String) name;
+		}
+
+		@Override
+		public Boolean isHidden() {
+			return (Boolean) hidden;
 		}
 
 		private void convertNames() {
@@ -642,6 +648,8 @@ class StructTypes {
 		public Object bytecodeIndex;
 		public Object type;
 
+		private boolean isParsed = false;
+
 		@Override
 		public Integer getFrameLineNumber() {
 			return (Integer) lineNumber;
@@ -672,6 +680,7 @@ class StructTypes {
 
 		@Override
 		public int hashCode() {
+			ensureParsed();
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + Objects.hashCode(method);
@@ -683,6 +692,7 @@ class StructTypes {
 
 		@Override
 		public boolean equals(Object obj) {
+			ensureParsed();
 			if (this == obj) {
 				return true;
 			} else if (obj instanceof JfrFrame) {
@@ -692,12 +702,23 @@ class StructTypes {
 			}
 			return false;
 		}
+
+		private void ensureParsed() {
+			if (!isParsed) {
+				// The 'type' field is used in hashCode and equality computations but may change when parsed
+				// Force parsing the field to make the hashCode and equality computations to perform consistently
+				getType();
+				isParsed = true;
+			}
+		}
 	}
 
 	static class JfrStackTrace implements IMCStackTrace {
 
 		public Object frames;
 		public Object truncated;
+
+		private boolean isParsed = false;
 
 		@SuppressWarnings("unchecked")
 		@Override
@@ -718,6 +739,7 @@ class StructTypes {
 
 		@Override
 		public int hashCode() {
+			ensureParsed();
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + Objects.hashCode(frames);
@@ -727,6 +749,7 @@ class StructTypes {
 
 		@Override
 		public boolean equals(Object obj) {
+			ensureParsed();
 			if (this == obj) {
 				return true;
 			} else if (obj instanceof JfrStackTrace) {
@@ -736,5 +759,13 @@ class StructTypes {
 			return false;
 		}
 
+		private void ensureParsed() {
+			if (!isParsed) {
+				// The 'frames' field is used in hashCode and equality computations but may change when parsed
+				// Force parsing the field to make the hashCode and equality computations to perform consistently
+				getFrames();
+				isParsed = true;
+			}
+		}
 	}
 }

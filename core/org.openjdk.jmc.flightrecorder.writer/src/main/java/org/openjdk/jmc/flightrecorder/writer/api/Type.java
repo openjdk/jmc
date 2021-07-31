@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
-import org.openjdk.jmc.flightrecorder.writer.TypedFieldImpl;
-
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -70,9 +68,9 @@ public interface Type extends NamedType {
 	/**
 	 * @param name
 	 *            field name
-	 * @return the {@link TypedFieldImpl field} instance
+	 * @return the {@link TypedField field} instance
 	 */
-	TypedFieldImpl getField(String name);
+	TypedField getField(String name);
 
 	/**
 	 * @return attached annotations

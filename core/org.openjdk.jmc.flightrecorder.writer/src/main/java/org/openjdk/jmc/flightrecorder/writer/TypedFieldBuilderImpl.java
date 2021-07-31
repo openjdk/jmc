@@ -36,9 +36,12 @@ package org.openjdk.jmc.flightrecorder.writer;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
+import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 final class TypedFieldBuilderImpl implements TypedFieldBuilder {
 	private final TypesImpl types;
@@ -55,7 +58,7 @@ final class TypedFieldBuilderImpl implements TypedFieldBuilder {
 
 	@Override
 	public TypedFieldBuilderImpl addAnnotation(Type type) {
-		return addAnnotation(type, null);
+		return addAnnotation(type, (String) null);
 	}
 
 	@Override
@@ -70,8 +73,23 @@ final class TypedFieldBuilderImpl implements TypedFieldBuilder {
 	}
 
 	@Override
-	public TypedFieldBuilderImpl addAnnotation(TypesImpl.Predefined type, String value) {
+	public TypedFieldBuilderImpl addAnnotation(Types.Predefined type, String value) {
 		return addAnnotation(types.getType(type), value);
+	}
+
+	@Override
+	public TypedFieldBuilder addAnnotation(Type type, Consumer<TypedValueBuilder> builderCallback) {
+		TypedValueBuilderImpl impl = new TypedValueBuilderImpl((TypeImpl) type);
+		if (builderCallback != null) {
+			builderCallback.accept(impl);
+		}
+		annotations.add(new Annotation(type, impl.build()));
+		return this;
+	}
+
+	@Override
+	public TypedFieldBuilder addAnnotation(Types.Predefined type, Consumer<TypedValueBuilder> builderCallback) {
+		return addAnnotation(types.getType(type), builderCallback);
 	}
 
 	@Override

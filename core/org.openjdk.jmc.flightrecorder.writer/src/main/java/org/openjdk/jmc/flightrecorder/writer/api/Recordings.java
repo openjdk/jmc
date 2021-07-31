@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.writer.api;
 
 import org.openjdk.jmc.flightrecorder.writer.RecordingImpl;
+import org.openjdk.jmc.flightrecorder.writer.RecordingSettingsBuilderImpl;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -42,24 +43,127 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 /**
  * A factory class to create new {@linkplain Recording} instances
  */
 public final class Recordings {
+	/**
+	 * Create a new recording that will be automatically stored in the given file. The recording
+	 * start timestamp is set to the current time and the recording will automatically initialize
+	 * JDK types.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
 	public static Recording newRecording(String path) throws IOException {
 		return newRecording(Paths.get(path));
 	}
 
+	/**
+	 * Create a new recording that will be automatically stored in the given file.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @param settingsCallback
+	 *            settings callback
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
+	public static Recording newRecording(String path, Consumer<RecordingSettingsBuilder> settingsCallback)
+			throws IOException {
+		return newRecording(Paths.get(path), settingsCallback);
+	}
+
+	/**
+	 * Create a new recording that will be automatically stored in the given path. The recording
+	 * start timestamp is set to the current time and the recording will automatically initialize
+	 * JDK types.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
 	public static Recording newRecording(Path path) throws IOException {
 		return newRecording(path.toFile());
 	}
 
-	public static Recording newRecording(File path) throws IOException {
-		return new RecordingImpl(new FileOutputStream(path));
+	/**
+	 * Create a new recording that will be automatically stored in the given path.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @param settingsCallback
+	 *            settings callback
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
+	public static Recording newRecording(Path path, Consumer<RecordingSettingsBuilder> settingsCallback)
+			throws IOException {
+		return newRecording(path.toFile(), settingsCallback);
 	}
 
+	/**
+	 * Create a new recording that will be automatically stored in the given file. The recording
+	 * start timestamp is set to the current time and the recording will automatically initialize
+	 * JDK types.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
+	public static Recording newRecording(File path) throws IOException {
+		return newRecording(new FileOutputStream(path));
+	}
+
+	/**
+	 * Create a new recording that will be automatically stored in the given file.
+	 * 
+	 * @param path
+	 *            the path to the recording file
+	 * @param settingsCallback
+	 *            settings callback
+	 * @return a new {@linkplain Recording} instance
+	 * @throws IOException
+	 */
+	public static Recording newRecording(File path, Consumer<RecordingSettingsBuilder> settingsCallback)
+			throws IOException {
+		return newRecording(new FileOutputStream(path), settingsCallback);
+	}
+
+	/**
+	 * Create a new recording that will be automatically stored in the given stream. The recording
+	 * start timestamp is set to the current time and the recording will automatically initialize
+	 * JDK types.
+	 * 
+	 * @param recordingStream
+	 *            recording output stream
+	 * @return a new {@linkplain Recording} instance
+	 */
 	public static Recording newRecording(OutputStream recordingStream) {
-		return new RecordingImpl(new BufferedOutputStream(recordingStream));
+		return newRecording(recordingStream, RecordingSettingsBuilder::withJdkTypeInitialization);
+	}
+
+	/**
+	 * Create a new recording that will be automatically stored in the given stream.
+	 * 
+	 * @param recordingStream
+	 *            recording output stream
+	 * @param settingsCallback
+	 *            settings callback
+	 * @return a new {@linkplain Recording} instance
+	 */
+	public static Recording newRecording(
+		OutputStream recordingStream, Consumer<RecordingSettingsBuilder> settingsCallback) {
+		RecordingSettingsBuilderImpl builder = new RecordingSettingsBuilderImpl();
+		if (settingsCallback != null) {
+			settingsCallback.accept(builder);
+		}
+		return new RecordingImpl(new BufferedOutputStream(recordingStream), builder.build());
 	}
 }

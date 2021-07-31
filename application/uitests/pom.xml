@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol.application</artifactId>
-		<version>8.0.1-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>missioncontrol.application.uitests</artifactId>
 	<packaging>pom</packaging>
@@ -50,8 +50,8 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jacoco.plugin.version>0.8.3</jacoco.plugin.version>
-		<jmc.version>8.0.1-SNAPSHOT</jmc.version>
+		<jacoco.plugin.version>0.8.6</jacoco.plugin.version>
+		<jmc.version>${revision}${changelist}</jmc.version>
 	</properties>
 	
 	<modules>

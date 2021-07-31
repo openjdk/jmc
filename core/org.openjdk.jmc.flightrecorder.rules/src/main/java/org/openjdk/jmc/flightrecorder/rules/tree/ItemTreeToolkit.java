@@ -55,6 +55,9 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
  */
 public final class ItemTreeToolkit {
 
+	private static final String NEW_LINE_SEPARATOR = "\n";
+	private static final String BULLET_CHARACTER = "\\u2022 ";
+
 	/**
 	 * @return A String representation of the tree. Useful for debugging.
 	 */
@@ -99,7 +102,7 @@ public final class ItemTreeToolkit {
 			reports.add(String.format("&nbsp;&nbsp;%s, %s (%s)", next.getType().getName(), toString(duration), //$NON-NLS-1$
 					RulesToolkit.toRatioPercentString(duration, topLevelDuration)));
 		}
-		report.append(StringToolkit.join(reports, " =><br>")); //$NON-NLS-1$
+		report.append(StringToolkit.join(reports, NEW_LINE_SEPARATOR)); //$NON-NLS-1$
 	}
 
 	/**
@@ -128,7 +131,7 @@ public final class ItemTreeToolkit {
 
 		IQuantity firstLayerDuration = null;
 		report.append(Messages.getString(Messages.ItemTreeToolkit_BREAKDOWN_HEADER_LAYERS));
-		report.append("<ul>"); //$NON-NLS-1$
+		report.append(NEW_LINE_SEPARATOR); //$NON-NLS-1$
 
 		for (int i = 0; i < layers.size() && i <= maxDepth; i++) {
 			LayerBreakdown breakdown = layers.get(i);
@@ -138,14 +141,13 @@ public final class ItemTreeToolkit {
 			} else if (firstLayerDuration == null) {
 				firstLayerDuration = layerDuration;
 			}
-			report.append("<li>"); //$NON-NLS-1$
+			report.append(NEW_LINE_SEPARATOR + BULLET_CHARACTER); //$NON-NLS-1$
 			report.append(MessageFormat.format(Messages.getString(Messages.ItemTreeToolkit_BREAKDOWN_LAYER_CAPTION),
 					breakdown.getLayer()));
 			appendLayerBreakdown(report, firstLayerDuration, breakdown);
-			report.append("</li>"); //$NON-NLS-1$
-			report.append("<br>"); //$NON-NLS-1$
+			report.append(NEW_LINE_SEPARATOR); //$NON-NLS-1$
 		}
-		report.append("</ul>"); //$NON-NLS-1$
+		report.append(NEW_LINE_SEPARATOR + NEW_LINE_SEPARATOR); //$NON-NLS-1$
 	}
 
 	private static void appendLayerBreakdown(
@@ -156,7 +158,7 @@ public final class ItemTreeToolkit {
 					RulesToolkit.toRatioPercentString(entry.getDuration(), firstLayerDuration),
 					entry.getType().getName(), toString(entry.getDuration())));
 		}
-		report.append(StringToolkit.join(reportEntries, "<br>")); //$NON-NLS-1$
+		report.append(StringToolkit.join(reportEntries, NEW_LINE_SEPARATOR)); //$NON-NLS-1$
 	}
 
 	private static Object toString(IQuantity duration) {

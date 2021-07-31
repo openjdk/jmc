@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
 		<artifactId>missioncontrol</artifactId>
-		<version>8.0.1-SNAPSHOT</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
@@ -82,6 +82,7 @@
 		<module>org.openjdk.jmc.feature.rcp</module>
 		<module>org.openjdk.jmc.feature.rcp.update</module>
 		<module>org.openjdk.jmc.feature.twitter</module>
+		<module>org.openjdk.jmc.feature.console.agent</module>
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
@@ -114,6 +115,7 @@
 		<module>org.openjdk.jmc.ui.common</module>
 		<module>org.openjdk.jmc.updatesite.ide</module>
 		<module>org.openjdk.jmc.updatesite.rcp</module>
+		<module>org.openjdk.jmc.console.agent</module>
 		<module>l10n</module>
 		<module>tests</module>
 		<module>coverage</module>
@@ -144,42 +146,47 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.serializers</artifactId>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.test</artifactId>
-			<version>8.0.1-SNAPSHOT</version>
+			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.3</version>
+			<version>0.8.6</version>
 		</dependency>
 	</dependencies>
 	<build>

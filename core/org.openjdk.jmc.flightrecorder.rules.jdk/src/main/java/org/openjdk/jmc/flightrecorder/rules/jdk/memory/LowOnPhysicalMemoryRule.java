@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -81,20 +81,22 @@ public class LowOnPhysicalMemoryRule implements IRule {
 		IQuantity total = items.getAggregate(JdkAggregators.MIN_TOTAL_MEMORY);
 		IQuantity used = items.getAggregate(JdkAggregators.MAX_USED_MEMORY);
 
-		// FIXME: Configuration attribute for warning limit and maybe safe usage
-		double safeUsage = 0.85;
-		double warningLimit = 0.95;
-		double usage = used.ratioTo(total);
-		// FIXME: Check that calculation gives a reasonable value
-		// double unsafeUse = (used - (total * safeUsage)) / (total * (1 - safeUsage));
-		double score = RulesToolkit.mapExp100(usage - safeUsage, 0, warningLimit - safeUsage);
-		if (score > 0) {
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO_LONG))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(USED_MEMORY_RATIO, UnitLookup.PERCENT_UNITY.quantity(usage))
-					.addResult(TOTAL_MEMORY, total).addResult(MAX_USED_MEMORY, used).build();
+		if (used != null) {
+			// FIXME: Configuration attribute for warning limit and maybe safe usage
+			double safeUsage = 0.85;
+			double warningLimit = 0.95;
+			double usage = used.ratioTo(total);
+			// FIXME: Check that calculation gives a reasonable value
+			// double unsafeUse = (used - (total * safeUsage)) / (total * (1 - safeUsage));
+			double score = RulesToolkit.mapExp100(usage - safeUsage, 0, warningLimit - safeUsage);
+			if (score > 0) {
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(USED_MEMORY_RATIO, UnitLookup.PERCENT_UNITY.quantity(usage))
+						.addResult(TOTAL_MEMORY, total).addResult(MAX_USED_MEMORY, used).build();
+			}
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.LowOnPhysicalMemoryFactory_TEXT_OK)).build();

@@ -1,4 +1,4 @@
-name: Check formatting and run tests
+name: validate
 
 on: [push, pull_request]
 

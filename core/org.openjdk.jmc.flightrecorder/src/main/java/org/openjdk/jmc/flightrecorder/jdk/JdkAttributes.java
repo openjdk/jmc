@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.ADDRESS;
 import static org.openjdk.jmc.common.unit.UnitLookup.CLASS;
 import static org.openjdk.jmc.common.unit.UnitLookup.CLASS_LOADER;
 import static org.openjdk.jmc.common.unit.UnitLookup.FLAG;
+import static org.openjdk.jmc.common.unit.UnitLookup.FREQUENCY;
 import static org.openjdk.jmc.common.unit.UnitLookup.LABELED_IDENTIFIER;
 import static org.openjdk.jmc.common.unit.UnitLookup.MEMORY;
 import static org.openjdk.jmc.common.unit.UnitLookup.METHOD;
@@ -135,7 +136,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<String> STACK_TRACE_STRING = Attribute.canonicalize(
 			new Attribute<String>("(stackTrace).string", Messages.getString(Messages.ATTR_STACK_TRACE_STRING), //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_STRING_DESC), UnitLookup.PLAIN_TEXT) {
@@ -152,7 +152,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<IMCFrame> STACK_TRACE_TOP_FRAME = Attribute.canonicalize(
 			new Attribute<IMCFrame>("(stackTrace).topframe", Messages.getString(Messages.ATTR_STACK_TRACE_FRAME), //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_FRAME_DESC), UnitLookup.STACKTRACE_FRAME) {
@@ -169,7 +168,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<String> STACK_TRACE_TOP_PACKAGE = Attribute.canonicalize(
 			new Attribute<String>("(stackTrace).topPackage", Messages.getString(Messages.ATTR_STACK_TRACE_PACKAGE), //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_PACKAGE_DESC), PLAIN_TEXT) {
@@ -185,7 +183,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<IMCType> STACK_TRACE_TOP_CLASS = Attribute.canonicalize(
 			new Attribute<IMCType>("(stackTrace).topClass", Messages.getString(Messages.ATTR_STACK_TRACE_CLASS), //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_CLASS_DESC), CLASS) {
@@ -246,7 +243,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<IMCFrame> STACK_TRACE_BOTTOM_FRAME = Attribute
 			.canonicalize(new Attribute<IMCFrame>("(stackTrace).bottomFrame", //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_BOTTOM_FRAME),
@@ -267,7 +263,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<IMCMethod> STACK_TRACE_BOTTOM_METHOD = Attribute
 			.canonicalize(new Attribute<IMCMethod>("(stackTrace).bottomMethod", //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_BOTTOM_METHOD),
@@ -300,7 +295,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<Boolean> STACK_TRACE_TRUNCATED = Attribute.canonicalize(
 			new Attribute<Boolean>("(stackTrace).truncationState", Messages.getString(Messages.ATTR_STACK_TRACE_DEPTH), //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_STACK_TRACE_DEPTH_DESC), FLAG) {
@@ -317,11 +311,9 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<String> PID = attr("pid", Messages.getString(Messages.ATTR_PID), PLAIN_TEXT); //$NON-NLS-1$
 	public static final IAttribute<String> COMMAND_LINE = attr("commandLine", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMMAND_LINE), PLAIN_TEXT);
-
 	public static final IAttribute<IQuantity> JVM_SYSTEM = attr("jvmSystem", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_JVM_SYSTEM), Messages.getString(Messages.ATTR_JVM_SYSTEM_DESC),
 			PERCENTAGE);
@@ -408,7 +400,6 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_RECORDING_MAX_AGE), TIMESPAN);
 	public static final IAttribute<String> RECORDING_DESTINATION = attr("destination", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_RECORDING_DESTINATION), PLAIN_TEXT);
-
 	public static final IAttribute<LabeledIdentifier> REC_SETTING_FOR = attr("settingFor", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REC_SETTING_FOR), LABELED_IDENTIFIER);
 	public static final IAttribute<String> REC_SETTING_NAME = attr("name", //$NON-NLS-1$
@@ -608,10 +599,8 @@ public final class JdkAttributes {
 		}
 	});
 	public static final IAttribute<IQuantity> COUNT = attr("count", Messages.getString(Messages.ATTR_COUNT), NUMBER); //$NON-NLS-1$
-
 	public static final IAttribute<IQuantity> HW_THREADS = attr("hwThreads", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_HW_THREADS), Messages.getString(Messages.ATTR_HW_THREADS_DESC), NUMBER);
-
 	public static final IAttribute<IQuantity> PARALLEL_GC_THREADS = attr("parallelGCThreads", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_PARALLEL_GC_THREADS),
 			Messages.getString(Messages.ATTR_PARALLEL_GC_THREADS_DESC), NUMBER);
@@ -636,7 +625,6 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> GC_TIME_RATIO = attr("gcTimeRatio", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_TIME_RATIO), Messages.getString(Messages.ATTR_GC_TIME_RATIO_DESC),
 			NUMBER);
-
 	public static final IAttribute<IQuantity> HEAP_MAX_SIZE = attr("maxSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_HEAP_MAX_SIZE), MEMORY);
 	public static final IAttribute<IQuantity> HEAP_MIN_SIZE = attr("minSize", //$NON-NLS-1$
@@ -669,14 +657,14 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> TENURING_THRESHOLD_MAXIMUM = attr("maxTenuringThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TENURING_THRESHOLD_MAXIMUM),
 			Messages.getString(Messages.ATTR_TENURING_THRESHOLD_MAXIMUM_DESC), NUMBER);
-
 	public static final IAttribute<Boolean> USES_TLABS = attr("usesTLABs", Messages.getString(Messages.ATTR_USES_TLABS), //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USES_TLABS_DESC), FLAG);
 	public static final IAttribute<IQuantity> TLAB_MIN_SIZE = attr("minTLABSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TLAB_MIN_SIZE), MEMORY);
+	public static final IAttribute<IQuantity> TLAB_MAX_SIZE = attr("maxTLABSize", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TLAB_MAX_SIZE), MEMORY);
 	public static final IAttribute<IQuantity> TLAB_REFILL_WASTE_LIMIT = attr("tlabRefillWasteLimit", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TLAB_REFILL_WASTE_LIMIT), MEMORY);
-
 	public static final IAttribute<IQuantity> HEAP_TOTAL = attr("totalSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_HEAP_TOTAL), MEMORY);
 	public static final IAttribute<IQuantity> HEAP_USED = attr("heapUsed", Messages.getString(Messages.ATTR_HEAP_USED), //$NON-NLS-1$
@@ -689,14 +677,12 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_REFERENCE_COUNT), NUMBER);
 	public static final IAttribute<String> GC_PHASE_NAME = attr("name", Messages.getString(Messages.ATTR_GC_PHASE_NAME), //$NON-NLS-1$
 			PLAIN_TEXT);
-
 	public static final IAttribute<IQuantity> GC_HEAPSPACE_COMMITTED = attr("heapSpace:committedSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_HEAPSPACE_COMMITTED),
 			Messages.getString(Messages.ATTR_GC_HEAPSPACE_COMMITTED_DESC), MEMORY);
 	public static final IAttribute<IQuantity> GC_HEAPSPACE_RESERVED = attr("heapSpace:reservedSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_HEAPSPACE_RESERVED),
 			Messages.getString(Messages.ATTR_GC_HEAPSPACE_RESERVED_DESC), MEMORY);
-
 	public static final IAttribute<IQuantity> GC_METASPACE_CAPACITY = attr("metaspace:capacity", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_METASPACE_CAPACITY),
 			Messages.getString(Messages.ATTR_GC_METASPACE_CAPACITY_DESC), MEMORY);
@@ -727,18 +713,15 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> GC_CLASSSPACE_USED = attr("classSpace:used", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED),
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
-
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);
-
 	public static final IAttribute<IQuantity> OS_MEMORY_TOTAL = attr("totalSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_OS_MEMORY_TOTAL), Messages.getString(Messages.ATTR_OS_MEMORY_TOTAL_DESC),
 			MEMORY);
 	public static final IAttribute<IQuantity> OS_MEMORY_USED = attr("usedSize", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_OS_MEMORY_USED), Messages.getString(Messages.ATTR_OS_MEMORY_USED_DESC),
 			MEMORY);
-
 	public static final IAttribute<String> FLAG_NAME = attr("name", Messages.getString(Messages.ATTR_FLAG_NAME), //$NON-NLS-1$
 			PLAIN_TEXT);
 	public static final IAttribute<Boolean> FLAG_NEW_VALUE_BOOLEAN = attr("newValue", //$NON-NLS-1$
@@ -761,7 +744,6 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_FLAG_VALUE_BOOLEAN), FLAG);
 	public static final IAttribute<String> FLAG_VALUE_TEXT = attr("value", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_FLAG_VALUE_TEXT), PLAIN_TEXT);
-
 	public static final IAttribute<String> THREAD_DUMP_RESULT = attr("result", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_THREAD_DUMP_RESULT), PLAIN_TEXT);
 	public static final IAttribute<String> DUMP_REASON = attr("reason", Messages.getString(Messages.ATTR_DUMP_REASON), //$NON-NLS-1$
@@ -770,17 +752,23 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID),
 			Messages.getString(Messages.ATTR_DUMP_REASON_RECORDING_ID_DESC), PLAIN_TEXT);
 
+	public static final IAttribute<IQuantity> THREAD_SYSTEM_CPU_LOAD = Attribute.attr("system", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SYSTEM_LOAD), Messages.getString(Messages.ATTR_SYSTEM_LOAD_DESC),
+			PERCENTAGE);
+	public static final IAttribute<IQuantity> THREAD_USER_CPU_LOAD = Attribute.attr("user", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_USER_LOAD), Messages.getString(Messages.ATTR_USER_LOAD_DESC), PERCENTAGE);
+	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.attr("thread", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD);
+
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);
-
 	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = attr("loadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), NUMBER);
 	public static final IAttribute<IQuantity> CLASSLOADER_UNLOADED_COUNT = attr("unloadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT),
 			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT_DESC), NUMBER);
-
 	private static final IAttribute<IMCType> CLASS_DEFINING_CLASSLOADER_V0 = attr("definingClassLoader", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_DEFINING_CLASSLOADER), CLASS);
 	private static final IAttribute<IMCType> CLASS_INITIATING_CLASSLOADER_V0 = attr("initiatingClassLoader", //$NON-NLS-1$
@@ -911,7 +899,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<String> CLASSLOADER_STRING = Attribute
 			.canonicalize(new Attribute<String>("classLoader.string", //$NON-NLS-1$
 					Messages.getString(Messages.ATTR_CLASSLOADER), null, PLAIN_TEXT) {
@@ -927,7 +914,6 @@ public final class JdkAttributes {
 					};
 				}
 			});
-
 	public static final IAttribute<IMCType> CLASS_LOADED = attr("loadedClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_LOADED), CLASS);
 	public static final IAttribute<IMCType> CLASS_UNLOADED = attr("unloadedClass", //$NON-NLS-1$
@@ -948,7 +934,6 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CLASS_COUNT), NUMBER);
 	public static final IAttribute<IQuantity> CLASS_LOADER_DATA = attr("classLoaderData", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_DATA), ADDRESS);
-
 	public static final IAttribute<IQuantity> COMPILER_COMPILATION_ID = attr("compileId", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMPILER_COMPILATION_ID), NUMBER);
 	public static final IAttribute<IQuantity> COMPILER_CODE_SIZE = attr("codeSize", //$NON-NLS-1$
@@ -984,7 +969,6 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_COMPILER_COMPILATION_SUCCEEDED), FLAG);
 	public static final IAttribute<Boolean> COMPILER_IS_OSR = attr("isOsr", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMPILER_IS_OSR), FLAG);
-
 	public static final IAttribute<IQuantity> START_ADDRESS = attr("startAddress", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_START_ADDRESS), ADDRESS);
 	public static final IAttribute<IQuantity> COMMITTED_TOP = attr("commitedTopAddress", //$NON-NLS-1$
@@ -1146,8 +1130,20 @@ public final class JdkAttributes {
 	public static final IAttribute<IMCThread> MONITOR_PREVIOUS_OWNER = attr("previousOwner", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_MONITOR_PREVIOUS_OWNER), THREAD);
 
-	public static final IAttribute<IQuantity> OS_SWITCH_RATE = attr("switchRate", //$NON-NLS-1$
+	private static final IAttribute<IQuantity> OS_SWITCH_RATE_FREQUENCY = attr("switchRate", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), FREQUENCY);
+	private static final IAttribute<IQuantity> OS_SWITCH_RATE_NUMBER = attr("switchRate", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_OS_SWITCH_RATE), NUMBER);
+	public static final IAttribute<IQuantity> OS_SWITCH_RATE = Attribute.canonicalize(
+			new Attribute<IQuantity>("(switchRate)", Messages.getString(Messages.ATTR_OS_SWITCH_RATE), "", FREQUENCY) { //$NON-NLS-1$ //$NON-NLS-2$
+				@Override
+				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IQuantity, U> rateNumberAccessor = OS_SWITCH_RATE_NUMBER.getAccessor(type);
+					final IMemberAccessor<IQuantity, U> rateFrequencyAccessor = OS_SWITCH_RATE_FREQUENCY
+							.getAccessor(type);
+					return rateNumberAccessor == null ? rateFrequencyAccessor : rateNumberAccessor;
+				}
+			});
 	public static final IAttribute<String> REFERENCE_STATISTICS_TYPE = attr("type", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_TYPE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = attr("count", //$NON-NLS-1$
@@ -1267,4 +1263,17 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_BASE_ADDRESS), ADDRESS);
 	public static final IAttribute<IQuantity> TOP_ADDRESS = attr("topAddress", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TOP_ADDRESS), ADDRESS);
+
+	public static final IAttribute<String> CONSTANT_POOLS_NAME = attr("name", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_NAME), PLAIN_TEXT);
+	public static final IAttribute<IQuantity> CONSTANT_POOLS_COUNT = attr("count", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_COUNT), NUMBER);
+	public static final IAttribute<IQuantity> CONSTANT_POOLS_SIZE = attr("size", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_POOLS_SIZE), MEMORY);
+	public static final IAttribute<String> CONSTANT_TYPE = attr("typeName", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_TYPE), PLAIN_TEXT);
+	public static final IAttribute<String> CONSTANT_VALUE = attr("constant", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
+	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
 }

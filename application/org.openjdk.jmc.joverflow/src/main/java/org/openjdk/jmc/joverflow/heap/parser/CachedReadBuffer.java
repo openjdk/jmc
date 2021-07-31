@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.joverflow.heap.parser;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Logger;
 
 /**
  * The implementation of ReadBuffer that uses in-heap, pure Java LRU disk cache. This cache consists
@@ -57,6 +58,7 @@ import java.io.RandomAccessFile;
  * to swap out.
  */
 public class CachedReadBuffer extends ReadBuffer {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.heap.parser"); //$NON-NLS-1$
 	private static final int PAGE_SIZE_MAGNITUDE = 19; // 512KB, seems optimal from experiments
 	private static final int PAGE_SIZE = 1 << PAGE_SIZE_MAGNITUDE;
 	private static final int PAGE_START_MASK = ~(PAGE_SIZE - 1);
@@ -114,19 +116,19 @@ public class CachedReadBuffer extends ReadBuffer {
 		prereadPages(pagePool);
 
 		long memForCache = (long) numPgsInPool * PAGE_SIZE;
-		System.err.println("\nDisk cache size set to " + (memForCache >> 20) + "MB");
+		LOGGER.fine("\nDisk cache size set to " + (memForCache >> 20) + "MB");
 
 		if (DEBUG_PERF) {
 			// Track how well the cached pages are utilized...
-			System.err.println("CRB: numPagesInPool = " + numPgsInPool);
+			LOGGER.fine("CRB: numPagesInPool = " + numPgsInPool);
 			numPageSwaps = 1; // To avoid accidental division by zero
 			Thread observer = new Thread() {
 				@Override
 				public void run() {
 					while (true) {
-						System.err.println("CRB: swps = " + numPageSwaps + ", swps/pg = "
-								+ (numPageSwaps / numPagesInPool) + ", relpos = " + (lastReadPos * 100 / fileSize) + "%"
-								+ ", reads/swps = " + (numReads / numPageSwaps) + ", numChanges = " + numChanges);
+						LOGGER.fine("CRB: swps = " + numPageSwaps + ", swps/pg = " + (numPageSwaps / numPagesInPool)
+								+ ", relpos = " + (lastReadPos * 100 / fileSize) + "%" + ", reads/swps = "
+								+ (numReads / numPageSwaps) + ", numChanges = " + numChanges);
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException ex) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -57,6 +58,7 @@ import org.openjdk.jmc.flightrecorder.parser.ValueField;
  * data will be passed through mostly untouched.
  */
 class SettingsTransformer implements IEventSink {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.parser.synthetic"); //$NON-NLS-1$
 
 	/**
 	 * Fix for JDK-8157024, the code cache stats unallocatedCapacity event is written as KiB but
@@ -126,42 +128,42 @@ class SettingsTransformer implements IEventSink {
 	private static HashMap<String, Map<String, String>> buildRenameMap() {
 		// NOTE: Replace the last string argument with an identifier reference if a matching one is added to JfrAttributes.
 		HashMap<String, Map<String, String>> map = new HashMap<>();
-		addRenameEntry(map, JdkTypeIDsPreJdk11.THREAD_PARK, "klass", "parkedClass");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.MONITOR_ENTER, "klass", JdkAttributes.MONITOR_CLASS.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.MONITOR_WAIT, "klass", JdkAttributes.MONITOR_CLASS.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.INT_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.INT_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.UINT_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.UINT_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.LONG_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.LONG_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.ULONG_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.ULONG_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.DOUBLE_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.DOUBLE_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.BOOLEAN_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.BOOLEAN_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.STRING_FLAG_CHANGED, "old_value", "oldValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.STRING_FLAG_CHANGED, "new_value", "newValue");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.GC_DETAILED_EVACUATION_INFO, "allocRegionsUsedBefore",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.THREAD_PARK, "klass", "parkedClass");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.MONITOR_ENTER, "klass", JdkAttributes.MONITOR_CLASS.getIdentifier());
+		addRenameEntry(map, OracleJdkTypeIDsPre11.MONITOR_WAIT, "klass", JdkAttributes.MONITOR_CLASS.getIdentifier());
+		addRenameEntry(map, OracleJdkTypeIDsPre11.INT_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.INT_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.UINT_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.UINT_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.LONG_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.LONG_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.ULONG_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.ULONG_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.DOUBLE_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.DOUBLE_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.BOOLEAN_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.BOOLEAN_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.STRING_FLAG_CHANGED, "old_value", "oldValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.STRING_FLAG_CHANGED, "new_value", "newValue");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.GC_DETAILED_EVACUATION_INFO, "allocRegionsUsedBefore",
 				"allocationRegionsUsedBefore");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.GC_DETAILED_EVACUATION_INFO, "allocRegionsUsedAfter",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.GC_DETAILED_EVACUATION_INFO, "allocRegionsUsedAfter",
 				"allocationRegionsUsedAfter");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.SWEEP_CODE_CACHE, "sweepIndex", "sweepId");
-		addRenameEntry(map, JdkTypeIDsPreJdk11.ALLOC_INSIDE_TLAB, "class",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.SWEEP_CODE_CACHE, "sweepIndex", "sweepId");
+		addRenameEntry(map, OracleJdkTypeIDsPre11.ALLOC_INSIDE_TLAB, "class",
 				JdkAttributes.ALLOCATION_CLASS.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.ALLOC_OUTSIDE_TLAB, "class",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.ALLOC_OUTSIDE_TLAB, "class",
 				JdkAttributes.ALLOCATION_CLASS.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.OBJECT_COUNT, "class", JdkAttributes.OBJECT_CLASS.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.COMPILER_PHASE, "compileID",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.OBJECT_COUNT, "class", JdkAttributes.OBJECT_CLASS.getIdentifier());
+		addRenameEntry(map, OracleJdkTypeIDsPre11.COMPILER_PHASE, "compileID",
 				JdkAttributes.COMPILER_COMPILATION_ID.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.COMPILATION, "compileID",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.COMPILATION, "compileID",
 				JdkAttributes.COMPILER_COMPILATION_ID.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.COMPILER_FAILURE, "compileID",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.COMPILER_FAILURE, "compileID",
 				JdkAttributes.COMPILER_COMPILATION_ID.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.COMPILER_FAILURE, "failure",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.COMPILER_FAILURE, "failure",
 				JdkAttributes.COMPILER_FAILED_MESSAGE.getIdentifier());
-		addRenameEntry(map, JdkTypeIDsPreJdk11.GC_DETAILED_OBJECT_COUNT_AFTER_GC, "class",
+		addRenameEntry(map, OracleJdkTypeIDsPre11.GC_DETAILED_OBJECT_COUNT_AFTER_GC, "class",
 				JdkAttributes.OBJECT_CLASS.getIdentifier());
 		return map;
 	}
@@ -214,7 +216,7 @@ class SettingsTransformer implements IEventSink {
 	public void addEvent(Object[] values) {
 		LabeledIdentifier type = (LabeledIdentifier) values[typeIndex];
 		if (type != null) {
-			type = new LabeledIdentifier(JdkTypeIDsPreJdk11.translate(type.getInterfaceId()),
+			type = new LabeledIdentifier(OracleJdkTypeIDsPre11.translate(type.getInterfaceId()),
 					type.getImplementationId(), type.getName(), type.getDeclaredDescription());
 			if (endTimeIndex < 0) {
 				values[typeIndex] = type;
@@ -278,19 +280,17 @@ class SettingsTransformer implements IEventSink {
 			public IEventSink create(
 				String identifier, String label, String[] category, String description,
 				List<ValueField> dataStructure) {
-				if (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier)
-						|| JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier)) {
+				if (OracleJdkTypeIDsPre11.RECORDING_SETTING.equals(identifier)
+						|| OracleJdkTypeIDsPre11.JDK9_RECORDING_SETTING.equals(identifier)) {
 					SettingsTransformer st = new SettingsTransformer(subFactory, label, category, description,
 							dataStructure);
-					if ((JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(identifier) && st.isValid())
-							|| (JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(identifier) && st.isValidV1())) {
+					if ((OracleJdkTypeIDsPre11.RECORDING_SETTING.equals(identifier) && st.isValid())
+							|| (OracleJdkTypeIDsPre11.JDK9_RECORDING_SETTING.equals(identifier) && st.isValidV1())) {
 						return st;
 					} else {
-						// FIXME: Avoid System.err.println
-						System.err
-								.println("Cannot create SettingsTransformer from fields: " + dataStructure.toString()); //$NON-NLS-1$
+						LOGGER.severe("Cannot create SettingsTransformer from fields: " + dataStructure.toString()); //$NON-NLS-1$
 					}
-				} else if (JdkTypeIDsPreJdk11.RECORDINGS.equals(identifier)) {
+				} else if (OracleJdkTypeIDsPre11.RECORDINGS.equals(identifier)) {
 					/*
 					 * NOTE: Renaming 'duration' and 'startTime' attributes for JDK 8 'Recording'
 					 * events so that they won't conflict with general attributes with the same
@@ -308,15 +308,16 @@ class SettingsTransformer implements IEventSink {
 					}
 					return subFactory.create(JdkTypeIDs.RECORDINGS, label, category, description,
 							Arrays.asList(struct));
-				} else if (JdkTypeIDsPreJdk11.CODE_CACHE_STATISTICS.equals(identifier)) {
+				} else if (OracleJdkTypeIDsPre11.CODE_CACHE_STATISTICS.equals(identifier)) {
 					for (int i = 0; i < dataStructure.size(); i++) {
 						if (UNALLOCATED_CAPACITY_FIELD_ID.equals(dataStructure.get(i).getIdentifier())) {
-							return new FixCodeCacheSink(i, subFactory.create(JdkTypeIDsPreJdk11.translate(identifier),
-									label, category, description, dataStructure));
+							return new FixCodeCacheSink(i,
+									subFactory.create(OracleJdkTypeIDsPre11.translate(identifier), label, category,
+											description, dataStructure));
 						}
 					}
 				}
-				return subFactory.create(JdkTypeIDsPreJdk11.translate(identifier), label, category, description,
+				return subFactory.create(OracleJdkTypeIDsPre11.translate(identifier), label, category, description,
 						translate(identifier, dataStructure));
 			}
 

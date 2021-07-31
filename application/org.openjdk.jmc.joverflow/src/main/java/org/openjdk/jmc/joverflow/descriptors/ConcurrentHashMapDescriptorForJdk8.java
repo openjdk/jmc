@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.joverflow.descriptors;
 
+import java.util.logging.Logger;
+
 import org.openjdk.jmc.joverflow.heap.model.JavaClass;
 import org.openjdk.jmc.joverflow.heap.model.JavaHeapObject;
 import org.openjdk.jmc.joverflow.heap.model.JavaLazyReadObject;
@@ -44,6 +46,7 @@ import org.openjdk.jmc.joverflow.support.Constants;
 // @SuppressWarnings("unused")
 public class ConcurrentHashMapDescriptorForJdk8 extends AbstractCollectionDescriptor
 		implements CollectionInstanceDescriptor.CapacityDifferentFromSize, Constants {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.joverflow.descriptors"); //$NON-NLS-1$
 
 	private final Factory factory;
 	private int cachedNumElements = -1;
@@ -226,7 +229,7 @@ public class ConcurrentHashMapDescriptorForJdk8 extends AbstractCollectionDescri
 						result += key.getSize();
 					} else {
 						// I don't think it can be anything else
-						System.err.println("Unexpected nodeKeyField: " + nodeKeyField.getClass().getName());
+						LOGGER.severe("Unexpected nodeKeyField: " + nodeKeyField.getClass().getName());
 					}
 				}
 				JavaThing nodeValField = node.getField(factory.nodeValFieldIdx);
@@ -239,7 +242,7 @@ public class ConcurrentHashMapDescriptorForJdk8 extends AbstractCollectionDescri
 						JavaClass val = (JavaClass) nodeValField;
 						result += val.getSize();
 					} else {
-						System.err.println("Unexpected nodeValField: " + nodeValField.getClass().getName());
+						LOGGER.severe("Unexpected nodeValField: " + nodeValField.getClass().getName());
 					}
 				}
 				JavaThing nextNodeThing = node.getField(factory.nodeNextFieldIdx);

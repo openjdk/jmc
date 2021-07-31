@@ -52,7 +52,7 @@ import org.openjdk.jmc.rjmx.services.jfr.IEventTypeInfo;
  * Provides information about an event type for JFR 2.0.
  */
 public final class EventTypeMetadataV2 implements IEventTypeInfo {
-	private static final String JFR_SETTINGS_PERIOD = "com.oracle.jfr.settings.Period"; //$NON-NLS-1$
+	private static final String JFR_SETTINGS_PERIOD = "jdk.settings.Period"; //$NON-NLS-1$
 	private final Long id;
 	private final EventTypeIDV2 eventTypeID;
 	private final String label;

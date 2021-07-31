@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.objectweb.asm.Type;
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
+import org.openjdk.jmc.agent.XMLValidationException;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
@@ -64,7 +65,7 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
-	public void testHasPendingTransforms() throws XMLStreamException, IOException {
+	public void testHasPendingTransforms() throws XMLStreamException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "HasPendingTransforms")); //$NON-NLS-1$
 		assertNotNull(registry);
@@ -78,14 +79,14 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
-	public void testFrom() throws XMLStreamException, IOException {
+	public void testFrom() throws XMLStreamException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "From")); //$NON-NLS-1$
 		assertNotNull(registry);
 	}
 
 	@Test
-	public void testGetTransformData() throws XMLStreamException, IOException {
+	public void testGetTransformData() throws XMLStreamException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "GetTransformData")); //$NON-NLS-1$
 		assertNotNull(registry);
@@ -95,7 +96,7 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
-	public void testModify() throws XMLStreamException, IOException {
+	public void testModify() throws XMLValidationException, IOException, XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
 		assertNotNull(registry);
@@ -107,7 +108,7 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
-	public void testModifyNameCollision() throws XMLStreamException, IOException {
+	public void testModifyNameCollision() throws XMLValidationException, IOException, XMLStreamException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
 		assertNotNull(registry);
@@ -118,19 +119,25 @@ public class TestDefaultTransformRegistry {
 	}
 
 	@Test
-	public void testModifyInvalidXml() throws XMLStreamException, IOException {
+	public void testModifyInvalidXml() throws XMLStreamException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry
 				.from(TestToolkit.getProbesXMLFromTemplate(getTemplate(), "Modify")); //$NON-NLS-1$
 		assertNotNull(registry);
 		final String initialConfiguration = registry.getCurrentConfiguration();
 		final String invalidSnippet = XML_EVENT_DESCRIPTION;
-		Set<String> modifiedClassNames = registry.modify(invalidSnippet);
-		assertNull(modifiedClassNames);
+		boolean exceptionThrown = false;
+		try {
+			Set<String> modifiedClassNames = registry.modify(invalidSnippet);
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			exceptionThrown = true;
+		}
+		assertTrue(exceptionThrown);
 		assertEquals(registry.getCurrentConfiguration(), initialConfiguration);
 	}
 
 	@Test
-	public void testClearAllTransformData() throws XMLStreamException, IOException {
+	public void testClearAllTransformData() throws XMLStreamException, IOException, XMLValidationException {
 		TransformRegistry registry = DefaultTransformRegistry.from(TestToolkit
 				.getProbesXMLFromTemplate(getXMLDescription(XML_EVENT_DESCRIPTION), "clearAllTransformData")); //$NON-NLS-1$
 		assertNotNull(registry);

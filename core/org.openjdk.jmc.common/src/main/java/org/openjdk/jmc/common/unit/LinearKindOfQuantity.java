@@ -84,6 +84,7 @@ public class LinearKindOfQuantity extends KindOfQuantity<LinearUnit> {
 	private static final FormatThreadLocal<NumberFormat> NUMBER_FORMAT_INTERACTIVE_HOLDER;
 	// Holder of display number formatter/parser, which may contain non-breaking spaces.
 	private static final FormatThreadLocal<NumberFormat> NUMBER_FORMAT_DISPLAY_HOLDER;
+	private static final String INFINITY = "infinity"; //$NON-NLS-1$
 
 	protected final LinearUnit atomUnit;
 	// Since units no longer have an explicit name, only a description, use this to generate prefixed names.
@@ -612,6 +613,9 @@ public class LinearKindOfQuantity extends KindOfQuantity<LinearUnit> {
 			} else {
 				throw QuantityConversionException.unknownUnit(persistedQuantity, getDefaultUnit().quantity(1234.0));
 			}
+		}
+		if (INFINITY.equals(persistedQuantity)) {
+			return UnitLookup.NANOSECOND.quantity(Long.MAX_VALUE);
 		}
 		throw QuantityConversionException.unparsable(persistedQuantity, getDefaultUnit().quantity(1234.0));
 	}

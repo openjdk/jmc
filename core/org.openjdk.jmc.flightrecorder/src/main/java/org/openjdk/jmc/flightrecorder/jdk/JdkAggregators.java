@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -82,6 +82,9 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_SURVIVOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_TLAB;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_YOUNG_GENERATION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_PAUSE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_COLLECTOR_OLD_GARBAGE_COLLECTION;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GARBAGE_COLLECTION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.HEAP_CONF;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.HEAP_SUMMARY;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.OBJECT_COUNT;
@@ -184,6 +187,8 @@ public final class JdkAggregators {
 	public static final IAggregator<Boolean, ?> USES_TLABS = or(GC_CONF_TLAB, JdkAttributes.USES_TLABS);
 	public static final IAggregator<IQuantity, ?> TLAB_MIN_SIZE = min(JdkAttributes.TLAB_MIN_SIZE.getName(), null,
 			GC_CONF_TLAB, JdkAttributes.TLAB_MIN_SIZE);
+	public static final IAggregator<IQuantity, ?> TLAB_MAX_SIZE = max(JdkAttributes.TLAB_MAX_SIZE.getName(), null,
+			GC_CONF_TLAB, JdkAttributes.TLAB_MAX_SIZE);
 	public static final IAggregator<IQuantity, ?> TLAB_REFILL_WASTE_LIMIT_MIN = min(TLAB_REFILL_WASTE_LIMIT.getName(),
 			null, GC_CONF_TLAB, TLAB_REFILL_WASTE_LIMIT);
 	// Other
@@ -283,9 +288,57 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> LONGEST_GC_PAUSE = Aggregators.max(
 			Messages.getString(Messages.AGGR_LONGEST_GC_PAUSE), Messages.getString(Messages.AGGR_LONGEST_GC_PAUSE_DESC),
 			GC_PAUSE, DURATION);
+	public static final IAggregator<IQuantity, ?> AVERAGE_GC_PAUSE = Aggregators.avg(
+			Messages.getString(Messages.AGGR_AVERAGE_GC_PAUSE), Messages.getString(Messages.AGGR_AVERAGE_GC_PAUSE_DESC),
+			GC_PAUSE, DURATION);
 	public static final IAggregator<IQuantity, ?> TOTAL_GC_PAUSE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_TOTAL_GC_PAUSE), Messages.getString(Messages.AGGR_TOTAL_GC_PAUSE_DESC),
 			GC_PAUSE, DURATION);
+	//Young Collection GC
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_GC_COUNT_DESC), JdkFilters.YOUNG_GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_MAX_GC_TIME_DESC), GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_AVG_GC_TIME_DESC), GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> YOUNG_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_YOUNG_COLLECTION_TOTAL_GC_TIME_DESC),
+			GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION, DURATION);
+	//Old Collection GC
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_GC_COUNT_DESC), JdkFilters.OLD_GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_MAX_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_AVG_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> OLD_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_OLD_COLLECTION_TOTAL_GC_TIME_DESC), GC_COLLECTOR_OLD_GARBAGE_COLLECTION,
+			DURATION);
+	//All Collection GC
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_GC_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_GC_COUNT),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_GC_COUNT_DESC), JdkFilters.GARBAGE_COLLECTION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_MAX_GC_TIME = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_MAX_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_MAX_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_AVG_GC_TIME = Aggregators.avg(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_AVG_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_AVG_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
+	public static final IAggregator<IQuantity, ?> ALL_COLLECTION_TOTAL_GC_TIME = Aggregators.sum(
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_TOTAL_GC_TIME),
+			Messages.getString(Messages.AGGR_ALL_COLLECTION_TOTAL_GC_TIME_DESC), GARBAGE_COLLECTION, DURATION);
 
 	public static final IAggregator<IQuantity, ?> JFR_DATA_LOST_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_JFR_DATA_LOST_COUNT),
@@ -323,9 +376,28 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_TLAB_AVG = Aggregators.avg(
+			Messages.getString(Messages.AGGR_ALLOC_TLAB_AVG), Messages.getString(Messages.AGGR_ALLOC_TLAB_AVG_DESC),
+			JdkTypeIDs.ALLOC_INSIDE_TLAB, JdkAttributes.TLAB_SIZE);
 	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_AVG = Aggregators.avg(
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
+			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_MAX = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MAX),
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MAX_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
+			JdkAttributes.TLAB_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_MAX = Aggregators.max(
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MAX),
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MAX_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
+			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_MIN = Aggregators.min(
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MIN),
+			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_MIN_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
+			JdkAttributes.TLAB_SIZE);
+	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_MIN = Aggregators.min(
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MIN),
+			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_MIN_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
 	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM),
@@ -335,6 +407,9 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
+	public static final IAggregator<IQuantity, ?> OBJ_ALLOC_TOTAL_SUM = Aggregators.sum(
+			Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM), Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM_DESC),
+			JdkTypeIDs.OBJ_ALLOC_SAMPLE, JdkAttributes.SAMPLE_WEIGHT);
 	public static final IAggregator<IQuantity, ?> SWEEP_METHOD_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM), Messages.getString(Messages.AGGR_SWEEP_METHOD_SUM_DESC),
 			JdkTypeIDs.SWEEP_CODE_CACHE, JdkAttributes.SWEEP_METHOD_SWEPT);

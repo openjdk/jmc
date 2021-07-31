@@ -3,8 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: FlameView
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flameview;singleton:=true
-Bundle-Version: 8.0.1.qualifier
+Bundle-Version: 8.1.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.common

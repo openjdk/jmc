@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -294,6 +294,7 @@ public final class FlightRecordingLoader {
 		try {
 			Chunk chunk = chunkSupplier.getNextChunk(buffer);
 			if (chunk != null) {
+				context.setVersion(chunk.getMajorVersion(), chunk.getMinorVersion());
 				switch (chunk.getMajorVersion()) {
 				case VERSION_0:
 					return ChunkLoaderV0.create(chunk, context);

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JMC Agent Plugin
+Bundle-SymbolicName: org.openjdk.jmc.console.agent;singleton:=true
+Bundle-Version: 8.1.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors;resolution:=optional,
+ org.eclipse.core.filesystem,
+ org.eclipse.ui.ide;resolution:=optional,
+ org.eclipse.core.resources;resolution:=optional,
+ org.eclipse.e4.core.contexts,
+ org.openjdk.jmc.console.ui,
+ org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.rjmx
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.inject,
+ org.eclipse.debug.core.sourcelookup.containers
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openjdk.jmc.console.agent.AgentPlugin
+Automatic-Module-Name: org.openjdk.jmc.console.agent
