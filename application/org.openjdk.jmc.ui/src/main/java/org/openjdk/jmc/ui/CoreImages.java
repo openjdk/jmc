@@ -113,6 +113,7 @@ public class CoreImages {
 	public static final ImageDescriptor METHOD_PROTECTED = icon(UIPlugin.ICON_METHOD_PROTECTED);
 	public static final ImageDescriptor METHOD_NON_OPTIMIZED = icon(UIPlugin.ICON_METHOD_NON_OPTIMIZED);
 	public static final ImageDescriptor METHOD_OPTIMZED = icon(UIPlugin.ICON_METHOD_OPTIMZED);
+	public static final ImageDescriptor METHOD_JITOVERLAY = icon(UIPlugin.ICON_METHOD_JITOVERLAY);
 
 	// package
 	public static final ImageDescriptor PACKAGE = icon(UIPlugin.ICON_PACKAGE);

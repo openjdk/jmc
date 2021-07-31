@@ -135,30 +135,29 @@ public class RuleManager {
 			resultsByTopicByRuleId.get(topic).put(rule.getId(), result);
 			updateListeners(result);
 			try {
-				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())) {
+				if (RulesToolkit.matchesEventAvailabilityMap(items.getItems(), rule.getRequiredEvents())
+						&& shouldEvaluate(rule)) {
 					evaluatedRules.remove(rule.getClass());
 					RunnableFuture<IResult> future = rule.createEvaluation(items.getItems(), config::getValue,
 							resultProvider);
 					Thread runner = new Thread(future);
-					if (shouldEvaluate(rule)) {
-						runner.start();
-						while (true) {
-							if (monitor.isCanceled()) {
-								future.cancel(true);
-								runner.join();
-								result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
-										.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
-										.addResult(RulesHtmlToolkit.FAILED, true).build();
-								evaluatedRules.put(rule.getClass(), Severity.NA);
-								break;
-							} else if (future.isDone()) {
-								result = future.get();
-								runner.join();
-								evaluatedRules.put(rule.getClass(), result.getSeverity());
-								break;
-							}
-							Thread.sleep(100);
+					runner.start();
+					while (true) {
+						if (monitor.isCanceled()) {
+							future.cancel(true);
+							runner.join();
+							result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
+									.setSummary(Messages.JFR_EDITOR_RULES_CANCELLED)
+									.addResult(RulesHtmlToolkit.FAILED, true).build();
+							evaluatedRules.put(rule.getClass(), Severity.NA);
+							break;
+						} else if (future.isDone()) {
+							result = future.get();
+							runner.join();
+							evaluatedRules.put(rule.getClass(), result.getSeverity());
+							break;
 						}
+						Thread.sleep(100);
 					}
 				} else {
 					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)

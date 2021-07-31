@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+	<component>
+		<!--  ******************************* GENERAL ****************************************** -->
+		<name>General</name>
+		<note version="8.0">
+			<title>JMC 8.0 - Major New Release!</title>
+			<description>
+				This is a major new release of Java Mission Control. All binary build of the JMC application using the
+				Eclipse 2020-09 platform will now require JDK 11+ to run, but can be used with OpenJDK 8u272+ and Oracle JDK 7u40+.
+				It can also open and visualize flight recordings from JDK 7 and 8.
+			</description>
+			<image>general/jmc.png</image>
+		</note>
+		<note version="8.0">
+			<title>Eclipse 4.16 support</title>
+			<description>
+				The Mission Control client is now built to run optimally on Eclipse 2020-06 and later. To install Java Mission
+				Control into Eclipse, go to the update site (Help | Install New Software...). The URL to the update site will be
+				vendor specific, and some vendors will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="8.0">
+			<title>JOverflow in the Base Distribution</title>
+			<description>
+				JOverflow is now part of the base distribution of Mission Control, and has been converted to SWT. It also has a brand  
+				new TreeMap visualization of the heap occupied by type. To open the new view, go to Window | Show view |
+				Other... and start typing JOverflow, and select JOverflow TreeMap.
+			</description>
+			<image>general/joverflow.png</image>
+		</note>
+		<note version="8.0">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are over two hundred fixes and improvements in this release. Check out the JMC 8 Result Dashboard 
+				(https://bugs.openjdk.java.net/secure/Dashboard.jspa?selectPageId=19536") for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+	</component>
+	
+	<!--  ******************************* JFR ******************************* -->
+	<component>
+		<name>Java Flight Recorder (JFR)</name>
+		<note version="8.0">
+			<title>Flame Graph View Improvements</title>
+			<description>
+				The Flame Graph View is now available in the standard perspective. It can now be configured to be
+				rendered either as an icicle graph or a flame graph, and the tool tips have been improved. Click on anything
+				representing a selection of events to get the aggregate of stack traces represented by that selection rendered in
+				the Flame Graph View.
+			</description>
+			<image>jfr/flameview.gif</image>
+		</note>
+		<note version="8.0">
+			<title>New Graph View</title>
+			<description>
+				An early access version of a Graph View is now available. The Graph View will show a directed graph
+				where the individual methods are nodes in the graphs, and the edges will represent calls from one method to another.
+				The size of the node will represent the "self" contribution, and the thickness of an edge will correlate with the
+				number of calls from one method to another in the events. To open up the graph view, go to Window | Show view |
+				Other..., then select Mission Control / Graph View. Once the Graph View has opened, it can be docked where you want
+				it to be, or dragged out into a new top level window which can be handled by your window manager. Currently there is
+				no graph pruning, and large graph will take a very long time to layout and render, during which the UI will freeze.
+				Therefore we've imposed a user configurable limit on the number of nodes a graph can have for now.
+			</description>
+			<image>jfr/graphview.gif</image>
+		</note>
+		<note version="8.0">
+			<title>Predecessors and Successors</title>
+			<description>
+				The predecessors and successors tabs have been brought back to the Method Profiling page. This means
+				that it is now easy to select a method and easily see wherever that method was called from, and to see what was then
+				called from that method. This is a temporary solution until we have a separate Butterfly/Sandwich view where any
+				selection of a method in a set of events can be rendered in a separately configured view.
+			</description>
+			<image>jfr/predsuc.png</image>
+		</note>
+	</component>
+	<component>
+		<!--  ******************************* Agent ******************************* -->
+		<name>JMC Agent</name>
+		<note version="1.0.0">
+			<title>Agent 1.0.0</title>
+			<description>
+				This is the first version where we build and release the JMC agent. The JMC agent is a byte code
+				instrumentation agent, providing an easy way to declaratively generate JFR events from most methods, even methods 
+				for which the source code is not available. Either configure the agent with an XML configuration file, or use the
+				MBean to dynamically change the instrumentation whilst the application is running.
+			</description>
+			<image>agent/agent.png</image>
+		</note>
+		<note version="1.0.0">
+			<title>Converter Functions</title>
+			<description>
+				Now any public static method can be used to convert objects of a specific type to one of the types
+				supported by flight recorder. The converter to use must be explicitly declared per recorded data.
+			</description>
+			<image>agent/converter.png</image>
+		</note>
+	</component>
+	<!--  ******************************* Bugfixes ****************************************** -->
+	<bugfixes>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>5734</bugid>
+			<synopsis>Overflow in stacktrace tooltips fixed</synopsis>
+			<description>On Mac, the tooltips shown for the stacktraces could overflow. This is now fixed.</description>
+		</bugfix>
+	</bugfixes>
+	<!--  ******************************* Known issues ****************************************** -->
+	<knownissues>
+		<issue>
+			<area>General</area>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
+			<description>
+				After the bugfix of https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean "Elapsed time of JVM process", whilst it previously
+				was implemented as time since start of the JVM process. The uptime attribute is used by JMC, together with
+				RuntimeMXBean#getStartTime(), to estimate the actual server time. This means that time stamps, as well as remaining
+				time for a flight recording, can be wrong for processes on machines that have been hibernated.
+			</description>
+		</issue>
+		<issue>
+			<area>General</area>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
+			<description>
+				After the bugfix of https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean "Elapsed time of JVM process", whilst it previously
+				was implemented as time since start of the JVM process. The uptime attribute is used by JMC, together with
+				RuntimeMXBean#getStartTime(), to estimate the actual server time. This means that time stamps, as well as remaining
+				time for a flight recording, can be wrong for processes on machines that have been hibernated.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7122</bugid>
+			<synopsis>Rules evaluation never complete</synopsis>
+			<description>Sometimes the rules evaluation may never complete for the GC rules.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>This one is still under investigation, but it seems JMC can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7068</bugid>
+			<synopsis>JfrRecordingTest (uitest) hangs on the automated analysis page</synopsis>
+			<description>Trying to run uitests on Fedora hangs on JfrRecordingTest.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7007</bugid>
+			<synopsis>Unable to edit run configurations for eclipse project after installing JMC plugin</synopsis>
+			<description>Avoid installing the experimental JMC launcher plug-in into Eclipse until this problem has been
+				resolved.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph view does not work on Windows</synopsis>
+			<description>This is due to a bug in the chromium browser plug-in used by JMC on Windows. See the issue for more
+				information.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>6265</bugid>
+			<synopsis>JMC crashes with Webkit2+GTK 4</synopsis>
+			<description>See the issue for more information.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>6265</bugid>
+			<synopsis>JMC crashes with Webkit2+GTK 4</synopsis>
+			<description>See the issue for more information.</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>5412</bugid>
+			<synopsis>Dragging and dropping a JFR file into an open analysis page does not work</synopsis>
+			<description>The expected behaviour would be to open the recording whenever a file is dropped in the editor area, but
+				the behaviour will be defined by the embedded browser component, and not very useful.
+			</description>
+		</issue>
+	</knownissues>
+</notes>

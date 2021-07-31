@@ -250,4 +250,10 @@ public class ContentTypeTest extends MCTestCase {
 		AdHocQuantityTest.assertNearlySame(quantity, wellKnown);
 	}
 
+	@Test
+	public void testPersistedQuantityInfinity() throws Exception {
+		ITypedQuantity<LinearUnit> quantity = TIMESPAN.parsePersisted("infinity");
+		assertEquals(quantity.longValue(), Long.MAX_VALUE);
+	}
+
 }

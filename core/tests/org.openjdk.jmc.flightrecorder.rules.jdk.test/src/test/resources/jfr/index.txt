@@ -5,8 +5,11 @@ flight_recording_hidden.jfr
 full_gc_cms.jfr
 full_gc_g1.jfr
 jdk15.jfr
+openjdk8u292.jfr
+openjdk8u302ea.jfr
 parallel-gc_cpu.jfr
 parallel-on-singlecpu.jfr
 stringdedup_enabled_jdk9.jfr
 wldf.jfr
 wls-medrec-jdk9.jfr
+flight_recording_17eaMonitoredVM10440_3.jfr

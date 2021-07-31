@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -64,6 +65,7 @@ public class LoaderContext {
 	private final boolean hideExperimentals;
 	private final List<? extends IParserExtension> extensions;
 	private final Set<IRange<IQuantity>> chunkRanges;
+	private final ParserStats parserStats = new ParserStats();
 
 	public LoaderContext(List<? extends IParserExtension> extensions, boolean hideExperimentals) {
 		this.extensions = extensions;
@@ -134,7 +136,34 @@ public class LoaderContext {
 			}
 
 		}
-		return new EventArrays(eventArrays.toArray(new EventArray[eventArrays.size()]), chunkRanges);
+		return new EventArrays(eventArrays.toArray(new EventArray[eventArrays.size()]), chunkRanges, parserStats);
 	}
 
+	public void incChunkCount() {
+		parserStats.incChunkCount();
+	}
+
+	public void updateEventStats(String eventTypeName, long size) {
+		parserStats.updateEventStats(eventTypeName, size);
+	}
+
+	public void addTypeConstantPool(long id, String name, FastAccessNumberMap<Object> constantPool) {
+		parserStats.addConstantPool(id, name, constantPool);
+	}
+
+	public ParserStats getParserStats() {
+		return parserStats;
+	}
+
+	public void setVersion(short majorVersion, short minorVersion) {
+		parserStats.setVersion(majorVersion, minorVersion);
+	}
+
+	public void setSkippedEventCount(long skippedEventCount) {
+		parserStats.setSkippedEventCount(skippedEventCount);
+	}
+
+	public void addEntryPoolSize(String typeIdentifier, long size) {
+		parserStats.addEntryPoolSize(typeIdentifier, size);
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,6 +45,8 @@ import static org.openjdk.jmc.flightrecorder.configuration.recording.RecordingOp
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeDataSupport;
@@ -66,6 +68,8 @@ import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
  * Toolkit for handling marshalling of RecordingOptions for JFR 1.0 (JDK 7/8).
  */
 public final class RecordingOptionsToolkitV1 {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.services.jfr.internal"); //$NON-NLS-1$
+
 	private final static Map<String, OpenTypeConverter<?, ?>> CONVERTERS_BY_REC_OPTION_KEY;
 
 	private final static String[] NAMES;
@@ -123,7 +127,7 @@ public final class RecordingOptionsToolkitV1 {
 			return new CompositeType("RecordingOptions", "Recording Options", names, descriptions, openTypes); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception e) {
 			// Will not ever happen!
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to create composite type", e);
 			return null;
 		}
 	}
@@ -145,8 +149,7 @@ public final class RecordingOptionsToolkitV1 {
 				try {
 					values[i] = toOpenTypeWithCast(converter, value);
 				} catch (QuantityConversionException e) {
-					// FIXME: Add proper logging here
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, "Failed to convert to open type", e);
 				}
 			}
 		}
@@ -190,8 +193,7 @@ public final class RecordingOptionsToolkitV1 {
 					EventOptionsToolkitV1.putWithCast(options, key, converter, openValue);
 				}
 			} catch (QuantityConversionException e) {
-				// FIXME: Add proper logging here
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, "Failed to convert options", e);
 			}
 		}
 		return options;

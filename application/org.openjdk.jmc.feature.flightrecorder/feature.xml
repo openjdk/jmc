@@ -34,10 +34,10 @@
 <feature
       id="org.openjdk.jmc.feature.flightrecorder"
       label="%name"
-      version="8.0.1.qualifier"
+      version="8.1.0.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="8.0.1.qualifier">
+      license-feature-version="8.1.0.qualifier">
 
    <description url="%descriptionUrl">
       %description
@@ -110,6 +110,13 @@
 
    <plugin
          id="org.openjdk.jmc.flightrecorder.rules.jdk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
+         id="org.openjdk.jmc.flightrecorder.serializers"
          download-size="0"
          install-size="0"
          version="0.0.0"

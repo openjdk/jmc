@@ -54,6 +54,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedVmOptionsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DumpReasonRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.FewSampledThreadsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.FlightRecordingSupportRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.JfrPeriodicEventsFixRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ManagementAgentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.OptionsCheckRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInArgumentsRule

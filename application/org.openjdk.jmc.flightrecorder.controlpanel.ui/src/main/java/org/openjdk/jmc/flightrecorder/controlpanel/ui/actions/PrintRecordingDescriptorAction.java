@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,6 +40,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -67,6 +69,8 @@ import org.openjdk.jmc.ui.misc.IGraphical;
  */
 @SuppressWarnings("nls")
 public class PrintRecordingDescriptorAction implements IUserAction, IGraphical {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.controlpanel.ui.actions"); //$NON-NLS-1$
+
 	private final IRecordingDescriptor recording;
 	private IFlightRecorderService flightRecorderService;
 	private final RecordingProvider rec;
@@ -106,7 +110,7 @@ public class PrintRecordingDescriptorAction implements IUserAction, IGraphical {
 			printDivider(writer);
 			writer.flush();
 		} catch (Throwable t) {
-			t.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to print recording info", t);
 		}
 	}
 
@@ -218,11 +222,11 @@ public class PrintRecordingDescriptorAction implements IUserAction, IGraphical {
 				printRecordingInfo(System.err);
 			}
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} catch (ConnectionException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} catch (ServiceNotAvailableException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed to execute print recording info", e);
 		} finally {
 			IOToolkit.closeSilently(handle);
 			IOToolkit.closeSilently(newOut);

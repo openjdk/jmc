@@ -102,7 +102,7 @@ public class Agent {
 	 *             if the configuration could not be read.
 	 */
 	public static void initializeAgent(InputStream configuration, Instrumentation instrumentation)
-			throws XMLStreamException {
+			throws XMLStreamException, XMLValidationException {
 		TransformRegistry registry = configuration != null ? DefaultTransformRegistry.from(configuration)
 				: DefaultTransformRegistry.empty();
 		instrumentation.addTransformer(new Transformer(registry), true);
@@ -132,7 +132,7 @@ public class Agent {
 		if (agentArguments == null || agentArguments.trim().length() == 0) {
 			try {
 				initializeAgent((InputStream) null, instrumentation);
-			} catch (XMLStreamException e) {
+			} catch (XMLStreamException | XMLValidationException e) {
 				// noop: null as InputStream causes defaults to be used - the stream will not be used
 			}
 			return;
@@ -141,7 +141,7 @@ public class Agent {
 		File file = new File(agentArguments);
 		try (InputStream stream = new FileInputStream(file)) {
 			initializeAgent(stream, instrumentation);
-		} catch (XMLStreamException | IOException e) {
+		} catch (XMLStreamException | IOException | XMLValidationException e) {
 			getLogger().log(Level.SEVERE, "Failed to read jfr probe definitions from " + file.getPath(), e); //$NON-NLS-1$
 		}
 	}

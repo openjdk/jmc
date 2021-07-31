@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -79,7 +79,6 @@ public abstract class AbstractSyntheticNotification implements ISyntheticNotific
 			broadcaster.sendNotification(notification);
 		} catch (Exception e) {
 			RJMXPlugin.getDefault().getLogger().log(Level.WARNING, "Unable to trigger notification!", e); //$NON-NLS-1$
-			e.printStackTrace();
 		}
 	}
 

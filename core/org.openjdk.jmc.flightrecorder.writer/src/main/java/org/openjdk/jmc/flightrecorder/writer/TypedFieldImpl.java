@@ -49,7 +49,7 @@ public final class TypedFieldImpl implements org.openjdk.jmc.flightrecorder.writ
 	private final boolean isArray;
 	private final List<Annotation> annotations;
 
-	TypedFieldImpl(TypeImpl type, String name) {
+	public TypedFieldImpl(TypeImpl type, String name) {
 		this(type, name, false, Collections.emptyList());
 	}
 
@@ -88,7 +88,6 @@ public final class TypedFieldImpl implements org.openjdk.jmc.flightrecorder.writ
 		return annotations;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

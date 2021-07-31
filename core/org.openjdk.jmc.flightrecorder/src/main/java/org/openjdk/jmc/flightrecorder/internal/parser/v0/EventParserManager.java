@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,6 +52,7 @@ import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.parser.IEventSink;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
 import org.openjdk.jmc.flightrecorder.parser.ValueField;
+import org.openjdk.jmc.flightrecorder.parser.synthetic.OracleJdkTypeIDsPre11;
 
 class EventParserManager {
 	// Event types
@@ -95,8 +96,9 @@ class EventParserManager {
 				category = Arrays.copyOf(category, category.length - 1);
 				IEventSink sink = context.getSinkFactory().create(id, etd.getLabel(), category, etd.getDescription(),
 						eventSpec.getValueFields());
+				String typeId = OracleJdkTypeIDsPre11.translate(id);
 				eventTypes.put(etd.getIdentifier(),
-						new EventTypeEntry(sink, etd.hasStartTime(), eventSpec.getValueReaders()));
+						new EventTypeEntry(typeId, sink, etd.hasStartTime(), eventSpec.getValueReaders()));
 			}
 		}
 		eventTypes.put(LOST_EVENT_TYPE_INDEX, createBufferLostEntry(context.getSinkFactory()));
@@ -107,6 +109,7 @@ class EventParserManager {
 		if (ep == null) {
 			throw new IllegalArgumentException("Event type " + eventTypeId + " is not described in the file"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		long size = offset.getEnd() - offset.get();
 		long endTime = readerFactory.readTicksTimestamp(data, offset);
 		int valueIndex = 0;
 		if (ep.hasStartTime) {
@@ -117,6 +120,7 @@ class EventParserManager {
 			ep.values[valueIndex++] = ep.parsers[n].readValue(data, offset, endTime);
 		}
 		ep.sink.addEvent(ep.values);
+		context.updateEventStats(ep.typeId, size);
 	}
 
 	private EventTypeEntry createBufferLostEntry(IEventSinkFactory esf) throws InvalidJfrFileException {
@@ -127,7 +131,7 @@ class EventParserManager {
 				Messages.getString(Messages.EventParserManager_TYPE_BUFFER_LOST),
 				EventAppearance.getHumanSegmentArray("recordings"), //$NON-NLS-1$
 				Messages.getString(Messages.EventParserManager_TYPE_BUFFER_LOST_DESC), eventReader.getValueFields());
-		return new EventTypeEntry(sink, false, eventReader.getValueReaders());
+		return new EventTypeEntry(JfrInternalConstants.BUFFER_LOST_TYPE_ID, sink, false, eventReader.getValueReaders());
 	}
 
 	private class EventTypeBuilder {
@@ -198,13 +202,14 @@ class EventParserManager {
 	}
 
 	private static class EventTypeEntry {
-
+		private final String typeId;
 		private final Object[] values;
 		private final IValueReader[] parsers;
 		private final IEventSink sink;
 		private final boolean hasStartTime;
 
-		public EventTypeEntry(IEventSink sink, boolean hasStartTime, IValueReader[] valueParsers) {
+		public EventTypeEntry(String typeId, IEventSink sink, boolean hasStartTime, IValueReader[] valueParsers) {
+			this.typeId = typeId;
 			parsers = valueParsers;
 			this.sink = sink;
 			this.hasStartTime = hasStartTime;

@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.RecordingWizardPage;
 import org.openjdk.jmc.ide.launch.model.JfrLaunchModel;
 
@@ -51,6 +50,7 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 	private Button enabledCheckbox;
 	private Button autoOpenCheckbox;
+	private Button lessThanOracleJDK11Checkbox;
 	private JfrLaunchModel model;
 
 	public JfrLaunchPage(JfrLaunchModel model) {
@@ -62,7 +62,7 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 	@Override
 	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
-		int cols = 2;
+		int cols = 3;
 		comp.setLayout(new GridLayout(cols, false));
 
 		GridData gd1 = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -70,8 +70,7 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 		createEnabled(comp, cols);
 		createOpenAutomatically(comp, cols);
-		// TODO: Add info text and help text
-
+		createLessThanOracleJdk11(comp, cols);
 		createSeparator(comp, cols);
 
 		super.createControl(comp);
@@ -119,6 +118,21 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 		autoOpenCheckbox.setLayoutData(gd);
 	}
 
+	private void createLessThanOracleJdk11(Composite parent, int cols) {
+		lessThanOracleJDK11Checkbox = new Button(parent, SWT.CHECK);
+		lessThanOracleJDK11Checkbox.setText(Messages.JfrLaunch_ORACLE_JDK_LESS_THAN_11);
+		lessThanOracleJDK11Checkbox.setToolTipText(Messages.JfrLaunch_ORACLE_JDK_CECHKBOX_MESSAGE);
+		lessThanOracleJDK11Checkbox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				model.setOracleJdkLessThan11(lessThanOracleJDK11Checkbox.getSelection());
+			}
+		});
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false);
+		gd.horizontalSpan = cols - 1;
+		lessThanOracleJDK11Checkbox.setLayoutData(gd);
+	}
+
 	public void setJfrEnabled(boolean jfrEnabled) {
 		enabledCheckbox.setSelection(jfrEnabled);
 	}
@@ -133,6 +147,14 @@ public class JfrLaunchPage extends RecordingWizardPage implements Observer {
 
 	public boolean getAutoOpen() {
 		return autoOpenCheckbox.getSelection();
+	}
+
+	public void setLessThanOracleJdk11(boolean lessThanOracleJdk11) {
+		lessThanOracleJDK11Checkbox.setSelection(lessThanOracleJdk11);
+	}
+
+	public boolean getLessThanOracleJdk11() {
+		return lessThanOracleJDK11Checkbox.getSelection();
 	}
 
 	@Override

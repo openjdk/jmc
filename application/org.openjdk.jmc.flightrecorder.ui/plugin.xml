@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -60,7 +60,7 @@
        point="org.eclipse.ui.editors">
       <editor
             class="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
-            extensions="jfr"
+            extensions="jfr,lz4"
             icon="icons/jfr.png"
             id="org.openjdk.jmc.flightrecorder.ui.JfrEditor"
             name="Flight Recording">
@@ -270,6 +270,10 @@
             class="org.openjdk.jmc.flightrecorder.ui.pages.GCConfigurationPage$GCConfigurationPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.gcconfiguration">
       </factory>
+       <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.GCSummaryPage$GCSummaryPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.gcsummary">
+      </factory>
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.CompilationsPage$CompilationsPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.compilations">
@@ -305,6 +309,10 @@
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.RecordingPage$RecordingPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.recording">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.ConstantPoolsPage$ConstantPoolsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.constantpools">
       </factory>
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.EventBrowserPage$Factory"

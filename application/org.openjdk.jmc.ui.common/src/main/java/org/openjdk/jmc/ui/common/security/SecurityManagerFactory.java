@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.ui.common.security;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * This is the global security manager factory for Mission Control. You can only have one
  * SecurityManager, and it is initialized at start. It can not be changed once initialized. The only
@@ -40,6 +43,7 @@ package org.openjdk.jmc.ui.common.security;
  * The class must implement ISecurityManager, and it must have a default constructor.
  */
 public final class SecurityManagerFactory {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.common.security"); //$NON-NLS-1$
 
 	private static ISecurityManager instance;
 
@@ -51,8 +55,8 @@ public final class SecurityManagerFactory {
 				instance = (ISecurityManager) c.newInstance();
 			}
 		} catch (Exception e) {
-			System.out.println("Could not create Security manager for className. Using default! Exception was:"); //$NON-NLS-1$
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not create Security manager for className. Using default! Exception was:", //$NON-NLS-1$
+					e);
 		}
 	}
 

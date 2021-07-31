@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -183,8 +183,8 @@ public class SyntheticAttributeExtension implements IParserExtension {
 	@Override
 	public String getValueInterpretation(String eventTypeId, String fieldId) {
 		if (REC_SETTING_EVENT_ID_ATTRIBUTE.getIdentifier().equals(fieldId)
-				&& (JdkTypeIDsPreJdk11.RECORDING_SETTING.equals(eventTypeId)
-						|| JdkTypeIDsPreJdk11.JDK9_RECORDING_SETTING.equals(eventTypeId)
+				&& (OracleJdkTypeIDsPre11.RECORDING_SETTING.equals(eventTypeId)
+						|| OracleJdkTypeIDsPre11.JDK9_RECORDING_SETTING.equals(eventTypeId)
 						|| JdkTypeIDs.RECORDING_SETTING.equals(eventTypeId))) {
 			return JfrInternalConstants.TYPE_IDENTIFIER_VALUE_INTERPRETATION;
 		}
@@ -203,11 +203,13 @@ public class SyntheticAttributeExtension implements IParserExtension {
 		@Override
 		public void addEvent(Object[] values) {
 			IMCPackage thePackage = (IMCPackage) values[packageFieldIndex];
-			IMCModule exportingModule = thePackage.getModule();
-			Object[] newValues = new Object[values.length + 1];
-			System.arraycopy(values, 0, newValues, 0, values.length);
-			newValues[values.length] = exportingModule;
-			subSink.addEvent(newValues);
+			if (thePackage != null) {
+				IMCModule exportingModule = thePackage.getModule();
+				Object[] newValues = new Object[values.length + 1];
+				System.arraycopy(values, 0, newValues, 0, values.length);
+				newValues[values.length] = exportingModule;
+				subSink.addEvent(newValues);
+			}
 		}
 	}
 }
