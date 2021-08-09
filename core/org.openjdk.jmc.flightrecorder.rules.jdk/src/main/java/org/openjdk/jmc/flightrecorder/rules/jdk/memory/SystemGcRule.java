@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -96,20 +96,24 @@ public class SystemGcRule implements IRule {
 
 	private IResult getSystemGcResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
-		IQuantity limit = valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT);
-		if (aggregate.getSystemGcCount() > 0) {
-			double systemGcRatio = aggregate.getSystemGcCount() / aggregate.getGcCount();
-			double score = RulesToolkit.mapExp100(systemGcRatio, limit.doubleValue());
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO))
-					.setExplanation(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO_LONG))
-					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(SYSTEM_GC_RATIO, UnitLookup.PERCENT_UNITY.quantity(systemGcRatio)).build();
-		} else {
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK)).build();
+		if (resultProvider != null) {
+			GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
+			IQuantity limit = valueProvider.getPreferenceValue(SYSTEM_GC_RATIO_LIMIT);
+			if (aggregate.getSystemGcCount() > 0) {
+				double systemGcRatio = aggregate.getSystemGcCount() / aggregate.getGcCount();
+				double score = RulesToolkit.mapExp100(systemGcRatio, limit.doubleValue());
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO))
+						.setExplanation(Messages.getString(Messages.SystemGcRuleFactory_TEXT_INFO_LONG))
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(SYSTEM_GC_RATIO, UnitLookup.PERCENT_UNITY.quantity(systemGcRatio)).build();
+			} else {
+				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.SystemGcRuleFactory_TEXT_OK)).build();
+			}
 		}
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA)
+				.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -83,27 +83,29 @@ public class GcLockerRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
-		if (aggregate != null) {
-			int gcLockers = aggregate.getGcLockers();
-			if (gcLockers > 0) {
-				int gcCount = aggregate.getGcCount();
-				IQuantity limit = valueProvider.getPreferenceValue(GC_LOCKER_RATIO_LIMIT);
-				double ratio = gcLockers / gcCount;
-				double score = RulesToolkit.mapExp74(ratio, limit.doubleValue());
-				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO))
-						.setExplanation(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO_LONG))
-						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-						.addResult(GC_LOCKER_RATIO, UnitLookup.PERCENT_UNITY.quantity(ratio)).build();
-			} else {
-				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-						.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK)).build();
+		if (resultProvider != null) {
+			GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
+			if (aggregate != null) {
+				int gcLockers = aggregate.getGcLockers();
+				if (gcLockers > 0) {
+					int gcCount = aggregate.getGcCount();
+					IQuantity limit = valueProvider.getPreferenceValue(GC_LOCKER_RATIO_LIMIT);
+					double ratio = gcLockers / gcCount;
+					double score = RulesToolkit.mapExp74(ratio, limit.doubleValue());
+					return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+							.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO))
+							.setExplanation(Messages.getString(Messages.GcLockerRuleFactory_TEXT_INFO_LONG))
+							.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+							.addResult(GC_LOCKER_RATIO, UnitLookup.PERCENT_UNITY.quantity(ratio)).build();
+				} else {
+					return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
+							.setSummary(Messages.getString(Messages.GcLockerRuleFactory_TEXT_OK)).build();
+				}
 			}
-		} else {
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA)
-					.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 		}
+		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.NA)
+				.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
+
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -98,23 +98,29 @@ public class HeapInspectionRule implements IRule {
 	private IResult getHeapInspectionResult(
 		IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		IQuantity limit = vp.getPreferenceValue(HEAP_INSPECTION_LIMIT);
-		GarbageCollectionsInfo aggregate = rp.getResultValue(GarbageCollectionInfoRule.GC_INFO);
-		if (aggregate.getObjectCountGCs() > 0) {
-			double score = RulesToolkit.mapExp74(aggregate.getObjectCountGCs(), limit.longValue());
-			String longMessage = Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG);
-			if (RulesToolkit.isEventsEnabled(items, JdkTypeIDs.OBJECT_COUNT)) {
-				longMessage += "\n" + Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG_JFR); //$NON-NLS-1$
+		if (rp != null) {
+			GarbageCollectionsInfo aggregate = rp.getResultValue(GarbageCollectionInfoRule.GC_INFO);
+			if (aggregate.getObjectCountGCs() > 0) {
+				double score = RulesToolkit.mapExp74(aggregate.getObjectCountGCs(), limit.longValue());
+				String longMessage = Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG);
+				if (RulesToolkit.isEventsEnabled(items, JdkTypeIDs.OBJECT_COUNT)) {
+					longMessage += "\n" + Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO_LONG_JFR); //$NON-NLS-1$
+				}
+				return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+						.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO))
+						.setExplanation(longMessage)
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(OBJECT_COUNT_GCS, UnitLookup.NUMBER_UNITY.quantity(aggregate.getObjectCountGCs()))
+						.build();
+			} else {
+				return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
+						.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK))
+						.setExplanation(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK_LONG)).build();
 			}
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_INFO))
-					.setExplanation(longMessage).addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(OBJECT_COUNT_GCS, UnitLookup.NUMBER_UNITY.quantity(aggregate.getObjectCountGCs()))
-					.build();
-		} else {
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK))
-					.setExplanation(Messages.getString(Messages.HeapInspectionGcRuleFactory_TEXT_OK_LONG)).build();
 		}
+
+		return ResultBuilder.createFor(this, vp).setSeverity(Severity.NA)
+				.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 	}
 
 	@Override

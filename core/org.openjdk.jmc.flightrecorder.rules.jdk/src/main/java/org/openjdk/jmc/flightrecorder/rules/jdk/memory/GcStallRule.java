@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -75,20 +75,28 @@ public class GcStallRule implements IRule {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
-				GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
-				if (aggregate.foundNonRequestedSerialOldGc()) {
-					CollectorType oldCollectorType = CollectorType.getOldCollectorType(items);
-					if (oldCollectorType == CollectorType.CMS) {
-						return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.WARNING)
-								.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS))
-								.setExplanation(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS_LONG))
-								.build();
-					} else if (oldCollectorType == CollectorType.G1_OLD) {
-						return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.WARNING)
-								.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1))
-								.setExplanation(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1_LONG))
-								.build();
+				if (resultProvider != null) {
+					GarbageCollectionsInfo aggregate = resultProvider.getResultValue(GarbageCollectionInfoRule.GC_INFO);
+					if (aggregate.foundNonRequestedSerialOldGc()) {
+						CollectorType oldCollectorType = CollectorType.getOldCollectorType(items);
+						if (oldCollectorType == CollectorType.CMS) {
+							return ResultBuilder.createFor(GcStallRule.this, valueProvider)
+									.setSeverity(Severity.WARNING)
+									.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS))
+									.setExplanation(
+											Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_CMS_LONG))
+									.build();
+						} else if (oldCollectorType == CollectorType.G1_OLD) {
+							return ResultBuilder.createFor(GcStallRule.this, valueProvider)
+									.setSeverity(Severity.WARNING)
+									.setSummary(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1))
+									.setExplanation(Messages.getString(Messages.SerialOldRuleFactory_TEXT_WARN_G1_LONG))
+									.build();
+						}
 					}
+				} else {
+					return ResultBuilder.createFor(GcStallRule.this, valueProvider).setSeverity(Severity.NA)
+							.setSummary(Messages.getString(Messages.GcLockerRule_TEXT_NA)).build();
 				}
 				IQuantity c = items.getAggregate(Aggregators.count(null, null, JdkFilters.CONCURRENT_MODE_FAILURE));
 				if (c != null && c.clampedLongValueIn(NUMBER_UNITY) > 0) {

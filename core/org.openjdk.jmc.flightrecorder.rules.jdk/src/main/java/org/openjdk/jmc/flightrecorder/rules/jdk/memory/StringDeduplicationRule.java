@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -195,7 +195,8 @@ public class StringDeduplicationRule extends AbstractRule {
 		IQuantity heapUsedRatio = null;
 		if (maxHeapSize != null) {
 			IQuantity avgHeapUsed = items.getAggregate(JdkAggregators.AVG_HEAP_USED_AFTER_GC);
-			heapUsedRatio = UnitLookup.PERCENT_UNITY.quantity(avgHeapUsed.ratioTo(maxHeapSize));
+			if (avgHeapUsed != null)
+				heapUsedRatio = UnitLookup.PERCENT_UNITY.quantity(avgHeapUsed.ratioTo(maxHeapSize));
 			heapInfo = Messages.getString(Messages.StringDeduplicationRule_RESULT_HEAP_USAGE);
 		}
 
