@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,10 +51,12 @@ public class PreferencesKeys {
 	public static final String PROPERTY_MAIL_SERVER = "rjmx.smtp.server"; //$NON-NLS-1$
 	public static final String PROPERTY_MAIL_SERVER_PORT = "rjmx.smtp.server.port"; //$NON-NLS-1$
 	public static final String PROPERTY_MAIL_SERVER_SECURE = "rjmx.smtp.server.secure"; //$NON-NLS-1$
+	public static final String PROPERTY_MAIL_SERVER_STARTTLS_ENCRYPTION = "rjmx.smtp.server.starttls.encryption"; //$NON-NLS-1$
 	public static final String PROPERTY_MAIL_SERVER_CREDENTIALS = "rjmx.smtp.server.credentials"; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SERVER = "mail.example.org"; //$NON-NLS-1$
 	public static final int DEFAULT_MAIL_SERVER_PORT = 25;
 	public static final boolean DEFAULT_MAIL_SERVER_SECURE = false;
+	public static final boolean DEFAULT_MAIL_SERVER_STARTTLS_ENCRYPTION = false;
 	public static final String DEFAULT_MAIL_SERVER_USER = ""; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SERVER_PASSWORD = ""; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SERVER_CREDENTIALS = ""; //$NON-NLS-1$
