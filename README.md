@@ -39,7 +39,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 ### Red Hat
 * Released version
 
-Red Hat distributes JDK Mission Control as RPMs in Fedora and RHEL. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
+Red Hat distributes JDK Mission Control in Red Hat Enterprise Linux (RHEL). JMC is available in RHEL 7 as the rh-jmc Software Collection, and is provided in RHEL 8 by the jmc:rhel8 module stream. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
 
 ## Mission Control Features
 
