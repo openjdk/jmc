@@ -281,15 +281,17 @@ public class ParserStats {
 			}
 			if ("constant".equals(attribute.getIdentifier())) {
 				if (constant instanceof IMCStackTrace) {
-					IMCFrame imcFrame = ((IMCStackTrace)constant).getFrames().get(0);
-					String str = StacktraceFormatToolkit.formatFrame(imcFrame, new FrameSeparator(FrameCategorization.METHOD, false));
+					IMCFrame imcFrame = ((IMCStackTrace) constant).getFrames().get(0);
+					String str = StacktraceFormatToolkit.formatFrame(imcFrame,
+							new FrameSeparator(FrameCategorization.METHOD, false));
 					return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(str));
 				}
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(constant));
 			}
 			if ("stackTrace".equals(attribute.getIdentifier())) {
 				if (constant instanceof IMCStackTrace) {
-					return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, IMCStackTrace, IMCStackTrace>constant((IMCStackTrace)constant);
+					return (IMemberAccessor<M, IItem>) MemberAccessorToolkit
+							.<IItem, IMCStackTrace, IMCStackTrace> constant((IMCStackTrace) constant);
 				}
 			}
 			return null;
