@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,8 +35,6 @@ package org.openjdk.jmc.attach;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import sun.management.counter.perf.InstrumentationException;
 
 /**
  * Checks for local attach availability
@@ -88,8 +86,6 @@ public class AttachToolkit {
 			return (String) importFrom.invoke(null, pid);
 		} catch (NullPointerException e) {
 			// This can happen if the JVM dies on us during the call.
-		} catch (InstrumentationException e) {
-			// This can happen when connecting to a 1.4 Sun JVM.
 		} catch (Throwable t) {
 			LOGGER.log(Level.WARNING, "Could not get connector address for pid", t); //$NON-NLS-1$
 		}
