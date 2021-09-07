@@ -113,6 +113,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 		private static final String SASH_ELEMENT = "sash"; //$NON-NLS-1$
 
 		private final IItemCollection constPoolItems;
+		private final IPageContainer container;
 		private final SashForm sash;
 		private final ItemHistogram byTypeTable;
 		private final ItemHistogram constantValueTable;
@@ -124,6 +125,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 		private ItemHistogramWithInput constantHistogram;
 
 		ConstantPoolsPageUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
+			container = pageContainer;
 			constPoolItems = getDataSource().getConstantPools();
 			selectionConstPoolItems = constPoolItems;
 			selectionConstantItems = getDataSource().getConstants();
@@ -153,6 +155,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 			byTypeHistogram = new ItemHistogramWithInput(byTypeTable);
 			constantHistogram = new ItemHistogramWithInput(constantValueTable);
 			byTypeHistogram.addListener(this::typeHistogramListener);
+			constantHistogram.addListener(container::showSelection);
 
 			PersistableSashForm.loadState(sash, state.getChild(SASH_ELEMENT));
 			byTypeFilter.loadState(state.getChild(TYPE_FILTER));
@@ -164,6 +167,7 @@ public class ConstantPoolsPage extends AbstractDataPage {
 			IItemCollection filteredItems = getDataSource().getConstants()
 					.apply(ItemFilters.equals(JdkAttributes.CONSTANT_TYPE, poolName));
 			constantHistogram.setInput(filteredItems);
+			container.showSelection(filteredItems);
 		}
 
 		private void onTypeFilterChange(IItemFilter filter) {
@@ -192,5 +196,4 @@ public class ConstantPoolsPage extends AbstractDataPage {
 	public IPageUI display(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 		return new ConstantPoolsPageUi(parent, toolkit, pageContainer, state);
 	}
-
 }

@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.internal.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +46,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.item.IAccessorKey;
 import org.openjdk.jmc.common.item.IAttribute;
@@ -55,9 +58,13 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.StructContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
 
 public class ParserStats {
 	private short majorVersion;
@@ -197,7 +204,7 @@ public class ParserStats {
 
 		@Override
 		public List<IAttribute<?>> getAttributes() {
-			return null;
+			return Collections.emptyList();
 		}
 
 		@Override
@@ -253,7 +260,7 @@ public class ParserStats {
 
 		@Override
 		public List<IAttribute<?>> getAttributes() {
-			return null;
+			return Collections.emptyList();
 		}
 
 		@Override
@@ -273,7 +280,19 @@ public class ParserStats {
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(typeName));
 			}
 			if ("constant".equals(attribute.getIdentifier())) {
+				if (constant instanceof IMCStackTrace) {
+					IMCFrame imcFrame = ((IMCStackTrace) constant).getFrames().get(0);
+					String str = StacktraceFormatToolkit.formatFrame(imcFrame,
+							new FrameSeparator(FrameCategorization.METHOD, false));
+					return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(str));
+				}
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(constant));
+			}
+			if ("stackTrace".equals(attribute.getIdentifier())) {
+				if (constant instanceof IMCStackTrace) {
+					return (IMemberAccessor<M, IItem>) MemberAccessorToolkit
+							.<IItem, IMCStackTrace, IMCStackTrace> constant((IMCStackTrace) constant);
+				}
 			}
 			return null;
 		}
