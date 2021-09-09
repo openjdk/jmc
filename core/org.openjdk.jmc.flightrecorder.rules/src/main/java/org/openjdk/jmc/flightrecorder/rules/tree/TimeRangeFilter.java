@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -59,7 +59,7 @@ public class TimeRangeFilter implements IItemFilter {
 
 		private boolean intersects(IItem o, Range range) {
 			IQuantity startTime = RulesToolkit.getStartTime(o);
-			IQuantity endTime = RulesToolkit.getStartTime(o);
+			IQuantity endTime = RulesToolkit.getEndTime(o);
 
 			if (range.isInside(startTime) || range.isInside(endTime)) {
 				return true;
