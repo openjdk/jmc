@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +11,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -407,6 +408,7 @@ public class Messages extends NLS {
 	public static String PREFERENCES_CONFIRM_REMOVE_TEMPLATE_TEXT;
 	public static String PREFERENCES_ENABLED_RULES;
 	public static String PREFERENCES_ENABLE_RECORDING_ANALYSIS;
+	public static String PREFERENCES_ENABLE_WEBSOCKET_SERVER;
 	public static String PREFERENCES_EVALUATION_THREAD_NUMBER_LESS_THAN_ONE;
 	public static String PREFERENCES_EVALUATION_THREAD_NUMBER_TEXT;
 	public static String PREFERENCES_EVALUATION_THREAD_NUMBER_TOOLTIP;
