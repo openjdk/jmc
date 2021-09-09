@@ -130,7 +130,7 @@ abstract class StructuredWriter {
 		return FormatToolkit.getPackage(mcPackage);
 	}
 
-	final protected int getColumn() {
+	protected final int getColumn() {
 		return column;
 	}
 
@@ -141,51 +141,51 @@ abstract class StructuredWriter {
 		builder.setLength(0);
 	}
 
-	final public void writeIndent() {
+	public final void writeIndent() {
 		builder.append(indentionArray, 0, indent);
 		column += indent;
 	}
 
-	final public void writeln() {
+	public final void writeln() {
 		builder.append(LINE_SEPARATOR);
 		column = 0;
 	}
 
-	final public void write(String ... texts) {
+	public final void write(String ... texts) {
 		for (String text : texts) {
 			write(text);
 		}
 	}
 
-	final public void writeAsString(Object o) {
+	public final void writeAsString(Object o) {
 		write(String.valueOf(o));
 	}
 
-	final public void write(String text) {
+	public final void write(String text) {
 		builder.append(text);
 		column += text.length();
 	}
 
-	final public void write(char c) {
+	public final void write(char c) {
 		builder.append(c);
 		column++;
 	}
 
-	final public void write(int value) {
+	public final void write(int value) {
 		write(String.valueOf(value));
 	}
 
-	final public void indent() {
+	public final void indent() {
 		indent += 2;
 		updateIndent();
 	}
 
-	final public void retract() {
+	public final void retract() {
 		indent -= 2;
 		updateIndent();
 	}
 
-	final public void writeln(String text) {
+	public final void writeln(String text) {
 		write(text);
 		writeln();
 	}
