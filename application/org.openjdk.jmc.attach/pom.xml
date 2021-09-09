@@ -42,6 +42,9 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
+		<java.source>11</java.source>
+		<java.target>11</java.target>
+		<project.build.java.target>11</project.build.java.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
@@ -52,20 +55,13 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<!-- Disable error for forbidden access to sun.management.* APIs -->
-					<compilerArgument>-err:-forbidden</compilerArgument>
+					<compilerArgs>
+						<args>--add-exports</args>
+						<args>java.management/sun.management=ALL-UNNAMED</args>
+					</compilerArgs>
 					<excludes>
 						<exclude>**/Empty.java</exclude>
 					</excludes>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>sun.jdk</groupId>
-							<artifactId>tools</artifactId>
-							<version>1.8.0</version>
-							<scope>system</scope>
-							<systemPath>${java.home}/../lib/tools.jar</systemPath>
-						</dependency>
-					</extraClasspathElements>
 				</configuration>
 			</plugin>
 		</plugins>

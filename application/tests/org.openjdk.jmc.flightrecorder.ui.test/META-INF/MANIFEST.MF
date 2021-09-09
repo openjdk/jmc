@@ -4,7 +4,7 @@ Bundle-Name: Flightrecorder Plug-in Test
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ui.test;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.flightrecorder.ui,

@@ -47,9 +47,10 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
+		<java.source>11</java.source>
+		<java.target>11</java.target>
+		<project.build.java.target>11</project.build.java.target>
 		<jmc.agent.version>1.0.0-SNAPSHOT</jmc.agent.version>
-		<java.version>1.8</java.version>
-
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
@@ -60,15 +61,10 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>sun.jdk</groupId>
-							<artifactId>tools</artifactId>
-							<version>${java.version}</version>
-							<scope>system</scope>
-							<systemPath>${java.home}/../lib/tools.jar</systemPath>
-						</dependency>
-					</extraClasspathElements>
+					<compilerArgs>
+						<args>--add-exports</args>
+						<args>java.management/sun.management=ALL-UNNAMED</args>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

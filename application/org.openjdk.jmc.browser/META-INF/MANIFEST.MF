@@ -13,7 +13,7 @@ Require-Bundle: org.openjdk.jmc.ui,
 Eclipse-BuddyPolicy: app
 Bundle-Vendor: Oracle Corporation
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.browser.views;x-friends:="org.openjdk.jmc.test.jemmy",
  org.openjdk.jmc.browser.wizards;x-friends:="org.openjdk.jmc.test.jemmy"
