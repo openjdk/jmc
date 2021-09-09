@@ -112,18 +112,34 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	private Reference<ResultPage> resultPageRef = new WeakReference<>(null);
 	private RuleManager ruleEngine;
 	private IPropertyChangeListener analysisEnabledListener;
+	private IPropertyChangeListener websocketServerEnabledListener;
 
 	public JfrEditor() {
 		super();
 		ruleEngine = new RuleManager(() -> DisplayToolkit.safeAsyncExec(() -> refreshOutline()));
 		analysisEnabledListener = e -> {
+			System.out.println(e.getProperty());
 			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_RECORDING_ANALYSIS)) {
+				System.out.println(e.getProperty());
 				if ((Boolean) e.getNewValue()) {
 					ruleEngine.evaluateAllRules();
 				}
 			}
 		};
+		websocketServerEnabledListener = e -> {
+			System.out.println(e.getProperty());
+			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER)) {
+				if ((Boolean) e.getNewValue()) {
+					// start server
+					System.out.println("Start websocket server");
+				} else {
+					// stop server
+					System.out.println("Stop websocket server");
+				}
+			}
+		};
 		FlightRecorderUI.getDefault().getPreferenceStore().addPropertyChangeListener(analysisEnabledListener);
+		FlightRecorderUI.getDefault().getPreferenceStore().addPropertyChangeListener(websocketServerEnabledListener);
 	}
 
 	@Override
@@ -397,6 +413,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	public void dispose() {
 		ruleEngine.dispose();
 		FlightRecorderUI.getDefault().getPreferenceStore().removePropertyChangeListener(analysisEnabledListener);
+		FlightRecorderUI.getDefault().getPreferenceStore().removePropertyChangeListener(websocketServerEnabledListener);
 		super.dispose();
 	}
 
