@@ -83,6 +83,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
+import org.openjdk.jmc.flightrecorder.ui.websocket.WebsocketServer;
 import org.openjdk.jmc.ui.MCPathEditorInput;
 import org.openjdk.jmc.ui.idesupport.IDESupportUIToolkit;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
@@ -113,27 +114,29 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	private RuleManager ruleEngine;
 	private IPropertyChangeListener analysisEnabledListener;
 	private IPropertyChangeListener websocketServerEnabledListener;
+	private WebsocketServer websocketServer;
 
 	public JfrEditor() {
 		super();
 		ruleEngine = new RuleManager(() -> DisplayToolkit.safeAsyncExec(() -> refreshOutline()));
 		analysisEnabledListener = e -> {
-			System.out.println(e.getProperty());
 			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_RECORDING_ANALYSIS)) {
-				System.out.println(e.getProperty());
 				if ((Boolean) e.getNewValue()) {
 					ruleEngine.evaluateAllRules();
 				}
 			}
 		};
+		if (FlightRecorderUI.getDefault().isWebsocketServerEnabled()) {
+			websocketServer = new WebsocketServer();
+		}
 		websocketServerEnabledListener = e -> {
-			System.out.println(e.getProperty());
 			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER)) {
 				if ((Boolean) e.getNewValue()) {
-					// start server
-					System.out.println("Start websocket server");
+					if (websocketServer == null) {
+						websocketServer = new WebsocketServer();
+					}
 				} else {
-					// stop server
+					// TODO: shutdown server
 					System.out.println("Stop websocket server");
 				}
 			}
@@ -200,6 +203,9 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		IItemCollection selectionItems = items;
 		if (!items.hasItems() && currentPage != null) {
 			selectionItems = getModel().getItems().apply(getDisplayablePage(currentPage).getDefaultSelectionFilter());
+		}
+		if (websocketServer != null) {
+			websocketServer.notifyAll(selectionItems);
 		}
 		getSite().getSelectionProvider().setSelection(new StructuredSelection(selectionItems));
 	}
