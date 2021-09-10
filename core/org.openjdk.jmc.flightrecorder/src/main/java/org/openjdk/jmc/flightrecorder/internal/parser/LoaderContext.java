@@ -37,12 +37,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
@@ -51,6 +54,7 @@ import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.parser.RepositoryBuilder.EventTypeEntry;
 import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 
@@ -64,6 +68,7 @@ public class LoaderContext {
 	private final ConcurrentHashMap<Object, CanonicalConstantMap<Object>> constantsByType = new ConcurrentHashMap<>();
 	private final boolean hideExperimentals;
 	private final List<? extends IParserExtension> extensions;
+	private final List<IConstantPoolExtension> constPoolExtensions = new CopyOnWriteArrayList<>();
 	private final Set<IRange<IQuantity>> chunkRanges;
 	private final ParserStats parserStats = new ParserStats();
 
@@ -74,6 +79,12 @@ public class LoaderContext {
 		// Traverse the list in reverse order so that the first element will create outermost sink factory
 		for (int i = extensions.size() - 1; i >= 0; i--) {
 			sinkFactory = extensions.get(i).getEventSinkFactory(sinkFactory);
+		}
+		for (IParserExtension extension : extensions) {
+			IConstantPoolExtension constantPoolExtension = extension.createConstantPoolExtension();
+			if (constantPoolExtension != null) {
+				constPoolExtensions.add(constantPoolExtension);
+			}
 		}
 		this.sinkFactory = sinkFactory;
 		this.chunkRanges = new HashSet<>();
@@ -97,6 +108,36 @@ public class LoaderContext {
 			}
 		}
 		return null;
+	}
+
+	public Object constantRead(long constantIndex, Object constant, String eventTypeId) {
+		Object newConstant = constant;
+		for (IConstantPoolExtension m : constPoolExtensions) {
+			newConstant = m.constantRead(constantIndex, newConstant, eventTypeId);
+		}
+		return newConstant;
+	}
+
+	public Object constantReferenced(Object constant, String poolName, String eventTypeId) {
+		Object newConstant = constant;
+		for (IConstantPoolExtension m : constPoolExtensions) {
+			newConstant = m.constantReferenced(newConstant, poolName, eventTypeId);
+		}
+		return newConstant;
+	}
+
+	public Object constantResolved(Object constant, String poolName, String eventTypeId) {
+		Object newConstant = constant;
+		for (IConstantPoolExtension m : constPoolExtensions) {
+			newConstant = m.constantResolved(newConstant, poolName, eventTypeId);
+		}
+		return newConstant;
+	}
+
+	public void allConstantPoolsResolved(Map<String, FastAccessNumberMap<Object>> constantPools) {
+		for (IConstantPoolExtension m : constPoolExtensions) {
+			m.allConstantPoolsResolved(constantPools);
+		}
 	}
 
 	public IEventSinkFactory getSinkFactory() {

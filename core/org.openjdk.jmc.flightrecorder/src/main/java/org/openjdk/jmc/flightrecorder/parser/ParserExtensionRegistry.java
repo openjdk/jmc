@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,8 +50,13 @@ public class ParserExtensionRegistry {
 		List<IParserExtension> extensions = new ArrayList<>();
 		// FIXME: Load the synthetic attribute extension using Java Service Loader instead
 		extensions.add(new SyntheticAttributeExtension());
-		ServiceLoader<IParserExtension> loader = ServiceLoader.load(IParserExtension.class,
-				IParserExtension.class.getClassLoader());
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		ServiceLoader<IParserExtension> loader;
+		if (contextClassLoader == null) {
+			loader = ServiceLoader.load(IParserExtension.class, IParserExtension.class.getClassLoader());
+		} else {
+			loader = ServiceLoader.load(IParserExtension.class, contextClassLoader);
+		}
 		for (IParserExtension extension : loader) {
 			extensions.add(extension);
 		}
