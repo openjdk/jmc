@@ -1,12 +1,14 @@
 package org.openjdk.jmc.flightrecorder.ui.websocket;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.eclipse.jetty.server.Server;
@@ -18,9 +20,12 @@ import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerI
 import org.eclipse.jetty.websocket.servlet.WebSocketUpgradeFilter;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
+import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 
 public class WebsocketServer {
 	private static int PORT = 8029;
+	private static int MAX_MESSAGE_SIZE = 1024 * 1024 * 1024;
+	private static int IDLE_TIMEOUT_MINUTES = 5;
 
 	private List<WebSocketConnectionHandler> handlers = new ArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -42,13 +47,12 @@ public class WebsocketServer {
 		server.setHandler(context);
 
 		// Configure specific websocket behaviour
-		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, configuration) -> {
+		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
 			// set idle timeout
-
 			// configuration.getPolicy().setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
-
-			configuration.addMapping("/events/*", (req, resp) -> {
-				System.out.println("Creating connection handler");
+			container.setMaxBinaryMessageSize(MAX_MESSAGE_SIZE);
+			container.setIdleTimeout(Duration.ofMinutes(IDLE_TIMEOUT_MINUTES));
+			container.addMapping("/events/*", (req, resp) -> {
 				// try to send the current selection when the client connects
 				// for simplicity, we serialise for every new connection
 				String eventsJson = currentSelection != null
@@ -64,9 +68,8 @@ public class WebsocketServer {
 			WebSocketUpgradeFilter.ensureFilter(context.getServletContext());
 			server.start();
 			server.join();
-		} catch (Throwable t) {
-			// TODO log error
-			t.printStackTrace(System.err);
+		} catch (Exception e) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to start websocket server", e);
 		}
 	}
 
@@ -92,12 +95,12 @@ public class WebsocketServer {
 
 		public void sendMessage(String message) {
 			if (getSession() != null && isConnected()) {
-				System.out.println("sending message to " + getSession().getRemoteAddress().toString());
+				FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+						"Sending message to " + getSession().getRemoteAddress().toString());
 				try {
 					getSession().getRemote().sendString(message);
 				} catch (IOException e) {
-					// TODO Log error
-					e.printStackTrace();
+					FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to send websocket message", e);
 				}
 			}
 		}
@@ -105,16 +108,15 @@ public class WebsocketServer {
 		@Override
 		public void onWebSocketConnect(Session sess) {
 			super.onWebSocketConnect(sess);
-			System.out.println("Socket Connected: " + sess);
+			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+					"Socket connected to " + sess.getRemoteAddress().toString());
 			try {
 				if (firstMessage != null) {
 					getSession().getRemote().sendString(firstMessage);
 					firstMessage = null;
 				}
-			} catch (IOException ex) {
-				// TODO: log error
-				System.out.println(ex.getMessage());
-				ex.printStackTrace();
+			} catch (IOException e) {
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to show outline view", e);
 			}
 		}
 
@@ -126,7 +128,7 @@ public class WebsocketServer {
 		@Override
 		public void onWebSocketClose(int statusCode, String reason) {
 			super.onWebSocketClose(statusCode, reason);
-			System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+			FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Socket closed: [" + statusCode + "] " + reason);
 			closureLatch.countDown();
 		}
 
@@ -134,17 +136,15 @@ public class WebsocketServer {
 		public void onWebSocketError(Throwable cause) {
 			super.onWebSocketError(cause);
 			if (cause.getCause() instanceof TimeoutException) {
-				System.out.println("Socket timeout");
+				FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Websocket timed out");
 			} else {
-				// TODO: log error
-				cause.printStackTrace(System.err);
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Websocket error", cause);
 			}
 		}
 
 		@SuppressWarnings("unused")
 		// TODO: graceful shutdown
 		public void awaitClosure() throws InterruptedException {
-			System.out.println("Awaiting closure from remote");
 			closureLatch.await();
 		}
 	}
