@@ -101,6 +101,8 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	private static final String RESULT_VIEW_ID = "org.openjdk.jmc.flightrecorder.ui.ResultView"; //$NON-NLS-1$
 	private static final String NO_PAGES_HELP_CONTEXT_ID = "org.openjdk.jmc.flightrecorder.ui.NoPages"; //$NON-NLS-1$
 
+	private static final int WEBSOCKET_SERVER_PORT = 8029;
+
 	private FormToolkit toolkit;
 	private Composite resultContainer;
 	private StreamModel items;
@@ -127,13 +129,13 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			}
 		};
 		if (FlightRecorderUI.getDefault().isWebsocketServerEnabled()) {
-			websocketServer = new WebsocketServer();
+			websocketServer = new WebsocketServer(WEBSOCKET_SERVER_PORT);
 		}
 		websocketServerEnabledListener = e -> {
 			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER)) {
 				if ((Boolean) e.getNewValue()) {
 					if (websocketServer == null) {
-						websocketServer = new WebsocketServer();
+						websocketServer = new WebsocketServer(WEBSOCKET_SERVER_PORT);
 					}
 				} else {
 					// TODO: shutdown server

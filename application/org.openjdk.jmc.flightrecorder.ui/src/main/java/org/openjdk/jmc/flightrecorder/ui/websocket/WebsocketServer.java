@@ -23,33 +23,32 @@ import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerial
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 
 public class WebsocketServer {
-	private static int PORT = 8029;
+
 	private static int MAX_MESSAGE_SIZE = 1024 * 1024 * 1024;
 	private static int IDLE_TIMEOUT_MINUTES = 5;
 
+	private final int port;
 	private List<WebSocketConnectionHandler> handlers = new ArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private IItemCollection currentSelection = null;
 
-	public WebsocketServer() {
+	public WebsocketServer(int port) {
+		this.port = port;
 		executorService.execute(() -> startServer());
 	}
 
 	private void startServer() {
 		Server server = new Server();
 		ServerConnector connector = new ServerConnector(server);
-		connector.setPort(PORT);
+		connector.setHost("127.0.0.1");
+		connector.setPort(port);
 		server.addConnector(connector);
 
-		// Setup the basic application context at "/"
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
 
-		// Configure specific websocket behaviour
 		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
-			// set idle timeout
-			// configuration.getPolicy().setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
 			container.setMaxBinaryMessageSize(MAX_MESSAGE_SIZE);
 			container.setIdleTimeout(Duration.ofMinutes(IDLE_TIMEOUT_MINUTES));
 			container.addMapping("/events/*", (req, resp) -> {
@@ -64,7 +63,6 @@ public class WebsocketServer {
 		});
 
 		try {
-			// Add generic filter that will accept WebSocket upgrade.
 			WebSocketUpgradeFilter.ensureFilter(context.getServletContext());
 			server.start();
 			server.join();
