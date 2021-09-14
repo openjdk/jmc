@@ -14,14 +14,13 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.eclipse.jetty.websocket.server.NativeWebSocketServletContainerInitializer;
-import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
+import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
+import org.eclipse.jetty.websocket.servlet.WebSocketUpgradeFilter;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
 
 public class WebsocketServer {
 	private static int PORT = 8029;
-	private static int MAX_MESSAGE_SIZE = 1024 * 1024 * 1024;
 
 	private List<WebSocketConnectionHandler> handlers = new ArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -43,10 +42,10 @@ public class WebsocketServer {
 		server.setHandler(context);
 
 		// Configure specific websocket behaviour
-		NativeWebSocketServletContainerInitializer.configure(context, (servletContext, configuration) -> {
+		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, configuration) -> {
 			// set idle timeout
 
-			configuration.getPolicy().setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
+			// configuration.getPolicy().setMaxTextMessageBufferSize(MAX_MESSAGE_SIZE);
 
 			configuration.addMapping("/events/*", (req, resp) -> {
 				System.out.println("Creating connection handler");
@@ -62,7 +61,7 @@ public class WebsocketServer {
 
 		try {
 			// Add generic filter that will accept WebSocket upgrade.
-			WebSocketUpgradeFilter.configure(context);
+			WebSocketUpgradeFilter.ensureFilter(context.getServletContext());
 			server.start();
 			server.join();
 		} catch (Throwable t) {

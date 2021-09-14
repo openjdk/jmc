@@ -152,7 +152,7 @@
          unpack="false"/>
 
    <plugin
-         id="javax.servlet-api"
+         id="org.apache.aries.spifly.dynamic.bundle"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -166,6 +166,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.jetty.websocket.servlet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.jetty.websocket.server"
          download-size="0"
          install-size="0"
@@ -173,7 +180,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jetty.websocket.servlet"
+         id="org.eclipse.jetty.websocket.javax.server"
          download-size="0"
          install-size="0"
          version="0.0.0"
