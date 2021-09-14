@@ -56,7 +56,7 @@ import java.util.logging.Logger;
 public final class JFCXMLValidator implements IXMLValidator {
 	private static final JFCXMLValidator SHARED = new JFCXMLValidator();
 
-	private static final Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.configuration");
+	private static final Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.configuration.model.xml");
 
 	interface IXMLNodeValidator {
 		XMLValidationResult validate(Object parentNode, Object node);
