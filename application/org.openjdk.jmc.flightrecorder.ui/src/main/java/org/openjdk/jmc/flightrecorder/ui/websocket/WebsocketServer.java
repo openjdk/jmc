@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
@@ -28,6 +27,7 @@ public class WebsocketServer {
 	private static int IDLE_TIMEOUT_MINUTES = 5;
 
 	private final int port;
+	private Server server;
 	private List<WebSocketConnectionHandler> handlers = new ArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private IItemCollection currentSelection = null;
@@ -37,8 +37,12 @@ public class WebsocketServer {
 		executorService.execute(() -> startServer());
 	}
 
+	public int getPort() {
+		return port;
+	}
+
 	private void startServer() {
-		Server server = new Server();
+		server = new Server();
 		ServerConnector connector = new ServerConnector(server);
 		connector.setHost("127.0.0.1");
 		connector.setPort(port);
@@ -64,6 +68,8 @@ public class WebsocketServer {
 
 		try {
 			WebSocketUpgradeFilter.ensureFilter(context.getServletContext());
+			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+					"Starting websocket server listening on port " + port);
 			server.start();
 			server.join();
 		} catch (Exception e) {
@@ -83,8 +89,17 @@ public class WebsocketServer {
 		handlers.forEach(handler -> handler.sendMessage(eventsJson));
 	}
 
+	public void shutdown() {
+		try {
+			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+					"Stopping websocket server listening on port " + port);
+			server.stop();
+		} catch (Exception e) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to stop websocket server", e);
+		}
+	}
+
 	private static class WebSocketConnectionHandler extends WebSocketAdapter {
-		private CountDownLatch closureLatch = new CountDownLatch(1);
 		private String firstMessage;
 
 		WebSocketConnectionHandler(String firstMessage) {
@@ -127,7 +142,6 @@ public class WebsocketServer {
 		public void onWebSocketClose(int statusCode, String reason) {
 			super.onWebSocketClose(statusCode, reason);
 			FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Socket closed: [" + statusCode + "] " + reason);
-			closureLatch.countDown();
 		}
 
 		@Override
@@ -138,12 +152,6 @@ public class WebsocketServer {
 			} else {
 				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Websocket error", cause);
 			}
-		}
-
-		@SuppressWarnings("unused")
-		// TODO: graceful shutdown
-		public void awaitClosure() throws InterruptedException {
-			closureLatch.await();
 		}
 	}
 }

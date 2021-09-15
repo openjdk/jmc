@@ -144,6 +144,23 @@ public final class FlightRecorderUI extends MCAbstractUIPlugin {
 		}
 	}
 
+	public static int parseWebsocketPort(String port) {
+		try {
+			return Integer.parseInt(port);
+		} catch (NumberFormatException e) {
+			return PreferenceKeys.DEFAULT_WEBSOCKET_PORT;
+		}
+	}
+
+	public int getWebsocketPort() {
+		return parseWebsocketPort(getPreferenceStore().getString(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT));
+	}
+
+	public boolean isWebsocketServerEnabled() {
+		int port = getWebsocketPort();
+		return port > 0 && port < 65535;
+	}
+
 	public static String validateDumpTimespan(String text) {
 		try {
 			IQuantity timespan = UnitLookup.TIMESPAN.parseInteractive(text);
@@ -174,10 +191,6 @@ public final class FlightRecorderUI extends MCAbstractUIPlugin {
 
 	public boolean isAnalysisEnabled() {
 		return getPreferenceStore().getBoolean(PreferenceKeys.PROPERTY_ENABLE_RECORDING_ANALYSIS);
-	}
-
-	public boolean isWebsocketServerEnabled() {
-		return getPreferenceStore().getBoolean(PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER);
 	}
 
 	public boolean includeExperimentalEventsAndFields() {

@@ -101,8 +101,6 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	private static final String RESULT_VIEW_ID = "org.openjdk.jmc.flightrecorder.ui.ResultView"; //$NON-NLS-1$
 	private static final String NO_PAGES_HELP_CONTEXT_ID = "org.openjdk.jmc.flightrecorder.ui.NoPages"; //$NON-NLS-1$
 
-	private static final int WEBSOCKET_SERVER_PORT = 8029;
-
 	private FormToolkit toolkit;
 	private Composite resultContainer;
 	private StreamModel items;
@@ -129,17 +127,23 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			}
 		};
 		if (FlightRecorderUI.getDefault().isWebsocketServerEnabled()) {
-			websocketServer = new WebsocketServer(WEBSOCKET_SERVER_PORT);
+			long websocketServerPort = FlightRecorderUI.getDefault().getWebsocketPort();
+			websocketServer = new WebsocketServer((int) websocketServerPort);
 		}
 		websocketServerEnabledListener = e -> {
-			if (e.getProperty().equals(PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER)) {
-				if ((Boolean) e.getNewValue()) {
-					if (websocketServer == null) {
-						websocketServer = new WebsocketServer(WEBSOCKET_SERVER_PORT);
+			if (e.getProperty().equals(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT)) {
+				int newWebsocketServerPort = FlightRecorderUI.parseWebsocketPort((String) e.getNewValue());
+				if (newWebsocketServerPort > 0) {
+					if (websocketServer != null) {
+						websocketServer.shutdown();
+						websocketServer = null;
 					}
+					websocketServer = new WebsocketServer(newWebsocketServerPort);
 				} else {
-					// TODO: shutdown server
-					System.out.println("Stop websocket server");
+					if (websocketServer != null) {
+						websocketServer.shutdown();
+						websocketServer = null;
+					}
 				}
 			}
 		};

@@ -94,6 +94,7 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 	private Text itemListValue;
 	private Text propertiesArrayStringSizeValue;
 	private Text editorRuleEvaluationThreadsValue;
+	private Text websocketPortValue;
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -108,8 +109,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		showMonitoringWarningCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		Button enableAnalysisCheckbox = createEnableAnalysisCheckBox(container);
 		enableAnalysisCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		Button enableWebsocketCheckbox = createEnableWebsocketServerCheckBox(container);
-		enableWebsocketCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		Button includeExperimental = createIncludeExperimentalEventsAndFieldsCheckBox(container);
 		includeExperimental.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		Button allowIncompleteRecording = createAllowIncompleteRecordingFileCheckBox(container);
@@ -172,12 +171,21 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		editorRuleEvaluationThreadsValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		QuantityKindProposal.install(editorRuleEvaluationThreadsValue, UnitLookup.NUMBER);
 
+		Label websocketPortLabel = new Label(defaultTimespanContainer, SWT.NONE);
+		websocketPortLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		websocketPortLabel.setText(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_TEXT);
+		websocketPortLabel.setToolTipText(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_TOOLTIP);
+		websocketPortValue = new Text(defaultTimespanContainer, SWT.BORDER);
+		websocketPortValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		QuantityKindProposal.install(websocketPortValue, UnitLookup.NUMBER);
+
 		loadDumpTypeFromPrefStore(false);
 		loadTimespanFromPrefStore(false);
 		loadSelectionStoreSizeFromPrefStore(false);
 		loadItemListSizeFromPrefStore(false);
 		loadPropertiesArrayStringSizeFromPrefStore(false);
 		loadEditorRuleEvaluationThreadsFromPrefStore(false);
+		loadWebsocketPortFromPrefStore(false);
 		timespanValue.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -208,6 +216,12 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 				validatePage();
 			}
 		});
+		websocketPortValue.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validatePage();
+			}
+		});
 
 		return container;
 	}
@@ -228,7 +242,23 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		if (error == null && error2 == null && error3 == null) {
 			setErrorMessage(error4);
 		}
-		setValid(error == null && error2 == null && error3 == null && error4 == null);
+		String error5 = validateWebsocketPort(websocketPortValue.getText());
+		if (error == null && error2 == null && error3 == null) {
+			setErrorMessage(error5);
+		}
+		setValid(error == null && error2 == null && error3 == null && error4 == null && error5 == null);
+	}
+
+	public static String validateWebsocketPort(String text) {
+		try {
+			int port = Integer.parseInt(text);
+			if (port < 0 || port > 65535) {
+				return Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
+			}
+		} catch (NumberFormatException e) {
+			return Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
+		}
+		return null;
 	}
 
 	public static String validateNumEvaluationThreads(String text) {
@@ -308,6 +338,12 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		editorRuleEvaluationThreadsValue.setText(FlightRecorderUI.parseItemListSize(size).interactiveFormat());
 	}
 
+	private void loadWebsocketPortFromPrefStore(boolean loadDefault) {
+		String port = loadDefault ? getPreferenceStore().getDefaultString(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT)
+				: getPreferenceStore().getString(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT);
+		websocketPortValue.setText(Integer.toString(FlightRecorderUI.parseWebsocketPort(port)));
+	}
+
 //	private Button createClearButton(Composite parent) {
 //		Button button = new Button(parent, SWT.NONE);
 //		button.setText(Messages.PREFERENCES_CLEAR_USER_SETTINGS_TEXT);
@@ -366,11 +402,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 	private Button createEnableAnalysisCheckBox(Composite parent) {
 		return createCheckBox(parent, Messages.PREFERENCES_ENABLE_RECORDING_ANALYSIS,
 				PreferenceKeys.PROPERTY_ENABLE_RECORDING_ANALYSIS);
-	}
-
-	private Button createEnableWebsocketServerCheckBox(Composite parent) {
-		return createCheckBox(parent, Messages.PREFERENCES_ENABLE_WEBSOCKET_SERVER,
-				PreferenceKeys.PROPERTY_ENABLE_WEBSOCKET_SERVER);
 	}
 
 	private Button createIncludeExperimentalEventsAndFieldsCheckBox(Composite parent) {
@@ -445,6 +476,14 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 			setErrorMessage(qce.getLocalizedMessage());
 			return false;
 		}
+		try {
+			int port = Integer.parseInt(websocketPortValue.getText());
+			getPreferenceStore().setValue(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT, Integer.toString(port));
+		} catch (NumberFormatException e) {
+			setErrorMessage(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID);
+			return false;
+		}
+
 		setErrorMessage(null);
 		if (timespanRadio.getSelection()) {
 			getPreferenceStore().setValue(PreferenceKeys.PROPERTY_DEFAULT_DUMP_TYPE, PreferenceKeys.DUMP_TIMESPAN);

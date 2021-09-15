@@ -46,7 +46,8 @@ public class PreferenceKeys {
 	public static final String PROPERTY_DEFAULT_DUMP_TIMESPAN = "flightrecorder.controlpanel.default.dump.timespan"; //$NON-NLS-1$
 	public static final String PROPERTY_DEFAULT_DUMP_TYPE = "flightrecorder.controlpanel.default.dump.type"; //$NON-NLS-1$
 	public static final String PROPERTY_ENABLE_RECORDING_ANALYSIS = "flightrecorder.controlpanel.enable.recording.analysis"; //$NON-NLS-1$
-	public static final String PROPERTY_ENABLE_WEBSOCKET_SERVER = "flightrecorder.controlpanel.enable.websocket.server"; //$NON-NLS-1$
+	public static final int DEFAULT_WEBSOCKET_PORT = 0;
+	public static final String PROPERTY_WEBSOCKET_SERVER_PORT = "flightrecorder.controlpanel.websocket.server.port"; //$NON-NLS-1$
 	public static final String PROPERTY_INCLUDE_EXPERIMENTAL_EVENTS_AND_FIELDS = "flightrecorder.ui.includeExperimentalEventsAndFields"; //$NON-NLS-1$
 	public static final String PROPERTY_ALLOW_INCOMPLETE_RECORDING_FILE = "flightrecorder.ui.allowIncompleteRecordingFile"; //$NON-NLS-1$
 	public static final IQuantity DUMP_TIMESPAN_DEFAULT = UnitLookup.MINUTE.quantity(5);
