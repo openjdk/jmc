@@ -3,10 +3,12 @@ package org.openjdk.jmc.flightrecorder.ui.websocket;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,13 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.eclipse.jetty.websocket.servlet.WebSocketUpgradeFilter;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
+import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 
 public class WebsocketServer {
@@ -28,7 +36,9 @@ public class WebsocketServer {
 
 	private final int port;
 	private Server server;
-	private List<WebSocketConnectionHandler> handlers = new ArrayList<>();
+	private List<WebsocketConnectionHandler> handlers = new ArrayList<>();
+	private List<WebsocketConnectionHandler> treeHandlers = new ArrayList<>();
+	private List<WebsocketConnectionHandler> graphHandlers = new ArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private IItemCollection currentSelection = null;
 
@@ -58,10 +68,21 @@ public class WebsocketServer {
 			container.addMapping("/events/*", (req, resp) -> {
 				// try to send the current selection when the client connects
 				// for simplicity, we serialise for every new connection
-				String eventsJson = currentSelection != null
-						? IItemCollectionJsonSerializer.toJsonString(currentSelection) : null;
-				WebSocketConnectionHandler handler = new WebSocketConnectionHandler(eventsJson);
+				String eventsJson = WebsocketServer.toEventsJsonString(currentSelection);
+				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(eventsJson);
 				handlers.add(handler);
+				return handler;
+			});
+			container.addMapping("/tree/*", (req, resp) -> {
+				String treeJson = WebsocketServer.toTreeModelJsonString(currentSelection);
+				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(treeJson);
+				treeHandlers.add(handler);
+				return handler;
+			});
+			container.addMapping("/graph/*", (req, resp) -> {
+				String dot = WebsocketServer.toGraphModelDotString(currentSelection);
+				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(dot);
+				graphHandlers.add(handler);
 				return handler;
 			});
 		});
@@ -79,14 +100,58 @@ public class WebsocketServer {
 
 	public void notifyAll(IItemCollection events) {
 		currentSelection = events;
-		handlers = handlers.stream().filter(h -> h.isConnected()).collect(Collectors.toList());
-		if (handlers.size() == 0) {
-			// do nothing if no handlers are registered
-			return;
-		}
-		String eventsJson = IItemCollectionJsonSerializer.toJsonString(events);
+		notifyAllEventHandlers(events);
+		notifyAllGraphHandlers(events);
+		notifyAllTreeHandlers(events);
+	}
 
-		handlers.forEach(handler -> handler.sendMessage(eventsJson));
+	private void notifyAllEventHandlers(IItemCollection events) {
+		handlers = notifyAllHandlers(events, handlers, WebsocketServer::toEventsJsonString);
+	}
+
+	private void notifyAllGraphHandlers(IItemCollection events) {
+		graphHandlers = notifyAllHandlers(events, graphHandlers, WebsocketServer::toGraphModelDotString);
+	}
+
+	private void notifyAllTreeHandlers(IItemCollection events) {
+		treeHandlers = notifyAllHandlers(events, treeHandlers, WebsocketServer::toTreeModelJsonString);
+	}
+
+	private static String toEventsJsonString(IItemCollection items) {
+		if (items == null) {
+			return null;
+		}
+		return IItemCollectionJsonSerializer.toJsonString(items);
+	}
+
+	private static String toGraphModelDotString(IItemCollection items) {
+		if (items == null) {
+			return null;
+		}
+		FrameSeparator frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
+		StacktraceGraphModel model = new StacktraceGraphModel(frameSeparator, items, null);
+		return DotSerializer.toDot(model, 10_000, new HashMap<>());
+	}
+
+	private static String toTreeModelJsonString(IItemCollection items) {
+		if (items == null) {
+			return null;
+		}
+		StacktraceTreeModel model = new StacktraceTreeModel(items);
+		return FlameGraphJsonSerializer.toJson(model);
+	}
+
+	private List<WebsocketConnectionHandler> notifyAllHandlers(
+		IItemCollection events, List<WebsocketConnectionHandler> handlers,
+		Function<IItemCollection, String> jsonSerializer) {
+		handlers = handlers.stream().filter(h -> h.isConnected()).collect(Collectors.toList());
+		if (handlers.size() == 0 || events == null) {
+			// do nothing if no handlers are registered
+			return handlers;
+		}
+		String json = jsonSerializer.apply(events);
+		handlers.forEach(handler -> handler.sendMessage(json));
+		return handlers;
 	}
 
 	public void shutdown() {
@@ -94,15 +159,16 @@ public class WebsocketServer {
 			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
 					"Stopping websocket server listening on port " + port);
 			server.stop();
+			// TODO: see if we need to cleanup executor service and thread
 		} catch (Exception e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to stop websocket server", e);
 		}
 	}
 
-	private static class WebSocketConnectionHandler extends WebSocketAdapter {
+	private static class WebsocketConnectionHandler extends WebSocketAdapter {
 		private String firstMessage;
 
-		WebSocketConnectionHandler(String firstMessage) {
+		WebsocketConnectionHandler(String firstMessage) {
 			this.firstMessage = firstMessage;
 		}
 

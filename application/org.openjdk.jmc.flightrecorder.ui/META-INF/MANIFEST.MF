@@ -8,6 +8,7 @@ Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx,
  org.apache.aries.spifly.dynamic.bundle,
+ org.openjdk.jmc.common,
  org.openjdk.jmc.flightrecorder;visibility:=reexport,
  org.openjdk.jmc.ui;visibility:=reexport,
  org.openjdk.jmc.flightrecorder.serializers,
