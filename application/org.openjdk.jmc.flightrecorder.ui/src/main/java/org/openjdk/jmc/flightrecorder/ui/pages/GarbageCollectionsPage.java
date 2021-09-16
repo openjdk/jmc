@@ -734,9 +734,10 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			correlateSystemGCEvents(sel, selCopy);
 			return selCopy.stream().map(gc -> gc.gcItem);
 		}
-		
+
 		private void correlateSystemGCEvents(List<GC> sourceGCList, List<GC> destinationGCList) {
-			IItemCollection systemGCEvents = getDataSource().getItems().apply(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_SYSTEM_GC));
+			IItemCollection systemGCEvents = getDataSource().getItems()
+					.apply(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_SYSTEM_GC));
 			for (GC gc : sourceGCList) {
 				IItemFilter rangeFilter = RulesToolkit.createRangeFilter(gc.gcItem);
 				IItemCollection correlatedItems = systemGCEvents.apply(rangeFilter);
@@ -746,7 +747,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 					}
 				}
 			}
-			
+
 		}
 	}
 
