@@ -35,9 +35,9 @@ package org.openjdk.jmc.flightrecorder.ui.websocket;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
@@ -69,9 +69,9 @@ public class WebsocketServer {
 
 	private final int port;
 	private Server server;
-	private List<WebsocketConnectionHandler> handlers = new ArrayList<>();
-	private List<WebsocketConnectionHandler> treeHandlers = new ArrayList<>();
-	private List<WebsocketConnectionHandler> graphHandlers = new ArrayList<>();
+	private List<WebsocketConnectionHandler> handlers = new CopyOnWriteArrayList<>();
+	private List<WebsocketConnectionHandler> treeHandlers = new CopyOnWriteArrayList<>();
+	private List<WebsocketConnectionHandler> graphHandlers = new CopyOnWriteArrayList<>();
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private IItemCollection currentSelection = null;
 

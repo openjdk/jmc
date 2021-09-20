@@ -127,8 +127,8 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 			}
 		};
 		if (FlightRecorderUI.getDefault().isWebsocketServerEnabled()) {
-			long websocketServerPort = FlightRecorderUI.getDefault().getWebsocketPort();
-			websocketServer = new WebsocketServer((int) websocketServerPort);
+			int websocketServerPort = FlightRecorderUI.getDefault().getWebsocketPort();
+			websocketServer = new WebsocketServer(websocketServerPort);
 		}
 		websocketServerEnabledListener = e -> {
 			if (e.getProperty().equals(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT)) {
