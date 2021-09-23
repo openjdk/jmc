@@ -35,11 +35,17 @@ package org.openjdk.jmc.flightrecorder.rules;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
 
 import org.junit.Test;
 
 import org.openjdk.jmc.common.version.JavaVersion;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.rules.report.html.JfrHtmlRulesReport;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 
 @SuppressWarnings("nls")
 public class RulesToolkitTest {
@@ -79,5 +85,16 @@ public class RulesToolkitTest {
 	public void testGetJavaVersion() {
 		JavaVersion javaVersion = RulesToolkit.getJavaVersion(JAVA_8_40);
 		assertFalse(javaVersion.isEarlyAccess());
+	}
+
+	@Test
+	public void testJfrHtmlRulesReportGeneration() {
+		String report = "";
+		try {
+			report = JfrHtmlRulesReport.createReport(RecordingToolkit.getNamedRecording("8u60.jfr"));
+		} catch (IOException | CouldNotLoadRecordingException e) {
+			fail();
+		}
+		assert (!report.isEmpty());
 	}
 }

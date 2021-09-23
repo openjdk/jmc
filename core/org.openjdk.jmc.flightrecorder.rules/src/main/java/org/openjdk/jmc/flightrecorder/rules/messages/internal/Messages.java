@@ -46,6 +46,7 @@ public class Messages {
 	public static final String Result_SHORT_RECORDING = "Result_SHORT_RECORDING";; //$NON-NLS-1$
 	public static final String RulesToolkit_ATTRIBUTE_NOT_FOUND = "RulesToolkit_ATTRIBUTE_NOT_FOUND"; //$NON-NLS-1$
 	public static final String RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG = "RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG"; //$NON-NLS-1$
+	public static final String RulesToolkit_EVALUATION_ERROR_DESCRIPTION = "RulesToolkit_EVALUATION_ERROR_DESCRIPTION"; //$NON-NLS-1$
 	public static final String RulesToolkit_EVERY_CHUNK = "RulesToolkit_EVERY_CHUNK"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_RECOMMENDS_EVENTS = "RulesToolkit_RULE_RECOMMENDS_EVENTS"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_REQUIRES_EVENTS = "RulesToolkit_RULE_REQUIRES_EVENTS"; //$NON-NLS-1$

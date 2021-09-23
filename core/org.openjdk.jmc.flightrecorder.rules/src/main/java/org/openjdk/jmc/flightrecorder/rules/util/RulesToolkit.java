@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -88,6 +89,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
@@ -1210,10 +1212,37 @@ public class RulesToolkit {
 		}
 		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
 		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
+		List<IRule> unavailableRules = new ArrayList<>();
+		List<IRule> rulesWithDependencies = new ArrayList<>();
 		for (IRule rule : rules) {
-			RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
-			resultFutures.put(rule, resultFuture);
-			futureQueue.add(resultFuture);
+			if (matchesEventAvailabilityMap(items, rule.getRequiredEvents())) {
+				if (hasDependency(rule)) {
+					rulesWithDependencies.add(rule);
+				} else {
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
+					resultFutures.put(rule, resultFuture);
+					futureQueue.add(resultFuture);
+				}
+			} else {
+				unavailableRules.add(rule);
+				resultFutures.put(rule, evaluationErrorResult(rule, preferences));
+			}
+		}
+		for (IRule rule : rulesWithDependencies) {
+			String dependencyName = getRuleDependencyName(rule);
+			boolean shouldEvaluate = true;
+			for (IRule unavailableRule : unavailableRules) {
+				if (dependencyName.equals(unavailableRule.getId())) {
+					shouldEvaluate = false;
+					resultFutures.put(rule, evaluationErrorResult(rule, preferences));
+					break;
+				}
+			}
+			if (shouldEvaluate) {
+				RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
+				resultFutures.put(rule, resultFuture);
+				futureQueue.add(resultFuture);
+			}
 		}
 		for (int i = 0; i < nThreads; i++) {
 			RuleEvaluator re = new RuleEvaluator(futureQueue);
@@ -1221,6 +1250,32 @@ public class RulesToolkit {
 			t.start();
 		}
 		return resultFutures;
+	}
+
+	/**
+	 * For rules that are not evaluated (due to event availability map mismatch, or missing
+	 * dependencies), create and return a completed future IResult that can be used for the rules
+	 * report.
+	 * 
+	 * @param rule
+	 * @param preferences
+	 * @return
+	 */
+	private static Future<IResult> evaluationErrorResult(IRule rule, IPreferenceValueProvider preferences) {
+		IResult result = ResultBuilder.createFor(rule, preferences).setSeverity(Severity.NA)
+				.setSummary(Messages.getString(Messages.RulesToolkit_EVALUATION_ERROR_DESCRIPTION)).build();
+		return CompletableFuture.completedFuture(result);
+	}
+
+	private static boolean hasDependency(IRule rule) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		return dependency != null ? true : false;
+	}
+
+	private static String getRuleDependencyName(IRule rule) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		Class<? extends IRule> dependencyType = dependency.value();
+		return dependencyType.getSimpleName();
 	}
 
 	private static class RuleEvaluator implements Runnable {
