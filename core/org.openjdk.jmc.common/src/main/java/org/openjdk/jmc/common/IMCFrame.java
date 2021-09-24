@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -62,6 +62,18 @@ public interface IMCFrame {
 	 * The frame was executed as code that was inlined by the Java JIT compiler.
 	 */
 	INLINED,
+	/**
+	 * The frame was executed as native code, most probably a C function.
+	 */
+	NATIVE,
+	/**
+	 * The frame was executed as native code compiled from C++.
+	 */
+	CPP,
+	/**
+	 * The frame was executed as kernel native code.
+	 */
+	KERNEL,
 	/**
 	 * The frame compilation type is unknown.
 	 */

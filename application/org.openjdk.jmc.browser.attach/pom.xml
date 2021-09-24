@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -52,15 +52,14 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>sun.jdk</groupId>
-							<artifactId>tools</artifactId>
-							<version>1.8.0</version>
-							<scope>system</scope>
-							<systemPath>${java.home}/../lib/tools.jar</systemPath>
-						</dependency>
-					</extraClasspathElements>
+					<compilerArgs>
+						<args>--add-exports</args>
+						<args>jdk.attach/sun.tools.attach=ALL-UNNAMED</args>
+						<args>--add-exports</args>
+						<args>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</args>
+						<args>--add-exports</args>
+						<args>java.management/sun.management.counter.perf=ALL-UNNAMED</args>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

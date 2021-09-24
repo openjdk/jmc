@@ -1,0 +1,6061 @@
+{
+  "events": [{
+    "eventType": "jdk.GCConfiguration", 
+    "attributes": {
+      "(endTime)": 1524063415354372000, 
+      "youngCollector": "ParallelScavenge", 
+      "oldCollector": "ParallelOld", 
+      "parallelGCThreads": 4, 
+      "concurrentGCThreads": 0, 
+      "usesDynamicGCThreads": false, 
+      "isExplicitGCConcurrent": false, 
+      "isExplicitGCDisabled": false, 
+      "pauseTarget": -9223372036854775808, 
+      "gcTimeRatio": 99
+    }
+  }, {
+    "eventType": "jdk.CPUTimeStampCounter", 
+    "attributes": {
+      "(endTime)": 1524063415354364000, 
+      "fastTimeEnabled": false, 
+      "fastTimeAutoEnabled": false, 
+      "fastTimeConversionAdjustments": 0, 
+      "timeToFastTimeFactor": 1.0, 
+      "timeToInitialize": 0, 
+      "timeToFastTimeOffset": 0, 
+      "osFrequency": 1000000, 
+      "fastTimeFrequency": 1000000, 
+      "currentOsTime": 24009335, 
+      "currentOsTimeConverted": 24009335, 
+      "firstFastTimeReference": 24009335, 
+      "secondFastTimeReference": 24009335
+    }
+  }, {
+    "eventType": "jdk.ExecutionSample", 
+    "attributes": {
+      "(endTime)": 1524063405360722000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.io.ObjectOutputStream$BlockDataOutputStream#writeUTF(Ljava/lang/String;)V", 
+          "line": 2000, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeUTF(Ljava/lang/String;)V", 
+          "line": 866, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectStreamClass#writeNonProxy(Ljava/io/ObjectOutputStream;)V", 
+          "line": 721, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeNonProxyDesc(Ljava/io/ObjectStreamClass;Z)V", 
+          "line": 1277, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeClassDesc(Ljava/io/ObjectStreamClass;Z)V", 
+          "line": 1228, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeOrdinaryObject(Ljava/lang/Object;Ljava/io/ObjectStreamClass;Z)V", 
+          "line": 1424, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeObject0(Ljava/lang/Object;Z)V", 
+          "line": 1175, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectOutputStream#writeObject(Ljava/lang/Object;)V", 
+          "line": 347, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.util.ArrayList#writeObject(Ljava/io/ObjectOutputStream;)V", 
+          "line": 742, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "state": "STATE_RUNNABLE"
+    }
+  }, {
+    "eventType": "jdk.ExecutionSample", 
+    "attributes": {
+      "(endTime)": 1524063411363178000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.nio.Buffer#checkIndex(I)I", 
+          "line": 531, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.nio.DirectByteBuffer#put(IB)Ljava/nio/ByteBuffer;", 
+          "line": 300, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.VMJFR$ThreadBuffer#release()V", 
+          "line": 119, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.VMJFR$ThreadBuffer#finish(Ljava/nio/ByteBuffer;Z)V", 
+          "line": 141, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.VMJFR#releaseThreadBuffer(Ljava/nio/ByteBuffer;Z)V", 
+          "line": 207, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "com.oracle.jrockit.jfr.InstantEvent#write()V", 
+          "line": 142, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "com.oracle.jrockit.jfr.InstantEvent#commit()V", 
+          "line": 138, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "state": "STATE_RUNNABLE"
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063407350918000, 
+      "jvmUser": 0.002396006602793932, 
+      "jvmSystem": 0.0014336011372506618, 
+      "machineTotal": 0.13249999284744263
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063408350870000, 
+      "jvmUser": 0.0019060049671679735, 
+      "jvmSystem": 0.0013153939507901669, 
+      "machineTotal": 0.12531328201293945
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063409351142000, 
+      "jvmUser": 0.0016180513193830848, 
+      "jvmSystem": 0.001345549477264285, 
+      "machineTotal": 0.11249999701976776
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063410351078000, 
+      "jvmUser": 0.007742492016404867, 
+      "jvmSystem": 0.001481899176724255, 
+      "machineTotal": 0.12531328201293945
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063411352180000, 
+      "jvmUser": 0.008836610242724419, 
+      "jvmSystem": 0.0016397885046899319, 
+      "machineTotal": 0.12219451367855072
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063412353216000, 
+      "jvmUser": 0.0018637148896232247, 
+      "jvmSystem": 0.0013170697493478656, 
+      "machineTotal": 0.1550000011920929
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063413355970000, 
+      "jvmUser": 0.0020837446209043264, 
+      "jvmSystem": 0.001372803351841867, 
+      "machineTotal": 0.11194030195474625
+    }
+  }, {
+    "eventType": "jdk.CPULoad", 
+    "attributes": {
+      "(endTime)": 1524063414356637000, 
+      "jvmUser": 0.0017211491940543056, 
+      "jvmSystem": 0.0013377853902056813, 
+      "machineTotal": 0.10249999910593033
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353298000, 
+      "settingFor": "Java Thread Start", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353298000, 
+      "settingFor": "Java Thread Start", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353298000, 
+      "settingFor": "Java Thread Start", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353395000, 
+      "settingFor": "Java Thread End", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353395000, 
+      "settingFor": "Java Thread End", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353395000, 
+      "settingFor": "Java Thread End", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353423000, 
+      "settingFor": "Java Thread Sleep", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353423000, 
+      "settingFor": "Java Thread Sleep", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353423000, 
+      "settingFor": "Java Thread Sleep", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353423000, 
+      "settingFor": "Java Thread Sleep", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353452000, 
+      "settingFor": "Java Thread Park", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353452000, 
+      "settingFor": "Java Thread Park", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353452000, 
+      "settingFor": "Java Thread Park", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353452000, 
+      "settingFor": "Java Thread Park", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353479000, 
+      "settingFor": "Java Monitor Blocked", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353479000, 
+      "settingFor": "Java Monitor Blocked", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353479000, 
+      "settingFor": "Java Monitor Blocked", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353479000, 
+      "settingFor": "Java Monitor Blocked", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353513000, 
+      "settingFor": "Java Monitor Wait", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353513000, 
+      "settingFor": "Java Monitor Wait", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353513000, 
+      "settingFor": "Java Monitor Wait", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353513000, 
+      "settingFor": "Java Monitor Wait", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353541000, 
+      "settingFor": "Class Load", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353541000, 
+      "settingFor": "Class Load", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353541000, 
+      "settingFor": "Class Load", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353541000, 
+      "settingFor": "Class Load", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353564000, 
+      "settingFor": "Class Unload", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353564000, 
+      "settingFor": "Class Unload", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353564000, 
+      "settingFor": "Class Unload", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353589000, 
+      "settingFor": "Heap Summary", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353589000, 
+      "settingFor": "Heap Summary", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353589000, 
+      "settingFor": "Heap Summary", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353615000, 
+      "settingFor": "Perm Gen Summary", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353615000, 
+      "settingFor": "Perm Gen Summary", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353615000, 
+      "settingFor": "Perm Gen Summary", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353647000, 
+      "settingFor": "Parallel Scavenge Heap Summary", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353647000, 
+      "settingFor": "Parallel Scavenge Heap Summary", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353647000, 
+      "settingFor": "Parallel Scavenge Heap Summary", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353683000, 
+      "settingFor": "Garbage Collection", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353683000, 
+      "settingFor": "Garbage Collection", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353683000, 
+      "settingFor": "Garbage Collection", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353683000, 
+      "settingFor": "Garbage Collection", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353720000, 
+      "settingFor": "Parallel Old Garbage Collection", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353720000, 
+      "settingFor": "Parallel Old Garbage Collection", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353720000, 
+      "settingFor": "Parallel Old Garbage Collection", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353720000, 
+      "settingFor": "Parallel Old Garbage Collection", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353767000, 
+      "settingFor": "Old Garbage Collection", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353767000, 
+      "settingFor": "Old Garbage Collection", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353767000, 
+      "settingFor": "Old Garbage Collection", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353767000, 
+      "settingFor": "Old Garbage Collection", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353807000, 
+      "settingFor": "Young Garbage Collection", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353807000, 
+      "settingFor": "Young Garbage Collection", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353807000, 
+      "settingFor": "Young Garbage Collection", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353807000, 
+      "settingFor": "Young Garbage Collection", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353850000, 
+      "settingFor": "Evacuation Information", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353850000, 
+      "settingFor": "Evacuation Information", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353850000, 
+      "settingFor": "Evacuation Information", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353887000, 
+      "settingFor": "G1 Garbage Collection", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353887000, 
+      "settingFor": "G1 Garbage Collection", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353887000, 
+      "settingFor": "G1 Garbage Collection", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353887000, 
+      "settingFor": "G1 Garbage Collection", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353926000, 
+      "settingFor": "Object Count After GC", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353926000, 
+      "settingFor": "Object Count After GC", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353926000, 
+      "settingFor": "Object Count After GC", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353964000, 
+      "settingFor": "GC Reference Processing", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353964000, 
+      "settingFor": "GC Reference Processing", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405353964000, 
+      "settingFor": "GC Reference Processing", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354000000, 
+      "settingFor": "Evacuation Failed", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354000000, 
+      "settingFor": "Evacuation Failed", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354000000, 
+      "settingFor": "Evacuation Failed", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354035000, 
+      "settingFor": "Promotion Failed", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354035000, 
+      "settingFor": "Promotion Failed", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354035000, 
+      "settingFor": "Promotion Failed", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354070000, 
+      "settingFor": "GC Phase Pause", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354070000, 
+      "settingFor": "GC Phase Pause", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354070000, 
+      "settingFor": "GC Phase Pause", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354070000, 
+      "settingFor": "GC Phase Pause", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354099000, 
+      "settingFor": "Concurrent Mode Failure", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354099000, 
+      "settingFor": "Concurrent Mode Failure", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354099000, 
+      "settingFor": "Concurrent Mode Failure", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354140000, 
+      "settingFor": "GC Phase Pause Level 2", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354140000, 
+      "settingFor": "GC Phase Pause Level 2", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354140000, 
+      "settingFor": "GC Phase Pause Level 2", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354140000, 
+      "settingFor": "GC Phase Pause Level 2", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354175000, 
+      "settingFor": "GC Phase Pause Level 1", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354175000, 
+      "settingFor": "GC Phase Pause Level 1", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354175000, 
+      "settingFor": "GC Phase Pause Level 1", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354175000, 
+      "settingFor": "GC Phase Pause Level 1", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354210000, 
+      "settingFor": "Compilation", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354210000, 
+      "settingFor": "Compilation", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354210000, 
+      "settingFor": "Compilation", 
+      "name": "threshold", 
+      "value": "100000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354210000, 
+      "settingFor": "Compilation", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354238000, 
+      "settingFor": "GC Phase Pause Level 3", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354238000, 
+      "settingFor": "GC Phase Pause Level 3", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354238000, 
+      "settingFor": "GC Phase Pause Level 3", 
+      "name": "threshold", 
+      "value": "0 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354238000, 
+      "settingFor": "GC Phase Pause Level 3", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354282000, 
+      "settingFor": "Compilation Failure", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354282000, 
+      "settingFor": "Compilation Failure", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354282000, 
+      "settingFor": "Compilation Failure", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354314000, 
+      "settingFor": "Compiler Phase", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354314000, 
+      "settingFor": "Compiler Phase", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354314000, 
+      "settingFor": "Compiler Phase", 
+      "name": "threshold", 
+      "value": "10000000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354314000, 
+      "settingFor": "Compiler Phase", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354344000, 
+      "settingFor": "Flight Recording", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354344000, 
+      "settingFor": "Flight Recording", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354344000, 
+      "settingFor": "Flight Recording", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354376000, 
+      "settingFor": "Code Cache Full", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354376000, 
+      "settingFor": "Code Cache Full", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354376000, 
+      "settingFor": "Code Cache Full", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354406000, 
+      "settingFor": "VM Operation", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354406000, 
+      "settingFor": "VM Operation", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354406000, 
+      "settingFor": "VM Operation", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354406000, 
+      "settingFor": "VM Operation", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354441000, 
+      "settingFor": "Sweep Code Cache", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354441000, 
+      "settingFor": "Sweep Code Cache", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354441000, 
+      "settingFor": "Sweep Code Cache", 
+      "name": "threshold", 
+      "value": "100000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354441000, 
+      "settingFor": "Sweep Code Cache", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354819000, 
+      "settingFor": "Recording Setting", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354819000, 
+      "settingFor": "Recording Setting", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354819000, 
+      "settingFor": "Recording Setting", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354857000, 
+      "settingFor": "Clean Code Cache", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354857000, 
+      "settingFor": "Clean Code Cache", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354857000, 
+      "settingFor": "Clean Code Cache", 
+      "name": "threshold", 
+      "value": "20 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354857000, 
+      "settingFor": "Clean Code Cache", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354899000, 
+      "settingFor": "Java Error", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354899000, 
+      "settingFor": "Java Error", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354899000, 
+      "settingFor": "Java Error", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354927000, 
+      "settingFor": "JVM Information", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354927000, 
+      "settingFor": "JVM Information", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354927000, 
+      "settingFor": "JVM Information", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354950000, 
+      "settingFor": "Java Exception", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354950000, 
+      "settingFor": "Java Exception", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354950000, 
+      "settingFor": "Java Exception", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354979000, 
+      "settingFor": "OS Information", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354979000, 
+      "settingFor": "OS Information", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405354979000, 
+      "settingFor": "OS Information", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355005000, 
+      "settingFor": "Socket Read", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355005000, 
+      "settingFor": "Socket Read", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355005000, 
+      "settingFor": "Socket Read", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355005000, 
+      "settingFor": "Socket Read", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355034000, 
+      "settingFor": "Allocation in new TLAB", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355034000, 
+      "settingFor": "Allocation in new TLAB", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355034000, 
+      "settingFor": "Allocation in new TLAB", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355098000, 
+      "settingFor": "Exception Statistics", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355098000, 
+      "settingFor": "Exception Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355098000, 
+      "settingFor": "Exception Statistics", 
+      "name": "period", 
+      "value": "1000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355139000, 
+      "settingFor": "Allocation outside TLAB", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355139000, 
+      "settingFor": "Allocation outside TLAB", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355139000, 
+      "settingFor": "Allocation outside TLAB", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355180000, 
+      "settingFor": "File Read", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355180000, 
+      "settingFor": "File Read", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355180000, 
+      "settingFor": "File Read", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355180000, 
+      "settingFor": "File Read", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355204000, 
+      "settingFor": "System Process", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355204000, 
+      "settingFor": "System Process", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355204000, 
+      "settingFor": "System Process", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355268000, 
+      "settingFor": "Socket Write", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355268000, 
+      "settingFor": "Socket Write", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355268000, 
+      "settingFor": "Socket Write", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355268000, 
+      "settingFor": "Socket Write", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355295000, 
+      "settingFor": "CPU Information", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355295000, 
+      "settingFor": "CPU Information", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355295000, 
+      "settingFor": "CPU Information", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355335000, 
+      "settingFor": "Initial System Property", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355335000, 
+      "settingFor": "Initial System Property", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355335000, 
+      "settingFor": "Initial System Property", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355445000, 
+      "settingFor": "File Write", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355445000, 
+      "settingFor": "File Write", 
+      "name": "stacktrace", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355445000, 
+      "settingFor": "File Write", 
+      "name": "threshold", 
+      "value": "10000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355445000, 
+      "settingFor": "File Write", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355479000, 
+      "settingFor": "Initial Environment Variable", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355479000, 
+      "settingFor": "Initial Environment Variable", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355479000, 
+      "settingFor": "Initial Environment Variable", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355523000, 
+      "settingFor": "Thread Context Switch Rate", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355523000, 
+      "settingFor": "Thread Context Switch Rate", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355523000, 
+      "settingFor": "Thread Context Switch Rate", 
+      "name": "period", 
+      "value": "10000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355566000, 
+      "settingFor": "Java Thread Statistics", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355566000, 
+      "settingFor": "Java Thread Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355566000, 
+      "settingFor": "Java Thread Statistics", 
+      "name": "period", 
+      "value": "1000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355603000, 
+      "settingFor": "CPU Time Stamp Counter", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355603000, 
+      "settingFor": "CPU Time Stamp Counter", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355603000, 
+      "settingFor": "CPU Time Stamp Counter", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355637000, 
+      "settingFor": "CPU Load", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355637000, 
+      "settingFor": "CPU Load", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355637000, 
+      "settingFor": "CPU Load", 
+      "name": "period", 
+      "value": "1000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355670000, 
+      "settingFor": "Method Profiling Sample", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355670000, 
+      "settingFor": "Method Profiling Sample", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355670000, 
+      "settingFor": "Method Profiling Sample", 
+      "name": "period", 
+      "value": "10 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355709000, 
+      "settingFor": "Physical Memory", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355709000, 
+      "settingFor": "Physical Memory", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355709000, 
+      "settingFor": "Physical Memory", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355742000, 
+      "settingFor": "Thread Allocation Statistics", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355742000, 
+      "settingFor": "Thread Allocation Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355742000, 
+      "settingFor": "Thread Allocation Statistics", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355792000, 
+      "settingFor": "Class Loading Statistics", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355792000, 
+      "settingFor": "Class Loading Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355792000, 
+      "settingFor": "Class Loading Statistics", 
+      "name": "period", 
+      "value": "1000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355950000, 
+      "settingFor": "Compiler Configuration", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355950000, 
+      "settingFor": "Compiler Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405355950000, 
+      "settingFor": "Compiler Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356000000, 
+      "settingFor": "Compiler Statistics", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356000000, 
+      "settingFor": "Compiler Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356000000, 
+      "settingFor": "Compiler Statistics", 
+      "name": "period", 
+      "value": "1000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356128000, 
+      "settingFor": "Thread Dump", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356128000, 
+      "settingFor": "Thread Dump", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356128000, 
+      "settingFor": "Thread Dump", 
+      "name": "period", 
+      "value": "60000 ms"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356195000, 
+      "settingFor": "Method Sampling Information", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356195000, 
+      "settingFor": "Method Sampling Information", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356195000, 
+      "settingFor": "Method Sampling Information", 
+      "name": "threshold", 
+      "value": "1000000 ns"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356195000, 
+      "settingFor": "Method Sampling Information", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356238000, 
+      "settingFor": "Code Sweeper Configuration", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356238000, 
+      "settingFor": "Code Sweeper Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356238000, 
+      "settingFor": "Code Sweeper Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356382000, 
+      "settingFor": "Code Sweeper Statistics", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356382000, 
+      "settingFor": "Code Sweeper Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356382000, 
+      "settingFor": "Code Sweeper Statistics", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356493000, 
+      "settingFor": "Code Cache Configuration", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356493000, 
+      "settingFor": "Code Cache Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356493000, 
+      "settingFor": "Code Cache Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356551000, 
+      "settingFor": "Code Cache Statistics", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356551000, 
+      "settingFor": "Code Cache Statistics", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356551000, 
+      "settingFor": "Code Cache Statistics", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356635000, 
+      "settingFor": "Boolean Flag", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356635000, 
+      "settingFor": "Boolean Flag", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356635000, 
+      "settingFor": "Boolean Flag", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356670000, 
+      "settingFor": "Double Flag", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356670000, 
+      "settingFor": "Double Flag", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356670000, 
+      "settingFor": "Double Flag", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356779000, 
+      "settingFor": "Unsigned Long Flag", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356779000, 
+      "settingFor": "Unsigned Long Flag", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356779000, 
+      "settingFor": "Unsigned Long Flag", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356940000, 
+      "settingFor": "Long Flag", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356940000, 
+      "settingFor": "Long Flag", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405356940000, 
+      "settingFor": "Long Flag", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357026000, 
+      "settingFor": "GC TLAB Configuration", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357026000, 
+      "settingFor": "GC TLAB Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357026000, 
+      "settingFor": "GC TLAB Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357178000, 
+      "settingFor": "GC Heap Configuration", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357178000, 
+      "settingFor": "GC Heap Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357178000, 
+      "settingFor": "GC Heap Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357331000, 
+      "settingFor": "GC Young Generation Configuration", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357331000, 
+      "settingFor": "GC Young Generation Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357331000, 
+      "settingFor": "GC Young Generation Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357437000, 
+      "settingFor": "String Flag", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357437000, 
+      "settingFor": "String Flag", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357437000, 
+      "settingFor": "String Flag", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357669000, 
+      "settingFor": "Object Count", 
+      "name": "enabled", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357669000, 
+      "settingFor": "Object Count", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357669000, 
+      "settingFor": "Object Count", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357776000, 
+      "settingFor": "GC Configuration", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357776000, 
+      "settingFor": "GC Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357776000, 
+      "settingFor": "GC Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357838000, 
+      "settingFor": "GC Survivor Configuration", 
+      "name": "enabled", 
+      "value": "true"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357838000, 
+      "settingFor": "GC Survivor Configuration", 
+      "name": "stacktrace", 
+      "value": "false"
+    }
+  }, {
+    "eventType": "jdk.ActiveSetting", 
+    "attributes": {
+      "(endTime)": 1524063405357838000, 
+      "settingFor": "GC Survivor Configuration", 
+      "name": "period", 
+      "value": "everyChunk"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 1063600, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 13016, 
+      "eventThread": "JMX server connection timeout 26"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 229040, 
+      "eventThread": "RMI TCP Connection(2)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 32, 
+      "eventThread": "RMI Scheduler(0)"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 5640328, 
+      "eventThread": "RMI TCP Connection(1)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 12512, 
+      "eventThread": "RMI TCP Accept-0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 5680, 
+      "eventThread": "TimerQueue"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 1506456, 
+      "eventThread": "Attach Listener"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 272, 
+      "eventThread": "DestroyJavaVM"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 7142360, 
+      "eventThread": "AWT-EventQueue-0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "Java2D Disposer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 1312, 
+      "eventThread": "Java2D Queue Flusher"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "AWT-Shutdown"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 2923640, 
+      "eventThread": "AppKit Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "Service Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "C2 CompilerThread1"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "C2 CompilerThread0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "VM JFR Buffer Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "JFR request timer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 272, 
+      "eventThread": "Signal Dispatcher"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "Finalizer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063405352013000, 
+      "allocated": 0, 
+      "eventThread": "Reference Handler"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 1530144, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 13016, 
+      "eventThread": "JMX server connection timeout 26"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 229040, 
+      "eventThread": "RMI TCP Connection(2)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 32, 
+      "eventThread": "RMI Scheduler(0)"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 5640328, 
+      "eventThread": "RMI TCP Connection(1)-10.161.183.200"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 12512, 
+      "eventThread": "RMI TCP Accept-0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 5680, 
+      "eventThread": "TimerQueue"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 1506456, 
+      "eventThread": "Attach Listener"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 272, 
+      "eventThread": "DestroyJavaVM"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 7142360, 
+      "eventThread": "AWT-EventQueue-0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "Java2D Disposer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 1312, 
+      "eventThread": "Java2D Queue Flusher"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "AWT-Shutdown"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 2923640, 
+      "eventThread": "AppKit Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "Service Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "C2 CompilerThread1"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "C2 CompilerThread0"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 7808, 
+      "eventThread": "VM JFR Buffer Thread"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 1528, 
+      "eventThread": "JFR request timer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 272, 
+      "eventThread": "Signal Dispatcher"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "Finalizer"
+    }
+  }, {
+    "eventType": "jdk.ThreadAllocationStatistics", 
+    "attributes": {
+      "(endTime)": 1524063415354237000, 
+      "allocated": 0, 
+      "eventThread": "Reference Handler"
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405349532000, 
+      "(endTime)": 1524063406350406000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406351630000, 
+      "(endTime)": 1524063407350881000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 999, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407350977000, 
+      "(endTime)": 1524063408352811000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408352944000, 
+      "(endTime)": 1524063409353269000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409353534000, 
+      "(endTime)": 1524063410357613000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410357711000, 
+      "(endTime)": 1524063411362940000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411363183000, 
+      "(endTime)": 1524063412365924000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 999, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412366122000, 
+      "(endTime)": 1524063413367785000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413367922000, 
+      "(endTime)": 1524063414368667000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": null, 
+      "timeout": 1000, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414369066000, 
+      "(endTime)": 1524063415353373000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 552, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "java.util.TaskQueue", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 982, 
+      "timedOut": true, 
+      "address": 140363608403808
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405360446000, 
+      "(endTime)": 1524063405462699000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405462755000, 
+      "(endTime)": 1524063405567223000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405567274000, 
+      "(endTime)": 1524063405668981000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405669032000, 
+      "(endTime)": 1524063405772221000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405772251000, 
+      "(endTime)": 1524063405873461000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405873521000, 
+      "(endTime)": 1524063405974034000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063405974079000, 
+      "(endTime)": 1524063406075632000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406075689000, 
+      "(endTime)": 1524063406176107000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406176147000, 
+      "(endTime)": 1524063406277820000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406277861000, 
+      "(endTime)": 1524063406380644000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406380695000, 
+      "(endTime)": 1524063406482550000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406482589000, 
+      "(endTime)": 1524063406583342000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406583408000, 
+      "(endTime)": 1524063406683482000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406683526000, 
+      "(endTime)": 1524063406783960000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406784003000, 
+      "(endTime)": 1524063406884398000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406884429000, 
+      "(endTime)": 1524063406984488000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063406984522000, 
+      "(endTime)": 1524063407088404000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407088453000, 
+      "(endTime)": 1524063407190833000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407190916000, 
+      "(endTime)": 1524063407291159000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407291193000, 
+      "(endTime)": 1524063407393738000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407393907000, 
+      "(endTime)": 1524063407494414000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407494449000, 
+      "(endTime)": 1524063407596095000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407596214000, 
+      "(endTime)": 1524063407699280000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407699321000, 
+      "(endTime)": 1524063407800245000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407800296000, 
+      "(endTime)": 1524063407900375000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063407900408000, 
+      "(endTime)": 1524063408003283000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408003336000, 
+      "(endTime)": 1524063408106677000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408106722000, 
+      "(endTime)": 1524063408209663000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408209708000, 
+      "(endTime)": 1524063408309896000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408309931000, 
+      "(endTime)": 1524063408413875000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408413918000, 
+      "(endTime)": 1524063408517026000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408517072000, 
+      "(endTime)": 1524063408618983000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408619025000, 
+      "(endTime)": 1524063408723294000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408723368000, 
+      "(endTime)": 1524063408823566000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408823596000, 
+      "(endTime)": 1524063408927588000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063408927634000, 
+      "(endTime)": 1524063409030288000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409030340000, 
+      "(endTime)": 1524063409132553000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409132600000, 
+      "(endTime)": 1524063409233284000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409233337000, 
+      "(endTime)": 1524063409333687000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409333718000, 
+      "(endTime)": 1524063409433796000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409433854000, 
+      "(endTime)": 1524063409536285000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409536339000, 
+      "(endTime)": 1524063409640850000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409640902000, 
+      "(endTime)": 1524063409742107000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409742186000, 
+      "(endTime)": 1524063409842235000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409842264000, 
+      "(endTime)": 1524063409942431000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063409942474000, 
+      "(endTime)": 1524063410042937000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410043010000, 
+      "(endTime)": 1524063410143472000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410143512000, 
+      "(endTime)": 1524063410243707000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410243740000, 
+      "(endTime)": 1524063410348442000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410348498000, 
+      "(endTime)": 1524063410453002000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410453041000, 
+      "(endTime)": 1524063410554473000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410554506000, 
+      "(endTime)": 1524063410654770000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410654816000, 
+      "(endTime)": 1524063410758224000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410758276000, 
+      "(endTime)": 1524063410859753000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410859792000, 
+      "(endTime)": 1524063410962213000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063410962252000, 
+      "(endTime)": 1524063411066974000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411067030000, 
+      "(endTime)": 1524063411167768000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411167807000, 
+      "(endTime)": 1524063411267991000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411268036000, 
+      "(endTime)": 1524063411370292000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411370348000, 
+      "(endTime)": 1524063411474169000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411474209000, 
+      "(endTime)": 1524063411576350000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411576388000, 
+      "(endTime)": 1524063411676607000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411676647000, 
+      "(endTime)": 1524063411781071000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411781161000, 
+      "(endTime)": 1524063411883642000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411883683000, 
+      "(endTime)": 1524063411983816000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063411983859000, 
+      "(endTime)": 1524063412084893000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412084950000, 
+      "(endTime)": 1524063412185989000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412186030000, 
+      "(endTime)": 1524063412287274000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412287311000, 
+      "(endTime)": 1524063412391079000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412391137000, 
+      "(endTime)": 1524063412492328000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412492380000, 
+      "(endTime)": 1524063412593173000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412593208000, 
+      "(endTime)": 1524063412693245000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412693291000, 
+      "(endTime)": 1524063412794079000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412794112000, 
+      "(endTime)": 1524063412894746000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412894805000, 
+      "(endTime)": 1524063412996070000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063412996127000, 
+      "(endTime)": 1524063413100289000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413100343000, 
+      "(endTime)": 1524063413200409000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413200452000, 
+      "(endTime)": 1524063413300476000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413300515000, 
+      "(endTime)": 1524063413403334000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413403426000, 
+      "(endTime)": 1524063413507591000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413507633000, 
+      "(endTime)": 1524063413608814000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413608869000, 
+      "(endTime)": 1524063413709213000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413709267000, 
+      "(endTime)": 1524063413811958000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413811999000, 
+      "(endTime)": 1524063413915902000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063413915951000, 
+      "(endTime)": 1524063414017833000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414017880000, 
+      "(endTime)": 1524063414118314000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414118361000, 
+      "(endTime)": 1524063414220471000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414220520000, 
+      "(endTime)": 1524063414324307000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414324358000, 
+      "(endTime)": 1524063414424748000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414424794000, 
+      "(endTime)": 1524063414525828000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414525871000, 
+      "(endTime)": 1524063414627329000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414627406000, 
+      "(endTime)": 1524063414730004000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414730058000, 
+      "(endTime)": 1524063414833800000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414833860000, 
+      "(endTime)": 1524063414939069000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063414939112000, 
+      "(endTime)": 1524063415041656000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063415041699000, 
+      "(endTime)": 1524063415143194000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063415143235000, 
+      "(endTime)": 1524063415245802000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.JavaMonitorWait", 
+    "attributes": {
+      "startTime": 1524063415245836000, 
+      "(endTime)": 1524063415350323000, 
+      "eventThread": "Java2D Queue Flusher", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.lang.Object#wait(J)V", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher#run()V", 
+          "line": 208, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "monitorClass": "sun.java2d.opengl.OGLRenderQueue$QueueFlusher", 
+      "notifier": "Unknown Thread Name", 
+      "timeout": 100, 
+      "timedOut": true, 
+      "address": 140363618050576
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063406350455000, 
+      "loadedClassCount": 3615, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063407350926000, 
+      "loadedClassCount": 3617, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063408350876000, 
+      "loadedClassCount": 3618, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063409351147000, 
+      "loadedClassCount": 3618, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063410351082000, 
+      "loadedClassCount": 3618, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063411352198000, 
+      "loadedClassCount": 3618, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063412353221000, 
+      "loadedClassCount": 3618, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063413355975000, 
+      "loadedClassCount": 3623, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.ClassLoadingStatistics", 
+    "attributes": {
+      "(endTime)": 1524063414356642000, 
+      "loadedClassCount": 3623, 
+      "unloadedClassCount": 0
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063406350390000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063407350924000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063408350874000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063409351146000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063410351080000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063411352183000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063412353220000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063413355973000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.JavaThreadStatistics", 
+    "attributes": {
+      "(endTime)": 1524063414356640000, 
+      "activeCount": 19, 
+      "daemonCount": 16, 
+      "accumulatedCount": 22, 
+      "peakCount": 19
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063406350991000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063407350936000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063408352906000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063409353420000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063410357669000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063411363015000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063412365990000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063413367878000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.ExceptionStatistics", 
+    "attributes": {
+      "(endTime)": 1524063414368801000, 
+      "eventThread": "JFR request timer", 
+      "throwables": 681
+    }
+  }, {
+    "eventType": "jdk.CPUInformation", 
+    "attributes": {
+      "(endTime)": 1524063415354303000, 
+      "cpu": "Intel (null) (HT) SSE SSE2 SSE3 SSSE3 SSE4.1 SSE4.2 Core Intel64", 
+      "description": "Brand: Intel(R) Core(TM) i7-6660U CPU @ 2.40GHz, Vendor: GenuineIntel\nFamily: <unknown> (0x6), Model: <unknown> (0x4e), Stepping: 0x3\nExt. family: 0x0, Ext. model: 0x4, Type: 0x0, Signature: 0x000406e3\nFeatures: ebx: 0x02100800, ecx: 0x7ffafbff, edx: 0xbfebfbff\nExt. features: eax: 0x00000000, ebx: 0x00000000, ecx: 0x00000121, edx: 0x2c100800\nSupports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size Extensions, Time Stamp Counter, Model Specific Registers, Physical Address Extension, Machine Check Exceptions, CMPXCHG8B Instruction, On-Chip APIC, Fast System Call, Memory Type Range Registers, Page Global Enable, Machine Check Architecture, Conditional Mov Instruction, Page Attribute Table, 36-bit Page Size Extension, CLFLUSH Instruction, Debug Trace Store feature, ACPI registers in MSR space, Intel Architecture MMX Technology, Fast Float Point Save and Restore, Streaming SIMD extensions, Streaming SIMD extensions 2, Self-Snoop, Hyper Threading, Thermal Monitor, Streaming SIMD Extensions 3, PCLMULQDQ, 64-bit DS Area, MONITOR/MWAIT instructions, Virtual Machine Extensions, Safer Mode Extensions, Enhanced Intel SpeedStep technology, Thermal Monitor 2, Supplemental Streaming SIMD Extensions 3, CMPXCHG16B, xTPR Update Control, Perfmon and Debug Capability, Streaming SIMD extensions 4.1, Streaming SIMD extensions 4.2, MOVBE, Popcount instruction, AES, Running on Hypervisor, LAHF/SAHF instruction support, Advanced Bit Manipulations: LZCNT, Prefetch and PrefetchW support, SYSCALL/SYSRET, Execute Disable Bit, RDTSCP, Intel 64 Architecture, Invariant TSC", 
+      "sockets": 1, 
+      "cores": 2, 
+      "hwThreads": 4
+    }
+  }, {
+    "eventType": "jdk.YoungGenerationConfiguration", 
+    "attributes": {
+      "(endTime)": 1524063415354379000, 
+      "minSize": 1310720, 
+      "maxSize": -9223372036854775808, 
+      "newRatio": 2
+    }
+  }, {
+    "eventType": "jdk.ObjectAllocationInNewTLAB", 
+    "attributes": {
+      "(endTime)": 1524063405352626000, 
+      "eventThread": "VM JFR Buffer Thread", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.util.AbstractCollection#toArray()[Ljava/lang/Object;", 
+          "line": 136, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.ArrayList#<init>(Ljava/util/Collection;)V", 
+          "line": 164, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.JFRImpl#getRecordings()Ljava/util/Collection;", 
+          "line": 550, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.MetaProducer#onNewChunk()V", 
+          "line": 54, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "oracle.jrockit.jfr.JFRImpl#onNewChunk()V", 
+          "line": 519, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "objectClass": "java.lang.Object[]", 
+      "allocationSize": 24, 
+      "tlabSize": 1352680
+    }
+  }, {
+    "eventType": "jdk.ObjectAllocationInNewTLAB", 
+    "attributes": {
+      "(endTime)": 1524063406350740000, 
+      "eventThread": "JFR request timer", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.util.TimerThread#mainLoop()V", 
+          "line": 555, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.TimerThread#run()V", 
+          "line": 505, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "objectClass": "oracle.jrockit.jfr.events.EventHandlerImpl$1$1", 
+      "allocationSize": 112, 
+      "tlabSize": 1352768
+    }
+  }, {
+    "eventType": "jdk.ObjectAllocationInNewTLAB", 
+    "attributes": {
+      "(endTime)": 1524063411408446000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.util.Arrays#copyOfRange([CII)[C", 
+          "line": 2694, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.lang.String#<init>([CII)V", 
+          "line": 203, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.lang.StringBuilder#toString()Ljava/lang/String;", 
+          "line": 405, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream$BlockDataInputStream#readUTFBody(J)Ljava/lang/String;", 
+          "line": 3067, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream$BlockDataInputStream#readUTF()Ljava/lang/String;", 
+          "line": 2863, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readString(Z)Ljava/lang/String;", 
+          "line": 1636, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readObject0(Z)Ljava/lang/Object;", 
+          "line": 1339, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readObject()Ljava/lang/Object;", 
+          "line": 370, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "javax.management.ObjectName#readObject(Ljava/io/ObjectInputStream;)V", 
+          "line": 1149, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.reflect.GeneratedMethodAccessor3#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.reflect.DelegatingMethodAccessorImpl#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", 
+          "line": 43, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.reflect.Method#invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", 
+          "line": 606, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectStreamClass#invokeReadObject(Ljava/lang/Object;Ljava/io/ObjectInputStream;)V", 
+          "line": 1017, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readSerialData(Ljava/lang/Object;Ljava/io/ObjectStreamClass;)V", 
+          "line": 1891, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readOrdinaryObject(Z)Ljava/lang/Object;", 
+          "line": 1796, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readObject0(Z)Ljava/lang/Object;", 
+          "line": 1348, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.ObjectInputStream#readObject()Ljava/lang/Object;", 
+          "line": 370, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.server.UnicastRef#unmarshalValue(Ljava/lang/Class;Ljava/io/ObjectInput;)Ljava/lang/Object;", 
+          "line": 325, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.server.UnicastServerRef#dispatch(Ljava/rmi/Remote;Ljava/rmi/server/RemoteCall;)V", 
+          "line": 307, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.Transport$1#run()Ljava/lang/Void;", 
+          "line": 177, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.Transport$1#run()Ljava/lang/Object;", 
+          "line": 174, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.security.AccessController#doPrivileged(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;", 
+          "line": -1, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.Transport#serviceCall(Ljava/rmi/server/RemoteCall;)Z", 
+          "line": 173, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 556, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "objectClass": "(default package).char[]", 
+      "allocationSize": 104, 
+      "tlabSize": 1352760
+    }
+  }, {
+    "eventType": "jdk.OSInformation", 
+    "attributes": {
+      "(endTime)": 1524063415354301000, 
+      "osVersion": "Bsduname:Darwin 16.7.0 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64 x86_64\n"
+    }
+  }, {
+    "eventType": "jdk.GCSurvivorConfiguration", 
+    "attributes": {
+      "(endTime)": 1524063415354374000, 
+      "maxTenuringThreshold": 15, 
+      "initialTenuringThreshold": 7
+    }
+  }, {
+    "eventType": "jdk.PhysicalMemory", 
+    "attributes": {
+      "(endTime)": 1524063405352524000, 
+      "totalSize": 17179869184, 
+      "usedSize": 12884901888
+    }
+  }, {
+    "eventType": "jdk.PhysicalMemory", 
+    "attributes": {
+      "(endTime)": 1524063415354247000, 
+      "totalSize": 17179869184, 
+      "usedSize": 12884901888
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063405364600000, 
+      "(endTime)": 1524063406370034000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063406376024000, 
+      "(endTime)": 1524063407380598000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063407384731000, 
+      "(endTime)": 1524063408385636000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063408388442000, 
+      "(endTime)": 1524063409391068000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063409394631000, 
+      "(endTime)": 1524063410400549000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063410403908000, 
+      "(endTime)": 1524063411407683000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063411411331000, 
+      "(endTime)": 1524063412417297000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063412421853000, 
+      "(endTime)": 1524063413425873000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.SocketRead", 
+    "attributes": {
+      "startTime": 1524063413429054000, 
+      "(endTime)": 1524063414433833000, 
+      "eventThread": "RMI TCP Connection(3)-10.161.183.200", 
+      "stackTrace": {
+        "frames": [{
+          "name": "java.net.SocketInputStream#read([BIII)I", 
+          "line": 160, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.net.SocketInputStream#read([BII)I", 
+          "line": 122, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#fill()V", 
+          "line": 235, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.io.BufferedInputStream#read()I", 
+          "line": 254, 
+          "type": "JIT_COMPILED"
+        }, {
+          "name": "java.io.FilterInputStream#read()I", 
+          "line": 83, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport#handleMessages(Lsun/rmi/transport/Connection;Z)V", 
+          "line": 538, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run0()V", 
+          "line": 811, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "sun.rmi.transport.tcp.TCPTransport$ConnectionHandler#run()V", 
+          "line": 670, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor#runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V", 
+          "line": 1145, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.util.concurrent.ThreadPoolExecutor$Worker#run()V", 
+          "line": 615, 
+          "type": "INTERPRETED"
+        }, {
+          "name": "java.lang.Thread#run()V", 
+          "line": 724, 
+          "type": "INTERPRETED"
+        }]
+      }, 
+      "bytesRead": 1, 
+      "timeout": 7200000, 
+      "port": 56496, 
+      "address": "10.161.183.200", 
+      "host": ""
+    }
+  }, {
+    "eventType": "jdk.ActiveRecording", 
+    "attributes": {
+      "(endTime)": 1524063405352719000, 
+      "compress": false, 
+      "recordingStart": 1524063405351, 
+      "maxSize": 0, 
+      "maxAge": 0, 
+      "recordingDuration": 10000, 
+      "destination": "recording.jfr", 
+      "name": "My Recording", 
+      "id": 1
+    }
+  }, {
+    "eventType": "jdk.GCHeapConfiguration", 
+    "attributes": {
+      "(endTime)": 1524063415354377000, 
+      "minSize": 6815736, 
+      "maxSize": 4294967296, 
+      "initialSize": 268435456, 
+      "usesCompressedOops": true, 
+      "compressedOopsMode": "zero based Compressed Oops", 
+      "objectAlignment": 8, 
+      "heapAddressBits": 32
+    }
+  }, {
+    "eventType": "jdk.JVMInformation", 
+    "attributes": {
+      "(endTime)": 1524063415354251000, 
+      "jvmName": "Java HotSpot(TM) 64-Bit Server VM", 
+      "jvmVersion": "Java HotSpot(TM) 64-Bit Server VM (24.0-b57) for bsd-amd64 JRE (1.7.0_40-b62), built on Sep 16 2013 16:58:41 by \"java_re\" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)", 
+      "jvmArguments": "-XX:+UnlockCommercialFeatures -XX:+FlightRecorder", 
+      "jvmFlags": "", 
+      "javaArguments": "jdk1.7.0_40.jdk/Contents/Home/lib/jconsole.jar", 
+      "jvmStartTime": 1524063391473
+    }
+  }, {
+    "eventType": "jdk.GCTLABConfiguration", 
+    "attributes": {
+      "(endTime)": 1524063415354375000, 
+      "usesTLABs": true, 
+      "minTLABSize": 2048, 
+      "tlabRefillWasteLimit": 64
+    }
+  }]
+}

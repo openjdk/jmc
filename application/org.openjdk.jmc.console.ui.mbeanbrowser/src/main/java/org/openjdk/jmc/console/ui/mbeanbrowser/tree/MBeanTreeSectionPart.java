@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -60,7 +59,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
 import org.openjdk.jmc.console.ui.actions.MBeanAutomaticRefreshAction;
 import org.openjdk.jmc.console.ui.mbeanbrowser.MBeanBrowserPlugin;
 import org.openjdk.jmc.console.ui.mbeanbrowser.messages.internal.Messages;

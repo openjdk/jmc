@@ -37,6 +37,7 @@
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
 	<version>${revision}${changelist}</version>
+        <name>JDK Mission Control Core</name>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -44,8 +45,11 @@
 		administrators to collect and analyze data from Java applications
 		running locally or deployed in production environments.
 	</description>
+	<inceptionYear>${project.inceptionYear}</inceptionYear>
 	<properties>
-		<revision>8.1.0</revision>
+		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
+		<project.inceptionYear>2018</project.inceptionYear>
+		<revision>8.2.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -89,7 +93,20 @@
 			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
-
+	<scm>
+		<connection>${scmConnection}</connection>
+		<developerConnection>scm:git:ssh://github.com/openjdk/jmc.git</developerConnection>
+		<url>https://github.com/openjdk/jmc</url>
+		<tag>HEAD</tag>
+	</scm>
+	<developers>
+		<developer>
+			<id>jmc</id>
+			<name>JDK Mission Control</name>
+			<email>jmc-dev@openjdk.java.net</email>
+			<url>https://www.oracle.com/java/technologies/jdk-mission-control.html</url>
+		</developer>
+	</developers>
 	<modules>
 		<module>org.openjdk.jmc.common</module>
 		<module>org.openjdk.jmc.flightrecorder</module>
@@ -237,6 +254,8 @@
 					</execution>
 				</executions>
 				<configuration>
+					<source>8</source>
+					<noindex>true</noindex>
 					<additionalOptions>
 						<additionalOption>-Xdoclint:all</additionalOption>
 						<additionalOption>-Xdoclint:-missing</additionalOption>
@@ -244,6 +263,11 @@
 					<excludePackageNames>*.internal</excludePackageNames>
 					<quiet>true</quiet>
 					<failOnError>false</failOnError>
+					<bottom>
+						<![CDATA[ <p> <a href="http://www.oracle.com/missioncontrol">JDK Mission Control</a> v ${project.version}  <br>
+						<a href="https://docs.oracle.com/javacomponents/dcommon/html/cpyr.htm">Copyright </a> &copy ${project.inceptionYear}-{currentYear}, Oracle and/or its affiliates. All rights reserved. Licensed under the Universal Permissive License v 1.0 as shown at <a href="https://oss.oracle.com/licenses/upl/">http://oss.oracle.com/licenses/upl</a>
+						</p>]]>
+					</bottom>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -39,7 +39,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 ### Red Hat
 * Released version
 
-Red Hat distributes JDK Mission Control as RPMs in Fedora and RHEL. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
+Red Hat distributes JDK Mission Control in Red Hat Enterprise Linux (RHEL). JMC is available in RHEL 7 as the rh-jmc Software Collection, and is provided in RHEL 8 by the jmc:rhel8 module stream. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
 
 ## Mission Control Features
 
@@ -366,7 +366,7 @@ application/org.openjdk.jmc.updatesite.ide/target/
 To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
 
 ```bash
-application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.1.0-SNAPSHOT.zip
+application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.2.0-SNAPSHOT.zip
 ```
 
 ## Setting up Development Environment
