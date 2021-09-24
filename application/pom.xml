@@ -112,6 +112,7 @@
 		<module>org.openjdk.jmc.rjmx.ui</module>
 		<module>org.openjdk.jmc.ui</module>
 		<module>org.openjdk.jmc.ui.common</module>
+		<module>org.openjdk.jmc.ui.celleditors</module>
 		<module>org.openjdk.jmc.updatesite.ide</module>
 		<module>org.openjdk.jmc.updatesite.rcp</module>
 		<module>l10n</module>

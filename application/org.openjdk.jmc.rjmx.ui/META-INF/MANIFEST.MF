@@ -8,7 +8,8 @@ Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.ui.forms,
  org.openjdk.jmc.ui;visibility:=reexport,
  org.openjdk.jmc.rjmx;visibility:=reexport,
- org.openjdk.jmc.greychart.ui;visibility:=reexport
+ org.openjdk.jmc.greychart.ui;visibility:=reexport,
+ org.openjdk.jmc.ui.celleditors
 Export-Package: org.openjdk.jmc.rjmx.ui,
  org.openjdk.jmc.rjmx.ui.attributes;
   x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,
@@ -16,7 +17,6 @@ Export-Package: org.openjdk.jmc.rjmx.ui,
    org.openjdk.jmc.console.uitest,
    org.openjdk.jmc.console.ui.mbeanbrowser.uitest,
    org.openjdk.jmc.test.jemmy",
- org.openjdk.jmc.rjmx.ui.celleditors;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.rjmx.ui.internal;
   x-friends:="org.openjdk.jmc.browser,
    org.openjdk.jmc.console.ui.coherence,

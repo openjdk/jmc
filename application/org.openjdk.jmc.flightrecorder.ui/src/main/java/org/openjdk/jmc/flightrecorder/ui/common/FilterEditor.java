@@ -119,7 +119,7 @@ import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.ui.celleditors.CommonCellEditors;
+import org.openjdk.jmc.ui.celleditors.CommonCellEditors;
 import org.openjdk.jmc.ui.TypeAppearance;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
