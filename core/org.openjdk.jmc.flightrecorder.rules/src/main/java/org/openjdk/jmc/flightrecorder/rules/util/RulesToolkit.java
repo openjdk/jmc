@@ -53,6 +53,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RunnableFuture;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,6 +96,7 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
@@ -1204,12 +1207,13 @@ public class RulesToolkit {
 	 */
 	public static Map<IRule, Future<IResult>> evaluateParallel(
 		Collection<IRule> rules, IItemCollection items, IPreferenceValueProvider preferences, int nThreads) {
-		if (preferences == null) {
+ 		if (preferences == null) {
 			preferences = IPreferenceValueProvider.DEFAULT_VALUES;
 		}
 		if (nThreads < 1) {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
+		ResultProvider resultProvider = new ResultProvider();
 		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
 		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
 		List<IRule> unavailableRules = new ArrayList<>();
@@ -1219,7 +1223,7 @@ public class RulesToolkit {
 				if (hasDependency(rule)) {
 					rulesWithDependencies.add(rule);
 				} else {
-					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
 					resultFutures.put(rule, resultFuture);
 					futureQueue.add(resultFuture);
 				}
@@ -1239,9 +1243,23 @@ public class RulesToolkit {
 				}
 			}
 			if (shouldEvaluate) {
-				RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
-				resultFutures.put(rule, resultFuture);
-				futureQueue.add(resultFuture);
+				IRule depRule = rules.stream().filter(r -> r.getId().equals(dependencyName)).findFirst().orElse(null);
+				Future<IResult> depResultFuture = resultFutures.get(depRule);
+				if (depResultFuture != null && !depResultFuture.isDone()) {
+					try {
+						((Runnable) depResultFuture).run();
+						IResult result = depResultFuture.get();
+						resultProvider.addResults(result);
+					} catch (InterruptedException | ExecutionException e) {
+						Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING,
+								"Unexpected problem evaluating rule dependency.", e); //$NON-NLS-1$
+					}
+				}
+				if (depResultFuture != null && depResultFuture.isDone()) {
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+					resultFutures.put(rule, resultFuture);
+					futureQueue.add(resultFuture);
+				}
 			}
 		}
 		for (int i = 0; i < nThreads; i++) {
