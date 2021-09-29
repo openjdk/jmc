@@ -1207,7 +1207,7 @@ public class RulesToolkit {
 	 */
 	public static Map<IRule, Future<IResult>> evaluateParallel(
 		Collection<IRule> rules, IItemCollection items, IPreferenceValueProvider preferences, int nThreads) {
- 		if (preferences == null) {
+		if (preferences == null) {
 			preferences = IPreferenceValueProvider.DEFAULT_VALUES;
 		}
 		if (nThreads < 1) {
@@ -1246,7 +1246,7 @@ public class RulesToolkit {
 				IRule depRule = rules.stream().filter(r -> r.getId().equals(dependencyName)).findFirst().orElse(null);
 				Future<IResult> depResultFuture = resultFutures.get(depRule);
 				if (depResultFuture != null) {
-					if(!depResultFuture.isDone()) {
+					if (!depResultFuture.isDone()) {
 						try {
 							((Runnable) depResultFuture).run();
 							IResult result = depResultFuture.get();
@@ -1257,7 +1257,8 @@ public class RulesToolkit {
 						}
 					}
 					if (depResultFuture.isDone()) {
-						RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+						RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences,
+								resultProvider);
 						resultFutures.put(rule, resultFuture);
 						futureQueue.add(resultFuture);
 					}
