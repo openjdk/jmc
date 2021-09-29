@@ -1245,20 +1245,22 @@ public class RulesToolkit {
 			if (shouldEvaluate) {
 				IRule depRule = rules.stream().filter(r -> r.getId().equals(dependencyName)).findFirst().orElse(null);
 				Future<IResult> depResultFuture = resultFutures.get(depRule);
-				if (depResultFuture != null && !depResultFuture.isDone()) {
-					try {
-						((Runnable) depResultFuture).run();
-						IResult result = depResultFuture.get();
-						resultProvider.addResults(result);
-					} catch (InterruptedException | ExecutionException e) {
-						Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING,
-								"Unexpected problem evaluating rule dependency.", e); //$NON-NLS-1$
+				if (depResultFuture != null) {
+					if(!depResultFuture.isDone()) {
+						try {
+							((Runnable) depResultFuture).run();
+							IResult result = depResultFuture.get();
+							resultProvider.addResults(result);
+						} catch (InterruptedException | ExecutionException e) {
+							Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING,
+									"Unexpected problem evaluating rule dependency.", e); //$NON-NLS-1$
+						}
 					}
-				}
-				if (depResultFuture != null && depResultFuture.isDone()) {
-					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
-					resultFutures.put(rule, resultFuture);
-					futureQueue.add(resultFuture);
+					if (depResultFuture.isDone()) {
+						RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+						resultFutures.put(rule, resultFuture);
+						futureQueue.add(resultFuture);
+					}
 				}
 			}
 		}
