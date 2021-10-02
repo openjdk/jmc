@@ -57,7 +57,7 @@ import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestConverterTransforms {
-	private static AtomicInteger runCount = new AtomicInteger(0);
+	private static AtomicInteger runCount = new AtomicInteger();
 
 	public static String getTemplate() throws IOException {
 		return TestToolkit.readTemplate(TestConverterTransforms.class, TestToolkit.DEFAULT_TEMPLATE_NAME);
