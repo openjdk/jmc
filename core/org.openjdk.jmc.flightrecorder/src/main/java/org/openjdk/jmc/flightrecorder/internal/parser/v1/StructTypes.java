@@ -694,7 +694,7 @@ class StructTypes {
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
-			}			
+			}
 			if (obj instanceof JfrFrame) {
 				ensureParsed();
 				JfrFrame of = (JfrFrame) obj;
