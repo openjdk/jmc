@@ -45,7 +45,7 @@ import javax.management.openmbean.SimpleType;
 import org.openjdk.jmc.rjmx.subscription.internal.AbstractSyntheticNotification;
 
 public class TestNotification extends AbstractSyntheticNotification {
-	private final static AtomicInteger THREAD_ID_PROVIDER = new AtomicInteger(0);
+	private final static AtomicInteger THREAD_ID_PROVIDER = new AtomicInteger();
 	private final int notificationId = THREAD_ID_PROVIDER.getAndIncrement();
 	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 		@Override
