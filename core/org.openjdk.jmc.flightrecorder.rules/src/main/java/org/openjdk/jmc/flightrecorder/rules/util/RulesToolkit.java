@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -1279,8 +1279,10 @@ public class RulesToolkit {
 	 * report.
 	 * 
 	 * @param rule
+	 *            rule to create an evaluation error result for
 	 * @param preferences
-	 * @return
+	 *            provider of configuration values used by the ResultBuilder
+	 * @return a completed future containing an evaluation error result
 	 */
 	private static Future<IResult> evaluationErrorResult(IRule rule, IPreferenceValueProvider preferences) {
 		IResult result = ResultBuilder.createFor(rule, preferences).setSeverity(Severity.NA)
