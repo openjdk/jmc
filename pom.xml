@@ -85,7 +85,7 @@
 		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
-		<spotless.version>2.5.0</spotless.version>
+		<spotless.version>2.14.0</spotless.version>
 		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<spotbugs.version>4.2.2</spotbugs.version>
 		<buildId>${user.name}</buildId>
