@@ -83,6 +83,7 @@ import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
@@ -1216,52 +1217,54 @@ public class RulesToolkit {
 		ResultProvider resultProvider = new ResultProvider();
 		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
 		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
-		List<IRule> unavailableRules = new ArrayList<>();
-		List<IRule> rulesWithDependencies = new ArrayList<>();
+		// Map using the rule name as a key, and a Pair containing the rule (left) and it's dependency (right)
+		Map<String, Pair<IRule, IRule>> rulesWithDependencies = new HashMap<>();
+		Map<IRule, IResult> computedResults = new HashMap<>();
 		for (IRule rule : rules) {
 			if (matchesEventAvailabilityMap(items, rule.getRequiredEvents())) {
 				if (hasDependency(rule)) {
-					rulesWithDependencies.add(rule);
+					IRule depRule = rules.stream().filter(r -> r.getId().equals(getRuleDependencyName(rule)))
+							.findFirst().orElse(null);
+					rulesWithDependencies.put(rule.getId(), new Pair<>(rule, depRule));
 				} else {
 					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
 					resultFutures.put(rule, resultFuture);
 					futureQueue.add(resultFuture);
 				}
 			} else {
-				unavailableRules.add(rule);
-				resultFutures.put(rule, evaluationErrorResult(rule, preferences));
+				resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+						Messages.getString(Messages.RulesToolkit_RULE_IGNORED))));
 			}
 		}
-		for (IRule rule : rulesWithDependencies) {
-			String dependencyName = getRuleDependencyName(rule);
-			boolean shouldEvaluate = true;
-			for (IRule unavailableRule : unavailableRules) {
-				if (dependencyName.equals(unavailableRule.getId())) {
-					shouldEvaluate = false;
-					resultFutures.put(rule, evaluationErrorResult(rule, preferences));
-					break;
+		for (String ruleName : rulesWithDependencies.keySet()) {
+			IRule rule = rulesWithDependencies.get(ruleName).left;
+			IRule depRule = rulesWithDependencies.get(ruleName).right;
+			Future<IResult> depResultFuture = resultFutures.get(depRule);
+			if (depResultFuture == null) {
+				resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+						Messages.getString(Messages.RulesToolkit_EVALUATION_ERROR_DESCRIPTION))));
+			} else {
+				IResult depResult = null;
+				if (!depResultFuture.isDone()) {
+					((Runnable) depResultFuture).run();
+					try {
+						depResult = depResultFuture.get();
+						resultProvider.addResults(depResult);
+						computedResults.put(depRule, depResult);
+					} catch (InterruptedException | ExecutionException e) {
+						Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING, MessageFormat
+								.format(Messages.getString(Messages.RulesToolkit_RULE_RESULT_RETRIEVAL_ERROR), e));
+					}
+				} else {
+					depResult = computedResults.get(depRule);
 				}
-			}
-			if (shouldEvaluate) {
-				IRule depRule = rules.stream().filter(r -> r.getId().equals(dependencyName)).findFirst().orElse(null);
-				Future<IResult> depResultFuture = resultFutures.get(depRule);
-				if (depResultFuture != null) {
-					if (!depResultFuture.isDone()) {
-						try {
-							((Runnable) depResultFuture).run();
-							IResult result = depResultFuture.get();
-							resultProvider.addResults(result);
-						} catch (InterruptedException | ExecutionException e) {
-							Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING,
-									"Unexpected problem evaluating rule dependency.", e); //$NON-NLS-1$
-						}
-					}
-					if (depResultFuture.isDone()) {
-						RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences,
-								resultProvider);
-						resultFutures.put(rule, resultFuture);
-						futureQueue.add(resultFuture);
-					}
+				if (depResult != null && shouldEvaluate(rule, depResult)) {
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+					resultFutures.put(rule, resultFuture);
+					futureQueue.add(resultFuture);
+				} else {
+					resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+							Messages.getString(Messages.RulesToolkit_RULE_IGNORED))));
 				}
 			}
 		}
@@ -1273,32 +1276,36 @@ public class RulesToolkit {
 		return resultFutures;
 	}
 
-	/**
-	 * For rules that are not evaluated (due to event availability map mismatch, or missing
-	 * dependencies), create and return a completed future IResult that can be used for the rules
-	 * report.
-	 * 
-	 * @param rule
-	 *            rule to create an evaluation error result for
-	 * @param preferences
-	 *            provider of configuration values used by the ResultBuilder
-	 * @return a completed future containing an evaluation error result
-	 */
-	private static Future<IResult> evaluationErrorResult(IRule rule, IPreferenceValueProvider preferences) {
-		IResult result = ResultBuilder.createFor(rule, preferences).setSeverity(Severity.NA)
-				.setSummary(Messages.getString(Messages.RulesToolkit_EVALUATION_ERROR_DESCRIPTION)).build();
-		return CompletableFuture.completedFuture(result);
-	}
-
 	private static boolean hasDependency(IRule rule) {
 		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
-		return dependency != null ? true : false;
+		return dependency != null;
 	}
 
 	private static String getRuleDependencyName(IRule rule) {
 		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
 		Class<? extends IRule> dependencyType = dependency.value();
 		return dependencyType.getSimpleName();
+	}
+
+	/**
+	 * Checks to see if a rule should be evaluated based on the severity value of its dependency's
+	 * result severity value.
+	 * 
+	 * @param rule
+	 *            rule to check severity value against its dependency's severity
+	 * @param depResult
+	 *            result from the rule's dependency
+	 * @return true if the dependency rule result satisfies the severity requirement for the passed
+	 *         rule
+	 */
+	private static boolean shouldEvaluate(IRule rule, IResult depResult) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		if (dependency != null) {
+			if (depResult.getSeverity().compareTo(dependency.severity()) < 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static class RuleEvaluator implements Runnable {

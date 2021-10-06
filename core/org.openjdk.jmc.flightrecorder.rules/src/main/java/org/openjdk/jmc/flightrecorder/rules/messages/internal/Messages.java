@@ -43,11 +43,12 @@ public class Messages {
 	public static final String ItemTreeToolkit_BREAKDOWN_HEADER_LAYERS = "ItemTreeToolkit_BREAKDOWN_HEADER_LAYERS"; //$NON-NLS-1$
 	public static final String ItemTreeToolkit_BREAKDOWN_HEADER_MAX_DURATION_EVENT_CHAIN = "ItemTreeToolkit_BREAKDOWN_HEADER_MAX_DURATION_EVENT_CHAIN"; //$NON-NLS-1$
 	public static final String ItemTreeToolkit_BREAKDOWN_LAYER_CAPTION = "ItemTreeToolkit_BREAKDOWN_LAYER_CAPTION"; //$NON-NLS-1$
-	public static final String Result_SHORT_RECORDING = "Result_SHORT_RECORDING";; //$NON-NLS-1$
+	public static final String Result_SHORT_RECORDING = "Result_SHORT_RECORDING"; //$NON-NLS-1$
 	public static final String RulesToolkit_ATTRIBUTE_NOT_FOUND = "RulesToolkit_ATTRIBUTE_NOT_FOUND"; //$NON-NLS-1$
 	public static final String RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG = "RulesToolkit_ATTRIBUTE_NOT_FOUND_LONG"; //$NON-NLS-1$
 	public static final String RulesToolkit_EVALUATION_ERROR_DESCRIPTION = "RulesToolkit_EVALUATION_ERROR_DESCRIPTION"; //$NON-NLS-1$
 	public static final String RulesToolkit_EVERY_CHUNK = "RulesToolkit_EVERY_CHUNK"; //$NON-NLS-1$
+	public static final String RulesToolkit_RULE_IGNORED = "RulesToolkit_RULE_IGNORED"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_RECOMMENDS_EVENTS = "RulesToolkit_RULE_RECOMMENDS_EVENTS"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_REQUIRES_EVENTS = "RulesToolkit_RULE_REQUIRES_EVENTS"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_REQUIRES_EVENTS_LONG = "RulesToolkit_RULE_REQUIRES_EVENTS_LONG"; //$NON-NLS-1$
@@ -58,6 +59,7 @@ public class Messages {
 	public static final String RulesToolkit_RULE_REQUIRES_SOME_EVENTS = "RulesToolkit_RULE_REQUIRES_SOME_EVENTS"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE = "RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE"; //$NON-NLS-1$
 	public static final String RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE_LONG = "RulesToolkit_RULE_REQUIRES_UNAVAILABLE_EVENT_TYPE_LONG"; //$NON-NLS-1$
+	public static final String RulesToolkit_RULE_RESULT_RETRIEVAL_ERROR = "RulesToolkit_RULE_RESULT_RETRIEVAL_ERROR"; //$NON-NLS-1$
 	public static final String RulesToolkit_TOO_FEW_EVENTS = "RulesToolkit_TOO_FEW_EVENTS"; //$NON-NLS-1$
 	public static final String Severity_INFORMATION = "Severity_INFORMATION"; //$NON-NLS-1$
 	public static final String Severity_NOT_APPLICABLE = "Severity_NOT_APPLICABLE"; //$NON-NLS-1$
