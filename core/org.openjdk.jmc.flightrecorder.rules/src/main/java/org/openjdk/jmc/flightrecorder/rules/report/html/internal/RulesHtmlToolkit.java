@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -261,7 +260,7 @@ public class RulesHtmlToolkit {
 		html.append(START_DIV);
 		html.append("<section id=\"sec\">"); //$NON-NLS-1$
 		List<IResult> resultList = new ArrayList<>(results);
-		Collections.sort(resultList, RESULT_SCORE_COMPARATOR);
+		resultList.sort(RESULT_SCORE_COMPARATOR);
 		if (results.size() == 0) {
 			html.append("<p style=\"font-size: 1.1em;\">"); //$NON-NLS-1$
 			html.append(Messages.getString(Messages.ResultOverview_NO_RESULTS_FOR_PAGE));
@@ -376,7 +375,7 @@ public class RulesHtmlToolkit {
 
 	private static List<IResult> sortResults(Collection<IResult> results) {
 		List<IResult> sorted = new ArrayList<>(results);
-		Collections.sort(sorted, RESULT_RULEID_COMPARATOR);
+		sorted.sort(RESULT_RULEID_COMPARATOR);
 		return sorted;
 	}
 

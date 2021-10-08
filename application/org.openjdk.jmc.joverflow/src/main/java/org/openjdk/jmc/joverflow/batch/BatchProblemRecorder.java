@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.joverflow.batch;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -284,7 +283,7 @@ public class BatchProblemRecorder implements ProblemRecorder {
 			clusterList.add(cluster.getFinalCluster(referer));
 		}
 
-		Collections.sort(clusterList, ReferencedObjCluster.DEFAULT_COMPARATOR);
+		clusterList.sort(ReferencedObjCluster.DEFAULT_COMPARATOR);
 	}
 
 	private List<List<? extends ReferencedObjCluster>> getProblematicDataClustersWithNearestField(int minOvhd) {
@@ -369,7 +368,7 @@ public class BatchProblemRecorder implements ProblemRecorder {
 			clusterList.add(cluster.getFinalCluster(referer));
 		}
 
-		Collections.sort(clusterList, ReferencedObjCluster.DEFAULT_COMPARATOR);
+		clusterList.sort(ReferencedObjCluster.DEFAULT_COMPARATOR);
 	}
 
 	private abstract static class AbstractClusterNode {

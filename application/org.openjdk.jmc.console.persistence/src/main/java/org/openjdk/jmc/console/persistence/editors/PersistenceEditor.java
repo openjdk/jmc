@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,6 @@ import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.EditorPart;
-
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.console.persistence.PersistencePlugin;
@@ -198,8 +196,7 @@ public class PersistenceEditor extends EditorPart {
 		}
 		// Order by size descending and add charts
 		List<Entry<KindOfQuantity<?>, List<MRI>>> allAttributes = new ArrayList<>(mrisByKind.entrySet());
-		Collections.sort(allAttributes, new Comparator<Entry<KindOfQuantity<?>, List<MRI>>>() {
-
+		allAttributes.sort(new Comparator<Entry<KindOfQuantity<?>, List<MRI>>>() {
 			@Override
 			public int compare(Entry<KindOfQuantity<?>, List<MRI>> e1, Entry<KindOfQuantity<?>, List<MRI>> e2) {
 				return e2.getValue().size() - e1.getValue().size();

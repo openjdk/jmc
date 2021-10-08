@@ -151,7 +151,7 @@ public final class NameConverter {
 	 */
 	public void addNamingRule(NamingRule rule) {
 		rules.add(rule);
-		Collections.sort(rules, COMPARATOR);
+		rules.sort(COMPARATOR);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public final class NameConverter {
 				}
 			}
 		}
-		Collections.sort(rules, COMPARATOR);
+		rules.sort(COMPARATOR);
 	}
 
 	private NamingRule createRule(IConfigurationElement config) throws Exception {

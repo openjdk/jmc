@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -260,7 +259,7 @@ public class JfrRulesReport {
 			Map<IRule, Future<IResult>> resultFutures = RulesToolkit.evaluateParallel(RuleRegistry.getRules(), events,
 					null, 0);
 			List<Map.Entry<IRule, Future<IResult>>> resultFutureList = new ArrayList<>(resultFutures.entrySet());
-			Collections.sort(resultFutureList, new Comparator<Map.Entry<IRule, ?>>() {
+			resultFutureList.sort(new Comparator<Map.Entry<IRule, ?>>() {
 				@Override
 				public int compare(Entry<IRule, ?> o1, Entry<IRule, ?> o2) {
 					return o1.getKey().getId().compareTo(o2.getKey().getId());

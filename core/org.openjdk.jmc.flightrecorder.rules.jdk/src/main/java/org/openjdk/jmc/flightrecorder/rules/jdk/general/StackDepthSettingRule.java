@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -147,7 +147,7 @@ public class StackDepthSettingRule implements IRule {
 		}
 		if (truncatedTraces > 0) {
 			List<String> typesWithTruncatedTraces = new ArrayList<>(truncatedTracesByType.keySet());
-			Collections.sort(typesWithTruncatedTraces);
+			typesWithTruncatedTraces.sort(null);
 			//TODO: Model this data better with e.g. a EventTruncationData class or something similar
 			List<StackDepthTruncationData> truncationData = new ArrayList<>();
 			for (String type : typesWithTruncatedTraces) {

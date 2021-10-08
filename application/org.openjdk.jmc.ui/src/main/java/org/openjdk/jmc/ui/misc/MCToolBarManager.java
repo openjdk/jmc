@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -276,7 +276,7 @@ public class MCToolBarManager {
 
 	public void add(IAction action, int alignment) {
 		m_list.add(new ToolbarItem(action, alignment));
-		Collections.sort(m_list);
+		m_list.sort(null);
 		update();
 		action.addPropertyChangeListener(actionListener);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -810,7 +810,7 @@ public class RulesToolkit {
 			}
 		}
 		List<IntEntry<T>> array = IteratorToolkit.toList(map.iterator(), map.size());
-		Collections.sort(array);
+		array.sort(null);
 		return array;
 	}
 
@@ -928,7 +928,7 @@ public class RulesToolkit {
 		for (String name : names) {
 			quotedNames.add("'" + name + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		Collections.sort(quotedNames);
+		quotedNames.sort(null);
 		return StringToolkit.join(quotedNames, ", "); //$NON-NLS-1$
 	}
 
@@ -1342,16 +1342,7 @@ public class RulesToolkit {
 	 */
 	public static Map<String, Integer> sortMap(final Map<String, Integer> map, final boolean sortAscending) {
 		List<Map.Entry<String, Integer>> entries = new ArrayList<>(map.entrySet());
-		Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
-			@Override
-			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-				if (sortAscending) {
-					return o1.getValue().compareTo(o2.getValue());
-				} else {
-					return o2.getValue().compareTo(o1.getValue());
-				}
-			}
-		});
+		entries.sort(Comparator.comparing(Map.Entry<String, Integer>::getValue));
 		final Map<String, Integer> sortedMap = new LinkedHashMap<>();
 		for (Map.Entry<String, Integer> entry : entries) {
 			sortedMap.put(entry.getKey(), entry.getValue());
