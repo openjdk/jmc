@@ -1342,7 +1342,16 @@ public class RulesToolkit {
 	 */
 	public static Map<String, Integer> sortMap(final Map<String, Integer> map, final boolean sortAscending) {
 		List<Map.Entry<String, Integer>> entries = new ArrayList<>(map.entrySet());
-		entries.sort(Comparator.comparing(Map.Entry<String, Integer>::getValue));
+		entries.sort(new Comparator<Map.Entry<String, Integer>>() {
+			@Override
+			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+				if (sortAscending) {
+					return o1.getValue().compareTo(o2.getValue());
+				} else {
+					return o2.getValue().compareTo(o1.getValue());
+				}
+			}
+		});
 		final Map<String, Integer> sortedMap = new LinkedHashMap<>();
 		for (Map.Entry<String, Integer> entry : entries) {
 			sortedMap.put(entry.getKey(), entry.getValue());
