@@ -125,8 +125,8 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	public static void validateProbeDefinition(InputStream in) throws XMLValidationException {
 		try {
 			Validator validator = PROBE_SCHEMA.newValidator();
-      validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-      validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+			validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			validator.validate(new StreamSource(in));
 		} catch (IOException | SAXException e) {
 			throw new XMLValidationException(e.getMessage(), e);
@@ -155,7 +155,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		HashMap<String, String> globalDefaults = new HashMap<>();
 		DefaultTransformRegistry registry = new DefaultTransformRegistry();
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-    disableExternalEntityProcessing(inputFactory);
+		disableExternalEntityProcessing(inputFactory);
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(configuration);
 		while (streamReader.hasNext()) {
 			if (streamReader.isStartElement()) {
@@ -496,7 +496,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 
 			StringReader reader = new StringReader(xmlDescription);
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-      disableExternalEntityProcessing(inputFactory);
+			disableExternalEntityProcessing(inputFactory);
 			XMLStreamReader streamReader = inputFactory.createXMLStreamReader(reader);
 			HashMap<String, String> globalDefaults = new HashMap<String, String>();
 			Set<String> modifiedClasses = new HashSet<>();
@@ -573,10 +573,10 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		return revertInstrumentation;
 	}
 
-  private static void disableExternalEntityProcessing(XMLInputFactory inputFactory) {
-    inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-    inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
-    inputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-  }
+	private static void disableExternalEntityProcessing(XMLInputFactory inputFactory) {
+		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+		inputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+	}
 
 }
