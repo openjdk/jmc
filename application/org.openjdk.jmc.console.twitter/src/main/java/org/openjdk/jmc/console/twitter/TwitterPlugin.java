@@ -56,12 +56,15 @@ import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.MementoToolkit;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
-import twitter4j.conf.ConfigurationBuilder;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The activator class controls the plug-in life cycle for the Twitter plug-in.-
@@ -76,6 +79,13 @@ public class TwitterPlugin extends AbstractUIPlugin {
 	private static final String CONSUMER_KEY_PREF_KEY = "consumer_key";
 	private static final String CONSUMER_SECRET_PREF_KEY = "consumer_secret";
 
+	private static final String UPDATE_STATUS_URL = "https://api.twitter.com/1.1/statuses/update.json";
+	private static final String SEND_DIRECT_MESSAGE_URL = "https://api.twitter.com/1.1/direct_messages/events/new.json";
+	private static final String GET_USER_ID = "https://api.twitter.com/1.1/users/lookup.json";
+
+	private static TwitterOAuthHeaderGenerator oAuthHeaderGenerator;
+	private static TwitterOAuthAunthenticator oauthAuthenticator = new TwitterOAuthAunthenticator();
+
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.openjdk.jmc.twitter"; //$NON-NLS-1$
 
@@ -86,11 +96,12 @@ public class TwitterPlugin extends AbstractUIPlugin {
 
 	private String consumerKey;
 	private String consumerSecret;
-	private List<Tweeter> tweeters = new ArrayList<>();
-	private TwitterFactory twitterFactory;
+	private static List<Tweeter> tweeters = new ArrayList<>();
 
 	private final IProxyChangeListener proxyListener;
 	private IProxyService proxyService;
+	private static String proxyHost;
+	private static int proxyPort;
 
 	/**
 	 * The constructor
@@ -119,42 +130,14 @@ public class TwitterPlugin extends AbstractUIPlugin {
 				tweeters.add(new Tweeter(tweeter));
 			}
 		}
-		twitterFactory = createTwitterFactory();
+
+		configureProxySettings();
 	}
 
 	private IProxyService setupProxyService(BundleContext context) {
 		IProxyService service = context.getService(context.getServiceReference(IProxyService.class));
 		service.addProxyChangeListener(proxyListener);
 		return service;
-	}
-
-	private TwitterFactory createTwitterFactory() {
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		try {
-			IProxyData[] data = proxyService.select(new URI("http://api.twitter.com")); //$NON-NLS-1$
-			String host = null;
-			int port = -1;
-			for (IProxyData proxyData : data) {
-				if (proxyData.getHost() != null) {
-					host = proxyData.getHost();
-					port = proxyData.getPort();
-					break;
-				}
-			}
-			if (host != null) {
-				cb.setHttpProxyHost(host);
-			}
-			if (port != -1) {
-
-				cb.setHttpProxyPort(port);
-			} else {
-				cb.setHttpProxyPort(80);
-			}
-		} catch (URISyntaxException e) {
-			// Should never happen...
-			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
-		}
-		return new TwitterFactory(cb.build());
 	}
 
 	@Override
@@ -167,6 +150,29 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		} finally {
 			// Implicitly stores preference store.
 			super.stop(context);
+		}
+	}
+
+	private void configureProxySettings() {
+		System.setProperty("java.net.useSystemProxies", "true");
+		Proxy proxy;
+		try {
+			proxy = (Proxy) ProxySelector.getDefault().select(new URI("http://api.twitter.com")).iterator().next();
+
+			InetSocketAddress addr = (InetSocketAddress) proxy.address();
+			if (addr != null) {
+				if (addr.getHostName() != null) {
+					proxyHost = addr.getHostName();
+				}
+				if (addr.getPort() != -1) {
+					proxyPort = addr.getPort();
+				} else {
+					proxyPort = 80;
+				}
+			}
+		} catch (URISyntaxException e) {
+			// Should never happen...
+			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
 		}
 	}
 
@@ -193,30 +199,16 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public RequestToken authorize(Twitter twitter) {
-		try {
-			twitter.setOAuthConsumer(consumerKey, consumerSecret);
-		} catch (IllegalStateException e) {
-			// Using log level info, since it's probably only since this was done before.
-			TwitterPlugin.LOGGER.log(Level.INFO,
-					"Could not set OAuth Consumer. Most likely this has already been done before.", e);
-		}
-		RequestToken requestToken;
-		try {
-			requestToken = twitter.getOAuthRequestToken();
-			Program.launch(requestToken.getAuthorizationURL());
-			return requestToken;
-		} catch (TwitterException e) {
-			TwitterPlugin.LOGGER.log(Level.SEVERE, "Could not request token!", e);
-			DialogToolkit.showException(null, "Problem when Authorizing",
-					"Problem when trying to connect to Twitter for authorization. Check your network and proxy settings. If you make any changes, a restart may be required. \n\nException message: "
-							+ e.getMessage(),
-					e);
-		}
-		return null;
+	// This method will authorize the twitter user from preference page.
+	public RequestToken authorize() {
+		String oauth_token = "";
+		oauth_token = oauthAuthenticator.getRequestToken(consumerKey, consumerSecret); // Step 1 of 3-legged OAuth Authentication flow
+		oauthAuthenticator.authorization(oauth_token); // Step 2 of 3-legged OAuth Authentication flow
+		return new RequestToken(oauth_token, "");
+
 	}
 
-	public Tweeter getAuthorizedTweeter(String username) {
+	public static Tweeter getAuthorizedTweeter(String username) {
 		for (Tweeter tweeter : tweeters) {
 			if (username.equals(tweeter.getUsername())) {
 				return tweeter;
@@ -225,50 +217,86 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		return null;
 	}
 
-	public void updateStatus(String username, String message) throws TwitterException {
-		Tweeter tweeter = getAuthorizedTweeter(username);
-		if (tweeter != null) {
-			AccessToken at = createAccessToken(tweeter);
-			Twitter twitter = twitterFactory.getInstance();
-			twitter.setOAuthConsumer(consumerKey, consumerSecret);
-			twitter.setOAuthAccessToken(at);
-			twitter.updateStatus(message);
-			return;
+	private static HttpClient getHttpClient() {
+		InetSocketAddress addr;
+		if (proxyHost != null) {
+			addr = new InetSocketAddress(proxyHost, proxyPort);
 		} else {
-			throw new TwitterException(String.format(
-					"Attempted to update status for an account not defined in the preferences. Please set up the account (%s) in preferences first.",
-					username));
+			addr = null;
 		}
+		HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2)
+				.connectTimeout(Duration.ofSeconds(100)).proxy(ProxySelector.of(addr)).build();
+
+		return httpClient;
 	}
 
-	private AccessToken createAccessToken(Tweeter tweeter) {
-		return new AccessToken(tweeter.getToken(), tweeter.getTokenSecret());
+	public void updateStatus(String username, String message) throws Exception {
+		verifyTweeter(username);
+		// form parameters
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("status", message);
+
+		HttpRequest request = HttpRequest.newBuilder().POST(ofFormData(data)).uri(URI.create(UPDATE_STATUS_URL))
+				.setHeader("Authorization", getHeader("POST", UPDATE_STATUS_URL, data))
+				.header("Content-Type", "application/x-www-form-urlencoded").build();
+
+		getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 	}
 
-	public void addTweeter(Twitter twitter, RequestToken rt, String pin) {
-		try {
-			AccessToken accessToken;
-			if (pin.length() > 0) {
-				accessToken = twitter.getOAuthAccessToken(rt, pin);
-			} else {
-				accessToken = twitter.getOAuthAccessToken();
+	// This method will be used to fetch the userid of the direct message recipient.
+	// On JMC UI, user will enter the username but direct message API is expecting corresponding userid.
+	public static Long getUserId(String username) throws Exception {
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("screen_name", username);
+
+		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(GET_USER_ID + "?screen_name=" + username))
+				.setHeader("Authorization", getHeader("GET", GET_USER_ID, data))
+				.header("Content-Type", "application/x-www-form-urlencoded").build();
+
+		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		if (response.statusCode() == 200) {
+			String userId = response.body().substring(7, 26); // FIXME: We can use some JSON third party library in future.
+			return Long.valueOf(userId);
+		}
+		return Long.valueOf(0);
+
+	}
+
+	public static HttpRequest.BodyPublisher ofFormData(Map<String, String> data) {
+		StringBuilder builder = new StringBuilder();
+		for (Map.Entry<String, String> entry : data.entrySet()) {
+			if (builder.length() > 0) {
+				builder.append("&");
 			}
+			builder.append(entry.getKey());
+			builder.append("=");
+			builder.append(oAuthHeaderGenerator.encode(entry.getValue()));
+		}
+		return HttpRequest.BodyPublishers.ofString(builder.toString());
+	}
 
-			String screenName = accessToken.getScreenName();
-			if (screenName != null && screenName.length() > 0) {
-				Tweeter tweeter = new Tweeter(accessToken.getScreenName(), accessToken.getToken(),
-						accessToken.getTokenSecret());
-				if (!tweeters.contains(tweeter)) {
-					tweeters.add(tweeter);
+	private static AccessToken createAccessToken(Tweeter tweeter) {
+		return new AccessToken(tweeter.getToken(), tweeter.getTokenSecret(), tweeter.getUsername());
+	}
+
+	// Once the authorization is successful, we will add that tweeter in JMC preference.
+	public void addTweeter(RequestToken rt, String pin) {
+		AccessToken accessToken;
+		if (pin.length() > 0) {
+			accessToken = oauthAuthenticator.authentication(consumerKey, consumerSecret, rt.getToken(), pin); // Step 3 of 3-legged OAuth Authentication flow
+			if (accessToken != null) {
+				String screenName = accessToken.getAccessUserName();
+				if (screenName != null && screenName.length() > 0) {
+					Tweeter tweeter = new Tweeter(accessToken.getAccessUserName(), accessToken.getAccessToken(),
+							accessToken.getAccessTokenSecret());
+					if (!tweeters.contains(tweeter)) {
+						tweeters.add(tweeter);
+					}
+					storeAndSavePrefs();
+				} else {
+					DialogToolkit.showError(null, "Invalid User", "The authorized user is invalid.");
 				}
-				storeAndSavePrefs();
-			} else {
-				DialogToolkit.showError(null, "Invalid User", "The authorized user is invalid.");
 			}
-			MessageDialog.openInformation(null, "Twitter Authorization",
-					"Access credentials created successfully for user " + screenName + ".");
-		} catch (TwitterException ex) {
-			DialogToolkit.showException(null, "Error storing access token", ex);
 		}
 	}
 
@@ -295,31 +323,20 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		return tweeters;
 	}
 
-	public Twitter getTwitter() {
-		return twitterFactory.getInstance();
-	}
-
 	public Logger getLogger() {
 		return LOGGER;
 	}
 
-	public void sendDirectMessage(String from, String to, String message) throws Exception {
-		Tweeter tweeter = getAuthorizedTweeter(from);
-		if (tweeter != null) {
-			AccessToken at = createAccessToken(tweeter);
-			Twitter twitter = twitterFactory.getInstance();
-			twitter.setOAuthConsumer(consumerKey, consumerSecret);
-			twitter.setOAuthAccessToken(at);
-			twitter.sendDirectMessage(to, message);
-		} else {
-			throw new Exception(String.format(
-					"Attempted to send direct message from account not defined in the preferences. Please set up the account (%s) in preferences first.",
-					from));
-		}
+	public String getProxyHost() {
+		return proxyHost;
+	}
+
+	public int getProxyPort() {
+		return proxyPort;
 	}
 
 	private void recreateFactory() {
-		twitterFactory = createTwitterFactory();
+		configureProxySettings();
 	}
 
 	public static String createMessage(String msg, TriggerEvent event) {
@@ -343,5 +360,41 @@ public class TwitterPlugin extends AbstractUIPlugin {
 					"User " + username + " has not been authorized in Preferences");
 			return false;
 		}
+	}
+
+	private void verifyTweeter(String fromUser) throws Exception {
+		Tweeter tweeter = getAuthorizedTweeter(fromUser);
+		if (tweeter != null) {
+			AccessToken at = createAccessToken(tweeter);
+			oAuthHeaderGenerator = new TwitterOAuthHeaderGenerator(consumerKey, consumerSecret, at.getAccessToken(),
+					at.getAccessTokenSecret());
+		} else {
+			throw new Exception(String.format(
+					"Attempted to send direct message from account not defined in the preferences. Please set up the account (%s) in preferences first.",
+					fromUser));
+		}
+	}
+
+	public void sendDirectMessage(String from, String to, String message) throws Exception {
+		verifyTweeter(from);
+		Map<String, String> requestParams = new HashMap<String, String>();
+		String json = createJSONObject(getUserId(to), message);
+		HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(json))
+				.uri(URI.create(SEND_DIRECT_MESSAGE_URL))
+				.setHeader("Authorization", getHeader("POST", SEND_DIRECT_MESSAGE_URL, requestParams))
+				.header("Content-Type", "application/json").build();
+
+		getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+	}
+
+	public static String createJSONObject(long recipientId, String text) throws Exception {
+		String json = "{\"event\":{\"message_create\":{\"message_data\":{\"text\":\"" + text
+				+ "\"},\"target\":{\"recipient_id\":\"" + Long.valueOf(recipientId).toString()
+				+ "\"}},\"type\":\"message_create\"}}";
+		return json;
+	}
+
+	private static String getHeader(String callMethod, String url, Map<String, String> requestParams) {
+		return oAuthHeaderGenerator.generateHeader(callMethod, url, requestParams);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,37 +32,43 @@
  */
 package org.openjdk.jmc.console.twitter;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.triggers.IActivatableTriggerAction;
-import org.openjdk.jmc.rjmx.triggers.TriggerAction;
-import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
+class AccessToken {
+	private String accessToken;
+	private String accessTokenSecret;
+	private String accessUserName;
 
-/**
- * Action that updates the status.
- */
-public class UpdateStatus extends TriggerAction implements IActivatableTriggerAction {
-	private static final String USERNAME_FIELD = "username"; //$NON-NLS-1$
-	private static final String MESSAGE_FIELD = "message"; //$NON-NLS-1$
-
-	public UpdateStatus() {
-		// Do nothing
+	public AccessToken(String accessToken, String accessTokenSecret, String accessUserName) {
+		this.accessToken = accessToken;
+		this.accessTokenSecret = accessTokenSecret;
+		this.accessUserName = accessUserName;
 	}
 
-	@Override
-	public void handleNotificationEvent(TriggerEvent event) throws Exception {
-		String username = getSetting(USERNAME_FIELD).getString();
-		String message = TwitterPlugin.createMessage(getSetting(MESSAGE_FIELD).getString(), event);
-		if (username != null && message != null) {
-			updateStatus(username, message);
-		}
+	public AccessToken(String accessToken, String accessTokenSecret) {
+		this.accessToken = accessToken;
+		this.accessTokenSecret = accessTokenSecret;
 	}
 
-	private void updateStatus(String username, String message) throws Exception {
-		TwitterPlugin.getDefault().updateStatus(username, message);
+	public String getAccessToken() {
+		return accessToken;
 	}
 
-	@Override
-	public boolean isActivatable(IConnectionHandle handle) {
-		return TwitterPlugin.getDefault().verifyAuthorizedUser(getSetting(USERNAME_FIELD).getString());
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public String getAccessTokenSecret() {
+		return accessTokenSecret;
+	}
+
+	public void setAccessTokenSecret(String accessTokenSecret) {
+		this.accessTokenSecret = accessTokenSecret;
+	}
+
+	public String getAccessUserName() {
+		return accessUserName;
+	}
+
+	public void setAccessUserName(String accessUserName) {
+		this.accessUserName = accessUserName;
 	}
 }
