@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.rcp.application.scripting.model;
 
+import java.util.Objects;
+
 /**
  * Represents a marker in the source code
  */
@@ -53,7 +55,7 @@ public final class Line {
 	public boolean equals(Object o) {
 		if (o instanceof Line) {
 			Line that = (Line) o;
-			return m_line == that.m_line;
+			return Objects.equals(m_line, that.m_line);
 		}
 		return false;
 	}

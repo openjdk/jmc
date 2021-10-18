@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -412,6 +412,7 @@ public class ResultReportUi {
 		try {
 			this.showOk = Boolean.valueOf(state.getChild("report").getChild("showOk").getAttribute("value")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} catch (NullPointerException npe) {
+			// ignore NPE when there is no state value is available 
 		}
 		browser.addListener(SWT.MenuDetect, new Listener() {
 			@Override

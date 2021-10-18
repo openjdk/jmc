@@ -60,6 +60,7 @@ class TwitterOAuthHeaderGenerator {
 	private String tokenSecret;
 	private String version;
 
+	final static Random RANDOM = new Random();
 	final static Logger LOGGER = Logger.getLogger("TwitterOAuthHeaderGenerator");
 
 	public TwitterOAuthHeaderGenerator(String consumerKey, String consumerSecret, String token, String tokenSecret) {
@@ -183,11 +184,12 @@ class TwitterOAuthHeaderGenerator {
 		int leftLimit = 48; // numeral '0'
 		int rightLimit = 122; // letter 'z'
 		int targetStringLength = 10;
-		Random random = new Random();
 
-		return random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-				.limit(targetStringLength)
-				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+		synchronized (RANDOM) {
+			return RANDOM.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+					.limit(targetStringLength)
+					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+		}
 	}
 
 	private String getTimestamp() {
