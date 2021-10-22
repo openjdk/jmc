@@ -34,10 +34,10 @@
 <feature
       id="org.openjdk.jmc.feature.flightrecorder"
       label="%name"
-      version="8.1.0.qualifier"
+      version="8.1.1.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="8.1.0.qualifier">
+      license-feature-version="8.1.1.qualifier">
 
    <description url="%descriptionUrl">
       %description
