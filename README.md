@@ -216,7 +216,7 @@ Prerequisites for building Mission Control:
 
 1. Install JDK 11, and make sure it is the JDK in use (java -version)
 
-2. Install Maven (version 3.3.x. or above)
+2. Install Maven (version 3.5.x. or above)
 
 On Linux or macOS you can use the build.sh script to build JMC:
 ```

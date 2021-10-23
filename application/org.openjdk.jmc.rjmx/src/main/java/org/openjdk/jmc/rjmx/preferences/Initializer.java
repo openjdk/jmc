@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,6 +53,8 @@ public class Initializer extends AbstractPreferenceInitializer {
 		preferences.put(PreferencesKeys.PROPERTY_MAIL_SERVER, PreferencesKeys.DEFAULT_MAIL_SERVER);
 		preferences.putInt(PreferencesKeys.PROPERTY_MAIL_SERVER_PORT, PreferencesKeys.DEFAULT_MAIL_SERVER_PORT);
 		preferences.putBoolean(PreferencesKeys.PROPERTY_MAIL_SERVER_SECURE, PreferencesKeys.DEFAULT_MAIL_SERVER_SECURE);
+		preferences.putBoolean(PreferencesKeys.PROPERTY_MAIL_SERVER_STARTTLS_ENCRYPTION,
+				PreferencesKeys.DEFAULT_MAIL_SERVER_STARTTLS_ENCRYPTION);
 		preferences.put(PreferencesKeys.PROPERTY_MAIL_SERVER_CREDENTIALS,
 				PreferencesKeys.DEFAULT_MAIL_SERVER_CREDENTIALS);
 

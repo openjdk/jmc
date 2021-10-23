@@ -107,7 +107,7 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	 */
 	private static final long VALUE_RECALIBRATION_INTERVAL = 120000;
 	private static final long REMOTE_START_TIME_UNDEFINED = -1;
-	private static final AtomicInteger CONNECTION_COUNTER = new AtomicInteger(0);
+	private static final AtomicInteger CONNECTION_COUNTER = new AtomicInteger();
 
 	// The ConnectionDescriptor used to create this RJMXConnection
 	private final IConnectionDescriptor m_connectionDescriptor;

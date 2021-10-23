@@ -692,10 +692,11 @@ class StructTypes {
 
 		@Override
 		public boolean equals(Object obj) {
-			ensureParsed();
 			if (this == obj) {
 				return true;
-			} else if (obj instanceof JfrFrame) {
+			}
+			if (obj instanceof JfrFrame) {
+				ensureParsed();
 				JfrFrame of = (JfrFrame) obj;
 				return Objects.equals(of.type, type) && Objects.equals(of.method, method)
 						&& Objects.equals(of.lineNumber, lineNumber) && Objects.equals(of.bytecodeIndex, bytecodeIndex);
@@ -749,10 +750,11 @@ class StructTypes {
 
 		@Override
 		public boolean equals(Object obj) {
-			ensureParsed();
 			if (this == obj) {
 				return true;
-			} else if (obj instanceof JfrStackTrace) {
+			}
+			if (obj instanceof JfrStackTrace) {
+				ensureParsed();
 				JfrStackTrace ost = (JfrStackTrace) obj;
 				return Objects.equals(ost.frames, frames) && Objects.equals(ost.truncated, truncated);
 			}
@@ -763,8 +765,14 @@ class StructTypes {
 			if (!isParsed) {
 				// The 'frames' field is used in hashCode and equality computations but may change when parsed
 				// Force parsing the field to make the hashCode and equality computations to perform consistently
-				getFrames();
+				getFrames().forEach(JfrStackTrace::ensureParsedFrame);
 				isParsed = true;
+			}
+		}
+
+		private static void ensureParsedFrame(IMCFrame f) {
+			if (f instanceof JfrFrame) {
+				((JfrFrame) f).ensureParsed();
 			}
 		}
 	}

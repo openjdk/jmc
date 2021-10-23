@@ -50,7 +50,7 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jacoco.plugin.version>0.8.6</jacoco.plugin.version>
+		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<jmc.version>${revision}${changelist}</jmc.version>
 	</properties>
 	

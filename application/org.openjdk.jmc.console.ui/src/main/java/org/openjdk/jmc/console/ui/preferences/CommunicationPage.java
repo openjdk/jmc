@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -121,6 +121,11 @@ public class CommunicationPage extends FieldEditorPreferencePage implements IWor
 		BooleanFieldEditor mailServerSecure = new BooleanFieldEditor(PreferencesKeys.PROPERTY_MAIL_SERVER_SECURE,
 				Messages.CommunicationPage_CAPTION_SECURE_MAIL_SERVER, getFieldEditorParent());
 		addField(mailServerSecure);
+
+		BooleanFieldEditor mailServerStarttls = new BooleanFieldEditor(
+				PreferencesKeys.PROPERTY_MAIL_SERVER_STARTTLS_ENCRYPTION,
+				Messages.CommunicationPage_CAPTION_SECURE_MAIL_SERVER_STARTTLS, getFieldEditorParent());
+		addField(mailServerStarttls);
 
 		createCredentialFields();
 		loadCredentials();

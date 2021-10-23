@@ -90,7 +90,7 @@ public final class RecordingImpl extends Recording {
 
 	private final OutputStream outputStream;
 
-	private final AtomicBoolean closed = new AtomicBoolean(false);
+	private final AtomicBoolean closed = new AtomicBoolean();
 
 	private final BlockingDeque<LEB128Writer> chunkDataQueue = new LinkedBlockingDeque<>();
 	private final ExecutorService chunkDataMergingService = Executors.newSingleThreadExecutor();

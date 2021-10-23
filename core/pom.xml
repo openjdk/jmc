@@ -58,7 +58,7 @@
 		<manifest-location>META-INF</manifest-location>
 		<maven.jar.version>3.2.0</maven.jar.version>
 		<maven.bundle.version>5.1.1</maven.bundle.version>
-		<spotless.version>2.5.0</spotless.version>
+		<spotless.version>2.14.0</spotless.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<maven.source.version>3.2.1</maven.source.version>
@@ -274,6 +274,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>${maven.gpg.version}</version>
+				<configuration>
+					<!-- Prevent gpg from using pinentry programs -->
+					<gpgArguments>
+						<arg>--pinentry-mode</arg>
+						<arg>loopback</arg>
+					</gpgArguments>
+				</configuration>
 				<executions>
 					<execution>
 						<id>gpg-sign</id>

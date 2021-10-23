@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -97,6 +97,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.jdk.memory.ReferenceStatisticsType;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
+import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IDataPageFactory;
 import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
@@ -729,7 +730,24 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private Stream<? extends IItem> gcSelectedGcItems() {
 			@SuppressWarnings("unchecked")
 			List<GC> sel = ((IStructuredSelection) gcList.getViewer().getSelection()).toList();
-			return sel.stream().map(gc -> gc.gcItem);
+			List<GC> selCopy = new ArrayList<>(sel);
+			correlateSystemGCEvents(sel, selCopy);
+			return selCopy.stream().map(gc -> gc.gcItem);
+		}
+
+		private void correlateSystemGCEvents(List<GC> sourceGCList, List<GC> destinationGCList) {
+			IItemCollection systemGCEvents = getDataSource().getItems()
+					.apply(ItemFilters.type(JdkTypeIDs.GC_COLLECTOR_SYSTEM_GC));
+			for (GC gc : sourceGCList) {
+				IItemFilter rangeFilter = RulesToolkit.createRangeFilter(gc.gcItem);
+				IItemCollection correlatedItems = systemGCEvents.apply(rangeFilter);
+				for (IItemIterable types : correlatedItems) {
+					for (IItem item : types) {
+						destinationGCList.add(new GC(item, null));
+					}
+				}
+			}
+
 		}
 	}
 
