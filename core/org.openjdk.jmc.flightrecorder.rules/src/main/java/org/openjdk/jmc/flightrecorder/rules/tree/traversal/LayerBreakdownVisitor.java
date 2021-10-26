@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.flightrecorder.rules.tree.traversal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +73,7 @@ public class LayerBreakdownVisitor extends BFTreeVisitor<IItem> {
 			for (Entry<IType<?>, IQuantity> entry : typeToDuration.entrySet()) {
 				list.add(new LayerEntry(entry.getKey(), entry.getValue()));
 			}
-			Collections.sort(list, ENTRY_COMPARATOR);
+			list.sort(ENTRY_COMPARATOR);
 			return list;
 		}
 
@@ -148,7 +147,7 @@ public class LayerBreakdownVisitor extends BFTreeVisitor<IItem> {
 	public List<LayerBreakdown> getLayers() {
 		List<LayerBreakdown> layers = new ArrayList<>();
 		layers.addAll(layersMap.values());
-		Collections.sort(layers, BREAKDOWN_COMPARATOR);
+		layers.sort(BREAKDOWN_COMPARATOR);
 		return layers;
 	}
 }

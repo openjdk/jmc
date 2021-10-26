@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -276,7 +276,7 @@ public class PersistenceReader implements IMRIService, IAttributeStorageService 
 				}
 			}
 		}
-		Collections.sort(files, PersistenceFile.PERSISTENCE_FILE_START_COMPARATOR);
+		files.sort(PersistenceFile.PERSISTENCE_FILE_START_COMPARATOR);
 		List<Long> seriesStart = new ArrayList<>();
 		DataInputStream seriesFileStream = null;
 		File seriesFile = new File(attributeDir, AttributeWriter.SERIES_FILE_NAME);

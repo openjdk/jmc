@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.joverflow.support;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class ClassAndOvhdComboList implements Cloneable {
 		ArrayList<ClassAndOvhdCombo> result = new ArrayList<>(list.size());
 		result.addAll(list);
 		if (result.size() > 1) {
-			Collections.sort(result);
+			result.sort(null);
 		}
 		return result;
 	}

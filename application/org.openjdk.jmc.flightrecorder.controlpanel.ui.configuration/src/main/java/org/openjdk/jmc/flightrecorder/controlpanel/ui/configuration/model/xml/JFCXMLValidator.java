@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,6 @@ import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -242,7 +241,7 @@ public final class JFCXMLValidator implements IXMLValidator {
 				}
 			}
 		}
-		Collections.sort(variables);
+		variables.sort(null);
 		return new LinkedHashSet<>(variables);
 	}
 

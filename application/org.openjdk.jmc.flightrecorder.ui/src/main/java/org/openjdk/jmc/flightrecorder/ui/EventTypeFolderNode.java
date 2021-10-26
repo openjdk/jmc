@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.flightrecorder.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -173,7 +172,7 @@ public class EventTypeFolderNode implements IParent<Object> {
 				((EventTypeFolderNode) c).sortChildren();
 			}
 		}
-		Collections.sort(getChildren(), new Comparator<Object>() {
+		getChildren().sort(new Comparator<Object>() {
 
 			@Override
 			public int compare(Object o1, Object o2) {

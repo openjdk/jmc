@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,7 +38,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Level;
 
 import org.openjdk.jmc.common.io.IOToolkit;
@@ -93,7 +92,7 @@ class AttributeWriter implements IMRIValueListener {
 						}
 					}
 				}
-				Collections.sort(existingFiles, PersistenceFile.PERSISTENCE_FILE_START_COMPARATOR);
+				existingFiles.sort(PersistenceFile.PERSISTENCE_FILE_START_COMPARATOR);
 				if (existingFiles.size() > 0) {
 					currentFile = existingFiles.get(existingFiles.size() - 1).file;
 					currentFileSize = currentFile.length();
