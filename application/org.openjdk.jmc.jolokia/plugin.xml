@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.openjdk.jmc.rjmx.descriptorProvider">
+      <provider
+            class="org.openjdk.jmc.jolokia.JolokiaDiscoveryListener">
+      </provider>
+   </extension>
+      <extension
+         point="org.openjdk.jmc.rjmx.jmxProtocols">
+      <client
+            class="org.openjdk.jmc.jolokia.JmcJolokiaJmxConnectionProvider" protocol="jolokia">
+            <sysproperty name="running.in.jmc" include="true" />
+      </client>
+   </extension>
+      <extension
+            point="org.eclipse.ui.preferencePages">
+         <page
+               category="org.openjdk.jmc.browser.preferences.BrowserPreferencePage"
+               class="org.openjdk.jmc.jolokia.preferences.JolokiaPreferencePage"
+               id="org.openjdk.jmc.jolokia.preferences.JolokiaPreferencePage"
+               name="%page.name">
+         </page>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.preferences">
+         <initializer
+               class="org.openjdk.jmc.jolokia.preferences.PreferenceInitializer">
+         </initializer>
+      </extension>
+</plugin>

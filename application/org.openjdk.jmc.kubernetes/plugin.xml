@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension
+         point="org.openjdk.jmc.rjmx.jmxProtocols">
+      <client
+            class="org.openjdk.jmc.kubernetes.JmcKubernetesJmxConnectionProvider" protocol="kubernetes">
+            <sysproperty name="running.in.jmc" include="true" />
+      </client>
+   </extension>
+      <extension
+            point="org.eclipse.ui.preferencePages">
+         <page
+               category="org.openjdk.jmc.browser.preferences.BrowserPreferencePage"
+               class="org.openjdk.jmc.kubernetes.preferences.JmcKubernetesPreferenceForm"
+               id="org.openjdk.jmc.kubernetes.preferences.JmcKubernetesPreferences"
+               name="%page.name">
+         </page>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.preferences">
+         <initializer
+               class="org.openjdk.jmc.kubernetes.preferences.PreferenceInitializer">
+         </initializer>
+      </extension>
+      <extension
+         point="org.openjdk.jmc.rjmx.descriptorProvider">
+      <provider
+            class="org.openjdk.jmc.kubernetes.KubernetesDiscoveryListener">
+      </provider>
+   </extension>
+      <extension
+            point="org.eclipse.help.toc">
+         <toc
+               file="toc.xml">
+         </toc>
+         <toc
+               file="testToc.xml"
+               primary="true">
+         </toc>
+      </extension>
+</plugin>
