@@ -255,7 +255,8 @@ public class TwitterPlugin extends AbstractUIPlugin {
 
 		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 		if (response.statusCode() == 200) {
-			String userId = response.body().substring(7, 26); // FIXME: We can use some JSON third party library in future.
+			String responseBody = response.body();
+			String userId = responseBody.substring(responseBody.indexOf("id") + 4, responseBody.indexOf("id_str") - 2); // FIXME: We can use some JSON third party library in future.
 			return Long.valueOf(userId);
 		}
 		return Long.valueOf(0);
