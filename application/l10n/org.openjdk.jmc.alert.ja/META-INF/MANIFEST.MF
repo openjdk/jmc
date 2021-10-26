@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Japanese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.alert.ja
-Bundle-Version: 8.1.0.qualifier
+Bundle-Version: 8.1.1.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.alert;bundle-version="8.1.0"
+Fragment-Host: org.openjdk.jmc.alert;bundle-version="8.1.1"
 Bundle-Localization: plugin
 Automatic-Module-Name: org.openjdk.jmc.alert.ja
