@@ -53,7 +53,9 @@ public interface IParserExtension {
 	 * @return the identifier of the value interpretation or {@code null} to use the default
 	 *         interpretation
 	 */
-	String getValueInterpretation(String eventTypeId, String fieldId);
+	default String getValueInterpretation(String eventTypeId, String fieldId) {
+		return null;
+	}
 
 	/**
 	 * Get a new event sink factory for use during the reading of one Flight Recording.
@@ -68,7 +70,9 @@ public interface IParserExtension {
 	 *            on to sinks created by the nested subfactory.
 	 * @return a new event sink factory
 	 */
-	IEventSinkFactory getEventSinkFactory(IEventSinkFactory subFactory);
+	default IEventSinkFactory getEventSinkFactory(IEventSinkFactory subFactory) {
+		return subFactory;
+	}
 
 	/**
 	 * creates an instance of IConstantPoolExtension at the beginning of the load of a recording
