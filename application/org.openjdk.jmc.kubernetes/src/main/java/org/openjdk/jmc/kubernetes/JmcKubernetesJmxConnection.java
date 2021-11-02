@@ -16,7 +16,7 @@ import org.openjdk.jmc.rjmx.ConnectionException;
 
 public class JmcKubernetesJmxConnection extends JmcJolokiaJmxConnection {
 
-	final static Collection<Pattern> DISCONNECT_SIGNS = Arrays.asList(Pattern.compile("Error: pods \".+\" not found")); //$NON-NLS-1$
+	static final Collection<Pattern> DISCONNECT_SIGNS = Arrays.asList(Pattern.compile("Error: pods \".+\" not found")); //$NON-NLS-1$
 
 	public JmcKubernetesJmxConnection(J4pClient client) throws IOException {
 		super(client);

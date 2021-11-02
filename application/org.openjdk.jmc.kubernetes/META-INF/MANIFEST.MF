@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.openjdk.jmc.kubernetes;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Automatic-Module-Name: org.openjdk.jmc.kubernetes
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.openjdk.jmc.jolokia;bundle-version="8.2.0",
  org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -35,7 +35,6 @@ Bundle-ClassPath: target/dependency/jolokia-kubernetes-1.7.0.jar,
  target/dependency/jackson-dataformat-yaml-2.10.3.jar,
  target/dependency/jackson-annotations-2.10.3.jar,
  target/dependency/logging-interceptor-3.12.12.jar,
- target/dependency/jolokia-core-1.7.0.jar,
  target/dependency/snakeyaml-1.24.jar,
  target/classes,
  .,

@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.openjdk.jmc.jolokia;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Automatic-Module-Name: org.openjdk.jmc.jolokia
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.openjdk.jmc.rjmx;bundle-version="8.1.0",
  org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -20,6 +20,7 @@ Export-Package: org.apache.commons.codec.binary,
  org.jolokia.client.jmxadapter,
  org.jolokia.client.request,
  org.jolokia.converter,
+ org.jolokia.util,
  org.openjdk.jmc.jolokia
 Bundle-ClassPath: target/dependency/jolokia-client-java-1.7.0.jar,
  target/dependency/jolokia-core-1.7.0.jar,

@@ -47,9 +47,9 @@ import io.fabric8.kubernetes.client.utils.Utils;
 
 public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvider {
 
-	private final Pattern SECRET_PATTERN = Pattern.compile("\\$\\{kubernetes/secret/(?<secretName>[^/]+)/(?<itemName>[^\\}]+)}"); //$NON-NLS-1$
-	private final Pattern ATTRIBUTE_PATTERN = Pattern.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
-	private final Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
+	private final static Pattern SECRET_PATTERN = Pattern.compile("\\$\\{kubernetes/secret/(?<secretName>[^/]+)/(?<itemName>[^\\}]+)}"); //$NON-NLS-1$
+	private final static Pattern ATTRIBUTE_PATTERN = Pattern.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
+	private final static Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public final String getDescription() {
 		return Messages.KubernetesDiscoveryListener_Description;

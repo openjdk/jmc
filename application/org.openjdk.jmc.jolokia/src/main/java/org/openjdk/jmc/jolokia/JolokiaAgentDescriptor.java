@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
+import javax.management.InstanceNotFoundException;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeDataSupport;
 import javax.management.openmbean.TabularDataSupport;
@@ -136,7 +138,7 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 			return new JVMDescriptor(javaVersion, type, arch, javaCommand, arguments, vmName, vmVendor, pid, isDebug,
 					Connectable.UNKNOWN);
 
-		} catch (Exception ignore) {
+		} catch (RuntimeException|IOException|InstanceNotFoundException|MalformedObjectNameException ignore) {
 			return NULL_DESCRIPTOR;
 		}
 
