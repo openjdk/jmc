@@ -65,6 +65,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  * The activator class controls the plug-in life cycle for the Twitter plug-in.-
@@ -240,7 +241,11 @@ public class TwitterPlugin extends AbstractUIPlugin {
 				.setHeader("Authorization", getHeader("POST", UPDATE_STATUS_URL, data))
 				.header("Content-Type", "application/x-www-form-urlencoded").build();
 
-		getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		if (response.statusCode() != 200) {
+			JOptionPane.showMessageDialog(null,
+					" Some error occured while updating Twitter status. Please verify your twitter app settings. ");
+		}
 	}
 
 	// This method will be used to fetch the userid of the direct message recipient.
@@ -385,7 +390,11 @@ public class TwitterPlugin extends AbstractUIPlugin {
 				.setHeader("Authorization", getHeader("POST", SEND_DIRECT_MESSAGE_URL, requestParams))
 				.header("Content-Type", "application/json").build();
 
-		getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		if (response.statusCode() != 200) {
+			JOptionPane.showMessageDialog(null,
+					" Some error occured while sending direct message. Please verify your twitter app settings. ");
+		}
 	}
 
 	public static String createJSONObject(long recipientId, String text) throws Exception {
