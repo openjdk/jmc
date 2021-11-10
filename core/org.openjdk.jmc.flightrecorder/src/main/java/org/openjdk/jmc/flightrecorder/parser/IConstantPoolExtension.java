@@ -42,14 +42,14 @@ import org.openjdk.jmc.flightrecorder.IParserStats;
 /**
  * Interface for Flight Recorder constant pool extensions. Implementation are created by
  * {@link IParserExtension#createConstantPoolExtension()} each time a recording is starting to be
- * parsed Provides callbacks for constant pools reads, referencing, simple resolution, full resolution
- * and parsing is finished
+ * parsed Provides callbacks for constant pools reads, referencing, simple resolution, full
+ * resolution and parsing is finished
  */
 public interface IConstantPoolExtension {
 
 	/**
-	 * @return id of the extension, by default the simple class name.
-	 * 			This id will be exposed in the Map returned by {@link IParserStats#getConstantPoolExtensions()}
+	 * @return id of the extension, by default the simple class name. This id will be exposed in the
+	 *         Map returned by {@link IParserStats#getConstantPoolExtensions()}
 	 */
 	default String getId() {
 		return getClass().getSimpleName();

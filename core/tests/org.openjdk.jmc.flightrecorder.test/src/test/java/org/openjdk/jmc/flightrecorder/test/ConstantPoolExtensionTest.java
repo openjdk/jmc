@@ -182,7 +182,7 @@ public class ConstantPoolExtensionTest {
 				Assert.assertEquals(POOL_SIZES[i], count);
 			}
 		}
-		
+
 	}
 
 }
