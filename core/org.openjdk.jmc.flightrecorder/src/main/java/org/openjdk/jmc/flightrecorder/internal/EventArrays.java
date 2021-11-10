@@ -32,12 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.internal;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.internal.parser.ParserStats;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 
 public class EventArrays {
 
@@ -69,5 +71,9 @@ public class EventArrays {
 
 	public IItemCollection getConstants() {
 		return parserStats.getConstants();
+	}
+
+	public Map<String, IConstantPoolExtension> getConstantPoolExtensions() {
+		return parserStats.getConstantPoolExtensions();
 	}
 }

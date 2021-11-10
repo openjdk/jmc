@@ -36,13 +36,24 @@ package org.openjdk.jmc.flightrecorder.parser;
 import java.util.Map;
 
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.flightrecorder.IParserStats;
 
 /**
  * Interface for Flight Recorder constant pool extensions. Implementation are created by
  * {@link IParserExtension#createConstantPoolExtension()} each time a recording is starting to be
- * parsed Provides callbacks for constant pools reads, referencing, resolution and full resolution
+ * parsed Provides callbacks for constant pools reads, referencing, simple resolution, full resolution
+ * and parsing is finished
  */
 public interface IConstantPoolExtension {
+
+	/**
+	 * @return id of the extension, by default the simple class name.
+	 * 			This id will be exposed in the Map returned by {@link IParserStats#getConstantPoolExtensions()}
+	 */
+	default String getId() {
+		return getClass().getSimpleName();
+	}
 
 	/**
 	 * Called when a constant is read from the Metadata to put into the constant pool.
@@ -99,5 +110,19 @@ public interface IConstantPoolExtension {
 	 */
 	default void allConstantPoolsResolved(Map<String, FastAccessNumberMap<Object>> constantPools) {
 
+	}
+
+	/**
+	 * Called when all events are loaded (end of parsing)
+	 */
+	default void eventsLoaded() {
+
+	}
+
+	/**
+	 * @return collection of items built by the extension
+	 */
+	default IItemCollection getItemCollection() {
+		return null;
 	}
 }

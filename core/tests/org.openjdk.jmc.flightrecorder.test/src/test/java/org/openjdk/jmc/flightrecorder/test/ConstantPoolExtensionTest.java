@@ -48,6 +48,7 @@ import org.junit.Test;
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.IParserStats;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
@@ -114,43 +115,32 @@ public class ConstantPoolExtensionTest {
 	@Test
 	public void constantResolution() throws IOException, CouldNotLoadRecordingException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
-		MyParserExtension extension = new MyParserExtension();
-		extensions.add(extension);
+		extensions.add(new MyParserExtension());
 		File recordingFile = new File(
 				ConstantPoolExtensionTest.class.getClassLoader().getResource("recordings/metadata_new.jfr").getFile());
 		IItemCollection items = JfrLoaderToolkit.loadEvents(Arrays.asList(recordingFile), extensions);
 		Assert.assertTrue(items.hasItems());
+		IConstantPoolExtension ext = ((IParserStats) items).getConstantPoolExtensions()
+				.get(MyConstantPoolExtension.class.getSimpleName());
+		Assert.assertNotNull(ext);
+		MyConstantPoolExtension extension = (MyConstantPoolExtension) ext;
 		for (String eventType : READ_EVENT_TYPES) {
-			Assert.assertTrue(extension.currentConstantPoolExt.readEventTypes.contains(eventType));
+			Assert.assertTrue(extension.readEventTypes.contains(eventType));
 		}
 		for (String eventType : REF_EVENT_TYPES) {
-			Assert.assertTrue(extension.currentConstantPoolExt.referencedEventTypes.contains(eventType));
+			Assert.assertTrue(extension.referencedEventTypes.contains(eventType));
 		}
 		for (String eventType : RESOLVED_EVENT_TYPES) {
-			Assert.assertTrue(extension.currentConstantPoolExt.resolvedEventTypes.contains(eventType));
+			Assert.assertTrue(extension.resolvedEventTypes.contains(eventType));
 		}
 
 	}
 
 	private class MyParserExtension implements IParserExtension {
-		MyConstantPoolExtension currentConstantPoolExt;
-
-		@Override
-		public String getValueInterpretation(String eventTypeId, String fieldId) {
-			return null;
-		}
-
-		@Override
-		public IEventSinkFactory getEventSinkFactory(IEventSinkFactory subFactory) {
-			return subFactory;
-		}
-
 		@Override
 		public IConstantPoolExtension createConstantPoolExtension() {
-			currentConstantPoolExt = new MyConstantPoolExtension();
-			return currentConstantPoolExt;
+			return new MyConstantPoolExtension();
 		}
-
 	}
 
 	private static class MyConstantPoolExtension implements IConstantPoolExtension {
@@ -192,6 +182,7 @@ public class ConstantPoolExtensionTest {
 				Assert.assertEquals(POOL_SIZES[i], count);
 			}
 		}
+		
 	}
 
 }

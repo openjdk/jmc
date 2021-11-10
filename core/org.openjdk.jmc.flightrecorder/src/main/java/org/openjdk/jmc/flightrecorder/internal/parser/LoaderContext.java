@@ -207,4 +207,11 @@ public class LoaderContext {
 	public void addEntryPoolSize(String typeIdentifier, long size) {
 		parserStats.addEntryPoolSize(typeIdentifier, size);
 	}
+
+	public void addConstantPoolExtensions() {
+		for (IConstantPoolExtension ext : constPoolExtensions) {
+			ext.eventsLoaded();
+			parserStats.addConstantPoolExtension(ext);
+		}
+	}
 }
