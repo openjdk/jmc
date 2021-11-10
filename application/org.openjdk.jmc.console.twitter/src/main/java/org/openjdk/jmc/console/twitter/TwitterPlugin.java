@@ -45,6 +45,7 @@ import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.program.Program;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
@@ -53,6 +54,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
+import org.openjdk.jmc.rjmx.triggers.actions.internal.Messages;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.MementoToolkit;
 
@@ -244,7 +246,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 		if (response.statusCode() != 200) {
 			JOptionPane.showMessageDialog(null,
-					" Some error occured while updating Twitter status. Please verify your twitter app settings. ");
+					NLS.bind(Messages.TriggerActionTwitterSendUpdateStatus_ErrorMessage, response.statusCode()));
 		}
 	}
 
@@ -362,8 +364,8 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		if (getAuthorizedTweeter(username) != null) {
 			return true;
 		} else {
-			DialogToolkit.showError(null, "Unauthorized Twitter User",
-					"User " + username + " has not been authorized in Preferences");
+			DialogToolkit.showError(null, Messages.TriggerActionTwitterUnauthorizedUser_Title,
+					NLS.bind(Messages.TriggerActionTwitterUnauthorizedUser_ErrorMessage, username));
 			return false;
 		}
 	}
@@ -375,9 +377,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 			oAuthHeaderGenerator = new TwitterOAuthHeaderGenerator(consumerKey, consumerSecret, at.getAccessToken(),
 					at.getAccessTokenSecret());
 		} else {
-			throw new Exception(String.format(
-					"Attempted to send direct message from account not defined in the preferences. Please set up the account (%s) in preferences first.",
-					fromUser));
+			throw new Exception(NLS.bind(Messages.TriggerActionTwitterVerifyTweeter_ErrorMessage, fromUser));
 		}
 	}
 
@@ -393,7 +393,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		HttpResponse<String> response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 		if (response.statusCode() != 200) {
 			JOptionPane.showMessageDialog(null,
-					" Some error occured while sending direct message. Please verify your twitter app settings. ");
+					NLS.bind(Messages.TriggerActionTwitterSendDirectMessage_ErrorMessage, response.statusCode()));
 		}
 	}
 
