@@ -55,6 +55,7 @@ import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import org.openjdk.jmc.rjmx.triggers.actions.internal.Messages;
 
 class TwitterOAuthAunthenticator {
 
@@ -63,6 +64,7 @@ class TwitterOAuthAunthenticator {
 	private static final String OAUTH_ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token";
 	private static final String REQUEST_METHOD_POST = "POST";
 	private static final String OAUTH_SIGNATURE_METHOD = "HMAC-SHA1";
+	private static final String SIGNATURE_ALGORITHM = "HmacSHA1";
 	private static String proxyHost;
 	private static int proxyPort;
 	final static Logger LOGGER = Logger.getLogger("TwitterOAuthAunthenticator");
@@ -76,7 +78,7 @@ class TwitterOAuthAunthenticator {
 		try {
 			encodedUrl = URLEncoder.encode(url, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			LOGGER.log(Level.SEVERE, "Failed to encode the URL.", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterEncoding_Exception, e);
 		}
 
 		return httpMethod.toUpperCase() + "&" + encodedUrl + "&";
@@ -119,7 +121,7 @@ class TwitterOAuthAunthenticator {
 
 			return oauth_token;
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Unable to get request token", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterRequestToken_Exception, e);
 		}
 		return null;
 	}
@@ -130,7 +132,7 @@ class TwitterOAuthAunthenticator {
 		try {
 			java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Unable to authorize.", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterAuthorization_Exception, e);
 		}
 	}
 
@@ -175,7 +177,7 @@ class TwitterOAuthAunthenticator {
 
 			return accessToken;
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Unable to authenticate.", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterAuthentication_Exception, e);
 		}
 		return null;
 
@@ -200,7 +202,7 @@ class TwitterOAuthAunthenticator {
 			}
 		} catch (URISyntaxException e) {
 			// Should never happen...
-			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterURIParsing_Exception, e);
 		}
 	}
 
@@ -223,9 +225,9 @@ class TwitterOAuthAunthenticator {
 		SecretKey secretKey = null;
 
 		byte[] keyBytes = keyString.getBytes();
-		secretKey = new SecretKeySpec(keyBytes, "HmacSHA1");
+		secretKey = new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM);
 
-		Mac mac = Mac.getInstance("HmacSHA1");
+		Mac mac = Mac.getInstance(SIGNATURE_ALGORITHM);
 
 		mac.init(secretKey);
 

@@ -45,6 +45,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.openjdk.jmc.rjmx.triggers.actions.internal.Messages;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -147,7 +148,7 @@ class TwitterOAuthHeaderGenerator {
 			mac = Mac.getInstance(HMAC_SHA1);
 			mac.init(key);
 		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
-			LOGGER.log(Level.SEVERE, "Failed to encrypt.", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterEncryption_Exception, e);
 			return null;
 		}
 		byte[] signatureBytes = mac.doFinal(input.getBytes(StandardCharsets.UTF_8));
@@ -165,7 +166,7 @@ class TwitterOAuthHeaderGenerator {
 		try {
 			encoded = Encode.forUriComponent(value);
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Failed to encode the URL.", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterEncoding_Exception, e);
 		}
 		return encoded;
 	}

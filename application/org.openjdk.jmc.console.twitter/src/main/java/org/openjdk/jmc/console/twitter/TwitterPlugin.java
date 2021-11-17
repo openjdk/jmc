@@ -175,7 +175,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 			}
 		} catch (URISyntaxException e) {
 			// Should never happen...
-			LOGGER.log(Level.SEVERE, "Failed to parse URI", e);
+			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterURIParsing_Exception, e);
 		}
 	}
 
@@ -302,7 +302,8 @@ public class TwitterPlugin extends AbstractUIPlugin {
 					}
 					storeAndSavePrefs();
 				} else {
-					DialogToolkit.showError(null, "Invalid User", "The authorized user is invalid.");
+					DialogToolkit.showError(null, Messages.TriggerActionTwitterInvalidUser_Title,
+							Messages.TriggerActionTwitterInvalidUser_ErrorMessage);
 				}
 			}
 		}
@@ -313,7 +314,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 		try {
 			InstanceScope.INSTANCE.getNode(PLUGIN_ID).flush();
 		} catch (BackingStoreException e) {
-			getLogger().log(Level.WARNING, "Failed to store to preferences!", e);
+			getLogger().log(Level.WARNING, Messages.TriggerActionTwitterPreferenceStorage_Exception, e);
 		}
 	}
 
