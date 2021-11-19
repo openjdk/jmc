@@ -21,7 +21,8 @@ Export-Package: org.apache.commons.codec.binary,
  org.jolokia.client.request,
  org.jolokia.converter,
  org.jolokia.util,
- org.openjdk.jmc.jolokia
+ org.openjdk.jmc.jolokia,
+ org.openjdk.jmc.jolokia.preferences
 Bundle-ClassPath: target/dependency/jolokia-client-java-1.7.0.jar,
  target/dependency/jolokia-core-1.7.0.jar,
  target/dependency/jolokia-jmx-adapter-1.7.0.jar,

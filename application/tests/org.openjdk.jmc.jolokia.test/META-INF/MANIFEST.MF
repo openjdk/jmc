@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJMX Test
+Bundle-SymbolicName: org.openjdk.jmc.jolokia.test;singleton:=true
+Bundle-Version: 8.2.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit,
+ org.openjdk.jmc.jolokia,
+ org.openjdk.jmc.common.test,
+ org.eclipse.osgi;bundle-version="3.16.200",
+ org.eclipse.ui.workbench,
+ org.openjdk.jmc.rjmx;bundle-version="8.2.0",
+ org.eclipse.ui
+Automatic-Module-Name: org.openjdk.jmc.jolokia.test
+Import-Package: org.openjdk.jmc.rjmx.descriptorprovider
+Bundle-Classpath: target/dependency/awaitility-4.0.0.jar
