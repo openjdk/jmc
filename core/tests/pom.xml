@@ -65,6 +65,7 @@
 		<mockito.core.version>3.7.7</mockito.core.version>
 		<mockito.inline.version>3.7.7</mockito.inline.version>
 		<build.helper.maven.version>3.2.0</build.helper.maven.version>
+		<surefireArgLine></surefireArgLine>
 	</properties>
 	<profiles>
 		<profile>
@@ -111,6 +112,36 @@
 				<test.excludes>${test.excludes.default}</test.excludes>
 			</properties>
 		</profile>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>pre-unit-test</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<configuration>
+									<propertyName>surefireArgLine</propertyName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>post-unit-test</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<dependencyManagement>
 		<dependencies>
@@ -125,34 +156,11 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
-				<executions>
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<propertyName>surefireArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 				<configuration>
-					<argLine>-Duser.language=en -Duser.region=nl -Duser.timezone=GMT -Djava.locale.providers=COMPAT ${surefireArgLine}</argLine>
+					<argLine>-Duser.language=en -Duser.region=nl -Duser.timezone=GMT -Djava.locale.providers=COMPAT @{surefireArgLine}</argLine>
 					<includes>${test.includes}</includes>
 					<excludes>${test.excludes}</excludes>
 					<failIfNoTests>${fail.if.no.tests}</failIfNoTests>
