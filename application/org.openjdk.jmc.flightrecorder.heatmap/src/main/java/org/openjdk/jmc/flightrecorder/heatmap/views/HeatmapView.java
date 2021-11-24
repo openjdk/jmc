@@ -84,7 +84,7 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 public class HeatmapView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
-		String jsD3V5 = "jslibs/d3.v5.min.js";
+		String jsD3V5 = "jslibs/d3.v6.min.js";
 		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V5));
 	}
 
