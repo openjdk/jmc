@@ -9,16 +9,23 @@
 
   <body>
     <svg id="heatmap" width="100%%" style="text-align: center"></svg>
-		<div id="debug" style="text-align: center"></div>
+    <div id="debug" style="text-align: center"></div>
     <script type="text/javascript">
-      function resetZoom() {}
+      const chart = {
+        config: {}
+      };
 
-      function resizeSVG() {}
+      function resizeSVG() {
+        try {
+          chart.config = getChartConfig(chart.data);
+          renderHeatmap();
+        } catch (e) {
+          debug.innerHTML = e.name + " " + e.message + " " + e.stack;
+        }
+      }
 
       d3.select(window).on("resize", resizeSVG);
-      d3.select(window).on("click", resetZoom);
       const debug = document.getElementById("debug");
-			const width = window.innerWidth;
 
       function range(from, to) {
         const result = [];
@@ -46,10 +53,11 @@
       }
 
       function getChartConfig(binnedData) {
+        const width = window.innerWidth;
         const numCols = 60;
         const numCells = binnedData.length;
         const cellSize = Math.floor(width / (numCols + 4));
-        const numRows = numCells / numCols;
+        const numRows = Math.ceil(numCells / numCols);
         const maxEvents = d3.max(binnedData, (d) => d.length);
         const marginLeft = 3 * cellSize;
         const marginTop = cellSize;
@@ -71,12 +79,16 @@
         };
       }
 
-			function getColorScale(chartConfig) {
-				const { maxEvents } = chartConfig;
-  			return d3.scaleSequentialSqrt(d3.interpolateOrRd).domain([0, maxEvents]);
-			}
+      function getColorScale(chartConfig) {
+        const { maxEvents } = chartConfig;
+        return d3
+          .scaleSequentialSqrt(d3.interpolateOrRd)
+          .domain([0, maxEvents]);
+      }
 
-      function renderHeatmap(chartConfig, binnedData) {
+      function renderHeatmap() {
+        const chartConfig = chart.config;
+        const binnedData = chart.data;
         const {
           numCols,
           numRows,
@@ -86,12 +98,14 @@
           marginLeft,
           marginTop,
           marginBottom,
+          width,
           height,
         } = chartConfig;
+
         if (!binnedData || binnedData.length < 2) {
           return "No data in current selection.";
         }
-				const colorScale = getColorScale(chartConfig);
+        const colorScale = getColorScale(chartConfig);
         const xDomain = range(0, numCols).map((val) => (val * 100) / 1000);
         const yDomain = [
           d3.min(binnedData, (d) => d.x0),
@@ -168,9 +182,14 @@
                 `${d3.timeFormat("%%H:%%M:%%S.%%L")(d.x0)} ${d.length} events`
             );
 
-        const svg = d3.select("#heatmap")
-					.style("width", width + "px")
-					.style("height", height + "px");
+        d3
+          .select("#heatmap")
+          .selectAll("*").remove()
+
+        const svg = d3
+          .select("#heatmap")
+          .style("width", width + "px")
+          .style("height", height + "px");
         svg
           .append("g")
           .call(makeCells)
@@ -205,23 +224,11 @@
           const binnedData = getBinnedData(eventTimes);
 
           const chartConfig = getChartConfig(binnedData);
-          renderHeatmap(chartConfig, binnedData);
-          if (rawData && rawData.events) {
-            const events = rawData.events;
-            debug.innerHTML =
-              events.length +
-              " events to display<br/><pre>" +
-              JSON.stringify(chartConfig);
-          }
+          chart.config = getChartConfig(binnedData);
+          chart.data = binnedData;
+          renderHeatmap();
         } catch (e) {
-          debug.innerHTML =
-            e.name +
-            " " +
-            e.message +
-            " " +
-            e.stack +
-            " d3 version: " +
-            d3.version;
+          debug.innerHTML = e.name + " " + e.message + " " + e.stack;
         }
       }
     </script>
