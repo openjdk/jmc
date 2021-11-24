@@ -1,0 +1,30 @@
+<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script>
+      %1$s
+    </script>
+  </head>
+
+  <body>
+    <div id="debug" style="text-align: center"></div>
+    <svg id="heatmap" style="text-align: center"></svg>
+    <script type="text/javascript">
+      function resetZoom() {}
+
+      function resizeSVG() {}
+
+      d3.select(window).on("resize", resizeSVG);
+      d3.select(window).on("click", resetZoom);
+      var debug = document.getElementById("debug");
+      function updateHeatmap(jsonStr) {
+        var eventsJson = JSON.parse(jsonStr);
+        if (eventsJson && eventsJson.events) {
+          var events = eventsJson.events;
+          debug.innerHTML = events.length + " events to display";
+        }
+      }
+    </script>
+  </body>
+</html>
