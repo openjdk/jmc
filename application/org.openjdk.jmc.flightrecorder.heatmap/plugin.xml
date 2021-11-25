@@ -6,7 +6,7 @@
           allowMultiple="false"
           category="org.openjdk.jmc.ui.main"
           class="org.openjdk.jmc.flightrecorder.heatmap.views.HeatmapView"
-          icon="icons/graph.png"
+          icon="icons/heatmap.png"
           id="org.openjdk.jmc.flightrecorder.heatmap"
           name="Heatmap View"
           restorable="true">
