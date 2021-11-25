@@ -71,6 +71,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.serializers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.writer</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -102,7 +112,20 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.serializers.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.writer.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp.test</artifactId>
+			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
