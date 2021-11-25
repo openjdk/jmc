@@ -38,8 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -47,11 +45,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -62,8 +55,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -72,11 +63,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
@@ -94,17 +82,12 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 
 	private static class ModelRebuildRunnable implements Runnable {
 		private final HeatmapView view;
-		private final FrameSeparator separator;
 		private IItemCollection items;
 		private volatile boolean isInvalid;
-		private final int maxNodesRendered;
 
-		private ModelRebuildRunnable(HeatmapView view, FrameSeparator separator, IItemCollection items,
-				int maxNodesRendered) {
+		private ModelRebuildRunnable(HeatmapView view, IItemCollection items) {
 			this.view = view;
 			this.items = items;
-			this.separator = separator;
-			this.maxNodesRendered = maxNodesRendered;
 		}
 
 		private void setInvalid() {
@@ -117,7 +100,6 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			// Add support for selected attribute later...
 			String eventsJson = IItemCollectionJsonSerializer.toJsonString(items);
 			if (isInvalid) {
 				return;
@@ -131,32 +113,25 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
 			new ThreadFactory() {
-				private ThreadGroup group = new ThreadGroup("GraphModelCalculationGroup");
+				private ThreadGroup group = new ThreadGroup("HeatmapCalculationGroup");
 				private AtomicInteger counter = new AtomicInteger();
 
 				@Override
 				public Thread newThread(Runnable r) {
-					Thread t = new Thread(group, r, "GraphModelCalculation-" + counter.getAndIncrement());
+					Thread t = new Thread(group, r, "HeatmapCalculation-" + counter.getAndIncrement());
 					t.setDaemon(true);
 					return t;
 				}
 			});
-	private FrameSeparator frameSeparator;
 	private Browser browser;
 	private SashForm container;
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
-	private int maxNodesRendered = 100;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
-		frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
-
-		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
-		toolBar.add(new NodeThresholdSelection());
-
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -164,66 +139,6 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 	public void dispose() {
 		getSite().getPage().removeSelectionListener(this);
 		super.dispose();
-	}
-
-	private class NodeThresholdSelection extends Action implements IMenuCreator {
-		private Menu menu;
-		private final List<Pair<String, Integer>> items = Arrays.asList(new Pair<>("100", 100), new Pair<>("500", 500),
-				new Pair<>("1000", 1000));
-
-		NodeThresholdSelection() {
-			super("Max Nodes", IAction.AS_DROP_DOWN_MENU);
-			setMenuCreator(this);
-		}
-
-		@Override
-		public void dispose() {
-			// do nothing
-		}
-
-		@Override
-		public Menu getMenu(Control parent) {
-			if (menu == null) {
-				menu = new Menu(parent);
-				populate(menu);
-			}
-			return menu;
-		}
-
-		@Override
-		public Menu getMenu(Menu parent) {
-			if (menu == null) {
-				menu = new Menu(parent);
-				populate(menu);
-			}
-			return menu;
-		}
-
-		private void populate(Menu menu) {
-			for (Pair<String, Integer> item : items) {
-				ActionContributionItem actionItem = new ActionContributionItem(
-						new SetNodeThreshold(item, item.right == maxNodesRendered));
-				actionItem.fill(menu, -1);
-			}
-		}
-	}
-
-	private class SetNodeThreshold extends Action {
-		private int value;
-
-		SetNodeThreshold(Pair<String, Integer> item, boolean isSelected) {
-			super(item.left, IAction.AS_RADIO_BUTTON);
-			this.value = item.right;
-			setChecked(isSelected);
-		}
-
-		@Override
-		public void run() {
-			if (maxNodesRendered != value) {
-				maxNodesRendered = value;
-				triggerRebuildTask(currentItems);
-			}
-		}
 	}
 
 	@Override
@@ -269,7 +184,7 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, frameSeparator, items, maxNodesRendered);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
