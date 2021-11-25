@@ -59,7 +59,7 @@
 				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>d3-v5-js</id>
+						<id>d3-v6-js</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
