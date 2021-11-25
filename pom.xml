@@ -83,9 +83,9 @@
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
+		<maven.enforcer.version>3.0.0</maven.enforcer.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
-		<spotless.version>2.5.0</spotless.version>
+		<spotless.version>2.17.2</spotless.version>
 		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<spotbugs.version>4.2.2</spotbugs.version>
 		<buildId>${user.name}</buildId>
@@ -251,6 +251,11 @@
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
 						</environment>
 					</environments>
 				</configuration>
@@ -523,13 +528,34 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>copy-resources-to-mac</id>
+							<id>copy-resources-to-mac-x86_64</id>
 							<phase>prepare-package</phase>
 							<goals>
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/x86_64/legal
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-mac-aarch64</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/aarch64/legal
 								</outputDirectory>
 								<resources>
 									<resource>

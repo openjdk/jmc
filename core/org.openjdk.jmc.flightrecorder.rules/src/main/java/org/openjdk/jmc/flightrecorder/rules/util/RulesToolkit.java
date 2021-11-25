@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,11 +47,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RunnableFuture;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,6 +83,7 @@ import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
@@ -88,10 +92,12 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.flightrecorder.rules.DependsOn;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultBuilder;
+import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
@@ -810,7 +816,7 @@ public class RulesToolkit {
 			}
 		}
 		List<IntEntry<T>> array = IteratorToolkit.toList(map.iterator(), map.size());
-		Collections.sort(array);
+		array.sort(null);
 		return array;
 	}
 
@@ -928,7 +934,7 @@ public class RulesToolkit {
 		for (String name : names) {
 			quotedNames.add("'" + name + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		Collections.sort(quotedNames);
+		quotedNames.sort(null);
 		return StringToolkit.join(quotedNames, ", "); //$NON-NLS-1$
 	}
 
@@ -1208,12 +1214,59 @@ public class RulesToolkit {
 		if (nThreads < 1) {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
+		ResultProvider resultProvider = new ResultProvider();
 		Map<IRule, Future<IResult>> resultFutures = new HashMap<>();
 		Queue<RunnableFuture<IResult>> futureQueue = new ConcurrentLinkedQueue<>();
+		// Map using the rule name as a key, and a Pair containing the rule (left) and it's dependency (right)
+		Map<String, Pair<IRule, IRule>> rulesWithDependencies = new HashMap<>();
+		Map<IRule, IResult> computedResults = new HashMap<>();
 		for (IRule rule : rules) {
-			RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, null);
-			resultFutures.put(rule, resultFuture);
-			futureQueue.add(resultFuture);
+			if (matchesEventAvailabilityMap(items, rule.getRequiredEvents())) {
+				if (hasDependency(rule)) {
+					IRule depRule = rules.stream().filter(r -> r.getId().equals(getRuleDependencyName(rule)))
+							.findFirst().orElse(null);
+					rulesWithDependencies.put(rule.getId(), new Pair<>(rule, depRule));
+				} else {
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+					resultFutures.put(rule, resultFuture);
+					futureQueue.add(resultFuture);
+				}
+			} else {
+				resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+						Messages.getString(Messages.RulesToolkit_RULE_IGNORED))));
+			}
+		}
+		for (String ruleName : rulesWithDependencies.keySet()) {
+			IRule rule = rulesWithDependencies.get(ruleName).left;
+			IRule depRule = rulesWithDependencies.get(ruleName).right;
+			Future<IResult> depResultFuture = resultFutures.get(depRule);
+			if (depResultFuture == null) {
+				resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+						Messages.getString(Messages.RulesToolkit_EVALUATION_ERROR_DESCRIPTION))));
+			} else {
+				IResult depResult = null;
+				if (!depResultFuture.isDone()) {
+					((Runnable) depResultFuture).run();
+					try {
+						depResult = depResultFuture.get();
+						resultProvider.addResults(depResult);
+						computedResults.put(depRule, depResult);
+					} catch (InterruptedException | ExecutionException e) {
+						Logger.getLogger(RulesToolkit.class.getName()).log(Level.WARNING, MessageFormat
+								.format(Messages.getString(Messages.RulesToolkit_RULE_RESULT_RETRIEVAL_ERROR), e));
+					}
+				} else {
+					depResult = computedResults.get(depRule);
+				}
+				if (depResult != null && shouldEvaluate(rule, depResult)) {
+					RunnableFuture<IResult> resultFuture = rule.createEvaluation(items, preferences, resultProvider);
+					resultFutures.put(rule, resultFuture);
+					futureQueue.add(resultFuture);
+				} else {
+					resultFutures.put(rule, CompletableFuture.completedFuture(getNotApplicableResult(rule, preferences,
+							Messages.getString(Messages.RulesToolkit_RULE_IGNORED))));
+				}
+			}
 		}
 		for (int i = 0; i < nThreads; i++) {
 			RuleEvaluator re = new RuleEvaluator(futureQueue);
@@ -1221,6 +1274,38 @@ public class RulesToolkit {
 			t.start();
 		}
 		return resultFutures;
+	}
+
+	private static boolean hasDependency(IRule rule) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		return dependency != null;
+	}
+
+	private static String getRuleDependencyName(IRule rule) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		Class<? extends IRule> dependencyType = dependency.value();
+		return dependencyType.getSimpleName();
+	}
+
+	/**
+	 * Checks to see if a rule should be evaluated based on the severity value of its dependency's
+	 * result severity value.
+	 * 
+	 * @param rule
+	 *            rule to check severity value against its dependency's severity
+	 * @param depResult
+	 *            result from the rule's dependency
+	 * @return true if the dependency rule result satisfies the severity requirement for the passed
+	 *         rule
+	 */
+	private static boolean shouldEvaluate(IRule rule, IResult depResult) {
+		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
+		if (dependency != null) {
+			if (depResult.getSeverity().compareTo(dependency.severity()) < 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static class RuleEvaluator implements Runnable {
@@ -1342,7 +1427,7 @@ public class RulesToolkit {
 	 */
 	public static Map<String, Integer> sortMap(final Map<String, Integer> map, final boolean sortAscending) {
 		List<Map.Entry<String, Integer>> entries = new ArrayList<>(map.entrySet());
-		Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
+		entries.sort(new Comparator<Map.Entry<String, Integer>>() {
 			@Override
 			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
 				if (sortAscending) {

@@ -58,7 +58,6 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.StructContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
@@ -363,6 +362,7 @@ public class ParserStats {
 	}
 
 	private static class ConstantPoolInfo {
+		@SuppressWarnings("unused")
 		final long id;
 		final String name;
 		final FastAccessNumberMap<Object> constantPool;

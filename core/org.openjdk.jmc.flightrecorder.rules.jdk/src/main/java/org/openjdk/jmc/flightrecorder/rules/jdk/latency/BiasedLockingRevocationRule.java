@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,7 +38,6 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -168,7 +167,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 				revocationMap);
 		totalScore += calculateRevocationCountScore(revocationClasses);
 
-		Collections.sort(revocationClasses);
+		revocationClasses.sort(null);
 		List<ClassEntry> filteredRevocationClasses = new ArrayList<>();
 		if (revocationClasses.size() > 0) {
 			int maxClasses = (int) valueProvider.getPreferenceValue(MAX_NUMBER_OF_CLASSES_TO_REPORT).longValue();

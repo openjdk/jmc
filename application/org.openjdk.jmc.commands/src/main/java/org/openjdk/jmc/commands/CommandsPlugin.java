@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,6 @@ package org.openjdk.jmc.commands;
 import java.io.PrintStream;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -172,7 +171,7 @@ public final class CommandsPlugin extends Plugin {
 			categories.add(c.getCategory());
 		}
 		List<String> list = new ArrayList<>(categories);
-		Collections.sort(list);
+		list.sort(null);
 		return list;
 	}
 
@@ -188,7 +187,7 @@ public final class CommandsPlugin extends Plugin {
 				list.add(c);
 			}
 		}
-		Collections.sort(list);
+		list.sort(null);
 		return list;
 	}
 

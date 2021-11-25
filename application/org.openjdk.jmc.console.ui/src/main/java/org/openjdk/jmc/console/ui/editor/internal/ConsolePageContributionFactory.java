@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.console.ui.editor.internal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -93,7 +92,7 @@ public final class ConsolePageContributionFactory {
 				}
 			}
 		}
-		Collections.sort(pageElements, PAGE_COMPARATOR);
+		pageElements.sort(PAGE_COMPARATOR);
 		return pageElements;
 	}
 

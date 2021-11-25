@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -95,6 +95,7 @@ public class TriggerActionMail extends TriggerAction {
 	 */
 	public void sendEMail(String subject, String content) throws MessagingException {
 		Properties props = new Properties();
+		props.put("mail.smtp.starttls.enable", getSmtpSTARTTLS());
 		Session session = Session.getInstance(props, null);
 		UserPassword credentials = getSmtpCredentials();
 		URLName urlName = createURLName(credentials);
@@ -181,6 +182,12 @@ public class TriggerActionMail extends TriggerAction {
 	private Boolean getSmtpSSL() {
 		return RJMXPlugin.getDefault().getRJMXPreferences().getBoolean(PreferencesKeys.PROPERTY_MAIL_SERVER_SECURE,
 				PreferencesKeys.DEFAULT_MAIL_SERVER_SECURE);
+	}
+
+	private Boolean getSmtpSTARTTLS() {
+		return RJMXPlugin.getDefault().getRJMXPreferences().getBoolean(
+				PreferencesKeys.PROPERTY_MAIL_SERVER_STARTTLS_ENCRYPTION,
+				PreferencesKeys.DEFAULT_MAIL_SERVER_STARTTLS_ENCRYPTION);
 	}
 
 	/**

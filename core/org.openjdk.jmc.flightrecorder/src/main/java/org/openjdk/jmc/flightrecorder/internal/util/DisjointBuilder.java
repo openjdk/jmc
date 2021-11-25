@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -163,13 +163,11 @@ public class DisjointBuilder<T> {
 		if (allLanes.size() == 0) {
 			return Collections.emptyList(); // No input time ranges
 		}
-		Collections.sort(allLanes, new Comparator<DisjointArray<?>>() {
-
+		allLanes.sort(new Comparator<DisjointArray<?>>() {
 			@Override
 			public int compare(DisjointArray<?> o1, DisjointArray<?> o2) {
 				return o1.end.compareTo(o2.end);
 			}
-
 		});
 
 		DisjointBuilder<DisjointArray<U>> lanesCombiner = new DisjointBuilder<>(DA_START, DA_END);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -606,7 +605,7 @@ public class Snapshot {
 			JavaObjectTable objectTable = objTableBuilder.buildJavaObjectTable(classes);
 			resolveSuperclasses(classes);
 			recheckPointerSize(objectTable, readBuf);
-			Collections.sort(roots); // More interesting roots will be scanned first
+			roots.sort(null); // More interesting roots will be scanned first
 
 			Snapshot snapshot = new Snapshot(hprofPointerSize, pointerSize, objHeaderSize, objAlignment,
 					usingNarrowPointers, roughTotalObjectSize, roots, objectTable, objIdToPosInObjectTable, classes,

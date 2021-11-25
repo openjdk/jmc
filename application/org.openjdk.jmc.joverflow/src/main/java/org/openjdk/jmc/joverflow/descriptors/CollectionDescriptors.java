@@ -33,7 +33,6 @@
 package org.openjdk.jmc.joverflow.descriptors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -135,7 +134,7 @@ public class CollectionDescriptors implements Constants {
 			result.add(factory.getClassDescriptor());
 		}
 
-		Collections.sort(result, new Comparator<CollectionClassDescriptor>() {
+		result.sort(new Comparator<CollectionClassDescriptor>() {
 			@Override
 			public int compare(CollectionClassDescriptor d1, CollectionClassDescriptor d2) {
 				long o1 = d1.getTotalOverhead();
