@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -50,7 +50,6 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<jmc.version>${revision}${changelist}</jmc.version>
 	</properties>
 	
@@ -157,32 +156,56 @@
 				<ui.test.osappargs>--launcher.appendVmargs</ui.test.osappargs>
 			</properties>
 		</profile>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>pre-unit-test</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<configuration>
+									<propertyName>surefireArgLine</propertyName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>post-unit-test</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-surefire-plugin</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<product>org.openjdk.jmc.rcp.application.product</product>
+							<application>org.openjdk.jmc.rcp.application.app</application>
+							<argLine>${ui.test.vmargs} ${ui.test.osvmargs} ${surefireArgLine}</argLine>
+							<appArgLine>-nl en -consoleLog ${ui.test.osappargs}</appArgLine>
+							<useUIHarness>${ui.test.run}</useUIHarness>
+							<useUIThread>false</useUIThread>
+							<failIfNoTests>false</failIfNoTests>
+							<includes>${test.includes}</includes>
+							<!--  To be used along with the maven toolchains plugin
+							<useJDK>SYSTEM</useJDK> -->
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<propertyName>surefireArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
@@ -190,11 +213,10 @@
 				<configuration>
 					<product>org.openjdk.jmc.rcp.application.product</product>
 					<application>org.openjdk.jmc.rcp.application.app</application>
-					<argLine>${ui.test.vmargs} ${ui.test.osvmargs} ${surefireArgLine}</argLine>
+					<argLine>${ui.test.vmargs} ${ui.test.osvmargs}</argLine>
 					<appArgLine>-nl en -consoleLog ${ui.test.osappargs}</appArgLine>
 					<useUIHarness>${ui.test.run}</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<testFailureIgnore>false</testFailureIgnore>
 					<failIfNoTests>false</failIfNoTests>
 					<includes>${test.includes}</includes>
 					<!--  To be used along with the maven toolchains plugin

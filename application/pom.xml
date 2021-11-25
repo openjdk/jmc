@@ -45,6 +45,7 @@
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
+		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 	</properties>
 
 	<modules>
@@ -117,9 +118,14 @@
 		<module>org.openjdk.jmc.updatesite.rcp</module>
 		<module>l10n</module>
 		<module>tests</module>
-		<module>coverage</module>
 	</modules>
 	<profiles>
+		<profile>
+			<id>coverage</id>
+			<modules>
+				<module>coverage</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>no-jfr</id>
 			<activation>
@@ -181,11 +187,6 @@
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.test</artifactId>
 			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.7</version>
 		</dependency>
 	</dependencies>
 	<build>
