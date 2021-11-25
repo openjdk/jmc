@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -57,41 +57,6 @@ public class Messages extends NLS {
 	public static String FileSelectorComposite_DIR_DOES_NOT_EXIST;
 	public static String FileSelectorComposite_FILE_SELECTOR_BROWSE_BUTTON_TEXT;
 	public static String FileSelectorComposite_PLEASE_SPECIFY_FILE;
-	public static String FilterEditor_ACTION_CLEAR_ALL;
-	public static String FilterEditor_ACTION_COMBINE_AND;
-	public static String FilterEditor_ACTION_COMBINE_OR;
-	public static String FilterEditor_ACTION_NEGATE;
-	public static String FilterEditor_ACTION_REMOVE;
-	public static String FilterEditor_ACTION_SHOW_COLUMN_HEADERS;
-	public static String FilterEditor_COLUMN_ATTRIBUTE;
-	public static String FilterEditor_COLUMN_OPERATION;
-	public static String FilterEditor_COLUMN_VALUE;
-	public static String FilterEditor_INVALID_REGEX;
-	public static String FilterEditor_KIND_CONTAINS;
-	public static String FilterEditor_KIND_DOESNT_EXIST;
-	public static String FilterEditor_KIND_EXISTS;
-	public static String FilterEditor_KIND_HAS_CENTER_IN;
-	public static String FilterEditor_KIND_INTERSECTS;
-	public static String FilterEditor_KIND_IS;
-	public static String FilterEditor_KIND_ISNT_NULL;
-	public static String FilterEditor_KIND_IS_CONTAINED_IN;
-	public static String FilterEditor_KIND_IS_NULL;
-	public static String FilterEditor_KIND_MATCHES;
-	public static String FilterEditor_KIND_NOT_CONTAINS;
-	public static String FilterEditor_KIND_NOT_HAS_CENTER_IN;
-	public static String FilterEditor_KIND_NOT_INTERSECTS;
-	public static String FilterEditor_KIND_NOT_IS_CONTAINED_IN;
-	public static String FilterEditor_KIND_NOT_MATCHES;
-	public static String FilterEditor_KIND_UNKNOWN;
-	public static String FilterEditor_LABEL_EMPTY;
-	public static String FilterEditor_LABEL_NAME_AND;
-	public static String FilterEditor_LABEL_NAME_NOT_AND;
-	public static String FilterEditor_LABEL_NAME_NOT_OR;
-	public static String FilterEditor_LABEL_NAME_OR;
-	public static String FilterEditor_LABEL_NAME_TYPE;
-	public static String FilterEditor_LABEL_NAME_UNKNOWN_FILTER;
-	public static String FilterEditor_LABEL_VALUE_UNKNOWN;
-	public static String FilterEditor_TOOLTIP_EMPTY;
 	public static String IntFieldEditor_ERROR_MESSAGE_PART_INTEGER;
 	public static String IntFieldEditor_ERROR_MESSAGE_PART_NATURAL_NUMBER;
 	public static String IntFieldEditor_ERROR_MESSAGE_PART_NEGATIVE_INTEGER;

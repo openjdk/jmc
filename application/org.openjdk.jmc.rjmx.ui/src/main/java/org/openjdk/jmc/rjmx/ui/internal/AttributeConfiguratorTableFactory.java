@@ -61,7 +61,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
 import org.openjdk.jmc.rjmx.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
-import org.openjdk.jmc.rjmx.ui.celleditors.TypedEditingSupport;
+import org.openjdk.jmc.ui.celleditors.TypedEditingSupport;
 import org.openjdk.jmc.rjmx.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;

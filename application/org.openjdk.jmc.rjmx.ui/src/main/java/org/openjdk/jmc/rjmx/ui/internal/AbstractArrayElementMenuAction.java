@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.openjdk.jmc.rjmx.services.IAttribute;
 import org.openjdk.jmc.rjmx.services.IIndexedAttributeChild;
 import org.openjdk.jmc.rjmx.services.IReadOnlyAttribute;
-import org.openjdk.jmc.rjmx.ui.celleditors.TypedEditingSupport;
+import org.openjdk.jmc.ui.celleditors.TypedEditingSupport;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnManager.IColumnState;
 import org.openjdk.jmc.ui.column.IColumn;
