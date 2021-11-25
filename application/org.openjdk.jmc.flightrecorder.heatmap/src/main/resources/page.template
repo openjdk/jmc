@@ -50,7 +50,7 @@
       function getEventTimes(rawData) {
         return rawData.events
           .filter((event) => event.attributes)
-          .map((event) => event.attributes["(endTime)"])
+          .map((event) => event.attributes.startTime || event.attributes.endTime || event.attributes["(endTime)"])
           .map((time) => new Date(time / 10e5));
       }
 
