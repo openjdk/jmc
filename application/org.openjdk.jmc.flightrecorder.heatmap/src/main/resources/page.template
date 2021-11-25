@@ -9,8 +9,15 @@
 
   <body>
     <svg id="heatmap" width="100%%" style="text-align: center"></svg>
-    <div id="debug" style="text-align: center"></div>
+    <pre id="debug" style="background: #ddd; font-size: 16px; padding: 0; padding: 10px;"></pre>
     <script type="text/javascript">
+      // resize
+      // auto-size height depending on recording length
+      // hide axes when cell is too small (maybe decrease font size?)
+      // add title
+      // add legend
+      // maybe gray when 0?
+
       const chart = {
         config: {}
       };
@@ -20,12 +27,17 @@
           chart.config = getChartConfig(chart.data);
           renderHeatmap();
         } catch (e) {
-          debug.innerHTML = e.name + " " + e.message + " " + e.stack;
+          log(e.name + " " + e.message);
+          log(e.stack);
         }
       }
 
       d3.select(window).on("resize", resizeSVG);
       const debug = document.getElementById("debug");
+
+      function log(msg) {
+        debug.innerHTML += msg + "\n";
+      }
 
       function range(from, to) {
         const result = [];
@@ -101,7 +113,7 @@
           width,
           height,
         } = chartConfig;
-
+        log("Start render " + binnedData.length);
         if (!binnedData || binnedData.length < 2) {
           return "No data in current selection.";
         }
@@ -215,11 +227,13 @@
           )
           .attr("fill", "#777")
           .attr("text-anchor", "middle");
+        log("End render");
       }
 
       function updateHeatmap(jsonStr) {
         try {
           const rawData = JSON.parse(jsonStr);
+          log(JSON.stringify(rawData.events[0], null, 2));
           const eventTimes = getEventTimes(rawData);
           const binnedData = getBinnedData(eventTimes);
 
@@ -228,7 +242,8 @@
           chart.data = binnedData;
           renderHeatmap();
         } catch (e) {
-          debug.innerHTML = e.name + " " + e.message + " " + e.stack;
+          log(e.name + " " + e.message);
+          log(e.stack);
         }
       }
     </script>
