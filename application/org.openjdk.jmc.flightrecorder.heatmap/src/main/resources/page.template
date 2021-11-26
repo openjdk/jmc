@@ -9,14 +9,13 @@
 
   <body>
     <svg id="heatmap" width="100%%" style="text-align: center"></svg>
-    <pre id="debug" style="background: #ddd; font-size: 16px; padding: 0; padding: 10px;"></pre>
+    <pre id="debug" style="display: none; background: #ddd; font-size: 16px; padding: 0; padding: 10px;"></pre>
     <script type="text/javascript">
-      // resize
-      // auto-size height depending on recording length
-      // hide axes when cell is too small (maybe decrease font size?)
-      // add title
-      // add legend
-      // maybe gray when 0?
+      // TODO other potential improvements:
+      // add title?
+      // add legend?
+      // maybe use gray color when value is 0?
+      // fix margins and ensure axes and ticks are always visible
 
       const chart = {
         config: {}
@@ -65,19 +64,24 @@
       }
 
       function getChartConfig(binnedData) {
-        const width = window.innerWidth;
-        const numCols = 60;
+        // numCells and maxEvents depend on the data
         const numCells = binnedData.length;
-        const cellSize = Math.floor(width / (numCols + 4));
-        const numRows = Math.ceil(numCells / numCols);
         const maxEvents = d3.max(binnedData, (d) => d.length);
-        const marginLeft = 3 * cellSize;
-        const marginTop = cellSize;
-        const marginBottom = 4 * cellSize;
-        const height = Math.max(
-          numRows * cellSize + marginTop + marginBottom,
-          450
-        );
+
+        // margins are fixed
+        const marginLeft = 50;
+        const marginTop = 20;
+        const marginBottom = 50;
+
+        // width and height are fixed from the window
+        const width = window.innerWidth - marginLeft;
+        const height = window.innerHeight - (marginTop + marginBottom);
+
+        // cellSize is derived from width, height and numCells
+        const cellSize = Math.floor(Math.sqrt(width * height / numCells));
+        const numCols = Math.floor(width / cellSize) - 3;
+        const numRows = Math.ceil(numCells / numCols);
+
         return {
           numCols,
           numRows,
@@ -87,6 +91,7 @@
           marginLeft,
           marginTop,
           marginBottom,
+          width,
           height,
         };
       }
@@ -133,12 +138,21 @@
           .domain(yDomain)
           .range([marginTop, marginTop + numRows * cellSize]);
 
+        const xTickFilter = (x, idx) => {
+          if (cellSize > 15) {
+            return true;
+          } else if (cellSize > 5) {
+            return idx %% 5 === 0;
+          } else {
+            return idx %% 10 === 0;
+          }
+        }
         const xAxis = (g) =>
           g
             .call(
               d3
                 .axisBottom(xScale)
-                .tickSizeOuter(0)
+                .tickValues(xDomain.filter(xTickFilter))
                 .tickFormat((d) => `${d3.format(".1f")(d)} s`)
             )
             .selectAll("text")
@@ -200,8 +214,8 @@
 
         const svg = d3
           .select("#heatmap")
-          .style("width", width + "px")
-          .style("height", height + "px");
+          .style("width", window.innerWidth + "px")
+          .style("height", window.innerHeight + "px");
         svg
           .append("g")
           .call(makeCells)
@@ -217,16 +231,6 @@
           .call(yAxis)
           .attr("transform", `translate(${marginLeft},0)`);
 
-        svg
-          .append("g")
-          .append("text")
-          // .text(summary())
-          .attr(
-            "transform",
-            `translate(${width / 2},${height - marginBottom + 3 * cellSize})`
-          )
-          .attr("fill", "#777")
-          .attr("text-anchor", "middle");
         log("End render");
       }
 
