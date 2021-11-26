@@ -9,34 +9,24 @@
 
   <body>
     <svg id="heatmap" width="100%%" style="text-align: center"></svg>
-    <pre id="debug" style="display: none; background: #ddd; font-size: 16px; padding: 0; padding: 10px;"></pre>
     <script type="text/javascript">
-      // TODO other potential improvements:
-      // add title?
-      // add legend?
-      // maybe use gray color when value is 0?
-      // fix margins and ensure axes and ticks are always visible
-
       const chart = {
-        config: {}
+        data: []
       };
 
+      function updateHeatmap(jsonStr) {
+        const rawData = JSON.parse(jsonStr);
+        const eventTimes = getEventTimes(rawData);
+        const binnedData = getBinnedData(eventTimes);
+        chart.data = binnedData;
+        renderHeatmap(chart.data);
+      }
+
       function resizeSVG() {
-        try {
-          chart.config = getChartConfig(chart.data);
-          renderHeatmap();
-        } catch (e) {
-          log(e.name + " " + e.message);
-          log(e.stack);
-        }
+        renderHeatmap(chart.data);
       }
-
       d3.select(window).on("resize", resizeSVG);
-      const debug = document.getElementById("debug");
 
-      function log(msg) {
-        debug.innerHTML += msg + "\n";
-      }
 
       function range(from, to) {
         const result = [];
@@ -103,9 +93,12 @@
           .domain([0, maxEvents]);
       }
 
-      function renderHeatmap() {
-        const chartConfig = chart.config;
-        const binnedData = chart.data;
+      function renderHeatmap(binnedData) {
+        if (!binnedData || binnedData.length < 2) {
+          // FIXME: currently this is not visible to the user
+          return "No data in current selection.";
+        }
+        const chartConfig = getChartConfig(binnedData);
         const {
           numCols,
           numRows,
@@ -118,10 +111,6 @@
           width,
           height,
         } = chartConfig;
-        log("Start render " + binnedData.length);
-        if (!binnedData || binnedData.length < 2) {
-          return "No data in current selection.";
-        }
         const colorScale = getColorScale(chartConfig);
         const xDomain = range(0, numCols).map((val) => (val * 100) / 1000);
         const yDomain = [
@@ -230,25 +219,6 @@
           .append("g")
           .call(yAxis)
           .attr("transform", `translate(${marginLeft},0)`);
-
-        log("End render");
-      }
-
-      function updateHeatmap(jsonStr) {
-        try {
-          const rawData = JSON.parse(jsonStr);
-          log(JSON.stringify(rawData.events[0], null, 2));
-          const eventTimes = getEventTimes(rawData);
-          const binnedData = getBinnedData(eventTimes);
-
-          const chartConfig = getChartConfig(binnedData);
-          chart.config = getChartConfig(binnedData);
-          chart.data = binnedData;
-          renderHeatmap();
-        } catch (e) {
-          log(e.name + " " + e.message);
-          log(e.stack);
-        }
       }
     </script>
   </body>
