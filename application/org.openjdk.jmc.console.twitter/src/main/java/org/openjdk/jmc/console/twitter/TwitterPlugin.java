@@ -87,7 +87,7 @@ public class TwitterPlugin extends AbstractUIPlugin {
 	private static final String GET_USER_ID = "https://api.twitter.com/1.1/users/lookup.json";
 
 	private static TwitterOAuthHeaderGenerator oAuthHeaderGenerator;
-	private static TwitterOAuthAunthenticator oauthAuthenticator = new TwitterOAuthAunthenticator();
+	private static TwitterOAuthAuthenticator oauthAuthenticator = new TwitterOAuthAuthenticator();
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.openjdk.jmc.twitter"; //$NON-NLS-1$

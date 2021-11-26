@@ -57,7 +57,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.openjdk.jmc.rjmx.triggers.actions.internal.Messages;
 
-class TwitterOAuthAunthenticator {
+class TwitterOAuthAuthenticator {
 
 	private static final String OAUTH_REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token";
 	private static final String OAUTH_AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize";
@@ -67,11 +67,7 @@ class TwitterOAuthAunthenticator {
 	private static final String SIGNATURE_ALGORITHM = "HmacSHA1";
 	private static String proxyHost;
 	private static int proxyPort;
-	final static Logger LOGGER = Logger.getLogger("TwitterOAuthAunthenticator");
-
-	TwitterOAuthAunthenticator() {
-
-	}
+	final static Logger LOGGER = Logger.getLogger("TwitterOAuthAuthenticator");
 
 	private String encode(String httpMethod, String url) {
 		String encodedUrl = "";
@@ -214,10 +210,8 @@ class TwitterOAuthAunthenticator {
 		} else {
 			addr = null;
 		}
-		HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2)
-				.connectTimeout(Duration.ofSeconds(100)).proxy(ProxySelector.of(addr)).build();
-
-		return httpClient;
+		return HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(100))
+				.proxy(ProxySelector.of(addr)).build();
 	}
 
 	private static String computeSignature(String baseString, String keyString) throws Exception {
@@ -231,9 +225,7 @@ class TwitterOAuthAunthenticator {
 
 		mac.init(secretKey);
 
-		byte[] text = baseString.getBytes();
-
-		byte[] signatureBytes = mac.doFinal(text);
+		byte[] signatureBytes = mac.doFinal(baseString.getBytes());
 		return new String(Base64.getEncoder().encode(signatureBytes));
 	}
 
