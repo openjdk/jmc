@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -51,7 +51,6 @@
 		<maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
 		<owasp.encoder.version>1.2.2</owasp.encoder.version>
 		<p2-maven-plugin.version>1.5.0</p2-maven-plugin.version>
-		<twitter4j.core.version>4.0.7</twitter4j.core.version>
 	</properties>
 
 	<build>
@@ -69,9 +68,6 @@
 							<artifacts>
 								<!-- specify third party non-OSGi dependencies here -->
 								<!-- groupId:artifactId:version -->
-								<artifact>
-									<id>org.twitter4j:twitter4j-core:${twitter4j.core.version}</id>
-								</artifact>
 								<artifact>
 									<id>com.sun.mail:jakarta.mail:${jakarta.mail.version}</id>
 									<override>true</override>

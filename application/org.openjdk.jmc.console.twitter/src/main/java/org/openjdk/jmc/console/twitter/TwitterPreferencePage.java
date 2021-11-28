@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -58,9 +58,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import twitter4j.Twitter;
-import twitter4j.auth.RequestToken;
-
 /**
  * Preference page that configures {@link TwitterPlugin}
  */
@@ -71,7 +68,6 @@ public class TwitterPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button finishButton;
 	private RequestToken m_requestToken;
 	private Control m_authorizationButton;
-	private Twitter m_twitter;
 	private TableViewer m_viewer;
 	private Control m_removeButton;
 
@@ -152,7 +148,6 @@ public class TwitterPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private void resetTwitter() {
-		m_twitter = TwitterPlugin.getDefault().getTwitter();
 		m_requestToken = null;
 	}
 
@@ -231,7 +226,7 @@ public class TwitterPreferencePage extends PreferencePage implements IWorkbenchP
 		b.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TwitterPlugin.getDefault().addTweeter(m_twitter, m_requestToken, m_pin.getText().trim());
+				TwitterPlugin.getDefault().addTweeter(m_requestToken, m_pin.getText().trim());
 				m_pin.setText("");
 				m_viewer.refresh();
 			}
@@ -248,7 +243,7 @@ public class TwitterPreferencePage extends PreferencePage implements IWorkbenchP
 				resetTwitter();
 				TwitterPlugin.getDefault().setConsumerKeyAndSecret(m_consumerKey.getText().trim(),
 						m_consumerSecret.getText().trim());
-				m_requestToken = TwitterPlugin.getDefault().authorize(m_twitter);
+				m_requestToken = TwitterPlugin.getDefault().authorize();
 				boolean enabled = m_requestToken != null;
 				finishButton.setEnabled(enabled);
 				m_pin.setEnabled(enabled);

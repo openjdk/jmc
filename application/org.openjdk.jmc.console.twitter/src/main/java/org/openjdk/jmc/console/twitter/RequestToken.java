@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,37 +32,20 @@
  */
 package org.openjdk.jmc.console.twitter;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.triggers.IActivatableTriggerAction;
-import org.openjdk.jmc.rjmx.triggers.TriggerAction;
-import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
+class RequestToken {
+	private String token;
+	private String tokenSecret;
 
-/**
- * Action that updates the status.
- */
-public class UpdateStatus extends TriggerAction implements IActivatableTriggerAction {
-	private static final String USERNAME_FIELD = "username"; //$NON-NLS-1$
-	private static final String MESSAGE_FIELD = "message"; //$NON-NLS-1$
-
-	public UpdateStatus() {
-		// Do nothing
+	public RequestToken(String token, String tokenSecret) {
+		this.token = token;
+		this.tokenSecret = tokenSecret;
 	}
 
-	@Override
-	public void handleNotificationEvent(TriggerEvent event) throws Exception {
-		String username = getSetting(USERNAME_FIELD).getString();
-		String message = TwitterPlugin.createMessage(getSetting(MESSAGE_FIELD).getString(), event);
-		if (username != null && message != null) {
-			updateStatus(username, message);
-		}
+	public String getToken() {
+		return token;
 	}
 
-	private void updateStatus(String username, String message) throws Exception {
-		TwitterPlugin.getDefault().updateStatus(username, message);
-	}
-
-	@Override
-	public boolean isActivatable(IConnectionHandle handle) {
-		return TwitterPlugin.getDefault().verifyAuthorizedUser(getSetting(USERNAME_FIELD).getString());
+	public String getTokenSecret() {
+		return tokenSecret;
 	}
 }
