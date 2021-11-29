@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -83,6 +83,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
+import org.openjdk.jmc.flightrecorder.ui.websocket.WebsocketServer;
 import org.openjdk.jmc.ui.MCPathEditorInput;
 import org.openjdk.jmc.ui.idesupport.IDESupportUIToolkit;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
@@ -112,6 +113,8 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	private Reference<ResultPage> resultPageRef = new WeakReference<>(null);
 	private RuleManager ruleEngine;
 	private IPropertyChangeListener analysisEnabledListener;
+	private IPropertyChangeListener websocketServerEnabledListener;
+	private WebsocketServer websocketServer;
 
 	public JfrEditor() {
 		super();
@@ -123,7 +126,29 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 				}
 			}
 		};
+		if (FlightRecorderUI.getDefault().isWebsocketServerEnabled()) {
+			int websocketServerPort = FlightRecorderUI.getDefault().getWebsocketPort();
+			websocketServer = new WebsocketServer(websocketServerPort);
+		}
+		websocketServerEnabledListener = e -> {
+			if (e.getProperty().equals(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT)) {
+				int newWebsocketServerPort = FlightRecorderUI.parseWebsocketPort((String) e.getNewValue());
+				if (newWebsocketServerPort > 0) {
+					if (websocketServer != null) {
+						websocketServer.shutdown();
+						websocketServer = null;
+					}
+					websocketServer = new WebsocketServer(newWebsocketServerPort);
+				} else {
+					if (websocketServer != null) {
+						websocketServer.shutdown();
+						websocketServer = null;
+					}
+				}
+			}
+		};
 		FlightRecorderUI.getDefault().getPreferenceStore().addPropertyChangeListener(analysisEnabledListener);
+		FlightRecorderUI.getDefault().getPreferenceStore().addPropertyChangeListener(websocketServerEnabledListener);
 	}
 
 	@Override
@@ -184,6 +209,9 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		IItemCollection selectionItems = items;
 		if (!items.hasItems() && currentPage != null) {
 			selectionItems = getModel().getItems().apply(getDisplayablePage(currentPage).getDefaultSelectionFilter());
+		}
+		if (websocketServer != null) {
+			websocketServer.notifyAll(selectionItems);
 		}
 		getSite().getSelectionProvider().setSelection(new StructuredSelection(selectionItems));
 	}
@@ -397,6 +425,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 	public void dispose() {
 		ruleEngine.dispose();
 		FlightRecorderUI.getDefault().getPreferenceStore().removePropertyChangeListener(analysisEnabledListener);
+		FlightRecorderUI.getDefault().getPreferenceStore().removePropertyChangeListener(websocketServerEnabledListener);
 		super.dispose();
 	}
 

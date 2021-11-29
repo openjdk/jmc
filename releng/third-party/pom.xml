@@ -45,12 +45,15 @@
 		<hdrhistogram.version>2.1.12</hdrhistogram.version>
 		<jakarta.activation.version>1.2.1</jakarta.activation.version>
 		<jakarta.mail.version>1.6.5</jakarta.mail.version>
+		<javax.websocket.version>1.1</javax.websocket.version>
+		<jetty.version>10.0.5</jetty.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty-maven-plugin.version>9.4.33.v20201020</jetty-maven-plugin.version>
+		<jetty-maven-plugin.version>9.4.43.v20210629</jetty-maven-plugin.version>
 		<lz4.version>1.7.1</lz4.version>
 		<maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
 		<owasp.encoder.version>1.2.2</owasp.encoder.version>
 		<p2-maven-plugin.version>1.5.0</p2-maven-plugin.version>
+		<spifly.version>1.3.4</spifly.version>
 	</properties>
 
 	<build>
@@ -104,6 +107,18 @@
 								</artifact>
 								<artifact>
 									<id>org.adoptopenjdk:jemmy-swt:${jemmy.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:websocket-jetty-server:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:websocket-javax-server:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:websocket-jetty-api:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
 								</artifact>
 							</artifacts>
 						</configuration>

@@ -99,6 +99,10 @@
 		<setEntry value="org.openjdk.jmc.feature.ide:default" />
 		<setEntry value="org.openjdk.jmc.feature.joverflow:default" />
 	</setAttribute>
+	<setAttribute key="additional_plugins">
+		<setEntry value="org.objectweb.asm.tree:9.2.0:default:true:default:default"/>
+		<setEntry value="org.objectweb.asm:9.2.0:default:true:default:default"/>
+	</setAttribute>
 	<booleanAttribute key="show_selected_only" value="false" />
 	<stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini" />
 	<booleanAttribute key="tracing" value="false" />

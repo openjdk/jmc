@@ -7,15 +7,26 @@ Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx,
+ org.apache.aries.spifly.dynamic.bundle,
+ org.openjdk.jmc.common,
  org.openjdk.jmc.flightrecorder;visibility:=reexport,
  org.openjdk.jmc.ui;visibility:=reexport,
+ org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.ui.celleditors,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.jdk,
  org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.commands,
  org.openjdk.jmc.browser,
- org.hdrhistogram.HdrHistogram
+ org.hdrhistogram.HdrHistogram,
+ org.eclipse.jetty.io,
+ org.eclipse.jetty.server,
+ org.eclipse.jetty.servlet,
+ org.eclipse.jetty.servlet-api,
+ org.eclipse.jetty.websocket.api,
+ org.eclipse.jetty.websocket.server,
+ org.eclipse.jetty.websocket.servlet,
+ org.eclipse.jetty.util
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI
 Export-Package: org.openjdk.jmc.flightrecorder.ui,
