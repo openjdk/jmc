@@ -8,10 +8,7 @@ Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.ui,
  org.eclipse.core.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Import-Package: twitter4j,
- twitter4j.auth,
- twitter4j.conf,
- twitter4j.api
+Import-Package: org.owasp.encoder
 Automatic-Module-Name: org.openjdk.jmc.console.twitter
