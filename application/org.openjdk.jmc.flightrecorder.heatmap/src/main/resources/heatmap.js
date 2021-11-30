@@ -65,7 +65,6 @@ try {
   function getChartConfig(binnedData) {
     // numCells and maxEvents depend on the data
     const numCells = binnedData.length;
-    const maxEvents = d3.max(binnedData, (d) => d.length);
 
     // margins are fixed
     const marginLeft = 50;
@@ -86,25 +85,19 @@ try {
     const numCols = Math.floor(width / cellSize);
     const numRows = Math.ceil(numCells / numCols);
 
-    const config = {
+    return {
       numCols,
       numRows,
-      numCells,
       cellSize,
-      maxEvents,
       marginLeft,
       marginTop,
-      marginBottom,
       width,
       height,
     };
-    logger.clear();
-    logger.log(JSON.stringify(config, null, 2));
-    return config;
   }
 
-  function getColorScale(chartConfig) {
-    const { maxEvents } = chartConfig;
+  function getColorScale(binnedData) {
+    const maxEvents = d3.max(binnedData, (d) => d.length);
     return d3.scaleSequentialSqrt(d3.interpolateOrRd).domain([0, maxEvents]);
   }
 
@@ -117,16 +110,13 @@ try {
     const {
       numCols,
       numRows,
-      numCells,
       cellSize,
-      maxEvents,
       marginLeft,
       marginTop,
-      marginBottom,
       width,
       height,
     } = chartConfig;
-    const colorScale = getColorScale(chartConfig);
+    const colorScale = getColorScale(binnedData);
     const xDomain = range(0, numCols).map((val) => (val * 100) / 1000);
     const yDomain = [
       d3.min(binnedData, (d) => d.x0),
