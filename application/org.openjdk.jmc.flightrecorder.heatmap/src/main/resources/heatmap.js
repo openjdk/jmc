@@ -175,6 +175,8 @@ try {
         .data(binnedData)
         .enter()
         .append("rect")
+        // we could potentially emphasize 0 by setting the cell color to white:
+        // .attr("fill", (d) => d.length ? colorScale(d.length) : "white")
         .attr("fill", (d) => colorScale(d.length))
         .attr("stroke", "white")
         .attr("x", (d, i) => {
