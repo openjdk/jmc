@@ -8,7 +8,7 @@
   </head>
 
   <body>
-    <svg id="heatmap" width="100%%" style="text-align: center"></svg>
+    <div id="heatmap" width="100%%" style="text-align: center"></div>
     <script type="text/javascript">
       %2$s
     </script>

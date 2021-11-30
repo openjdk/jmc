@@ -109,8 +109,8 @@ try {
 
   function renderHeatmap(binnedData) {
     if (!binnedData || binnedData.length < 2) {
-      // FIXME: currently this is not visible to the user
-      return "No data in current selection.";
+      d3.select("#heatmap").append("p").text("No data in current selection.");
+      return;
     }
     const chartConfig = getChartConfig(binnedData);
     const {
@@ -212,6 +212,7 @@ try {
 
     const svg = d3
       .select("#heatmap")
+      .append("svg")
       .style("width", window.innerWidth + "px")
       .style("height", window.innerHeight + "px");
     svg
