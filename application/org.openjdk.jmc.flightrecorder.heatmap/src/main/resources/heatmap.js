@@ -70,7 +70,7 @@ try {
     // margins are fixed
     const marginLeft = 50;
     const marginTop = 20;
-    const marginBottom = 50;
+    const marginBottom = 100;
 
     // width and height are fixed from the window
     const width = window.innerWidth - marginLeft;
@@ -82,7 +82,7 @@ try {
       4,
       Math.floor(Math.sqrt((width * height) / numCells))
     );
-    const numCols = Math.floor(width / cellSize) - 3;
+    const numCols = Math.floor(width / cellSize);
     const numRows = Math.ceil(numCells / numCols);
 
     const config = {
@@ -97,6 +97,7 @@ try {
       width,
       height,
     };
+    logger.clear();
     logger.log(JSON.stringify(config, null, 2));
     return config;
   }
