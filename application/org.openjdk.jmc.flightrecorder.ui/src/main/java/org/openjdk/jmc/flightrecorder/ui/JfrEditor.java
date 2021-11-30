@@ -407,7 +407,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 
 	@Override
 	public INavigationLocation createEmptyNavigationLocation() {
-		return new JfrNavigationLocation(this, null);
+		return new JfrNavigationLocation(this);
 	}
 
 	@Override
@@ -415,7 +415,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		if (currentPage == null) {
 			return null;
 		}
-		return new JfrNavigationLocation(this, currentPage);
+		return new JfrNavigationLocation(this);
 	}
 
 	@Override

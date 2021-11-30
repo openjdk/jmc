@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,26 +34,13 @@ package org.openjdk.jmc.flightrecorder.ui;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.INavigationLocation;
+import org.eclipse.ui.NavigationLocation;
 
-class JfrNavigationLocation implements INavigationLocation {
-
-	private final JfrEditor m_editor;
-	private final DataPageDescriptor m_page;
-
+class JfrNavigationLocation extends NavigationLocation {
 	private boolean m_disposed;
 
-	public JfrNavigationLocation(JfrEditor editor, DataPageDescriptor page) {
-		m_editor = editor;
-		m_page = page;
-	}
-
-	@Override
-	public void dispose() {
-		m_disposed = true;
-	}
-
-	@Override
-	public void releaseState() {
+	public JfrNavigationLocation(JfrEditor editor) {
+		super(editor);
 	}
 
 	@Override
@@ -62,14 +49,17 @@ class JfrNavigationLocation implements INavigationLocation {
 
 	@Override
 	public void restoreState(IMemento memento) {
+
+	}
+
+	@Override
+	public void releaseState() {
+		super.releaseState();
 		m_disposed = true;
 	}
 
 	@Override
 	public void restoreLocation() {
-		if (!m_disposed) {
-			m_editor.navigateTo(m_page);
-		}
 	}
 
 	@Override
@@ -79,33 +69,13 @@ class JfrNavigationLocation implements INavigationLocation {
 		}
 		if (currentLocation instanceof JfrNavigationLocation) {
 			JfrNavigationLocation that = (JfrNavigationLocation) currentLocation;
-			return that.m_editor == m_editor && that.m_page == m_page;
+			return that.getInput() == this.getInput();
 
 		}
 		return false;
 	}
 
 	@Override
-	public Object getInput() {
-		return null;
-	}
-
-	@Override
-	public String getText() {
-		return m_page.getName() + " [" + m_editor.getPartName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + '[' + getText() + ']';
-	}
-
-	@Override
-	public void setInput(Object input) {
-	}
-
-	@Override
 	public void update() {
 	}
-
 }
