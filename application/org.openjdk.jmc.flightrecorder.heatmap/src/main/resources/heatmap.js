@@ -69,11 +69,12 @@ try {
 
     // margins are fixed
     const marginLeft = 50;
+    const marginRight = 20;
     const marginTop = 20;
     const marginBottom = 100;
 
     // width and height are fixed from the window
-    const width = window.innerWidth - marginLeft;
+    const width = window.innerWidth - (marginLeft + marginRight);
     const height = window.innerHeight - (marginTop + marginBottom);
 
     // cellSize is derived from width, height and numCells
