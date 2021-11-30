@@ -224,9 +224,22 @@ try {
       .call(xAxis)
       .attr("transform", `translate(0, ${numRows * cellSize + marginTop})`);
 
+    const eventCount = d3.sum(binnedData, (d) => d.length);
+    const formatDate = (d) => d.toLocaleString("en-GB", { timeZone: "UTC" });
+    svg
+      .append("g")
+      .append("text")
+      .text(
+        `This is a heatmap of ${eventCount} events recorded
+        between ${formatDate(yDomain[0])} and ${formatDate(yDomain[1])}.`
+      )
+      .attr("transform", `translate(${width / 2},${height + 75})`)
+      .attr("fill", "#777")
+      .attr("text-anchor", "middle");
+
     svg.append("g").call(yAxis).attr("transform", `translate(${marginLeft},0)`);
   }
 } catch (e) {
-  logger.log(e.name + ":" + e.message)
+  logger.log(e.name + ":" + e.message);
   logger.log(e.stack);
 }
