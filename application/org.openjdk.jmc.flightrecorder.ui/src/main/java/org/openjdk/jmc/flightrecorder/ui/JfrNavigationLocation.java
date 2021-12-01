@@ -37,10 +37,15 @@ import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.NavigationLocation;
 
 class JfrNavigationLocation extends NavigationLocation {
+	private JfrEditor jfrEditor;
+	private DataPageDescriptor page;
 	private boolean m_disposed;
 
-	public JfrNavigationLocation(JfrEditor editor) {
+	public JfrNavigationLocation(JfrEditor editor, DataPageDescriptor page) {
 		super(editor);
+		this.jfrEditor = editor;
+		this.page = page;
+
 	}
 
 	@Override
@@ -55,11 +60,16 @@ class JfrNavigationLocation extends NavigationLocation {
 	@Override
 	public void releaseState() {
 		super.releaseState();
+		jfrEditor = null;
+		page = null;
 		m_disposed = true;
 	}
 
 	@Override
 	public void restoreLocation() {
+		if (!m_disposed) {
+			jfrEditor.navigateTo(page);
+		}
 	}
 
 	@Override
@@ -69,7 +79,7 @@ class JfrNavigationLocation extends NavigationLocation {
 		}
 		if (currentLocation instanceof JfrNavigationLocation) {
 			JfrNavigationLocation that = (JfrNavigationLocation) currentLocation;
-			return that.getInput() == this.getInput();
+			return that.getInput() == this.getInput() && that.page == page;
 
 		}
 		return false;
