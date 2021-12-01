@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,6 +48,7 @@ import org.openjdk.jmc.common.unit.StructContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
+import org.openjdk.jmc.flightrecorder.internal.parser.LoaderContext;
 
 class ValueReaders {
 	interface IValueReader {
@@ -81,10 +82,17 @@ class ValueReaders {
 	static class PoolReader implements IValueReader {
 		private final FastAccessNumberMap<Object> constantPool;
 		private final ContentType<?> contentType;
+		private final LoaderContext context;
+		private final String poolName;
+		private final String eventTypeId;
 
-		PoolReader(FastAccessNumberMap<Object> pool, ContentType<?> contentType) {
+		PoolReader(FastAccessNumberMap<Object> pool, ContentType<?> contentType, LoaderContext context, String poolName,
+				String eventTypeId) {
 			this.constantPool = pool;
 			this.contentType = contentType;
+			this.context = context;
+			this.poolName = poolName;
+			this.eventTypeId = eventTypeId;
 		}
 
 		@Override
@@ -92,6 +100,7 @@ class ValueReaders {
 				throws IOException, InvalidJfrFileException {
 			long constantIndex = in.readLong();
 			Object constant = constantPool.get(constantIndex);
+			constant = context.constantReferenced(constant, poolName, eventTypeId);
 			return (allowUnresolvedReference && (constant == null)) ? new ConstantReference(constantIndex) : constant;
 		}
 
@@ -103,7 +112,9 @@ class ValueReaders {
 		@Override
 		public Object resolve(Object value) throws InvalidJfrFileException {
 			if (value instanceof ConstantReference) {
-				return constantPool.get(((ConstantReference) value).key);
+				Object newValue = constantPool.get(((ConstantReference) value).key);
+				newValue = context.constantResolved(newValue, poolName, eventTypeId);
+				return newValue;
 			}
 			return value;
 		}

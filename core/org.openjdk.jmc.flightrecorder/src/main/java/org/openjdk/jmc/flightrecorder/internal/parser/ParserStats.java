@@ -61,6 +61,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
@@ -71,10 +72,11 @@ public class ParserStats {
 	private final AtomicInteger chunkCount = new AtomicInteger();
 	private final AtomicLong skippedEventCount = new AtomicLong();
 	private final ConcurrentHashMap<String, EventTypeStats> statsByType = new ConcurrentHashMap<>();
-	private final ConcurrentLinkedDeque<ConstantPoolInfo> constantPoolInfoList = new ConcurrentLinkedDeque<ConstantPoolInfo>();
+	private final ConcurrentLinkedDeque<ConstantPoolInfo> constantPoolInfoList = new ConcurrentLinkedDeque<>();
 	private final ConcurrentHashMap<String, Long> entryPoolSizeByType = new ConcurrentHashMap<>();
 	private IItemCollection poolStats;
 	private IItemCollection constants;
+	private Map<String, IConstantPoolExtension> constantPoolExtensions = new ConcurrentHashMap<>();
 
 	public void setVersion(short majorVersion, short minorVersion) {
 		this.majorVersion = majorVersion;
@@ -110,6 +112,10 @@ public class ParserStats {
 			}
 			return value + size;
 		});
+	}
+
+	public void addConstantPoolExtension(IConstantPoolExtension extension) {
+		constantPoolExtensions.put(extension.getId(), extension);
 	}
 
 	public void forEachEventType(Consumer<IEventStats> consumer) {
@@ -173,6 +179,10 @@ public class ParserStats {
 			constants = ItemCollectionToolkit.build(items.stream());
 		}
 		return constants;
+	}
+
+	public Map<String, IConstantPoolExtension> getConstantPoolExtensions() {
+		return constantPoolExtensions;
 	}
 
 	static class ConstPoolItem implements IItem, IType<IItem> {
