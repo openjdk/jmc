@@ -225,7 +225,7 @@ to a jury trial in any resulting litigation.
 
 
 %% The following notice is provided with respect to OWASP Java 
-Encoder Project v1.2.2 which may be included with this product.
+Encoder Project v1.2.3 which may be included with this product.
 
           Copyright (c) 2015 Jeff Ichnowski
                   All rights reserved.
@@ -729,7 +729,7 @@ which may be included with this product.
    See the License for the specific language governing permissions and
    limitations under the License.
 
-%% The following notice is provided with respect to Jakarta Mail v1.6.5,
+%% The following notice is provided with respect to Jakarta Mail v2.0.1,
 which may be included with this product.
 
                     Eclipse Public License - v 2.0
@@ -1389,7 +1389,7 @@ None
 Cryptography
 Content may contain encryption software. The country in which you are currently may have restrictions on the import, possession, and use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check the country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.
 ------------------------------------------------------------------------------------------------------
-Fourth Party Dependency #1 : Jakarta/JavaBeans Activation Framework (JAF) 1.2.2
+Fourth Party Dependency #1 : Jakarta/JavaBeans Activation Framework (JAF) 2.0.1
 Fourth Party Dependency #1 License & Copyright:
 
 Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
@@ -1500,7 +1500,7 @@ JUnit (4.12)
 * License: Eclipse Public License
 
 %% The following notice is provided with respect to Jakarta Activation
-Framework v1.2.2, which may be included with this product.
+Framework v2.0.1, which may be included with this product.
 
 Jakarta Activation API (JAF) (jakarta.activation:jakarta.activation-api)
 Copyright (c) 1997,2019 Oracle and/or its affiliates. All rights reserved.
@@ -1566,7 +1566,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-%% The following notice is provided with respect to lz4-java v1.7.1,
+%% The following notice is provided with respect to lz4-java v1.8.0,
 which may be included with this product.
 
 
