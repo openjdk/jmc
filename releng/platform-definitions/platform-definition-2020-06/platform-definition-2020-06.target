@@ -36,10 +36,10 @@
 <target name="jmc-target-2020-06" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="com.sun.mail.jakarta.mail" version="1.6.5"/>
-            <unit id="com.sun.activation.jakarta.activation" version="1.2.1"/>
-            <unit id="org.owasp.encoder" version="1.2.2"/>
-            <unit id="org.lz4.lz4-java" version="1.7.1"/>
+            <unit id="com.sun.mail.jakarta.mail" version="2.0.1"/>
+            <unit id="com.sun.activation.jakarta.activation" version="2.0.1"/>
+            <unit id="org.owasp.encoder" version="1.2.3"/>
+            <unit id="org.lz4.lz4-java" version="1.8.0"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.1.12"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
