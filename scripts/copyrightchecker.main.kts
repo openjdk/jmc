@@ -1,4 +1,3 @@
-@file:DependsOn("org.junit.jupiter:junit-jupiter:5.7.0")
 @file:DependsOn("org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r")
 
 import org.eclipse.jgit.api.Git
@@ -76,12 +75,12 @@ class GitClient(jmcRepoPath: String) {
                 when (diff.changeType) {
                     MODIFY, RENAME, COPY -> {
                         Change(
-                            newPath = diff.newPath,
+                            headPath = diff.newPath,
                             headBytes = getBytes(reader, diff.newId),
-                            baseBytes = getBytes(reader, diff.oldId)
+                            baseBytes = getBytes(reader, diff.oldId),
                         )
                     }
-                    ADD -> Change(newPath = diff.newPath, headBytes = getBytes(reader, diff.newId))
+                    ADD -> Change(headPath = diff.newPath, headBytes = getBytes(reader, diff.newId))
                     else -> throw IllegalArgumentException("Unsupported: ${diff.changeType}")
                 }
             }
@@ -91,7 +90,12 @@ class GitClient(jmcRepoPath: String) {
         Instant.ofEpochSecond(head.commitTime.toLong()).atZone(ZoneId.of("Etc/UTC")).year
 }
 
-class Change(val newPath: String, val headBytes: ByteArray, val baseBytes: ByteArray? = null)
+class Change(
+    val headPath: String,
+    val headBytes: ByteArray,
+    val baseBytes: ByteArray? = null,
+    val basePath: String? = null
+)
 
 data class Range(val start: Int, val end: Int? = null) {
     companion object {
@@ -110,7 +114,7 @@ data class Range(val start: Int, val end: Int? = null) {
         }
 }
 
-data class CopyrightString(private val range: Range, private val holder: CopyrightHolders) {
+data class CopyrightString(val range: Range, val holder: CopyrightHolders) {
     companion object {
         fun parse(line: String): CopyrightString? {
             if (!line.contains("Copyright")) return null
@@ -137,7 +141,7 @@ data class CopyrightString(private val range: Range, private val holder: Copyrig
     override fun toString() = "Copyright (c) $range, ${holder.displayName}. All rights reserved."
 }
 
-class CopyrightHeader(val holders: List<CopyrightString>) {
+data class CopyrightHeader(val holders: List<CopyrightString>) {
     companion object {
         fun parse(file: String): CopyrightHeader {
             val holders = file.split("\n").mapNotNull { CopyrightString.parse(it) }
@@ -188,39 +192,61 @@ class CopyrightChecker {
         }
 
         private fun validateChange(change: Change, year: Int): Boolean {
-            val fileType = FileTypes.fromPath(change.newPath)
+            val fileType = FileTypes.fromPath(change.headPath)
             if (fileType == FileTypes.UNSUPPORTED) {
-                println("⚪️ ${change.newPath}")
+                println("⚪️ ${change.headPath}")
                 return true
             }
-            val header = if (change.baseBytes != null) {
-                val baseContent = String(change.baseBytes, Charsets.UTF_8)
-                try {
-                    CopyrightHeader.update(CopyrightHeader.parse(baseContent), year)
-                } catch (e: Exception) {
-                    println("🔴 ${change.newPath}")
-                    println(e.message)
-                    return false
-                }
+            return if (change.baseBytes != null) {
+                checkModifiedFile(change, year, fileType)
             } else {
-                CopyrightHeader(
-                    listOf(
-                        CopyrightString(Range(year), CopyrightHolders.ORACLE),
-                        CopyrightString(Range(year), CopyrightHolders.DATADOG)
-                    )
-                )
+                checkNewFile(change, year, fileType)
             }
+        }
+
+        private fun checkModifiedFile(change: Change, year: Int, fileType: FileTypes): Boolean {
+            val baseContent = String(change.baseBytes!!, Charsets.UTF_8)
+            val baseHeader = try {
+                CopyrightHeader.parse(baseContent)
+            } catch (e: Exception) {
+                println("🟡 ${change.headPath}")
+                println("Failed to parse header in base commit $change")
+                println(e.message)
+                return false
+            }
+            val header = CopyrightHeader.update(baseHeader, year)
             val headContent = String(change.headBytes, Charsets.UTF_8)
-            val expected = header.format(fileType)
-            return if (headContent.startsWith(expected)) {
-                println("🟢 ${change.newPath}")
+            return checkContents(change.headPath, headContent, fileType, header)
+        }
+
+        private fun checkNewFile(change: Change, year: Int, fileType: FileTypes): Boolean {
+            val headContent = String(change.headBytes, Charsets.UTF_8)
+            return try {
+                val header = CopyrightHeader.parse(headContent)
+                val invalid = header.holders.filter { it.range != Range(year) }
+                if (invalid.isNotEmpty()) throw IllegalArgumentException("Invalid ranges $invalid")
+                if (header.holders.none { it.holder == CopyrightHolders.ORACLE }) {
+                    throw IllegalArgumentException("Oracle copyright missing")
+                }
+                checkContents(change.headPath, headContent, fileType, header)
+            } catch (e: Exception) {
+                println("🔴 ${change.headPath}")
+                println(e.message)
+                false
+            }
+        }
+
+        private fun checkContents(filePath: String, fileContent: String, fileType: FileTypes, expectedHeader: CopyrightHeader): Boolean {
+            val expected = expectedHeader.format(fileType)
+            return if (fileContent.startsWith(expected)) {
+                println("🟢 $filePath")
                 true
             } else {
-                println("🔴 ${change.newPath}")
+                println("🔴 $filePath")
                 println("Expected:")
                 println(expected)
                 println("Actual:")
-                println(headContent.substring(0, expected.length + 1))
+                println(fileContent.substring(0, expected.length + 1))
                 println("(check whitespace if strings seem to match)")
                 false
             }
@@ -250,7 +276,9 @@ enum class FileTypes {
 }
 
 enum class CopyrightHolders(val displayName: String) {
-    ORACLE("Oracle and/or its affiliates"), DATADOG("Datadog, Inc");
+    ORACLE("Oracle and/or its affiliates"),
+    DATADOG("Datadog, Inc"),
+    RED_HAT("Red Hat Inc");
     companion object {
         fun fromString(str: String) =
             values().find { it.displayName == str } ?: throw IllegalArgumentException(str)
