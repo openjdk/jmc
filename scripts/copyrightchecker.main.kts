@@ -129,18 +129,14 @@ data class CopyrightString(val range: Range, val holder: CopyrightHolders) {
         fun parse(line: String): CopyrightString? {
             if (!line.contains("Copyright")) return null
             return try {
-                val parts: List<String> = line
-                    .split(".").first()
-                    .split("(c)")[1]
-                    .split(",")
-                    .map { part -> part.trim() }
-                when (parts.size) {
-                    2 -> CopyrightString(Range(parts[0].toInt()), CopyrightHolders.fromString(parts[1]))
-                    3 -> CopyrightString(Range(parts[0].toInt(), parts[1].toInt()), CopyrightHolders.fromString(parts[2]))
-                    else -> throw IllegalArgumentException()
-                }
+                val regex = """.*Copyright \(c\) (\d{4}),(?: (\d{4}),)? ([^.]+).*""".toRegex()
+                val match = regex.matchEntire(line) ?: throw IllegalArgumentException("failed to match regex")
+                CopyrightString(
+                    range = Range(match.groups[1]!!.value.toInt(), match.groups[2]?.value?.toInt()),
+                    holder = CopyrightHolders.fromString(match.groups[3]!!.value)
+                )
             } catch (e: Exception) {
-                throw IllegalArgumentException("🟡 Failed to parse: $line", e)
+                throw IllegalArgumentException("🟡 Failed to parse '$line': $e", e)
             }
         }
 
