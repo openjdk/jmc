@@ -7,9 +7,12 @@ import org.eclipse.jgit.lib.Constants
 import org.eclipse.jgit.lib.ObjectReader
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
+import org.eclipse.jgit.revwalk.RevTree
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.revwalk.filter.RevFilter
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
+import org.eclipse.jgit.treewalk.TreeWalk
+import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
@@ -22,7 +25,7 @@ fun run() {
     CopyrightChecker.validateChanges(git.getCommitYear(), git.getChanges())
 }
 
-run()
+treeWalk()
 
 class GitClient(jmcRepoPath: String) {
     private val git: Git
@@ -112,6 +115,13 @@ data class Range(val start: Int, val end: Int? = null) {
         } else {
             "$start"
         }
+
+    fun endsWith(year: Int): Boolean =
+        if (end == null) {
+            start == year
+        } else {
+            end == year
+        }
 }
 
 data class CopyrightString(val range: Range, val holder: CopyrightHolders) {
@@ -143,8 +153,8 @@ data class CopyrightString(val range: Range, val holder: CopyrightHolders) {
 
 data class CopyrightHeader(val holders: List<CopyrightString>) {
     companion object {
-        fun parse(file: String): CopyrightHeader {
-            val holders = file.split("\n").mapNotNull { CopyrightString.parse(it) }
+        fun parse(fileContents: String): CopyrightHeader {
+            val holders = fileContents.split("\n").mapNotNull { CopyrightString.parse(it) }
             return CopyrightHeader(holders)
         }
 
@@ -287,27 +297,44 @@ enum class CopyrightHolders(val displayName: String) {
 
 // We could use something similar to validate all copyright notices in the repo:
 //
-// fun treeWalk() {
-//    val revWalk = RevWalk(repo)
-//    val lastCommitId = repo.resolve(Constants.HEAD)!!
-//    val commit: RevCommit = revWalk.parseCommit(lastCommitId)
-//
-//    val tree: RevTree = commit.tree
-//    val treeWalk = TreeWalk(repo)
-//    treeWalk.addTree(tree)
-//    treeWalk.isRecursive = true
-//
-//    println("starting tree walk")
-//    treeWalk.filter = PathSuffixFilter.create(".java")
-//    val javaFiles = mutableListOf<Pair<String, Instant>>()
-//    while (treeWalk.next()) {
-//        git.log().addPath(treeWalk.pathString).setMaxCount(1).call().forEach {
-//            javaFiles.add(Pair(treeWalk.pathString, Instant.ofEpochSecond(it.commitTime.toLong())))
-//        }
-//        if (javaFiles.size % 10 == 0) {
-//            println(javaFiles.size)
-//            break
-//        }
-//    }
-//    println(javaFiles)
-// }
+fun treeWalk() {
+    val git = Git.open(File("."))
+    val repo = git.repository!!
+    val revWalk = RevWalk(repo)
+    val lastCommitId = repo.resolve(Constants.HEAD)!!
+    val commit: RevCommit = revWalk.parseCommit(lastCommitId)
+
+    val tree: RevTree = commit.tree
+    val treeWalk = TreeWalk(repo)
+    treeWalk.addTree(tree)
+    treeWalk.isRecursive = true
+    treeWalk.filter = PathSuffixFilter.create(".java")
+    var successes = 0
+    var failures = 0
+    while (treeWalk.next()) {
+        git.log()
+            .addPath(treeWalk.pathString)
+            .setMaxCount(1)
+            .call().forEach { lastCommit ->
+                val year = Instant.ofEpochSecond(lastCommit.commitTime.toLong())
+                    .atZone(ZoneId.of("Etc/UTC"))
+                    .year
+                try {
+                    val header = CopyrightHeader.parse(File(treeWalk.pathString).readText(Charsets.UTF_8))
+                    if (header.holders.none { it.holder == CopyrightHolders.ORACLE }) {
+                        throw IllegalArgumentException("no Oracle copyright")
+                    }
+                    if (header.holders.any { !it.range.endsWith(year) }) {
+                        throw IllegalArgumentException("invalid range, expected to end with $year but was $header")
+                    }
+                    println("🟢 ${treeWalk.pathString}")
+                    successes++
+                } catch (e: Exception) {
+                    println("🔴 ${treeWalk.pathString}")
+                    println(e.message)
+                    failures++
+                }
+            }
+    }
+    println("$successes succeeded; $failures failed")
+}
