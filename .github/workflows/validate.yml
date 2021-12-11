@@ -26,7 +26,8 @@ jobs:
       run: ./scripts/runapptests.sh
     - name: Run agent tests
       run: ./scripts/runagenttests.sh
-
+    - name: Run copyright checker
+      run: kotlinc -script scripts/copyrightchecker.main.kts
   mac:
     runs-on: 'macOS-latest'
     steps:
