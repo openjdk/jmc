@@ -47,5 +47,4 @@ public interface PreferenceConstants {
 	public static final String P_USERNAME = "username"; //$NON-NLS-1$
 	public static final String P_PASSWORD = "password"; //$NON-NLS-1$
 
-	
 }

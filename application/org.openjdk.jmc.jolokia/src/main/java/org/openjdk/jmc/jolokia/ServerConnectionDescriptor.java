@@ -43,5 +43,6 @@ import org.openjdk.jmc.rjmx.IServerDescriptor;
  */
 public interface ServerConnectionDescriptor extends IServerDescriptor, IConnectionDescriptor {
 	String getPath();
+
 	JMXServiceURL serviceUrl();
 }

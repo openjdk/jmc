@@ -49,8 +49,8 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 
 	@Override
 	protected Map<String, ServerConnectionDescriptor> discoverJvms() {
-		Map<String, ServerConnectionDescriptor> found=new HashMap<>();
-		if(!JmcJolokiaPlugin.getDefault().getPreferenceStore().getBoolean(P_SCAN)) {
+		Map<String, ServerConnectionDescriptor> found = new HashMap<>();
+		if (!JmcJolokiaPlugin.getDefault().getPreferenceStore().getBoolean(P_SCAN)) {
 			return found;
 		}
 		try {
@@ -76,12 +76,11 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 		return found;
 	}
 
-
 	@Override
 	public String getDescription() {
 		return Messages.JolokiaDiscoveryListener_Description;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "jolokia"; //$NON-NLS-1$
@@ -91,7 +90,5 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 	protected boolean isEnabled() {
 		return true;
 	}
-	
-	
 
 }

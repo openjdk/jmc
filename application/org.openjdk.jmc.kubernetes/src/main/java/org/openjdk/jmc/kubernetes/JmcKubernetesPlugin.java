@@ -39,7 +39,8 @@ import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
 import org.openjdk.jmc.kubernetes.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 
-public class JmcKubernetesPlugin extends MCAbstractUIPlugin implements KubernetesScanningParameters, PreferenceConstants{
+public class JmcKubernetesPlugin extends MCAbstractUIPlugin
+		implements KubernetesScanningParameters, PreferenceConstants {
 
 	public final static String PLUGIN_ID = "org.openjdk.jmc.kubernetes"; //$NON-NLS-1$
 
@@ -92,7 +93,7 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin implements Kubernete
 	public String password() {
 		return getPreferenceStore().getString(P_PASSWORD);
 	}
-	
+
 	@Override
 	public String jolokiaPath() {
 		return getPreferenceStore().getString(P_JOLOKIA_PATH);
@@ -107,5 +108,5 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin implements Kubernete
 	public String jolokiaProtocol() {
 		return getPreferenceStore().getString(P_JOLOKIA_PROTOCOL);
 	}
-	
+
 }

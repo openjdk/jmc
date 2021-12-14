@@ -55,11 +55,8 @@ import org.jolokia.converter.Converters;
 import org.jolokia.converter.json.JsonConvertOptions;
 
 /**
- * 
- *         Make JMC specific adjustments to Jolokia JMX connection May consider
- *         to create a decorator pattern if differences are big but begin with a
- *         subclass
- *
+ * Make JMC specific adjustments to Jolokia JMX connection May consider to create a decorator
+ * pattern if differences are big but begin with a subclass
  */
 public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
@@ -101,37 +98,39 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 				modifiedOperations[i] = stealOrBuildOperationInfo(mBeanInfo.getOperations()[i], localInfo);
 			}
 			//create a copy with modified operations in place of the original MBeanInfo in the cache
-			final MBeanInfo modifiedMBeanInfo = new MBeanInfo(mBeanInfo.getClassName(), mBeanInfo.getDescription(), mBeanInfo.getAttributes(),
-					mBeanInfo.getConstructors(), modifiedOperations, mBeanInfo.getNotifications());
-			this.mbeanInfoCache.put(name,
-					modifiedMBeanInfo);
+			final MBeanInfo modifiedMBeanInfo = new MBeanInfo(mBeanInfo.getClassName(), mBeanInfo.getDescription(),
+					mBeanInfo.getAttributes(), mBeanInfo.getConstructors(), modifiedOperations,
+					mBeanInfo.getNotifications());
+			this.mbeanInfoCache.put(name, modifiedMBeanInfo);
 			return modifiedMBeanInfo;
 		}
 		return mBeanInfo;
 	}
-	
+
 	@Override
 	public Object invoke(ObjectName name, String operationName, Object[] params, String[] signature)
 			throws InstanceNotFoundException, MBeanException, IOException {
 		for (int i = 0; i < params.length; i++) {
 			Object object = params[i];
-			if(object instanceof TabularData) {
+			if (object instanceof TabularData) {
 				try {
-					params[i]=new Converters().getToJsonConverter().convertToJson(object, new LinkedList<String>(), JsonConvertOptions.DEFAULT);
+					params[i] = new Converters().getToJsonConverter().convertToJson(object, new LinkedList<String>(),
+							JsonConvertOptions.DEFAULT);
 				} catch (AttributeNotFoundException ignore) {
 				}
 			}
-			
+
 		}
 		return super.invoke(name, operationName, params, signature);
 	}
 
 	/**
-	 * build / reverse engineer MBeanOperationInfo by using the local one if it is a
-	 * match or try to reverse engineer otherwise
+	 * build / reverse engineer MBeanOperationInfo by using the local one if it is a match or try to
+	 * reverse engineer otherwise
 	 * 
 	 * @param original
-	 * @param localInfo MBeanInfo from this JVM to use for getting descriptor
+	 * @param localInfo
+	 *            MBeanInfo from this JVM to use for getting descriptor
 	 * @return Descriptor
 	 */
 	private MBeanOperationInfo stealOrBuildOperationInfo(MBeanOperationInfo original, MBeanInfo localInfo) {

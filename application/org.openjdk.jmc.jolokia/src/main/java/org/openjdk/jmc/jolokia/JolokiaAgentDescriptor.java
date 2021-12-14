@@ -59,8 +59,8 @@ import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 
-	public static final JVMDescriptor NULL_DESCRIPTOR = new JVMDescriptor(null, null, null,null, null, null, null, null, false,
-			Connectable.UNKNOWN);
+	public static final JVMDescriptor NULL_DESCRIPTOR = new JVMDescriptor(null, null, null, null, null, null, null,
+			null, false, Connectable.UNKNOWN);
 	private final JMXServiceURL serviceUrl;
 	private final JSONObject agentData;
 	private final JVMDescriptor jvmDescriptor;
@@ -95,16 +95,16 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 	}
 
 	/**
-	 * Best effort to extract JVM information from a connection if everything works.
-	 * Can be adjusted to support different flavors of JVM
+	 * Best effort to extract JVM information from a connection if everything works. Can be adjusted
+	 * to support different flavors of JVM
 	 */
 	public static JVMDescriptor attemptToGetJvmInfo(RemoteJmxAdapter adapter) {
 
 		try {
 			AttributeList attributes = adapter.getAttributes(new ObjectName(ManagementFactory.RUNTIME_MXBEAN_NAME),
-					new String[] { "Pid", "Name", "InputArguments", "SystemProperties" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					new String[] {"Pid", "Name", "InputArguments", "SystemProperties"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			Integer pid = null;
-			String arguments=null, javaCommand=null, javaVersion=null, vmName=null, vmVendor = null;
+			String arguments = null, javaCommand = null, javaVersion = null, vmName = null, vmVendor = null;
 			boolean isDebug = false;
 			JVMType type = JVMType.UNKNOWN;
 			JVMArch arch = JVMArch.UNKNOWN;
@@ -156,12 +156,12 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 							}
 						} else if (key.equalsIgnoreCase("sun.java.command")) { //$NON-NLS-1$
 							javaCommand = value;
-						} else if(key.equalsIgnoreCase("java.version")) { //$NON-NLS-1$
+						} else if (key.equalsIgnoreCase("java.version")) { //$NON-NLS-1$
 							javaVersion = value;
 						} else if (key.equalsIgnoreCase("java.vm.name")) { //$NON-NLS-1$
-							vmName=value;
-						} else if(key.equalsIgnoreCase("java.vm.vendor")) { //$NON-NLS-1$
-							vmVendor=value;
+							vmName = value;
+						} else if (key.equalsIgnoreCase("java.vm.vendor")) { //$NON-NLS-1$
+							vmVendor = value;
 						}
 					}
 
@@ -171,7 +171,7 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 			return new JVMDescriptor(javaVersion, type, arch, javaCommand, arguments, vmName, vmVendor, pid, isDebug,
 					Connectable.UNKNOWN);
 
-		} catch (RuntimeException|IOException|InstanceNotFoundException|MalformedObjectNameException ignore) {
+		} catch (RuntimeException | IOException | InstanceNotFoundException | MalformedObjectNameException ignore) {
 			return NULL_DESCRIPTOR;
 		}
 

@@ -47,7 +47,7 @@ public class JmcKubernetesJmxConnector extends KubernetesJmxConnector {
 	public JmcKubernetesJmxConnector(JMXServiceURL serviceURL, Map<String, ?> environment) {
 		super(serviceURL, environment);
 	}
-	
+
 	@Override
 	protected RemoteJmxAdapter createAdapter(J4pClient client) throws IOException {
 		return new JmcKubernetesJmxConnection(client);
