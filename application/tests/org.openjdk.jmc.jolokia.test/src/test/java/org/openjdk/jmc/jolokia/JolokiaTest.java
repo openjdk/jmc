@@ -70,7 +70,7 @@ import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
 /**
- * I test that JMX connections done with JmcJolokiaJmxConnectionProvider are functional 
+ * I test that JMX connections done with JmcJolokiaJmxConnectionProvider are functional
  */
 @SuppressWarnings("restriction")
 public class JolokiaTest {
@@ -91,8 +91,7 @@ public class JolokiaTest {
 		Awaitility.await().atMost(Duration.ofSeconds(15))//Note: hard code property to avoid module dependency on agent
 				.until(() -> (jolokiaUrl = System.getProperty("jolokia.agent")) != null);
 		discoveryListener = new JolokiaDiscoveryListener();
-		jolokiaConnection=getJolokiaMBeanConnector();
-		
+		jolokiaConnection = getJolokiaMBeanConnector();
 
 	}
 
@@ -100,7 +99,8 @@ public class JolokiaTest {
 	public void testReadAttributesOverJolokia() throws MalformedURLException, IOException, OperationsException,
 			IntrospectionException, AttributeNotFoundException, ReflectionException, MBeanException {
 		for (ObjectName objectName : jolokiaConnection.queryNames(null, null)) {
-			for (MBeanAttributeInfo attributeInfo : getJolokiaMBeanConnector().getMBeanInfo(objectName).getAttributes()) {
+			for (MBeanAttributeInfo attributeInfo : getJolokiaMBeanConnector().getMBeanInfo(objectName)
+					.getAttributes()) {
 				if (!unsafeAttributes.contains(attributeInfo.getName())) {
 					System.out.println("Getting attribute " + objectName + "/" + attributeInfo.getName());
 					getJolokiaMBeanConnector().getAttribute(objectName, attributeInfo.getName());
@@ -109,24 +109,27 @@ public class JolokiaTest {
 		}
 
 	}
-	
+
 	@Test
-	public void testExecuteOperation() throws InstanceNotFoundException, MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
+	public void testExecuteOperation() throws InstanceNotFoundException, MalformedObjectNameException, MBeanException,
+			ReflectionException, MalformedURLException, IOException {
 		jolokiaConnection.invoke(new ObjectName("java.lang:type=Memory"), "gc", new Object[0], new String[0]);
 	}
-	
+
 	@Test
-	public void testWriteAttribute() throws InstanceNotFoundException, AttributeNotFoundException, InvalidAttributeValueException, MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
+	public void testWriteAttribute()
+			throws InstanceNotFoundException, AttributeNotFoundException, InvalidAttributeValueException,
+			MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
 		ObjectName objectName = new ObjectName("jolokia:type=Config");
 		String attribute = "Debug";
 		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, true));
 		Assert.assertEquals(true, jolokiaConnection.getAttribute(objectName, attribute));
-		
+
 	}
 
 	private static MBeanServerConnection getJolokiaMBeanConnector() throws IOException, MalformedURLException {
-		JMXConnector connector = new JmcJolokiaJmxConnectionProvider().newJMXConnector(new JMXServiceURL(jolokiaUrl.replace("http", "service:jmx:jolokia")),
-				Collections.emptyMap());
+		JMXConnector connector = new JmcJolokiaJmxConnectionProvider().newJMXConnector(
+				new JMXServiceURL(jolokiaUrl.replace("http", "service:jmx:jolokia")), Collections.emptyMap());
 		connector.connect();
 		MBeanServerConnection connection = connector.getMBeanServerConnection();
 		return connection;
@@ -141,8 +144,9 @@ public class JolokiaTest {
 		InstanceScope.INSTANCE.getNode(JmcJolokiaPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN, "true");
 
 		discoveryListener.addDescriptorListener(new IDescriptorListener() {
-			public void onDescriptorDetected(IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
-					IConnectionDescriptor connectionDescriptor, IDescribable provider) {
+			public void onDescriptorDetected(
+				IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
+				IConnectionDescriptor connectionDescriptor, IDescribable provider) {
 				foundVms.getAndIncrement();
 			}
 
