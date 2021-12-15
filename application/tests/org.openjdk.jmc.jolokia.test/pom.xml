@@ -78,7 +78,7 @@
 					<includes>${test.includes}</includes>
 					<!-- Start jolokia on a random free port to avoid requiring specific 
 						ports to run test -->
-					<argLine>-XstartOnFirstThread -javaagent:target/dependency/jolokia-jvm-1.7.0.jar=port=0,discover=true</argLine>
+					<argLine>-javaagent:target/dependency/jolokia-jvm-1.7.0.jar=port=0,discover=true</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
