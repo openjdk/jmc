@@ -90,6 +90,106 @@
     <Match>
         <Bug pattern="DM_CONVERT_CASE"/>
     </Match>
+
+	<!-- Allow low level access of overridable methods within the constructor -->
+	<Match>
+		<Or>
+			<Package name="~org\.openjdk\.jmc\.browser.*"/>
+			<Package name="~org\.openjdk\.jmc\.console.*"/>
+			<Package name="~org\.openjdk\.jmc\.flightrecorder.*"/>
+			<Package name="~org\.openjdk\.jmc\.flightress.*"/>
+			<Package name="~org\.openjdk\.jmc\.greychart.*"/>
+			<Package name="~org\.openjdk\.jmc\.ide.*"/>
+			<Package name="~org\.openjdk\.jmc\.joverflow.*"/>
+			<Package name="~org\.openjdk\.jmc\.rcp.*"/>
+			<Package name="~org\.openjdk\.jmc\.rjmx.*"/>
+			<Package name="~org\.openjdk\.jmc\.ui.*"/>
+		</Or>
+		<Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+	</Match>
+
+	<!-- Allowing Eclipse plug-in static fields using public static methods -->
+	<Match>
+		<Class name="~org\.openjdk\.jmc\..*Plugin" />
+		<Or>
+			<Method name="getDefault" />
+		</Or>
+		<Bug pattern="MS_EXPOSE_REP" />
+	</Match>
+	<Match>
+		<Or>
+			<!-- getDefault() -->
+			<Class name="org.openjdk.jmc.ui.common.labelingrules.NameConverter"/>
+			<!-- getSecurityManager() -->
+			<Class name="org.openjdk.jmc.ui.common.security.SecurityManagerFactory"/>
+			<!-- getInstance() -->
+			<Class name="org.openjdk.jmc.rjmx.preferences.JMXRMIPreferences"/>
+			<!-- getDefault() / getPluginLogger() -->
+			<Class name="org.openjdk.jmc.browser.attach.BrowserAttachPlugin"/>
+			<!-- getInstance() -->
+			<Class name="org.openjdk.jmc.browser.attach.LocalDescriptorProvider"/>
+			<!-- getLogger() -->
+			<Class name="org.openjdk.jmc.flightrecorder.configuration.ConfigurationToolkit"/>
+			<!-- getDefault() -->
+			<Class name="org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI"/>
+			<!-- createSingleton() -->
+			<Class name="org.openjdk.jmc.console.agent.manager.model.PresetRepositoryFactory"/>
+			<!-- getDefault() / getLogger() -->
+			<Class name="org.openjdk.jmc.console.jconsole.Activator"/>
+			<!-- getDefault() -->
+			<Class name="org.openjdk.jmc.console.pde.Activator"/>
+			<!-- getDefault() -->
+			<Class name="org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel"/>
+			<!-- get*Delegate() -->
+			<Class name="org.openjdk.jmc.flightrecorder.controlpanel.ui.model.VolatileStorageDelegate"/>
+			<!-- getDefault() -->
+			<Class name="org.openjdk.jmc.flightrecorder.pde.Activator"/>
+			<!-- getUpdateSites() -->
+			<Class name="org.openjdk.jmc.rcp.application.p2.UpdateSiteURLToolkit"/>
+			<!-- getLogger() -->
+			<Class name="org.openjdk.jmc.rcp.logging.LoggingToolkit"/>
+		</Or>
+		<Bug pattern="MS_EXPOSE_REP" />
+	</Match>
+
+    <!-- Allowing catching a NullPointerException for a JBoss 4.2.3 specific workaround -->
+    <Match>
+        <Class name="org.openjdk.jmc.rjmx.internal.RJMXConnection"/>
+		<Method name="getMBeanInfos" />
+        <Bug pattern="DCN_NULLPOINTER_EXCEPTION" />
+    </Match>
+
+    <!-- Allowing catching a NullPointerException that could occur when VM dies -->
+    <Match>
+        <Class name="org.openjdk.jmc.attach.AttachToolkit"/>
+		<Method name="importFromPid" />
+        <Bug pattern="DCN_NULLPOINTER_EXCEPTION" />
+    </Match>
+
+    <!-- Allowing catching a NullPointerException that could occur when there is no state value -->
+    <Match>
+        <Class name="org.openjdk.jmc.flightrecorder.ui.overview.ResultReportUi"/>
+		<Method name="createHtmlOverview" />
+        <Bug pattern="DCN_NULLPOINTER_EXCEPTION" />
+    </Match>
+
+    <Match>
+        <Class name="org.openjdk.jmc.ui.common.security.SecurityManagerFactory"/>
+        <Bug pattern="EI_EXPOSE_STATIC_REP2" />
+    </Match>
+
+    <!-- Allowing non secure random to generate test data sets -->
+    <Match>
+        <Or>
+            <Class name="org.openjdk.jmc.joverflow.util.TestSetOfLongs"/>
+            <Class name="org.openjdk.jmc.joverflow.util.TestSetOfObjects"/>
+        </Or>
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    </Match>
+    <Match>
+        <Class name="org.openjdk.jmc.browser.attach.LocalJVMToolkit$3"/>
+        <Bug pattern="DE_MIGHT_IGNORE" />
+    </Match>
     
 	<!-- Allowing Eclipse plug-in style singleton default instances -->
 	<Match>
