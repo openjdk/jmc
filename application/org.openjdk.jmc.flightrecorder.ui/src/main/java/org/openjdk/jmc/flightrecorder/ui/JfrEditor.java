@@ -195,6 +195,10 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		return p;
 	}
 
+	public IPageUI getCurrentPageUI() {
+		return this.currentPageUI;
+	}
+
 	@Override
 	public IDisplayablePage getDisplayablePage(DataPageDescriptor page) {
 		return pageMap.computeIfAbsent(page, this::buildPage);
