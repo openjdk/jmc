@@ -46,7 +46,9 @@ import org.jolokia.client.exception.J4pRemoteException;
 import org.jolokia.client.request.J4pResponse;
 import org.openjdk.jmc.jolokia.JmcJolokiaJmxConnection;
 import org.openjdk.jmc.rjmx.ConnectionException;
-
+/**
+ * Jolokia based MBeanServerConnector tailored for JMC needs
+ */
 public class JmcKubernetesJmxConnection extends JmcJolokiaJmxConnection {
 
 	static final Collection<Pattern> DISCONNECT_SIGNS = Arrays.asList(Pattern.compile("Error: pods \".+\" not found")); //$NON-NLS-1$

@@ -42,8 +42,10 @@ import org.openjdk.jmc.rjmx.descriptorprovider.AbstractDescriptorProvider;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
 /**
- * I cache a list if identified JVMs that can be refreshed in the background by some means of
- * discovering JVMs and notify changes of any changes
+ * 
+ * The {@code AbstractCachedDescriptorProvider} keeps a list of identified JVMs that can be refreshed in the background by some means of
+ * discovering JVMs. 
+ * Listeners will be notified of any changes.
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractCachedDescriptorProvider extends AbstractDescriptorProvider {

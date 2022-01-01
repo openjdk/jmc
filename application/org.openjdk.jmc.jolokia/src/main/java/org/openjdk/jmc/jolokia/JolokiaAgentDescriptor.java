@@ -56,7 +56,9 @@ import org.openjdk.jmc.ui.common.jvm.Connectable;
 import org.openjdk.jmc.ui.common.jvm.JVMArch;
 import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.jvm.JVMType;
-
+/**
+ * Provide data about JVMs accessed over Jolokia for the JVM browser
+ */
 public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 
 	public static final JVMDescriptor NULL_DESCRIPTOR = new JVMDescriptor(null, null, null, null, null, null, null,
@@ -95,8 +97,8 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 	}
 
 	/**
-	 * Best effort to extract JVM information from a connection if everything works. Can be adjusted
-	 * to support different flavors of JVM
+	 * Best effort to extract JVM information from a connection if everything works. 
+	 * Can be adjusted to support different flavors of JVM.
 	 */
 	public static JVMDescriptor attemptToGetJvmInfo(RemoteJmxAdapter adapter) {
 

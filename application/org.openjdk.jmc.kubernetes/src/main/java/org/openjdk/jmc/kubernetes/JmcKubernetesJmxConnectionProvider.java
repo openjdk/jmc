@@ -40,7 +40,9 @@ import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorProvider;
 import javax.management.remote.JMXServiceURL;
-
+/**
+ * This {@code JMXConnectionProvider} handles the "kubernetes" protocol.
+ */
 public class JmcKubernetesJmxConnectionProvider implements JMXConnectorProvider {
 	@Override
 	public JMXConnector newJMXConnector(JMXServiceURL serviceURL, Map<String, ?> environment) throws IOException {

@@ -36,6 +36,7 @@ package org.openjdk.jmc.jolokia;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.LinkedList;
+import java.util.Optional;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.Descriptor;
@@ -55,8 +56,9 @@ import org.jolokia.converter.Converters;
 import org.jolokia.converter.json.JsonConvertOptions;
 
 /**
- * Make JMC specific adjustments to Jolokia JMX connection May consider to create a decorator
- * pattern if differences are big but begin with a subclass
+ * Make JMC specific adjustments to Jolokia JMX connection. 
+ * May consider to use the decorator pattern if differences are big,
+ * but for now subclass
  */
 public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
@@ -85,17 +87,11 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 		// modify descriptors the first time
 		if (DIAGNOSTIC_OPTIONS.equals(name.getCanonicalName())
 				&& mBeanInfo.getOperations()[0].getDescriptor() == ImmutableDescriptor.EMPTY_DESCRIPTOR) {
-			MBeanInfo localInfo = null;
-			// try to "steal" descriptors from this VM
-			try {
-				localInfo = ManagementFactory.getPlatformMBeanServer().getMBeanInfo(name);
-			} catch (Exception ignore) {
-				localInfo = null;
-			}
+
 			MBeanOperationInfo[] modifiedOperations = new MBeanOperationInfo[mBeanInfo.getOperations().length];
 
 			for (int i = 0; i < mBeanInfo.getOperations().length; i++) {
-				modifiedOperations[i] = stealOrBuildOperationInfo(mBeanInfo.getOperations()[i], localInfo);
+				modifiedOperations[i] = stealOrBuildOperationInfo(mBeanInfo.getOperations()[i], checkForLocalOperationInfo(name));
 			}
 			//create a copy with modified operations in place of the original MBeanInfo in the cache
 			final MBeanInfo modifiedMBeanInfo = new MBeanInfo(mBeanInfo.getClassName(), mBeanInfo.getDescription(),
@@ -105,6 +101,16 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 			return modifiedMBeanInfo;
 		}
 		return mBeanInfo;
+	}
+
+	private Optional<MBeanInfo> checkForLocalOperationInfo(ObjectName name) {
+		MBeanInfo localInfo;
+		try {
+			localInfo = ManagementFactory.getPlatformMBeanServer().getMBeanInfo(name);
+		} catch (Exception ignore) {
+			localInfo = null;
+		}
+		return Optional.ofNullable(localInfo);
 	}
 
 	@Override
@@ -125,36 +131,41 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 	}
 
 	/**
-	 * build / reverse engineer MBeanOperationInfo by using the local one if it is a match or try to
-	 * reverse engineer otherwise
+	 * Build MBeanOperationInfo by taking information from the corresponding 
+	 * MBean in the local JVM for a more precise signature. 
+	 * If it is not available locally, attempt to construct it from the metadata from Jolokia.
 	 * 
-	 * @param original
+	 * @param original MBeanInfo from Jolokia list.
 	 * @param localInfo
-	 *            MBeanInfo from this JVM to use for getting descriptor
+	 *            MBeanInfo from this JVM to use for getting descriptor.
 	 * @return Descriptor
 	 */
-	private MBeanOperationInfo stealOrBuildOperationInfo(MBeanOperationInfo original, MBeanInfo localInfo) {
-		// first attempt to get descriptor from local copy
-		if (localInfo != null) {
+	private MBeanOperationInfo stealOrBuildOperationInfo(MBeanOperationInfo original, Optional<MBeanInfo> localInfo) {			
+		return localInfo
+				.map(info -> checkForMatchingLocalOperation(original, info))// first attempt to get descriptor from local copy
+				.orElseGet(()->reverseEngineerOperationInfo(original));// if not, reverse engineer descriptor from operation info
+	}
 
-			for (MBeanOperationInfo localOperation : localInfo.getOperations()) {
-				if (localOperation.getName().equals(original.getName())) {
-					if (localOperation.getSignature().length == original.getSignature().length) {
-						for (int i = 0; i < original.getSignature().length; i++) {
-							MBeanParameterInfo param = original.getSignature()[i];
-							if (!param.getType().equals(localOperation.getSignature()[i].getType())) {
-								break;
-							} else if (i == original.getSignature().length - 1) {
-								// whole signature matches, use as replacement
-								return localOperation;
-							}
-
+	private MBeanOperationInfo checkForMatchingLocalOperation(MBeanOperationInfo original, MBeanInfo info) {
+		for (MBeanOperationInfo localOperation : info.getOperations()) {
+			if (localOperation.getName().equals(original.getName())) {
+				if (localOperation.getSignature().length == original.getSignature().length) {
+					for (int i = 0; i < original.getSignature().length; i++) {
+						MBeanParameterInfo param = original.getSignature()[i];
+						if (!param.getType().equals(localOperation.getSignature()[i].getType())) {
+							break;
+						} else if (i == original.getSignature().length - 1) {
+							// whole signature matches, use as replacement
+							return localOperation;
 						}
 					}
 				}
 			}
 		}
-		// if not reverse engineer descriptor from operation info
+		return null;
+	}
+
+	private MBeanOperationInfo reverseEngineerOperationInfo(MBeanOperationInfo original) {
 		DescriptorSupport result = new DescriptorSupport();
 		result.setField(NAME, original.getName());
 		result.setField(DESCRIPTION, original.getDescription());

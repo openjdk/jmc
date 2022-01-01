@@ -54,7 +54,6 @@ import org.openjdk.jmc.ui.misc.PasswordFieldEditor;
  * belongs to the main plug-in class. That way, preferences can be accessed directly via the
  * preference store.
  */
-
 public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage, PreferenceConstants {
 

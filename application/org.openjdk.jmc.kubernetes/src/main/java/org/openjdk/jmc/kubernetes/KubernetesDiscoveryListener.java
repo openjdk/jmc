@@ -77,7 +77,10 @@ import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
 import io.fabric8.kubernetes.client.internal.KubeConfigUtils;
 import io.fabric8.kubernetes.client.utils.Utils;
-
+/**
+ * This class attempts to connect to JVMs in pods running in kubernetes in a background thread.
+ * Enablement and parameters for the scanning is given by user preferences.
+ */
 public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvider {
 
 	private final static Pattern SECRET_PATTERN = Pattern
