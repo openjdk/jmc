@@ -54,6 +54,7 @@
 		<owasp.encoder.version>1.2.3</owasp.encoder.version>
 		<p2-maven-plugin.version>2.0.0</p2-maven-plugin.version>
 		<spifly.version>1.3.4</spifly.version>
+		<jolokia.version>1.7.1</jolokia.version>
 	</properties>
 
 	<build>
@@ -126,6 +127,18 @@
 								</artifact>
 								<artifact>
 									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-jmx-adapter:jar:standalone:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-kubernetes:jar:standalone:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-jvm:${jolokia.version}</id>
+									<transitive>false</transitive>
 								</artifact>
 							</artifacts>
 						</configuration>
