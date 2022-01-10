@@ -295,7 +295,8 @@ public class ParserStats {
 						IMCFrame imcFrame = (stackTrace).getFrames().get(0);
 						String str = StacktraceFormatToolkit.formatFrame(imcFrame,
 								new FrameSeparator(FrameCategorization.METHOD, false));
-						return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(str));
+						return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit
+								.<IItem, Object, Object> constant(str));
 					}
 				}
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(constant));
