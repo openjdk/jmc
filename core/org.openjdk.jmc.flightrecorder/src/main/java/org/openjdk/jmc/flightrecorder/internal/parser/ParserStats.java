@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -290,10 +290,14 @@ public class ParserStats {
 			}
 			if ("constant".equals(attribute.getIdentifier())) {
 				if (constant instanceof IMCStackTrace) {
-					IMCFrame imcFrame = ((IMCStackTrace) constant).getFrames().get(0);
-					String str = StacktraceFormatToolkit.formatFrame(imcFrame,
-							new FrameSeparator(FrameCategorization.METHOD, false));
-					return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(str));
+					IMCStackTrace stackTrace = ((IMCStackTrace) constant);
+					if (!stackTrace.getFrames().isEmpty()) {
+						IMCFrame imcFrame = (stackTrace).getFrames().get(0);
+						String str = StacktraceFormatToolkit.formatFrame(imcFrame,
+								new FrameSeparator(FrameCategorization.METHOD, false));
+						return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit
+								.<IItem, Object, Object> constant(str));
+					}
 				}
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(constant));
 			}
