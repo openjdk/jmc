@@ -101,7 +101,7 @@
         </dependency>
     </dependencies>
     <build>
-      <testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
+      <testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
