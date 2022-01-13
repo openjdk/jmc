@@ -79,7 +79,7 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.version>2.4.0</tycho.version>
+		<tycho.version>2.5.0</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.3.1</maven.directory.version>

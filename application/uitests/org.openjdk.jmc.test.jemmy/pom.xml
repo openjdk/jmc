@@ -51,13 +51,11 @@
 			<artifactId>common</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>

@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.openjdk.jmc.ui.celleditors;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx;visibility:=reexport,
   org.openjdk.jmc.ui
 Export-Package: org.openjdk.jmc.ui.celleditors

@@ -7,9 +7,9 @@ Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.ui.forms,
  org.openjdk.jmc.ui;visibility:=reexport,
+ org.openjdk.jmc.ui.celleditors,
  org.openjdk.jmc.rjmx;visibility:=reexport,
- org.openjdk.jmc.greychart.ui;visibility:=reexport,
- org.openjdk.jmc.ui.celleditors
+ org.openjdk.jmc.greychart.ui;visibility:=reexport
 Export-Package: org.openjdk.jmc.rjmx.ui,
  org.openjdk.jmc.rjmx.ui.attributes;
   x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,

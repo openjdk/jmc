@@ -36,8 +36,6 @@ import java.lang.reflect.Array;
 
 import org.eclipse.swt.widgets.Composite;
 
-import org.openjdk.jmc.ui.celleditors.Messages;
-
 public class ArrayLengthCellEditor extends NumberCellEditor<Integer> {
 
 	private final Class<?> arrayType;

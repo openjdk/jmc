@@ -1,17 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Name: Flightrecorder Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ui;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.flightrecorder.serializers,
  org.apache.aries.spifly.dynamic.bundle,
  org.openjdk.jmc.common,
  org.openjdk.jmc.flightrecorder;visibility:=reexport,
  org.openjdk.jmc.ui;visibility:=reexport,
- org.openjdk.jmc.flightrecorder.serializers,
+ org.openjdk.jmc.ui.celleditors,
  org.openjdk.jmc.ui.celleditors,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.jdk,

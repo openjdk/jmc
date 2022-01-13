@@ -35,7 +35,6 @@ package org.openjdk.jmc.ui.celleditors;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.widgets.Composite;
-
 import org.openjdk.jmc.rjmx.services.IUpdateInterval;
 
 public class UpdateIntervalEditingSupport extends TypedEditingSupport<IUpdateInterval> {
