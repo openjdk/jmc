@@ -44,34 +44,11 @@
 	<artifactId>org.openjdk.jmc.kubernetes</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<build>
-
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
-				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>org.jolokia</groupId>
-							<artifactId>jolokia-kubernetes</artifactId>
-							<version>1.7.0</version>
-						</dependency>
-					</extraClasspathElements>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-external-dependencies</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
