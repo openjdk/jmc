@@ -87,11 +87,6 @@
 								</artifact>
 								<artifact>
 									<id>org.lz4:lz4-java:${lz4.version}</id>
-									<override>true</override>
-									<instructions>
-										<Bundle-Name>org.lz4.lz4-java</Bundle-Name>
-										<Bundle-SymbolicName>org.lz4.lz4-java</Bundle-SymbolicName>
-									</instructions>
 								</artifact>
 								<artifact>
 									<id>org.hdrhistogram:HdrHistogram:${hdrhistogram.version}</id>
