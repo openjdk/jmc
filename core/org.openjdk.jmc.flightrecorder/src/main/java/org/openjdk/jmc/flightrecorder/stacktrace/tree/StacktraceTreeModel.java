@@ -45,6 +45,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
@@ -162,6 +163,10 @@ public class StacktraceTreeModel {
 		return items;
 	}
 
+	public IAttribute<IQuantity> getAttribute() {
+		return attribute;
+	}
+
 	private void addItem(
 		IItem item, IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor,
 		IMemberAccessor<IQuantity, IItem> quantityAccessor) {
@@ -181,6 +186,9 @@ public class StacktraceTreeModel {
 
 		// if we don't request a specific attribute, we simply count occurrences
 		double value = (quantityAccessor != null) ? quantityAccessor.getMember(item).doubleValue() : 1.0;
+		if (attribute != null && attribute.getContentType() == UnitLookup.MEMORY) {
+			value = value / 1024;
+		}
 
 		// if the stack is zero valued for the requested attribute we prune it
 		if (attribute != null && value == 0.0) {

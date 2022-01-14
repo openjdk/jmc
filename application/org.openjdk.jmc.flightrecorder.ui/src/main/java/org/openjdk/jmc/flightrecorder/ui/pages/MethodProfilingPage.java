@@ -160,7 +160,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 			if (event.index == 2 && (total = rootFork.getItemsInFork()) > 0) { // index == 2 => percentage column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
