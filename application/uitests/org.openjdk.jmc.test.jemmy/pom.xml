@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -51,13 +51,11 @@
 			<artifactId>common</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.ui.views">
+		<view
+          allowMultiple="false"
+          category="org.openjdk.jmc.ui.main"
+          class="org.openjdk.jmc.flightrecorder.heatmap.views.HeatmapView"
+          icon="icons/heatmap.png"
+          id="org.openjdk.jmc.flightrecorder.heatmap"
+          name="Heatmap View"
+          restorable="true">
+		</view>
+	</extension>
+</plugin>

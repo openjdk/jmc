@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.joverflow.stats;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -206,7 +205,7 @@ class StringStatsCollector {
 			dupStringsOvhd += overhead;
 		}
 
-		Collections.sort(dupStringList, new Comparator<DupStringStats.Entry>() {
+		dupStringList.sort(new Comparator<DupStringStats.Entry>() {
 			@Override
 			public int compare(DupStringStats.Entry e1, DupStringStats.Entry e2) {
 				return e2.overhead - e1.overhead;

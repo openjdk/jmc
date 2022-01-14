@@ -78,7 +78,7 @@ import org.openjdk.jmc.rjmx.services.IllegalOperandException;
 import org.openjdk.jmc.rjmx.ui.attributes.AttributeTreeBuilder;
 import org.openjdk.jmc.rjmx.ui.attributes.ChangeValueAction;
 import org.openjdk.jmc.rjmx.ui.attributes.ValueColumnLabelProvider;
-import org.openjdk.jmc.rjmx.ui.celleditors.AttributeEditingSupport;
+import org.openjdk.jmc.ui.celleditors.AttributeEditingSupport;
 import org.openjdk.jmc.rjmx.ui.internal.InsertArrayElementMenuAction;
 import org.openjdk.jmc.rjmx.ui.internal.RemoveArrayElementMenuAction;
 import org.openjdk.jmc.rjmx.util.internal.DefaultAttribute;

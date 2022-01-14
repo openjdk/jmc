@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
-import org.openjdk.jmc.rjmx.ui.celleditors.TypedEditingSupport;
+import org.openjdk.jmc.ui.celleditors.TypedEditingSupport;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.IColumn;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -137,7 +137,7 @@ public class MethodProfilingRule implements IRule {
 		}
 
 		void sort() {
-			Collections.sort(settingPairs, new Comparator<Pair<IQuantity, IQuantity>>() {
+			settingPairs.sort(new Comparator<Pair<IQuantity, IQuantity>>() {
 				@Override
 				public int compare(Pair<IQuantity, IQuantity> p1, Pair<IQuantity, IQuantity> p2) {
 					return p1.left.compareTo(p2.left); // sorting according to time of setting event

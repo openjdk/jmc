@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -226,7 +226,7 @@ public class GroupingAggregator {
 					while (groupsIterator.hasNext()) {
 						values.add(a.getValue(Arrays.asList(groupsIterator.next().getConsumer()).iterator()));
 					}
-					Collections.sort(values);
+					values.sort(null);
 					IQuantity total = a.getValue(consumerIterator(groups.iterator()));
 					return groupFinisher.getValue(values, total);
 				}

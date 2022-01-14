@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.latency;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -197,7 +196,7 @@ public class VMOperationRule implements IRule {
 				sortedEvents.add(event);
 			}
 		}
-		Collections.sort(sortedEvents, new Comparator<IItem>() {
+		sortedEvents.sort(new Comparator<IItem>() {
 			@Override
 			public int compare(IItem e1, IItem e2) {
 				return getStartTime(e1).compareTo(getStartTime(e2));

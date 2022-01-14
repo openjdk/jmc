@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2020, Red Hat Inc. All rights reserved.
+   Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2021, Red Hat Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -39,7 +39,7 @@
 		<artifactId>missioncontrol.core</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>coverage</artifactId>
+	<artifactId>coverage.core</artifactId>
 	<name>Code coverage report jmc/core</name>
 	<packaging>pom</packaging>
 
@@ -67,6 +67,16 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.rules.jdk</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.serializers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -102,7 +112,20 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.serializers.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.writer.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp.test</artifactId>
+			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
@@ -111,7 +134,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.7</version>
+				<version>${jacoco.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>report-aggregate</id>

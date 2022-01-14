@@ -169,7 +169,7 @@ class TypeManager {
 						throw new InvalidJfrFileException(
 								element.typeIdentifier + " is a simple type referring to itself"); //$NON-NLS-1$
 					} else {
-						reader = createFieldReader(element.fields.get(0), null);
+						reader = createFieldReader(element.fields.get(0), null, context, element.typeIdentifier);
 					}
 				} else if (fieldCount == 0 && element.superType == null) {
 					if (StringReader.STRING.equals(element.typeIdentifier)) {
@@ -187,7 +187,7 @@ class TypeManager {
 					reader = typeReader;
 					for (int i = 0; i < fieldCount; i++) {
 						FieldElement fe = element.fields.get(i);
-						IValueReader reader = createFieldReader(fe, null);
+						IValueReader reader = createFieldReader(fe, null, context, element.typeIdentifier);
 						String labelOrId = (fe.label == null) ? fe.fieldIdentifier : fe.label;
 						typeReader.addField(fe.fieldIdentifier, labelOrId, fe.description, reader);
 					}
@@ -292,6 +292,7 @@ class TypeManager {
 			Object value = constants.get(constantIndex);
 			if (value == null) {
 				value = getReader().read(input, true);
+				value = context.constantRead(constantIndex, value, element.typeIdentifier);
 				constants.put(constantIndex, value);
 			} else {
 				getReader().skip(input);
@@ -339,7 +340,7 @@ class TypeManager {
 				for (int i = 0; i < element.getFieldCount(); i++) {
 					FieldElement fe = element.fields.get(i);
 					String valueType = context.getValueInterpretation(element.typeIdentifier, fe.fieldIdentifier);
-					IValueReader reader = createFieldReader(fe, valueType);
+					IValueReader reader = createFieldReader(fe, valueType, context, element.typeIdentifier);
 					String fieldLabel = buildLabel(fe.fieldIdentifier, fe);
 					if (context.hideExperimentals() && fe.experimental) {
 						valueReaders.add(reader);
@@ -351,7 +352,8 @@ class TypeManager {
 							FieldElement nestedField = fieldType.fields.get(j);
 							String nestedId = fe.fieldIdentifier + ":" + nestedField.fieldIdentifier; //$NON-NLS-1$
 							String nestedValueType = context.getValueInterpretation(element.typeIdentifier, nestedId);
-							IValueReader nestedReader = createFieldReader(nestedField, nestedValueType);
+							IValueReader nestedReader = createFieldReader(nestedField, nestedValueType, context,
+									element.typeIdentifier);
 							valueReaders.add(nestedReader);
 							String nestedLabel = fieldLabel + " : " //$NON-NLS-1$
 									+ (nestedField.label == null ? nestedField.fieldIdentifier : nestedField.label);
@@ -384,11 +386,13 @@ class TypeManager {
 	private final Map<Long, StructContentType<Object[]>> structTypes = new HashMap<>();
 	private final FastAccessNumberMap<TypeEntry> otherTypes = new FastAccessNumberMap<>();
 	private final FastAccessNumberMap<EventTypeEntry> eventTypes = new FastAccessNumberMap<>();
+	private final LoaderContext context;
 	private final ChunkStructure header;
 	private long skippedEventCount;
 
 	TypeManager(List<ClassElement> classList, LoaderContext context, ChunkStructure header)
 			throws InvalidJfrFileException, IOException {
+		this.context = context;
 		this.header = header;
 		for (ClassElement ce : classList) {
 			if (ce.isEventType()) {
@@ -430,9 +434,12 @@ class TypeManager {
 	}
 
 	void resolveConstants() throws InvalidJfrFileException {
+		Map<String, FastAccessNumberMap<Object>> pools = new HashMap<>();
 		for (TypeEntry classEntry : otherTypes) {
 			classEntry.resolveConstants();
+			pools.put(classEntry.element.typeIdentifier, classEntry.constants);
 		}
+		context.allConstantPoolsResolved(pools);
 	}
 
 	long getSkippedEventCount() {
@@ -456,7 +463,8 @@ class TypeManager {
 		}
 	}
 
-	private IValueReader createFieldReader(FieldElement f, String valueType) throws InvalidJfrFileException {
+	private IValueReader createFieldReader(FieldElement f, String valueType, LoaderContext context, String eventTypeId)
+			throws InvalidJfrFileException {
 		TypeEntry fieldType = getTypeEntry(f.classId);
 		String typeIdentifier = fieldType.element.typeIdentifier;
 		boolean isNumeric = PrimitiveReader.isNumeric(typeIdentifier);
@@ -487,7 +495,7 @@ class TypeManager {
 			if (isNumeric) {
 				throw new InvalidJfrFileException("Numerics should not be put in constant pools"); //$NON-NLS-1$
 			}
-			reader = new PoolReader(fieldType.constants, reader.getContentType());
+			reader = new PoolReader(fieldType.constants, reader.getContentType(), context, typeIdentifier, eventTypeId);
 		}
 		return f.isArray() ? new ArrayReader(reader, header) : reader;
 	}

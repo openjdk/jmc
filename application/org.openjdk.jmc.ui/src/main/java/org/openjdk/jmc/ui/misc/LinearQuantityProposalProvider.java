@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,12 +36,10 @@ import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Locale;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearUnit;
@@ -67,7 +65,7 @@ public class LinearQuantityProposalProvider implements IContentProposalProvider 
 			unitList.addAll(allUnits);
 			// Add after to keep custom units below an equivalent standard unit (if aliasing is allowed)
 			unitList.add(unit);
-			Collections.sort(unitList);
+			unitList.sort(null);
 			units = unitList;
 		} else {
 			units = allUnits;

@@ -34,7 +34,6 @@ package org.openjdk.jmc.agent.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -127,7 +126,7 @@ public class TestDefaultTransformRegistry {
 		final String invalidSnippet = XML_EVENT_DESCRIPTION;
 		boolean exceptionThrown = false;
 		try {
-			Set<String> modifiedClassNames = registry.modify(invalidSnippet);
+			registry.modify(invalidSnippet);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			exceptionThrown = true;

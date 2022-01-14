@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,20 @@ public class Messages extends NLS {
 	public static String TriggerActionMail_SUBJECT_TRIGGERED;
 	public static String TriggerActionSystemOut_FOOTER;
 	public static String TriggerActionSystemOut_HEADER;
+	public static String TriggerActionTwitterSendUpdateStatus_ErrorMessage;
+	public static String TriggerActionTwitterSendDirectMessage_ErrorMessage;
+	public static String TriggerActionTwitterVerifyTweeter_ErrorMessage;
+	public static String TriggerActionTwitterUnauthorizedUser_Title;
+	public static String TriggerActionTwitterUnauthorizedUser_ErrorMessage;
+	public static String TriggerActionTwitterInvalidUser_Title;
+	public static String TriggerActionTwitterInvalidUser_ErrorMessage;
+	public static String TriggerActionTwitterAuthorization_Exception;
+	public static String TriggerActionTwitterAuthentication_Exception;
+	public static String TriggerActionTwitterRequestToken_Exception;
+	public static String TriggerActionTwitterURIParsing_Exception;
+	public static String TriggerActionTwitterEncryption_Exception;
+	public static String TriggerActionTwitterEncoding_Exception;
+	public static String TriggerActionTwitterPreferenceStorage_Exception;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,8 +37,6 @@ import org.openjdk.jmc.rjmx.triggers.IActivatableTriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 
-import twitter4j.TwitterException;
-
 /**
  * Action that updates the status.
  */
@@ -51,7 +49,7 @@ public class UpdateStatus extends TriggerAction implements IActivatableTriggerAc
 	}
 
 	@Override
-	public void handleNotificationEvent(TriggerEvent event) throws TwitterException {
+	public void handleNotificationEvent(TriggerEvent event) throws Exception {
 		String username = getSetting(USERNAME_FIELD).getString();
 		String message = TwitterPlugin.createMessage(getSetting(MESSAGE_FIELD).getString(), event);
 		if (username != null && message != null) {
@@ -59,7 +57,7 @@ public class UpdateStatus extends TriggerAction implements IActivatableTriggerAc
 		}
 	}
 
-	private void updateStatus(String username, String message) throws TwitterException {
+	private void updateStatus(String username, String message) throws Exception {
 		TwitterPlugin.getDefault().updateStatus(username, message);
 	}
 

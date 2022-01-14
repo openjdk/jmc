@@ -94,6 +94,7 @@ public class ChunkLoaderV1 implements IChunkLoader {
 			index += size;
 		}
 		context.setSkippedEventCount(manager.getSkippedEventCount());
+		context.addConstantPoolExtensions();
 		return data;
 	}
 

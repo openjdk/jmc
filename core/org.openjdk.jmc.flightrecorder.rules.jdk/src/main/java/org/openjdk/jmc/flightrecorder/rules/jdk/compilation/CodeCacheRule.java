@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.compilation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -216,7 +215,7 @@ public class CodeCacheRule implements IRule {
 			addIfHalfFull(nonProfiledRatio, heaps, NON_PROFILED_NAME);
 			addIfHalfFull(nonNMethodsRatio, heaps, NON_NMETHODS_NAME);
 			IQuantity worstRatio;
-			Collections.sort(heaps);
+			heaps.sort(null);
 			builder.addResult(CODE_HEAPS, heaps);
 			if (heaps.size() > 0) {
 				if (heaps.size() > 1) {
@@ -238,7 +237,7 @@ public class CodeCacheRule implements IRule {
 				 * don't get null descriptions when we create the result.
 				 */
 				List<IQuantity> ratios = Arrays.asList(profiledRatio, nonProfiledRatio, nonNMethodsRatio);
-				Collections.sort(ratios);
+				ratios.sort(null);
 				worstRatio = ratios.get(0);
 			}
 			allocationRatioScore = RulesToolkit.mapExp100(100 - worstRatio.doubleValueIn(UnitLookup.PERCENT),

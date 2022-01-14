@@ -43,7 +43,6 @@ import static org.openjdk.jmc.rjmx.actionprovider.internal.ActionProviderGrammar
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,6 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.actionprovider.IActionProviderFactory;
@@ -82,7 +80,7 @@ public class ActionProviderRepository {
 			}
 		};
 
-		Collections.sort(configurationElements, comparator);
+		configurationElements.sort(comparator);
 		for (IConfigurationElement element : configurationElements) {
 			try {
 				loadElement(element, handle, ap, declaredProviders);
@@ -95,7 +93,7 @@ public class ActionProviderRepository {
 			}
 		}
 
-		Collections.sort(addOnElements, comparator);
+		addOnElements.sort(comparator);
 		for (IConfigurationElement element : addOnElements) {
 			String id = element.getAttribute(LOCATION_ATTRIBUTE);
 			ActionProviderDescriptor apd = declaredProviders.get(id);

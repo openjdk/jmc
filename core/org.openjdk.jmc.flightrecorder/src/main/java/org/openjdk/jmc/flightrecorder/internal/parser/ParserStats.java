@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -61,6 +61,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.flightrecorder.IParserStats.IEventStats;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
@@ -71,10 +72,11 @@ public class ParserStats {
 	private final AtomicInteger chunkCount = new AtomicInteger();
 	private final AtomicLong skippedEventCount = new AtomicLong();
 	private final ConcurrentHashMap<String, EventTypeStats> statsByType = new ConcurrentHashMap<>();
-	private final ConcurrentLinkedDeque<ConstantPoolInfo> constantPoolInfoList = new ConcurrentLinkedDeque<ConstantPoolInfo>();
+	private final ConcurrentLinkedDeque<ConstantPoolInfo> constantPoolInfoList = new ConcurrentLinkedDeque<>();
 	private final ConcurrentHashMap<String, Long> entryPoolSizeByType = new ConcurrentHashMap<>();
 	private IItemCollection poolStats;
 	private IItemCollection constants;
+	private Map<String, IConstantPoolExtension> constantPoolExtensions = new ConcurrentHashMap<>();
 
 	public void setVersion(short majorVersion, short minorVersion) {
 		this.majorVersion = majorVersion;
@@ -110,6 +112,10 @@ public class ParserStats {
 			}
 			return value + size;
 		});
+	}
+
+	public void addConstantPoolExtension(IConstantPoolExtension extension) {
+		constantPoolExtensions.put(extension.getId(), extension);
 	}
 
 	public void forEachEventType(Consumer<IEventStats> consumer) {
@@ -173,6 +179,10 @@ public class ParserStats {
 			constants = ItemCollectionToolkit.build(items.stream());
 		}
 		return constants;
+	}
+
+	public Map<String, IConstantPoolExtension> getConstantPoolExtensions() {
+		return constantPoolExtensions;
 	}
 
 	static class ConstPoolItem implements IItem, IType<IItem> {
@@ -280,10 +290,14 @@ public class ParserStats {
 			}
 			if ("constant".equals(attribute.getIdentifier())) {
 				if (constant instanceof IMCStackTrace) {
-					IMCFrame imcFrame = ((IMCStackTrace) constant).getFrames().get(0);
-					String str = StacktraceFormatToolkit.formatFrame(imcFrame,
-							new FrameSeparator(FrameCategorization.METHOD, false));
-					return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(str));
+					IMCStackTrace stackTrace = ((IMCStackTrace) constant);
+					if (!stackTrace.getFrames().isEmpty()) {
+						IMCFrame imcFrame = (stackTrace).getFrames().get(0);
+						String str = StacktraceFormatToolkit.formatFrame(imcFrame,
+								new FrameSeparator(FrameCategorization.METHOD, false));
+						return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit
+								.<IItem, Object, Object> constant(str));
+					}
 				}
 				return ((IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Object, Object> constant(constant));
 			}

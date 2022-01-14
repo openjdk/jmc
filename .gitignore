@@ -44,6 +44,7 @@ application/coverage/coverage-report
 # Ignore the fetched JS libraries
 application/org.openjdk.jmc.flightrecorder.flameview/src/main/resources/jslibs/
 application/org.openjdk.jmc.flightrecorder.graphview/src/main/resources/jslibs/
+application/org.openjdk.jmc.flightrecorder.heatmap/src/main/resources/jslibs/
 
 # Ignore the output from running the p2 server from the scripts
 releng/third-party/nohup.out
