@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -35,22 +36,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.releng</artifactId>
+		<artifactId>platform-definitions</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>platform-definitions</artifactId>
-	<packaging>pom</packaging>
+	<artifactId>platform-definition-2021-09</artifactId>
+	<packaging>eclipse-target-definition</packaging>
 
 	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
-
-	<modules>
-		<module>platform-definition-2021-09</module>
-		<module>platform-definition-2021-06</module>
-		<module>platform-definition-2021-03</module>
-		<module>platform-definition-2020-12</module>
-		<module>platform-definition-2020-09</module>
-		<module>platform-definition-2020-06</module>
-	</modules>
 </project>
