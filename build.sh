@@ -4,7 +4,10 @@ set -u # a reference to any variable you have not previously defined causes the 
 set -o pipefail # If any command in a pipeline fails, that return code will be used as the return code of the whole pipeline
 
 PROGNAME=$(basename "$0")
-
+ARCH="x86_64"
+if [[ "`uname -m`" =~ "arm64" ]]; then 
+  ARCH="aarch64"
+fi
 JETTY_PID=""
 BASEDIR=""
 JMC_DIR=""
@@ -121,9 +124,9 @@ function packageJmc() {
     mvn package --log-file "${packageLog}"
 
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
-        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc\""
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/linux/gtk/${ARCH}/JDK\ Mission\ Control/jmc\""
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
-        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/${ARCH}/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
     else
         err_log "unknown OS type: \"${OSTYPE}\". Please check your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
     fi
@@ -193,9 +196,9 @@ function clean() {
 function run() {
     local path
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
-        path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK Mission Control/jmc"
+        path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/${ARCH}/JDK Mission Control/jmc"
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
-        path="${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK Mission Control.app/Contents/MacOS/jmc"
+        path="${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/${ARCH}/JDK Mission Control.app/Contents/MacOS/jmc"
     else
         err_log "unknown OS type: ${OSTYPE}"
         exit 1
