@@ -62,8 +62,8 @@
 		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
 		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
 		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
-		<mockito.core.version>3.7.7</mockito.core.version>
-		<mockito.inline.version>3.7.7</mockito.inline.version>
+		<mockito.core.version>3.12.4</mockito.core.version>
+		<mockito.inline.version>3.12.4</mockito.inline.version>
 		<build.helper.maven.version>3.2.0</build.helper.maven.version>
 		<surefireArgLine></surefireArgLine>
 	</properties>
