@@ -171,10 +171,11 @@ public final class TestToolkit {
 				helpMessage = "";
 			}
 			JDPClientTest.LOGGER.log(Level.WARNING, "Broadcasting does not seem to be possible.\n"
-					+ "This is usually related to VPN. There are three possible ways to remedy this:\n"
+					+ "This is usually related to VPN. There are four possible ways to remedy this:\n"
 					+ "  1. Try to configure your VPN, or perhaps turn it off.\n"
-					+ "  2. Add a proper route for local multicast" + helpMessage + "\n"
-					+ "  3. If the two above really can't be made to work, use -DskipJDPMulticastTests=true to skip the tests.");
+					+ "  2. Add a proper route for local multicast" + helpMessage + ".\n"
+					+ "  3. If the two above really can't be made to work, use -DskipJDPMulticastTests=true (with Java or maven)\n"
+					+ "     or --skipJDPMulticastTests (as first argument of the build script)");
 		}
 		return true;
 	}
