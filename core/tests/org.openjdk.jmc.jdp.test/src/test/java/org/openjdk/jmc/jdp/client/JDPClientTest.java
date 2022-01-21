@@ -41,6 +41,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,6 +63,7 @@ public class JDPClientTest {
 
 	@Test
 	public void testJDPClient() throws Exception {
+		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
 		JDPClient client = createDefaultClient();
 		JDPServer server = createDefaultServer();
 		client.start();
@@ -83,6 +85,7 @@ public class JDPClientTest {
 
 	@Test
 	public void testChangePacket() throws Exception {
+		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
 		JDPClient client = createDefaultClient();
 		JDPServer server = createDefaultServer();
 		client.start();

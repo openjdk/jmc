@@ -32,9 +32,12 @@
  */
 package org.openjdk.jmc.jdp.client;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.logging.Level;
@@ -52,6 +55,10 @@ public final class TestToolkit {
 	public static final int TEST_MULTICAST_PORT = 7711;
 	private static final String TEST_MULTICAST_ADDRESS_STRING = "224.0.23.177";
 	public static final InetAddress TEST_MULTICAST_ADDRESS;
+	/**
+	 * See https://bugs.openjdk.java.net/browse/JMC-7539
+	 */
+	public static final boolean BROADCASTING_SUPPORTED;
 
 	static {
 		InetAddress tmp = null;
@@ -62,6 +69,7 @@ public final class TestToolkit {
 			JDPClientTest.LOGGER.log(Level.SEVERE, "Could not create test multicast address!", e);
 		}
 		TEST_MULTICAST_ADDRESS = tmp;
+		BROADCASTING_SUPPORTED = isBroadcastingSupported();
 	}
 
 	private TestToolkit() {
@@ -148,4 +156,37 @@ public final class TestToolkit {
 		}
 		return bytes;
 	}
+
+    private static boolean isBroadcastingSupported() {
+        try {
+            InetAddress multiCastAddress = InetAddress.getByName("239.255.255.255");
+            int multiCastPort = 7711;
+            Thread thread = new Thread(() -> {
+                try {
+                    MulticastSocket ssocket = new MulticastSocket(multiCastPort);
+                    ssocket.setTimeToLive(1);
+                    ssocket.joinGroup(multiCastAddress);
+                    final DatagramPacket dp = new DatagramPacket(new byte[]{1}, 1, multiCastAddress, multiCastPort);
+                    while (true) {
+                        ssocket.send(dp);
+                        Thread.sleep(10);
+                    }
+                } catch (InterruptedException | IOException e) {
+                }
+            });
+            thread.start();
+            try {
+                MulticastSocket socket = new MulticastSocket(multiCastPort);
+                socket.joinGroup(multiCastAddress);
+                byte[] buffer = new byte[4096];
+                socket.setSoTimeout(300);
+                socket.receive(new DatagramPacket(buffer, buffer.length));
+                thread.interrupt();
+                return true;
+            } catch (IOException e) {
+                thread.interrupt();
+            }
+        } catch (UnknownHostException ex) {}
+        return false;
+    }
 }

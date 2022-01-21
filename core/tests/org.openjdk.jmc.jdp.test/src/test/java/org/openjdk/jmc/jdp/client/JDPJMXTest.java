@@ -39,6 +39,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.openjdk.jmc.jdp.common.Configuration;
@@ -58,6 +59,7 @@ public class JDPJMXTest {
 
 	@Test
 	public void testJDPClient() throws Exception {
+		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
 		JDPClient client = createDefaultClient();
 		JDPServer server = TestToolkit.createDefaultJMXJDPServer(discoverableID);
 		TestToolkit.printServerSettings(server);
