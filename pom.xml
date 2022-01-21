@@ -135,6 +135,9 @@
 		</profile>
 		<profile>
 			<id>2021-09</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>
@@ -156,9 +159,6 @@
 		</profile>
 		<profile>
 			<id>2021-06</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<build>
 				<plugins>
 					<plugin>
