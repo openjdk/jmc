@@ -157,36 +157,37 @@ public final class TestToolkit {
 		return bytes;
 	}
 
-    private static boolean isBroadcastingSupported() {
-        try {
-            InetAddress multiCastAddress = InetAddress.getByName("239.255.255.255");
-            int multiCastPort = 7711;
-            Thread thread = new Thread(() -> {
-                try {
-                    MulticastSocket ssocket = new MulticastSocket(multiCastPort);
-                    ssocket.setTimeToLive(1);
-                    ssocket.joinGroup(multiCastAddress);
-                    final DatagramPacket dp = new DatagramPacket(new byte[]{1}, 1, multiCastAddress, multiCastPort);
-                    while (true) {
-                        ssocket.send(dp);
-                        Thread.sleep(10);
-                    }
-                } catch (InterruptedException | IOException e) {
-                }
-            });
-            thread.start();
-            try {
-                MulticastSocket socket = new MulticastSocket(multiCastPort);
-                socket.joinGroup(multiCastAddress);
-                byte[] buffer = new byte[4096];
-                socket.setSoTimeout(300);
-                socket.receive(new DatagramPacket(buffer, buffer.length));
-                thread.interrupt();
-                return true;
-            } catch (IOException e) {
-                thread.interrupt();
-            }
-        } catch (UnknownHostException ex) {}
-        return false;
-    }
+	private static boolean isBroadcastingSupported() {
+		try {
+			InetAddress multiCastAddress = InetAddress.getByName("239.255.255.255");
+			int multiCastPort = 7711;
+			Thread thread = new Thread(() -> {
+				try {
+					MulticastSocket ssocket = new MulticastSocket(multiCastPort);
+					ssocket.setTimeToLive(1);
+					ssocket.joinGroup(multiCastAddress);
+					final DatagramPacket dp = new DatagramPacket(new byte[] { 1 }, 1, multiCastAddress, multiCastPort);
+					while (true) {
+						ssocket.send(dp);
+						Thread.sleep(10);
+					}
+				} catch (InterruptedException | IOException e) {
+				}
+			});
+			thread.start();
+			try {
+				MulticastSocket socket = new MulticastSocket(multiCastPort);
+				socket.joinGroup(multiCastAddress);
+				byte[] buffer = new byte[4096];
+				socket.setSoTimeout(300);
+				socket.receive(new DatagramPacket(buffer, buffer.length));
+				thread.interrupt();
+				return true;
+			} catch (IOException e) {
+				thread.interrupt();
+			}
+		} catch (UnknownHostException ex) {
+		}
+		return false;
+	}
 }
