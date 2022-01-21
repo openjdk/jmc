@@ -162,8 +162,7 @@ public final class TestToolkit {
 			InetAddress multiCastAddress = InetAddress.getByName("239.255.255.255");
 			int multiCastPort = 7711;
 			Thread thread = new Thread(() -> {
-				try {
-					MulticastSocket ssocket = new MulticastSocket(multiCastPort);
+				try (MulticastSocket ssocket = new MulticastSocket(multiCastPort)) {
 					ssocket.setTimeToLive(1);
 					ssocket.joinGroup(multiCastAddress);
 					final DatagramPacket dp = new DatagramPacket(new byte[] { 1 }, 1, multiCastAddress, multiCastPort);
@@ -175,15 +174,14 @@ public final class TestToolkit {
 				}
 			});
 			thread.start();
-			try {
-				MulticastSocket socket = new MulticastSocket(multiCastPort);
+			try (MulticastSocket socket = new MulticastSocket(multiCastPort)){
 				socket.joinGroup(multiCastAddress);
 				byte[] buffer = new byte[4096];
 				socket.setSoTimeout(300);
 				socket.receive(new DatagramPacket(buffer, buffer.length));
-				thread.interrupt();
 				return true;
 			} catch (IOException e) {
+			} finally {
 				thread.interrupt();
 			}
 		} catch (UnknownHostException ex) {
