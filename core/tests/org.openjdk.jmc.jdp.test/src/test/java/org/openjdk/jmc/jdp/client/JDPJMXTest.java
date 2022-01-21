@@ -59,7 +59,7 @@ public class JDPJMXTest {
 
 	@Test
 	public void testJDPClient() throws Exception {
-		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
+		Assume.assumeTrue(TestToolkit.areBroadcastingTestsEnabled());
 		JDPClient client = createDefaultClient();
 		JDPServer server = TestToolkit.createDefaultJMXJDPServer(discoverableID);
 		TestToolkit.printServerSettings(server);

@@ -55,11 +55,6 @@ public final class TestToolkit {
 	public static final int TEST_MULTICAST_PORT = 7711;
 	private static final String TEST_MULTICAST_ADDRESS_STRING = "224.0.23.177";
 	public static final InetAddress TEST_MULTICAST_ADDRESS;
-	/**
-	 * See https://bugs.openjdk.java.net/browse/JMC-7539
-	 */
-	public static final boolean BROADCASTING_SUPPORTED;
-
 	static {
 		InetAddress tmp = null;
 		try {
@@ -69,7 +64,6 @@ public final class TestToolkit {
 			JDPClientTest.LOGGER.log(Level.SEVERE, "Could not create test multicast address!", e);
 		}
 		TEST_MULTICAST_ADDRESS = tmp;
-		BROADCASTING_SUPPORTED = isBroadcastingSupported();
 	}
 
 	private TestToolkit() {
@@ -157,34 +151,59 @@ public final class TestToolkit {
 		return bytes;
 	}
 
-	private static boolean isBroadcastingSupported() {
-		try {
-			InetAddress multiCastAddress = InetAddress.getByName("239.255.255.255");
-			int multiCastPort = 7711;
-			Thread thread = new Thread(() -> {
-				try (MulticastSocket ssocket = new MulticastSocket(multiCastPort)) {
-					ssocket.setTimeToLive(1);
-					ssocket.joinGroup(multiCastAddress);
-					final DatagramPacket dp = new DatagramPacket(new byte[] {1}, 1, multiCastAddress, multiCastPort);
-					while (true) {
-						ssocket.send(dp);
-						Thread.sleep(10);
-					}
-				} catch (InterruptedException | IOException e) {
-				}
-			});
-			thread.start();
-			try (MulticastSocket socket = new MulticastSocket(multiCastPort)) {
-				socket.joinGroup(multiCastAddress);
-				byte[] buffer = new byte[4096];
-				socket.setSoTimeout(300);
-				socket.receive(new DatagramPacket(buffer, buffer.length));
-				return true;
-			} catch (IOException e) {
-			} finally {
-				thread.interrupt();
+	/**
+	 * See https://bugs.openjdk.java.net/browse/JMC-7539
+	 */
+	public static boolean areBroadcastingTestsEnabled() {
+		if (System.getProperty("skipJDPMulticastTests", "false").equals("true")) {
+			JDPClientTest.LOGGER.log(Level.INFO, "Broadcasting related tests are disabled");
+			return false;
+		}
+		if (!isBroadcastingPossible()) {
+			String os = System.getProperty("os.name").toLowerCase();
+			String helpMessage = ", you could try ";
+			String address = TEST_MULTICAST_ADDRESS.getCanonicalHostName();
+			if (os.startsWith("mac") || os.startsWith("darwin")) {
+				helpMessage += String.format("'sudo route add -host %s -interface en0'", address);
+			} else if (os.startsWith("linux")) {
+				helpMessage += String.format("'sudo ip route add %s dev eth0'", address);
+			} else {
+				helpMessage = "";
 			}
-		} catch (UnknownHostException ex) {
+			JDPClientTest.LOGGER.log(Level.WARNING, "Broadcasting does not seem to be possible.\n"
+					+ "This is usually related to VPN. There are three possible ways to remedy this:\n"
+					+ "  1. Try to configure your VPN, or perhaps turn it off.\n"
+					+ "  2. Add a proper route for local multicast" + helpMessage + "\n"
+					+ "  3. If the two above really can't be made to work, use -DskipJDPMulticastTests=true to skip the tests.");
+		}
+		return true;
+	}
+
+	private static boolean isBroadcastingPossible() {
+		InetAddress multiCastAddress = TEST_MULTICAST_ADDRESS;
+		int multiCastPort = 7711;
+		Thread thread = new Thread(() -> {
+			try (MulticastSocket ssocket = new MulticastSocket(multiCastPort)) {
+				ssocket.setTimeToLive(1);
+				ssocket.joinGroup(multiCastAddress);
+				final DatagramPacket dp = new DatagramPacket(new byte[] { 1 }, 1, multiCastAddress, multiCastPort);
+				while (true) {
+					ssocket.send(dp);
+					Thread.sleep(10);
+				}
+			} catch (InterruptedException | IOException e) {
+			}
+		});
+		thread.start();
+		try (MulticastSocket socket = new MulticastSocket(multiCastPort)) {
+			socket.joinGroup(multiCastAddress);
+			byte[] buffer = new byte[4096];
+			socket.setSoTimeout(300);
+			socket.receive(new DatagramPacket(buffer, buffer.length));
+			return true;
+		} catch (IOException e) {
+		} finally {
+			thread.interrupt();
 		}
 		return false;
 	}

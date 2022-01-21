@@ -63,7 +63,7 @@ public class JDPClientTest {
 
 	@Test
 	public void testJDPClient() throws Exception {
-		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
+		Assume.assumeTrue(TestToolkit.areBroadcastingTestsEnabled());
 		JDPClient client = createDefaultClient();
 		JDPServer server = createDefaultServer();
 		client.start();
@@ -85,7 +85,7 @@ public class JDPClientTest {
 
 	@Test
 	public void testChangePacket() throws Exception {
-		Assume.assumeTrue(TestToolkit.BROADCASTING_SUPPORTED);
+		Assume.assumeTrue(TestToolkit.areBroadcastingTestsEnabled());
 		JDPClient client = createDefaultClient();
 		JDPServer server = createDefaultServer();
 		client.start();
