@@ -187,7 +187,7 @@ public final class TestToolkit {
 			try (MulticastSocket ssocket = new MulticastSocket(multiCastPort)) {
 				ssocket.setTimeToLive(1);
 				ssocket.joinGroup(multiCastAddress);
-				final DatagramPacket dp = new DatagramPacket(new byte[] { 1 }, 1, multiCastAddress, multiCastPort);
+				final DatagramPacket dp = new DatagramPacket(new byte[] {1}, 1, multiCastAddress, multiCastPort);
 				while (true) {
 					ssocket.send(dp);
 					Thread.sleep(10);
