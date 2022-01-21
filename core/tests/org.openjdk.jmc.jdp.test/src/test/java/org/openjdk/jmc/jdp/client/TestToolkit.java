@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -174,7 +174,7 @@ public final class TestToolkit {
 				}
 			});
 			thread.start();
-			try (MulticastSocket socket = new MulticastSocket(multiCastPort)){
+			try (MulticastSocket socket = new MulticastSocket(multiCastPort)) {
 				socket.joinGroup(multiCastAddress);
 				byte[] buffer = new byte[4096];
 				socket.setSoTimeout(300);
