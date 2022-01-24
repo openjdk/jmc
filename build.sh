@@ -294,7 +294,7 @@ function parseArgs() {
                 runAgentByClass "org.openjdk.jmc.agent.converters.test.InstrumentMeConverter"
                 ;;
             --skipJDPMulticastTests)
-                JVM_ARGUMENTS="${JVM_ARGUMENTS} -DskipJDPMulticastTests=true "
+                JVM_ARGUMENTS="${JVM_ARGUMENTS} -DskipJDPMulticastTests=true"
                 ;;
             *)
                 err_log "unknown arguments: $@"

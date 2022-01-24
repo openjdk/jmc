@@ -55,6 +55,7 @@ public final class TestToolkit {
 	public static final int TEST_MULTICAST_PORT = 7711;
 	private static final String TEST_MULTICAST_ADDRESS_STRING = "224.0.23.177";
 	public static final InetAddress TEST_MULTICAST_ADDRESS;
+
 	static {
 		InetAddress tmp = null;
 		try {
@@ -155,7 +156,7 @@ public final class TestToolkit {
 	 * See https://bugs.openjdk.java.net/browse/JMC-7539
 	 */
 	public static boolean areBroadcastingTestsEnabled() {
-		if (System.getProperty("skipJDPMulticastTests", "false").equals("true")) {
+		if (Boolean.getBoolean("skipJDPMulticastTests")) {
 			JDPClientTest.LOGGER.log(Level.INFO, "Broadcasting related tests are disabled");
 			return false;
 		}
@@ -167,11 +168,14 @@ public final class TestToolkit {
 				helpMessage += String.format("'sudo route add -host %s -interface en0'", address);
 			} else if (os.startsWith("linux")) {
 				helpMessage += String.format("'sudo ip route add %s dev eth0'", address);
+			} else if (os.startsWith("win")) {
+				helpMessage += String.format("'route add %s <gateway>' in a shell with administrator permissions",
+						address);
 			} else {
 				helpMessage = "";
 			}
 			JDPClientTest.LOGGER.log(Level.WARNING, "Broadcasting does not seem to be possible.\n"
-					+ "This is usually related to VPN. There are four possible ways to remedy this:\n"
+					+ "This is usually related to VPN. There are three possible ways to remedy this:\n"
 					+ "  1. Try to configure your VPN, or perhaps turn it off.\n"
 					+ "  2. Add a proper route for local multicast" + helpMessage + ".\n"
 					+ "  3. If the two above really can't be made to work, use -DskipJDPMulticastTests=true (with Java or maven)\n"
