@@ -24,5 +24,6 @@ Import-Package: org.openjdk.jmc.common,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.tree,
  org.openjdk.jmc.flightrecorder.rules.util,
- org.openjdk.jmc.flightrecorder.stacktrace
+ org.openjdk.jmc.flightrecorder.stacktrace,
+ org.owasp.encoder
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.rules.jdk
