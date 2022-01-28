@@ -9,4 +9,4 @@ Export-Package: org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.serializers.json,
  org.openjdk.jmc.flightrecorder.serializers.dot
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.serializers
-Require-Bundle: org.lz4.lz4-java, org.openjdk.jmc.flightrecorder
+Require-Bundle: lz4-java, org.openjdk.jmc.flightrecorder
