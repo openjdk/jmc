@@ -65,7 +65,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v5.min.js</url>
+							<url>https://d3js.org/d3.v6.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
