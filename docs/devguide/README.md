@@ -17,7 +17,7 @@ Install it, start it and create a new workspace for your JMC work. Creating a ne
 ## Installing JDKs
 If you haven't already, you should now first build JMC using the instructions in the [README.md](../../README.md). 
 
-Next set up your JDKs in your Eclipse. Download and install a JDK 8 and JDK 11 (or the very latest update of the latest JDK), then open Window | Preferences and then select Java / Installed JREs. Add your favourite JKD 8 and JDK 11 JDKs (Add…) and then use Java / Installed JREs / Execution Environments to set them as defaults for the JDK 8 and JDK 11 execution environments.
+Next set up your JDKs in your Eclipse. Download and install a JDK 8 and JDK 11 (or at most JDK 17), then open Window | Preferences and then select Java / Installed JREs. Add your favourite JKD 8 and JDK 11 JDKs (Add…) and then use Java / Installed JREs / Execution Environments to set them as defaults for the JDK 8 and JDK 11 execution environments.
 
 Setting installed JREs:
 
@@ -27,7 +27,9 @@ Setting execution environments:
 
 ![Set Execution Environment](images/setexecutionenvironment.png)
 
-Okay, we now have our JDKs set up. If you want to import not only the JMC core project, you will next need to set up a user library for things that JMC will need from the JDK. Go to Preferences | Java/Build Path/User Libraries and create a new library named JMC_JDK. Add (Add External JARs…) the following JARs from a JDK 8 (u40 or above) to the User Library: tools.jar (/lib/tools.jar) and finally jconsole.jar (/lib/jconsole.jar).
+On JDK 17: you might need to change the execution environment in this tab to "JavaSE-11" and select a JDK 17 as the used JDK.
+
+Okay, we now have our JDKs set up. If you want to import not only the JMC core project, you will next need to set up a user library for things that JMC will need from the JDK. Go to Preferences | Java/Build Path/User Libraries and create a new library named JMC_JDK. Add (Add External JARs…) the following JARs from a JDK 8 (u40 or above) to the User Library: tools.jar (/lib/tools.jar) and finally jconsole.jar (/lib/jconsole.jar). On JDK 17 you have to get these libraries from an JDK 8 package.
 
 Creating the user library:
 
@@ -82,3 +84,5 @@ Optional:
 If you have the spotbugs plug-in installed, you should also import the spotbugs excludes (configuration/spotbugs/spotbugs-exclude.xml). There is also a common dictionary (configuration/ide/eclipse/dictionary/dictionary.txt) and templates (configuration/ide/eclipse/templates/JMC templates.xml) which you may find useful.
 
 For dynamic working sets, see http://hirt.se/blog/?p=1149.
+
+For testing: Run all tests as "JUnit Plugin-In Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests.
