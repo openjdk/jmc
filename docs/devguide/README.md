@@ -85,4 +85,4 @@ If you have the spotbugs plug-in installed, you should also import the spotbugs 
 
 For dynamic working sets, see http://hirt.se/blog/?p=1149.
 
-For testing: Run all tests as "JUnit Plugin-In Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests.
+For testing: Run all tests as "JUnit Plugin-In Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests. Run the class `org.openjdk.jmc.rjmx.test.testutil.JVMKeepAlive` with the VM arguments `-Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false` alongside.
