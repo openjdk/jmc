@@ -84,3 +84,5 @@ Optional:
 If you have the spotbugs plug-in installed, you should also import the spotbugs excludes (`configuration/spotbugs/spotbugs-exclude.xml`). There is also a common dictionary (`configuration/ide/eclipse/dictionary/dictionary.txt`) and templates (`configuration/ide/eclipse/templates/JMC templates.xml`) which you may find useful.
 
 For dynamic working sets, see http://hirt.se/blog/?p=1149.
+
+For testing: Run all tests as "JUnit Plugin-In Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests.
