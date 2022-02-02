@@ -3,51 +3,26 @@ name: validate
 on: [push, pull_request]
 
 jobs:
-  linux:
+  unix:
     strategy:
       matrix:
         jdk: ['11', '17']
-    runs-on: 'ubuntu-latest'
+        os: ['ubuntu-latest', 'macOS-latest']
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} with JDK ${{ matrix.jdk }}
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
       with:
-        java-version: {{ matrix.jdk }}
+        java-version: ${{ matrix.jdk }}
         java-package: jdk
     - name: Cache local Maven repository
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-{{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-${{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-{{ matrix.jdk }}maven-
-    - name: Check formatting
-      run: ./scripts/checkformatting.sh
-    - name: Run core tests
-      run: ./scripts/runcoretests.sh
-    - name: Run application tests
-      run: ./scripts/runapptests.sh
-    - name: Run agent tests
-      run: ./scripts/runagenttests.sh
-
-  mac:
-    strategy:
-      matrix:
-        jdk: ['11', '17']
-    runs-on: 'macOS-latest'
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: {{ matrix.jdk }}
-        java-package: jdk
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-{{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-{{ matrix.jdk }}-maven-
+          ${{ runner.os }}-${{ matrix.jdk }}maven-
     - name: Check formatting
       run: ./scripts/checkformatting.sh
     - name: Run core tests
@@ -62,19 +37,20 @@ jobs:
       matrix:
         jdk: ['11', '17']
     runs-on: 'windows-latest'
+    name: windows-latest with JDK ${{ matrix.jdk }}
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
       with:
-        java-version: {{ matrix.jdk }}
+        java-version: ${{ matrix.jdk }}
         java-package: jdk
     - name: Cache local Maven repository
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-{{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-${{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-{{ matrix.jdk }}-maven-
+          ${{ runner.os }}-${{ matrix.jdk }}-maven-
     - name: Check formatting
       run: .\scripts\checkformatting.bat
       shell: cmd
