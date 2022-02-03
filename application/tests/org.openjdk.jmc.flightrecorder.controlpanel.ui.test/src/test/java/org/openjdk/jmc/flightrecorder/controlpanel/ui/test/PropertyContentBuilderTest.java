@@ -338,8 +338,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		for (T pathElement : actualNodes) {
 			if (!pathElement.getName().equals("jdk")) {
 				// jdk named root nodes are related to nodes that are not supported in newer
-				// JDKs
-				// like jdk.SafepointWaitBlocked (removed in JDK 13)
+				// JDKs like jdk.SafepointWaitBlocked (removed in JDK 13)
 				res.add(pathElement);
 			}
 		}
