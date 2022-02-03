@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+
 import org.openjdk.jmc.ui.common.tree.ITreeNode;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
 import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;
