@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -225,19 +225,8 @@ public class DialViewer extends Composite implements IRefreshable {
 	@Override
 	public boolean refresh() {
 		if (!isDisposed()) {
-			if (IMMEDIATE_DRAWING) {
-				if (isVisible()) {
-					Rectangle area = getClientArea();
-					if (!area.isEmpty()) {
-						GC gc = new GC(this);
-						draw(gc, 0, 0, area.width, area.height, true);
-						// Must redraw focus in the same way as FocusTracker
-						if (isFocusControl()) {
-							FocusTracker.drawFocusOn(this, gc);
-						}
-						gc.dispose();
-					}
-				}
+			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
+				redraw();
 			} else {
 				redraw();
 			}

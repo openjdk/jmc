@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -186,12 +186,7 @@ public class ChartComposite extends SelectionCanvas {
 			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
 			m_chart.setXAxis(m_chart.getXAxis());
 			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
-				GC gc = new GC(this);
-				paint(gc);
-				if (isFocusControl()) {
-					FocusTracker.drawFocusOn(this, gc);
-				}
-				gc.dispose();
+				redraw();
 			} else {
 				redraw();
 				/*
