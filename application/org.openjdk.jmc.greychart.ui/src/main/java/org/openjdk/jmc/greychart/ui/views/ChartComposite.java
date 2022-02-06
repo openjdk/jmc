@@ -185,17 +185,13 @@ public class ChartComposite extends SelectionCanvas {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
 			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
 			m_chart.setXAxis(m_chart.getXAxis());
-			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
-				redraw();
-			} else {
-				redraw();
-				/*
-				 * Explicit calls to update() should be avoided unless absolutely necessary. They
-				 * may have a negative performance impact and may cause issues on Mac OS X Cocoa
-				 * (SWT 3.6). If it is required here, there must be a justifying comment.
-				 */
-				// update();
-			}
+			redraw();
+			/*
+			 * Explicit calls to update() should be avoided unless absolutely necessary. They may
+			 * have a negative performance impact and may cause issues on Mac OS X Cocoa (SWT 3.6).
+			 * If it is required here, there must be a justifying comment.
+			 */
+			// update();
 		}
 	}
 

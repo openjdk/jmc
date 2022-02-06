@@ -225,11 +225,7 @@ public class DialViewer extends Composite implements IRefreshable {
 	@Override
 	public boolean refresh() {
 		if (!isDisposed()) {
-			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
-				redraw();
-			} else {
-				redraw();
-			}
+			redraw();
 			/*
 			 * Explicit calls to update() should be avoided unless absolutely necessary. They may
 			 * have a negative performance impact and may cause issues on Mac OS X Cocoa (SWT 3.6).
