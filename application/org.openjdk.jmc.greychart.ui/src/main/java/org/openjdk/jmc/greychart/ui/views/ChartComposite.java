@@ -186,12 +186,6 @@ public class ChartComposite extends SelectionCanvas {
 			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
 			m_chart.setXAxis(m_chart.getXAxis());
 			redraw();
-			/*
-			 * Explicit calls to update() should be avoided unless absolutely necessary. They may
-			 * have a negative performance impact and may cause issues on Mac OS X Cocoa (SWT 3.6).
-			 * If it is required here, there must be a justifying comment.
-			 */
-			// update();
 		}
 	}
 
