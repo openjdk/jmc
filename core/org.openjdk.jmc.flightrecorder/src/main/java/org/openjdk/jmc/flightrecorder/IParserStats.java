@@ -33,9 +33,12 @@
  */
 package org.openjdk.jmc.flightrecorder;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 
 public interface IParserStats {
 
@@ -64,4 +67,8 @@ public interface IParserStats {
 	IItemCollection getConstantPools();
 
 	IItemCollection getConstants();
+
+	default Map<String, IConstantPoolExtension> getConstantPoolExtensions() {
+		return Collections.emptyMap();
+	}
 }

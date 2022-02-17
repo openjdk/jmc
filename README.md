@@ -39,7 +39,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 ### Red Hat
 * Released version
 
-Red Hat distributes JDK Mission Control as RPMs in Fedora and RHEL. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
+Red Hat distributes JDK Mission Control in Red Hat Enterprise Linux (RHEL). JMC is available in RHEL 7 as the rh-jmc Software Collection, and is provided in RHEL 8 by the jmc:rhel8 module stream. JMC is also included in the OpenJDK [developer builds](https://developers.redhat.com/products/openjdk/download) for Windows.
 
 ## Mission Control Features
 
@@ -216,7 +216,7 @@ Prerequisites for building Mission Control:
 
 1. Install JDK 11, and make sure it is the JDK in use (java -version)
 
-2. Install Maven (version 3.3.x. or above)
+2. Install Maven (version 3.5.x. or above)
 
 On Linux or macOS you can use the build.sh script to build JMC:
 ```
@@ -333,7 +333,11 @@ to use when launching, add -vm and the path to a directory where a JDK java laun
 Here is an example for Mac OS X:
 
 ```bash
+# on x86_64
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
+
+# on M1
+target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 ```
 
 Here is an example for Linux:
@@ -366,7 +370,7 @@ application/org.openjdk.jmc.updatesite.ide/target/
 To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
 
 ```bash
-application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.1.1-SNAPSHOT.zip
+application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.2.0-SNAPSHOT.zip
 ```
 
 ## Setting up Development Environment

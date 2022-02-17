@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -109,7 +110,7 @@ public class LocalJVMToolkit {
 	private static long SEQ_NUMBER = 0;
 	private static boolean isErrorMessageSent = false;
 	private static boolean m_unconnectableInited = false;
-	private static boolean m_showUnconnectable = false;
+	private static AtomicBoolean m_showUnconnectable = new AtomicBoolean();
 
 	private static Map<Object, DiscoveryEntry> last = new WeakHashMap<>();
 
@@ -140,19 +141,19 @@ public class LocalJVMToolkit {
 		if (!m_unconnectableInited) {
 			IPreferenceStore store = BrowserAttachPlugin.getDefault().getPreferenceStore();
 			if (store != null) {
-				m_showUnconnectable = store.getBoolean(PreferenceConstants.P_SHOW_UNCONNECTABLE);
+				m_showUnconnectable.set(store.getBoolean(PreferenceConstants.P_SHOW_UNCONNECTABLE));
 				store.addPropertyChangeListener(new IPropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent event) {
 						if (event.getProperty().equals(PreferenceConstants.P_SHOW_UNCONNECTABLE)) {
-							m_showUnconnectable = ((Boolean) event.getNewValue()).booleanValue();
+							m_showUnconnectable.set(((Boolean) event.getNewValue()).booleanValue());
 						}
 					}
 				});
 				m_unconnectableInited = true;
 			}
 		}
-		return m_showUnconnectable;
+		return m_showUnconnectable.get();
 	}
 
 	private static void populateMonitoredVMs(HashMap<Object, DiscoveryEntry> map, boolean includeUnconnectables) {

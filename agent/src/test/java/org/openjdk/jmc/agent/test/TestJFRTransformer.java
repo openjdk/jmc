@@ -57,7 +57,7 @@ import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.test.util.TestToolkit;
 
 public class TestJFRTransformer {
-	private static AtomicInteger runCount = new AtomicInteger(0);
+	private static AtomicInteger runCount = new AtomicInteger();
 
 	@Test
 	public void testRunTransforms()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,7 +38,6 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -113,7 +112,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
 			MAX_NUMBER_OF_CLASSES_TO_REPORT, FILTERED_CLASSES);
 
-	public static final TypedCollectionResult<IMCType> REVOKED_TYPES = new TypedCollectionResult<>("revokedClasses", //$NON-NLS-1$
+	public static final TypedCollectionResult<IMCType> REVOKED_CLASSES = new TypedCollectionResult<>("revokedClasses", //$NON-NLS-1$
 			"Revoked Classes", "Revoked Classes.", UnitLookup.CLASS, IMCType.class);
 	public static final TypedCollectionResult<ClassEntry> REVOCATION_CLASSES = new TypedCollectionResult<>(
 			"revocationClasses", "Revocation Classes", "Revocation Classes", ClassEntry.CLASS_ENTRY, ClassEntry.class); //$NON-NLS-1$
@@ -121,7 +120,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 			"Filtered Types", "Types that were filtered out.", UnitLookup.PLAIN_TEXT, String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, REVOKED_TYPES, REVOCATION_CLASSES, FILTERED_TYPES);
+			.<TypedResult<?>> asList(TypedResult.SCORE, REVOKED_CLASSES, REVOCATION_CLASSES, FILTERED_TYPES);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION, EventAvailability.ENABLED).build();
@@ -168,7 +167,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 				revocationMap);
 		totalScore += calculateRevocationCountScore(revocationClasses);
 
-		Collections.sort(revocationClasses);
+		revocationClasses.sort(null);
 		List<ClassEntry> filteredRevocationClasses = new ArrayList<>();
 		if (revocationClasses.size() > 0) {
 			int maxClasses = (int) valueProvider.getPreferenceValue(MAX_NUMBER_OF_CLASSES_TO_REPORT).longValue();
@@ -192,7 +191,7 @@ public final class BiasedLockingRevocationRule implements IRule {
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(totalScore))
 				.setSummary(summary.toString()).setExplanation(explanation.toString())
-				.addResult(REVOKED_TYPES, revokedTypes).addResult(REVOCATION_CLASSES, filteredRevocationClasses)
+				.addResult(REVOKED_CLASSES, revokedTypes).addResult(REVOCATION_CLASSES, filteredRevocationClasses)
 				.addResult(FILTERED_TYPES, filteredTypes).build();
 	}
 

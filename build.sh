@@ -4,10 +4,14 @@ set -u # a reference to any variable you have not previously defined causes the 
 set -o pipefail # If any command in a pipeline fails, that return code will be used as the return code of the whole pipeline
 
 PROGNAME=$(basename "$0")
-
+ARCH="x86_64"
+if [[ "`uname -m`" =~ "arm64" ]]; then 
+  ARCH="aarch64"
+fi
 JETTY_PID=""
 BASEDIR=""
 JMC_DIR=""
+JVM_ARGUMENTS=""
 
 function err_report() {
     err_log "$(date +%T) ${PROGNAME}: Error on line $1"
@@ -83,6 +87,7 @@ function printHelp() {
         printf " \t%s\t%s\n" "--installCore" "to install JMC core"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
+        printf " \t%s\t%s\n" "--skipJDPMulticastTests" "skip multicast related tests"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC, once it is packaged"
         printf " \t%s\t%s\n" "--runAgentExample" "to run Agent 'InstrumentMe' example, once it is packaged"
@@ -100,7 +105,7 @@ function runTests() {
     local timestamp=$1
     startJetty $timestamp
     echo "${timestamp} running tests"
-    mvn verify
+    mvn ${JVM_ARGUMENTS} verify
 }
 
 function runUiTests() {
@@ -108,7 +113,7 @@ function runUiTests() {
     startJetty $timestamp
     installCore $timestamp
     echo "$(date +%T) running UI tests"
-    mvn verify -P uitests
+    mvn ${JVM_ARGUMENTS} verify -P uitests
 }
 
 function packageJmc() {
@@ -118,12 +123,12 @@ function packageJmc() {
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
     echo "$(date +%T) packaging jmc - logging output to ${packageLog}"
-    mvn package --log-file "${packageLog}"
+    mvn ${JVM_ARGUMENTS} package --log-file "${packageLog}"
 
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
-        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc\""
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/linux/gtk/${ARCH}/JDK\ Mission\ Control/jmc\""
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
-        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
+        echo "You can now run jmc by calling \"${PROGNAME} --run\" or \"${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/${ARCH}/JDK\ Mission\ Control.app/Contents/MacOS/jmc\""
     else
         err_log "unknown OS type: \"${OSTYPE}\". Please check your package in \"${BASEDIR}/products/org.openjdk.jmc/\""
     fi
@@ -139,7 +144,7 @@ function packageAgent() {
     }
     
     echo "$(date +%T) packaging jmc agent - logging output to ${packageLog}"
-    mvn package --log-file "${packageLog}"
+    mvn ${JVM_ARGUMENTS} package --log-file "${packageLog}"
 
     popd 1> /dev/null || {
         err_log "could not go to project root directory"
@@ -193,9 +198,9 @@ function clean() {
 function run() {
     local path
     if [[ "${OSTYPE}" =~ "linux"* ]]; then
-        path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/x86_64/JDK Mission Control/jmc"
+        path="${BASEDIR}/products/org.openjdk.jmc/linux/gtk/${ARCH}/JDK Mission Control/jmc"
     elif [[ "${OSTYPE}" =~ "darwin"* ]]; then
-        path="${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK Mission Control.app/Contents/MacOS/jmc"
+        path="${BASEDIR}/products/org.openjdk.jmc/macosx/cocoa/${ARCH}/JDK Mission Control.app/Contents/MacOS/jmc"
     else
         err_log "unknown OS type: ${OSTYPE}"
         exit 1
@@ -290,6 +295,9 @@ function parseArgs() {
                 ;;
             --runAgentConverterExample)
                 runAgentByClass "org.openjdk.jmc.agent.converters.test.InstrumentMeConverter"
+                ;;
+            --skipJDPMulticastTests)
+                JVM_ARGUMENTS="${JVM_ARGUMENTS} -DskipJDPMulticastTests=true"
                 ;;
             *)
                 err_log "unknown arguments: $@"

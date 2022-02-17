@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+   Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -44,7 +44,7 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
-		<download.maven.plugin.version>1.4.2</download.maven.plugin.version>
+		<download.maven.plugin.version>1.6.7</download.maven.plugin.version>
 		<download-maven-plugin.phase>process-resources</download-maven-plugin.phase>
 		<download-maven-plugin.output>${project.basedir}/src/main/resources/jslibs</download-maven-plugin.output>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
@@ -59,13 +59,13 @@
 				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>d3-v5-js</id>
+						<id>download-d3</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v5.min.js</url>
+							<url>https://d3js.org/d3.v6.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
@@ -73,7 +73,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>wasm</id>
+						<id>download-wasm</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
@@ -87,7 +87,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>d3-graphviz-js</id>
+						<id>download-graphviz</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
@@ -101,7 +101,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>graphvizlib-wasm</id>
+						<id>download-graphvizlib-wasm</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>

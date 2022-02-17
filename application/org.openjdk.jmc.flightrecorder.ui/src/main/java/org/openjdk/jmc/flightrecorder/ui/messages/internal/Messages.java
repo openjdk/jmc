@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -169,6 +169,41 @@ public class Messages extends NLS {
 	public static String FileIOPage_SELECTED_PATH;
 	public static String FileIOPage_SELECTED_PATHS;
 	public static String FileIOPage_TIMELINE_SELECTION;
+	public static String FilterEditor_ACTION_CLEAR_ALL;
+	public static String FilterEditor_ACTION_COMBINE_AND;
+	public static String FilterEditor_ACTION_COMBINE_OR;
+	public static String FilterEditor_ACTION_NEGATE;
+	public static String FilterEditor_ACTION_REMOVE;
+	public static String FilterEditor_ACTION_SHOW_COLUMN_HEADERS;
+	public static String FilterEditor_COLUMN_ATTRIBUTE;
+	public static String FilterEditor_COLUMN_OPERATION;
+	public static String FilterEditor_COLUMN_VALUE;
+	public static String FilterEditor_INVALID_REGEX;
+	public static String FilterEditor_KIND_CONTAINS;
+	public static String FilterEditor_KIND_DOESNT_EXIST;
+	public static String FilterEditor_KIND_EXISTS;
+	public static String FilterEditor_KIND_HAS_CENTER_IN;
+	public static String FilterEditor_KIND_INTERSECTS;
+	public static String FilterEditor_KIND_IS;
+	public static String FilterEditor_KIND_ISNT_NULL;
+	public static String FilterEditor_KIND_IS_CONTAINED_IN;
+	public static String FilterEditor_KIND_IS_NULL;
+	public static String FilterEditor_KIND_MATCHES;
+	public static String FilterEditor_KIND_NOT_CONTAINS;
+	public static String FilterEditor_KIND_NOT_HAS_CENTER_IN;
+	public static String FilterEditor_KIND_NOT_INTERSECTS;
+	public static String FilterEditor_KIND_NOT_IS_CONTAINED_IN;
+	public static String FilterEditor_KIND_NOT_MATCHES;
+	public static String FilterEditor_KIND_UNKNOWN;
+	public static String FilterEditor_LABEL_EMPTY;
+	public static String FilterEditor_LABEL_NAME_AND;
+	public static String FilterEditor_LABEL_NAME_NOT_AND;
+	public static String FilterEditor_LABEL_NAME_NOT_OR;
+	public static String FilterEditor_LABEL_NAME_OR;
+	public static String FilterEditor_LABEL_NAME_TYPE;
+	public static String FilterEditor_LABEL_NAME_UNKNOWN_FILTER;
+	public static String FilterEditor_LABEL_VALUE_UNKNOWN;
+	public static String FilterEditor_TOOLTIP_EMPTY;
 	public static String FlavorSelector_BUTTON_CONTAINED;
 	public static String FlavorSelector_BUTTON_CONTAINED_TOOLTIP;
 	public static String FlavorSelector_BUTTON_SAME_THREADS;
@@ -418,6 +453,9 @@ public class Messages extends NLS {
 	public static String PREFERENCES_REMOVE_FINISHED_RECORDING_TEXT;
 	public static String PREFERENCES_RULES_CONFIGURE_SELECTED;
 	public static String PREFERENCES_SHOW_MONITORING_WARNING_TEXT;
+	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
+	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TEXT;
+	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TOOLTIP;
 	public static String ProcessesPage_AGGR_CONCURRENT_PROCESSES;
 	public static String ProcessesPage_AGGR_CONCURRENT_PROCESSES_DESC;
 	public static String ProcessesPage_AGGR_FIRST_SAMPLE;

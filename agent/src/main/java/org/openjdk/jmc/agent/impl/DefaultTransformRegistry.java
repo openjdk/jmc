@@ -445,7 +445,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 					if ("name".equals(key)) { //$NON-NLS-1$
 						name = value;
 					} else if ("descriptor".equals(key)) { //$NON-NLS-1$
-						descriptor = value;
+						descriptor = value != null ? value.trim() : null;
 					}
 				}
 			} else if (streamReader.isEndElement()) {

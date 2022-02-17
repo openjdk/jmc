@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Version: 8.1.1.qualifier
+Bundle-Version: 8.2.0.qualifier
 Bundle-Name: Java FX for JFR Tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ext.jfx.test;singleton:=true

@@ -88,6 +88,8 @@
 		<module>org.openjdk.jmc.rjmx.ui.ja</module>
 		<module>org.openjdk.jmc.rjmx.ui.zh_CN</module>
 		<module>org.openjdk.jmc.rjmx.zh_CN</module>
+		<module>org.openjdk.jmc.ui.celleditors.ja</module>
+		<module>org.openjdk.jmc.ui.celleditors.zh_CN</module>
 		<module>org.openjdk.jmc.ui.common.ja</module>
 		<module>org.openjdk.jmc.ui.common.zh_CN</module>
 		<module>org.openjdk.jmc.ui.ja</module>

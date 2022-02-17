@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -51,7 +51,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2021, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -75,19 +75,19 @@
 		<module>releng</module>
 	</modules>
 	<properties>
-		<revision>8.1.1</revision>
+		<revision>8.2.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.version>2.0.0</tycho.version>
+		<tycho.version>2.5.0</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
+		<maven.enforcer.version>3.0.0</maven.enforcer.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
-		<spotless.version>2.5.0</spotless.version>
+		<spotless.version>2.17.2</spotless.version>
 		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotbugs.version>4.1.4</spotbugs.version>
+		<spotbugs.version>4.5.2.0</spotbugs.version>
 		<buildId>${user.name}</buildId>
 		<!-- The version of the JDK embedded. When not embedding a JDK (this is 
 			usually the case), leave this empty. If embedding a JDK, include a comma 
@@ -113,7 +113,28 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2021-03</id>
+			<id>2021-12</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.openjdk.jmc</groupId>
+									<artifactId>platform-definition-2021-12</artifactId>
+									<version>${revision}${changelist}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>2021-09</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -127,7 +148,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2021-03</artifactId>
+									<artifactId>platform-definition-2021-09</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -137,7 +158,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>2020-12</id>
+			<id>2021-06</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -148,70 +169,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2020-12</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2020-09</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2020-09</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2020-06</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2020-06</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2020-03</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2020-03</artifactId>
+									<artifactId>platform-definition-2021-06</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -251,6 +209,11 @@
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
 						</environment>
 					</environments>
 				</configuration>
@@ -523,13 +486,34 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>copy-resources-to-mac</id>
+							<id>copy-resources-to-mac-x86_64</id>
 							<phase>prepare-package</phase>
 							<goals>
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/x86_64/legal
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-mac-aarch64</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/aarch64/legal
 								</outputDirectory>
 								<resources>
 									<resource>

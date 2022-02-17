@@ -48,7 +48,6 @@ public class Messages extends NLS {
 	public static String CONFIGURE_ATTRIBUTE_DESCRIPTION;
 	public static String CONFIGURE_ATTRIBUTE_TITLE;
 	public static String CONTEXT_MENU_UNIT_TYPE_NAME;
-	public static String DATE_PARSE_ERROR_MSG;
 	public static String INSERT_ARRAY_ELEMENT_ABOVE_ACTION;
 	public static String INSERT_ARRAY_ELEMENT_BELOW_ACTION;
 	public static String REMOVE_ARRAY_ELEMENT_ACTION;

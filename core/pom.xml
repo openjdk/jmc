@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -49,16 +49,17 @@
 	<properties>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.inceptionYear>2018</project.inceptionYear>
-		<revision>8.1.1</revision>
+		<revision>8.2.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
+		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<maven.jar.version>3.2.0</maven.jar.version>
 		<maven.bundle.version>5.1.1</maven.bundle.version>
-		<spotless.version>2.5.0</spotless.version>
+		<spotless.version>2.14.0</spotless.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<maven.source.version>3.2.1</maven.source.version>
@@ -74,7 +75,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2021, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -116,8 +117,15 @@
 		<module>org.openjdk.jmc.flightrecorder.writer</module>
 		<module>org.openjdk.jmc.jdp</module>
 		<module>tests</module>
-		<module>coverage</module>
 	</modules>
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<modules>
+				<module>coverage</module>
+			</modules>
+		</profile>
+	</profiles>
 	<distributionManagement>
 		<repository>
 			<id>jmc-publish</id>
@@ -274,6 +282,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>${maven.gpg.version}</version>
+				<configuration>
+					<!-- Prevent gpg from using pinentry programs -->
+					<gpgArguments>
+						<arg>--pinentry-mode</arg>
+						<arg>loopback</arg>
+					</gpgArguments>
+				</configuration>
 				<executions>
 					<execution>
 						<id>gpg-sign</id>

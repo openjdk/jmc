@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -60,6 +60,7 @@ public class Messages extends NLS {
 	public static String CommunicationPage_CAPTION_MAIL_SERVER_USER;
 	public static String CommunicationPage_CAPTION_RETAINED_EVENT_VALUES;
 	public static String CommunicationPage_CAPTION_SECURE_MAIL_SERVER;
+	public static String CommunicationPage_CAPTION_SECURE_MAIL_SERVER_STARTTLS;
 	public static String CommunicationPage_DESCRIPTION;
 	public static String CommunicationPage_UPDATE_INTERVAL_THREAD_STACK0;
 	public static String ConsoleEditorInput_FAILED_TO_OPEN_EDITOR;

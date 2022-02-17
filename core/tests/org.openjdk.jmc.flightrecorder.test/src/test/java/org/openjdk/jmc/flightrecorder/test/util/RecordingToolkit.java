@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,8 @@ import org.openjdk.jmc.common.test.io.IOResource;
 import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
+import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 
 @SuppressWarnings("nls")
 public class RecordingToolkit {
@@ -88,6 +91,11 @@ public class RecordingToolkit {
 
 	public static IItemCollection getFlightRecording(IOResource resource)
 			throws IOException, CouldNotLoadRecordingException {
+		return getFlightRecording(resource, ParserExtensionRegistry.getParserExtensions());
+	}
+
+	public static IItemCollection getFlightRecording(IOResource resource, List<IParserExtension> extensions)
+			throws IOException, CouldNotLoadRecordingException {
 		File tmpRecording = createResultFile("recordingTest", "tmp_recording", true);
 		InputStream is = resource.open();
 		OutputStream os = new FileOutputStream(tmpRecording);
@@ -98,7 +106,7 @@ public class RecordingToolkit {
 		}
 		IOToolkit.closeSilently(os);
 		IOToolkit.closeSilently(is);
-		return JfrLoaderToolkit.loadEvents(tmpRecording);
+		return JfrLoaderToolkit.loadEvents(Arrays.asList(tmpRecording), extensions);
 	}
 
 	public static List<String> getStats(IOResourceSet resourceSet) throws IOException {

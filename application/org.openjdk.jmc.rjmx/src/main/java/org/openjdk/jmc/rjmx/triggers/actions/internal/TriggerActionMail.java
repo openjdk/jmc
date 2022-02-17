@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,14 +36,14 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.URLName;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -95,6 +95,7 @@ public class TriggerActionMail extends TriggerAction {
 	 */
 	public void sendEMail(String subject, String content) throws MessagingException {
 		Properties props = new Properties();
+		props.put("mail.smtp.starttls.enable", getSmtpSTARTTLS());
 		Session session = Session.getInstance(props, null);
 		UserPassword credentials = getSmtpCredentials();
 		URLName urlName = createURLName(credentials);
@@ -181,6 +182,12 @@ public class TriggerActionMail extends TriggerAction {
 	private Boolean getSmtpSSL() {
 		return RJMXPlugin.getDefault().getRJMXPreferences().getBoolean(PreferencesKeys.PROPERTY_MAIL_SERVER_SECURE,
 				PreferencesKeys.DEFAULT_MAIL_SERVER_SECURE);
+	}
+
+	private Boolean getSmtpSTARTTLS() {
+		return RJMXPlugin.getDefault().getRJMXPreferences().getBoolean(
+				PreferencesKeys.PROPERTY_MAIL_SERVER_STARTTLS_ENCRYPTION,
+				PreferencesKeys.DEFAULT_MAIL_SERVER_STARTTLS_ENCRYPTION);
 	}
 
 	/**

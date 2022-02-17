@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -55,6 +56,7 @@ import org.openjdk.jmc.common.util.PredicateToolkit;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.parser.ParserStats;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 
 /**
  * Implementation of {@link IItemCollection} using {@link IItemIterable} iterators.
@@ -271,5 +273,10 @@ class EventCollection implements IItemCollection, IParserStats {
 	@Override
 	public IItemCollection getConstants() {
 		return parserStats.getConstants();
+	}
+
+	@Override
+	public Map<String, IConstantPoolExtension> getConstantPoolExtensions() {
+		return parserStats.getConstantPoolExtensions();
 	}
 }

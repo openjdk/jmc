@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.joverflow.stats;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +87,7 @@ public class ObjectHistogram {
 			}
 		}
 
-		Collections.sort(result, new Comparator<Entry>() {
+		result.sort(new Comparator<Entry>() {
 			@Override
 			public int compare(Entry o1, Entry o2) {
 				long diff = (o2.getTotalInclusiveSize() - o1.getTotalInclusiveSize());
@@ -144,7 +143,7 @@ public class ObjectHistogram {
 		ArrayList<ProblemFieldsEntry> result = findClassesWithNullFields(percentile);
 		checkForSuperclassesDefiningProblemFields(result);
 
-		Collections.sort(result, PROBLEM_OVERHEAD_COMPARATOR);
+		result.sort(PROBLEM_OVERHEAD_COMPARATOR);
 		return result;
 	}
 
@@ -162,7 +161,7 @@ public class ObjectHistogram {
 		ArrayList<ProblemFieldsEntry> result = findClassesWithUnusedHiByteFields(percentile);
 		checkForSuperclassesDefiningProblemFields(result);
 
-		Collections.sort(result, PROBLEM_OVERHEAD_COMPARATOR);
+		result.sort(PROBLEM_OVERHEAD_COMPARATOR);
 		return result;
 	}
 

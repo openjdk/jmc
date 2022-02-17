@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.feature.license"
       label="JDK Mission Control License Feature"
-      version="8.1.1.qualifier"
+      version="8.2.0.qualifier"
       provider-name="Oracle">
 
    <description url="http://www.oracle.com/missioncontrol">
@@ -42,7 +42,7 @@
    </description>
 
    <copyright>
-      Copyright \u00A9 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+      Copyright \u00A9 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    </copyright>
 
    <license url="%licenseUrl">

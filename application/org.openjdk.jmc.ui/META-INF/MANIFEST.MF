@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: JDK Mission Control Core
 Bundle-SymbolicName: org.openjdk.jmc.ui;singleton:=true
-Bundle-Version: 8.1.1.qualifier
+Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: org.openjdk.jmc.ui.UIPlugin
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.ui,
  org.openjdk.jmc.ui.accessibility,
- org.openjdk.jmc.ui.celleditors,
  org.openjdk.jmc.ui.charts,
  org.openjdk.jmc.ui.column,
  org.openjdk.jmc.ui.dial,

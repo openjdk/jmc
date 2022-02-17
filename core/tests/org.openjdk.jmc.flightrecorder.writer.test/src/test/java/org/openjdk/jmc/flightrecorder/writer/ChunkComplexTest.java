@@ -100,6 +100,7 @@ class ChunkComplexTest {
 					});
 		});
 
+		@SuppressWarnings("unchecked")
 		TypedValue eventValue = eventType.asValue(access -> {
 			access.putField("startTime", System.nanoTime()).putField("name", EVENT_NAME).putField("message", EVENT_MSG)
 					.putField("eventThread", threadAccess -> {
@@ -109,7 +110,6 @@ class ChunkComplexTest {
 									groupAcess.putField("name", "Main AWT Group");
 								});
 					}).putField("stackTrace", builder -> {
-						//noinspection unchecked
 						builder.putField("truncated", false).putFields("frames", frame1 -> {
 							frame1.putField("type", "Interpreted").putField("method", method -> {
 								method.putField("type", classType -> {

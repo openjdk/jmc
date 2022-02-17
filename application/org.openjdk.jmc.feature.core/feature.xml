@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -34,11 +34,11 @@
 <feature
       id="org.openjdk.jmc.feature.core"
       label="%name"
-      version="8.1.1.qualifier"
+      version="8.2.0.qualifier"
       provider-name="%provider"
       plugin="org.openjdk.jmc.ui"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="8.1.1.qualifier">
+      license-feature-version="8.2.0.qualifier">
 
    <description url="%descriptionUrl">
       %description
@@ -84,7 +84,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.lz4.lz4-java"
+         id="lz4-java"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -154,6 +154,13 @@
 
    <plugin
          id="org.openjdk.jmc.ui.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openjdk.jmc.ui.celleditors"
          download-size="0"
          install-size="0"
          version="0.0.0"

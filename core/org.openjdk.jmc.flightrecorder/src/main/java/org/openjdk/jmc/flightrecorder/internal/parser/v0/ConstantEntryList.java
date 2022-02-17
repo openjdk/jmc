@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.flightrecorder.internal.parser.v0;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -101,7 +100,7 @@ class ConstantEntryList {
 
 	void sort() {
 		if (list != null) {
-			Collections.sort(list, CHRONOLOGICAL);
+			list.sort(CHRONOLOGICAL);
 		}
 	}
 

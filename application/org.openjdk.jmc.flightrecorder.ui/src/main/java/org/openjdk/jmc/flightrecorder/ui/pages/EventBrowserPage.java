@@ -64,6 +64,7 @@ import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemToolkit;
+import org.openjdk.jmc.common.item.PersistableItemFilter;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -77,6 +78,7 @@ import org.openjdk.jmc.flightrecorder.ui.IDisplayablePage;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
+import org.openjdk.jmc.flightrecorder.ui.JfrEditor;
 import org.openjdk.jmc.flightrecorder.ui.RuleManager;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
@@ -147,14 +149,34 @@ public class EventBrowserPage extends AbstractDataPage {
 	public TreePath[] treeExpansion;
 	public FlavorSelectorState flavorSelectorState;
 	private IItemFilter flagsFilter;
+	private IPageContainer editor;
 //	public int topIndex;
 
 	public EventBrowserPage(IPageDefinition definition, StreamModel items, IPageContainer editor) {
 		super(definition, items, editor);
+		this.editor = editor;
+	}
+
+	static IItemFilter getPageFilter(IState state) {
+		if (state == null) {
+			return null;
+		}
+		IState filterElement = state.getChild("ItemFilter");
+		return filterElement == null ? null : PersistableItemFilter.readFrom(filterElement);
 	}
 
 	@Override
 	public IItemFilter getDefaultSelectionFilter() {
+		if (editor instanceof JfrEditor) {
+			JfrEditor jfrEditor = (JfrEditor) editor;
+			IPageUI currentPageUI = jfrEditor.getCurrentPageUI();
+			if (currentPageUI instanceof EventBrowserUI) {
+				EventBrowserUI ebUI = (EventBrowserUI) currentPageUI;
+				if (ebUI != null && ebUI.currentItemFilter != null) {
+					return ebUI.currentItemFilter;
+				}
+			}
+		}
 		return ItemFilters.all();
 	}
 
@@ -177,6 +199,7 @@ public class EventBrowserPage extends AbstractDataPage {
 		private Boolean showTypesWithoutEvents;
 		private Boolean showFilterAction;
 		private Boolean showSearchAction;
+		private IItemFilter currentItemFilter;
 
 		EventBrowserUI(Composite parent, FormToolkit toolkit, IState state, IPageContainer container) {
 			this.container = container;
@@ -263,7 +286,8 @@ public class EventBrowserPage extends AbstractDataPage {
 		private IItemCollection getFilteredItems() {
 			if (!selectedTypes.isEmpty()) {
 				Set<String> types = selectedTypes.stream().map(t -> t.getIdentifier()).collect(Collectors.toSet());
-				return selectionItems.apply(ItemFilters.type(types));
+				currentItemFilter = ItemFilters.type(types);
+				return selectionItems.apply(currentItemFilter);
 			}
 			return selectionItems;
 		}

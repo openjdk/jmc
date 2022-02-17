@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,7 +36,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,7 +116,7 @@ public class AttributeConfiguration {
 					pageAttributes.add(new AttributeGroup(rule.getName(), unique));
 				}
 			}
-			Collections.sort(pageAttributes, (p1, p2) -> p1.groupTitle.compareTo(p2.groupTitle));
+			pageAttributes.sort((p1, p2) -> p1.groupTitle.compareTo(p2.groupTitle));
 			if (rest.size() > 0) {
 				pageAttributes.add(new AttributeGroup(Messages.ATTRIBUTE_CONFIG_SHARED_GROUP_NAME, rest));
 			}

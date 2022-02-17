@@ -34,7 +34,6 @@ package org.openjdk.jmc.flightrecorder.stacktrace;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -436,7 +435,7 @@ public class StacktraceModel {
 			this.itemOffset = itemOffset;
 			this.parentBranch = parentBranch;
 			List<FrameEntry> branchHeadFrames = getDistinctFrames(countFramesOnOrAbove(parentBranch), items);
-			Collections.sort(branchHeadFrames, COUNT_CMP);
+			branchHeadFrames.sort(COUNT_CMP);
 			int itemsInFork = 0;
 
 			SimpleArray<IItem> allItems = new SimpleArray<IItem>(new IItem[0]);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,7 +32,6 @@
  */
 package org.openjdk.jmc.console.ui.notification.tab;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,7 +67,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-
 import org.openjdk.jmc.alert.AlertPlugin;
 import org.openjdk.jmc.console.ui.actions.MBeanAutomaticRefreshAction;
 import org.openjdk.jmc.console.ui.notification.NotificationPlugin;
@@ -415,7 +413,7 @@ public class TriggerSectionPart extends MCSectionPart {
 		for (TriggerRule rule : rules) {
 			names.add(rule.getName());
 		}
-		Collections.sort(names);
+		names.sort(null);
 
 		StringBuilder namesBuilder = new StringBuilder();
 		int index = 0;
