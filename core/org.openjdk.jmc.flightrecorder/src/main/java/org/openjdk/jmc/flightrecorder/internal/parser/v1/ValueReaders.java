@@ -409,7 +409,6 @@ class ValueReaders {
 			switch (typeIdentifier) {
 			case BYTE:
 			case SHORT:
-			case CHAR:
 			case INT:
 			case LONG:
 			case FLOAT:
