@@ -75,7 +75,7 @@
 		<module>releng</module>
 	</modules>
 	<properties>
-		<revision>8.2.0</revision>
+		<revision>8.3.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
