@@ -523,15 +523,15 @@ class ValueReaders {
 		public Object read(IDataInput in, boolean allowUnresolvedReference)
 				throws IOException, InvalidJfrFileException {
 			try {
-				Object thread = klass.newInstance();
+				Object instance = klass.newInstance();
 				for (int i = 0; i < valueReaders.size(); i++) {
 					Object val = valueReaders.get(i).read(in, allowUnresolvedReference);
 					Field f = fields.get(i);
 					if (f != null) {
-						f.set(thread, val);
+						f.set(instance, val);
 					}
 				}
-				return thread;
+				return instance;
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
