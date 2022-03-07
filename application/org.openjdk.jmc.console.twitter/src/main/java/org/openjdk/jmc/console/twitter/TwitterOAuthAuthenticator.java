@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -123,12 +123,19 @@ class TwitterOAuthAuthenticator {
 	}
 
 	public void authorization(String oauth_token) {
-
-		String url_open = OAUTH_AUTHORIZE_URL + "?oauth_token=" + oauth_token;
-		try {
-			java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterAuthorization_Exception, e);
+		if (oauth_token != null) {
+			try {
+				byte[] data = Base64.getUrlDecoder().decode(oauth_token);
+				oauth_token = Base64.getUrlEncoder().withoutPadding().encodeToString(data);
+				String url_open = OAUTH_AUTHORIZE_URL + "?oauth_token=" + oauth_token;
+				java.awt.Desktop.getDesktop().browse(new URI(url_open));
+			} catch (IOException e) {
+				LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterAuthorization_Exception, e);
+			} catch (URISyntaxException e) {
+				LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterAuthorization_Exception, e);
+			} catch (IllegalArgumentException e) {
+				LOGGER.log(Level.SEVERE, Messages.TriggerActionTwitterInvalidToken_Exception, e);
+			}
 		}
 	}
 

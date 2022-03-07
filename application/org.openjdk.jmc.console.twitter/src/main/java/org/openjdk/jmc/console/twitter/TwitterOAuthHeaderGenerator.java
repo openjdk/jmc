@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,7 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -60,7 +60,6 @@ class TwitterOAuthHeaderGenerator {
 	private String tokenSecret;
 	private String version;
 
-	final static Random RANDOM = new Random();
 	final static Logger LOGGER = Logger.getLogger("TwitterOAuthHeaderGenerator");
 
 	public TwitterOAuthHeaderGenerator(String consumerKey, String consumerSecret, String token, String tokenSecret) {
@@ -181,15 +180,7 @@ class TwitterOAuthHeaderGenerator {
 	}
 
 	private String getNonce() {
-		int leftLimit = 48; // numeral '0'
-		int rightLimit = 122; // letter 'z'
-		int targetStringLength = 10;
-
-		synchronized (RANDOM) {
-			return RANDOM.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-					.limit(targetStringLength)
-					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-		}
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 	private String getTimestamp() {
