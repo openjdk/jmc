@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -54,6 +54,7 @@ public class Messages extends NLS {
 	public static String TriggerActionTwitterInvalidUser_Title;
 	public static String TriggerActionTwitterInvalidUser_ErrorMessage;
 	public static String TriggerActionTwitterAuthorization_Exception;
+	public static String TriggerActionTwitterInvalidToken_Exception;
 	public static String TriggerActionTwitterAuthentication_Exception;
 	public static String TriggerActionTwitterRequestToken_Exception;
 	public static String TriggerActionTwitterURIParsing_Exception;

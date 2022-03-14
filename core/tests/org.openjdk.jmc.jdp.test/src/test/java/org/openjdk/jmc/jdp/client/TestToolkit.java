@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +32,12 @@
  */
 package org.openjdk.jmc.jdp.client;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.logging.Level;
@@ -147,5 +150,66 @@ public final class TestToolkit {
 			bytes[i] = Byte.parseByte(tmp[i]);
 		}
 		return bytes;
+	}
+
+	/**
+	 * See https://bugs.openjdk.java.net/browse/JMC-7539
+	 */
+	public static boolean areBroadcastingTestsEnabled() {
+		if (Boolean.getBoolean("skipJDPMulticastTests")) {
+			JDPClientTest.LOGGER.log(Level.INFO, "Broadcasting related tests are disabled");
+			return false;
+		}
+		if (!isBroadcastingPossible()) {
+			String os = System.getProperty("os.name").toLowerCase();
+			String helpMessage = ", you could try ";
+			String address = TEST_MULTICAST_ADDRESS.getCanonicalHostName();
+			if (os.startsWith("mac") || os.startsWith("darwin")) {
+				helpMessage += String.format("'sudo route add -host %s -interface en0'", address);
+			} else if (os.startsWith("linux")) {
+				helpMessage += String.format("'sudo ip route add %s dev eth0'", address);
+			} else if (os.startsWith("win")) {
+				helpMessage += String.format("'route add %s <gateway>' in a shell with administrator permissions",
+						address);
+			} else {
+				helpMessage = "";
+			}
+			JDPClientTest.LOGGER.log(Level.WARNING, "Broadcasting does not seem to be possible.\n"
+					+ "This is usually related to VPN. There are three possible ways to remedy this:\n"
+					+ "  1. Try to configure your VPN, or perhaps turn it off.\n"
+					+ "  2. Add a proper route for local multicast" + helpMessage + ".\n"
+					+ "  3. If the two above really can't be made to work, use -DskipJDPMulticastTests=true (with Java or maven)\n"
+					+ "     or --skipJDPMulticastTests (as first argument of the build script)");
+		}
+		return true;
+	}
+
+	private static boolean isBroadcastingPossible() {
+		InetAddress multiCastAddress = TEST_MULTICAST_ADDRESS;
+		int multiCastPort = 7711;
+		Thread thread = new Thread(() -> {
+			try (MulticastSocket ssocket = new MulticastSocket(multiCastPort)) {
+				ssocket.setTimeToLive(1);
+				ssocket.joinGroup(multiCastAddress);
+				final DatagramPacket dp = new DatagramPacket(new byte[] {1}, 1, multiCastAddress, multiCastPort);
+				while (true) {
+					ssocket.send(dp);
+					Thread.sleep(10);
+				}
+			} catch (InterruptedException | IOException e) {
+			}
+		});
+		thread.start();
+		try (MulticastSocket socket = new MulticastSocket(multiCastPort)) {
+			socket.joinGroup(multiCastAddress);
+			byte[] buffer = new byte[4096];
+			socket.setSoTimeout(300);
+			socket.receive(new DatagramPacket(buffer, buffer.length));
+			return true;
+		} catch (IOException e) {
+		} finally {
+			thread.interrupt();
+		}
+		return false;
 	}
 }

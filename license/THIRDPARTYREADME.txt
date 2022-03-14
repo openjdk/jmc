@@ -1,7 +1,7 @@
-%% The following notice is provided with respect to Eclipse Platform 4.19.0
-and Eclipse Babel 0.19.0 which may be included with this product.
+%% The following notice is provided with respect to Eclipse Platform 4.21.0
+and Eclipse Babel 0.19.2 which may be included with this product.
 
-*Eclipse Public License - v 1.0*
+*Eclipse Public License - v 2.0*
 
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
 PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF
@@ -262,7 +262,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-%% The following notice is provided with respect to D3 v6.1.3, which may
+%% The following notice is provided with respect to D3 v6.3.1, which may
 be included with this product.
 
                   Copyright 2010-2020 Mike Bostock
