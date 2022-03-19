@@ -63,7 +63,7 @@
 				There is now a new rule for explicit invocations of
 				System.gc().
 			</description>
-			<image>special/noimage.png</image>
+			<image>core/dukegc.png</image>
 		</note>
 	</component>
 	<component>
