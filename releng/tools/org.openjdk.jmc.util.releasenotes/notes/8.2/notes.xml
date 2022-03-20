@@ -72,8 +72,8 @@
 		<note version="8.2">
 			<title>Heat map view</title>
 			<description>
-				A new heat map view has been added, which is handed to
-				see when events are taking place. Use Window | Show View | Other...,
+				A new heat map view has been added, which is handy for
+				seeing when events are taking place. Use Window | Show View | Other...,
 				and select the Heatmap View under Mission Control and click Open to
 				open the view.
 			</description>
@@ -124,6 +124,18 @@
 				severely delayed on MacOS. This is now fixed.
 			</description>
 		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7068</bugid>
+			<synopsis>
+				JfrRecordingTest (uitest) hangs on the automated analysis
+				page
+			</synopsis>
+			<description>
+				Trying to run uitests on Fedora hangs on JfrRecordingTest. 
+				This was fixed after the Eclipse platform update.
+			</description>
+		</bugfix>
 	</bugfixes>
 	<!-- ******************************* Known issues ****************************************** -->
 	<knownissues>
@@ -150,18 +162,6 @@
 			<description>
 				This one is still under investigation, but it seems JMC
 				can't attach to certain jlinked images.
-			</description>
-		</issue>
-		<issue>
-			<area>JFR</area>
-			<bugid>7068</bugid>
-			<synopsis>
-				JfrRecordingTest (uitest) hangs on the automated analysis
-				page
-			</synopsis>
-			<description>
-				Trying to run uitests on Fedora hangs on
-				JfrRecordingTest.
 			</description>
 		</issue>
 		<issue>
