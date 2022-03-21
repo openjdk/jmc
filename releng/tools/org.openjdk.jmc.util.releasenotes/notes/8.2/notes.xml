@@ -7,7 +7,7 @@
 		<note version="8.2">
 			<title>JMC 8.2 - New Release!</title>
 			<description>
-				This is a new minor release of Java Mission Control. The
+				This is a new minor release of JDK Mission Control. The
 				JMC application requires JDK 11+ to run, but can still be used to
 				connect to, and parse JFR recordings from, OpenJDK 8u272+ and Oracle
 				JDK 7u40+. It can also still open and visualize flight recordings
@@ -19,7 +19,7 @@
 			<title>Eclipse 4.22 support</title>
 			<description>
 				The Mission Control client is now built to run optimally
-				on Eclipse 2021-06 and later. To install Java Mission Control into
+				on Eclipse 2021-06 and later. To install JDK Mission Control into
 				Eclipse, go to the update site (Help | Install New Software...). The
 				URL to the update site will be vendor specific, and some vendors
 				will instead provide an archive with the update site.
@@ -40,8 +40,7 @@
 			<title>Binary build for Apple ARM</title>
 			<description>
 				JDK Mission Control is now built for Apple ARM, allowing
-				JMC to be
-				run natively (without Rosetta x86 emulation) on Apple M1.
+				JMC to be run natively (without Rosetta x86 emulation) on Apple M1.
 			</description>
 			<image>general/apple.png</image>
 		</note>
@@ -170,7 +169,7 @@
 			<synopsis>The graph and flame graph view does not work on Windows
 			</synopsis>
 			<description>
-				This is due to a bug with the Windows based browser
+				This is due to a problem with the Windows based browser
 				component in SWT. We're hoping for a fix in the component for a
 				future version of the Eclipse platform.
 			</description>
