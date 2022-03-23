@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Joverflow Test
+Bundle-Name: JOverFlow Test
 Bundle-SymbolicName: org.openjdk.jmc.joverflow.test;singleton:=true
 Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: Oracle Corporation
