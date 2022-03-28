@@ -42,6 +42,7 @@ import org.openjdk.jmc.common.messages.internal.Messages;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
+import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -767,6 +768,38 @@ public class Aggregators {
 			}
 
 		};
+	}
+
+	public static IAggregator<IQuantity, ?> rate(
+			String name, String description, final String typeId, final IAttribute<IQuantity> attribute, IRange<IQuantity> range) {
+		final double duration = range.getExtent().in(UnitLookup.SECOND).doubleValue();
+		//System.out.println("rate interval " + duration);
+
+		ContentType<?> contentType = attribute.getContentType();
+		if (contentType instanceof LinearKindOfQuantity) {
+			return new Sum(name, description, (LinearKindOfQuantity) contentType) {
+
+				@Override
+				protected IMemberAccessor<IQuantity, IItem> doGetAccessor(IType<IItem> type) {
+					if (type.getIdentifier().equals(typeId)) {
+						return attribute.getAccessor(type);
+					}
+					return null;
+				}
+
+				@Override
+				public IQuantity getValue(SumConsumer consumer) {
+					if (consumer.unit != null) {
+						IQuantity rate = UnitLookup.MEMBANWIDTH.getDefaultUnit().quantity(consumer.sum / duration);
+						//System.out.println("rate unit" + rate.getUnit().getClass());
+						//System.out.println("rate unit.toString()" +rate.getUnit());
+						return rate;
+					}
+					return null;
+				}
+			};
+		}
+		throw new IllegalArgumentException("Can only use LinearKindOfQuantity"); //$NON-NLS-1$
 	}
 
 	public static IAggregator<IQuantity, ?> avg(final IAttribute<IQuantity> attribute) {

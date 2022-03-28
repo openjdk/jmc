@@ -162,6 +162,10 @@ public class TlabPage extends AbstractDataPage {
 			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_MIN);
 			insideSummary.addAggregate(JdkAggregators.ALLOC_TLAB_AVG);
 			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
+
+			//System.out.println("getStart: " + visibleRange.getStart().toString());
+			//System.out.println("getEnd: " + visibleRange.getEnd().toString());
+			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_RATE(visibleRange));
 			insideSummarySection.setClient(insideSummary.getControl());
 
 			Section outsideSummarySection = CompositeToolkit.createSection(container, toolkit,
@@ -172,6 +176,7 @@ public class TlabPage extends AbstractDataPage {
 			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_MIN);
 			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_AVG);
 			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
+			outsideSummary.addAggregate(JdkAggregators.ALLOC_OUTSIDE_TLAB_RATE(visibleRange));
 			outsideSummarySection.setClient(outsideSummary.getControl());
 
 			insideSummary.setValues(getDataSource().getItems());

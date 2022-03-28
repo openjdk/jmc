@@ -90,6 +90,7 @@ import org.openjdk.jmc.common.util.MethodToolkit;
 final public class UnitLookup {
 	private static final String UNIT_ID_SEPARATOR = ":";
 	public static final LinearKindOfQuantity MEMORY = createMemory();
+	public static final LinearKindOfQuantity MEMBANWIDTH = createMemoryBandwidth();
 	public static final LinearKindOfQuantity TIMESPAN = createTimespan();
 	/*
 	 * NOTE: These 3 (count, index, and identifier) cannot be persisted/restored due to Long(1) and
@@ -441,6 +442,17 @@ final public class UnitLookup {
 
 	private static LinearKindOfQuantity createMemory() {
 		LinearKindOfQuantity memory = new LinearKindOfQuantity("memory", "B", EnumSet.range(NOBI, PEBI),
+				EnumSet.range(NOBI, YOBI));
+
+		memory.addFormatter(new LinearKindOfQuantity.AutoFormatter(memory, "Dynamic", 1.0, 1024));
+		memory.addFormatter(new KindOfQuantity.ExactFormatter<>(memory));
+		memory.addFormatter(new KindOfQuantity.VerboseFormatter<>(memory));
+
+		return memory;
+	}
+
+	private static LinearKindOfQuantity createMemoryBandwidth() {
+		LinearKindOfQuantity memory = new LinearKindOfQuantity("bandwidth", "B/s", EnumSet.range(NOBI, PEBI),
 				EnumSet.range(NOBI, YOBI));
 
 		memory.addFormatter(new LinearKindOfQuantity.AutoFormatter(memory, "Dynamic", 1.0, 1024));
