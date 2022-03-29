@@ -773,10 +773,9 @@ public class Aggregators {
 	public static IAggregator<IQuantity, ?> rate(
 			String name, String description, final String typeId, final IAttribute<IQuantity> attribute, IRange<IQuantity> range) {
 		final double duration = range.getExtent().in(UnitLookup.SECOND).doubleValue();
-		//System.out.println("rate interval " + duration);
 
 		ContentType<?> contentType = attribute.getContentType();
-		if (contentType instanceof LinearKindOfQuantity) {
+		if (contentType instanceof LinearKindOfQuantity && contentType == UnitLookup.MEMORY) {
 			return new Sum(name, description, (LinearKindOfQuantity) contentType) {
 
 				@Override
@@ -790,9 +789,8 @@ public class Aggregators {
 				@Override
 				public IQuantity getValue(SumConsumer consumer) {
 					if (consumer.unit != null) {
-						IQuantity rate = UnitLookup.MEMBANWIDTH.getDefaultUnit().quantity(consumer.sum / duration);
-						//System.out.println("rate unit" + rate.getUnit().getClass());
-						//System.out.println("rate unit.toString()" +rate.getUnit());
+						IUnit rateUnit = UnitLookup.getRateKind(consumer.unit.getContentType()).getDefaultUnit();
+						IQuantity rate = rateUnit.quantity(consumer.sum / duration);
 						return rate;
 					}
 					return null;

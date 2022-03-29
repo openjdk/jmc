@@ -162,9 +162,6 @@ public class TlabPage extends AbstractDataPage {
 			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_MIN);
 			insideSummary.addAggregate(JdkAggregators.ALLOC_TLAB_AVG);
 			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
-
-			//System.out.println("getStart: " + visibleRange.getStart().toString());
-			//System.out.println("getEnd: " + visibleRange.getEnd().toString());
 			insideSummary.addAggregate(JdkAggregators.ALLOC_INSIDE_TLAB_RATE(visibleRange));
 			insideSummarySection.setClient(insideSummary.getControl());
 

@@ -90,7 +90,7 @@ import org.openjdk.jmc.common.util.MethodToolkit;
 final public class UnitLookup {
 	private static final String UNIT_ID_SEPARATOR = ":";
 	public static final LinearKindOfQuantity MEMORY = createMemory();
-	public static final LinearKindOfQuantity MEMBANWIDTH = createMemoryBandwidth();
+	public static final LinearKindOfQuantity MEMORYBANWIDTH = createMemoryBandwidth();
 	public static final LinearKindOfQuantity TIMESPAN = createTimespan();
 	/*
 	 * NOTE: These 3 (count, index, and identifier) cannot be persisted/restored due to Long(1) and
@@ -160,6 +160,7 @@ final public class UnitLookup {
 
 	private static final List<ContentType<?>> CONTENT_TYPES;
 	private static final Map<String, RangeContentType<?>> RANGE_CONTENT_TYPES;
+	private static final Map<String, LinearKindOfQuantity> RATE_MAP;
 
 	static {
 		List<KindOfQuantity<?>> quantityKinds = new ArrayList<>();
@@ -170,6 +171,10 @@ final public class UnitLookup {
 		quantityKinds.add(NUMBER);
 		quantityKinds.add(ADDRESS);
 		quantityKinds.add(FREQUENCY);
+
+		Map<String, LinearKindOfQuantity> rateKinds = new HashMap<>();
+		rateKinds.put(MEMORY.getIdentifier(), MEMORYBANWIDTH);
+		RATE_MAP = Collections.unmodifiableMap(rateKinds);
 
 		Map<String, RangeContentType<?>> rangeTypes = new HashMap<>();
 		for (KindOfQuantity<?> kind : quantityKinds) {
@@ -205,6 +210,10 @@ final public class UnitLookup {
 	@SuppressWarnings("unchecked")
 	public static <M extends Comparable<? super M>> RangeContentType<M> getRangeType(ContentType<M> endPointType) {
 		return (RangeContentType<M>) RANGE_CONTENT_TYPES.get(endPointType.getIdentifier());
+	}
+
+	public static LinearKindOfQuantity getRateKind(KindOfQuantity kind) {
+		return RATE_MAP.get(kind.getIdentifier());
 	}
 
 	private static abstract class LeafContentType<T> extends ContentType<T> implements IPersister<T> {
@@ -452,7 +461,9 @@ final public class UnitLookup {
 	}
 
 	private static LinearKindOfQuantity createMemoryBandwidth() {
-		LinearKindOfQuantity memory = new LinearKindOfQuantity("bandwidth", "B/s", EnumSet.range(NOBI, PEBI),
+		// the unit is similar to https://en.wikipedia.org/wiki/Bit_rate,
+		// but we don't support bits/s for simplicity.
+		LinearKindOfQuantity memory = new LinearKindOfQuantity("MemoryBandwidth", "B/s", EnumSet.range(NOBI, PEBI),
 				EnumSet.range(NOBI, YOBI));
 
 		memory.addFormatter(new LinearKindOfQuantity.AutoFormatter(memory, "Dynamic", 1.0, 1024));
