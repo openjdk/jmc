@@ -771,7 +771,8 @@ public class Aggregators {
 	}
 
 	public static IAggregator<IQuantity, ?> rate(
-			String name, String description, final String typeId, final IAttribute<IQuantity> attribute, IRange<IQuantity> range) {
+		String name, String description, final String typeId, final IAttribute<IQuantity> attribute,
+		IRange<IQuantity> range) {
 		final double duration = range.getExtent().in(UnitLookup.SECOND).doubleValue();
 
 		ContentType<?> contentType = attribute.getContentType();

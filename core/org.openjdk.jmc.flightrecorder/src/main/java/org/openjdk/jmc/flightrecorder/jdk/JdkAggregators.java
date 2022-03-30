@@ -108,7 +108,6 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.messages.internal.Messages;
 
-
 /**
  * Various useful aggregators based on JDK flight recorder data.
  */
@@ -406,22 +405,24 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkAttributes.TLAB_SIZE);
+
 	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_RATE(IRange<IQuantity> range) {
-		return Aggregators.rate(
-				Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_RATE),
+		return Aggregators.rate(Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_RATE),
 				Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_RATE_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,
 				JdkAttributes.TLAB_SIZE, range);
 	}
+
 	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM),
 			Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_SUM_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 			JdkAttributes.ALLOCATION_SIZE);
+
 	public static final IAggregator<IQuantity, ?> ALLOC_OUTSIDE_TLAB_RATE(IRange<IQuantity> range) {
-		return Aggregators.rate(
-				Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_RATE),
+		return Aggregators.rate(Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_RATE),
 				Messages.getString(Messages.AGGR_ALLOC_OUTSIDE_TLAB_RATE_DESC), JdkTypeIDs.ALLOC_OUTSIDE_TLAB,
 				JdkAttributes.ALLOCATION_SIZE, range);
 	}
+
 	public static final IAggregator<IQuantity, ?> OBJ_ALLOC_TOTAL_SUM = Aggregators.sum(
 			Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM), Messages.getString(Messages.AGGR_OBJ_ALLOC_SUM_DESC),
 			JdkTypeIDs.OBJ_ALLOC_SAMPLE, JdkAttributes.SAMPLE_WEIGHT);
