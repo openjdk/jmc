@@ -33,7 +33,7 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2021-12" sequenceNumber="47">
+<target name="jmc-target-2022-03" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="2.0.1"/>
