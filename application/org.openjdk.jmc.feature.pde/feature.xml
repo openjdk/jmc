@@ -52,7 +52,6 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.openjdk.jmc.pde" match="equivalent"/>
       <import plugin="org.eclipse.pde.core"/>
       <import feature="org.openjdk.jmc.feature.console" match="equivalent"/>
    </requires>

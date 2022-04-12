@@ -63,7 +63,7 @@
 		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<maven.javadoc.version>3.3.2</maven.javadoc.version>
 		<nexus.staging.version>1.6.8</nexus.staging.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
 		<build.helper.maven.version>3.2.0</build.helper.maven.version>
