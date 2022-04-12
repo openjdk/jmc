@@ -37,7 +37,7 @@
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
 	<version>${revision}${changelist}</version>
-        <name>JDK Mission Control Core</name>
+	<name>JDK Mission Control Core</name>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -66,7 +66,7 @@
 		<maven.javadoc.version>3.3.2</maven.javadoc.version>
 		<nexus.staging.version>1.6.8</nexus.staging.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
+		<build.helper.maven.version>3.3.0</build.helper.maven.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<url>http://jdk.java.net/jmc</url>

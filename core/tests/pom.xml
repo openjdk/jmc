@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
    Copyright (c) 2021, Datadog, Inc. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -63,7 +63,6 @@
 		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
 		<mockito.core.version>3.12.4</mockito.core.version>
 		<mockito.inline.version>3.12.4</mockito.inline.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
 		<surefireArgLine></surefireArgLine>
 	</properties>
 	<profiles>
