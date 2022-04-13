@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-Name: Flightrecorder Plug-in
+Bundle-Name: Flight Recorder UI Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ui;singleton:=true
 Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: Oracle Corporation
