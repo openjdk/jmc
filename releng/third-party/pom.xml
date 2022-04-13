@@ -48,7 +48,7 @@
 		<javax.websocket.version>1.1</javax.websocket.version>
 		<jetty.version>10.0.7</jetty.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty-maven-plugin.version>9.4.43.v20210629</jetty-maven-plugin.version>
+		<jetty-maven-plugin.version>9.4.46.v20220331</jetty-maven-plugin.version>
 		<lz4.version>1.8.0</lz4.version>
 		<maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
 		<owasp.encoder.version>1.2.3</owasp.encoder.version>
@@ -87,11 +87,6 @@
 								</artifact>
 								<artifact>
 									<id>org.lz4:lz4-java:${lz4.version}</id>
-									<override>true</override>
-									<instructions>
-										<Bundle-Name>org.lz4.lz4-java</Bundle-Name>
-										<Bundle-SymbolicName>org.lz4.lz4-java</Bundle-SymbolicName>
-									</instructions>
 								</artifact>
 								<artifact>
 									<id>org.hdrhistogram:HdrHistogram:${hdrhistogram.version}</id>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.openjdk.jmc.jdp.common.Configuration;
@@ -58,6 +59,7 @@ public class JDPJMXTest {
 
 	@Test
 	public void testJDPClient() throws Exception {
+		Assume.assumeTrue(TestToolkit.areBroadcastingTestsEnabled());
 		JDPClient client = createDefaultClient();
 		JDPServer server = TestToolkit.createDefaultJMXJDPServer(discoverableID);
 		TestToolkit.printServerSettings(server);

@@ -333,7 +333,11 @@ to use when launching, add -vm and the path to a directory where a JDK java laun
 Here is an example for Mac OS X:
 
 ```bash
+# on x86_64
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
+
+# on M1
+target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 ```
 
 Here is an example for Linux:
@@ -366,7 +370,7 @@ application/org.openjdk.jmc.updatesite.ide/target/
 To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
 
 ```bash
-application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.2.0-SNAPSHOT.zip
+application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.3.0-SNAPSHOT.zip
 ```
 
 ## Setting up Development Environment

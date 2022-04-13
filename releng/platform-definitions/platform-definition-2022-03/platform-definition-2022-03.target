@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -33,13 +33,13 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2021-03" sequenceNumber="47">
+<target name="jmc-target-2022-03" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="2.0.1"/>
             <unit id="com.sun.activation.jakarta.activation" version="2.0.1"/>
             <unit id="org.owasp.encoder" version="1.2.3"/>
-            <unit id="org.lz4.lz4-java" version="1.8.0"/>
+            <unit id="lz4-java" version="1.8.0"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.1.12"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
@@ -53,15 +53,16 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1100.v20210209-1541"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.700.v20210303-1800"/>
-            <unit id="org.eclipse.platform.sdk" version="4.19.0.I20210303-1800"/>
-            <repository location="http://download.eclipse.org/releases/2021-03/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1500.v20220210-1108"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.1100.v20220308-0310"/>
+            <unit id="org.eclipse.platform.sdk" version="4.23.0.I20220308-0310"/>
+            <repository location="http://download.eclipse.org/releases/2022-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.19.0.v20210630075054"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.19.0.v20210630075054"/>
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.19.0/2021-03/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.22.0.v20211218020001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.22.0.v20211218020001"/>
+            <!-- No new release yet - using 2021-12 -->
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.19.2/2021-12/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
    Copyright (c) 2021, Datadog, Inc. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -57,8 +57,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<junit.version>4.13.1</junit.version>
 		<maven.javadoc.version>3.3.1</maven.javadoc.version>
+		<junit.version>4.13.2</junit.version>
 		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
 		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
 		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
