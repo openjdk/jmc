@@ -55,6 +55,7 @@
 					<compilerArgs>
 						<args>--add-exports</args>
 						<args>jdk.attach/sun.tools.attach=ALL-UNNAMED</args>
+						<args>-version</args>
 						<args>--add-exports</args>
 						<args>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</args>
 					</compilerArgs>
