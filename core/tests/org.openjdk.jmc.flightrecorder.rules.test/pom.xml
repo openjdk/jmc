@@ -46,15 +46,13 @@
            <dependency>
                    <groupId>org.openjdk.jmc</groupId>
                    <artifactId>flightrecorder.test</artifactId>
-                   <type>test-jar</type>
-                   <scope>test</scope>
+                   <scope>compile</scope>
                    <version>${project.version}</version>
            </dependency>
            <dependency>
                    <groupId>org.openjdk.jmc</groupId>
                    <artifactId>common.test</artifactId>
-                   <type>test-jar</type>
-                   <scope>test</scope>
+                   <scope>compile</scope>
                    <version>${project.version}</version>
            </dependency>
            <dependency>
@@ -81,24 +79,10 @@
                    <groupId>junit</groupId>
                    <artifactId>junit</artifactId>
                    <version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
-                   <scope>test</scope>
+                   <scope>compile</scope>
            </dependency>
    </dependencies>
    <build>
     <testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>${maven.jar.version}</version><!--$NO-MVN-MAN-VER$-->
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>test-jar</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
    </build>
 </project>
