@@ -15,7 +15,7 @@ Binary distributions of JDK Mission Control are provided by different downstream
 * EA builds of upcoming release
 * Downloadable Eclipse update site archive
 
-[https://adoptium.net/de/jmc](https://adoptium.net/de/jmc)
+[https://adoptium.net/jmc](https://adoptium.net/jmc)
 
 
 ### Azul (Zulu Mission Control)
