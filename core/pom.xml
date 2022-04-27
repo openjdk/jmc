@@ -61,6 +61,7 @@
 		<spotless.version>2.14.0</spotless.version>
 		<maven.directory.version>1.0</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
+		<maven.antrun.version>3.0.0</maven.antrun.version>
 		<maven.source.version>3.2.1</maven.source.version>
 		<maven.javadoc.version>3.3.2</maven.javadoc.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
@@ -145,7 +146,7 @@
 					<version>${maven.jar.version}</version>
 					<configuration>
 						<archive>
-							<manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+							<manifestFile>${project.build.directory}/${manifest-location}/MANIFEST.MF</manifestFile>
 						</archive>
 					</configuration>
 				</plugin>
@@ -187,6 +188,22 @@
 								</resources>
 							</configuration>
 						</execution>
+						<execution>
+							<id>copy-manifest</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<resources>
+									<resource>
+										<targetPath>${project.build.directory}/${manifest-location}</targetPath>
+										<directory>${project.basedir}/${manifest-location}</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
 					</executions>
 				</plugin>
 				<plugin>
@@ -220,6 +237,65 @@
 						</goals>
 						<configuration>
 							<property>rootDir</property>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.version}</version>
+				<executions>
+					<execution>
+						<id>check for manifest</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<exportAntProperties>true</exportAntProperties>
+							<target name="check-manifest">
+								<available file="${project.build.directory}/${manifest-location}" property="manifest.present"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>fix qualifier</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="fix-qualifier" if="${manifest.present}">
+								<tstamp>
+									<format property="buildtimestamp" pattern="yyyyMMddHHmm"/>
+								</tstamp>
+								<condition property="qualifier.value" value=".${buildtimestamp}" else="">
+									<and>
+										<isset property="changelist"/>
+										<equals arg1="${changelist}" arg2="-SNAPSHOT"/>
+									</and>
+								</condition>
+								<replace token=".qualifier" value="${qualifier.value}" dir="${project.build.directory}/${manifest-location}"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build.helper.maven.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${rootDir}/license</source>
+							</sources>
 						</configuration>
 					</execution>
 				</executions>
