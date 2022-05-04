@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
+<!--
    Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
-   
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -58,17 +58,17 @@
 		<manifest-location>META-INF</manifest-location>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<maven.jar.version>3.2.0</maven.jar.version>
-		<maven.bundle.version>5.1.1</maven.bundle.version>
 		<spotless.version>2.14.0</spotless.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
+		<maven.directory.version>1.0</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<maven.antrun.version>3.0.0</maven.antrun.version>
 		<maven.source.version>3.2.1</maven.source.version>
 		<maven.javadoc.version>3.3.2</maven.javadoc.version>
-		<nexus.staging.version>1.6.8</nexus.staging.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.3.0</build.helper.maven.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<maven.flatten.version>1.2.2</maven.flatten.version>
+		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
+		<maven.deploy.version>3.0.0-M2</maven.deploy.version>
+		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
@@ -137,7 +137,6 @@
 			<url>${snapshot.repo}</url>
 		</snapshotRepository>
 	</distributionManagement>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -149,14 +148,6 @@
 						<archive>
 							<manifestFile>${project.build.directory}/${manifest-location}/MANIFEST.MF</manifestFile>
 						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${maven.bundle.version}</version>
-					<configuration>
-						<manifestLocation>${manifest-location}</manifestLocation>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -187,11 +178,11 @@
 								<outputDirectory>${project.build.directory}</outputDirectory>
 								<resources>
 									<resource>
-										<targetPath>${basedir}/target/classes</targetPath>
+										<targetPath>${project.basedir}/target/classes</targetPath>
 										<directory>${rootDir}/license</directory>
 									</resource>
 									<resource>
-										<targetPath>${basedir}/target/apidocs</targetPath>
+										<targetPath>${project.basedir}/target/apidocs</targetPath>
 										<directory>${rootDir}/license</directory>
 									</resource>
 								</resources>
@@ -215,6 +206,21 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven.javadoc.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven.deploy.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -225,10 +231,10 @@
 				<executions>
 					<execution>
 						<id>directories</id>
+						<phase>initialize</phase>
 						<goals>
 							<goal>highest-basedir</goal>
 						</goals>
-						<phase>initialize</phase>
 						<configuration>
 							<property>rootDir</property>
 						</configuration>
@@ -277,24 +283,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build.helper.maven.version}</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${rootDir}/license</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>${maven.source.version}</version>
@@ -310,7 +298,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -358,13 +345,9 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>${maven.flatten.version}</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
