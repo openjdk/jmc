@@ -40,7 +40,7 @@ import java.util.Objects;
  * A stack trace frame.
  * <p>
  * It's recommended, but by design not a requirement, that classes that implements IMCFrame also
- * implement {@link IMCMethod}. This allow classes in higher layers to treat a frame just like a
+ * implement {@link IMCMethod}. This allows classes in higher layers to treat a frame just like a
  * method, for instance when using Eclipse object contribution mechanism.
  * <p>
  * This can be implemented simply by letting {@link IMCFrame#getMethod()} return {@code this}.
