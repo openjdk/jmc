@@ -34,6 +34,8 @@ package org.openjdk.jmc.common;
 
 import org.openjdk.jmc.common.messages.internal.Messages;
 
+import java.util.Objects;
+
 /**
  * A stack trace frame.
  * <p>
@@ -49,44 +51,81 @@ public interface IMCFrame {
 	/**
 	 * Frame compilation types.
 	 */
-	public enum Type {
-	/**
-	 * The frame was executed as native code compiled by the Java JIT compiler.
-	 */
-	JIT_COMPILED,
-	/**
-	 * The frame was executed as interpreted Java byte code.
-	 */
-	INTERPRETED,
-	/**
-	 * The frame was executed as code that was inlined by the Java JIT compiler.
-	 */
-	INLINED,
-	/**
-	 * The frame was executed as native code, most probably a C function.
-	 */
-	NATIVE,
-	/**
-	 * The frame was executed as native code compiled from C++.
-	 */
-	CPP,
-	/**
-	 * The frame was executed as kernel native code.
-	 */
-	KERNEL,
-	/**
-	 * The frame compilation type is unknown.
-	 */
-	UNKNOWN;
+	final class Type {
+		private static final String MSG_PREFIX = "IMCFrame_Type_";
 
-		private String name;
+		private final String id;
+		private final String name;
+		private final boolean isUnknown;
 
-		private Type() {
-			name = Messages.getString("IMCFrame_Type_" + toString()); //$NON-NLS-1$
+		public Type(String id) {
+			this.id = id.toUpperCase();
+
+			String key = MSG_PREFIX + this.id;
+			if (Messages.hasString(key)) {
+				this.name = Messages.getString(key);
+				this.isUnknown = false;
+			} else {
+				this.name = this.id;
+				this.isUnknown = true;
+			}
 		}
+
+		/**
+		 * The frame was executed as native code compiled by the Java JIT compiler.
+		 */
+		public static final Type JIT_COMPILED = new Type("JIT_COMPILED"); //$NON-NLS-1$
+		/**
+		 * The frame was executed as interpreted Java byte code.
+		 */
+		public static final Type INTERPRETED = new Type("INTERPRETED"); //$NON-NLS-1$
+		/**
+		 * The frame was executed as code that was inlined by the Java JIT compiler.
+		 */
+		public static final Type INLINED = new Type("INLINED"); //$NON-NLS-1$
+		/**
+		 * The frame was executed as native code, most probably a C function
+		 */
+		public static final Type NATIVE = new Type("NATIVE"); //$NON-NLS-1$
+		/**
+		 * The frame was executed as native code compiled from C++
+		 */
+		public static final Type CPP = new Type("CPP"); //$NON-NLS-1$
+		/**
+		 * The frame was executed as kernel native code
+		 */
+		public static final Type KERNEL = new Type("KERNEL"); //$NON-NLS-1$
+		/**
+		 * The frame compilation type is unknown.
+		 */
+		public static final Type UNKNOWN = new Type("UNKNONW"); //$NON-NLS-1$
 
 		public String getName() {
 			return name;
+		}
+
+		public boolean isUnknown() {
+			return isUnknown;
+		}
+
+		@Override
+		public String toString() {
+			return id;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Type type = (Type) o;
+			return id.equals(type.id);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(id);
 		}
 	}
 

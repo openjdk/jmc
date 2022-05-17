@@ -92,4 +92,8 @@ public class Messages {
 			return def;
 		}
 	}
+
+	public static boolean hasString(String key) {
+		return RESOURCE_BUNDLE.containsKey(key);
+	}
 }

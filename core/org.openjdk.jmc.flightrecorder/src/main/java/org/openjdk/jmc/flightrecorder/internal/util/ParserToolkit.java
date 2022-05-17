@@ -32,12 +32,23 @@
  */
 package org.openjdk.jmc.flightrecorder.internal.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 
 public final class ParserToolkit {
+	// The following type IDs are public only for the sakes of testing
+	public static final String INTERPRETED_TYPE_ID = "Interpreted"; //$NON-NLS-1$
+	public static final String JIT_COMPILED_TYPE_ID = "JIT compiled"; //$NON-NLS-1$
+	public static final String INLINED_TYPE_ID = "Inlined"; //$NON-NLS-1$
+	public static final String NATIVE_TYPE_ID = "Native"; //$NON-NLS-1$
+	public static final String CPP_TYPE_ID = "C++"; //$NON-NLS-1$
+	public static final String KERNEL_TYPE_ID = "Kernel"; //$NON-NLS-1$
+	public static final String UNKNOWN_TYPE_ID = "Unknown"; //$NON-NLS-1$
+
 	private ParserToolkit() {
 		throw new Error("Don't"); //$NON-NLS-1$
 	}
@@ -70,25 +81,35 @@ public final class ParserToolkit {
 		throw new InvalidJfrFileException(value + " is not among the expected values"); //$NON-NLS-1$
 	}
 
+	/*
+	 * A helper cache for the unrecognized frame types to reduce the amount of allocated instances.
+	 * The expectation is that the number of unrecognized frame types will be very small, usually
+	 * zero, so the memory overhead of the cache stays negligible.
+	 */
+	private static final Map<String, IMCFrame.Type> TYPE_CACHE = new HashMap<>();
+
 	public static IMCFrame.Type parseFrameType(String type) {
-		if ("Interpreted".equals(type)) { //$NON-NLS-1$
+		if (INTERPRETED_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.INTERPRETED;
 		}
-		if ("JIT compiled".equals(type)) { //$NON-NLS-1$
+		if (JIT_COMPILED_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.JIT_COMPILED;
 		}
-		if ("Inlined".equals(type)) { //$NON-NLS-1$
+		if (INLINED_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.INLINED;
 		}
-		if ("Native".equals(type)) { //$NON-NLS-1$
+		if (NATIVE_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.NATIVE;
 		}
-		if ("C++".equals(type)) { //$NON-NLS-1$
+		if (CPP_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.CPP;
 		}
-		if ("Kernel".equals(type)) { //$NON-NLS-1$
+		if (KERNEL_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.KERNEL;
 		}
-		return IMCFrame.Type.UNKNOWN;
+		if (UNKNOWN_TYPE_ID.equals(type)) {
+			return IMCFrame.Type.UNKNOWN;
+		}
+		return TYPE_CACHE.computeIfAbsent(type, IMCFrame.Type::new);
 	}
 }
