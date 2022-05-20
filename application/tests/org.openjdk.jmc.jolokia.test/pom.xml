@@ -46,6 +46,7 @@
 
 	<properties>
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jolokia.version>1.7.1</jolokia.version>
 	</properties>
 
 	<dependencies>
@@ -58,7 +59,7 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-jvm</artifactId>
-			<version>1.7.0</version>
+			<version>${jolokia.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun</groupId>
@@ -78,7 +79,7 @@
 					<includes>${test.includes}</includes>
 					<!-- Start jolokia on a random free port to avoid requiring specific 
 						ports to run test -->
-					<argLine>-javaagent:target/dependency/jolokia-jvm-1.7.0.jar=port=0,discover=true</argLine>
+					<argLine>-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
