@@ -33,14 +33,11 @@
  */
 package org.openjdk.jmc.jolokia;
 
-import java.util.logging.Logger;
-
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 
 public class JmcJolokiaPlugin extends MCAbstractUIPlugin {
 
 	public final static String PLUGIN_ID = "org.openjdk.jmc.jolokia"; //$NON-NLS-1$
-	private final static Logger LOGGER = Logger.getLogger(PLUGIN_ID);
 	private static JmcJolokiaPlugin plugin;
 
 	public JmcJolokiaPlugin() {
@@ -51,9 +48,4 @@ public class JmcJolokiaPlugin extends MCAbstractUIPlugin {
 	public static JmcJolokiaPlugin getDefault() {
 		return plugin;
 	}
-
-	public static Logger getPluginLogger() {
-		return LOGGER;
-	}
-
 }
