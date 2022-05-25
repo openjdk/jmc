@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.internal.util;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import org.openjdk.jmc.common.IMCFrame;
@@ -81,13 +80,6 @@ public final class ParserToolkit {
 		throw new InvalidJfrFileException(value + " is not among the expected values"); //$NON-NLS-1$
 	}
 
-	/*
-	 * A helper cache for the unrecognized frame types to reduce the amount of allocated instances.
-	 * The expectation is that the number of unrecognized frame types will be very small, usually
-	 * zero, so the memory overhead of the cache stays negligible.
-	 */
-	private static final Map<String, IMCFrame.Type> TYPE_CACHE = new HashMap<>();
-
 	public static IMCFrame.Type parseFrameType(String type) {
 		if (INTERPRETED_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.INTERPRETED;
@@ -110,6 +102,6 @@ public final class ParserToolkit {
 		if (UNKNOWN_TYPE_ID.equals(type)) {
 			return IMCFrame.Type.UNKNOWN;
 		}
-		return TYPE_CACHE.computeIfAbsent(type, IMCFrame.Type::new);
+		return IMCFrame.Type.cachedType(type);
 	}
 }

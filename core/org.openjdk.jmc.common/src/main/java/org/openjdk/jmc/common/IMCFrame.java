@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +33,11 @@
  */
 package org.openjdk.jmc.common;
 
-import org.openjdk.jmc.common.messages.internal.Messages;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import org.openjdk.jmc.common.messages.internal.Messages;
 
 /**
  * A stack trace frame.
@@ -52,53 +55,70 @@ public interface IMCFrame {
 	 * Frame compilation types.
 	 */
 	final class Type {
+		/**
+		 * The frame was executed as native code compiled by the Java JIT compiler.
+		 */
+		public static final Type JIT_COMPILED = new Type("JIT_COMPILED"); //$NON-NLS-1$
+
+		/**
+		 * The frame was executed as interpreted Java byte code.
+		 */
+		public static final Type INTERPRETED = new Type("INTERPRETED"); //$NON-NLS-1$
+
+		/**
+		 * The frame was executed as code that was inlined by the Java JIT compiler.
+		 */
+		public static final Type INLINED = new Type("INLINED"); //$NON-NLS-1$
+
+		/**
+		 * The frame was executed as native code, most probably a C function
+		 */
+		public static final Type NATIVE = new Type("NATIVE"); //$NON-NLS-1$
+
+		/**
+		 * The frame was executed as native code compiled from C++
+		 */
+		public static final Type CPP = new Type("CPP"); //$NON-NLS-1$
+
+		/**
+		 * The frame was executed as kernel native code
+		 */
+		public static final Type KERNEL = new Type("KERNEL"); //$NON-NLS-1$
+
+		/**
+		 * The frame compilation type is unknown.
+		 */
+		public static final Type UNKNOWN = new Type("UNKNONW"); //$NON-NLS-1$
+
 		private static final String MSG_PREFIX = "IMCFrame_Type_";
+
+		/*
+		 * A helper cache for the unrecognized frame types to reduce the amount of allocated
+		 * instances. The expectation is that the number of unrecognized frame types will be very
+		 * small, usually zero, so the memory overhead of the cache stays negligible.
+		 */
+		private static final Map<String, Type> TYPE_CACHE = new HashMap<>();
 
 		private final String id;
 		private final String name;
 		private final boolean isUnknown;
 
-		public Type(String id) {
+		private Type(String id) {
 			this.id = id.toUpperCase();
 
 			String key = MSG_PREFIX + this.id;
 			if (Messages.hasString(key)) {
-				this.name = Messages.getString(key);
-				this.isUnknown = false;
+				name = Messages.getString(key);
+				isUnknown = false;
 			} else {
-				this.name = this.id;
-				this.isUnknown = true;
+				name = this.id;
+				isUnknown = true;
 			}
 		}
 
-		/**
-		 * The frame was executed as native code compiled by the Java JIT compiler.
-		 */
-		public static final Type JIT_COMPILED = new Type("JIT_COMPILED"); //$NON-NLS-1$
-		/**
-		 * The frame was executed as interpreted Java byte code.
-		 */
-		public static final Type INTERPRETED = new Type("INTERPRETED"); //$NON-NLS-1$
-		/**
-		 * The frame was executed as code that was inlined by the Java JIT compiler.
-		 */
-		public static final Type INLINED = new Type("INLINED"); //$NON-NLS-1$
-		/**
-		 * The frame was executed as native code, most probably a C function
-		 */
-		public static final Type NATIVE = new Type("NATIVE"); //$NON-NLS-1$
-		/**
-		 * The frame was executed as native code compiled from C++
-		 */
-		public static final Type CPP = new Type("CPP"); //$NON-NLS-1$
-		/**
-		 * The frame was executed as kernel native code
-		 */
-		public static final Type KERNEL = new Type("KERNEL"); //$NON-NLS-1$
-		/**
-		 * The frame compilation type is unknown.
-		 */
-		public static final Type UNKNOWN = new Type("UNKNONW"); //$NON-NLS-1$
+		public static Type cachedType(String type) {
+			return TYPE_CACHE.computeIfAbsent(type, IMCFrame.Type::new);
+		}
 
 		public String getName() {
 			return name;
