@@ -34,6 +34,7 @@
 package org.openjdk.jmc.common;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -93,11 +94,22 @@ public interface IMCFrame {
 		private static final String MSG_PREFIX = "IMCFrame_Type_";
 
 		/*
+		 * Maximum number of items the TYPE_CACHE will hold. The assumption is that the number of
+		 * 'dynamic' frame types will be small, typically in ones rather than tens and as such 100
+		 * items in the type cache should cover the vast majority of use cases.
+		 */
+		private static final int TYPE_CACHE_MAX_SIZE = 100;
+		/*
 		 * A helper cache for the unrecognized frame types to reduce the amount of allocated
 		 * instances. The expectation is that the number of unrecognized frame types will be very
 		 * small, usually zero, so the memory overhead of the cache stays negligible.
 		 */
-		private static final Map<String, Type> TYPE_CACHE = new HashMap<>();
+		private static final Map<String, Type> TYPE_CACHE = new LinkedHashMap<String, Type>() {
+			@Override
+			protected boolean removeEldestEntry(Map.Entry eldest) {
+				return size() > TYPE_CACHE_MAX_SIZE;
+			}
+		};
 
 		private final String id;
 		private final String name;
