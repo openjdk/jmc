@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.common;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -99,14 +98,17 @@ public interface IMCFrame {
 		 * items in the type cache should cover the vast majority of use cases.
 		 */
 		private static final int TYPE_CACHE_MAX_SIZE = 100;
+
 		/*
 		 * A helper cache for the unrecognized frame types to reduce the amount of allocated
 		 * instances. The expectation is that the number of unrecognized frame types will be very
 		 * small, usually zero, so the memory overhead of the cache stays negligible.
 		 */
 		private static final Map<String, Type> TYPE_CACHE = new LinkedHashMap<String, Type>() {
+			private static final long serialVersionUID = 6330800425284157773L;
+
 			@Override
-			protected boolean removeEldestEntry(Map.Entry eldest) {
+			protected boolean removeEldestEntry(Map.Entry<String, Type> eldest) {
 				return size() > TYPE_CACHE_MAX_SIZE;
 			}
 		};

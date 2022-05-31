@@ -42,8 +42,7 @@ public class ParserToolkitTest {
 	@Test
 	public void testParseBuiltinFrameType() {
 		Assert.assertTrue(IMCFrame.Type.INTERPRETED == ParserToolkit.parseFrameType(ParserToolkit.INTERPRETED_TYPE_ID));
-		Assert.assertTrue(
-				IMCFrame.Type.JIT_COMPILED == ParserToolkit.parseFrameType(ParserToolkit.JIT_COMPILED_TYPE_ID));
+		Assert.assertTrue(IMCFrame.Type.JIT_COMPILED == ParserToolkit.parseFrameType(ParserToolkit.JIT_COMPILED_TYPE_ID));
 		Assert.assertTrue(IMCFrame.Type.INLINED == ParserToolkit.parseFrameType(ParserToolkit.INLINED_TYPE_ID));
 		Assert.assertTrue(IMCFrame.Type.NATIVE == ParserToolkit.parseFrameType(ParserToolkit.NATIVE_TYPE_ID));
 		Assert.assertTrue(IMCFrame.Type.CPP == ParserToolkit.parseFrameType(ParserToolkit.CPP_TYPE_ID));
