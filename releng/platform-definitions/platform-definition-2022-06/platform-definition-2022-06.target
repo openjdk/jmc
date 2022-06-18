@@ -53,10 +53,10 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1500.v20220210-1108"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.1100.v20220308-0310"/>
-            <unit id="org.eclipse.platform.sdk" version="4.23.0.I20220308-0310"/>
-            <repository location="http://download.eclipse.org/releases/2022-03/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1700.v20220509-0833"/>
+            <unit id="org.eclipse.pde.feature.group" version=" 3.14.1200.v20220607-0700"/>
+            <unit id="org.eclipse.platform.sdk" version="4.24.0.I20220607-0700"/>
+            <repository location="http://download.eclipse.org/releases/2022-06/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.22.0.v20211218020001"/>
