@@ -50,6 +50,7 @@
             <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.7"/>
             <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.7"/>
             <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.4"/>
+            <unit id="fireplace-swing" version="0.0.1.20220627143300"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
