@@ -1,30 +1,41 @@
 function updateGraph(eventsJson) {
+	const data = JSON.parse(eventsJson);
 	clear();
-    debug(`Loaded ${eventsJson.length} events`);
+    debug(`Loaded ${data.events.length} events`);
     try {
-		render(eventsJson);
+		render(data);
 	} catch (e) {
 		debug(e.message);
 		debug(`<pre>${e.stack}</pre>`);
 	}
 }
 
+const marginLeft = 0;
+const marginRight = 0;
+const marginTop = 0;
+const marginBottom = 0;
+
+const width = window.innerWidth - (marginLeft + marginRight);
+const height = window.innerHeight - (marginTop + marginBottom);
+
+const levels = 2;
+
 function debug(msg) {
 	const displayEl = document.getElementById("debug");
-	displayEl.innerHTML += "<br />"  + msg;
+	displayEl.innerHTML += "<br />" + msg;
 }
 
 function clear() {
 	document.getElementById("debug").innerHTML = "";
 }
 
-function render(rawData) {
+function render(data) {
   // compute package hierarchy
-  
   const svg = d3
-    .create("svg")
+	.select("#hierarchical")
+	.append("svg")
     .attr("viewBox", [-width / 2, -width / 2, width, width]);
-  const graph = buildGraph(rawData);
+  const graph = buildGraph(data);
   const d3Hierarchy = d3
     .hierarchy(graph.root)
     .sort(
@@ -32,6 +43,7 @@ function render(rawData) {
         d3.ascending(a.height, b.height) ||
         d3.ascending(a.data.name, b.data.name)
     );
+  const treeClustering = d3.cluster().size([2 * Math.PI, width / 2 - 100])
   const root = treeClustering(bilink(d3Hierarchy));
   const colors = getColors();
   const node = svg
@@ -208,7 +220,7 @@ class Package {
       if (maxDepth - 1 >= 0 && maxDepth - 1 < idx) {
         return acc;
       }
-      const parent = _.last(acc);
+      const parent = acc[acc.length - 1];
       acc.push(parent ? `${parent}.${current}` : current);
       return acc;
     }, []);
@@ -278,10 +290,10 @@ function bilink(root) {
   return root;
 }
 
-function buildGraph(rawData) {
+function buildGraph(data) {
   const graph = new Graph();
-  rawData.events
-    .map((data) => new Event(data))
+  data.events
+    .map((d) => new Event(d))
     .forEach((event) => {
       const stackTrace = event.stackTrace;
       if (stackTrace) {
