@@ -3,14 +3,14 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <script>
-      // %1$s
+      %1$s
     </script>
   </head>
   <body>
-    <div id="hierarchical" width="100%%" style="text-align: center"></div>
-    hierarchical - to remove
+    <div id="debug" width="100%%" style="text-align: center">debug</div>
+    <div id="hierarchical" width="100%%" style="text-align: center">hierarchical - to remove</div>
     <script type="text/javascript">
-      // %2$s
+      %2$s
     </script>
   </body>
 </html>
