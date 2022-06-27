@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.openjdk.jmc.flightrecorder.heatmap</name>
+	<name>org.openjdk.jmc.flightrecorder.hierarchical-edge</name>
 	<comment></comment>
 	<projects>
 	</projects>
