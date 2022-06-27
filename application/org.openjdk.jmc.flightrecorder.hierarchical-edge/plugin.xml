@@ -7,7 +7,7 @@
           category="org.openjdk.jmc.ui.main"
           class="org.openjdk.jmc.flightrecorder.hierarchical.views.HierarchicalEdgeView"
           icon="icons/hierarchical.png"
-          id="org.openjdk.jmc.flightrecorder.hiearchical-edge"
+          id="org.openjdk.jmc.flightrecorder.hierarchical-edge"
           name="Hierarchical Edge View"
           restorable="true">
 		</view>
