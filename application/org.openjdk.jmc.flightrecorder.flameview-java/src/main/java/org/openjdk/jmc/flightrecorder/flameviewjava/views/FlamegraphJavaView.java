@@ -86,6 +86,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 import static java.util.Collections.reverseOrder;
@@ -224,10 +225,22 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		}
 
 		private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
-			List<FrameBox<Node>> nodes = new ArrayList<>();
-
-			FrameBox.flattenAndCalculateCoordinate(nodes, model.getRoot(), Node::getChildren, Node::getCumulativeWeight,
-					0.0d, 1.0d, 0);
+			var nodes = new ArrayList<FrameBox<Node>>();
+			
+			FrameBox.flattenAndCalculateCoordinate(
+	                nodes,
+	                model.getRoot(),
+	                Node::getChildren,
+	                Node::getCumulativeWeight,
+	                node -> {
+	                	// Eclipse looses the type in the inner lambda, so it needs to be
+	                	// explicitly available
+	                	Stream<Node> children = node.getChildren().stream();
+	                	return children.mapToDouble(Node::getCumulativeWeight).sum();
+	                },
+	                0.0d,
+	                1.0d,
+	                0);
 
 			return nodes;
 		}
@@ -309,9 +322,10 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		container = new SashForm(parent, SWT.HORIZONTAL);
-		embeddingComposite = new Composite(container, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+		embeddingComposite = new Composite(container, SWT.EMBEDDED | SWT.NO_BACKGROUND);		
 		container.setMaximizedControl(embeddingComposite);
 
+		
 		// TODO search field
 
 		embeddingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -418,15 +432,13 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 				//            + "</html>";
 				// }
 				);
-				flamegraphView.component.invalidate();
-				flamegraphView.requestRepaint();
+//				flamegraphView.component.invalidate();
+//				flamegraphView.requestRepaint();
 
 				Display.getDefault().asyncExec(() -> {
 					embeddingComposite.layout(true, true);
 					var embedSize = embeddingComposite.getSize();
 					flamegraphView.component.setSize(embedSize.x, embedSize.y);
-					
-//					embeddingComposite.pack(true);
 				});
 			});
 		}
