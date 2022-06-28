@@ -1,3 +1,16 @@
+function updateGraph(eventsJson) {
+	const data = JSON.parse(eventsJson);
+	clear();
+    debug(`Loaded ${data.events.length} events`);
+    try {
+		debug(JSON.stringify(data.events[0]));
+		render(data);
+	} catch (e) {
+		debug(e.message);
+		debug(`<pre>${e.stack}</pre>`);
+	}
+}
+
 const marginLeft = 0;
 const marginRight = 0;
 const marginTop = 0;
@@ -203,10 +216,10 @@ class StackTrace {
 class StackFrame {
   constructor({ name }) {
     this.id = name;
-    const lastDelimiterIdx = name.lastIndexOf(".");
-    this.package = new Package(name.slice(0, lastDelimiterIdx));
-    const [clazz, method] = name.slice(lastDelimiterIdx + 1).split("#");
-    this.clazz = clazz;
+    const [fqcn, method] = name.split("#");
+    const lastDelimiterIdx = fqcn.lastIndexOf(".");
+    this.package = new Package(fqcn.slice(0, lastDelimiterIdx));
+    this.clazz = fqcn.slice(lastDelimiterIdx + 1);
     this.method = method.split("(")[0];
   }
 }
