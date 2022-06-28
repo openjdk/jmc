@@ -1,15 +1,3 @@
-function updateGraph(eventsJson) {
-	const data = JSON.parse(eventsJson);
-	clear();
-    debug(`Loaded ${data.events.length} events`);
-    try {
-		render(data);
-	} catch (e) {
-		debug(e.message);
-		debug(`<pre>${e.stack}</pre>`);
-	}
-}
-
 const marginLeft = 0;
 const marginRight = 0;
 const marginTop = 0;
@@ -18,22 +6,36 @@ const marginBottom = 0;
 const width = window.innerWidth - (marginLeft + marginRight);
 const height = window.innerHeight - (marginTop + marginBottom);
 
-const levels = 2;
+var levels = 2;
+
+function updateGraph(eventsJson, packageLevels) {
+  const data = JSON.parse(eventsJson);
+  clear();
+  debug(`Loaded ${data.events.length} events`);
+  try {
+    levels = packageLevels
+    render(data);
+  } catch (e) {
+    debug(e.message);
+    debug(`<pre>${e.stack}</pre>`);
+  }
+}
+
 
 function debug(msg) {
-	const displayEl = document.getElementById("debug");
-	displayEl.innerHTML += "<br />" + msg;
+  const displayEl = document.getElementById("debug");
+  displayEl.innerHTML += "<br />" + msg;
 }
 
 function clear() {
-	document.getElementById("debug").innerHTML = "";
+  document.getElementById("debug").innerHTML = "";
 }
 
 function render(data) {
   // compute package hierarchy
   const svg = d3
-	.select("#hierarchical")
-	.append("svg")
+    .select("#hierarchical")
+    .append("svg")
     .attr("viewBox", [-width / 2, -width / 2, width, width]);
   const graph = buildGraph(data);
   const d3Hierarchy = d3

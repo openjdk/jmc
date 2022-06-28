@@ -38,13 +38,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -55,6 +64,8 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -63,7 +74,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
+import org.openjdk.jmc.flightrecorder.hierarchical.Messages;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
@@ -83,12 +96,14 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 
 	private static class ModelRebuildRunnable implements Runnable {
 		private final HierarchicalEdgeView view;
-		private IItemCollection items;
+		private final IItemCollection items;
 		private volatile boolean isInvalid;
+		private final int packageDepth;
 
-		private ModelRebuildRunnable(HierarchicalEdgeView view, IItemCollection items) {
+		private ModelRebuildRunnable(HierarchicalEdgeView view, IItemCollection items, int packageDepth) {
 			this.view = view;
 			this.items = items;
+			this.packageDepth = packageDepth;
 		}
 
 		private void setInvalid() {
@@ -106,7 +121,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 				return;
 			} else {
 				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, eventsJson));
+				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, eventsJson, packageDepth));
 			}
 		}
 	}
@@ -129,10 +144,14 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
+	private int packageDepth = 3;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
+		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		toolBar.add(new PackageDepthSelection());
+
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -140,6 +159,65 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	public void dispose() {
 		getSite().getPage().removeSelectionListener(this);
 		super.dispose();
+	}
+
+	private class PackageDepthSelection extends Action implements IMenuCreator {
+		private Menu menu;
+		private final List<Pair<String, Integer>> depths = IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+				.mapToObj(i -> new Pair<>(Integer.toString(i), i)).collect(Collectors.toUnmodifiableList());
+
+		PackageDepthSelection() {
+			super(Messages.getString(Messages.HIERARCHICAL_PACKAGE_LEVEL_DEPTH), IAction.AS_DROP_DOWN_MENU);
+			setMenuCreator(this);
+		}
+
+		@Override
+		public void dispose() {
+			// do nothing
+		}
+
+		@Override
+		public Menu getMenu(Control parent) {
+			if (menu == null) {
+				menu = new Menu(parent);
+				populate(menu);
+			}
+			return menu;
+		}
+
+		@Override
+		public Menu getMenu(Menu parent) {
+			if (menu == null) {
+				menu = new Menu(parent);
+				populate(menu);
+			}
+			return menu;
+		}
+
+		private void populate(Menu menu) {
+			for (Pair<String, Integer> item : depths) {
+				var actionItem = new ActionContributionItem(new SetPackageDepth(item, item.right == packageDepth));
+				actionItem.fill(menu, -1);
+			}
+		}
+		
+		private class SetPackageDepth extends Action {
+			private int value;
+
+			SetPackageDepth(Pair<String, Integer> item, boolean isSelected) {
+				super(item.left, IAction.AS_RADIO_BUTTON);
+				this.value = item.right;
+				setChecked(isSelected);
+			}
+
+			@Override
+			public void run() {
+				if (packageDepth != value) {
+					packageDepth = value;
+					triggerRebuildTask(currentItems);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -185,19 +263,19 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items, packageDepth);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
 	}
 
-	private void setModel(final IItemCollection items, final String eventsJson) {
+	private void setModel(final IItemCollection items, final String eventsJson, int packageDepth) {
 		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems) && !browser.isDisposed()) {
-			setViewerInput(eventsJson);
+			setViewerInput(eventsJson, packageDepth);
 		}
 	}
 
-	private void setViewerInput(String eventsJson) {
+	private void setViewerInput(String eventsJson, int packageDepth) {
 		browser.setText(HTML_PAGE);
 
 		browser.addProgressListener(new ProgressAdapter() {
@@ -213,13 +291,13 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("updateGraph(`%s`);", eventsJson));
+				browser.execute(String.format("updateGraph(`%s`, %d);", eventsJson, packageDepth));
 				loaded = true;
 			}
 		});
 	}
 
-	private static String loadLibraries(String ... libs) {
+	private static String loadLibraries(String... libs) {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {

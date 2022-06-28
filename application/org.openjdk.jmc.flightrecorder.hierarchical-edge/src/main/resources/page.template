@@ -7,7 +7,7 @@
     </script>
   </head>
   <body>
-    <div id="debug" width="100%%" style="text-align: center">debug</div>
+    <div id="debug" width="100%%" style="text-align: left">debug</div>
     <div id="hierarchical" width="100%%" style="text-align: center"></div>
     <script type="text/javascript">
       %2$s
