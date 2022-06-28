@@ -50,9 +50,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -92,341 +95,344 @@ import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_IC
 import static org.openjdk.jmc.flightrecorder.flameviewjava.MessagesUtils.getFlameviewMessage;
 
 public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
-    private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
-    private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview-java"; //$NON-NLS-1$
+	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview-java"; //$NON-NLS-1$
 
-    private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
-    private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
-                                                                                       new ThreadFactory() {
-                                                                                           private ThreadGroup group = new ThreadGroup("FlameGraphModelCalculationGroup");
-                                                                                           private AtomicInteger counter = new AtomicInteger();
+	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
+	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
+			new ThreadFactory() {
+				private ThreadGroup group = new ThreadGroup("FlameGraphModelCalculationGroup");
+				private AtomicInteger counter = new AtomicInteger();
 
-                                                                                           @Override
-                                                                                           public Thread newThread(Runnable r) {
-                                                                                               Thread t = new Thread(group, r, "FlameGraphModelCalculation-" + counter.getAndIncrement());
-                                                                                               t.setDaemon(true);
-                                                                                               return t;
-                                                                                           }
-                                                                                       });
-    private FrameSeparator frameSeparator;
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread t = new Thread(group, r, "FlamegraphJavaModelCalculation-" + counter.getAndIncrement());
+					t.setDaemon(true);
+					return t;
+				}
+			});
+	private FrameSeparator frameSeparator;
 
-    private Composite embeddingComposite;
-    private FlamegraphView<Node> flamegraphView;
+	private SashForm container;
+	private Composite embeddingComposite;
+	private FlamegraphView<Node> flamegraphView;
 
-    private GroupByAction[] groupByActions;
-    private GroupByFlameviewAction[] groupByFlameviewActions;
-    // TODO private ExportAction[] exportActions;
-    private boolean threadRootAtTop = true;
-    private boolean icicleViewActive = true;
-    private IItemCollection currentItems;
-    private volatile ModelState modelState = ModelState.NONE;
-    private ModelRebuildRunnable modelRebuildRunnable;
+	private GroupByAction[] groupByActions;
+	private GroupByFlameviewAction[] groupByFlameviewActions;
+	// TODO private ExportAction[] exportActions;
+	private boolean threadRootAtTop = true;
+	private boolean icicleViewActive = true;
+	private IItemCollection currentItems;
+	private volatile ModelState modelState = ModelState.NONE;
+	private ModelRebuildRunnable modelRebuildRunnable;
 
-    private enum GroupActionType {
-        THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
-        LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
-        ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-                FlameviewImages.ICON_ICICLE_FLIP)),
-        // FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-        // 		FlameviewImages.ICON_FLAME_FLIP))
-        ;
+	private enum GroupActionType {
+		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
+		LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
+		ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
+				FlameviewImages.ICON_ICICLE_FLIP)),
+		// FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
+		// 		FlameviewImages.ICON_FLAME_FLIP))
+		;
 
-        private final String message;
-        private final int action;
-        private final ImageDescriptor imageDescriptor;
+		private final String message;
+		private final int action;
+		private final ImageDescriptor imageDescriptor;
 
-        private GroupActionType(String message, int action, ImageDescriptor imageDescriptor) {
-            this.message = message;
-            this.action = action;
-            this.imageDescriptor = imageDescriptor;
-        }
-    }
+		private GroupActionType(String message, int action, ImageDescriptor imageDescriptor) {
+			this.message = message;
+			this.action = action;
+			this.imageDescriptor = imageDescriptor;
+		}
+	}
 
-    private enum ModelState {
-        NOT_STARTED, STARTED, FINISHED, NONE;
-    }
+	private enum ModelState {
+		NOT_STARTED, STARTED, FINISHED, NONE;
+	}
 
-    private class GroupByAction extends Action {
-        private final GroupActionType actionType;
+	private class GroupByAction extends Action {
+		private final GroupActionType actionType;
 
-        GroupByAction(GroupActionType actionType) {
-            super(actionType.message, actionType.action);
-            this.actionType = actionType;
-            setToolTipText(actionType.message);
-            setImageDescriptor(actionType.imageDescriptor);
-            setChecked(GroupActionType.THREAD_ROOT.equals(actionType) == threadRootAtTop);
-        }
+		GroupByAction(GroupActionType actionType) {
+			super(actionType.message, actionType.action);
+			this.actionType = actionType;
+			setToolTipText(actionType.message);
+			setImageDescriptor(actionType.imageDescriptor);
+			setChecked(GroupActionType.THREAD_ROOT.equals(actionType) == threadRootAtTop);
+		}
 
-        @Override
-        public void run() {
-            boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
-            if (newValue != threadRootAtTop) {
-                threadRootAtTop = newValue;
-                triggerRebuildTask(currentItems);
-            }
-        }
-    }
+		@Override
+		public void run() {
+			boolean newValue = isChecked() == GroupActionType.THREAD_ROOT.equals(actionType);
+			if (newValue != threadRootAtTop) {
+				threadRootAtTop = newValue;
+				triggerRebuildTask(currentItems);
+			}
+		}
+	}
 
-    private class GroupByFlameviewAction extends Action {
-        private final GroupActionType actionType;
+	private class GroupByFlameviewAction extends Action {
+		private final GroupActionType actionType;
 
-        GroupByFlameviewAction(GroupActionType actionType) {
-            super(actionType.message, actionType.action);
-            this.actionType = actionType;
-            setToolTipText(actionType.message);
-            setImageDescriptor(actionType.imageDescriptor);
-            setChecked(GroupActionType.ICICLE_GRAPH.equals(actionType) == icicleViewActive);
-        }
+		GroupByFlameviewAction(GroupActionType actionType) {
+			super(actionType.message, actionType.action);
+			this.actionType = actionType;
+			setToolTipText(actionType.message);
+			setImageDescriptor(actionType.imageDescriptor);
+			setChecked(GroupActionType.ICICLE_GRAPH.equals(actionType) == icicleViewActive);
+		}
 
-        @Override
-        public void run() {
-            icicleViewActive = GroupActionType.ICICLE_GRAPH.equals(actionType);
-        }
-    }
+		@Override
+		public void run() {
+			icicleViewActive = GroupActionType.ICICLE_GRAPH.equals(actionType);
+		}
+	}
 
-    private static class ModelRebuildRunnable implements Runnable {
+	private static class ModelRebuildRunnable implements Runnable {
 
-        private FlamegraphJavaView view;
-        private IItemCollection items;
-        private volatile boolean isInvalid;
+		private FlamegraphJavaView view;
+		private IItemCollection items;
+		private volatile boolean isInvalid;
 
-        private ModelRebuildRunnable(FlamegraphJavaView view, IItemCollection items) {
-            this.view = view;
-            this.items = items;
-        }
+		private ModelRebuildRunnable(FlamegraphJavaView view, IItemCollection items) {
+			this.view = view;
+			this.items = items;
+		}
 
-        private void setInvalid() {
-            this.isInvalid = true;
-        }
+		private void setInvalid() {
+			this.isInvalid = true;
+		}
 
-        @Override
-        public void run() {
-            view.modelState = ModelState.STARTED;
-            if (isInvalid) {
-                return;
-            }
-            StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
-            if (isInvalid) {
-                return;
-            }
-            String rootFrameDescription = createRootNodeDescription(items);
-            List<FrameBox<Node>> frameBoxList = convert(treeModel);
-            if (isInvalid) {
-                return;
-            } else {
-                view.modelState = ModelState.FINISHED;
-                SwingUtilities.invokeLater(() -> view.setModel(items, frameBoxList, rootFrameDescription));
-            }
-        }
+		@Override
+		public void run() {
+			view.modelState = ModelState.STARTED;
+			if (isInvalid) {
+				return;
+			}
+			var treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
+			if (isInvalid) {
+				return;
+			}
+			var rootFrameDescription = createRootNodeDescription(items);
+			var frameBoxList = convert(treeModel);
+			if (isInvalid) {
+				return;
+			} else {
+				view.modelState = ModelState.FINISHED;
+				view.setModel(items, frameBoxList, rootFrameDescription);
+			}
+		}
 
-        private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
-            List<FrameBox<Node>> nodes = new ArrayList<>();
+		private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
+			List<FrameBox<Node>> nodes = new ArrayList<>();
 
-            FrameBox.flattenAndCalculateCoordinate(
-                    nodes,
-                    model.getRoot(),
-                    Node::getChildren,
-                    Node::getCumulativeWeight,
-                    0.0d,
-                    1.0d,
-                    0
-            );
+			FrameBox.flattenAndCalculateCoordinate(nodes, model.getRoot(), Node::getChildren, Node::getCumulativeWeight,
+					0.0d, 1.0d, 0);
 
-            return nodes;
-        }
+			return nodes;
+		}
 
-        private static String createRootNodeDescription(IItemCollection items) {
-            Map<String, Long> freq = eventTypeFrequency(items);
-            // root => 51917 events of 1 type: Method Profiling Sample[51917],
-            long totalEvents = freq.values().stream().mapToLong(Long::longValue).sum();
-            if (totalEvents == 0) {
-                return "Stack Trace not available";
-            }
-            StringBuilder description = new StringBuilder(totalEvents + " event(s) of " + freq.size() + " type(s): ");
-            int i = 0;
-            for (Map.Entry<String, Long> e : freq.entrySet()) {
-                description.append(e.getKey()).append("[").append(e.getValue()).append("]");
-                if (i < freq.size() - 1 && i < 3) {
-                    description.append(", ");
-                }
-                if (i >= 3) {
-                    description.append(", ...");
-                    break;
-                }
-                i++;
-            }
+		private static String createRootNodeDescription(IItemCollection items) {
+			var freq = eventTypeFrequency(items);
+			// root => 51917 events of 1 type: Method Profiling Sample[51917],
+			long totalEvents = freq.values().stream().mapToLong(Long::longValue).sum();
+			if (totalEvents == 0) {
+				return "Stack Trace not available";
+			}
+			var description = new StringBuilder(totalEvents + " event(s) of " + freq.size() + " type(s): ");
+			int i = 0;
+			for (var e : freq.entrySet()) {
+				description.append(e.getKey()).append("[").append(e.getValue()).append("]");
+				if (i < freq.size() - 1 && i < 3) {
+					description.append(", ");
+				}
+				if (i >= 3) {
+					description.append(", ...");
+					break;
+				}
+				i++;
+			}
 
-            return description.toString();
-        }
+			return description.toString();
+		}
 
-        private static Map<String, Long> eventTypeFrequency(IItemCollection items) {
-            Map<String, Long> eventCountByType = new HashMap<>();
-            for (IItemIterable eventIterable : items) {
-                if (eventIterable.getItemCount() == 0) {
-                    continue;
-                }
-                eventCountByType.compute(
-                        eventIterable.getType().getName(),
-                        (k, v) -> (v == null ? 0 : v) + eventIterable.getItemCount()
-                );
-                // long newValue = eventCountByType.getOrDefault(typeName, 0L) + eventIterable.getItemCount();
-                // eventCountByType.put(typeName, newValue);
-            }
-            // sort the map in ascending order of values
-            return eventCountByType.entrySet().stream().sorted(reverseOrder(comparingByValue()))
-                                   .collect(toMap(
-                                           Map.Entry::getKey,
-                                           Map.Entry::getValue,
-                                           (e1, e2) -> e1,
-                                           LinkedHashMap::new
-                                   ));
-        }
-    }
+		private static Map<String, Long> eventTypeFrequency(IItemCollection items) {
+			var eventCountByType = new HashMap<String, Long>();
+			for (var eventIterable : items) {
+				if (eventIterable.getItemCount() == 0) {
+					continue;
+				}
+				eventCountByType.compute(eventIterable.getType().getName(),
+						(k, v) -> (v == null ? 0 : v) + eventIterable.getItemCount());
+				// long newValue = eventCountByType.getOrDefault(typeName, 0L) + eventIterable.getItemCount();
+				// eventCountByType.put(typeName, newValue);
+			}
+			// sort the map in ascending order of values
+			return eventCountByType.entrySet().stream().sorted(reverseOrder(comparingByValue()))
+					.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		}
+	}
 
-    @Override
-    public void init(IViewSite site, IMemento memento) throws PartInitException {
-        super.init(site, memento);
-        frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
-        groupByActions = new GroupByAction[]{new GroupByAction(GroupActionType.LAST_FRAME),
-                                             new GroupByAction(GroupActionType.THREAD_ROOT)};
-        groupByFlameviewActions = new GroupByFlameviewAction[]{// TODO new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
-                                                               new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
-        // TODO exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
-        // 									new ExportAction(ExportActionType.PRINT)};
-        // TODO Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
+	@Override
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
+		groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
+				new GroupByAction(GroupActionType.THREAD_ROOT)};
+		groupByFlameviewActions = new GroupByFlameviewAction[] {// TODO new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
+				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
+		// TODO exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
+		// 									new ExportAction(ExportActionType.PRINT)};
+		// TODO Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
-        // methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
-        IMenuManager siteMenu = site.getActionBars().getMenuManager();
-        siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
-        siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
-        // addOptions(siteMenu);
-        IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		// methodFormatter = new MethodFormatter(null, () -> viewer.refresh());
+		var siteMenu = site.getActionBars().getMenuManager();
+		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
+		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
+		// addOptions(siteMenu);
+		var toolBar = site.getActionBars().getToolBarManager();
 
-        Stream.of(groupByFlameviewActions).forEach(toolBar::add);
-        toolBar.add(new Separator());
-        Stream.of(groupByActions).forEach(toolBar::add);
-        toolBar.add(new Separator());
-        // TODO Stream.of(exportActions).forEach(toolBar::add);
-        getSite().getPage().addSelectionListener(this);
-    }
+		Stream.of(groupByFlameviewActions).forEach(toolBar::add);
+		toolBar.add(new Separator());
+		Stream.of(groupByActions).forEach(toolBar::add);
+		toolBar.add(new Separator());
+		// TODO Stream.of(exportActions).forEach(toolBar::add);
+		getSite().getPage().addSelectionListener(this);
+	}
 
-    @Override
-    public void dispose() {
-        getSite().getPage().removeSelectionListener(this);
-        super.dispose();
-    }
+	@Override
+	public void dispose() {
+		getSite().getPage().removeSelectionListener(this);
+		super.dispose();
+	}
 
-    @Override
-    public void createPartControl(Composite parent) {
-        // TODO search field
+	@Override
+	public void createPartControl(Composite parent) {
+		container = new SashForm(parent, SWT.HORIZONTAL);
+		embeddingComposite = new Composite(container, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+		container.setMaximizedControl(embeddingComposite);
 
-        embeddingComposite = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-        embeddingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        embeddingComposite.setLayout(new FillLayout());
-        Frame frame = SWT_AWT.new_Frame(embeddingComposite);
-        embeddingComposite.addDisposeListener(e -> {
-            // NOTE: Workaround to avoid memory leak caused by SWT_AWT.new_Frame which adds the frame to java.awt.Window.allWindows twice, so we remove it once more here
-            SwingUtilities.invokeLater(() -> {
-                try {
-                    frame.removeNotify();
-                } catch (Throwable ignored) {
-                }
-            });
-        });
-        SwingUtilities.invokeLater(() -> {
-            JRootPane rootPane = new JRootPane();
-            flamegraphView = createFlameGraph();
-            rootPane.getContentPane().add(flamegraphView.component);
+		// TODO search field
 
-            frame.add(rootPane);
-        });
-    }
+		embeddingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		embeddingComposite.setLayout(new GridLayout(1, false));
+		var frame = SWT_AWT.new_Frame(embeddingComposite);
+//		embeddingComposite.addDisposeListener(e -> {
+//			// NOTE: Workaround to avoid memory leak caused by SWT_AWT.new_Frame which adds the frame to java.awt.Window.allWindows twice, so we remove it once more here
+//			try {
+//				frame.removeNotify();
+//			} catch (Throwable ignored) {
+//			}
+//		});
+		SwingUtilities.invokeLater(() -> {
+			var rootPane = new JRootPane();
+			flamegraphView = createFlameGraph();
+			rootPane.getContentPane().add(flamegraphView.component);
 
-    @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (selection instanceof IStructuredSelection) {
-            Object first = ((IStructuredSelection) selection).getFirstElement();
-            IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
-            if (items == null) {
-                triggerRebuildTask(ItemCollectionToolkit.build(Stream.empty()));
-            } else if (!items.equals(currentItems)) {
-                triggerRebuildTask(items);
-            }
-        }
-    }
+			var panel = new Panel();
+			panel.setLayout(new BorderLayout(0, 0));
+			panel.add(rootPane);
+			frame.add(panel);
+			var embedSize = embeddingComposite.getSize();
+			flamegraphView.component.setSize(embedSize.x, embedSize.y);
+		});
+	}
 
-    @Override
-    public void setFocus() {
-        embeddingComposite.setFocus();
-    }
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			var first = ((IStructuredSelection) selection).getFirstElement();
+			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
+			if (items == null) {
+				triggerRebuildTask(ItemCollectionToolkit.build(Stream.empty()));
+			} else if (!items.equals(currentItems)) {
+				triggerRebuildTask(items);
+			}
+		}
+	}
 
-    private FlamegraphView<Node> createFlameGraph() {
-        FlamegraphView<Node> fg = new FlamegraphView<>();
-        fg.putClientProperty(FlamegraphView.SHOW_STATS, true);
+	@Override
+	public void setFocus() {
+		embeddingComposite.setFocus();
+	}
 
-        return fg;
-    }
+	private FlamegraphView<Node> createFlameGraph() {
+		var fg = new FlamegraphView<Node>();
+		fg.putClientProperty(FlamegraphView.SHOW_STATS, true);
 
-    private void triggerRebuildTask(IItemCollection items) {
-        // Release old model calculation before building a new
-        if (modelRebuildRunnable != null) {
-            modelRebuildRunnable.setInvalid();
-        }
+		return fg;
+	}
 
-        currentItems = items;
-        modelState = ModelState.NOT_STARTED;
-        modelRebuildRunnable = new ModelRebuildRunnable(this, items);
-        if (!modelRebuildRunnable.isInvalid) {
-            MODEL_EXECUTOR.execute(modelRebuildRunnable);
-        }
-    }
+	private void triggerRebuildTask(IItemCollection items) {
+		// Release old model calculation before building a new
+		if (modelRebuildRunnable != null) {
+			modelRebuildRunnable.setInvalid();
+		}
 
-    private void setModel(final IItemCollection items, final List<FrameBox<Node>> flatFrameList, String rootFrameDescription) {
-        if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems)) {
-            flamegraphView.setConfigurationAndData(
-                    flatFrameList,
-                    FrameTextsProvider.of(
-                            (frame) -> {
-                                if (frame.isRoot()) {
-                                    return rootFrameDescription;
-                                } else {
-                                    return frame.actualNode.getFrame().getHumanReadableShortString();
-                                }
-                            },
-                            frame -> frame.isRoot() ? "" : FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false, false, false, true, false),
-                            frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()
-                    ),
-                    new DimmingFrameColorProvider<Node>(frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
-                    		                                                .apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
-                    FrameFontProvider.defaultFontProvider(),
-                    frame -> ""
-                    // frame -> {
-                    //     if (frame.stackDepth == 0) {
-                    //         return "";
-                    //     }
-                    //
-                    //     var method = frame.actualNode.getFrame().getMethod();
-                    //     var desc = FormatToolkit.getHumanReadable(method,
-                    //                                               false,
-                    //                                               false,
-                    //                                               true,
-                    //                                               true,
-                    //                                               true,
-                    //                                               false,
-                    //                                               false);
-                    //
-                    //     return "<html>"
-                    //            + "<b>" + frame.actualNode.getFrame().getHumanReadableShortString() + "</b><br>"
-                    //            + desc + "<br><hr>"
-                    //            + frame.actualNode.getCumulativeWeight() + " " + frame.actualNode.getWeight() + "<br>"
-                    //            + "BCI: " + frame.actualNode.getFrame().getBCI() + " Line number: " + frame.actualNode.getFrame().getFrameLineNumber() + "<br>"
-                    //            + "</html>";
-                    // }
-            );
-        }
-    }
+		currentItems = items;
+		modelState = ModelState.NOT_STARTED;
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
+		if (!modelRebuildRunnable.isInvalid) {
+			MODEL_EXECUTOR.execute(modelRebuildRunnable);
+		}
+	}
 
-    private static ImageDescriptor flameviewImageDescriptor(String iconName) {
-        return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
-    }
+	private void setModel(
+		final IItemCollection items, final List<FrameBox<Node>> flatFrameList, String rootFrameDescription) {
+		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems)) {
+			SwingUtilities.invokeLater(() -> {
+				flamegraphView.setConfigurationAndData(flatFrameList, FrameTextsProvider.of((frame) -> {
+					if (frame.isRoot()) {
+						return rootFrameDescription;
+					} else {
+						return frame.actualNode.getFrame().getHumanReadableShortString();
+					}
+				}, frame -> frame.isRoot() ? ""
+						: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false, false,
+								false, true, false),
+						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()),
+						new DimmingFrameColorProvider<Node>(
+								frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
+										.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
+						FrameFontProvider.defaultFontProvider(), frame -> ""
+				// frame -> {
+				//     if (frame.stackDepth == 0) {
+				//         return "";
+				//     }
+				//
+				//     var method = frame.actualNode.getFrame().getMethod();
+				//     var desc = FormatToolkit.getHumanReadable(method,
+				//                                               false,
+				//                                               false,
+				//                                               true,
+				//                                               true,
+				//                                               true,
+				//                                               false,
+				//                                               false);
+				//
+				//     return "<html>"
+				//            + "<b>" + frame.actualNode.getFrame().getHumanReadableShortString() + "</b><br>"
+				//            + desc + "<br><hr>"
+				//            + frame.actualNode.getCumulativeWeight() + " " + frame.actualNode.getWeight() + "<br>"
+				//            + "BCI: " + frame.actualNode.getFrame().getBCI() + " Line number: " + frame.actualNode.getFrame().getFrameLineNumber() + "<br>"
+				//            + "</html>";
+				// }
+				);
+				flamegraphView.component.invalidate();
+				flamegraphView.requestRepaint();
+
+				Display.getDefault().asyncExec(() -> {
+					embeddingComposite.layout(true, true);
+					var embedSize = embeddingComposite.getSize();
+					flamegraphView.component.setSize(embedSize.x, embedSize.y);
+					
+//					embeddingComposite.pack(true);
+				});
+			});
+		}
+	}
+
+	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
+	}
 }
