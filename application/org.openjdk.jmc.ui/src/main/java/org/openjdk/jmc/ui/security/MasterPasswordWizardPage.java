@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.ui.security;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
@@ -58,9 +61,11 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 
 	private final boolean usePasswordVerification;
 	private final boolean warnForDataClear;
-	private static final int MIN_PASSWORD_LENGTH = 5;
 
 	private String password;
+
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
 
 	private class InputVerifier implements ModifyListener {
 
@@ -148,10 +153,8 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_PASSWORD_EMPTY_TEXT);
 			return;
 		}
-		if (passwordField.getText().length() < MIN_PASSWORD_LENGTH) {
-			setErrorMessage(
-					NLS.bind(Messages.MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_SHORTER_THAN_X_CHARACTERS_TEXT,
-							MIN_PASSWORD_LENGTH));
+		if (!isValid(passwordField.getText())) {
+			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_VALIDATION_FAILED);
 			return;
 		}
 		if (usePasswordVerification) {
@@ -162,6 +165,11 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 		}
 		setErrorMessage(null);
 		setPageComplete(true);
+	}
+
+	public static boolean isValid(final String password) {
+		Matcher matcher = PASSWORD_PATTERN.matcher(password);
+		return matcher.matches();
 	}
 
 	@Override
