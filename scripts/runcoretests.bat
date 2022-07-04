@@ -1,6 +1,6 @@
 @echo off
-echo "======== Running core tests ================="
-cd core
-mvn verify
-echo "======== Finished ==========================="
 
+echo "======== Installing and testing core ========"
+cd core
+call mvn %MAVENPARAMS% install || EXIT /B 2
+echo "======== Finished ==========================="
