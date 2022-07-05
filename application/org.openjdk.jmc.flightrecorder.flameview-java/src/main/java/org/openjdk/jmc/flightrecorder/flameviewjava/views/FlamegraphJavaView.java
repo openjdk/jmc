@@ -86,13 +86,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 import static java.util.Collections.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
 import static org.openjdk.jmc.flightrecorder.flameviewjava.MessagesUtils.getFlameviewMessage;
 
 public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
@@ -186,6 +186,22 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			icicleViewActive = GroupActionType.ICICLE_GRAPH.equals(actionType);
+		}
+	}
+	
+	private class ToggleMinimapAction extends Action {
+		private ToggleMinimapAction() {
+			super(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP), IAction.AS_CHECK_BOX);
+			setToolTipText(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP));
+			
+			setChecked(false);
+		}
+		
+		@Override
+		public void run() {
+			var toggleMinimap = !flamegraphView.isShowMinimap();
+			SwingUtilities.invokeLater(() -> flamegraphView.showMinimap(toggleMinimap));
+			setChecked(toggleMinimap);
 		}
 	}
 
@@ -305,6 +321,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		// addOptions(siteMenu);
 		var toolBar = site.getActionBars().getToolBarManager();
 
+		toolBar.add(new ToggleMinimapAction());
+		toolBar.add(new Separator());
 		Stream.of(groupByFlameviewActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
 		Stream.of(groupByActions).forEach(toolBar::add);
@@ -338,6 +356,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 //			} catch (Throwable ignored) {
 //			}
 //		});
+		var embedSize = embeddingComposite.getSize(); // done here to avoid so SWT don;t complain about wrong thread
 		SwingUtilities.invokeLater(() -> {
 			var rootPane = new JRootPane();
 			flamegraphView = createFlameGraph();
@@ -347,7 +366,6 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 			panel.setLayout(new BorderLayout(0, 0));
 			panel.add(rootPane);
 			frame.add(panel);
-			var embedSize = embeddingComposite.getSize();
 			flamegraphView.component.setSize(embedSize.x, embedSize.y);
 		});
 	}
@@ -373,6 +391,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	private FlamegraphView<Node> createFlameGraph() {
 		var fg = new FlamegraphView<Node>();
 		fg.putClientProperty(FlamegraphView.SHOW_STATS, true);
+		fg.showMinimap(false);
 
 		return fg;
 	}
@@ -432,8 +451,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 				//            + "</html>";
 				// }
 				);
-//				flamegraphView.component.invalidate();
-//				flamegraphView.requestRepaint();
+				flamegraphView.component.invalidate();
+				flamegraphView.component.repaint();
 
 				Display.getDefault().asyncExec(() -> {
 					embeddingComposite.layout(true, true);

@@ -48,6 +48,7 @@ public class Messages {
 	public static final String FLAMEVIEW_SAVE_FLAME_GRAPH_AS = "FLAMEVIEW_SAVE_FLAME_GRAPH_AS"; //$NON-NLS-1$
 	public static final String FLAMEVIEW_JPEG_IMAGE = "FLAMEVIEW_JPEG_IMAGE"; //$NON-NLS-1$
 	public static final String FLAMEVIEW_PNG_IMAGE = "FLAMEVIEW_PNG_IMAGE"; //$NON-NLS-1$
+	public static final String FLAMEVIEW_TOGGLE_MINIMAP = "FLAMEVIEW_TOGGLE_MINIMAP"; //$NON-NLS-1$
 
 	private Messages() {
 	}
