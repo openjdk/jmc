@@ -36,6 +36,7 @@ import io.github.bric3.fireplace.core.ui.Colors;
 import io.github.bric3.fireplace.flamegraph.ColorMapper;
 import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView;
+import io.github.bric3.fireplace.flamegraph.FlamegraphView.HoveringListener;
 import io.github.bric3.fireplace.flamegraph.FrameBox;
 import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
 import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
@@ -56,6 +57,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -77,11 +82,13 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -356,16 +363,35 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 //			} catch (Throwable ignored) {
 //			}
 //		});
-		var embedSize = embeddingComposite.getSize(); // done here to avoid so SWT don;t complain about wrong thread
+		
+		// done here to avoid SWT complain about wrong thread
+		var embedSize = embeddingComposite.getSize(); 
+		var balloon = new ToolTip(embeddingComposite.getShell(), SWT.BALLOON);
+        balloon.setAutoHide(true);
+        
+        embeddingComposite.addListener(SWT.MouseExit, new Listener() {
+			
+			public void handleEvent(Event event) {
+				balloon.getDisplay().timerExec(300, new Runnable() {
+                    public void run() {
+                        balloon.setVisible(false);
+                    }
+                });
+			}
+		});
+        
+
 		SwingUtilities.invokeLater(() -> {
 			var rootPane = new JRootPane();
-			flamegraphView = createFlameGraph();
+			flamegraphView = createFlameGraph(embeddingComposite, balloon);
 			rootPane.getContentPane().add(flamegraphView.component);
 
 			var panel = new Panel();
 			panel.setLayout(new BorderLayout(0, 0));
 			panel.add(rootPane);
 			frame.add(panel);
+			
+			// setting the size seems necessary to show the scrollbars
 			flamegraphView.component.setSize(embedSize.x, embedSize.y);
 		});
 	}
@@ -388,11 +414,52 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		embeddingComposite.setFocus();
 	}
 
-	private FlamegraphView<Node> createFlameGraph() {
+	private FlamegraphView<Node> createFlameGraph(Composite owner, ToolTip balloon) {
 		var fg = new FlamegraphView<Node>();
 		fg.putClientProperty(FlamegraphView.SHOW_STATS, true);
 		fg.showMinimap(false);
 
+		
+		fg.setHoveringListener(new HoveringListener<Node>() {
+			
+			public void onStopHover(MouseEvent arg0) {
+				Display.getDefault().asyncExec(() -> {
+					// Don't do this as it flickers
+					// balloon.setVisible(false);
+				});
+			}
+			
+			public void onFrameHover(FrameBox<Node> frameBox, Rectangle frameRect, MouseEvent mouseEvent) {
+				
+				// This code knows too much about Flamegraph but given tooltips
+                // will probably evolve it may be too early to refactor it
+                var scrollPane = (JScrollPane) mouseEvent.getComponent();
+                var canvas = scrollPane.getViewport().getView();
+
+                var pointOnCanvas =	SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
+
+                pointOnCanvas.y = frameRect.y + frameRect.height;
+                var componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
+                
+                
+				var shortString = frameBox.actualNode.getFrame().getHumanReadableShortString();
+				
+				Display.getDefault().asyncExec(() -> {
+					var tooltipLocation = embeddingComposite.toDisplay(componentPoint.x, componentPoint.y);
+					
+					balloon.setText(shortString);
+					balloon.setLocation(tooltipLocation);
+					balloon.getDisplay().timerExec(1000, () -> {
+						var control = Display.getDefault().getCursorControl();
+						
+						if (Objects.equals(owner, control)) {							
+							balloon.setVisible(true);
+						}
+					});
+				});
+			}
+		});
+		
 		return fg;
 	}
 
@@ -455,6 +522,9 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 				flamegraphView.component.repaint();
 
 				Display.getDefault().asyncExec(() -> {
+					if (embeddingComposite.isDisposed()) {
+						return;
+					}
 					embeddingComposite.layout(true, true);
 					var embedSize = embeddingComposite.getSize();
 					flamegraphView.component.setSize(embedSize.x, embedSize.y);
