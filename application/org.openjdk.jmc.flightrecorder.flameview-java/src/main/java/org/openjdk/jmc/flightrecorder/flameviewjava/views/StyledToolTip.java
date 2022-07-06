@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,34 +30,48 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameviewjava;
+package org.openjdk.jmc.flightrecorder.flameviewjava.views;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.forms.widgets.FormText;
 
-public class Messages {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.flameviewjava.messages"; //$NON-NLS-1$
-
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	public static final String FLAMEVIEW_FLAME_GRAPH = "FLAMEVIEW_FLAME_GRAPH"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_ICICLE_GRAPH = "FLAMEVIEW_ICICLE_GRAPH"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_SAVE_AS = "FLAMEVIEW_SAVE_AS"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_PRINT = "FLAMEVIEW_PRINT"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_SAVE_FLAME_GRAPH_AS = "FLAMEVIEW_SAVE_FLAME_GRAPH_AS"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_JPEG_IMAGE = "FLAMEVIEW_JPEG_IMAGE"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_PNG_IMAGE = "FLAMEVIEW_PNG_IMAGE"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_TOGGLE_MINIMAP = "FLAMEVIEW_TOGGLE_MINIMAP"; //$NON-NLS-1$
-	public static final String FLAMEVIEW_RESET_ZOOM = "FLAMEVIEW_RESET_ZOOM"; //$NON-NLS-1$
-
-	private Messages() {
+/**
+ * This tool tip extends the Jface implementation and relies on the {@link FormText} control
+ * to render the text.
+ * 
+ * @author brice.dutheil
+ * @see FormText
+ */
+public class StyledToolTip extends DefaultToolTip {
+	public StyledToolTip(Control control) {
+		super(control);
 	}
 
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+	public StyledToolTip(Control control, int style, boolean manualActivation) {
+		super(control, style, manualActivation);
+	}
+
+	@Override
+	protected Composite createToolTipContentArea(Event event, Composite parent) {
+		final Composite container = setDefaultLayout(new Composite(parent, SWT.NULL), event);
+		GridLayoutFactory.fillDefaults().margins(2, 2).generateLayout(container);
+		var formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
+		
+		String pseudoHtml = getText(event);
+
+		formText.setText(pseudoHtml, true, false);
+		return parent;
+	}
+
+	private <T extends Control> T setDefaultLayout(T control, Event event) {
+		control.setBackground(getBackgroundColor(event));
+		control.setForeground(getForegroundColor(event));
+		control.setFont(getFont(event));
+		return control;
 	}
 }
