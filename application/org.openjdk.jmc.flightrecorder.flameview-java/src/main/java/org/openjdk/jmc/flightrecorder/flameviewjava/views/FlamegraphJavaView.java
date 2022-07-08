@@ -523,8 +523,6 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 								frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
 										.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
 						FrameFontProvider.defaultFontProvider(), frame -> "");
-				flamegraphView.component.invalidate();
-				flamegraphView.component.repaint();
 
 				Display.getDefault().asyncExec(() -> {
 					if (embeddingComposite.isDisposed()) {
