@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-kubernetes</artifactId>
-			<version>1.7.0</version>
+			<version>${jolokia.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

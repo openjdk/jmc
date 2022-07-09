@@ -55,7 +55,7 @@
 						<dependency>
 							<groupId>org.jolokia</groupId>
 							<artifactId>jolokia-jmx-adapter</artifactId>
-							<version>1.7.0</version>
+							<version>${jolokia.version}</version>
 						</dependency>
 					</extraClasspathElements>
 				</configuration>
@@ -66,12 +66,12 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-jmx-adapter</artifactId>
-			<version>1.7.0</version>
+			<version>${jolokia.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.rjmx</artifactId>
-			<version>8.2.0-SNAPSHOT</version>
+			<version>8.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-jvm</artifactId>
-			<version>1.7.1</version>
+			<version>${jolokia.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun</groupId>

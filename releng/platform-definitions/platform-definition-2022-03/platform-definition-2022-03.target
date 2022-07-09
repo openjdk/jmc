@@ -50,6 +50,9 @@
             <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.11"/>
             <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.11"/>
             <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.4"/>
+            <unit id="org.jolokia.jmx-adapter.standalone" version="1.7.1"/>
+            <unit id="org.jolokia.jvm" version="1.7.1"/>
+            <unit id="org.jolokia.kubernetes.standalone" version="1.7.1"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

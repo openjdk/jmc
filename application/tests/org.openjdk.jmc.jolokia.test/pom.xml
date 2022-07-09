@@ -46,7 +46,6 @@
 
 	<properties>
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jolokia.version>1.7.1</jolokia.version>
 	</properties>
 
 	<dependencies>
