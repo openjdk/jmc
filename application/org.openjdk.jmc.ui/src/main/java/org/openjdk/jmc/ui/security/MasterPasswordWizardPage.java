@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import org.openjdk.jmc.ui.UIPlugin;
+import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 import org.openjdk.jmc.ui.wizards.IPerformFinishable;
 
 /**
@@ -63,9 +64,6 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 	private final boolean warnForDataClear;
 
 	private String password;
-
-	private static final Pattern PASSWORD_PATTERN = Pattern
-			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
 
 	private class InputVerifier implements ModifyListener {
 
@@ -153,7 +151,7 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_PASSWORD_EMPTY_TEXT);
 			return;
 		}
-		if (!isValid(passwordField.getText())) {
+		if (!PersistentCredentials.isPasswordValid(passwordField.getText())) {
 			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_VALIDATION_FAILED);
 			return;
 		}
@@ -165,11 +163,6 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 		}
 		setErrorMessage(null);
 		setPageComplete(true);
-	}
-
-	public static boolean isValid(final String password) {
-		Matcher matcher = PASSWORD_PATTERN.matcher(password);
-		return matcher.matches();
 	}
 
 	@Override

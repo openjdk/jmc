@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,63 +30,30 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.ui.test.security;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-/**
- * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy
- * loaded on demand.
- */
-public class PersistentCredentials implements ICredentials {
+import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 
-	private final String id;
-	private String[] wrapped;
+@SuppressWarnings("nls")
+public class MasterPasswordTest {
 
-	public PersistentCredentials(String id) {
-		this.id = id;
+	private final String invalidPwdValue = "Jmc20";
+	private final String validPwdValue = "Jmc@2022";
+
+	@Test
+	public void testInvalidMasterPassword() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue);
+		assertFalse(result);
 	}
 
-	public PersistentCredentials(String username, String password) throws SecurityException {
-		this(username, password, null);
+	@Test
+	public void testValidMasterPassword() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(validPwdValue);
+		assertTrue(result);
 	}
 
-	public PersistentCredentials(String username, String password, String family) throws SecurityException {
-		wrapped = new String[] {username, password};
-		id = SecurityManagerFactory.getSecurityManager().storeInFamily(family, wrapped);
-	}
-
-	@Override
-	public String getUsername() throws SecurityException {
-		return getCredentials()[0];
-	}
-
-	@Override
-	public String getPassword() throws SecurityException {
-		return getCredentials()[1];
-	}
-
-	private String[] getCredentials() throws SecurityException {
-		if (wrapped == null) {
-			wrapped = (String[]) SecurityManagerFactory.getSecurityManager().get(id);
-		}
-		if (wrapped == null || wrapped.length != 2) {
-			throw new CredentialsNotAvailableException();
-		}
-		return wrapped;
-	}
-
-	@Override
-	public String getExportedId() {
-		return id;
-	}
-
-	public static boolean isPasswordValid(final String password) {
-		Pattern PASSWORD_PATTERN = Pattern
-				.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
-
-		Matcher matcher = PASSWORD_PATTERN.matcher(password);
-		return matcher.matches();
-	}
 }
