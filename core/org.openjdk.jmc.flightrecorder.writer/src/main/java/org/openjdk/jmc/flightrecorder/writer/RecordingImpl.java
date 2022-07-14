@@ -98,10 +98,13 @@ public final class RecordingImpl extends Recording {
 	private final ConstantPools constantPools = new ConstantPools();
 	private final MetadataImpl metadata = new MetadataImpl(constantPools);
 	private final TypesImpl types;
+	private final long duration;
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
-		this.startTicks = settings.getStartTimestamp();
-		this.startNanos = settings.getStartTimestamp();
+		this.startTicks = settings.getStartTicks() != -1 ? settings.getStartTicks() : System.nanoTime();
+		this.startNanos = settings.getStartTimestamp() != -1 ? settings.getStartTimestamp()
+				: System.currentTimeMillis() * 1_000_000L;
+		this.duration = settings.getDuration();
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
 		writeFileHeader();
@@ -279,7 +282,7 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void finalizeRecording() {
-		long duration = System.nanoTime() - startTicks;
+		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
 		types.resolveAll();
 
 		long checkpointOffset = globalWriter.position();
@@ -287,7 +290,7 @@ public final class RecordingImpl extends Recording {
 		long metadataOffset = globalWriter.position();
 		writeMetadataEvent(duration);
 
-		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, duration);
+		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, recDuration);
 		globalWriter.writeLongRaw(SIZE_OFFSET, globalWriter.position());
 		globalWriter.writeLongRaw(CONSTANT_OFFSET_OFFSET, checkpointOffset);
 		globalWriter.writeLongRaw(METADATA_OFFSET_OFFSET, metadataOffset);
