@@ -1,5 +1,3 @@
-package org.openjdk.jmc.flightrecorder.testutils.parser;
-
 /*
  * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022, Datadog, Inc. All rights reserved.
@@ -33,6 +31,8 @@ package org.openjdk.jmc.flightrecorder.testutils.parser;
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.openjdk.jmc.flightrecorder.testutils.parser;
+
 import org.jctools.maps.NonBlockingHashMapLong;
 
 import java.io.IOException;
