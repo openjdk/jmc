@@ -175,7 +175,7 @@
 						<goal>verify</goal>
 					</goals>
 						<configuration>
-							<argLine> -Djava.security.manager -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy
+							<argLine> -Djdk.io.permissionsUseCanonicalPath=true -Djava.security.manager -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy
 								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
 								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
 							<includes>TestPermissionChecks.java</includes>

@@ -1,8 +1,7 @@
 #!/bin/sh -l
-
 set -e
-echo "======== Running agent tests ================"
-cd agent
-mvn verify
-echo "======== Finished ==========================="
 
+echo "======== Building and testing agent ========="
+cd agent
+sh -c "mvn ${MAVENPARAMS} verify"
+echo "======== Finished ==========================="
