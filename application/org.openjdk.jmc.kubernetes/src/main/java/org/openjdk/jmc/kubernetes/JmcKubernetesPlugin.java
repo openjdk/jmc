@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.kubernetes;
 
-import java.util.logging.Logger;
-
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
 import org.openjdk.jmc.kubernetes.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
@@ -43,9 +41,6 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 		implements KubernetesScanningParameters, PreferenceConstants {
 
 	public final static String PLUGIN_ID = "org.openjdk.jmc.kubernetes"; //$NON-NLS-1$
-
-	// The logger.
-	private final static Logger LOGGER = Logger.getLogger(PLUGIN_ID);
 
 	// The shared instance.
 	private static JmcKubernetesPlugin plugin;
@@ -65,9 +60,6 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 		return plugin;
 	}
 
-	public static Logger getPluginLogger() {
-		return LOGGER;
-	}
 
 	@Override
 	public boolean scanForInstances() {
