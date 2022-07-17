@@ -53,7 +53,6 @@
 			<groupId>org.awaitility</groupId>
 			<artifactId>awaitility</artifactId>
 			<version>4.0.0</version>
-			<!-- <scope>test</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.jolokia</groupId>
@@ -80,20 +79,7 @@
 						ports to run test -->
 					<argLine>-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-external-dependencies</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			</plugin>	
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
