@@ -55,6 +55,7 @@
 		<module>org.openjdk.jmc.ui.common.test</module>
 		<module>org.openjdk.jmc.ui.test</module>
 		<module>org.openjdk.jmc.jolokia.test</module>
+		<module>org.openjdk.jmc.kubernetes.test</module>
 	</modules>
 	<properties>
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>

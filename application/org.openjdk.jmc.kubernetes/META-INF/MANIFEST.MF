@@ -12,7 +12,8 @@ Require-Bundle: org.openjdk.jmc.jolokia;bundle-version="8.3.0",
  org.eclipse.swt,
  org.jolokia.kubernetes.standalone;bundle-version="1.7.1",
  org.openjdk.jmc.rjmx;bundle-version="8.3.0"
-Export-Package: org.openjdk.jmc.kubernetes
+Export-Package: org.openjdk.jmc.kubernetes,
+ org.openjdk.jmc.kubernetes.preferences
 Import-Package: org.apache.commons.logging;version="1.2.0",
  org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.descriptorprovider

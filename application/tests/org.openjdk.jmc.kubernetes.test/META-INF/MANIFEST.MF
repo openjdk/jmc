@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJMX Test
+Bundle-SymbolicName: org.openjdk.jmc.kubernetes.test;singleton:=true
+Bundle-Version: 8.3.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit,
+ org.openjdk.jmc.jolokia,
+ org.openjdk.jmc.common.test,
+ org.eclipse.osgi;bundle-version="3.16.200",
+ org.eclipse.ui.workbench,
+ org.openjdk.jmc.rjmx;bundle-version="8.3.0",
+ org.eclipse.ui,
+ org.awaitility;bundle-version="4.0.0",
+ org.hamcrest;bundle-version="2.1.0",
+ org.openjdk.jmc.kubernetes;bundle-version="8.3.0",
+ com.github.tomakehurst.wiremock-standalone;bundle-version="2.27.2"
+Automatic-Module-Name: org.openjdk.jmc.jolokia.test
+Import-Package: io.fabric8.kubernetes.client,
+ org.openjdk.jmc.rjmx.descriptorprovider
+Bundle-Classpath: target/dependency/awaitility-4.0.0.jar

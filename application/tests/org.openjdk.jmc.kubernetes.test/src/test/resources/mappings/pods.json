@@ -1,0 +1,10 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPath": "/kubernetes/api/v1/pods"
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "pods.json"
+	}
+}
