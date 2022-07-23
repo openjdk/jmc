@@ -53,6 +53,7 @@
             <unit id="org.jolokia.org.jolokia.jmx-adapter.standalone" version="1.7.1"/>
             <unit id="org.jolokia.jvm" version="1.7.1"/>
             <unit id="org.jolokia.kubernetes.standalone" version="1.7.1"/>
+            <unit id="com.github.tomakehurst.wiremock-standalone" version="2.27.2"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
