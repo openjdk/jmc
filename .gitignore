@@ -37,6 +37,9 @@ workspace/
 dependency-reduced-pom.xml
 .flattened-pom.xml
 
+# Ignore tycho consumer pom
+.tycho-consumer-pom.xml
+
 # Ignore coverage report
 core/coverage/coverage-report
 application/coverage/coverage-report

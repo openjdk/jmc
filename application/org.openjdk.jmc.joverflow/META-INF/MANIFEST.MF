@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Joverflow
+Bundle-Name: JOverFlow Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.joverflow
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Oracle Corporation

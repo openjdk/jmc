@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -33,88 +33,58 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.openjdk.jmc</groupId>
-        <artifactId>missioncontrol.core.tests</artifactId>
-        <version>${revision}${changelist}</version>
-    </parent>
-    <artifactId>flightrecorder.writer.test</artifactId>
-    <properties>
-        <spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.source>8</maven.compiler.source>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.openjdk.jmc</groupId>
-            <artifactId>common</artifactId>
-            <version>${revision}${changelist}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmc</groupId>
-            <artifactId>flightrecorder.writer</artifactId>
-            <version>${revision}${changelist}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.api.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.params.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.engine.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.core.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>${mockito.inline.version}</version><!--$NO-MVN-MAN-VER$-->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmc</groupId>
-            <artifactId>flightrecorder</artifactId>
-            <version>${revision}${changelist}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <build>
-      <testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${maven.jar.version}</version><!--$NO-MVN-MAN-VER$-->
-          <executions>
-             <execution>
-                <goals>
-                   <goal>test-jar</goal>
-                </goals>
-             </execution>
-          </executions>
-       </plugin>
-      </plugins>
-    </build>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openjdk.jmc</groupId>
+		<artifactId>missioncontrol.core.tests</artifactId>
+		<version>${revision}${changelist}</version>
+	</parent>
+	<artifactId>flightrecorder.writer.test</artifactId>
+	<properties>
+		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.writer</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<testSourceDirectory>${project.basedir}/src/main/java</testSourceDirectory>
+	</build>
 </project>
