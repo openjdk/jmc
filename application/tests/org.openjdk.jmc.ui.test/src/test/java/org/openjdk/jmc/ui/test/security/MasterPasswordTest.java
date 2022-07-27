@@ -41,8 +41,12 @@ import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 @SuppressWarnings("nls")
 public class MasterPasswordTest {
 
-	private final String invalidPwdValue = "Jmc20";
-	private final String validPwdValue = "Jmc@2022";
+	private final String invalidPwdValue = "Jmc20"; // Invalid Length, Missing alphanumeric
+	private final String validPwdValue = "Jmc@2022"; // Following all standards
+	private final String invalidPwdValue1 = "Jmcu2022"; // Missing alphanumeric
+	private final String invalidPwdValue2 = "JMC@2022"; // Missing lowercase
+	private final String invalidPwdValue3 = "jmc!2022"; // Missing uppercase
+	private final String invalidPwdValue4 = "Jmc#xyzs"; // Missing digit
 
 	@Test
 	public void testInvalidMasterPassword() throws Exception {
@@ -56,4 +60,27 @@ public class MasterPasswordTest {
 		assertTrue(result);
 	}
 
+	@Test
+	public void testInvalidPwdMissingAlphaNum() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue1);
+		assertFalse(result);
+	}
+
+	@Test
+	public void testInvalidPwdMissingLowerCase() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue2);
+		assertFalse(result);
+	}
+
+	@Test
+	public void testInvalidPwdMissingUpperCase() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue3);
+		assertFalse(result);
+	}
+
+	@Test
+	public void testInvalidPwdMissingDigit() throws Exception {
+		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue4);
+		assertFalse(result);
+	}
 }

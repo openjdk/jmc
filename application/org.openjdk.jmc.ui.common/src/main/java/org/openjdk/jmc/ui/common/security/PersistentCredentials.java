@@ -44,6 +44,9 @@ public class PersistentCredentials implements ICredentials {
 	private final String id;
 	private String[] wrapped;
 
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
+
 	public PersistentCredentials(String id) {
 		this.id = id;
 	}
@@ -83,8 +86,6 @@ public class PersistentCredentials implements ICredentials {
 	}
 
 	public static boolean isPasswordValid(final String password) {
-		Pattern PASSWORD_PATTERN = Pattern
-				.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
 
 		Matcher matcher = PASSWORD_PATTERN.matcher(password);
 		return matcher.matches();
