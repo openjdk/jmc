@@ -86,7 +86,6 @@ public class PersistentCredentials implements ICredentials {
 	}
 
 	public static boolean isPasswordValid(final String password) {
-
 		Matcher matcher = PASSWORD_PATTERN.matcher(password);
 		return matcher.matches();
 	}

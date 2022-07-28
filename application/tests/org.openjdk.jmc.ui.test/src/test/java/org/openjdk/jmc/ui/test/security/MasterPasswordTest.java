@@ -41,9 +41,9 @@ import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 @SuppressWarnings("nls")
 public class MasterPasswordTest {
 
-	private final String invalidPwdValue = "Jmc20"; // Invalid Length, Missing alphanumeric
+	private final String invalidPwdValue = "Jmc20"; // Invalid Length, Missing special character
 	private final String validPwdValue = "Jmc@2022"; // Following all standards
-	private final String invalidPwdValue1 = "Jmcu2022"; // Missing alphanumeric
+	private final String invalidPwdValue1 = "Jmcu2022"; // Missing special character
 	private final String invalidPwdValue2 = "JMC@2022"; // Missing lowercase
 	private final String invalidPwdValue3 = "jmc!2022"; // Missing uppercase
 	private final String invalidPwdValue4 = "Jmc#xyzs"; // Missing digit
@@ -61,7 +61,7 @@ public class MasterPasswordTest {
 	}
 
 	@Test
-	public void testInvalidPwdMissingAlphaNum() throws Exception {
+	public void testInvalidPwdMissingSpecialChar() throws Exception {
 		boolean result = PersistentCredentials.isPasswordValid(invalidPwdValue1);
 		assertFalse(result);
 	}
