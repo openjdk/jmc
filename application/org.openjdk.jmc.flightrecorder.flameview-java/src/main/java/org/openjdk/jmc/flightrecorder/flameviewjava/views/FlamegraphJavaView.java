@@ -101,9 +101,11 @@ import io.github.bric3.fireplace.core.ui.Colors;
 import io.github.bric3.fireplace.flamegraph.ColorMapper;
 import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView;
+import io.github.bric3.fireplace.flamegraph.FlamegraphView.HoverListener;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView.HoveringListener;
 import io.github.bric3.fireplace.flamegraph.FrameBox;
 import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
+import io.github.bric3.fireplace.flamegraph.FrameModel;
 import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
 
 public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
@@ -130,7 +132,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	private FlamegraphView<Node> flamegraphView;
 
 	private GroupByAction[] groupByActions;
-	private GroupByFlameviewAction[] groupByFlameviewActions;
+	private ViewModeAction[] groupByFlameviewActions;
 	// TODO private ExportAction[] exportActions;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
@@ -182,10 +184,10 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	private class GroupByFlameviewAction extends Action {
+	private class ViewModeAction extends Action {
 		private final GroupActionType actionType;
 
-		GroupByFlameviewAction(GroupActionType actionType) {
+		ViewModeAction(GroupActionType actionType) {
 			super(actionType.message, actionType.action);
 			this.actionType = actionType;
 			setToolTipText(actionType.message);
@@ -196,6 +198,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			icicleViewActive = GroupActionType.ICICLE_GRAPH.equals(actionType);
+			SwingUtilities.invokeLater(() -> flamegraphView
+					.setMode(icicleViewActive ? FlamegraphView.Mode.ICICLEGRAPH : FlamegraphView.Mode.FLAMEGRAPH));
 		}
 	}
 
@@ -210,7 +214,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			var toggleMinimap = !flamegraphView.isShowMinimap();
-			SwingUtilities.invokeLater(() -> flamegraphView.showMinimap(toggleMinimap));
+			SwingUtilities.invokeLater(() -> flamegraphView.setShowMinimap(toggleMinimap));
 			setChecked(toggleMinimap);
 		}
 	}
@@ -320,9 +324,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
 		groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
 				new GroupByAction(GroupActionType.THREAD_ROOT)};
-		groupByFlameviewActions = new GroupByFlameviewAction[] {
-				// TODO new GroupByFlameviewAction(GroupActionType.FLAME_GRAPH),
-				new GroupByFlameviewAction(GroupActionType.ICICLE_GRAPH)};
+		groupByFlameviewActions = new ViewModeAction[] {new ViewModeAction(GroupActionType.FLAME_GRAPH),
+				new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
 		// TODO exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
 		// 									new ExportAction(ExportActionType.PRINT)};
 		// TODO Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
@@ -420,12 +423,21 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	private FlamegraphView<Node> createFlameGraph(Composite owner, DefaultToolTip tooltip) {
 		var fg = new FlamegraphView<Node>();
 		fg.putClientProperty(FlamegraphView.SHOW_STATS, false);
-		fg.showMinimap(false);
+		fg.setShowMinimap(false);
 
-		fg.setHoveringListener(new HoveringListener<Node>() {
-			public void onStopHover(MouseEvent mouseEvent) {
-			}
+		fg.setRenderConfiguration(
+				FrameTextsProvider.of(
+						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(),
+						frame -> frame.isRoot() ? ""
+								: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false,
+										false, false, true, false),
+						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()),
+				new DimmingFrameColorProvider<Node>(
+						frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
+								.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
+				FrameFontProvider.defaultFontProvider());
 
+		fg.setHoverListener(new HoverListener<>() {
 			public void onFrameHover(FrameBox<Node> frameBox, Rectangle frameRect, MouseEvent mouseEvent) {
 				// This code knows too much about Flamegraph but given tooltips
 				// will probably evolve it may be too early to refactor it
@@ -509,20 +521,9 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		final IItemCollection items, final List<FrameBox<Node>> flatFrameList, String rootFrameDescription) {
 		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems)) {
 			SwingUtilities.invokeLater(() -> {
-				flamegraphView.setConfigurationAndData(flatFrameList, FrameTextsProvider.of((frame) -> {
-					if (frame.isRoot()) {
-						return rootFrameDescription;
-					} else {
-						return frame.actualNode.getFrame().getHumanReadableShortString();
-					}
-				}, frame -> frame.isRoot() ? ""
-						: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false, false,
-								false, true, false),
-						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()),
-						new DimmingFrameColorProvider<Node>(
-								frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
-										.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
-						FrameFontProvider.defaultFontProvider(), frame -> "");
+				flamegraphView.setModel(new FrameModel<Node>(rootFrameDescription,
+						(frameA, frameB) -> Objects.equals(frameA.actualNode.getFrame(), frameB.actualNode.getFrame()),
+						flatFrameList));
 
 				Display.getDefault().asyncExec(() -> {
 					if (embeddingComposite.isDisposed()) {
