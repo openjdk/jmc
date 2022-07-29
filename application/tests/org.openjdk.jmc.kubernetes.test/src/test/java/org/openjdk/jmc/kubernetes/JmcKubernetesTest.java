@@ -59,10 +59,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.awaitility.Awaitility;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.jolokia.preferences.PreferenceInitializer;
 import org.openjdk.jmc.kubernetes.preferences.PreferenceConstants;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
@@ -113,10 +115,22 @@ public class JmcKubernetesTest {
 	public void testReadAttribute()
 			throws InstanceNotFoundException, AttributeNotFoundException, InvalidAttributeValueException,
 			MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
+		MBeanServerConnection jmxConnection = jolokiaConnection;
+		assertOneSingleAttribute(jmxConnection);
+
+	}
+
+	private void assertOneSingleAttribute(MBeanServerConnection jmxConnection) throws MalformedObjectNameException, MBeanException,
+			AttributeNotFoundException, InstanceNotFoundException, ReflectionException, IOException {
 		ObjectName objectName = new ObjectName("java.lang:type=Memory");
 		String attribute = "Verbose";
-		Assert.assertEquals(false, jolokiaConnection.getAttribute(objectName, attribute));
-
+		Assert.assertEquals(false, jmxConnection.getAttribute(objectName, attribute));
+	}
+	
+	@Before
+	public void resetPreferences() {
+		new PreferenceInitializer().initializeDefaultPreferences();
+		wiremock.resetAll();
 	}
 
 	private static MBeanServerConnection getKubernetesMBeanConnector() throws IOException, MalformedURLException {
@@ -128,16 +142,63 @@ public class JmcKubernetesTest {
 	}
 
 	@Test
-	public void testDiscover() {
+	public void testDiscoverWithMostlyDefaultSettings() throws Exception {
 
 		// Set config so that scanning takes place
 		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
 				"true");
 
-		testThatJVMIsFound();
+		testThatJvmIsFound();
+	}
+	
+	@Test
+	public void testDiscoverWithPathFromAnnotation() throws Exception {
+		// Set config so that scanning takes place
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
+				"true");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_JOLOKIA_PATH,
+				"${kubernetes/annotation/jolokiaPath}");
+
+		testThatJvmIsFound();
+	}
+	
+	@Test
+	public void testDiscoverWithPortFromAnnotation() throws Exception {
+		// Set config so that scanning takes place
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
+				"true");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_JOLOKIA_PORT,
+				"${kubernetes/annotation/jolokiaPort}");
+
+		testThatJvmIsFound();
+	}
+	
+	@Test
+	public void testDiscoverWithBasicAuthFromSecret() throws Exception {
+		// Set config so that scanning takes place
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
+				"true");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_USERNAME,
+				"${kubernetes/secret/jolokia-auth/username}");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_PASSWORD,
+				"${kubernetes/secret/jolokia-auth/password}");
+
+		testThatJvmIsFound();
+	}
+	@Test
+	public void testDiscoverWithAuthFromProperties() throws Exception {
+		// Set config so that scanning takes place
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
+				"true");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_USERNAME,
+				"${kubernetes/secret/jolokia-auth/username}");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_PASSWORD,
+				"${kubernetes/secret/jolokia-auth/password}");
+
+		testThatJvmIsFound();
 	}
 
-	private void testThatJVMIsFound() {
+	private void testThatJvmIsFound() throws Exception {
 		final Map<String, IServerDescriptor> foundVms = new HashMap<>();
 		IDescriptorListener descriptorListener = new IDescriptorListener() {
 			public void onDescriptorDetected(IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
@@ -161,8 +222,16 @@ public class JmcKubernetesTest {
 					descriptor.getJvmInfo().toString());
 			Assert.assertEquals(JVMType.HOTSPOT, descriptor.getJvmInfo().getJvmType());
 			Assert.assertEquals("18.0.1", descriptor.getJvmInfo().getJavaVersion());
+			Assert.assertTrue(descriptor instanceof IConnectionDescriptor);
+			IConnectionDescriptor connectDescriptor = (IConnectionDescriptor)descriptor;
+			JMXConnector connector = new JmcKubernetesJmxConnectionProvider().newJMXConnector(connectDescriptor.createJMXServiceURL(),
+					connectDescriptor.getEnvironment());
+			connector.connect();
+			assertOneSingleAttribute(connector.getMBeanServerConnection());
+			
 		} finally {
-			discoveryListener.removeDescriptorListener(descriptorListener);
+			//Tell scanner thread to exit
+			discoveryListener.shutdown();
 		}
 	}
 }
