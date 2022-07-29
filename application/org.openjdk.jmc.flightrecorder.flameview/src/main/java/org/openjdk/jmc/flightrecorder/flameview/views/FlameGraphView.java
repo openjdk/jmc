@@ -120,13 +120,13 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String TOOLTIP_DESCRIPTION = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION);
 	private static final String HTML_PAGE;
 	static {
-		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.css
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css
 		String cssD3Flamegraph = "jslibs/d3-flamegraph.css";
 		// from: https://d3js.org/d3.v6.min.js
 		String jsD3V6 = "jslibs/d3.v6.min.js";
-		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph-tooltip.js
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph-tooltip.js
 		String jsD3Tip = "jslibs/d3-flamegraph-tooltip.js";
-		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.js
+		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.js
 		String jsD3FlameGraph = "jslibs/d3-flamegraph.js";
 		// jmc flameview coloring, tooltip and other  functions
 		String jsFlameviewName = "flameview.js";
