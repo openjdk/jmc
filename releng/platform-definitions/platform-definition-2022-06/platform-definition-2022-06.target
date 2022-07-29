@@ -54,7 +54,7 @@
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1700.v20220509-0833"/>
-            <unit id="org.eclipse.pde.feature.group" version=" 3.14.1200.v20220607-0700"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.1200.v20220607-0700"/>
             <unit id="org.eclipse.platform.sdk" version="4.24.0.I20220607-0700"/>
             <repository location="http://download.eclipse.org/releases/2022-06/"/>
         </location>
