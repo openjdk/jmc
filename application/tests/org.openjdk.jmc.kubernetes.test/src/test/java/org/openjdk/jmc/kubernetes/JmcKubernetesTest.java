@@ -58,6 +58,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.awaitility.Awaitility;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.jolokia.util.Base64Util;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -71,6 +72,7 @@ import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 import org.openjdk.jmc.ui.common.jvm.JVMType;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -120,17 +122,18 @@ public class JmcKubernetesTest {
 
 	}
 
-	private void assertOneSingleAttribute(MBeanServerConnection jmxConnection) throws MalformedObjectNameException, MBeanException,
-			AttributeNotFoundException, InstanceNotFoundException, ReflectionException, IOException {
+	private void assertOneSingleAttribute(MBeanServerConnection jmxConnection) throws MalformedObjectNameException,
+			MBeanException, AttributeNotFoundException, InstanceNotFoundException, ReflectionException, IOException {
 		ObjectName objectName = new ObjectName("java.lang:type=Memory");
 		String attribute = "Verbose";
 		Assert.assertEquals(false, jmxConnection.getAttribute(objectName, attribute));
 	}
-	
+
 	@Before
 	public void resetPreferences() {
 		new PreferenceInitializer().initializeDefaultPreferences();
 		wiremock.resetAll();
+		wiremock.resetRequests();
 	}
 
 	private static MBeanServerConnection getKubernetesMBeanConnector() throws IOException, MalformedURLException {
@@ -150,7 +153,7 @@ public class JmcKubernetesTest {
 
 		testThatJvmIsFound();
 	}
-	
+
 	@Test
 	public void testDiscoverWithPathFromAnnotation() throws Exception {
 		// Set config so that scanning takes place
@@ -161,7 +164,7 @@ public class JmcKubernetesTest {
 
 		testThatJvmIsFound();
 	}
-	
+
 	@Test
 	public void testDiscoverWithPortFromAnnotation() throws Exception {
 		// Set config so that scanning takes place
@@ -172,7 +175,7 @@ public class JmcKubernetesTest {
 
 		testThatJvmIsFound();
 	}
-	
+
 	@Test
 	public void testDiscoverWithBasicAuthFromSecret() throws Exception {
 		// Set config so that scanning takes place
@@ -184,7 +187,13 @@ public class JmcKubernetesTest {
 				"${kubernetes/secret/jolokia-auth/password}");
 
 		testThatJvmIsFound();
+		//Verify that the expected authorization was picked up
+		WireMock.verify(WireMock
+				.postRequestedFor(
+						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.withHeader("X-jolokia-authorization", WireMock.equalTo("Basic "+Base64Util.encode("admin:admin".getBytes()))));
 	}
+
 	@Test
 	public void testDiscoverWithAuthFromProperties() throws Exception {
 		// Set config so that scanning takes place
@@ -196,6 +205,29 @@ public class JmcKubernetesTest {
 				"${kubernetes/secret/jolokia-auth/password}");
 
 		testThatJvmIsFound();
+		//Verify that the expected authorization was picked up
+		WireMock.verify(WireMock
+				.postRequestedFor(
+						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.withHeader("X-jolokia-authorization", WireMock.equalTo("Basic "+Base64Util.encode("admin:secret".getBytes()))));
+	}
+	
+	@Test
+	public void testDiscoverWithAuthDirectlyFromSettings() throws Exception {
+		// Set config so that scanning takes place
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_SCAN_FOR_INSTANCES,
+				"true");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_USERNAME,
+				"user");
+		InstanceScope.INSTANCE.getNode(JmcKubernetesPlugin.PLUGIN_ID).put(PreferenceConstants.P_PASSWORD,
+				"***");
+
+		testThatJvmIsFound();
+		//Verify that the expected authorization was picked up
+		WireMock.verify(WireMock
+				.postRequestedFor(
+						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.withHeader("X-jolokia-authorization", WireMock.equalTo("Basic "+Base64Util.encode("user:***".getBytes()))));
 	}
 
 	private void testThatJvmIsFound() throws Exception {
@@ -223,14 +255,14 @@ public class JmcKubernetesTest {
 			Assert.assertEquals(JVMType.HOTSPOT, descriptor.getJvmInfo().getJvmType());
 			Assert.assertEquals("18.0.1", descriptor.getJvmInfo().getJavaVersion());
 			Assert.assertTrue(descriptor instanceof IConnectionDescriptor);
-			IConnectionDescriptor connectDescriptor = (IConnectionDescriptor)descriptor;
-			JMXConnector connector = new JmcKubernetesJmxConnectionProvider().newJMXConnector(connectDescriptor.createJMXServiceURL(),
-					connectDescriptor.getEnvironment());
+			IConnectionDescriptor connectDescriptor = (IConnectionDescriptor) descriptor;
+			JMXConnector connector = new JmcKubernetesJmxConnectionProvider()
+					.newJMXConnector(connectDescriptor.createJMXServiceURL(), connectDescriptor.getEnvironment());
 			connector.connect();
 			assertOneSingleAttribute(connector.getMBeanServerConnection());
-			
+
 		} finally {
-			//Tell scanner thread to exit
+			// Tell scanner thread to exit
 			discoveryListener.shutdown();
 		}
 	}
