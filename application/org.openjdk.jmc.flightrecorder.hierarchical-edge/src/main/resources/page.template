@@ -12,5 +12,8 @@
     <script type="text/javascript">
       %2$s
     </script>
+    <script type="text/javascript">
+      %3$s
+    </script>
   </body>
 </html>

@@ -38,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -86,7 +85,10 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V6 = "jslibs/d3.v6.min.js";
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V6),
+		HTML_PAGE = String.format(
+				loadStringFromFile("page.template"),
+				loadLibraries(jsD3V6),
+				loadStringFromFile("utils.js"),
 				loadStringFromFile("hierarchical-edge.js"));
 	}
 
