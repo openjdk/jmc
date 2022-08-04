@@ -60,7 +60,7 @@ public class StyledToolTip extends DefaultToolTip {
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
 		final Composite container = setDefaultLayout(new Composite(parent, SWT.NULL), event);
 		GridLayoutFactory.fillDefaults().margins(2, 2).generateLayout(container);
-		var formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
+		FormText formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
 		
 		String pseudoHtml = getText(event);
 

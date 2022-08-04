@@ -48,9 +48,12 @@ import static org.openjdk.jmc.flightrecorder.flameviewjava.MessagesUtils.getFlam
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.image.RenderedImage;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -79,6 +82,8 @@ import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ResourceLocator;
@@ -88,9 +93,11 @@ import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -103,7 +110,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.IMCPackage;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.flameviewjava.FlameviewImages;
@@ -233,7 +243,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 
 		@Override
 		public void run() {
-			var toggleMinimap = !flamegraphView.isShowMinimap();
+			boolean toggleMinimap = !flamegraphView.isShowMinimap();
 			SwingUtilities.invokeLater(() -> flamegraphView.setShowMinimap(toggleMinimap));
 			setChecked(toggleMinimap);
 		}
@@ -317,12 +327,12 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			var treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
+			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
 			if (isInvalid) {
 				return;
 			}
-			var rootFrameDescription = createRootNodeDescription(items);
-			var frameBoxList = convert(treeModel);
+			String rootFrameDescription = createRootNodeDescription(items);
+			List<FrameBox<Node>> frameBoxList = convert(treeModel);
 			if (isInvalid) {
 				return;
 			} else {
@@ -332,7 +342,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		}
 
 		private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
-			var nodes = new ArrayList<FrameBox<Node>>();
+			List<FrameBox<Node>> nodes = new ArrayList<FrameBox<Node>>();
 
 			FrameBox.flattenAndCalculateCoordinate(nodes, model.getRoot(), Node::getChildren, Node::getCumulativeWeight,
 					node -> {
@@ -346,15 +356,15 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		}
 
 		private static String createRootNodeDescription(IItemCollection items) {
-			var freq = eventTypeFrequency(items);
+			Map<String, Long> freq = eventTypeFrequency(items);
 			// root => 51917 events of 1 type: Method Profiling Sample[51917],
 			long totalEvents = freq.values().stream().mapToLong(Long::longValue).sum();
 			if (totalEvents == 0) {
 				return "Stack Trace not available";
 			}
-			var description = new StringBuilder(totalEvents + " event(s) of " + freq.size() + " type(s): ");
+			StringBuilder description = new StringBuilder(totalEvents + " event(s) of " + freq.size() + " type(s): ");
 			int i = 0;
-			for (var e : freq.entrySet()) {
+			for (Map.Entry<String, Long> e : freq.entrySet()) {
 				description.append(e.getKey()).append("[").append(e.getValue()).append("]");
 				if (i < freq.size() - 1 && i < 3) {
 					description.append(", ");
@@ -370,8 +380,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		}
 
 		private static Map<String, Long> eventTypeFrequency(IItemCollection items) {
-			var eventCountByType = new HashMap<String, Long>();
-			for (var eventIterable : items) {
+			Map<String, Long> eventCountByType = new HashMap<String, Long>();
+			for (IItemIterable eventIterable : items) {
 				if (eventIterable.getItemCount() == 0) {
 					continue;
 				}
@@ -396,11 +406,11 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		 									/*new ExportAction(ExportActionType.PRINT)*/};
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
-		var siteMenu = site.getActionBars().getMenuManager();
+		IMenuManager siteMenu = site.getActionBars().getMenuManager();
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
 
-		var toolBar = site.getActionBars().getToolBarManager();
+		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
 		toolBar.add(new ResetZoomAction());
 		toolBar.add(new ToggleMinimapAction());
 		toolBar.add(new Separator());
@@ -428,13 +438,13 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 
 		embeddingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		embeddingComposite.setLayout(new GridLayout(1, false));
-		var frame = SWT_AWT.new_Frame(embeddingComposite);
+		Frame frame = SWT_AWT.new_Frame(embeddingComposite);
 
 		// done here to avoid SWT complain about wrong thread
-		var embedSize = embeddingComposite.getSize();
-		var embedBg = embeddingComposite.getBackground();
+		Point embedSize = embeddingComposite.getSize();
+		org.eclipse.swt.graphics.Color embedBg = embeddingComposite.getBackground();
 
-		var tooltip = new StyledToolTip(embeddingComposite, org.eclipse.jface.window.ToolTip.NO_RECREATE, true);
+		StyledToolTip tooltip = new StyledToolTip(embeddingComposite, org.eclipse.jface.window.ToolTip.NO_RECREATE, true);
 		tooltip.setPopupDelay(500);
 		tooltip.setShift(new org.eclipse.swt.graphics.Point(10, 5));
 
@@ -445,11 +455,11 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		});
 
 		SwingUtilities.invokeLater(() -> {
-			var rootPane = new JRootPane();
+			JRootPane rootPane = new JRootPane();
 			flamegraphView = createFlameGraph(embeddingComposite, tooltip);
 			rootPane.getContentPane().add(flamegraphView.component);
 
-			var panel = new Panel();
+			Panel panel = new Panel();
 			panel.setLayout(new BorderLayout(0, 0));
 			panel.add(rootPane);
 			panel.setBackground(new Color(embedBg.getRed(), embedBg.getGreen(), embedBg.getBlue(), embedBg.getAlpha()));
@@ -464,7 +474,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
-			var first = ((IStructuredSelection) selection).getFirstElement();
+			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
 			if (items == null) {
 				triggerRebuildTask(ItemCollectionToolkit.build(Stream.empty()));
@@ -480,7 +490,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	}
 
 	private FlamegraphView<Node> createFlameGraph(Composite owner, DefaultToolTip tooltip) {
-		var fg = new FlamegraphView<Node>();
+		FlamegraphView<Node> fg = new FlamegraphView<Node>();
 		fg.putClientProperty(FlamegraphView.SHOW_STATS, false);
 		fg.setShowMinimap(false);
 
@@ -496,22 +506,22 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 								.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
 				FrameFontProvider.defaultFontProvider());
 
-		fg.setHoverListener(new HoverListener<>() {
+		fg.setHoverListener(new HoverListener<Node>() {
 			public void onFrameHover(FrameBox<Node> frameBox, Rectangle frameRect, MouseEvent mouseEvent) {
 				// This code knows too much about Flamegraph but given tooltips
 				// will probably evolve it may be too early to refactor it
-				var scrollPane = (JScrollPane) mouseEvent.getComponent();
-				var canvas = scrollPane.getViewport().getView();
+				JScrollPane scrollPane = (JScrollPane) mouseEvent.getComponent();
+				Component canvas = scrollPane.getViewport().getView();
 
-				var pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
+				java.awt.Point pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
 				pointOnCanvas.y = frameRect.y + frameRect.height;
-				var componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
+				java.awt.Point componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
 
 				if (frameBox.isRoot()) {
 					return;
 				}
 
-				var method = frameBox.actualNode.getFrame().getMethod();
+				IMCMethod method = frameBox.actualNode.getFrame().getMethod();
 
 				StringBuilder sb = new StringBuilder();
 				sb.append("<form><p>");
@@ -519,7 +529,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 				sb.append(frameBox.actualNode.getFrame().getHumanReadableShortString());
 				sb.append("</b><br/>");
 
-				var packageName = method.getType().getPackage();
+				IMCPackage packageName = method.getType().getPackage();
 				if (packageName != null) {
 					sb.append(packageName);
 					sb.append("<br/>");
@@ -544,10 +554,10 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 					sb.append("<br/>");
 				}
 				sb.append("</p></form>");
-				var text = sb.toString();
+				String text = sb.toString();
 
 				Display.getDefault().asyncExec(() -> {
-					var control = Display.getDefault().getCursorControl();
+					Control control = Display.getDefault().getCursorControl();
 
 					if (Objects.equals(owner, control)) {
 						tooltip.setText(text);
@@ -590,7 +600,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 					}
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(!flatFrameList.isEmpty()));
 					embeddingComposite.layout(true, true);
-					var embedSize = embeddingComposite.getSize();
+					Point embedSize = embeddingComposite.getSize();
 					flamegraphView.component.setSize(embedSize.x, embedSize.y);
 				});
 			});
@@ -598,8 +608,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	}
 	
 	private void saveFlamegraph() {
-		var future = new CompletableFuture<Path>();
-		
+		CompletableFuture<Path> future = new CompletableFuture<Path>();		
 
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			FileDialog fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
@@ -626,10 +635,10 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		
 		
 		try {
-			var destinationPath = future.get();
+			Path destinationPath = future.get();
 			
 			String type = null;
-			var filename = destinationPath.getFileName().toString().toLowerCase();
+			String filename = destinationPath.getFileName().toString().toLowerCase();
 			switch (filename.substring(filename.lastIndexOf('.') + 1)) {
 			case "jpeg": //$NON-NLS-1$
 			case "jpg": //$NON-NLS-1$
@@ -653,8 +662,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 									.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
 					FrameFontProvider.defaultFontProvider());
 			
-			var image = fgImage.generate(flamegraphView.getFrameModel(), flamegraphView.getMode(), 2000);
-			try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {			
+			RenderedImage image = fgImage.generate(flamegraphView.getFrameModel(), flamegraphView.getMode(), 2000);
+			try (BufferedOutputStream os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {			
             	ImageIO.write(image, type, os);
 			}
 		} catch (CancellationException e) {
