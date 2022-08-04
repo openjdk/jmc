@@ -1,16 +1,3 @@
-function updateGraph(eventsJson) {
-	const data = JSON.parse(eventsJson);
-	clear();
-    debug(`Loaded ${data.events.length} events`);
-    try {
-		debug(JSON.stringify(data.events[0]));
-		render(data);
-	} catch (e) {
-		debug(e.message);
-		debug(`<pre>${e.stack}</pre>`);
-	}
-}
-
 const marginLeft = 0;
 const marginRight = 0;
 const marginTop = 0;
@@ -19,12 +6,17 @@ const marginBottom = 0;
 const width = window.innerWidth - (marginLeft + marginRight);
 const height = window.innerHeight - (marginTop + marginBottom);
 
-var levels = 2;
+let levels = 2;
+let chartType = "edge-bundling"; 
+
+function setChartType(value) {
+	chartType = value;
+	debug(`Chart type: ${chartType}`);
+}
 
 function updateGraph(eventsJson, packageLevels) {
   const data = JSON.parse(eventsJson);
-  clear();
-  debug(`Loaded ${data.events.length} events`);
+  debug(`Loaded ${data.events.length} events`);  
   try {
     levels = packageLevels
     render(data);

@@ -53,6 +53,9 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -82,6 +85,8 @@ import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class HierarchicalEdgeView extends ViewPart implements ISelectionListener {
+	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V6 = "jslibs/d3.v6.min.js";
@@ -128,6 +133,45 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 		}
 	}
 
+	private enum DependencyChartType {
+		EDGE_BUNDLING("", IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("flameflip.png")),
+		CHORD("", IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("icicleflip.png"));
+
+		private final String message;
+		private final int action;
+		private final ImageDescriptor imageDescriptor;
+
+		private DependencyChartType(String message, int action, ImageDescriptor imageDescriptor) {
+			this.message = message;
+			this.action = action;
+			this.imageDescriptor = imageDescriptor;
+		}
+	}
+
+	private class ChangeChartTypeAction extends Action {
+		private final DependencyChartType selected;
+
+		ChangeChartTypeAction(DependencyChartType selected) {
+			super(selected.message, selected.action);
+			this.selected = selected;
+			chartType = selected;
+			setToolTipText(selected.message);
+			setImageDescriptor(selected.imageDescriptor);
+			setChecked(DependencyChartType.EDGE_BUNDLING.equals(selected));
+		}
+
+		@Override
+		public void run() {
+			if (this.isChecked()) {
+				browser.execute(String.format("setChartType('%s');", selected.name()));
+			}
+		}
+	}
+
+	private static ImageDescriptor hierarchicalEdgeImageDescriptor(String iconName) {
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
+	}
+
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
 			new ThreadFactory() {
@@ -147,13 +191,19 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 	private int packageDepth = 3;
+	private DependencyChartType chartType = DependencyChartType.EDGE_BUNDLING;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		ChangeChartTypeAction[] chartTypeActions = new ChangeChartTypeAction[] {
+				new ChangeChartTypeAction(DependencyChartType.EDGE_BUNDLING),
+				new ChangeChartTypeAction(DependencyChartType.CHORD)
+		};
+		Stream.of(chartTypeActions).forEach(toolBar::add);
+		toolBar.add(new Separator());
 		toolBar.add(new PackageDepthSelection());
-
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -202,7 +252,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 				actionItem.fill(menu, -1);
 			}
 		}
-		
+
 		private class SetPackageDepth extends Action {
 			private int value;
 
@@ -293,6 +343,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
+//				browser.execute(String.format("setChartType('%s');", chartType.name()));
 				browser.execute(String.format("updateGraph(`%s`, %d);", eventsJson, packageDepth));
 				loaded = true;
 			}
