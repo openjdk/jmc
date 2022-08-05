@@ -599,9 +599,6 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 						return;
 					}
 					Stream.of(exportActions).forEach((action) -> action.setEnabled(!flatFrameList.isEmpty()));
-					embeddingComposite.layout(true, true);
-					Point embedSize = embeddingComposite.getSize();
-					flamegraphView.component.setSize(embedSize.x, embedSize.y);
 				});
 			});
 		}
