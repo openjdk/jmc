@@ -164,8 +164,10 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 		public void run() {
 			if (this.isChecked()) {
 				diagramType = type;
-				String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
-				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
+				if (currentItems != null) {
+					String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
+					browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
+				}
 			}
 		}
 	}
