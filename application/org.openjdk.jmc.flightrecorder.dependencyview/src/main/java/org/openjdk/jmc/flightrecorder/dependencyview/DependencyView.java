@@ -31,7 +31,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.hierarchical.views;
+package org.openjdk.jmc.flightrecorder.dependencyview;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -78,15 +78,14 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.hierarchical.Messages;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-public class HierarchicalEdgeView extends ViewPart implements ISelectionListener {
+public class DependencyView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
-	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.hierarchical-edge"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.dependencyview"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V6 = "jslibs/d3.v6.min.js";
@@ -104,12 +103,12 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	}
 
 	private static class ModelRebuildRunnable implements Runnable {
-		private final HierarchicalEdgeView view;
+		private final DependencyView view;
 		private final IItemCollection items;
 		private volatile boolean isInvalid;
 		private final int packageDepth;
 
-		private ModelRebuildRunnable(HierarchicalEdgeView view, IItemCollection items, int packageDepth) {
+		private ModelRebuildRunnable(DependencyView view, IItemCollection items, int packageDepth) {
 			this.view = view;
 			this.items = items;
 			this.packageDepth = packageDepth;
@@ -135,55 +134,55 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 		}
 	}
 
-	private enum DependencyChartType {
-		EDGE_BUNDLING(Messages.getString(Messages.HIERARCHICAL_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("edge.png")),
-		CHORD(Messages.getString(Messages.HIERARCHICAL_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("chord.png"));
+	private enum DiagramType {
+		EDGE_BUNDLING(Messages.getString(Messages.DEPENDENCYVIEW_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor("edge.png")),
+		CHORD(Messages.getString(Messages.DEPENDENCYVIEW_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor("chord.png"));
 
 		private final String message;
 		private final int action;
 		private final ImageDescriptor imageDescriptor;
 
-		private DependencyChartType(String message, int action, ImageDescriptor imageDescriptor) {
+		private DiagramType(String message, int action, ImageDescriptor imageDescriptor) {
 			this.message = message;
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
 		}
 	}
 
-	private class ChangeChartTypeAction extends Action {
-		private final DependencyChartType type;
+	private class ChangeDiagramTypeAction extends Action {
+		private final DiagramType type;
 
-		ChangeChartTypeAction(DependencyChartType type) {
+		ChangeDiagramTypeAction(DiagramType type) {
 			super(type.message, type.action);
 			this.type = type;
 			setToolTipText(type.message);
 			setImageDescriptor(type.imageDescriptor);
-			setChecked(DependencyChartType.CHORD.equals(type));
+			setChecked(DiagramType.CHORD.equals(type));
 		}
 
 		@Override
 		public void run() {
 			if (this.isChecked()) {
-				chartType = type;
+				diagramType = type;
 				String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
-				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
+				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
 			}
 		}
 	}
 
-	private static ImageDescriptor hierarchicalEdgeImageDescriptor(String iconName) {
+	private static ImageDescriptor dependencyViewImageDescriptor(String iconName) {
 		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
 	}
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
 			new ThreadFactory() {
-				private ThreadGroup group = new ThreadGroup("HierarchicalEdgeCalculationGroup");
+				private ThreadGroup group = new ThreadGroup("DependencyViewCalculationGroup");
 				private AtomicInteger counter = new AtomicInteger();
 
 				@Override
 				public Thread newThread(Runnable r) {
-					Thread t = new Thread(group, r, "HierarchicalEdgeCalculation-" + counter.getAndIncrement());
+					Thread t = new Thread(group, r, "DependencyViewCalculation-" + counter.getAndIncrement());
 					t.setDaemon(true);
 					return t;
 				}
@@ -194,15 +193,15 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 	private int packageDepth = 3;
-	private DependencyChartType chartType = DependencyChartType.CHORD;
+	private DiagramType diagramType = DiagramType.CHORD;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
-		ChangeChartTypeAction[] chartTypeActions = new ChangeChartTypeAction[] {
-				new ChangeChartTypeAction(DependencyChartType.CHORD),
-				new ChangeChartTypeAction(DependencyChartType.EDGE_BUNDLING)
+		ChangeDiagramTypeAction[] chartTypeActions = new ChangeDiagramTypeAction[] {
+				new ChangeDiagramTypeAction(DiagramType.CHORD),
+				new ChangeDiagramTypeAction(DiagramType.EDGE_BUNDLING)
 		};
 		Stream.of(chartTypeActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
@@ -219,10 +218,10 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private class PackageDepthSelection extends Action implements IMenuCreator {
 		private Menu menu;
 		private final List<Pair<String, Integer>> depths = IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-				.mapToObj(i -> new Pair<>(Integer.toString(i), i)).collect(Collectors.toUnmodifiableList());
+				.mapToObj(i -> new Pair<>(Integer.toString(i), i)).collect(Collectors.toList());
 
 		PackageDepthSelection() {
-			super(Messages.getString(Messages.HIERARCHICAL_PACKAGE_LEVEL_DEPTH), IAction.AS_DROP_DOWN_MENU);
+			super(Messages.getString(Messages.DEPENDENCYVIEW_PACKAGE_DEPTH), IAction.AS_DROP_DOWN_MENU);
 			setMenuCreator(this);
 		}
 
@@ -251,7 +250,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 
 		private void populate(Menu menu) {
 			for (Pair<String, Integer> item : depths) {
-				var actionItem = new ActionContributionItem(new SetPackageDepth(item, item.right == packageDepth));
+				ActionContributionItem actionItem = new ActionContributionItem(new SetPackageDepth(item, item.right == packageDepth));
 				actionItem.fill(menu, -1);
 			}
 		}
@@ -333,7 +332,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private void setViewerInput(String eventsJson, int packageDepth) {
 		browser.setText(HTML_PAGE);
 		browser.addListener(SWT.Resize, event -> {
-			browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
+			browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
 		});
 
 		browser.addProgressListener(new ProgressAdapter() {
@@ -349,7 +348,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
+				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
 				loaded = true;
 			}
 		});
@@ -370,7 +369,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 
 	private static String loadStringFromFile(String fileName) {
 		try {
-			return StringToolkit.readString(HierarchicalEdgeView.class.getClassLoader().getResourceAsStream(fileName));
+			return StringToolkit.readString(DependencyView.class.getClassLoader().getResourceAsStream(fileName));
 		} catch (IOException e) {
 			FlightRecorderUI.getDefault().getLogger().log(Level.WARNING,
 					MessageFormat.format("Could not load script \"{0}\",\"{1}\"", fileName, e.getMessage())); //$NON-NLS-1$

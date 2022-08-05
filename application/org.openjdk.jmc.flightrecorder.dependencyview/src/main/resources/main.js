@@ -10,9 +10,10 @@ function updateGraph(eventsJson, packageLevels, chartType) {
 		levels = packageLevels;
 		width = window.innerWidth;
 		height = window.innerHeight;
-		d3.select("#hierarchical").selectAll("*").remove();
+		d3.select("#diagram").selectAll("*").remove();
 		if (chartType === "EDGE_BUNDLING") {
 			const edgeBundlingData = transformEdgeBundlingData(data);
+			clearWarning();
 			renderHierarchicalEdgeBundling(edgeBundlingData);
 		} else if (chartType === "CHORD") {
 			const chordData = transformChordData(data);

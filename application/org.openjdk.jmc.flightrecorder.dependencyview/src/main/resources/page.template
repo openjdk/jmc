@@ -17,7 +17,7 @@
 			font-size: 12px;
 		}
 
-		#hierarchical {
+		#diagram {
 			width: 100%%;
 			text-align: center;
 		}
@@ -29,7 +29,7 @@
 	<body>
 		<div id="debug"></div>
 		<div id="banner"></div>
-		<div id="hierarchical"></div>
+		<div id="diagram"></div>
 
 		<script type="text/javascript">
 			%2$s

@@ -5,10 +5,10 @@
 		<view
           allowMultiple="false"
           category="org.openjdk.jmc.ui.main"
-          class="org.openjdk.jmc.flightrecorder.hierarchical.views.HierarchicalEdgeView"
+          class="org.openjdk.jmc.flightrecorder.dependencyview.DependencyView"
           icon="icons/chord.png"
-          id="org.openjdk.jmc.flightrecorder.hierarchical-edge"
-          name="Hierarchical Edge View"
+          id="org.openjdk.jmc.flightrecorder.dependencyview"
+          name="Dependency View"
           restorable="true">
 		</view>
 	</extension>

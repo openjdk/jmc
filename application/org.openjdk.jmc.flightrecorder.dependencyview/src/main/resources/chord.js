@@ -1,6 +1,6 @@
 function renderChordDiagram(data) {
 	const svg = d3
-		.select("#hierarchical")
+		.select("#diagram")
 		.append("svg")
 		.attr("viewBox", [-width / 2, -height / 2, width, height]);
 

@@ -32,7 +32,7 @@
 		<artifactId>missioncontrol.application</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>org.openjdk.jmc.flightrecorder.hierarchical-edge</artifactId>
+	<artifactId>org.openjdk.jmc.flightrecorder.dependencyview</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>

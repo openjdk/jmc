@@ -31,19 +31,19 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.hierarchical;
+package org.openjdk.jmc.flightrecorder.dependencyview;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.hierarchical.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.dependencyview.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	public static final String HIERARCHICAL_PACKAGE_LEVEL_DEPTH = "HIERARCHICAL_PACKAGE_LEVEL_DEPTH"; //$NON-NLS-1$
-	public static final String HIERARCHICAL_EDGE_BUNDLING_DIAGRAM = "HIERARCHICAL_EDGE_BUNDLING_DIAGRAM"; //$NON-NLS-1$
-	public static final String HIERARCHICAL_CHORD_DIAGRAM = "HIERARCHICAL_CHORD_DIAGRAM"; //$NON-NLS-1$
+	public static final String DEPENDENCYVIEW_PACKAGE_DEPTH = "DEPENDENCYVIEW_PACKAGE_DEPTH"; //$NON-NLS-1$
+	public static final String DEPENDENCYVIEW_EDGE_BUNDLING_DIAGRAM = "DEPENDENCYVIEW_EDGE_BUNDLING_DIAGRAM"; //$NON-NLS-1$
+	public static final String DEPENDENCYVIEW_CHORD_DIAGRAM = "DEPENDENCYVIEW_CHORD_DIAGRAM"; //$NON-NLS-1$
 
 	private Messages() {
 	}

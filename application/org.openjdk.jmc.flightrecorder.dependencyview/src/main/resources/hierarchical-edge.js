@@ -1,7 +1,7 @@
 function renderHierarchicalEdgeBundling(graph) {
 	// compute package hierarchy
 	const svg = d3
-		.select("#hierarchical")
+		.select("#diagram")
 		.append("svg")
 		.attr("viewBox", [-width / 2, -height / 2, width, height]);
 	const d3Hierarchy = d3
