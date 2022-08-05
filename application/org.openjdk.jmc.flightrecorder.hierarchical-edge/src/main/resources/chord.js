@@ -4,7 +4,7 @@ function renderChordDiagram(data) {
     .append("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, height]);
 
-  const innerRadius = Math.min(width, height) * 0.5 - 90;
+  const innerRadius = Math.max(Math.min(width, height) * 0.5 - 90, 100);
   const outerRadius = innerRadius + 10;
 
   const names = Array.from(
