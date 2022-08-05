@@ -158,7 +158,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			this.type = type;
 			setToolTipText(type.message);
 			setImageDescriptor(type.imageDescriptor);
-			setChecked(DependencyChartType.EDGE_BUNDLING.equals(type));
+			setChecked(DependencyChartType.CHORD.equals(type));
 		}
 
 		@Override
@@ -194,15 +194,15 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 	private int packageDepth = 3;
-	private DependencyChartType chartType = DependencyChartType.EDGE_BUNDLING;
+	private DependencyChartType chartType = DependencyChartType.CHORD;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
 		ChangeChartTypeAction[] chartTypeActions = new ChangeChartTypeAction[] {
-				new ChangeChartTypeAction(DependencyChartType.EDGE_BUNDLING),
-				new ChangeChartTypeAction(DependencyChartType.CHORD)
+				new ChangeChartTypeAction(DependencyChartType.CHORD),
+				new ChangeChartTypeAction(DependencyChartType.EDGE_BUNDLING)
 		};
 		Stream.of(chartTypeActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
