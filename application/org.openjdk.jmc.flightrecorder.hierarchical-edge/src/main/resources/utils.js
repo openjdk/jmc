@@ -42,8 +42,9 @@ class Event {
 		if (!attributes) {
 			return;
 		}
-		// TODO: support more time attributes
-		this.time = attributes["(endTime)"];
+		this.time = attributes.startTime ||
+					attributes.endTime ||
+					attributes["(endTime)"]
 		this.eventThread = attributes.eventThread;
 		this.stackTrace = new StackTrace(attributes.stackTrace);
 		this.state = attributes.state;
