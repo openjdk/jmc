@@ -37,8 +37,8 @@ package org.openjdk.jmc.flightrecorder.flameviewjava;
  * Class that holds reference to the icons and images used by the Flight Recorder plug-in
  */
 public final class FlameviewImages {
-
 	public static final String ICON_FLAME_FLIP = "flameflip.png"; //$NON-NLS-1$
 	public static final String ICON_ICICLE_FLIP = "icicleflip.png"; //$NON-NLS-1$
-
+	public static final String ICON_RESET_ZOOM = "reset-zoom.png"; //$NON-NLS-1$
+	public static final String ICON_MINIMAP = "map.png"; //$NON-NLS-1$
 }

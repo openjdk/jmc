@@ -237,6 +237,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		private ToggleMinimapAction() {
 			super(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP), IAction.AS_CHECK_BOX);
 			setToolTipText(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP));
+			setImageDescriptor(flameviewImageDescriptor(FlameviewImages.ICON_MINIMAP));
 
 			setChecked(false);
 		}
@@ -252,6 +253,8 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 	private class ResetZoomAction extends Action {
 		private ResetZoomAction() {
 			super(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM), IAction.AS_PUSH_BUTTON);
+			setToolTipText(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM));
+			setImageDescriptor(flameviewImageDescriptor(FlameviewImages.ICON_RESET_ZOOM));
 		}
 
 		@Override
