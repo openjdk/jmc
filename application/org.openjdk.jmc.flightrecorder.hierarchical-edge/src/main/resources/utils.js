@@ -61,14 +61,15 @@ function clear() {
 }
 
 // data manipulation for chord diagram
-const maxPackages = 500;
-
 function truncatePackage(name, level) {
 	return name.split(".").slice(0, level).join(".");
 }
 
 function transformChordData(json) {
 	const events = json.events.map((e) => new Event(e));
+	// the number of edges rendered on the chart
+	// if the dataset contains more, we show the largest weights
+	const numEdges = Math.min(500, Math.round(Math.min(width, height) / 5));
 	let calls = {};
 	events.forEach((e) => {
 		const frames = e.stackTrace.frames;
@@ -80,14 +81,34 @@ function transformChordData(json) {
 			calls[id] = (calls[id] || 0) + 1;
 		}
 	});
+
+	const totalEdges = Object.keys(calls).length;
+	if (numEdges < totalEdges) {
+		displayWarning(numEdges, totalEdges);
+	} else {
+		clearWarning();
+	}
+
 	calls = Object.entries(calls)
 		.sort(([, a], [, b]) => b - a)
-		.slice(0, maxPackages)
+		.slice(0, numEdges)
 		.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 	return Object.keys(calls).map((id) => {
 		const [source, target] = id.split(" ");
 		return { source, target, value: calls[id] };
 	});
+}
+
+function displayWarning(shown, total) {
+	let message = `Showing ${shown}/${total} edges<br />`;
+	message += "Resize to see more";
+
+	const banner = document.getElementById("banner");
+	banner.innerHTML = message;
+}
+
+function clearWarning() {
+	banner.innerHTML = "";
 }
 
 // data manipulation for hierarchical edge bundling diagram
