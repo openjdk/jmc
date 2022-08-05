@@ -166,7 +166,8 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 		public void run() {
 			if (this.isChecked()) {
 				chartType = type;
-				browser.execute(String.format("setChartType('%s');", type.name()));
+				String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
+				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
 			}
 		}
 	}
@@ -346,8 +347,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("setChartType('%s');", chartType.name()));
-				browser.execute(String.format("updateGraph(`%s`, %d);", eventsJson, packageDepth));
+				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
 				loaded = true;
 			}
 		});

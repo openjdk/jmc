@@ -7,17 +7,13 @@ const width = window.innerWidth - (marginLeft + marginRight);
 const height = window.innerHeight - (marginTop + marginBottom);
 
 let levels = 2;
-let chartType = "EDGE_BUNDLING";
 
-function setChartType(value) {
-  chartType = value;
-}
-
-function updateGraph(eventsJson, packageLevels) {
+function updateGraph(eventsJson, packageLevels, chartType) {
   const data = JSON.parse(eventsJson);
   debug(`Loaded ${data.events.length} events`);
   try {
     levels = packageLevels;
+    d3.select("#hierarchical").selectAll("*").remove();
     if (chartType === "EDGE_BUNDLING") {
       debug(`Rendering edge bundling diagram: ${chartType}`);
       const edgeBundlingData = transformEdgeBundlingData(data);
