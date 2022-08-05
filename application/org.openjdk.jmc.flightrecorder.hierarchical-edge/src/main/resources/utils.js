@@ -1,8 +1,7 @@
-
 class StackTrace {
   constructor(stackTraceData) {
     const frames = (stackTraceData && stackTraceData.frames) || [];
-    this.frames = frames.map(frame => new StackFrame(frame));
+    this.frames = frames.map((frame) => new StackFrame(frame));
   }
 }
 
@@ -127,7 +126,7 @@ function getColors() {
     hover: scheme[0],
     both: scheme[3],
     default: "#eee",
-    link: "#ccc"
+    link: "#ccc",
   };
 }
 

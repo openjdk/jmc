@@ -11,7 +11,7 @@ function renderHierarchicalEdgeBundling(graph) {
         d3.ascending(a.height, b.height) ||
         d3.ascending(a.data.name, b.data.name)
     );
-  const treeClustering = d3.cluster().size([2 * Math.PI, width / 2 - 100])
+  const treeClustering = d3.cluster().size([2 * Math.PI, width / 2 - 100]);
   const root = treeClustering(bilink(d3Hierarchy));
   const colors = getColors();
   const node = svg
@@ -103,14 +103,14 @@ function renderHierarchicalEdgeBundling(graph) {
 
 function bilink(root) {
   const leaves = root.leaves();
-  const map = new Map(leaves.map(d => [d.data.name, d]));
+  const map = new Map(leaves.map((d) => [d.data.name, d]));
   for (const d of leaves) {
     d.incoming = [];
     d.outgoing = [...d.data.outgoing]
-      .map(i => {
+      .map((i) => {
         return [d, map.get(i.name)];
       })
-      .filter(o => o[1]);
+      .filter((o) => o[1]);
   }
 
   for (const d of leaves) {
