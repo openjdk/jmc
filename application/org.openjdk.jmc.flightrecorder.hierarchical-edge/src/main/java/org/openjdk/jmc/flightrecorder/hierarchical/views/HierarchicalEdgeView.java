@@ -97,7 +97,6 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 				loadStringFromFile("utils.js"),
 				loadStringFromFile("hierarchical-edge.js"),
 				loadStringFromFile("chord.js"));
-		System.out.println(HTML_PAGE);
 	}
 
 	private enum ModelState {

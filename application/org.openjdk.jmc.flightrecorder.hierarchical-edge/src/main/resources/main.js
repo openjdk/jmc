@@ -1,10 +1,5 @@
-const marginLeft = 0;
-const marginRight = 0;
-const marginTop = 0;
-const marginBottom = 0;
-
-let width = window.innerWidth - (marginLeft + marginRight);
-let height = window.innerHeight - (marginTop + marginBottom);
+let width = window.innerWidth;
+let height = window.innerHeight;
 
 let levels = 2;
 

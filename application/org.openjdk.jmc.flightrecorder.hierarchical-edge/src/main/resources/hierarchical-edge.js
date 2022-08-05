@@ -3,7 +3,7 @@ function renderHierarchicalEdgeBundling(graph) {
   const svg = d3
     .select("#hierarchical")
     .append("svg")
-    .attr("viewBox", [-width / 2, -width / 2, width, width]);
+    .attr("viewBox", [-width / 2, -height / 2, width, height]);
   const d3Hierarchy = d3
     .hierarchy(graph.root)
     .sort(
@@ -11,7 +11,9 @@ function renderHierarchicalEdgeBundling(graph) {
         d3.ascending(a.height, b.height) ||
         d3.ascending(a.data.name, b.data.name)
     );
-  const treeClustering = d3.cluster().size([2 * Math.PI, width / 2 - 100]);
+  // we use the same formula as for the outerRadius in the chord diagram
+  const radius = Math.max(Math.min(width, height) * 0.5 - 90, 100) + 10;
+  const treeClustering = d3.cluster().size([2 * Math.PI, radius]);
   const root = treeClustering(bilink(d3Hierarchy));
   const colors = getColors();
   const node = svg
