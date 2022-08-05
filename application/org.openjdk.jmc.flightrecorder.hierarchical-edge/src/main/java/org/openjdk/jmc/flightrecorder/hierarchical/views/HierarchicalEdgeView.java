@@ -93,8 +93,11 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 		HTML_PAGE = String.format(
 				loadStringFromFile("page.template"),
 				loadLibraries(jsD3V6),
+				loadStringFromFile("main.js"),
 				loadStringFromFile("utils.js"),
-				loadStringFromFile("hierarchical-edge.js"));
+				loadStringFromFile("hierarchical-edge.js"),
+				loadStringFromFile("chord.js"));
+		System.out.println(HTML_PAGE);
 	}
 
 	private enum ModelState {
@@ -149,21 +152,21 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	}
 
 	private class ChangeChartTypeAction extends Action {
-		private final DependencyChartType selected;
+		private final DependencyChartType type;
 
-		ChangeChartTypeAction(DependencyChartType selected) {
-			super(selected.message, selected.action);
-			this.selected = selected;
-			chartType = selected;
-			setToolTipText(selected.message);
-			setImageDescriptor(selected.imageDescriptor);
-			setChecked(DependencyChartType.EDGE_BUNDLING.equals(selected));
+		ChangeChartTypeAction(DependencyChartType type) {
+			super(type.message, type.action);
+			this.type = type;
+			setToolTipText(type.message);
+			setImageDescriptor(type.imageDescriptor);
+			setChecked(DependencyChartType.EDGE_BUNDLING.equals(type));
 		}
 
 		@Override
 		public void run() {
 			if (this.isChecked()) {
-				browser.execute(String.format("setChartType('%s');", selected.name()));
+				chartType = type;
+				browser.execute(String.format("setChartType('%s');", type.name()));
 			}
 		}
 	}
@@ -343,7 +346,7 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-//				browser.execute(String.format("setChartType('%s');", chartType.name()));
+				browser.execute(String.format("setChartType('%s');", chartType.name()));
 				browser.execute(String.format("updateGraph(`%s`, %d);", eventsJson, packageDepth));
 				loaded = true;
 			}
