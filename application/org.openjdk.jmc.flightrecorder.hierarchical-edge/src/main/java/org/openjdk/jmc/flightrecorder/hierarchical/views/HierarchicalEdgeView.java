@@ -333,6 +333,9 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 
 	private void setViewerInput(String eventsJson, int packageDepth) {
 		browser.setText(HTML_PAGE);
+		browser.addListener(SWT.Resize, event -> {
+			browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, chartType.name()));
+		});
 
 		browser.addProgressListener(new ProgressAdapter() {
 			private boolean loaded = false;
