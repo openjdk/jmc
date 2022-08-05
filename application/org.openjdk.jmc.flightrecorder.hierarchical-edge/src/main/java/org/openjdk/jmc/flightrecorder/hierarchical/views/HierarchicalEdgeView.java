@@ -136,8 +136,8 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	}
 
 	private enum DependencyChartType {
-		EDGE_BUNDLING(Messages.getString(Messages.HIERARCHICAL_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("flameflip.png")),
-		CHORD(Messages.getString(Messages.HIERARCHICAL_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("icicleflip.png"));
+		EDGE_BUNDLING(Messages.getString(Messages.HIERARCHICAL_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("edge.png")),
+		CHORD(Messages.getString(Messages.HIERARCHICAL_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("chord.png"));
 
 		private final String message;
 		private final int action;
