@@ -3,23 +3,23 @@ const marginRight = 0;
 const marginTop = 0;
 const marginBottom = 0;
 
-const width = window.innerWidth - (marginLeft + marginRight);
-const height = window.innerHeight - (marginTop + marginBottom);
+let width = window.innerWidth - (marginLeft + marginRight);
+let height = window.innerHeight - (marginTop + marginBottom);
 
 let levels = 2;
 
 function updateGraph(eventsJson, packageLevels, chartType) {
   const data = JSON.parse(eventsJson);
-  debug(`Loaded ${data.events.length} events`);
+  debug(`${chartType} displaying ${data.events.length} events`);
   try {
     levels = packageLevels;
+    width = window.innerWidth;
+    height = window.innerHeight;
     d3.select("#hierarchical").selectAll("*").remove();
     if (chartType === "EDGE_BUNDLING") {
-      debug(`Rendering edge bundling diagram: ${chartType}`);
       const edgeBundlingData = transformEdgeBundlingData(data);
       renderHierarchicalEdgeBundling(edgeBundlingData);
     } else if (chartType === "CHORD") {
-      debug(`Rendering chord diagram: ${chartType}`);
       const chordData = transformChordData(data);
       renderChordDiagram(chordData);
     }
