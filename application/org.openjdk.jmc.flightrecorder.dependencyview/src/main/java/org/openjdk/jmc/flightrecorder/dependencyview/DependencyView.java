@@ -194,7 +194,7 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
-	private int packageDepth = 3;
+	private int packageDepth = 2;
 	private DiagramType diagramType = DiagramType.CHORD;
 
 	@Override
