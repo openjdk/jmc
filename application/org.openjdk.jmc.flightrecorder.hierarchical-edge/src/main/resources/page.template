@@ -1,25 +1,25 @@
 <!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <script>
-      %1$s
-    </script>
-  </head>
-  <body>
-    <div id="debug" width="100%%" style="text-align: left; display:none;"></div>
-    <div id="hierarchical" width="100%%" style="text-align: center"></div>
-    <script type="text/javascript">
-      %2$s
-    </script>
-    <script type="text/javascript">
-      %3$s
-    </script>
-    <script type="text/javascript">
-      %4$s
-    </script>
-    <script type="text/javascript">
-      %5$s
-    </script>
-  </body>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<script>
+			%1$s
+		</script>
+	</head>
+	<body>
+		<div id="debug" width="100%%" style="text-align: left; display:none;"></div>
+		<div id="hierarchical" width="100%%" style="text-align: center"></div>
+		<script type="text/javascript">
+			%2$s
+		</script>
+		<script type="text/javascript">
+			%3$s
+		</script>
+		<script type="text/javascript">
+			%4$s
+		</script>
+		<script type="text/javascript">
+			%5$s
+		</script>
+	</body>
 </html>
