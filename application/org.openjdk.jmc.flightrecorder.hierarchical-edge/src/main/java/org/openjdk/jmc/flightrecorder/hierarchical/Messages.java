@@ -40,9 +40,11 @@ public class Messages {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.hierarchical.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-	
+
 	public static final String HIERARCHICAL_PACKAGE_LEVEL_DEPTH = "HIERARCHICAL_PACKAGE_LEVEL_DEPTH"; //$NON-NLS-1$
-	
+	public static final String HIERARCHICAL_EDGE_BUNDLING_DIAGRAM = "HIERARCHICAL_EDGE_BUNDLING_DIAGRAM"; //$NON-NLS-1$
+	public static final String HIERARCHICAL_CHORD_DIAGRAM = "HIERARCHICAL_CHORD_DIAGRAM"; //$NON-NLS-1$
+
 	private Messages() {
 	}
 

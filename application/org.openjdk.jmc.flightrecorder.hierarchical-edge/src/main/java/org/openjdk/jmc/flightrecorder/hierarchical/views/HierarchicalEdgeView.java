@@ -86,7 +86,7 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class HierarchicalEdgeView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
-	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.hierarchical-edge"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V6 = "jslibs/d3.v6.min.js";
@@ -136,8 +136,8 @@ public class HierarchicalEdgeView extends ViewPart implements ISelectionListener
 	}
 
 	private enum DependencyChartType {
-		EDGE_BUNDLING("", IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("flameflip.png")),
-		CHORD("", IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("icicleflip.png"));
+		EDGE_BUNDLING(Messages.getString(Messages.HIERARCHICAL_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("flameflip.png")),
+		CHORD(Messages.getString(Messages.HIERARCHICAL_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, hierarchicalEdgeImageDescriptor("icicleflip.png"));
 
 		private final String message;
 		private final int action;
