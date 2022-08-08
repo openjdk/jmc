@@ -89,13 +89,9 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
 		String jsD3V6 = "jslibs/d3.v6.min.js";
-		HTML_PAGE = String.format(
-				loadStringFromFile("page.template"),
-				loadLibraries(jsD3V6),
-				loadStringFromFile("main.js"),
-				loadStringFromFile("utils.js"),
-				loadStringFromFile("hierarchical-edge.js"),
-				loadStringFromFile("chord.js"));
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V6),
+				loadStringFromFile("main.js"), loadStringFromFile("utils.js"),
+				loadStringFromFile("hierarchical-edge.js"), loadStringFromFile("chord.js"));
 	}
 
 	private enum ModelState {
@@ -135,8 +131,12 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 	}
 
 	private enum DiagramType {
-		EDGE_BUNDLING(Messages.getString(Messages.DEPENDENCYVIEW_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor("edge.png")),
-		CHORD(Messages.getString(Messages.DEPENDENCYVIEW_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor("chord.png"));
+		EDGE_BUNDLING(Messages.getString(
+				Messages.DEPENDENCYVIEW_EDGE_BUNDLING_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor(
+						"edge.png")),
+		CHORD(Messages.getString(
+				Messages.DEPENDENCYVIEW_CHORD_DIAGRAM), IAction.AS_RADIO_BUTTON, dependencyViewImageDescriptor(
+						"chord.png"));
 
 		private final String message;
 		private final int action;
@@ -166,7 +166,8 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 				diagramType = type;
 				if (currentItems != null) {
 					String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
-					browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
+					browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth,
+							diagramType.name()));
 				}
 			}
 		}
@@ -202,9 +203,7 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 		super.init(site, memento);
 		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
 		ChangeDiagramTypeAction[] chartTypeActions = new ChangeDiagramTypeAction[] {
-				new ChangeDiagramTypeAction(DiagramType.CHORD),
-				new ChangeDiagramTypeAction(DiagramType.EDGE_BUNDLING)
-		};
+				new ChangeDiagramTypeAction(DiagramType.CHORD), new ChangeDiagramTypeAction(DiagramType.EDGE_BUNDLING)};
 		Stream.of(chartTypeActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
 		toolBar.add(new PackageDepthSelection());
@@ -252,7 +251,8 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 
 		private void populate(Menu menu) {
 			for (Pair<String, Integer> item : depths) {
-				ActionContributionItem actionItem = new ActionContributionItem(new SetPackageDepth(item, item.right == packageDepth));
+				ActionContributionItem actionItem = new ActionContributionItem(
+						new SetPackageDepth(item, item.right == packageDepth));
 				actionItem.fill(menu, -1);
 			}
 		}
@@ -334,7 +334,8 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 	private void setViewerInput(String eventsJson, int packageDepth) {
 		browser.setText(HTML_PAGE);
 		browser.addListener(SWT.Resize, event -> {
-			browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
+			browser.execute(
+					String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
 		});
 
 		browser.addProgressListener(new ProgressAdapter() {
@@ -350,13 +351,14 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 			@Override
 			public void completed(ProgressEvent event) {
 				browser.removeProgressListener(this);
-				browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
+				browser.execute(
+						String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth, diagramType.name()));
 				loaded = true;
 			}
 		});
 	}
 
-	private static String loadLibraries(String... libs) {
+	private static String loadLibraries(String ... libs) {
 		if (libs == null || libs.length == 0) {
 			return "";
 		} else {
