@@ -113,6 +113,18 @@
 									<id>org.eclipse.jetty.websocket:websocket-jetty-api:${jetty.version}</id>
 								</artifact>
 								<artifact>
+									<id>org.eclipse.jetty:jetty-security:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty:jetty-server:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:websocket-core-server:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty:jetty-xml:${jetty.version}</id>
+								</artifact>
+								<artifact>
 									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
 								</artifact>
 							</artifacts>
