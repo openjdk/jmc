@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -101,8 +101,13 @@ public class ClassLeakingRule implements IRule {
 			Messages.getString(Messages.General_CONFIG_CLASS_LIMIT),
 			Messages.getString(Messages.General_CONFIG_CLASS_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(5));
 
+	public static final TypedPreference<IQuantity> MAX_TIMEOUT = new TypedPreference<>(
+			"classLeaking.calculation.timeout", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT),
+			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG), NUMBER,
+			NUMBER_UNITY.quantity(5));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
-			MAX_NUMBER_OF_CLASSES_TO_REPORT);
+			MAX_NUMBER_OF_CLASSES_TO_REPORT, MAX_TIMEOUT);
 
 	public static final TypedCollectionResult<ClassEntry> LOADED_CLASSES = new TypedCollectionResult<>("loadedClasses", //$NON-NLS-1$
 			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_NAME),
@@ -123,6 +128,7 @@ public class ClassLeakingRule implements IRule {
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.CLASS_LOAD, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.CLASS_UNLOAD, EventAvailability.ENABLED).build();
+	public static int CONFIGURED_TIMEOUT = 0;
 
 	@Override
 	public String getId() {
@@ -147,7 +153,7 @@ public class ClassLeakingRule implements IRule {
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults) {
 		int warningLimit = (int) valueProvider.getPreferenceValue(WARNING_LIMIT).longValue();
-
+		CONFIGURED_TIMEOUT = (int) valueProvider.getPreferenceValue(MAX_TIMEOUT).longValue();
 		ItemQueryBuilder queryLoad = ItemQueryBuilder.fromWhere(JdkFilters.CLASS_LOAD);
 		queryLoad.groupBy(JdkAttributes.CLASS_LOADED);
 		queryLoad.select(JdkAttributes.CLASS_LOADED);
@@ -170,13 +176,15 @@ public class ClassLeakingRule implements IRule {
 			long maxCount = 0;
 			entries.sort(null);
 			Collection<ClassEntry> entriesOverLimit = new ArrayList<>();
-			for (int i = 0; i < classLimit; i++) {
-				ClassEntry entry = entries.get(i);
+
+			int totalEntries = entries.size() - 1;
+			for (int i = 0, j = totalEntries; i < classLimit; i++, j--) {
+				ClassEntry entry = entries.get(j);
 				entriesOverLimit.add(entry);
 				maxCount = Math.max(entry.getCount().longValue(), maxCount);
 			}
 			double maxScore = RulesToolkit.mapExp100(maxCount, warningLimit) * 0.75;
-			ClassEntry worst = entries.get(0);
+			ClassEntry worst = entries.get(totalEntries);
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(maxScore))
 					.setSummary(Messages.getString(Messages.ClassLeakingRule_RESULT_SUMMARY))
 					.setExplanation(Messages.getString(Messages.ClassLeakingRule_RESULT_EXPLANATION))

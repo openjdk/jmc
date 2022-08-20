@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -100,6 +100,8 @@ public class Messages {
 	public static final String BufferLostRuleFactory_RESULT_SOLUTION = "BufferLostRuleFactory_RESULT_SOLUTION"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_CONFIG_WARNING_LIMIT = "ClassLeakingRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_CONFIG_WARNING_LIMIT_LONG = "ClassLeakingRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT = "ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT"; //$NON-NLS-1$
+	public static final String ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG = "ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_NAME = "ClassLeakingRule_NAME"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_RESULT_SUMMARY = "ClassLeakingRule_RESULT_SUMMARY"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_RESULT_EXPLANATION = "ClassLeakingRule_RESULT_EXPLANATION"; //$NON-NLS-1$
