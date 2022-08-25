@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Heatmap
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.heatmap;singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 8.2.1.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.flightrecorder.serializers,
