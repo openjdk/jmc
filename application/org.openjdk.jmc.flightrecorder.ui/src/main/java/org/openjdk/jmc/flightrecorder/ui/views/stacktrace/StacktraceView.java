@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -102,6 +102,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Pair;
@@ -758,7 +759,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private StacktraceModel createStacktraceModel() {
-		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), itemsToShow,
+		IItemCollection filteredItems = itemsToShow;
+		if (currentAttribute != null) {
+			filteredItems = filteredItems.apply(ItemFilters.hasAttribute(currentAttribute));
+		}
+		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), filteredItems,
 				currentAttribute);
 	}
 
@@ -797,7 +802,6 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
 		String attrName = currentAttribute != null ? currentAttribute.getName() : null;
 		createAttributeSelection(attrName, attrList);
-
 	}
 
 	private void setViewerInput(Fork rootFork) {
