@@ -102,7 +102,7 @@ public class ObjectStatisticsDataProvider {
 	}
 
 	/**
-	 * @return an aggregator for the increase in the live size set between the first and last
+	 * @return an aggregator for the increase in the live set size between the first and last
 	 *         garbage collections
 	 */
 	public static IAggregator<IQuantity, ?> getIncreaseAggregator() {
@@ -132,7 +132,7 @@ public class ObjectStatisticsDataProvider {
 	}
 
 	/**
-	 * @return an aggregator for the increase in the live instances set between the first and last
+	 * @return an aggregator for the increase in the live set instances between the first and last
 	 *         garbage collections
 	 */
 	public static IAggregator<IQuantity, ?> getIncreaseInstancesAggregator() {
