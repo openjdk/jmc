@@ -56,6 +56,7 @@ import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Pair;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 
 public class AttributeSelection extends Action implements IMenuCreator {
 	public static final String SAMPLES = "Samples"; //$NON-NLS-1$
@@ -72,10 +73,12 @@ public class AttributeSelection extends Action implements IMenuCreator {
 		Set<Pair<String, IAttribute<IQuantity>>> compatibleAttr = new HashSet<>();
 		for (IItemIterable eventIterable : items) {
 			List<IAttribute<?>> attributes = eventIterable.getType().getAttributes();
-			for (IAttribute<?> attr : attributes) {
-				ContentType<?> contentType = attr.getContentType();
-				if (contentType == UnitLookup.NUMBER || contentType == UnitLookup.MEMORY) {
-					compatibleAttr.add(new Pair<>(attr.getName(), (IAttribute<IQuantity>) attr));
+			if (eventIterable.getType().hasAttribute(JfrAttributes.EVENT_STACKTRACE)) {
+				for (IAttribute<?> attr : attributes) {
+					ContentType<?> contentType = attr.getContentType();
+					if (contentType == UnitLookup.NUMBER || contentType == UnitLookup.MEMORY) {
+						compatibleAttr.add(new Pair<>(attr.getName(), (IAttribute<IQuantity>) attr));
+					}
 				}
 			}
 		}
