@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,8 @@
 package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -94,13 +96,16 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -112,6 +117,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
+import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
@@ -211,6 +217,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private ViewerAction[] viewerActions;
 	private int[] columnWidths;
 	private Map<IItemCollection, Object[]> treeViewerExpandedItems = new WeakHashMap<>();
+	private AttributeSelection attributeSelection;
+	private IAttribute<IQuantity> currentAttribute;
+	private IToolBarManager toolBar;
+	private ViewerColumn valueColumn;
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -376,6 +386,26 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		reducedTreeAction.setChecked(reducedTree);
 	}
 
+	private void createAttributeSelection(String attrName, Collection<Pair<String, IAttribute<IQuantity>>> items) {
+		if (attributeSelection != null) {
+			toolBar.remove(attributeSelection.getId());
+		}
+		attributeSelection = new AttributeSelection(items, attrName, this::getCurrentAttribute,
+				this::setCurrentAttribute, this::rebuildModel);
+		toolBar.insertAfter(AttributeSelection.ATTRIBUTE_SELECTION_SEP_ID, attributeSelection);
+		toolBar.update(true);
+		if (attrName == null) {
+			attrName = AttributeSelection.SAMPLES;
+		}
+		if (valueColumn != null) {
+			if (treeLayout) {
+				((TreeViewerColumn) valueColumn).getColumn().setText(attrName);
+			} else {
+				((TableViewerColumn) valueColumn).getColumn().setText(attrName);
+			}
+		}
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -426,7 +456,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
 		addOptions(siteMenu);
-		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		toolBar = site.getActionBars().getToolBarManager();
 		toolBar.add(selectGroupAction);
 		toolBar.add(backwardAction);
 		toolBar.add(forwardAction);
@@ -436,7 +466,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		toolBar.add(perByDurationAction);
 		Stream.of(groupByActions).forEach(toolBar::add);
 
+		toolBar.add(new Separator(AttributeSelection.ATTRIBUTE_SELECTION_SEP_ID));
+		createAttributeSelection(null, Collections.emptyList());
+
 		getSite().getPage().addSelectionListener(this);
+	}
+
+	private IAttribute<IQuantity> getCurrentAttribute() {
+		return currentAttribute;
+	}
+
+	private void setCurrentAttribute(IAttribute<IQuantity> attr) {
+		currentAttribute = attr;
 	}
 
 	@Override
@@ -564,8 +605,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_STACK_TRACE, SWT.NONE, columnWidths[0])
 				.setLabelProvider(stackTraceLabelProvider);
-		buildColumn(viewer, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, SWT.RIGHT, columnWidths[1])
-				.setLabelProvider(countLabelProvider);
+		valueColumn = buildColumn(viewer, AttributeSelection.SAMPLES, SWT.RIGHT, columnWidths[1]);
+		valueColumn.setLabelProvider(countLabelProvider);
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
 				.setLabelProvider(percentageLabelProvider);
 		if (perDuration)
@@ -718,7 +759,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private StacktraceModel createStacktraceModel() {
-		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), itemsToShow);
+		IItemCollection filteredItems = itemsToShow;
+		if (currentAttribute != null) {
+			filteredItems = filteredItems.apply(ItemFilters.hasAttribute(currentAttribute));
+		}
+		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), filteredItems,
+				currentAttribute);
 	}
 
 	private void rebuildModel() {
@@ -753,6 +799,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		if (model.equals(createStacktraceModel()) && !viewer.getControl().isDisposed()) {
 			setViewerInput(model.getRootFork());
 		}
+		List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
+		String attrName = currentAttribute != null ? currentAttribute.getName() : null;
+		createAttributeSelection(attrName, attrList);
 	}
 
 	private void setViewerInput(Fork rootFork) {
@@ -776,17 +825,17 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 2 && (total = rootFork.getItemsInFork()) > 0) { // index == 2 => percentage column
+			if (event.index == 2 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 2 => percentage column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
-				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
+				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
-				double fraction = frame.getItemCount() / total;
+				double fraction = frame.getAttributeAggregate() / total;
 				event.gc.setBackground(COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
@@ -802,17 +851,17 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 3 && (total = rootFork.getItemsInFork()) > 0) { // index == 3 => percentage (by duration) column
+			if (event.index == 3 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 3 => percentage (by duration) column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
-				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
+				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
-				double fraction = frame.getItemCount() / total;
+				double fraction = frame.getAttributeAggregate() / total;
 				event.gc.setBackground(COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
@@ -826,9 +875,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		@Override
 		public String getText(Object element) {
 			StacktraceFrame frame = (StacktraceFrame) element;
-			int itemCount = frame.getItemCount();
-			int totalCount = getRootFork(frame.getBranch().getParentFork()).getItemsInFork();
-			return UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount).displayUsing(IDisplayable.AUTO);
+			long aggregValue = frame.getAttributeAggregate();
+			long totalCount = getRootFork(frame.getBranch().getParentFork()).getAggregateItemsInFork();
+			return UnitLookup.PERCENT_UNITY.quantity(aggregValue / (double) totalCount).displayUsing(IDisplayable.AUTO);
 		}
 
 		@Override
@@ -908,7 +957,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private final ColumnLabelProvider countLabelProvider = new ColumnLabelProvider() {
 		@Override
 		public String getText(Object element) {
-			return Integer.toString(((StacktraceFrame) element).getItemCount());
+			return Long.toString(((StacktraceFrame) element).getAttributeAggregate());
 		}
 	};
 
