@@ -65,7 +65,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.css</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
@@ -89,7 +89,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph-tooltip.js</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph-tooltip.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
@@ -101,7 +101,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.js</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>

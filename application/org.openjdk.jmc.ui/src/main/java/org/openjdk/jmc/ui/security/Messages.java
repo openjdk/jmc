@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,7 +42,7 @@ public final class Messages extends NLS {
 	public static String MasterPasswordWizardPage_CAPTION_ENTER_PASSWORD;
 	public static String MasterPasswordWizardPage_CAPTION_NEW_PASSWORD;
 	public static String MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORDS_DO_NOT_MATCH_TEXT;
-	public static String MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_SHORTER_THAN_X_CHARACTERS_TEXT;
+	public static String MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_VALIDATION_FAILED;
 	public static String MasterPasswordWizardPage_ERROR_PASSWORD_EMPTY_TEXT;
 	public static String MasterPasswordWizardPage_SET_MASTER_PASSWORD_DESCRIPTION_TEXT;
 	public static String MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE;

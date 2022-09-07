@@ -33,12 +33,12 @@
 -->
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 	<setAttribute key="additional_plugins">
-		<setEntry value="org.eclipse.jetty.http:10.0.7:default:true:default:default"/>
-        	<setEntry value="org.eclipse.jetty.io:10.0.7:default:true:default:default"/>
-        	<setEntry value="org.eclipse.jetty.security:10.0.7:default:true:default:default"/>
-        	<setEntry value="org.eclipse.jetty.server:10.0.7:default:true:default:default"/>
-        	<setEntry value="org.eclipse.jetty.servlet:10.0.7:default:true:default:default"/>
-        	<setEntry value="org.eclipse.jetty.util:10.0.7:default:true:default:default"/>
+		<setEntry value="org.eclipse.jetty.http:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.io:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.security:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.server:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.servlet:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.util:10.0.11:default:true:default:default"/>
 	</setAttribute>
 	<booleanAttribute key="append.args" value="true" />
 	<stringAttribute key="application" value="org.openjdk.jmc.rcp.application.app" />

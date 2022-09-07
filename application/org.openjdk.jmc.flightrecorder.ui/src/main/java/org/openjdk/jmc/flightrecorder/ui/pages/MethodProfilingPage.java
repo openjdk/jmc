@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -160,7 +160,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 			if (event.index == 2 && (total = rootFork.getItemsInFork()) > 0) { // index == 2 => percentage column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);

@@ -264,6 +264,8 @@ public class Messages extends NLS {
 	public static String HeapPage_SELECTED_CLASSES;
 	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE;
 	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC;
+	public static String HeapPage_SIZE_TOTAL_PERCENTAGE;
+	public static String HeapPage_SIZE_TOTAL_PERCENTAGE_DESC;
 	public static String INFORMATION_COMPONENT_NOT_AVAILABLE;
 	public static String IO_PAGE_DURATIONS_DESCRIPTION;
 	public static String IO_PAGE_EVENT_LOG_DESCRIPTION;
