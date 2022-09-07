@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.common,
- fireplace-swing
+ fireplace-swing,
+ fireplace-swt-awt-bridge
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Oracle Corporation
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flameview-java

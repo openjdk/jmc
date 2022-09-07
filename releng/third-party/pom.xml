@@ -129,6 +129,11 @@
 								</artifact>
 								<artifact>
 									<id>io.github.bric3.fireplace:fireplace-swing:${fireplace.version}</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>io.github.bric3.fireplace:fireplace-swt-awt-bridge:${fireplace.version}</id>
+									<source>true</source>
 								</artifact>
 							</artifacts>
 						</configuration>
