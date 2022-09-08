@@ -55,6 +55,7 @@
 		<p2-maven-plugin.version>2.0.0</p2-maven-plugin.version>
 		<spifly.version>1.3.4</spifly.version>
 		<fireplace.version>0.0.1-SNAPSHOT</fireplace.version>
+		<radiance.version>6.0.0</radiance.version>
 	</properties>
 
 	<repositories>
@@ -134,6 +135,25 @@
 								<artifact>
 									<id>io.github.bric3.fireplace:fireplace-swt-awt-bridge:${fireplace.version}</id>
 									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>io.github.bric3.fireplace:fireplace-swing-animation:${fireplace.version}</id>
+									<source>true</source>
+<!--									<override>true</override>-->
+<!--									<instructions>-->
+<!--										<Require-Bundle>fireplace-swing,radiance-animation</Require-Bundle>-->
+<!--									</instructions>-->
+								</artifact>
+								<!-- Dependency of fireplace-swing-animation -->
+								<artifact>
+									<id>org.pushing-pixels:radiance-animation:${radiance.version}</id>
+									<source>true</source>
+									<override>true</override>
+									<instructions>
+										<Bundle-Name>radiance-animation</Bundle-Name>
+										<Bundle-SymbolicName>radiance-animation</Bundle-SymbolicName>
+										<Export-Package>org.pushingpixels.radiance.animation.api.*</Export-Package>
+									</instructions>
 								</artifact>
 							</artifacts>
 						</configuration>

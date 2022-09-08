@@ -131,6 +131,7 @@ import io.github.bric3.fireplace.flamegraph.FrameBox;
 import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
 import io.github.bric3.fireplace.flamegraph.FrameModel;
 import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
+import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
 import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
 import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 
@@ -451,6 +452,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 
 		embeddingComposite.init(() -> {
 			flamegraphView = createFlameGraph(embeddingComposite, tooltip);
+			new ZoomAnimation().install(flamegraphView);
 
 			flamegraphView.component.setBackground(bgColorAwtColor);
 			return flamegraphView.component;
