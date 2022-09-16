@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -230,7 +230,7 @@ public class RulesHtmlToolkit {
 			String title = matcher.group(1);
 			String url = matcher.group(2);
 			String encodedUrl = Encode.forUriComponent(url);
-			String link = "<a class=\"anchorTag\" onclick=\"javascript:window.open(decodeURIComponent('" + encodedUrl //$NON-NLS-1$
+			String link = "<a class=\"anchorTag\" onclick=\"window.location.assign(decodeURIComponent('" + encodedUrl //$NON-NLS-1$
 					+ "'))\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$
 			description = description.replace(matcher.group(), link);
 		}
