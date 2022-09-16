@@ -229,7 +229,9 @@ public class RulesHtmlToolkit {
 		while (matcher.find()) {
 			String title = matcher.group(1);
 			String url = matcher.group(2);
-			String link = "<a href=\"" + url + "\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			String encodedUrl = Encode.forUriComponent(url);
+			String link = "<a class=\"anchorTag\" onclick=\"javascript:window.open(decodeURIComponent('" + encodedUrl //$NON-NLS-1$
+					+ "'))\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$
 			description = description.replace(matcher.group(), link);
 		}
 		return description;
