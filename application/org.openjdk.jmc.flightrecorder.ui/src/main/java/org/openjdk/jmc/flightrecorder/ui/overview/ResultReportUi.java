@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -78,6 +78,7 @@ import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.ui.DataPageDescriptor;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
+import org.openjdk.jmc.flightrecorder.ui.JfrEditor;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 /**
@@ -437,8 +438,13 @@ public class ResultReportUi {
 					if (isSinglePage) {
 						browser.execute(OVERVIEW_MAKE_SCALABLE);
 					}
-					browser.evaluate(OVERVIEW_UPDATE_PAGE_HEADERS_VISIBILITY);
-					isLoaded = true;
+					if (browser.getUrl().equals("about:blank")) {
+						browser.evaluate(OVERVIEW_UPDATE_PAGE_HEADERS_VISIBILITY);
+						isLoaded = true;
+					} else {
+						((ResultOverview) (((JfrEditor) editor).getCurrentPageUI())).enableBrowserAction();
+						return;
+					}
 
 					DisplayToolkit.safeAsyncExec(cmdExecRunnable);
 				}

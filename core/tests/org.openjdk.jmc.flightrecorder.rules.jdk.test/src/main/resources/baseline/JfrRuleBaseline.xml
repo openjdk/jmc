@@ -3047,7 +3047,8 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
 The heap is around 22.3 % full. There is likely no big benefit from enabling string deduplication.</summary>
             <explanation>String deduplication is enabled using the JVM flag '-XX:+UseStringDeduplication'. This flag can be used together with the G1 garbage collector in JDK 8u20 or later, or with the Shenandoah garbage collector.
 To validate if this gives a performance improvement for your application, create flight recordings both with and without string deduplication. For the run with string deduplication enabled, also enable statistics with '-XX:+PrintStringDeduplicationStatistics' for JDK 8 or '-Xlog:stringdedup*=debug' for JDK 9. Check if the heap live set decrease in the recording with string deduplication enabled is larger than the size of the string deduplication metadata table. The size of the metadata table is printed in the statistics output as 'Table/Memory Usage: XX MB'
-You can read more about string deduplication in the java options documentation or in [JEP 192](https://openjdk.java.net/jeps/192).&lt;p&gt;String deduplication is only supported when using the G1 (JDK 8u20+) or Shenandoah garbage collectors. If you want to use this feature you can enable G1 by using '-XX:+UseG1GC', or enable Shenandoah by using '-XX:+UseShenandoahGC'.</explanation>
+You can read more about string deduplication in the java options documentation or in [JEP 192](https://openjdk.java.net/jeps/192).
+String deduplication is only supported when using the G1 (JDK 8u20+) or Shenandoah garbage collectors. If you want to use this feature you can enable G1 by using '-XX:+UseG1GC', or enable Shenandoah by using '-XX:+UseShenandoahGC'.</explanation>
         </rule>
         <rule>
             <id>SystemGc</id>

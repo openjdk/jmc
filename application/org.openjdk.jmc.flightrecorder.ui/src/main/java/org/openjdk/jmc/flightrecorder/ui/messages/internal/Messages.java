@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -499,6 +499,7 @@ public class Messages extends NLS {
 	public static String ResultOverview_EXPORT_DIALOG_TITLE;
 	public static String ResultOverview_PAGE_DESC;
 	public static String ResultOverview_PAGE_NAME;
+	public static String ResultOverview_BROWSER_ACTION;
 	public static String ResultTableUi_SCORE_TOOLTIP;
 	public static String RuleManager_NULL_RESULT_DESCRIPTION;
 	public static String SAVE_AS_ERROR_MSG;

@@ -6,3 +6,4 @@ Bundle-SymbolicName: org.openjdk.jmc.docs;singleton:=true
 Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Automatic-Module-Name: org.openjdk.jmc.docs
+Require-Bundle: org.eclipse.jdt.core
