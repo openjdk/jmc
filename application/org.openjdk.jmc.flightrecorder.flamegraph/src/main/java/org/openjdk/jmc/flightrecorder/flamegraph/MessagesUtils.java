@@ -31,48 +31,42 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameviewjava.views;
+package org.openjdk.jmc.flightrecorder.flamegraph;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.window.DefaultToolTip;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.forms.widgets.FormText;
+import java.text.MessageFormat;
 
-/**
- * This tool tip extends the Jface implementation and relies on the {@link FormText} control
- * to render the text.
- * 
- * @author brice.dutheil
- * @see FormText
- */
-public class StyledToolTip extends DefaultToolTip {
-	public StyledToolTip(Control control) {
-		super(control);
+public final class MessagesUtils {
+
+	/**
+	 * Localized Stack Trace message
+	 * 
+	 * @param key
+	 *            stack trace message
+	 * @return message
+	 */
+	public static String getStacktraceMessage(String key) {
+		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
 	}
 
-	public StyledToolTip(Control control, int style, boolean manualActivation) {
-		super(control, style, manualActivation);
+	/**
+	 * Localized Flameview Message
+	 * 
+	 * @param key
+	 *            flameview message
+	 * @param values
+	 *            message values
+	 * @return message
+	 */
+	public static String getFlameviewMessage(String key, Object ... values) {
+		if (values == null || values.length == 0) {
+			return getFlameviewMessage(key);
+		} else {
+			return MessageFormat.format(getFlameviewMessage(key), values);
+		}
 	}
 
-	@Override
-	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		final Composite container = setDefaultLayout(new Composite(parent, SWT.NULL), event);
-		GridLayoutFactory.fillDefaults().margins(2, 2).generateLayout(container);
-		FormText formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
-		
-		String pseudoHtml = getText(event);
-
-		formText.setText(pseudoHtml, true, false);
-		return parent;
+	private static String getFlameviewMessage(String key) {
+		return org.openjdk.jmc.flightrecorder.flamegraph.Messages.getString(key);
 	}
 
-	private <T extends Control> T setDefaultLayout(T control, Event event) {
-		control.setBackground(getBackgroundColor(event));
-		control.setForeground(getForegroundColor(event));
-		control.setFont(getFont(event));
-		return control;
-	}
 }

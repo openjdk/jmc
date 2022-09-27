@@ -31,14 +31,48 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameviewjava;
+package org.openjdk.jmc.flightrecorder.flamegraph.views;
+
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.forms.widgets.FormText;
 
 /**
- * Class that holds reference to the icons and images used by the Flight Recorder plug-in
+ * This tool tip extends the Jface implementation and relies on the {@link FormText} control
+ * to render the text.
+ * 
+ * @author brice.dutheil
+ * @see FormText
  */
-public final class FlameviewImages {
-	public static final String ICON_FLAME_FLIP = "flameflip.png"; //$NON-NLS-1$
-	public static final String ICON_ICICLE_FLIP = "icicleflip.png"; //$NON-NLS-1$
-	public static final String ICON_RESET_ZOOM = "reset-zoom.png"; //$NON-NLS-1$
-	public static final String ICON_MINIMAP = "map.png"; //$NON-NLS-1$
+public class StyledToolTip extends DefaultToolTip {
+	public StyledToolTip(Control control) {
+		super(control);
+	}
+
+	public StyledToolTip(Control control, int style, boolean manualActivation) {
+		super(control, style, manualActivation);
+	}
+
+	@Override
+	protected Composite createToolTipContentArea(Event event, Composite parent) {
+		final Composite container = setDefaultLayout(new Composite(parent, SWT.NULL), event);
+		GridLayoutFactory.fillDefaults().margins(2, 2).generateLayout(container);
+		FormText formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
+		
+		String pseudoHtml = getText(event);
+
+		formText.setText(pseudoHtml, true, false);
+		return parent;
+	}
+
+	private <T extends Control> T setDefaultLayout(T control, Event event) {
+		control.setBackground(getBackgroundColor(event));
+		control.setForeground(getForegroundColor(event));
+		control.setFont(getFont(event));
+		return control;
+	}
 }

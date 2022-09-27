@@ -31,21 +31,21 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameviewjava.views;
+package org.openjdk.jmc.flightrecorder.flamegraph.views;
 
 import static java.util.Collections.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_FLAME_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_ICICLE_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_JPEG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_PNG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_PRINT;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_RESET_ZOOM;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_SAVE_AS;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
-import static org.openjdk.jmc.flightrecorder.flameviewjava.MessagesUtils.getFlameviewMessage;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PNG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PRINT;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_RESET_ZOOM;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
+import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlameviewMessage;
 
 import java.awt.Component;
 import java.awt.Rectangle;
@@ -111,7 +111,7 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.flightrecorder.flameviewjava.FlameviewImages;
+import org.openjdk.jmc.flightrecorder.flamegraph.FlamegraphImages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
@@ -136,9 +136,9 @@ import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
 import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
 import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 
-public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
+public class FlamegraphSwingView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
-	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flameview-java"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flamegraph"; //$NON-NLS-1$
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
@@ -172,9 +172,9 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
 		LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
 		ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-				FlameviewImages.ICON_ICICLE_FLIP)),
+				FlamegraphImages.ICON_ICICLE_FLIP)),
 		FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-				FlameviewImages.ICON_FLAME_FLIP));
+				FlamegraphImages.ICON_FLAME_FLIP));
 
 		private final String message;
 		private final int action;
@@ -235,7 +235,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		private ToggleMinimapAction() {
 			super(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP), IAction.AS_CHECK_BOX);
 			setToolTipText(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP));
-			setImageDescriptor(flameviewImageDescriptor(FlameviewImages.ICON_MINIMAP));
+			setImageDescriptor(flameviewImageDescriptor(FlamegraphImages.ICON_MINIMAP));
 
 			setChecked(false);
 		}
@@ -252,7 +252,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		private ResetZoomAction() {
 			super(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM), IAction.AS_PUSH_BUTTON);
 			setToolTipText(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM));
-			setImageDescriptor(flameviewImageDescriptor(FlameviewImages.ICON_RESET_ZOOM));
+			setImageDescriptor(flameviewImageDescriptor(FlamegraphImages.ICON_RESET_ZOOM));
 		}
 
 		@Override
@@ -298,7 +298,7 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 		public void run() {
 			switch (actionType) {
 			case SAVE_AS:
-				Executors.newSingleThreadExecutor().execute(FlamegraphJavaView.this::saveFlamegraph);
+				Executors.newSingleThreadExecutor().execute(FlamegraphSwingView.this::saveFlamegraph);
 				break;
 			case PRINT:
 				// not supported
@@ -309,11 +309,11 @@ public class FlamegraphJavaView extends ViewPart implements ISelectionListener {
 
 	private static class ModelRebuildRunnable implements Runnable {
 
-		private FlamegraphJavaView view;
+		private FlamegraphSwingView view;
 		private IItemCollection items;
 		private volatile boolean isInvalid;
 
-		private ModelRebuildRunnable(FlamegraphJavaView view, IItemCollection items) {
+		private ModelRebuildRunnable(FlamegraphSwingView view, IItemCollection items) {
 			this.view = view;
 			this.items = items;
 		}

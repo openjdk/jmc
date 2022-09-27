@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
-Bundle-Name: FlameViewJava
-Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flameview-java; singleton:=true
+Bundle-Name: flamegraph
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flamegraph; singleton:=true
 Bundle-Version: 8.3.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -16,6 +16,6 @@ Require-Bundle: org.eclipse.ui,
  radiance-animation
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Oracle Corporation
-Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flameview-java
-Export-Package: org.openjdk.jmc.flightrecorder.flameviewjava,
- org.openjdk.jmc.flightrecorder.flameviewjava.views
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flamegraph
+Export-Package: org.openjdk.jmc.flightrecorder.flamegraph,
+ org.openjdk.jmc.flightrecorder.flamegraph.views

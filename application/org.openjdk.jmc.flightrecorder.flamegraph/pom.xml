@@ -32,25 +32,24 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<?eclipse version="3.2"?>
-<plugin>
-	<extension point="org.eclipse.ui.views">
-		<view
-			allowMultiple="false"
-			category="org.openjdk.jmc.ui.main"
-			class="org.openjdk.jmc.flightrecorder.flameviewjava.views.FlamegraphJavaView"
-			icon="icons/flame.png"
-			id="org.openjdk.jmc.flightrecorder.flameview-java"
-			name="%FLAME_VIEW_NAME"/>
-	</extension>
-	<extension point="org.eclipse.ui.perspectiveExtensions">
-		<perspectiveExtension targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
-			<view
-				id="org.openjdk.jmc.flightrecorder.flameview-java"
-				relationship="stack"
-				relative="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
-				showTitle="true"
-				visible="true"/>
-		</perspectiveExtension>
-	</extension>
-</plugin>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openjdk.jmc</groupId>
+		<artifactId>missioncontrol.application</artifactId>
+		<version>${revision}${changelist}</version>
+	</parent>
+	<artifactId>org.openjdk.jmc.flightrecorder.flamegraph</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<spotless.config.path.js>${basedir}/../../configuration/ide/eclipse/formatting/formattingjs.xml</spotless.config.path.js>
+	</properties>
+
+	<build>
+		<plugins>
+		</plugins>
+	</build>
+</project>

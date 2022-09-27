@@ -31,42 +31,14 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.flameviewjava;
+package org.openjdk.jmc.flightrecorder.flamegraph;
 
-import java.text.MessageFormat;
-
-public final class MessagesUtils {
-
-	/**
-	 * Localized Stack Trace message
-	 * 
-	 * @param key
-	 *            stack trace message
-	 * @return message
-	 */
-	public static String getStacktraceMessage(String key) {
-		return org.openjdk.jmc.flightrecorder.stacktrace.Messages.getString(key);
-	}
-
-	/**
-	 * Localized Flameview Message
-	 * 
-	 * @param key
-	 *            flameview message
-	 * @param values
-	 *            message values
-	 * @return message
-	 */
-	public static String getFlameviewMessage(String key, Object ... values) {
-		if (values == null || values.length == 0) {
-			return getFlameviewMessage(key);
-		} else {
-			return MessageFormat.format(getFlameviewMessage(key), values);
-		}
-	}
-
-	private static String getFlameviewMessage(String key) {
-		return org.openjdk.jmc.flightrecorder.flameviewjava.Messages.getString(key);
-	}
-
+/**
+ * Class that holds reference to the icons and images used by the Flight Recorder plug-in
+ */
+public final class FlamegraphImages {
+	public static final String ICON_FLAME_FLIP = "flameflip.png"; //$NON-NLS-1$
+	public static final String ICON_ICICLE_FLIP = "icicleflip.png"; //$NON-NLS-1$
+	public static final String ICON_RESET_ZOOM = "reset-zoom.png"; //$NON-NLS-1$
+	public static final String ICON_MINIMAP = "map.png"; //$NON-NLS-1$
 }
