@@ -77,7 +77,7 @@ public class CompressedOopsRule implements IRule {
 		String vmName = items.getAggregate(JdkAggregators.JVM_NAME);
 		if (compressedOops != null && mx != null && vmName != null) {
 			if (vmName.toUpperCase().contains("64-BIT")) { //$NON-NLS-1$
-				if (mx.compareTo(UnitLookup.NUMBER.getUnit(BinaryPrefix.GIBI).quantity(32)) > 0) {
+				if (mx.compareTo(UnitLookup.NUMBER.getUnit(BinaryPrefix.GIBI).quantity(32)) < 0) {
 					if (!compressedOops) {
 						return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.INFO)
 								.setSummary(Messages.getString(Messages.CompressedOopsRuleFactory_TEXT_INFO))
