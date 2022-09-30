@@ -96,6 +96,28 @@ public final class FlightRecordingLoader {
 		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk);
 	}
 
+	/**
+	 * Read events from an input stream of JFR data.
+	 *
+	 * @param stream
+	 *            input stream
+	 * @param extensions
+	 *            the extensions to use when parsing the data
+	 * @param hideExperimentals
+	 *            if {@code true}, then events of types marked as experimental will be ignored when
+	 *            reading the data
+	 * @param executorService
+	 *            the executor service to read chunks in
+	 * @return an array of EventArrays (one event type per EventArray)
+	 */
+	public static EventArrays loadStream(
+		InputStream stream, List<? extends IParserExtension> extensions, boolean hideExperimentals,
+		boolean ignoreTruncatedChunk, ExecutorService executorService)
+			throws CouldNotLoadRecordingException, IOException {
+		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk,
+				executorService);
+	}
+
 	public static IChunkSupplier createChunkSupplier(final InputStream input)
 			throws CouldNotLoadRecordingException, IOException {
 		return new IChunkSupplier() {
@@ -195,18 +217,24 @@ public final class FlightRecordingLoader {
 	public static EventArrays readChunks(
 		Runnable monitor, List<? extends IParserExtension> extensions, IChunkSupplier chunkSupplier,
 		boolean hideExperimentals, boolean ignoreTruncatedChunk) throws CouldNotLoadRecordingException, IOException {
-		LoaderContext context = new LoaderContext(extensions, hideExperimentals);
-		Runtime rt = Runtime.getRuntime();
-		long availableMemory = rt.maxMemory() - rt.totalMemory() + rt.freeMemory();
-		long maxBuffersCount = Math.min(Math.max(availableMemory / MIN_MEMORY_PER_THREAD, 1),
-				rt.availableProcessors() - 1);
-
 		ExecutorService threadPool;
 		if (Boolean.getBoolean(SINGLE_THREADED_PARSER_PROPERTY_KEY)) {
 			threadPool = Executors.newSingleThreadExecutor();
 		} else {
 			threadPool = Executors.newCachedThreadPool();
 		}
+		return readChunks(monitor, extensions, chunkSupplier, hideExperimentals, ignoreTruncatedChunk, threadPool);
+	}
+
+	public static EventArrays readChunks(
+		Runnable monitor, List<? extends IParserExtension> extensions, IChunkSupplier chunkSupplier,
+		boolean hideExperimentals, boolean ignoreTruncatedChunk, ExecutorService threadPool)
+			throws CouldNotLoadRecordingException, IOException {
+		LoaderContext context = new LoaderContext(extensions, hideExperimentals);
+		Runtime rt = Runtime.getRuntime();
+		long availableMemory = rt.maxMemory() - rt.totalMemory() + rt.freeMemory();
+		long maxBuffersCount = Math.min(Math.max(availableMemory / MIN_MEMORY_PER_THREAD, 1),
+				rt.availableProcessors() - 1);
 
 		int chunkCount = 0;
 		try {

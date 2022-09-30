@@ -39,6 +39,7 @@ import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -89,6 +90,21 @@ public class JfrLoaderToolkit {
 	 *
 	 * @param stream
 	 *            the input stream to read the recording from
+	 * @param executorService
+	 *            the executor service to read chunks in
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(InputStream stream, ExecutorService executorService)
+			throws IOException, CouldNotLoadRecordingException {
+		return loadEvents(stream, ParserExtensionRegistry.getParserExtensions(), executorService);
+	}
+
+	/**
+	 * Loads a potentially zipped or gzipped input stream using the parser extensions loaded from
+	 * the java service loader
+	 *
+	 * @param stream
+	 *            the input stream to read the recording from
 	 * @param extensions
 	 *            the extensions to use when parsing the file
 	 * @return the events in the recording
@@ -97,6 +113,25 @@ public class JfrLoaderToolkit {
 			throws CouldNotLoadRecordingException, IOException {
 		try (InputStream in = IOToolkit.openUncompressedStream(stream)) {
 			return EventCollection.build(FlightRecordingLoader.loadStream(in, extensions, false, true));
+		}
+	}
+
+	/**
+	 * Loads a potentially zipped or gzipped input stream using the parser extensions loaded from
+	 * the java service loader
+	 *
+	 * @param stream
+	 *            the input stream to read the recording from
+	 * @param extensions
+	 *            the extensions to use when parsing the file
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(
+		InputStream stream, List<? extends IParserExtension> extensions, ExecutorService executorService)
+			throws CouldNotLoadRecordingException, IOException {
+		try (InputStream in = IOToolkit.openUncompressedStream(stream)) {
+			return EventCollection
+					.build(FlightRecordingLoader.loadStream(in, extensions, false, true, executorService));
 		}
 	}
 
