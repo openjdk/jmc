@@ -267,7 +267,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		form.getToolBarManager().update(true);
 	}
 
-	private volatile boolean isUpdated = false;
+	private volatile boolean isUpdated;
 
 	public void updateRule(IResult result) {
 		if (displayReport && report != null) {
