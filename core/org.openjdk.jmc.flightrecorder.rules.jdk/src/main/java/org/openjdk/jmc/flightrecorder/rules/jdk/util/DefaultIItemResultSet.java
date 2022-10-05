@@ -51,7 +51,6 @@ import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule;
 
 /**
  * The default implementation of an {@link IItemResultSet}.
@@ -63,22 +62,24 @@ final class DefaultIItemResultSet implements IItemResultSet {
 	private final Map<String, ColumnInfo> info;
 	private final ArrayList<Object[]> data = new ArrayList<>();
 	private int cursor = -1;
+	private ExecutorService exec;
 
-	DefaultIItemResultSet(IItemCollection items, IItemQuery query) {
+	DefaultIItemResultSet(IItemCollection items, IItemQuery query, int configuredTimeout) {
 		this.query = query;
 		attributes.addAll(query.getAttributes());
 		aggregators.addAll(query.getAggregators());
 		info = new HashMap<>(attributes.size() + aggregators.size());
+		exec = Executors.newWorkStealingPool();
 		initializeMetadata();
 		try {
-			calculateData(items);
+			calculateData(items, configuredTimeout);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void calculateData(IItemCollection input) throws InterruptedException {
+	private void calculateData(IItemCollection input, int configuredTimeout) throws InterruptedException {
 		input = input.apply(query.getFilter());
 		final IItemCollection newInput = input;
 		if (query.getGroupBy() == null) {
@@ -105,7 +106,6 @@ final class DefaultIItemResultSet implements IItemResultSet {
 			IAggregator<?, ?> aggregator = Aggregators.distinct(query.getGroupBy());
 			Set<?> aggregate = input.getAggregate((IAggregator<Set<?>, ?>) aggregator);
 			if (aggregate != null) {
-				ExecutorService exec = Executors.newWorkStealingPool();
 				try {
 					for (final Object o : aggregate) {
 						exec.submit(new Runnable() {
@@ -131,7 +131,15 @@ final class DefaultIItemResultSet implements IItemResultSet {
 					}
 				} finally {
 					exec.shutdown();
-					exec.awaitTermination(ClassLeakingRule.CONFIGURED_TIMEOUT, TimeUnit.MINUTES);
+					try {
+						if (!exec.awaitTermination(60, TimeUnit.SECONDS)) {
+							exec.shutdownNow();
+							exec.awaitTermination(configuredTimeout, TimeUnit.MINUTES);
+						}
+					} catch (InterruptedException ie) {
+						exec.shutdownNow();
+						Thread.currentThread().interrupt();
+					}
 				}
 				if (Thread.currentThread().isInterrupted())
 					return;

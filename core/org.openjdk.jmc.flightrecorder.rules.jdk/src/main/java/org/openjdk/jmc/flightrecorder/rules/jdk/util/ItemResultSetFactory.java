@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,6 +40,10 @@ import org.openjdk.jmc.common.item.IItemQuery;
  */
 public class ItemResultSetFactory {
 	public IItemResultSet createResultSet(IItemCollection items, IItemQuery query) {
-		return new DefaultIItemResultSet(items, query);
+		return new DefaultIItemResultSet(items, query, 0);
+	}
+
+	public IItemResultSet createResultSet(IItemCollection items, IItemQuery query, int configuredTimeout) {
+		return new DefaultIItemResultSet(items, query, configuredTimeout);
 	}
 }
