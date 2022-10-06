@@ -40,7 +40,7 @@ import org.openjdk.jmc.common.item.IItemQuery;
  */
 public class ItemResultSetFactory {
 	public IItemResultSet createResultSet(IItemCollection items, IItemQuery query) {
-		return new DefaultIItemResultSet(items, query, 0);
+		return new DefaultIItemResultSet(items, query, 1440); //Setting a default timeout value of 1 Day
 	}
 
 	public IItemResultSet createResultSet(IItemCollection items, IItemQuery query, int configuredTimeout) {

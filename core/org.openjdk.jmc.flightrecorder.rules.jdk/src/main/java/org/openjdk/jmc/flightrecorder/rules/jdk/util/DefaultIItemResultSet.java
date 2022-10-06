@@ -134,8 +134,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 					try {
 						if (!exec.awaitTermination(60, TimeUnit.SECONDS)) {
 							exec.shutdownNow();
-							if (configuredTimeout != 0)
-								exec.awaitTermination(configuredTimeout, TimeUnit.MINUTES);
+							exec.awaitTermination(configuredTimeout, TimeUnit.MINUTES);
 						}
 					} catch (InterruptedException ie) {
 						exec.shutdownNow();

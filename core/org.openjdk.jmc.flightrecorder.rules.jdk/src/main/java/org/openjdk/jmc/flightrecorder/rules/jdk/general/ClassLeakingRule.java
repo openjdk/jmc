@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 import static org.openjdk.jmc.common.unit.UnitLookup.MINUTE;
+import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,7 +106,8 @@ public class ClassLeakingRule implements IRule {
 	public static final TypedPreference<IQuantity> ClassLeakingRule_MAX_TIMEOUT = new TypedPreference<>(
 			"classLeaking.calculation.timeout", //$NON-NLS-1$
 			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT),
-			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG), NUMBER, MINUTE.quantity(5));
+			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG), TIMESPAN,
+			MINUTE.quantity(5));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
 			MAX_NUMBER_OF_CLASSES_TO_REPORT, ClassLeakingRule_MAX_TIMEOUT);
 
