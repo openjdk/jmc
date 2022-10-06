@@ -39,7 +39,6 @@ package org.openjdk.jmc.flightrecorder.writer.api;
 public final class RecordingSettings {
 	private final long startTimestamp;
 	private final long startTicks;
-
 	private final long duration;
 	private final boolean initializeJDKTypes;
 

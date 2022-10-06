@@ -39,7 +39,6 @@ import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettingsBuilder;
 public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuilder {
 	private long timestamp = -1;
 	private long startTicks = -1;
-
 	private long duration = -1;
 	private boolean initializeJdkTypes = false;
 
@@ -56,7 +55,7 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	}
 
 	@Override
-	public RecordingSettingsBuilder withDuration(long ticks) {
+	public RecordingSettingsBuilder withDuration(long duration) {
 		this.duration = duration;
 		return this;
 	}
