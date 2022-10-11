@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2022 Datadog, Inc. All rights reserved.
+ * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,57 +31,9 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.writer.api;
 
 /**
- * A builder type for {@linkplain RecordingSettings}
+ * A simple, non feature-complete JFR parser. Useful to inspect chunk headers or metadata. It is
+ * possible extending it to a full-fledged JFR streaming parser if found useful.
  */
-public interface RecordingSettingsBuilder {
-	/**
-	 * Set the recording timestamp in epoch nanoseconds (nanoseconds since 1970-01-01).
-	 * 
-	 * @param timestamp
-	 *            the timestamp in epoch nanoseconds (nanoseconds since 1970-01-01)
-	 * @return this instance for chaining
-	 */
-	RecordingSettingsBuilder withTimestamp(long timestamp);
-
-	/**
-	 * Set the recording starting timestamp in ticks.
-	 *
-	 * @param ticks
-	 *            a tick represent a monotonic increase in time
-	 * @return this instance for chaining
-	 * @since 8.3.0
-	 */
-	default RecordingSettingsBuilder withStartTicks(long ticks) {
-		return this;
-	}
-
-	/**
-	 * Set the recording duration in ticks.
-	 *
-	 * @param ticks
-	 *            a tick represent a monotonic increase in time
-	 * @return this instance for chaining
-	 * @since 8.3.0
-	 */
-	default RecordingSettingsBuilder withDuration(long ticks) {
-		return this;
-	}
-
-	/**
-	 * The recording will automatically initialize
-	 * {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Types.JDK} types.
-	 * 
-	 * @return this instance for chaining
-	 */
-	RecordingSettingsBuilder withJdkTypeInitialization();
-
-	/**
-	 * Build the settings instance.
-	 * 
-	 * @return the settings instance
-	 */
-	RecordingSettings build();
-}
+package org.openjdk.jmc.flightrecorder.testutils.parser;
