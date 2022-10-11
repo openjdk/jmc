@@ -161,6 +161,7 @@ public class StacktraceModel {
 
 	static IMemberAccessor<IQuantity, IItem> getAccessor(SimpleArray<IItem> items, IAttribute<IQuantity> attribute) {
 		if (items.size() > 0 && attribute != null) {
+			@SuppressWarnings("unchecked")
 			IType<IItem> type = (IType<IItem>) items.get(0).getType();
 			return type.getAccessor(attribute.getKey());
 		}

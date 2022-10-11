@@ -37,6 +37,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 
 import java.util.List;
 
+@SuppressWarnings("restriction")
 abstract class TestType extends BaseType {
 	public TestType(long id, String name, String supertype, ConstantPools constantPools, TypesImpl types) {
 		super(id, name, supertype, constantPools, types);
