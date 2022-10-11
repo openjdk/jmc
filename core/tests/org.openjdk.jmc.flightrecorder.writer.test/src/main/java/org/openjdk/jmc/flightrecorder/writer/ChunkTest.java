@@ -45,6 +45,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
+@SuppressWarnings("restriction")
 class ChunkTest {
 	private Chunk instance;
 	private LEB128Writer writer;

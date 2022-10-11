@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class AnnotationTest {
 	private TypesImpl types;
 

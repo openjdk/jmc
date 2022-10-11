@@ -32,23 +32,15 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace;
 
-import org.openjdk.jmc.common.IMCFrame;
-import org.openjdk.jmc.common.collection.SimpleArray;
-import org.openjdk.jmc.common.item.Aggregators;
-import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.item.IItem;
-import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.QuantitiesToolkit;
-import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
-
 import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.aggregateItems;
 
-import java.util.Arrays;
+import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 
 /**
  * An expanded version of {@link IMCFrame} that adds relations to items and to other frames in a

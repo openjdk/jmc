@@ -45,6 +45,7 @@ import org.mockito.Mockito;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class ResolvableTypeTest {
 	private static final String FIELD_1_NAME = "field_1";
 	private static final String FIELD_2_NAME = "field_2";

@@ -58,6 +58,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class RecordingImplTest {
 	private RecordingImpl recording;
 	private ByteArrayOutputStream bos;
