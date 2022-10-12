@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,10 +44,13 @@ import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.collection.ArrayToolkit;
 import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemToolkit;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 
@@ -94,6 +97,7 @@ public class StacktraceModel {
 	private final boolean threadRootAtTop;
 	private final FrameSeparator frameSeparator;
 	private final IItemCollection items;
+	private final IAttribute<IQuantity> attribute;
 	private Fork rootFork;
 
 	/**
@@ -107,9 +111,15 @@ public class StacktraceModel {
 	 *            stacktraces are silently ignored.
 	 */
 	public StacktraceModel(boolean threadRootAtTop, FrameSeparator frameSeparator, IItemCollection items) {
+		this(threadRootAtTop, frameSeparator, items, null);
+	}
+
+	public StacktraceModel(boolean threadRootAtTop, FrameSeparator frameSeparator, IItemCollection items,
+			IAttribute<IQuantity> attribute) {
 		this.threadRootAtTop = threadRootAtTop;
 		this.frameSeparator = frameSeparator;
 		this.items = items;
+		this.attribute = attribute;
 	}
 
 	@Override
@@ -124,7 +134,7 @@ public class StacktraceModel {
 		} else if (obj instanceof StacktraceModel) {
 			StacktraceModel other = (StacktraceModel) obj;
 			return threadRootAtTop == other.threadRootAtTop && frameSeparator.equals(other.frameSeparator)
-					&& items.equals(other.items);
+					&& items.equals(other.items) && Objects.equals(attribute, other.attribute);
 		}
 		return false;
 	}
@@ -147,6 +157,24 @@ public class StacktraceModel {
 			rootFork = new Fork(ItemToolkit.asIterable(items));
 		}
 		return rootFork;
+	}
+
+	static IMemberAccessor<IQuantity, IItem> getAccessor(SimpleArray<IItem> items, IAttribute<IQuantity> attribute) {
+		if (items.size() > 0 && attribute != null) {
+			@SuppressWarnings("unchecked")
+			IType<IItem> type = (IType<IItem>) items.get(0).getType();
+			return type.getAccessor(attribute.getKey());
+		}
+		return null;
+	}
+
+	static IQuantity aggregateItems(SimpleArray<IItem> items, IMemberAccessor<IQuantity, IItem> accessor) {
+		IQuantity quantity = null;
+		for (IItem item : items) {
+			IQuantity value = accessor.getMember(item);
+			quantity = quantity == null ? value : quantity.add(value);
+		}
+		return quantity;
 	}
 
 	private IMCFrame getFrame(IItem item, int frameIndex) {
@@ -262,19 +290,19 @@ public class StacktraceModel {
 		private final StacktraceFrame firstFrame;
 		private final int siblingIndex;
 		// The sum of the number of items in all sibling branches preceding this one. A value between 0 and getParentFork().getItemsInFork().
-		private final int itemOffsetInFork;
+		private final long itemOffsetInFork;
 		private Boolean hasTail;
 		private StacktraceFrame[] tailFrames;
 		private Fork branchEnding;
 
-		private Branch(Fork parent, SimpleArray<IItem> items, IMCFrame frame, int siblingIndex, int itemOffsetInFork) {
+		private Branch(Fork parent, SimpleArray<IItem> items, IMCFrame frame, int siblingIndex, long itemOffsetInFork) {
 			this.parentFork = parent;
 			this.siblingIndex = siblingIndex;
 			this.itemOffsetInFork = itemOffsetInFork;
-			firstFrame = new StacktraceFrame(items, frame, this, 0);
+			firstFrame = new StacktraceFrame(items, frame, this, 0, attribute);
 		}
 
-		public int getItemOffsetInFork() {
+		public long getItemOffsetInFork() {
 			return itemOffsetInFork;
 		}
 
@@ -383,10 +411,10 @@ public class StacktraceModel {
 					// All branches match
 					return tail.elements();
 				} else if (removeIndexes.isEmpty()) {
-					node = new StacktraceFrame(node.getItems(), commonFrame, this, tail.size() + 1);
+					node = new StacktraceFrame(node.getItems(), commonFrame, this, tail.size() + 1, attribute);
 				} else {
 					IItem[] subset = ArrayToolkit.filter(node.getItems().elements(), removeIndexes);
-					node = new StacktraceFrame(subset, commonFrame, this, tail.size() + 1);
+					node = new StacktraceFrame(subset, commonFrame, this, tail.size() + 1, attribute);
 				}
 				tail.add(node);
 				nextIndex++;
@@ -413,8 +441,9 @@ public class StacktraceModel {
 		private final Branch parentBranch;
 		private final Branch[] branches;
 		// The sum of the number of items in all forks preceding this one. A value between 0 and StacktraceModel.items.length.
-		private final int itemOffset;
+		private final long itemOffset;
 		private final int itemsInFork;
+		private final long aggregateItemsInFork;
 		private Integer selectedBranchIndex;
 		private final SimpleArray<IItem> allItems;
 
@@ -431,18 +460,30 @@ public class StacktraceModel {
 		 * Create a fork by grouping items by distinct head frames using the frame separator. If a
 		 * parent branch is specified, then look for head frames after the parent branch.
 		 */
-		private Fork(Iterable<? extends IItem> items, int itemOffset, Branch parentBranch) {
+		private Fork(Iterable<? extends IItem> items, long itemOffset, Branch parentBranch) {
 			this.itemOffset = itemOffset;
 			this.parentBranch = parentBranch;
 			List<FrameEntry> branchHeadFrames = getDistinctFrames(countFramesOnOrAbove(parentBranch), items);
 			branchHeadFrames.sort(COUNT_CMP);
 			int itemsInFork = 0;
+			long aggregateValue = 0;
 
 			SimpleArray<IItem> allItems = new SimpleArray<IItem>(new IItem[0]);
 			SimpleArray<Branch> branches = new SimpleArray<>(new Branch[branchHeadFrames.size()]);
 			for (FrameEntry fe : branchHeadFrames) {
-				Branch b = new Branch(Fork.this, fe.items, fe.frame, branches.size(), itemsInFork);
+				Branch b = new Branch(Fork.this, fe.items, fe.frame, branches.size(), aggregateValue);
 				itemsInFork += fe.items.size();
+
+				IMemberAccessor<IQuantity, IItem> memberAccessor = getAccessor(fe.items, attribute);
+				if (memberAccessor != null) {
+					IQuantity quantity = aggregateItems(fe.items, memberAccessor);
+					if (quantity != null) {
+						aggregateValue += quantity.longValue();
+					}
+				} else {
+					aggregateValue += fe.items.size();
+				}
+
 				if (allItems != null) {
 					allItems.addAll(fe.items.elements());
 				} else {
@@ -453,15 +494,20 @@ public class StacktraceModel {
 			selectedBranchIndex = branches.size() > 0 ? 0 : null; // To disable default branch selection: always set null
 			this.branches = branches.elements();
 			this.itemsInFork = itemsInFork;
+			this.aggregateItemsInFork = aggregateValue;
 			this.allItems = allItems;
 		}
 
-		public int getItemOffset() {
+		public long getItemOffset() {
 			return itemOffset;
 		}
 
 		public int getItemsInFork() {
 			return itemsInFork;
+		}
+
+		public long getAggregateItemsInFork() {
+			return aggregateItemsInFork;
 		}
 
 		public SimpleArray<IItem> getAllItemsInFork() {

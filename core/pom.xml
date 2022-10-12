@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
+<!--
    Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
-   
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -37,7 +37,7 @@
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
 	<version>${revision}${changelist}</version>
-        <name>JDK Mission Control Core</name>
+	<name>JDK Mission Control Core</name>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -49,7 +49,7 @@
 	<properties>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.inceptionYear>2018</project.inceptionYear>
-		<revision>8.2.1</revision>
+		<revision>8.3.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -58,16 +58,17 @@
 		<manifest-location>META-INF</manifest-location>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<maven.jar.version>3.2.0</maven.jar.version>
-		<maven.bundle.version>5.1.1</maven.bundle.version>
 		<spotless.version>2.14.0</spotless.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
+		<maven.directory.version>1.0</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
+		<maven.antrun.version>3.0.0</maven.antrun.version>
 		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<nexus.staging.version>1.6.8</nexus.staging.version>
+		<maven.javadoc.version>3.3.2</maven.javadoc.version>
 		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<maven.flatten.version>1.2.2</maven.flatten.version>
+		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
+		<maven.deploy.version>3.0.0-M2</maven.deploy.version>
+		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
@@ -136,7 +137,6 @@
 			<url>${snapshot.repo}</url>
 		</snapshotRepository>
 	</distributionManagement>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -146,16 +146,8 @@
 					<version>${maven.jar.version}</version>
 					<configuration>
 						<archive>
-							<manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+							<manifestFile>${project.build.directory}/${manifest-location}/MANIFEST.MF</manifestFile>
 						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${maven.bundle.version}</version>
-					<configuration>
-						<manifestLocation>${manifest-location}</manifestLocation>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -186,17 +178,48 @@
 								<outputDirectory>${project.build.directory}</outputDirectory>
 								<resources>
 									<resource>
-										<targetPath>${basedir}/target/classes</targetPath>
+										<targetPath>${project.basedir}/target/classes</targetPath>
 										<directory>${rootDir}/license</directory>
 									</resource>
 									<resource>
-										<targetPath>${basedir}/target/apidocs</targetPath>
+										<targetPath>${project.basedir}/target/apidocs</targetPath>
 										<directory>${rootDir}/license</directory>
 									</resource>
 								</resources>
 							</configuration>
 						</execution>
+						<execution>
+							<id>copy-manifest</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<resources>
+									<resource>
+										<targetPath>${project.build.directory}/${manifest-location}</targetPath>
+										<directory>${project.basedir}/${manifest-location}</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven.javadoc.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven.deploy.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -208,10 +231,10 @@
 				<executions>
 					<execution>
 						<id>directories</id>
+						<phase>initialize</phase>
 						<goals>
 							<goal>highest-basedir</goal>
 						</goals>
-						<phase>initialize</phase>
 						<configuration>
 							<property>rootDir</property>
 						</configuration>
@@ -219,19 +242,42 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build.helper.maven.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.version}</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>check for manifest</id>
+						<phase>compile</phase>
 						<goals>
-							<goal>add-source</goal>
+							<goal>run</goal>
 						</goals>
 						<configuration>
-							<sources>
-								<source>${rootDir}/license</source>
-							</sources>
+							<exportAntProperties>true</exportAntProperties>
+							<target name="check-manifest">
+								<available file="${project.build.directory}/${manifest-location}" property="manifest.present"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>fix qualifier</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="fix-qualifier" if="${manifest.present}">
+								<tstamp>
+									<format property="buildtimestamp" pattern="yyyyMMddHHmm"/>
+								</tstamp>
+								<condition property="qualifier.value" value=".${buildtimestamp}" else="">
+									<and>
+										<isset property="changelist"/>
+										<equals arg1="${changelist}" arg2="-SNAPSHOT"/>
+									</and>
+								</condition>
+								<replace token=".qualifier" value="${qualifier.value}" dir="${project.build.directory}/${manifest-location}"/>
+							</target>
 						</configuration>
 					</execution>
 				</executions>
@@ -252,7 +298,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -300,13 +345,9 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>${maven.flatten.version}</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>

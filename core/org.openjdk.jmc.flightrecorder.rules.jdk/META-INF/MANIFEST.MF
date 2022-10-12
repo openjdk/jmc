@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mission Control Flight Recorder Rules
+Bundle-Name: Mission Control Flight Recorder Rules JDK
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.rules.jdk;singleton:=true
-Bundle-Version: 8.2.1.qualifier
+Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.openjdk.jmc.flightrecorder.rules.jdk.cpu;x-friends:="org.openjdk.jmc.flightrecorder.ui",

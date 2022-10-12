@@ -1,7 +1,6 @@
 @echo off
-echo "======== Running agent tests ================"
-cd agent
-rem The integration tests fail on windows - change to "mvn verify" once fixed.
-mvn test
-echo "======== Finished ==========================="
 
+echo "======== Building and testing agent ========="
+cd agent
+call mvn %MAVENPARAMS% verify || EXIT /B 4
+echo "======== Finished ==========================="

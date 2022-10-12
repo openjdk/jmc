@@ -1,4 +1,3 @@
-![JMC Build](../../workflows/validate/badge.svg) 
 # Mission Control
 
 Mission Control is an open source production time profiling and diagnostics tool for Java.
@@ -10,12 +9,12 @@ For more information on Mission Control, see http://www.oracle.com/missioncontro
 ## Downloading Builds
 Binary distributions of JDK Mission Control are provided by different downstream vendors.
 
-### AdoptOpenJDK
+### Eclipse Adoptium
 * Released version
 * EA builds of upcoming release
 * Downloadable Eclipse update site archive
 
-[http://adoptopenjdk.net/jmc](http://adoptopenjdk.net/jmc)
+[https://adoptium.net/jmc](https://adoptium.net/jmc)
 
 
 ### Azul (Zulu Mission Control)
@@ -370,7 +369,7 @@ application/org.openjdk.jmc.updatesite.ide/target/
 To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
 
 ```bash
-application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.2.1-SNAPSHOT.zip
+application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-8.3.0-SNAPSHOT.zip
 ```
 
 ## Setting up Development Environment

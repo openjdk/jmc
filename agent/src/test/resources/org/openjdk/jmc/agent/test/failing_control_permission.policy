@@ -1,6 +1,8 @@
 grant {
 	permission java.io.FilePermission "target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml", "read";
 	permission java.io.FilePermission "target/surefire/*", "read";
+	permission java.io.FilePermission "target/failsafe-reports", "read,write";
+	permission java.io.FilePermission "${java.io.tmpdir}/-", "read";
 	permission java.lang.management.ManagementPermission "monitor";
 	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
 	permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.misc";

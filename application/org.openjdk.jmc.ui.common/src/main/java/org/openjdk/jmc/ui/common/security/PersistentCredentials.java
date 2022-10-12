@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.ui.common.security;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy
  * loaded on demand.
@@ -40,6 +43,9 @@ public class PersistentCredentials implements ICredentials {
 
 	private final String id;
 	private String[] wrapped;
+
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
 
 	public PersistentCredentials(String id) {
 		this.id = id;
@@ -77,5 +83,10 @@ public class PersistentCredentials implements ICredentials {
 	@Override
 	public String getExportedId() {
 		return id;
+	}
+
+	public static boolean isPasswordValid(final String password) {
+		Matcher matcher = PASSWORD_PATTERN.matcher(password);
+		return matcher.matches();
 	}
 }
