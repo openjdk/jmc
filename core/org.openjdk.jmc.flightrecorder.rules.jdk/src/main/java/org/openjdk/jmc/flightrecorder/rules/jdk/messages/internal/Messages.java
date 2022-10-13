@@ -457,6 +457,8 @@ public class Messages {
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC"; //$NON-NLS-1$
+	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE"; //$NON-NLS-1$
+	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE_DESC = "ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE_DESC"; //$NON-NLS-1$
 	public static final String OptionsCheckRule_CONFIG_ACCEPTED_OPTIONS = "OptionsCheckRule_CONFIG_ACCEPTED_OPTIONS"; //$NON-NLS-1$
 	public static final String OptionsCheckRule_CONFIG_ACCEPTED_OPTIONS_LONG = "OptionsCheckRule_CONFIG_ACCEPTED_OPTIONS_LONG"; //$NON-NLS-1$
 	public static final String OptionsCheckRule_RULE_NAME = "OptionsCheckRule_RULE_NAME"; //$NON-NLS-1$

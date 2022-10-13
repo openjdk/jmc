@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+	<component>
+		<!-- ******************************* GENERAL ****************************************** -->
+		<name>General</name>
+		<note version="8.3">
+			<title>JMC 8.3 - New Release!</title>
+			<description>
+				This is a new minor release of JDK Mission Control. The
+				JMC application requires JDK 11+ to run, but can still be used to
+				connect to, and parse JFR recordings from, OpenJDK 8u272+ and Oracle
+				JDK 7u40+. It can also still open and visualize flight recordings
+				from JDK 7 and 8. JDK Mission Control is built for Windows (x86_64), 
+				Mac OS X (ARM and x86_64), as well as Linux (x86_64).
+			</description>
+			<image>general/jmc.png</image>
+		</note>
+		<note version="8.3">
+			<title>Eclipse 4.24 support</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2022-06 and later. To install JDK Mission Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be vendor specific, and some vendors
+				will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="8.3">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are 51 fixes and improvements in this release.
+				Check out the JMC 8.3 Result Dashboard
+				(https://bugs.openjdk.org/secure/Dashboard.jspa?selectPageId=21205)
+				for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JMC Core ************************** -->
+		<name>Core</name>
+		<note version="8.3">
+			<title>Parser improvements</title>
+			<description>
+				The performance of the FastAccessNumberMap has been improved
+				for sparse values.
+			</description>
+			<image>special/noimage.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JFR ******************************* -->
+		<name>Java Flight Recorder (JFR)</name>
+		<note version="8.3">
+			<title>Dependency View</title>
+			<description>
+				There is a new view for visualizing call dependencies. There are 
+				two modes of operation in the view, chord diagram and edge bundling.
+				In the edge bundling visualization, hover over packages to see
+				dependencies highlighted in colors: green means that methods in the 
+				linked package is called by methods in the package being hovered over, 
+				yellow means that methods in the linked package are calling mathods in
+				the package being hovered over. Red means that methods in the packages
+				are calling each other. To show the Dependency View, go to Window | Show View | 
+				Other... and select the Dependency View under the Mission Control folder. 
+			</description>
+			<image>jfr/dependency.png</image>
+		</note>
+		<note version="8.3">
+			<title>Graph Pruning</title>
+			<description>
+				The graph view in JMC can now be pruned to focus on the most impactful 
+				nodes. Select the target number of nodes, and the visualization will 
+				show at most that many number of nodes.
+			</description>
+			<image>jfr/graphpruning.png</image>
+		</note>
+		<note version="8.3">
+			<title>Selectable Attribute</title>
+			<description>
+				It is now possible to select which attribute to use for the weights
+				in the trace view and the flame graph view.
+			</description>
+			<image>jfr/attribute.png</image>
+		</note>
+		<note version="8.3">
+			<title>Parser improvement</title>
+			<description>
+				The parser now supports parsing events with char fields.
+			</description>
+			<image>special/noimage.png</image>
+		</note>
+	</component>
+	<!-- ******************************* Agent ******************************* -->
+	<!-- <component> <name>JMC Agent Plug-in</name> <note version="8.1.0"> <title>New 
+		JMC Agent Plug-in</title> <description> There is now a new agent plug-in 
+		available for JMC, which allows configuring where to emit flight recording 
+		events in an already running process. </description> <image>agent/agent.png</image> 
+		</note> </component> -->
+	<!-- ******************************* Bugfixes ****************************************** -->
+	<bugfixes>
+		<bugfix>
+			<area>General</area>
+			<bugid>7813</bugid>
+			<synopsis>
+				Unable to open Help page in macOS M1 when JMC started with JDK11
+			</synopsis>
+			<description>
+				The help page was inaccessible, throwing an error on macOS M1 
+				when JMC is run on JDK 11.0.16. This is now fixed.
+			</description>
+		</bugfix>
+		<bugfix>
+			<area>General</area>
+			<bugid>7321</bugid>
+			<synopsis>
+				Unable to view JMC Help Contents (HTTP ERROR 500 ) when booted with JDK 17 or higher
+			</synopsis>
+			<description>
+				The help page was inaccessible, throwing an error, when running on JDK 17+.
+				This is now fixed.
+			</description>
+		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7812</bugid>
+			<synopsis>Unable to open links from Automated Result analysis page</synopsis>
+			<description>
+				Links in the results of the automated analysis results would not
+				open properly on Linux and Mac OS X. Now they do open in situ.
+			</description>
+		</bugfix>
+	</bugfixes>
+	<!-- ******************************* Known issues ****************************************** -->
+	<knownissues>
+		<issue>
+			<area>General</area>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
+			<description>
+				After the bugfix of
+				https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean
+				"Elapsed time of JVM process", whilst it previously was implemented
+				as time since start of the JVM process. The uptime attribute is used
+				by JMC, together with RuntimeMXBean#getStartTime(), to estimate the
+				actual server time. This means that time stamps, as well as
+				remaining time for a flight recording, can be wrong for processes on
+				machines that have been hibernated.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>
+				This one is still under investigation, but it seems JMC
+				can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph, flame graph view, heatmap view and dependency view does not work on 
+Windows
+			</synopsis>
+			<description>
+				This is due to a problem with the Windows based browser
+				component in SWT. We're hoping for a fix in the component for a
+				future version of the Eclipse platform.
+			</description>
+		</issue>
+	</knownissues>
+</notes>

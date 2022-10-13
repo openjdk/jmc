@@ -87,6 +87,7 @@ public final class RecordingImpl extends Recording {
 
 	private final long startTicks;
 	private final long startNanos;
+	private final long duration;
 
 	private final OutputStream outputStream;
 
@@ -100,8 +101,10 @@ public final class RecordingImpl extends Recording {
 	private final TypesImpl types;
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
-		this.startTicks = settings.getStartTimestamp();
-		this.startNanos = settings.getStartTimestamp();
+		this.startTicks = settings.getStartTicks() != -1 ? settings.getStartTicks() : System.nanoTime();
+		this.startNanos = settings.getStartTimestamp() != -1 ? settings.getStartTimestamp()
+				: System.currentTimeMillis() * 1_000_000L;
+		this.duration = settings.getDuration();
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
 		writeFileHeader();
@@ -279,26 +282,26 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void finalizeRecording() {
-		long duration = System.nanoTime() - startTicks;
+		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
 		types.resolveAll();
 
 		long checkpointOffset = globalWriter.position();
-		writeCheckpointEvent();
+		writeCheckpointEvent(recDuration);
 		long metadataOffset = globalWriter.position();
-		writeMetadataEvent(duration);
+		writeMetadataEvent(recDuration);
 
-		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, duration);
+		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, recDuration);
 		globalWriter.writeLongRaw(SIZE_OFFSET, globalWriter.position());
 		globalWriter.writeLongRaw(CONSTANT_OFFSET_OFFSET, checkpointOffset);
 		globalWriter.writeLongRaw(METADATA_OFFSET_OFFSET, metadataOffset);
 	}
 
-	private void writeCheckpointEvent() {
+	private void writeCheckpointEvent(long duration) {
 		LEB128Writer cpWriter = LEB128Writer.getInstance();
 
 		cpWriter.writeLong(1L) // checkpoint event ID
 				.writeLong(startNanos) // start timestamp
-				.writeLong(System.nanoTime() - startTicks) // duration till now
+				.writeLong(duration) // duration till now
 				.writeLong(0L) // fake delta-to-next
 				.writeInt(1) // all checkpoints are flush for now
 				.writeInt(metadata.getConstantPools().size()); // start writing constant pools array

@@ -1,8 +1,7 @@
 #!/bin/sh -l
-
 set -e
-echo "======== Running core tests ================="
-cd core
-mvn verify
-echo "======== Finished ==========================="
 
+echo "======== Installing and testing core ========"
+cd core
+sh -c "mvn ${MAVENPARAMS} install"
+echo "======== Finished ==========================="
