@@ -57,12 +57,12 @@
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<jctools.version>4.0.1</jctools.version>
 		<junit.version>4.13.2</junit.version>
-		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
-		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
-		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
-		<mockito.core.version>4.6.1</mockito.core.version>
-		<mockito.inline.version>4.6.1</mockito.inline.version>
-		<mockito.jupiter.version>4.6.1</mockito.jupiter.version>
+		<junit.jupiter.api.version>5.9.0</junit.jupiter.api.version>
+		<junit.jupiter.params.version>5.9.0</junit.jupiter.params.version>
+		<junit.jupiter.engine.version>5.9.0</junit.jupiter.engine.version>
+		<mockito.core.version>4.8.0</mockito.core.version>
+		<mockito.inline.version>4.8.0</mockito.inline.version>
+		<mockito.jupiter.version>4.8.0</mockito.jupiter.version>
 		<slf4j.version>2.0.3</slf4j.version>
 		<surefireArgLine></surefireArgLine>
 	</properties>
