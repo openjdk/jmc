@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GreyChart Plug-in Test
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview.test;singleton:=true
+Bundle-Version: 8.3.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.openjdk.jmc.flightrecorder.graphview
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Import-Package: org.junit, org.junit.jupiter.api
+Export-Package: org.openjdk.jmc.flightrecorder.ext.graphview.graph
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.graphview.test
