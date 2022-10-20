@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,7 +51,7 @@ public abstract class NumberToObjectMap<V> {
 	protected int[] nextElement;
 	protected int firstElementIdx, prevAddedElementIdx;
 
-	private volatile Collection<V> valuesCollectionView = null;
+	private volatile Collection<V> valuesCollectionView;
 
 	// Debugging
 	protected long rehashTime, numRehashes;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -66,7 +66,7 @@ public class SampleCountingProvider implements OptimizingProvider {
 	private long m_requestedStartX = Long.MIN_VALUE;
 	private long m_requestedEndX = Long.MAX_VALUE;
 
-	private volatile boolean dataChangeOccured = false;
+	private volatile boolean dataChangeOccured;
 	private final boolean m_integrate;
 
 	public SampleCountingProvider(DataSeries<IXYData> s, double yMultiplier, XAxis xAxis, CancelService cancelService,

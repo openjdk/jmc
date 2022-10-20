@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,7 +48,7 @@ public class BoundedListTest {
 
 	private static class ProducerThread implements Runnable {
 		private final BoundedList<Long> list;
-		private volatile boolean shouldStop = false;
+		private volatile boolean shouldStop;
 		private long counter;
 
 		public ProducerThread(BoundedList<Long> list) {
@@ -77,7 +77,7 @@ public class BoundedListTest {
 
 	private static class ValidationThread implements Runnable {
 		private final BoundedList<Long> list;
-		private volatile boolean shouldStop = false;
+		private volatile boolean shouldStop;
 		private volatile long countError = -1;
 		private volatile long sequenceError = -1;
 		private volatile long maxNum;

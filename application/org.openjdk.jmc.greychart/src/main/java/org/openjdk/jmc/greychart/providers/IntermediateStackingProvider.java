@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -62,7 +62,7 @@ public class IntermediateStackingProvider implements OptimizingProvider {
 	private StackingBuffer m_sampleBuffer;
 
 	private int m_lastSubSampleWidth = -1;
-	private volatile boolean dataChangeOccured = false;
+	private volatile boolean dataChangeOccured;
 
 	/**
 	 * @param topProvider
