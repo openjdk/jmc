@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Name: Browser Attach Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.browser.attach;singleton:=true
 Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.ui,
@@ -14,4 +14,3 @@ Eclipse-BuddyPolicy: app
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.browser.attach
 Automatic-Module-Name: org.openjdk.jmc.browser.attach
-
