@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.dependencyview;singleton:=tr
 Bundle-Version: 9.0.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui,
- org.openjdk.jmc.flightrecorder.serializers,
- org.apiguardian
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ org.openjdk.jmc.flightrecorder.serializers
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.dependencyview
 Bundle-Vendor: Oracle Corporation
