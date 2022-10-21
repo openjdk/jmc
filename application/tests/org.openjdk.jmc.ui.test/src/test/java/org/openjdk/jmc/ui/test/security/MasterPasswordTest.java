@@ -36,7 +36,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
+import org.openjdk.jmc.common.security.PersistentCredentials;
 
 @SuppressWarnings("nls")
 public class MasterPasswordTest {

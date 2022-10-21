@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import org.openjdk.jmc.common.security.PersistentCredentials;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 import org.openjdk.jmc.ui.wizards.IPerformFinishable;
 
 /**
