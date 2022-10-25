@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -60,7 +60,7 @@ public class SyntheticNotificationTest extends ServerHandleTestCase {
 
 	private IConnectionHandle handle;
 	private MBeanServerConnection connection;
-	private volatile boolean gotNotification = false;
+	private volatile boolean gotNotification;
 
 	private class SyntheticNotificationListener implements NotificationListener {
 		private Notification lastNotification;
