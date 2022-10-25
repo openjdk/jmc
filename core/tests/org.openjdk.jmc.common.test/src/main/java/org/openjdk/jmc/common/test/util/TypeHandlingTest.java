@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,11 +30,12 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.util;
-
-import static org.junit.Assert.assertEquals;
+package org.openjdk.jmc.common.test.util;
 
 import org.junit.Test;
+import org.openjdk.jmc.common.util.TypeHandling;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
 public class TypeHandlingTest {
@@ -49,5 +50,4 @@ public class TypeHandlingTest {
 		assertEquals("N/A (Float.NaN)", TypeHandling.getNumericString(Float.NaN));
 		assertEquals("N/A (Float.NEGATIVE_INFINITY)", TypeHandling.getNumericString(Float.NEGATIVE_INFINITY));
 	}
-
 }
