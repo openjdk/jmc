@@ -19,5 +19,6 @@ Require-Bundle: org.junit,
  com.github.tomakehurst.wiremock-standalone;bundle-version="2.27.2"
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test
 Import-Package: io.fabric8.kubernetes.client,
+ org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.rjmx.descriptorprovider
 Bundle-Classpath: target/dependency/awaitility-4.0.0.jar

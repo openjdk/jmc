@@ -44,7 +44,5 @@ public interface PreferenceConstants {
 	public static final String P_JOLOKIA_PATH = "jolokiaPath"; //$NON-NLS-1$
 	public static final String P_JOLOKIA_PORT = "jolokiaPort"; //$NON-NLS-1$
 	public static final String P_JOLOKIA_PROTOCOL = "jolokiaProtocol"; //$NON-NLS-1$
-	public static final String P_USERNAME = "username"; //$NON-NLS-1$
-	public static final String P_PASSWORD = "password"; //$NON-NLS-1$
-
+	public static final String P_CREDENTIALS_KEY = "kubernetes.scanning.credentials"; //$NON-NLS-1$
 }

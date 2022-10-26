@@ -53,7 +53,6 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.apache.commons.codec.binary.Base64;
-import org.eclipse.core.runtime.Platform;
 import org.jolokia.client.J4pClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.jolokia.util.AuthorizationHeaderParser;
@@ -63,7 +62,7 @@ import org.openjdk.jmc.jolokia.JolokiaAgentDescriptor;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
 import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.osgi.framework.FrameworkUtil;
+import org.openjdk.jmc.ui.common.security.SecurityException;
 
 import io.fabric8.kubernetes.api.model.NamedContext;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -88,6 +87,16 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private final static Pattern ATTRIBUTE_PATTERN = Pattern
 			.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
 	private final static Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
+	
+	KubernetesScanningParameters settings;
+	
+	public KubernetesDiscoveryListener() {
+		this(JmcKubernetesPlugin.getDefault());
+	}
+	
+	KubernetesDiscoveryListener(KubernetesScanningParameters parameters){
+		this.settings=parameters;
+	}
 
 	public final String getDescription() {
 		return Messages.KubernetesDiscoveryListener_Description;
@@ -122,29 +131,30 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 
 	@Override
 	protected Map<String, ServerConnectionDescriptor> discoverJvms() {
+		return scanForJvms();
+	}
+
+	Map<String, ServerConnectionDescriptor> scanForJvms() {
 		Map<String, ServerConnectionDescriptor> found = new HashMap<>();
-		KubernetesScanningParameters parameters = JmcKubernetesPlugin.getDefault();
 		if (!isEnabled()) {
 			return found;
 		}
 		boolean hasScanned = false;
 
-		if (parameters.scanAllContexts()) {
+		if (settings.scanAllContexts()) {
 			try {
 				for (final String context : allContexts()) {
 					hasScanned = true;
-					scanContext(found, parameters, context);
+					scanContext(found, settings, context);
 				}
 			} catch (IOException e) {
-				Platform.getLog(FrameworkUtil.getBundle(getClass()))
-						.error(Messages.KubernetesDiscoveryListener_UnableToFindContexts, e);
+				settings.logError(Messages.KubernetesDiscoveryListener_UnableToFindContexts, e);
 			}
 		}
 		if (!hasScanned) {// scan default context
-			return scanContext(found, parameters, null);
+			return scanContext(found, settings, null);
 		}
 		return found;
-
 	}
 
 	private Map<String, ServerConnectionDescriptor> scanContext(
@@ -152,8 +162,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		try {
 			scanContextUnsafe(found, parameters, context);
 		} catch (Exception e) {
-			Platform.getLog(FrameworkUtil.getBundle(getClass()))
-					.error(Messages.KubernetesDiscoveryListener_UnableToScan + context, e);
+			parameters.logError(Messages.KubernetesDiscoveryListener_UnableToScan + context, e);
 		}
 		return found;
 	}
@@ -185,11 +194,15 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		final ObjectMeta metadata = pod.getMetadata();
 		HashMap<String, String> headers = new HashMap<>();
 		Map<String, Object> env = new HashMap<>();
-		if (notEmpty(parameters.username())) {
-			if (!notEmpty(parameters.password())) {
-				throw new IllegalArgumentException(Messages.KubernetesDiscoveryListener_MustProvidePassword);
+		try {
+			if (notEmpty(parameters.username())) {
+				if (!notEmpty(parameters.password())) {
+					throw new IllegalArgumentException(Messages.KubernetesDiscoveryListener_MustProvidePassword);
+				}
+				authorize(headers, client, parameters.username(), parameters.password(), metadata.getNamespace(), env);
 			}
-			authorize(headers, client, parameters.username(), parameters.password(), metadata.getNamespace(), env);
+		} catch (SecurityException e) {
+			//skipping authorization if anything fails
 		}
 		final StringBuilder url = new StringBuilder(metadata.getSelfLink());
 		// JMX url must be reverse constructed, so that we can connect from the
@@ -242,8 +255,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 						env);
 				found.put(descriptor.getGUID(), descriptor);
 			} catch (IOException e) {
-				Platform.getLog(FrameworkUtil.getBundle(getClass()))
-						.error(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
+				parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
 
 			}
 		}
@@ -307,9 +319,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 							} catch (IOException ignore) {
 							}
 						}
-
 					}
-
 				}
 			}
 
@@ -321,6 +331,6 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 
 	@Override
 	protected boolean isEnabled() {
-		return JmcKubernetesPlugin.getDefault().scanForInstances();
+		return this.settings.scanForInstances();
 	}
 }

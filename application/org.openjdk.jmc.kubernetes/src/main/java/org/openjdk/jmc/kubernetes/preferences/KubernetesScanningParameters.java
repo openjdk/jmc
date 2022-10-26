@@ -33,6 +33,9 @@
  */
 package org.openjdk.jmc.kubernetes.preferences;
 
+import org.openjdk.jmc.ui.common.security.ICredentials;
+import org.openjdk.jmc.ui.common.security.SecurityException;
+
 public interface KubernetesScanningParameters {
 	boolean scanForInstances();
 
@@ -40,13 +43,17 @@ public interface KubernetesScanningParameters {
 
 	String jolokiaPort();
 
-	String username();
+	String username() throws SecurityException;
 
-	String password();
+	String password() throws SecurityException;
 
 	String jolokiaPath();
 
 	String jolokiaProtocol();
 
 	String requireLabel();
+	
+	ICredentials storeCredentials(String username, String password) throws SecurityException;
+	
+	void logError(String message, Throwable error);
 }

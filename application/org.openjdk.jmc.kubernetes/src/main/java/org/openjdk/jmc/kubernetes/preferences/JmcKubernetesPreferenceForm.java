@@ -35,29 +35,40 @@ package org.openjdk.jmc.kubernetes.preferences;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.openjdk.jmc.kubernetes.JmcKubernetesPlugin;
-import org.openjdk.jmc.ui.misc.PasswordFieldEditor;
+import org.openjdk.jmc.ui.common.security.SecurityException;
 
 /**
- * This class represents a preference page that is contributed to the Preferences dialog. By
- * subclassing <samp>FieldEditorPreferencePage</samp>, we can use the field support built into JFace
- * that allows us to create a page that is small and knows how to save, restore and apply itself.
+ * This class represents a preference page that is contributed to the
+ * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage</samp>, we
+ * can use the field support built into JFace that allows us to create a page
+ * that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the preference store that
- * belongs to the main plug-in class. That way, preferences can be accessed directly via the
- * preference store.
+ * This page is used to modify preferences only. They are stored in the
+ * preference store that belongs to the main plug-in class. That way,
+ * preferences can be accessed directly via the preference store.
  */
 public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage, PreferenceConstants {
 
-	private Map<FieldEditor, Object> dependantControls = new WeakHashMap<>();
+	private Map<Control, Object> dependantControls = new WeakHashMap<>();
+	private Text userField;
+	private Text passwordField;
+	private boolean credentialsDirty;
 
 	public JmcKubernetesPreferenceForm() {
 		super(GRID);
@@ -66,9 +77,9 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 	}
 
 	/**
-	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to
-	 * manipulate various types of preferences. Each field editor knows how to save and restore
-	 * itself.
+	 * Creates the field editors. Field editors are abstractions of the common GUI
+	 * blocks needed to manipulate various types of preferences. Each field editor
+	 * knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
 		BooleanFieldEditor mainEnabler = new BooleanFieldEditor(P_SCAN_FOR_INSTANCES,
@@ -81,8 +92,9 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 		};
 		addField(mainEnabler);
 
-		this.addDependantField(new BooleanFieldEditor(P_SCAN_ALL_CONTEXTS,
-				Messages.JmcKubernetesPreferenceForm_AllContexts, getFieldEditorParent()));
+		BooleanFieldEditor scanContextsEditor = new BooleanFieldEditor(P_SCAN_ALL_CONTEXTS,
+				Messages.JmcKubernetesPreferenceForm_AllContexts, getFieldEditorParent());
+		this.addDependantField(scanContextsEditor, scanContextsEditor.getDescriptionControl(getFieldEditorParent()));
 		this.addTextField(new StringFieldEditor(P_REQUIRE_LABEL, Messages.JmcKubernetesPreferenceForm_RequireLabel,
 				getFieldEditorParent()), Messages.JmcKubernetesPreferenceForm_LabelToolTip);
 		this.addTextField(new StringFieldEditor(P_JOLOKIA_PATH, Messages.JmcKubernetesPreferenceForm_PathLabel,
@@ -91,33 +103,57 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 				getFieldEditorParent()), Messages.JmcKubernetesPreferenceForm_PortTooltip);
 		this.addTextField(new StringFieldEditor(P_JOLOKIA_PROTOCOL, Messages.JmcKubernetesPreferenceForm_ProtocolLabel,
 				getFieldEditorParent()), Messages.JmcKubernetesPreferenceForm_ProtocolTooltip);
-		this.addTextField(new StringFieldEditor(P_USERNAME, Messages.JmcKubernetesPreferenceForm_UsernameLabel,
-				getFieldEditorParent()), Messages.JmcKubernetesPreferenceForm_UsernameTooltip);
-		PasswordFieldEditor passwordField = new PasswordFieldEditor(P_PASSWORD,
-				Messages.JmcKubernetesPreferenceForm_PasswordLabel, getFieldEditorParent());
-		String passwordTooltip = Messages.JmcKubernetesPreferenceForm_PasswordTooltip;
-		passwordField.getTextControl(getFieldEditorParent()).setToolTipText(passwordTooltip);
-		this.addDependantField(passwordField);
+		createCredentialFields();
 		// set initial enablement
 		enableDependantFields(JmcKubernetesPlugin.getDefault().scanForInstances());
 
 	}
 
+	private void createCredentialFields() {
+		Label userLabel = new Label(getFieldEditorParent(), SWT.NONE);
+		userLabel.setText(Messages.JmcKubernetesPreferenceForm_UsernameLabel);
+		userLabel.setLayoutData(new GridData());
+		this.userField = new Text(getFieldEditorParent(), SWT.SINGLE | SWT.BORDER);
+		userField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		userField.setToolTipText(Messages.JmcKubernetesPreferenceForm_UsernameTooltip);
+		this.dependantControls.put(userField, null);
+
+		Label passLabel = new Label(getFieldEditorParent(), SWT.NONE);
+		passLabel.setText(Messages.JmcKubernetesPreferenceForm_PasswordLabel);
+		passLabel.setLayoutData(new GridData());
+		this.passwordField = new Text(getFieldEditorParent(), SWT.PASSWORD | SWT.SINGLE | SWT.BORDER);
+		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		JmcKubernetesPlugin plugin = JmcKubernetesPlugin.getDefault();
+		
+		try {
+			userField.setText(plugin.username());
+			passwordField.setText(plugin.password());
+		} catch (SecurityException e) {
+			plugin.getLogger().log(Level.WARNING, "Could not load kubernetes credentials", e); //$NON-NLS-1$
+		}
+		
+		ModifyListener markCredentials = e -> credentialsDirty = true;
+		this.userField.addModifyListener(markCredentials);
+		this.passwordField.addModifyListener(markCredentials);
+	}
+
 	private void addTextField(StringFieldEditor field, String tooltip) {
-		this.addDependantField(field);
-		field.getTextControl(getFieldEditorParent()).setToolTipText(tooltip);
+		Text textControl = field.getTextControl(getFieldEditorParent());
+		this.addDependantField(field, textControl);
+		textControl.setToolTipText(tooltip);
 		field.getLabelControl(getFieldEditorParent()).setToolTipText(tooltip);
 
 	}
 
-	private void addDependantField(FieldEditor field) {
-		this.dependantControls.put(field, null);
+	private void addDependantField(FieldEditor field, Control control) {
+		this.dependantControls.put(control, null);
 		addField(field);
 	}
 
 	private void enableDependantFields(boolean enabled) {
-		for (FieldEditor field : this.dependantControls.keySet()) {
-			field.setEnabled(enabled, getFieldEditorParent());
+		for (Control field : this.dependantControls.keySet()) {
+			field.setEnabled(enabled);
 		}
 	}
 
@@ -127,6 +163,23 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
+	}
+
+	@Override
+	public boolean performOk() {
+		updateCredentialsIfApplicable();
+		return super.performOk();
+	}
+
+	private void updateCredentialsIfApplicable() {
+		if (this.credentialsDirty) {
+			try {
+				JmcKubernetesPlugin.getDefault().storeCredentials(userField.getText(), passwordField.getText());
+			} catch (SecurityException ex) {
+				JmcKubernetesPlugin.getDefault().getLogger().log(Level.WARNING,
+						"Could not store kubernetes credentials", ex); //$NON-NLS-1$
+			}
+		}
 	}
 
 }

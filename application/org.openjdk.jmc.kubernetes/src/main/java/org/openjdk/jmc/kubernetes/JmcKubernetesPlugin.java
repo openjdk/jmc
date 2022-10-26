@@ -33,9 +33,14 @@
  */
 package org.openjdk.jmc.kubernetes;
 
+import org.eclipse.core.runtime.Platform;
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
 import org.openjdk.jmc.kubernetes.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
+import org.openjdk.jmc.ui.common.security.ICredentials;
+import org.openjdk.jmc.ui.common.security.PersistentCredentials;
+import org.openjdk.jmc.ui.common.security.SecurityException;
+import org.osgi.framework.FrameworkUtil;
 
 public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 		implements KubernetesScanningParameters, PreferenceConstants {
@@ -75,15 +80,30 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 	public String jolokiaPort() {
 		return getPreferenceStore().getString(P_JOLOKIA_PORT);
 	}
+	
+	private ICredentials getScanningCredentials() throws SecurityException {
+		final String key = getPreferenceStore().getString(P_CREDENTIALS_KEY);
+		if (key == null) {
+			String username="", password="";
+			return storeCredentials(username, password);
+		}
+		return new PersistentCredentials(key);
+	}
 
-	@Override
-	public String username() {
-		return getPreferenceStore().getString(P_USERNAME);
+	public ICredentials storeCredentials(String username, String password) throws SecurityException {
+		PersistentCredentials credentials = new PersistentCredentials(username, password, "kubernetes");
+		getPreferenceStore().setValue(P_CREDENTIALS_KEY, credentials.getExportedId());
+		return credentials;
 	}
 
 	@Override
-	public String password() {
-		return getPreferenceStore().getString(P_PASSWORD);
+	public String username() throws SecurityException {
+		return getScanningCredentials().getUsername();
+	}
+
+	@Override
+	public String password() throws SecurityException {
+		return getScanningCredentials().getPassword();
 	}
 
 	@Override
@@ -99,6 +119,12 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 	@Override
 	public String jolokiaProtocol() {
 		return getPreferenceStore().getString(P_JOLOKIA_PROTOCOL);
+	}
+
+	@Override
+	public void logError(String message, Throwable error) {
+		Platform.getLog(FrameworkUtil.getBundle(getClass())).error(message, error);
+		
 	}
 
 }
