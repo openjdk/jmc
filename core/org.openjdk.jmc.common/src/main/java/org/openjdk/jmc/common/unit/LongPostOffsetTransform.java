@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,23 +36,12 @@ package org.openjdk.jmc.common.unit;
  * {@link IScalarAffineTransform} used as the inverse of {@link LongPreOffsetTransform} to avoid
  * losing the precision of the long offset. Otherwise similar to {@link SimpleAffineTransform}.
  */
-public class LongPostOffsetTransform implements IScalarAffineTransform {
-	private final double multiplier;
+public class LongPostOffsetTransform extends ScalarAffineTransform {
 	private final long offset;
 
 	public LongPostOffsetTransform(double multiplier, long offset) {
-		this.multiplier = multiplier;
+		super(false, false, offset, multiplier);
 		this.offset = offset;
-	}
-
-	@Override
-	public double getOffset() {
-		return offset;
-	}
-
-	@Override
-	public double getMultiplier() {
-		return multiplier;
 	}
 
 	@Override
@@ -133,16 +122,6 @@ public class LongPostOffsetTransform implements IScalarAffineTransform {
 	@Override
 	public IScalarAffineTransform invert() {
 		return new LongPreOffsetTransform(-offset, 1.0 / multiplier);
-	}
-
-	@Override
-	public boolean isUnity() {
-		return false;
-	}
-
-	@Override
-	public boolean isInteger() {
-		return false;
 	}
 
 	@Override

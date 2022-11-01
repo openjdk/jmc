@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,23 +39,12 @@ import org.openjdk.jmc.common.unit.ScalarQuantity.LongStored;
  * multiplier. This is typically used to reduce cancellation errors when the offset is larger than
  * can be accurately represented in a double.
  */
-public class LongPreOffsetTransform implements IScalarAffineTransform {
+public class LongPreOffsetTransform extends ScalarAffineTransform {
 	final long preOffset;
-	private final double multiplier;
 
 	public LongPreOffsetTransform(long preOffset, double multiplier) {
+		super(false, false, preOffset * multiplier, multiplier);
 		this.preOffset = preOffset;
-		this.multiplier = multiplier;
-	}
-
-	@Override
-	public double getOffset() {
-		return preOffset * multiplier;
-	}
-
-	@Override
-	public double getMultiplier() {
-		return multiplier;
 	}
 
 	@Override
@@ -138,16 +127,6 @@ public class LongPreOffsetTransform implements IScalarAffineTransform {
 	@Override
 	public IScalarAffineTransform invert() {
 		return new LongPostOffsetTransform(1.0 / multiplier, -preOffset);
-	}
-
-	@Override
-	public boolean isUnity() {
-		return false;
-	}
-
-	@Override
-	public boolean isInteger() {
-		return false;
 	}
 
 	@Override

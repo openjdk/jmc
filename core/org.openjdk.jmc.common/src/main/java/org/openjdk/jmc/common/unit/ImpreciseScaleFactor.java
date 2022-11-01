@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,6 +40,7 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 	private final double numberFactor;
 
 	public ImpreciseScaleFactor(double factor) {
+		super(false, false, factor);
 		numberFactor = factor;
 	}
 
@@ -116,18 +117,6 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 	}
 
 	@Override
-	public boolean isUnity() {
-		// NOTE: Since we're imprecise, we cannot return true.
-		return false;
-	}
-
-	@Override
-	public boolean isInteger() {
-		// NOTE: Since we're imprecise, we cannot return true (yet).
-		return false;
-	}
-
-	@Override
 	public boolean equals(Object other) {
 		return (other instanceof ImpreciseScaleFactor)
 				&& Double.compare(numberFactor, ((ImpreciseScaleFactor) other).numberFactor) == 0;
@@ -141,10 +130,5 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 	@Override
 	public String toString() {
 		return Double.toString(numberFactor);
-	}
-
-	@Override
-	public double getMultiplier() {
-		return numberFactor;
 	}
 }

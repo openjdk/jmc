@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,7 +43,16 @@ import org.openjdk.jmc.common.unit.ScalarQuantity.LongStored;
  */
 // FIXME: Find better method names.
 // FIXME: Is it possible (or desirable) to extend Number?
-public abstract class ScaleFactor implements IScalarAffineTransform, Comparable<ScaleFactor> {
+public abstract class ScaleFactor extends ScalarAffineTransform implements Comparable<ScaleFactor> {
+
+	protected ScaleFactor(boolean isInteger, boolean isUnity, double offset, double multiplier) {
+		super(isInteger, isUnity, offset, multiplier);
+	}
+
+	protected ScaleFactor(boolean isInteger, boolean isUnity, double multiplier) {
+		this(isInteger, isUnity, 0, multiplier);
+	}
+
 	@Override
 	public final IScalarAffineTransform concat(IScalarAffineTransform innerTransform) {
 		// FIXME: Let subclasses do this, not very common case.
@@ -94,11 +103,6 @@ public abstract class ScaleFactor implements IScalarAffineTransform, Comparable<
 
 	@Override
 	public abstract ScaleFactor invert();
-
-	@Override
-	public final double getOffset() {
-		return 0;
-	}
 
 	@Override
 	public double targetFloor(double srcNumericalValue) {

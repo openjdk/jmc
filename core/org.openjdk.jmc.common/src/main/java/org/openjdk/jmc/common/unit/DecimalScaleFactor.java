@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -241,12 +241,8 @@ public class DecimalScaleFactor extends ScaleFactor {
 	}
 
 	public DecimalScaleFactor(int powerOf10) {
+		super(powerOf10 >= 0, powerOf10 == 0, 0, Math.pow(10.0, powerOf10));
 		this.powerOf10 = powerOf10;
-	}
-
-	@Override
-	public double getMultiplier() {
-		return Math.pow(10.0, powerOf10);
 	}
 
 	public StringBuilder asExponentialStringBuilder(boolean multiplicationSign) {
@@ -305,16 +301,6 @@ public class DecimalScaleFactor extends ScaleFactor {
 	@Override
 	public double targetValue(double srcNumericalValue) {
 		return powerOf10 < 0 ? srcNumericalValue / Math.pow(10.0, -powerOf10) : srcNumericalValue * getMultiplier();
-	}
-
-	@Override
-	public boolean isUnity() {
-		return (powerOf10 == 0);
-	}
-
-	@Override
-	public boolean isInteger() {
-		return (powerOf10 >= 0);
 	}
 
 	@Override

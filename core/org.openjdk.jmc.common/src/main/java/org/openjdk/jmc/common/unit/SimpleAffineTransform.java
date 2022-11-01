@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,10 +32,8 @@
  */
 package org.openjdk.jmc.common.unit;
 
-public class SimpleAffineTransform implements IScalarAffineTransform {
+public class SimpleAffineTransform extends ScalarAffineTransform {
 	private static final long DOUBLE_EXACT_LIMIT = 1L >> 52;
-	private final double multiplier;
-	private final double offset;
 
 	public static IScalarAffineTransform createWithPostOffset(double multiplier, Number offset) {
 		if ((offset instanceof Long) && (offset.longValue() >= DOUBLE_EXACT_LIMIT)) {
@@ -59,18 +57,7 @@ public class SimpleAffineTransform implements IScalarAffineTransform {
 	}
 
 	public SimpleAffineTransform(double multiplier, double offset) {
-		this.multiplier = multiplier;
-		this.offset = offset;
-	}
-
-	@Override
-	public double getOffset() {
-		return offset;
-	}
-
-	@Override
-	public double getMultiplier() {
-		return multiplier;
+		super(false, false, offset, multiplier);
 	}
 
 	@Override
@@ -146,16 +133,6 @@ public class SimpleAffineTransform implements IScalarAffineTransform {
 	@Override
 	public IScalarAffineTransform invert() {
 		return new SimpleAffineTransform(1.0 / multiplier, -offset / multiplier);
-	}
-
-	@Override
-	public boolean isUnity() {
-		return false;
-	}
-
-	@Override
-	public boolean isInteger() {
-		return false;
 	}
 
 	@Override

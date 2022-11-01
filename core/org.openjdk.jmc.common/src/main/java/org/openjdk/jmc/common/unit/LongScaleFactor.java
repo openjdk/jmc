@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,7 @@ public class LongScaleFactor extends ScaleFactor {
 	private final long longMultiplier;
 
 	public LongScaleFactor(long factor) {
+		super(true, factor == 1L, factor);
 		longMultiplier = factor;
 	}
 
@@ -113,16 +114,6 @@ public class LongScaleFactor extends ScaleFactor {
 	}
 
 	@Override
-	public boolean isUnity() {
-		return (longMultiplier == 1L);
-	}
-
-	@Override
-	public boolean isInteger() {
-		return true;
-	}
-
-	@Override
 	public boolean equals(Object other) {
 		return (other instanceof LongScaleFactor) && (longMultiplier == ((LongScaleFactor) other).longMultiplier);
 	}
@@ -136,10 +127,5 @@ public class LongScaleFactor extends ScaleFactor {
 	@Override
 	public String toString() {
 		return String.valueOf(longMultiplier);
-	}
-
-	@Override
-	public double getMultiplier() {
-		return longMultiplier;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -199,12 +199,8 @@ public class BinaryScaleFactor extends ScaleFactor {
 	}
 
 	private BinaryScaleFactor(int powerOf2) {
+		super(powerOf2 >= 0, powerOf2 == 0, 0, Math.scalb(1.0, powerOf2));
 		this.powerOf2 = powerOf2;
-	}
-
-	@Override
-	public double getMultiplier() {
-		return Math.scalb(1.0, powerOf2);
 	}
 
 	public StringBuilder asExponentialStringBuilder(boolean multiplicationSign) {
@@ -257,16 +253,6 @@ public class BinaryScaleFactor extends ScaleFactor {
 	@Override
 	public double targetValue(double srcNumericalValue) {
 		return Math.scalb(srcNumericalValue, powerOf2);
-	}
-
-	@Override
-	public boolean isUnity() {
-		return (powerOf2 == 0);
-	}
-
-	@Override
-	public boolean isInteger() {
-		return (powerOf2 >= 0);
 	}
 
 	@Override
