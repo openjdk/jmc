@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -34,14 +34,10 @@
 
 package org.openjdk.jmc.flightrecorder.ext.jfx.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.RunnableFuture;
 
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.test.TestToolkit;
-import org.openjdk.jmc.common.test.io.IOResource;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -51,6 +47,10 @@ import org.openjdk.jmc.flightrecorder.ext.jfx.JfxPulseDurationRule;
 import org.openjdk.jmc.flightrecorder.ext.jfx.Messages;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.TypedResult;
+import org.openjdk.jmc.test.TestToolkit;
+import org.openjdk.jmc.test.io.IOResource;
+
+import static org.junit.Assert.assertEquals;
 
 public class JfxPulseDurationRuleTest {
 
@@ -95,5 +95,4 @@ public class JfxPulseDurationRuleTest {
 		assertEquals(WARNING_SHORT, result.getSummary());
 		assertEquals(WARNING_LONG, result.getExplanation());
 	}
-
 }

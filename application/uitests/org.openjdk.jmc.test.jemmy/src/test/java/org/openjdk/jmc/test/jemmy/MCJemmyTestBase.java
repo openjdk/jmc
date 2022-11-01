@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -40,14 +40,13 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
-
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.common.test.TestToolkit;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.rjmx.servermodel.IServerModel;
+import org.openjdk.jmc.test.TestToolkit;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.helpers.ConnectionHelper;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
@@ -230,7 +229,7 @@ public abstract class MCJemmyTestBase {
 	/**
 	 * Creates a ConnectionHandle for the specified connection, {@code null} if no connection could
 	 * be made
-	 * 
+	 *
 	 * @param connectionName
 	 *            the name of the connection
 	 * @return a {@link IConnectionHandle}. {@code null} if no connection could be made
@@ -267,5 +266,4 @@ public abstract class MCJemmyTestBase {
 			return new File(System.getProperty("user.dir"));
 		}
 	}
-
 }
