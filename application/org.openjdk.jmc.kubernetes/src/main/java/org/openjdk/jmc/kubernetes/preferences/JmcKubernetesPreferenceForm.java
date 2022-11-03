@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.openjdk.jmc.kubernetes.JmcKubernetesPlugin;
+import org.openjdk.jmc.ui.common.security.CredentialsNotAvailableException;
 import org.openjdk.jmc.ui.common.security.SecurityException;
 
 /**
@@ -123,16 +124,18 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 		passLabel.setLayoutData(new GridData());
 		this.passwordField = new Text(getFieldEditorParent(), SWT.PASSWORD | SWT.SINGLE | SWT.BORDER);
 		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		JmcKubernetesPlugin plugin = JmcKubernetesPlugin.getDefault();
-		
+
 		try {
 			userField.setText(plugin.username());
 			passwordField.setText(plugin.password());
+		} catch (CredentialsNotAvailableException ignore) {
+			// ignore if credentials are not stored
 		} catch (SecurityException e) {
 			plugin.getLogger().log(Level.WARNING, "Could not load kubernetes credentials", e); //$NON-NLS-1$
 		}
-		
+
 		ModifyListener markCredentials = e -> credentialsDirty = true;
 		this.userField.addModifyListener(markCredentials);
 		this.passwordField.addModifyListener(markCredentials);
