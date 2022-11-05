@@ -76,9 +76,11 @@ import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
 import io.fabric8.kubernetes.client.internal.KubeConfigUtils;
 import io.fabric8.kubernetes.client.utils.Utils;
+
 /**
- * This class attempts to connect to JVMs in pods running in kubernetes in a background thread.
- * Enablement and parameters for the scanning is given by user preferences.
+ * This class attempts to connect to JVMs in pods running in kubernetes in a
+ * background thread. Enablement and parameters for the scanning is given by
+ * user preferences.
  */
 public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvider {
 
@@ -87,15 +89,15 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private final static Pattern ATTRIBUTE_PATTERN = Pattern
 			.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
 	private final static Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	KubernetesScanningParameters settings;
-	
+
 	public KubernetesDiscoveryListener() {
 		this(JmcKubernetesPlugin.getDefault());
 	}
-	
-	KubernetesDiscoveryListener(KubernetesScanningParameters parameters){
-		this.settings=parameters;
+
+	KubernetesDiscoveryListener(KubernetesScanningParameters parameters) {
+		this.settings = parameters;
 	}
 
 	public final String getDescription() {
@@ -118,11 +120,13 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		final String path = Utils.getSystemPropertyOrEnvVar(Config.KUBERNETES_KUBECONFIG_FILE,
 				new File(System.getProperty("user.home"), ".kube" + File.separator + "config").toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		File configPath = new File(path);
-		if (contexts != null && contextsCached > configPath.lastModified()) {// the YAML parsing is soo incredibly sloow, hence cache context names for later
+		if (contexts != null && contextsCached > configPath.lastModified()) {// the YAML parsing is soo incredibly
+																				// sloow, hence cache context names for
+																				// later
 			// runs
 			return contexts;
 		}
-		//reload config if kubeconfig has been modified since we cached the config
+		// reload config if kubeconfig has been modified since we cached the config
 		io.fabric8.kubernetes.api.model.Config config = KubeConfigUtils.parseConfig(configPath);
 		this.contextsCached = System.currentTimeMillis();
 		KubernetesJmxConnector.resetKubernetesConfig();
@@ -157,8 +161,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return found;
 	}
 
-	private Map<String, ServerConnectionDescriptor> scanContext(
-		Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters, String context) {
+	private Map<String, ServerConnectionDescriptor> scanContext(Map<String, ServerConnectionDescriptor> found,
+			KubernetesScanningParameters parameters, String context) {
 		try {
 			scanContextUnsafe(found, parameters, context);
 		} catch (Exception e) {
@@ -167,8 +171,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return found;
 	}
 
-	private Map<String, ServerConnectionDescriptor> scanContextUnsafe(
-		Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters, String context) {
+	private Map<String, ServerConnectionDescriptor> scanContextUnsafe(Map<String, ServerConnectionDescriptor> found,
+			KubernetesScanningParameters parameters, String context) {
 		String pathLabel = parameters.requireLabel();
 		KubernetesClient client = KubernetesJmxConnector.getApiClient(context);
 
@@ -187,9 +191,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return found;
 	}
 
-	private void scanPod(
-		Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters, String context,
-		KubernetesClient client, Pod pod) {
+	private void scanPod(Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters,
+			String context, KubernetesClient client, Pod pod) {
 
 		final ObjectMeta metadata = pod.getMetadata();
 		HashMap<String, String> headers = new HashMap<>();
@@ -202,9 +205,10 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 				authorize(headers, client, parameters.username(), parameters.password(), metadata.getNamespace(), env);
 			}
 		} catch (SecurityException e) {
-			//skipping authorization if anything fails
+			// skipping authorization if anything fails
 		}
-		final StringBuilder url = new StringBuilder(metadata.getSelfLink());
+		final StringBuilder url = new StringBuilder("/api/").append(pod.getApiVersion()).append("/namespaces/")
+				.append(metadata.getNamespace()).append("/pods/");
 		// JMX url must be reverse constructed, so that we can connect from the
 		// resulting node in the JVM browser
 		final StringBuilder jmxUrl = new StringBuilder("service:jmx:kubernetes:///").append(metadata.getNamespace()) //$NON-NLS-1$
@@ -218,11 +222,12 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 						+ Messages.KubernetesDiscoveryListener_HttpOrHttps);
 			}
 			// a bit clumsy, need to inject protocol _before_ podname in selflink
-			url.insert(url.lastIndexOf(podName), protocol + ":"); //$NON-NLS-1$
+			url.append(protocol).append(':');
 			jmxUrl.append(protocol).append(':');
 		}
 
 		jmxUrl.append(podName);
+		url.append(podName);
 
 		final String port = getValueOrAttribute(parameters.jolokiaPort(), metadata);
 		if (port != null) {
@@ -273,9 +278,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return null;
 	}
 
-	private void authorize(
-		HashMap<String, String> headers, KubernetesClient client, String username, String password, String namespace,
-		Map<String, Object> jmxEnv) {
+	private void authorize(HashMap<String, String> headers, KubernetesClient client, String username, String password,
+			String namespace, Map<String, Object> jmxEnv) {
 
 		final Matcher userNameMatcher = SECRET_PATTERN.matcher(username);
 		String secretName = null;
@@ -296,11 +300,11 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 
 		headers.put(AuthorizationHeaderParser.JOLOKIA_ALTERNATE_AUTHORIZATION_HEADER,
 				"Basic " + Base64Util.encode((username + ":" + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
-		jmxEnv.put(JMXConnector.CREDENTIALS, new String[] {username, password});
+		jmxEnv.put(JMXConnector.CREDENTIALS, new String[] { username, password });
 
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, String> findSecret(KubernetesClient client, String namespace, String secretName) {
 
 		for (Secret secret : client.secrets().inNamespace(namespace).list().getItems()) {
