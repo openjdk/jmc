@@ -64,7 +64,7 @@ public class SimpleAffineTransform implements IScalarAffineTransform {
 	}
 
 	@Override
-	public Number getOffset() {
+	public double getOffset() {
 		return offset;
 	}
 
@@ -161,7 +161,7 @@ public class SimpleAffineTransform implements IScalarAffineTransform {
 	@Override
 	public IScalarAffineTransform concat(IScalarAffineTransform innerTransform) {
 		return SimpleAffineTransform.createWithPostOffset(multiplier * innerTransform.getMultiplier(),
-				targetNumber(innerTransform.getOffset()));
+				targetValue(innerTransform.getOffset()));
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class SimpleAffineTransform implements IScalarAffineTransform {
 			return DecimalScaleFactor.get(0);
 		}
 		double invertedMultiplier = 1.0 / multiplier;
-		double otherOffset = innerTransform.getOffset().doubleValue();
+		double otherOffset = innerTransform.getOffset();
 		return new SimpleAffineTransform(innerTransform.getMultiplier() * invertedMultiplier,
 				(otherOffset - offset) * invertedMultiplier);
 	}
