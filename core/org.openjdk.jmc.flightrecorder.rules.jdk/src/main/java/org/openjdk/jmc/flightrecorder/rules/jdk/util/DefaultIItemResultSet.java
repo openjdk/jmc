@@ -62,7 +62,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 	private final Map<String, ColumnInfo> info;
 	private final ArrayList<Object[]> data = new ArrayList<>();
 	private int cursor = -1;
-	private ExecutorService exec;
+	private final ExecutorService exec;
 
 	DefaultIItemResultSet(IItemCollection items, IItemQuery query, int configuredTimeout) {
 		this.query = query;
@@ -81,7 +81,6 @@ final class DefaultIItemResultSet implements IItemResultSet {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void calculateData(IItemCollection input, int configuredTimeout) throws InterruptedException {
 		input = input.apply(query.getFilter());
-		final IItemCollection newInput = input;
 		if (query.getGroupBy() == null) {
 			for (IItemIterable iterable : input) {
 				IType<IItem> type = iterable.getType();
@@ -104,6 +103,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 			}
 		} else {
 			IAggregator<?, ?> aggregator = Aggregators.distinct(query.getGroupBy());
+			final IItemCollection newInput = input;
 			Set<?> aggregate = input.getAggregate((IAggregator<Set<?>, ?>) aggregator);
 			if (aggregate != null) {
 				try {
@@ -141,8 +141,6 @@ final class DefaultIItemResultSet implements IItemResultSet {
 						Thread.currentThread().interrupt();
 					}
 				}
-				if (Thread.currentThread().isInterrupted())
-					return;
 			}
 		}
 	}
