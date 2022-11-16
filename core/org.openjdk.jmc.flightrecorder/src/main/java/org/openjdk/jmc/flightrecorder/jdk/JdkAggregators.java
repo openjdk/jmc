@@ -177,7 +177,7 @@ public final class JdkAggregators {
 			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
 	public static final IAggregator<IQuantity, ?> YOUNG_GENERATION_MAX_SIZE = min(
 			JdkAttributes.YOUNG_GENERATION_MAX_SIZE.getName(), null, GC_CONF_YOUNG_GENERATION,
-			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
+			JdkAttributes.YOUNG_GENERATION_MAX_SIZE);
 	public static final IAggregator<IQuantity, ?> NEW_RATIO_MIN = min(NEW_RATIO.getName(), null,
 			GC_CONF_YOUNG_GENERATION, NEW_RATIO);
 	public static final IAggregator<IQuantity, ?> TENURING_THRESHOLD_INITIAL_MIN = min(
