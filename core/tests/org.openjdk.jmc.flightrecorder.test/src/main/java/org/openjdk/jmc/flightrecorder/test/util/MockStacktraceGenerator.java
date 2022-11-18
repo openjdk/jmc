@@ -68,6 +68,16 @@ public class MockStacktraceGenerator {
 			return truncationState;
 		}
 
+		@Override
+		public IMCStackTrace tail() {
+			return tail(1);
+		}
+
+		@Override
+		public IMCStackTrace tail(int framesToRemove) {
+			return new MockStackTrace(frames.subList(framesToRemove, frames.size()), truncationState);
+		}
+
 	}
 
 	private static class MockFrame implements IMCFrame {

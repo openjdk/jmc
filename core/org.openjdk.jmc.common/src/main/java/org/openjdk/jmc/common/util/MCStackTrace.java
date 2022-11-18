@@ -33,6 +33,7 @@
 package org.openjdk.jmc.common.util;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -55,9 +56,13 @@ public class MCStackTrace implements IMCStackTrace {
 	 *            the stack trace truncation state
 	 */
 	public MCStackTrace(List<IMCFrame> frames, TruncationState truncationState) {
+		this(frames, truncationState, calcMethodHash(frames, truncationState));
+	}
+
+	private MCStackTrace(List<IMCFrame> frames, TruncationState truncationState, int hashCode) {
 		this.frames = frames;
 		this.truncationState = truncationState;
-		hashCode = calcMethodHash();
+		this.hashCode = hashCode;
 	}
 
 	@Override
@@ -86,8 +91,56 @@ public class MCStackTrace implements IMCStackTrace {
 		return false;
 	}
 
-	private int calcMethodHash() {
+	@Override
+	public IMCStackTrace tail() {
+		if (frames.isEmpty()) {
+			throw new NoSuchElementException("stack trace is empty");
+		}
+		// polynomial hashcodes allow removal of additive terms,
+		// which saves recomputing the hash of the rest of the stacktrace
+		int constant = getHashCoefficient(frames.size() + 1);
+		int power = getHashCoefficient(frames.size());
+		int hash = hashCode - frames.get(0).hashCode() * power - constant + power;
+		return new MCStackTrace(frames.subList(1, frames.size()), truncationState, hash);
+	}
+
+	@Override
+	public IMCStackTrace tail(int framesToRemove) {
+		if (frames.size() < framesToRemove) {
+			throw new NoSuchElementException("stack trace has less than " + framesToRemove + " frames");
+		}
+
+		int hash = hashCode;
+		int constant = getHashCoefficient(frames.size() + 1);
+		for (int i = 0; i < framesToRemove; i++) {
+			int power = getHashCoefficient(frames.size() - i);
+			hash = hash - frames.get(i).hashCode() * power - constant + power;
+			constant = power;
+		}
+
+		return new MCStackTrace(frames.subList(framesToRemove, frames.size()), truncationState, hash);
+	}
+
+	private static int calcMethodHash(List<IMCFrame> frames, TruncationState truncationState) {
 		return truncationState.hashCode() + 31 * frames.hashCode();
 	}
 
+	private static int getHashCoefficient(int listSize) {
+		if (listSize >= HASH_POWERS.length) {
+			int power = HASH_POWERS[HASH_POWERS.length - 1];
+			for (int i = HASH_POWERS.length - 1; i < listSize; i++) {
+				power *= 31;
+			}
+			return power;
+		}
+		return HASH_POWERS[listSize];
+	}
+
+	private static final int[] HASH_POWERS = new int[257];
+	static {
+		for (int hash = 1, power = 0; power < HASH_POWERS.length; power++) {
+			HASH_POWERS[power] = hash;
+			hash *= 31;
+		}
+	}
 }

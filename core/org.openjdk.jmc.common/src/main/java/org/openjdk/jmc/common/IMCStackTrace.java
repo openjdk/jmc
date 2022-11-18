@@ -33,6 +33,7 @@
 package org.openjdk.jmc.common;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Interface for classes that represents stack traces in Mission Control.
@@ -106,4 +107,22 @@ public interface IMCStackTrace {
 	 * @return the truncation state
 	 */
 	TruncationState getTruncationState();
+
+	/**
+	 * Produces a new stack trace with the top frame (the head) removed.
+	 *
+	 * @return a new stack trace, sharing the underlying frames.
+	 * @throws NoSuchElementException
+	 *             if the stack trace is empty.
+	 */
+	IMCStackTrace tail();
+
+	/**
+	 * Produces a new stack trace with the specified number of frames removed from the top.
+	 *
+	 * @return a new stack trace, sharing the underlying frames.
+	 * @throws NoSuchElementException
+	 *             if the stack trace does not have enough capacity
+	 */
+	IMCStackTrace tail(int framesToRemove);
 }

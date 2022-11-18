@@ -36,6 +36,7 @@ import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -720,6 +721,7 @@ class StructTypes {
 		public Object truncated;
 
 		private boolean isParsed = false;
+		private int offset = 0;
 
 		@SuppressWarnings("unchecked")
 		@Override
@@ -729,13 +731,34 @@ class StructTypes {
 				l = Arrays.asList((Object[]) l);
 				frames = l;
 			}
-			return (List<? extends IMCFrame>) l;
+			List<? extends IMCFrame> framesList = (List<? extends IMCFrame>) l;
+			return offset == 0 ? framesList : framesList.subList(offset, framesList.size());
 		}
 
 		@Override
 		public TruncationState getTruncationState() {
 			return truncated == null ? TruncationState.UNKNOWN : (((Boolean) truncated).booleanValue()
 					? TruncationState.TRUNCATED : TruncationState.NOT_TRUNCATED);
+		}
+
+		@Override
+		public IMCStackTrace tail() {
+			return tail(1);
+		}
+
+		@Override
+		public IMCStackTrace tail(int framesToRemove) {
+			ensureParsed();
+			int size = (frames instanceof List) ? ((List<?>) frames).size() : ((Object[]) frames).length;
+			if (framesToRemove > size) {
+				throw new NoSuchElementException("cannot remove " + framesToRemove + " from " + size);
+			}
+			JfrStackTrace stackTrace = new JfrStackTrace();
+			stackTrace.isParsed = isParsed;
+			stackTrace.truncated = truncated;
+			stackTrace.frames = frames;
+			stackTrace.offset = framesToRemove;
+			return stackTrace;
 		}
 
 		@Override
