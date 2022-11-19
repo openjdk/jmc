@@ -47,6 +47,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.TypeStructure;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 
+@SuppressWarnings("restriction")
 class TypeStructureBuilderImplTest {
 	private static final String FIELD_NAME = "field";
 	private static final String CUSTOM_TYPE_NAME = "test.Type";

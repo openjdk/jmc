@@ -15,5 +15,5 @@
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="org.openjdk.jmc.util.releasenotes"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-IN notes.xml -XSL stylesheet.xsl -OUT new_and_noteworthy.html"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.openjdk.jmc.util.releasenotes"/>
-    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:org.openjdk.jmc.util.releasenotes/notes/8.2}"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:org.openjdk.jmc.util.releasenotes/notes/8.3}"/>
 </launchConfiguration>

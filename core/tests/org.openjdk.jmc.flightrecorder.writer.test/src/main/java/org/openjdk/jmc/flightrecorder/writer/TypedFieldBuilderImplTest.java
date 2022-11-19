@@ -47,6 +47,7 @@ import org.mockito.Mockito;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class TypedFieldBuilderImplTest {
 	private static final String FIELD_NAME = "field";
 	private static final String CUSTOM_TYPE_NAME = "test.Type";

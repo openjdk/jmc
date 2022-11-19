@@ -86,11 +86,7 @@ public class BinaryScaleFactor extends ScaleFactor {
 				return get(powerOf2 + ((BinaryScaleFactor) innerFactor).powerOf2);
 			}
 			long longMultiplier = 1L << powerOf2;
-			Number multiplier = innerFactor.targetNumber(longMultiplier);
-			if (multiplier instanceof Long) {
-				return new LongScaleFactor(multiplier.longValue());
-			}
-			return new ImpreciseScaleFactor(multiplier);
+			return innerFactor.scale(longMultiplier);
 		}
 
 		@Override

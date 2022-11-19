@@ -134,7 +134,7 @@ public class StacktraceModel {
 		} else if (obj instanceof StacktraceModel) {
 			StacktraceModel other = (StacktraceModel) obj;
 			return threadRootAtTop == other.threadRootAtTop && frameSeparator.equals(other.frameSeparator)
-					&& items.equals(other.items);
+					&& items.equals(other.items) && Objects.equals(attribute, other.attribute);
 		}
 		return false;
 	}
@@ -161,6 +161,7 @@ public class StacktraceModel {
 
 	static IMemberAccessor<IQuantity, IItem> getAccessor(SimpleArray<IItem> items, IAttribute<IQuantity> attribute) {
 		if (items.size() > 0 && attribute != null) {
+			@SuppressWarnings("unchecked")
 			IType<IItem> type = (IType<IItem>) items.get(0).getType();
 			return type.getAccessor(attribute.getKey());
 		}

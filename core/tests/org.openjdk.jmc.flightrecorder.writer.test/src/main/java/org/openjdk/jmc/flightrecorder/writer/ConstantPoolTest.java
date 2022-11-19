@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
+@SuppressWarnings("restriction")
 class ConstantPoolTest {
 	private ConstantPool instance;
 

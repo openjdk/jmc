@@ -336,11 +336,6 @@ public final class StacktraceGraphModel {
 		return keptNodes.isEmpty() || keptNodes.contains(frame);
 	}
 
-	private Node getOrCreateNode(IMCFrame frame) {
-		AggregatableFrame aframe = new AggregatableFrame(frameSeparator, frame);
-		return getOrCreateNode(aframe);
-	}
-
 	private Node getOrCreateNode(AggregatableFrame frame) {
 		Node n = nodes.get(frame);
 		if (n == null) {
