@@ -4158,4 +4158,245 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <summary>No revocation of biased locks found.</summary>
         </rule>
     </report>
+    <report>
+        <file>jdk18-finalizers.jfr</file>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Information</severity>
+            <summary>26.5 ×10⁶ finalizers were run.</summary>
+            <explanation>Finalization can lead to performance issues, deadlocks, or hangs, and has been marked for removal in a future Java version. The following finalizable classes have been detected: &lt;ul&gt;&lt;li&gt;my_package.Main$MyFinalizableObject&lt;/li&gt;&lt;/ul&gt;</explanation>
+            <solution>Remove finalize method implementations from your application, and consider making use of the [Cleaner API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/Cleaner.html) instead.</solution>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with stack traces were recorded.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+    </report>
 </reportcollection>
