@@ -110,6 +110,10 @@
             <summary>There are no file write events in this recording.</summary>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -408,6 +412,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>There are no file write events in this recording.</summary>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -670,6 +678,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -938,6 +950,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -1187,6 +1203,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1447,6 +1467,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1701,6 +1725,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1983,6 +2011,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -2274,6 +2306,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
         </rule>
+         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FlightRecordingSupport</id>
             <severity>Warning</severity>
@@ -2552,6 +2588,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -2860,6 +2900,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>No long file write pauses were found in this recording (the longest was 172.408 ms).</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -3172,6 +3216,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>Warning</severity>
             <summary>The recording is from an early access build.</summary>
@@ -3417,6 +3465,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3654,6 +3706,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3915,6 +3971,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
         </rule>
         <rule>
             <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
