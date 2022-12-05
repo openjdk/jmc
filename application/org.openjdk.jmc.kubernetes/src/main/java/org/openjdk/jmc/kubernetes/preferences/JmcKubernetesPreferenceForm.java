@@ -178,6 +178,7 @@ public class JmcKubernetesPreferenceForm extends FieldEditorPreferencePage
 		if (this.credentialsDirty) {
 			try {
 				JmcKubernetesPlugin.getDefault().storeCredentials(userField.getText(), passwordField.getText());
+				this.credentialsDirty=false;
 			} catch (SecurityException ex) {
 				JmcKubernetesPlugin.getDefault().getLogger().log(Level.WARNING,
 						"Could not store kubernetes credentials", ex); //$NON-NLS-1$

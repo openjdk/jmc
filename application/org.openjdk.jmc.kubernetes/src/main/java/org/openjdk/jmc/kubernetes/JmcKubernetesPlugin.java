@@ -40,6 +40,9 @@ import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 import org.openjdk.jmc.ui.common.security.ICredentials;
 import org.openjdk.jmc.ui.common.security.PersistentCredentials;
 import org.openjdk.jmc.ui.common.security.SecurityException;
+import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
+import org.openjdk.jmc.ui.misc.DisplayToolkit;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 public class JmcKubernetesPlugin extends MCAbstractUIPlugin
@@ -65,10 +68,26 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 		return plugin;
 	}
 
+	private void ensureNeededCredentialsAreUnlocked() {
+		if (getScanningCredentials() != null && SecurityManagerFactory.getSecurityManager().isLocked()) {
+			DisplayToolkit.safeAsyncExec(() -> {
+				try {
+					SecurityManagerFactory.getSecurityManager().unlock();
+				} catch (SecurityException e) {
+					logError("Error unlocking credentials needed for kubernetes scanning", e);//$NON-NLS-1$
+				}
+			});
+		}
+	}
 
 	@Override
 	public boolean scanForInstances() {
-		return getPreferenceStore().getBoolean(P_SCAN_FOR_INSTANCES);
+		// If credentials are locked and credentials are required, the scanner thread
+		// will get hung
+		// therefore await credentials store to be unlocked before proceeding to scan
+		return getPreferenceStore().getBoolean(P_SCAN_FOR_INSTANCES)
+				&& (getScanningCredentials() == null || !SecurityManagerFactory.getSecurityManager().isLocked());
+
 	}
 
 	@Override
@@ -80,30 +99,36 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 	public String jolokiaPort() {
 		return getPreferenceStore().getString(P_JOLOKIA_PORT);
 	}
-	
-	private ICredentials getScanningCredentials() throws SecurityException {
-		final String key = getPreferenceStore().getString(P_CREDENTIALS_KEY);
-		if (key == null) {
-			String username="", password="";
-			return storeCredentials(username, password);
-		}
-		return new PersistentCredentials(key);
+
+	private PersistentCredentials getScanningCredentials() {
+		String key = getPreferenceStore().getString(P_CREDENTIALS_KEY);
+		return key == null ? null : new PersistentCredentials(key);
 	}
 
 	public ICredentials storeCredentials(String username, String password) throws SecurityException {
-		PersistentCredentials credentials = new PersistentCredentials(username, password, "kubernetes");
+		PersistentCredentials credentials = new PersistentCredentials(username, password, "kubernetes");//$NON-NLS-1$
 		getPreferenceStore().setValue(P_CREDENTIALS_KEY, credentials.getExportedId());
 		return credentials;
 	}
 
 	@Override
 	public String username() throws SecurityException {
-		return getScanningCredentials().getUsername();
+		final PersistentCredentials cred = getScanningCredentials();
+		if (cred == null) {
+			return "";//$NON-NLS-1$
+		} else {
+			return cred.getUsername();
+		}
 	}
 
 	@Override
 	public String password() throws SecurityException {
-		return getScanningCredentials().getPassword();
+		final PersistentCredentials cred = getScanningCredentials();
+		if (cred == null) {
+			return "";//$NON-NLS-1$
+		} else {
+			return cred.getPassword();
+		}
 	}
 
 	@Override
@@ -124,7 +149,12 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 	@Override
 	public void logError(String message, Throwable error) {
 		Platform.getLog(FrameworkUtil.getBundle(getClass())).error(message, error);
-		
+	}
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		this.ensureNeededCredentialsAreUnlocked();
 	}
 
 }
