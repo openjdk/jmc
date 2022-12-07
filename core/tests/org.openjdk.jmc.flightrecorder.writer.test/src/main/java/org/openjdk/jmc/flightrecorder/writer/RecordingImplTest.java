@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -105,7 +105,7 @@ class RecordingImplTest {
 
 	@Test
 	void registerEventTypeNullName() {
-		assertThrows(IllegalArgumentException.class, () -> recording.registerEventType(null));
+		assertThrows(IllegalArgumentException.class, () -> recording.registerEventType((String) null));
 	}
 
 	@Test

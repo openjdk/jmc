@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,8 @@ import org.openjdk.jmc.flightrecorder.writer.TypesImpl;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import jdk.jfr.Event;
+
 public abstract class Recording implements AutoCloseable {
 	public abstract RecordingImpl rotateChunk();
 
@@ -53,6 +55,8 @@ public abstract class Recording implements AutoCloseable {
 	 */
 	public abstract RecordingImpl writeEvent(TypedValue event);
 
+	public abstract RecordingImpl writeEvent(Event event);
+
 	/**
 	 * Try registering a user event type with no additional attributes. If a same-named event
 	 * already exists it will be returned.
@@ -62,6 +66,8 @@ public abstract class Recording implements AutoCloseable {
 	 * @return a user event type of the given name
 	 */
 	public abstract Type registerEventType(String name);
+
+	public abstract Type registerEventType(Class<? extends Event> eventType);
 
 	/**
 	 * Try registering a user event type. If a same-named event already exists it will be returned.
