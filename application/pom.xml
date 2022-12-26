@@ -46,7 +46,7 @@
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<jolokia.version>1.7.1</jolokia.version>
+		<jolokia.version>1.7.2</jolokia.version>
 	</properties>
 
 	<modules>

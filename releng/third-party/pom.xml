@@ -47,7 +47,7 @@
 		<owasp.encoder.version>1.2.3</owasp.encoder.version>
 		<p2-maven-plugin.version>2.0.0</p2-maven-plugin.version>
 		<spifly.version>1.3.4</spifly.version>
-		<jolokia.version>1.7.1</jolokia.version>
+		<jolokia.version>1.7.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
 	</properties>
 
