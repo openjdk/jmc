@@ -49,6 +49,8 @@ import org.openjdk.jmc.common.unit.LinearKindOfQuantity.LinearUnitSelector;
 // Localization is delegated to the Messages class. Warnings here would still not catch the cases that matter.
 @SuppressWarnings("nls")
 public enum DecimalPrefix implements IPrefix<DecimalPrefix> {
+	QUECTO(-30, 'q'),
+	RONTO(-27, 'r'),
 	YOCTO(-24, 'y'),
 	ZEPTO(-21, 'z'),
 	ATTO(-18, 'a'),
@@ -69,7 +71,9 @@ public enum DecimalPrefix implements IPrefix<DecimalPrefix> {
 	PETA(15, 'P'),
 	EXA(18, 'E'),
 	ZETTA(21, 'Z'),
-	YOTTA(24, 'Y');
+	YOTTA(24, 'Y'),
+	RONNA(27, 'R'),
+	QUETTA(30, 'Q');
 
 	private DecimalPrefix(int powerOf10, char prefixChar) {
 		this(powerOf10, "" + prefixChar, null);
@@ -92,8 +96,8 @@ public enum DecimalPrefix implements IPrefix<DecimalPrefix> {
 		doubleMult = StrictMath.pow(10, powerOf10);
 	}
 
-	private final static DecimalPrefix[] THOUSANDS = {YOCTO, ZEPTO, ATTO, FEMTO, PICO, NANO, MICRO, MILLI, NONE, KILO,
-			MEGA, GIGA, TERA, EXA, PETA, ZETTA, YOTTA};
+	private final static DecimalPrefix[] THOUSANDS = {QUECTO, RONTO, YOCTO, ZEPTO, ATTO, FEMTO, PICO, NANO, MICRO,
+			MILLI, NONE, KILO, MEGA, GIGA, TERA, EXA, PETA, ZETTA, YOTTA, RONNA, QUETTA};
 
 	private final static Map<String, DecimalPrefix> PREFIX_BY_SYMBOL;
 
@@ -131,7 +135,7 @@ public enum DecimalPrefix implements IPrefix<DecimalPrefix> {
 	}
 
 	public static DecimalPrefix getEngFloorPrefix(double value) {
-		int idx = Math.max(0, getFloorLog1000(value) - (YOCTO.powerOfTen / 3));
+		int idx = Math.max(0, getFloorLog1000(value) - (QUECTO.powerOfTen / 3));
 		return THOUSANDS[Math.min(idx, THOUSANDS.length - 1)];
 	}
 

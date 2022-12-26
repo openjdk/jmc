@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,16 +65,20 @@ public class DisjointBuilder<T> {
 		}
 
 		boolean accept(T e, IQuantity start, IQuantity end) {
+			if (start.compareTo(this.end) >= 0) {
+				extend(e, end);
+				return true;
+			}
+			return false;
+		}
+
+		void extend(T e, IQuantity end) {
 			if (size >= array.length) {
 				int newCapacity = array.length < 100 ? array.length * 4 : (array.length * 3) / 2 + 1;
 				array = Arrays.copyOf(array, newCapacity);
 			}
-			if (start.compareTo(this.end) >= 0) {
-				array[size++] = e;
-				this.end = end;
-				return true;
-			}
-			return false;
+			array[size++] = e;
+			this.end = end;
 		}
 
 		private T getElement(int index) {
@@ -118,38 +122,66 @@ public class DisjointBuilder<T> {
 		if (noLanes == 0) {
 			addToNewLane(e, start, end);
 		} else if (!lanes[0].accept(e, start, end)) {
-			int changedLane = addToOtherLane(e, start, end);
-			sortLanes(changedLane);
+			addToOtherLane(e, start, end);
 		}
 	}
 
-	private void sortLanes(int fromIndex) {
-		// Sorting the lanes by descending end time
-		for (int i = fromIndex; i > 0; i--) {
-			if (lanes[i].end.compareTo(lanes[i - 1].end) > 0) {
-				DisjointArray<T> tmp = lanes[i - 1];
-				lanes[i - 1] = lanes[i];
-				lanes[i] = tmp;
+	private int indexOf(IQuantity point, int from, int to) {
+		int low = from;
+		int high = to - 1;
+		while (low <= high) {
+			int mid = (low + high) >>> 1;
+			DisjointArray<T> lane = lanes[mid];
+			int comparison = point.compareTo(lane.end);
+			if (comparison < 0) {
+				low = mid + 1;
+			} else if (comparison > 0) {
+				high = mid - 1;
+			} else {
+				break;
 			}
+		}
+		return low;
+	}
+
+	private void addToOtherLane(T e, IQuantity start, IQuantity end) {
+		int modificationIndex = indexOf(start, 1, noLanes);
+		if (modificationIndex < noLanes) {
+			DisjointArray<T> lane = lanes[modificationIndex];
+			if (modificationIndex > 0 && lanes[modificationIndex - 1].end.compareTo(end) < 0) {
+				relocateLane(modificationIndex, end, lane);
+			}
+			lane.extend(e, end);
+		} else {
+			resizeIfNecessary();
+			DisjointArray<T> lane = new DisjointArray<>(e, start, end);
+			if (lanes[modificationIndex - 1].end.compareTo(end) < 0) {
+				relocateLane(modificationIndex, end, lane);
+			} else {
+				lanes[modificationIndex] = lane;
+			}
+			noLanes++;
 		}
 	}
 
-	private int addToOtherLane(T e, IQuantity start, IQuantity end) {
-		// Try with the other existing lanes
-		for (int i = 1; i < noLanes; i++) {
-			if (lanes[i].accept(e, start, end)) {
-				return i;
-			}
+	private void relocateLane(int modificationIndex, IQuantity end, DisjointArray<T> lane) {
+		int relocationIndex = indexOf(end, 0, noLanes);
+		for (int i = modificationIndex; i > relocationIndex; i--) {
+			lanes[i] = lanes[i - 1];
 		}
-		return addToNewLane(e, start, end);
+		lanes[relocationIndex] = lane;
 	}
 
 	private int addToNewLane(T e, IQuantity start, IQuantity end) {
+		resizeIfNecessary();
+		lanes[noLanes] = new DisjointArray<>(e, start, end);
+		return noLanes++;
+	}
+
+	private void resizeIfNecessary() {
 		if (noLanes >= lanes.length) {
 			lanes = Arrays.copyOf(lanes, (lanes.length * 3) / 2 + 2);
 		}
-		lanes[noLanes] = new DisjointArray<>(e, start, end);
-		return noLanes++;
 	}
 
 	public static <U> Collection<U[]> toArrays(

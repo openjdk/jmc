@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2020, 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2020, 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -33,23 +33,23 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?pde version="3.8"?>
-<target name="jmc-target-2020-12" sequenceNumber="47">
+<target name="jmc-target-2022-12" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="com.sun.mail.jakarta.mail" version="2.0.1"/>
             <unit id="com.sun.activation.jakarta.activation" version="2.0.1"/>
             <unit id="org.owasp.encoder" version="1.2.3"/>
-            <unit id="org.lz4.lz4-java" version="1.8.0"/>
+            <unit id="lz4-java" version="1.8.0"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.1.12"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
-            <unit id="org.eclipse.jetty.websocket.api" version="10.0.5"/>
-            <unit id="org.eclipse.jetty.websocket.server" version="10.0.5"/>
-            <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.5"/>
-            <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.5"/>
-            <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.4"/>
+            <unit id="org.eclipse.jetty.websocket.api" version="10.0.12"/>
+            <unit id="org.eclipse.jetty.websocket.server" version="10.0.12"/>
+            <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.12"/>
+            <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.12"/>
+            <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.6"/>
             <unit id="org.jolokia.jmx-adapter.standalone" version="1.7.2"/>
             <unit id="org.jolokia.jvm" version="1.7.2"/>
             <unit id="org.jolokia.kubernetes.standalone" version="1.7.2"/>
@@ -57,15 +57,16 @@
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1000.v20200915-1508"/>
-            <unit id="org.eclipse.pde.feature.group" version="3.14.600.v20201202-1800"/>
-            <unit id="org.eclipse.platform.sdk" version="4.18.0.I20201202-1800"/>
-            <repository location="http://download.eclipse.org/releases/2020-12/"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1900.v20221108-1024"/>
+            <unit id="org.eclipse.pde.feature.group" version="3.14.1400.v20221123-1800"/>
+            <unit id="org.eclipse.platform.sdk" version="4.26.0.I20221123-1800"/>
+            <repository location="http://download.eclipse.org/releases/2022-12/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.18.0.v20210327075149"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.18.0.v20210327075149"/>
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.18.3/2020-12/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.22.0.v20211218020001"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.22.0.v20211218020001"/>
+            <!-- No new release yet - using 2021-12 -->
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.19.2/2021-12/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>

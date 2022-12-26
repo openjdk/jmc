@@ -37,6 +37,10 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.YOCTO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.ZEPTO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.ZETTA;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUECTO;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUETTA;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.RONTO;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.RONNA;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -48,6 +52,24 @@ public class DecimalPrefixTest extends MCTestCase {
 	public void testZero() {
 		assertEquals(0, DecimalPrefix.getFloorLog1000(0));
 		assertEquals(NONE, DecimalPrefix.getEngFloorPrefix(0));
+	}
+
+	@Test
+	public void testQuecto() {
+		double quectos = 2 * Math.pow(10, -30);
+		assertEquals(-10, DecimalPrefix.getFloorLog1000(quectos));
+		assertEquals(QUECTO, DecimalPrefix.getEngFloorPrefix(quectos));
+		assertEquals(-10, DecimalPrefix.getFloorLog1000(-quectos));
+		assertEquals(QUECTO, DecimalPrefix.getEngFloorPrefix(-quectos));
+	}
+
+	@Test
+	public void testRonto() {
+		double rontos = 2 * Math.pow(10, -27);
+		assertEquals(-9, DecimalPrefix.getFloorLog1000(rontos));
+		assertEquals(RONTO, DecimalPrefix.getEngFloorPrefix(rontos));
+		assertEquals(-9, DecimalPrefix.getFloorLog1000(-rontos));
+		assertEquals(RONTO, DecimalPrefix.getEngFloorPrefix(-rontos));
 	}
 
 	@Test
@@ -66,6 +88,24 @@ public class DecimalPrefixTest extends MCTestCase {
 		assertEquals(ZEPTO, DecimalPrefix.getEngFloorPrefix(zeptos));
 		assertEquals(-7, DecimalPrefix.getFloorLog1000(-zeptos));
 		assertEquals(ZEPTO, DecimalPrefix.getEngFloorPrefix(-zeptos));
+	}
+
+	@Test
+	public void testQuetta() {
+		double quettas = 2 * Math.pow(10, 30);
+		assertEquals(10, DecimalPrefix.getFloorLog1000(quettas));
+		assertEquals(QUETTA, DecimalPrefix.getEngFloorPrefix(quettas));
+		assertEquals(10, DecimalPrefix.getFloorLog1000(-quettas));
+		assertEquals(QUETTA, DecimalPrefix.getEngFloorPrefix(-quettas));
+	}
+
+	@Test
+	public void testRonna() {
+		double ronnas = 2 * Math.pow(10, 27);
+		assertEquals(9, DecimalPrefix.getFloorLog1000(ronnas));
+		assertEquals(RONNA, DecimalPrefix.getEngFloorPrefix(ronnas));
+		assertEquals(9, DecimalPrefix.getFloorLog1000(-ronnas));
+		assertEquals(RONNA, DecimalPrefix.getEngFloorPrefix(-ronnas));
 	}
 
 	@Test
