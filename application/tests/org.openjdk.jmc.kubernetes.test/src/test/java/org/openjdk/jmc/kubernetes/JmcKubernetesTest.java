@@ -238,7 +238,7 @@ public class JmcKubernetesTest {
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
 				.postRequestedFor(
-						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64Util.encode("admin:admin".getBytes()))));
 	}
@@ -255,7 +255,7 @@ public class JmcKubernetesTest {
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
 				.postRequestedFor(
-						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64Util.encode("admin:secret".getBytes()))));
 	}
@@ -270,7 +270,7 @@ public class JmcKubernetesTest {
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
 				.postRequestedFor(
-						WireMock.urlPathMatching("/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64Util.encode("user:***".getBytes()))));
 	}

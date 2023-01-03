@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"urlPath": "/kubernetes/api/v1/namespaces/ns1/pods/pod-abcdef/proxy/jolokia",
+		"urlPath": "/api/v1/namespaces/ns1/pods/pod-abcdef/proxy/jolokia",
 		"bodyPatterns": [
 			{
 				"equalToJson": "{\"operation\":\"gc()\",\"mbean\":\"java.lang:type=Memory\",\"type\":\"EXEC\"}"
