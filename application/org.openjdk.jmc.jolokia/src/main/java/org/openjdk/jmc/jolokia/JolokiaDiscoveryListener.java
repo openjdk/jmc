@@ -34,6 +34,7 @@
 package org.openjdk.jmc.jolokia;
 
 import java.io.IOException;
+
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +46,10 @@ import org.json.simple.JSONObject;
 import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 
+/**
+ * Add found Jolokia instances to the JVM browser using the Jolokia discovery mechanism.
+ * https://jolokia.org/reference/html/protocol.html#discovery
+ */
 public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider implements PreferenceConstants {
 
 	@Override
