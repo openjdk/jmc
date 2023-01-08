@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,8 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmc.common.item.Aggregators;
@@ -61,6 +63,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 	private final List<IAggregator<?, ?>> aggregators = new ArrayList<>();
 	private final Map<String, ColumnInfo> info;
 	private final ArrayList<Object[]> data = new ArrayList<>();
+	private final ConcurrentLinkedQueue<Object[]> processingQueue = new ConcurrentLinkedQueue<Object[]>();
 	private int cursor = -1;
 	private final ExecutorService exec;
 
@@ -80,6 +83,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void calculateData(IItemCollection input, int configuredTimeout) throws InterruptedException {
+		List<Future> futures = new ArrayList<>();
 		input = input.apply(query.getFilter());
 		if (query.getGroupBy() == null) {
 			for (IItemIterable iterable : input) {
@@ -98,17 +102,18 @@ final class DefaultIItemResultSet implements IItemResultSet {
 						row[column + j] = new SingleEntryItemCollection(item, input.getUnfilteredTimeRanges())
 								.getAggregate(aggregators.get(j));
 					}
-					data.add(row);
+					processingQueue.add(row);
 				}
 			}
 		} else {
 			IAggregator<?, ?> aggregator = Aggregators.distinct(query.getGroupBy());
+			Future future = null;
 			final IItemCollection newInput = input;
 			Set<?> aggregate = input.getAggregate((IAggregator<Set<?>, ?>) aggregator);
 			if (aggregate != null) {
 				try {
 					for (final Object o : aggregate) {
-						exec.submit(new Runnable() {
+						future = exec.submit(new Runnable() {
 							@Override
 							public void run() {
 								IItemCollection rowCollection = newInput
@@ -123,18 +128,20 @@ final class DefaultIItemResultSet implements IItemResultSet {
 								for (int j = 0; j < aggregators.size(); j++) {
 									row[column + j] = rowCollection.getAggregate(aggregators.get(j));
 								}
-								synchronized (data) {
-									data.add(row);
-								}
+								processingQueue.add(row);
 							}
+
 						});
+						futures.add(future);
 					}
 				} finally {
 					exec.shutdown();
 					try {
-						if (!exec.awaitTermination(60, TimeUnit.SECONDS)) {
+						if (!exec.awaitTermination(configuredTimeout, TimeUnit.MINUTES)) {
+							checkStatusOfAllTasks(futures);
+
 							exec.shutdownNow();
-							exec.awaitTermination(configuredTimeout, TimeUnit.MINUTES);
+							// Await time for termination is not required as we have already given enough time before force shutdown. 
 						}
 					} catch (InterruptedException ie) {
 						exec.shutdownNow();
@@ -142,6 +149,21 @@ final class DefaultIItemResultSet implements IItemResultSet {
 					}
 				}
 			}
+		}
+		data.addAll(processingQueue);
+	}
+
+	private void checkStatusOfAllTasks(List<Future> totalAssignedTasks) {
+		int completedTask = 0;
+		for (Future future : totalAssignedTasks) {
+			if (future.isDone())
+				completedTask++;
+		}
+
+		if (completedTask < totalAssignedTasks.size()) {
+			System.out.println(
+					"The results may be inaccurate as JMC is unable to process all the class entries to determine "
+							+ "the class leak results. Please increase the configured timeout in preferences to see the accurate results.  ");
 		}
 	}
 
