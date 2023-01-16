@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -96,7 +96,8 @@ public class GcFreedRatioRule extends AbstractRule {
 			UnitLookup.NUMBER_UNITY.quantity(10));
 
 	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
-			.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT);
+			.<TypedPreference<?>> asList(GC_FREED_PER_SECOND_TO_LIVESET_RATIO_INFO_LIMIT, WINDOW_SIZE, FEW_GCS_LIMIT,
+					SHORT_RECORDING_LIMIT);
 
 	public static final TypedResult<IQuantity> HEAP_SUMMARY_EVENTS = new TypedResult<>("heapSummarys", //$NON-NLS-1$
 			"Heap Summary Events", "Heap Summary Events", UnitLookup.NUMBER, IQuantity.class);
