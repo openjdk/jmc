@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -267,6 +267,17 @@ public class Messages {
 	public static final String FileWriteRuleFactory_TEXT_WARN_LONG = "FileWriteRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT = "FileWriteRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT_LONG = "FileWriteRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_EXPLANATION = "FinalizersRunRule_EXPLANATION"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES = "FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES_DESC = "FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT = "FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT_DESC = "FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RULE_NAME = "FinalizersRunRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SOLUTION = "FinalizersRunRule_SOLUTION"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SUMMARY_OK = "FinalizersRunRule_SUMMARY_OK"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SUMMARY_WARN = "FinalizersRunRule_SUMMARY_WARN"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_EA_TEXT_WARN_LONG = "FlightRecordingSupportRule_EA_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_EA_TEXT_WARN_SHORT = "FlightRecordingSupportRule_EA_TEXT_WARN_SHORT"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT = "FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT"; //$NON-NLS-1$
