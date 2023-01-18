@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2020, 2021 Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -46,6 +46,8 @@ import javax.xml.validation.Validator;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
 public class ProbeValidator extends Validator {
@@ -68,6 +70,13 @@ public class ProbeValidator extends Validator {
 
 	public ProbeValidator() {
 		validator = PROBE_SCHEMA.newValidator();
+		try {
+			validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+			// This should not happen anyway
+			throw new RuntimeException(e);
+		}
 		validator.setErrorHandler(new ProbeValidatorErrorHandler());
 	}
 
