@@ -42,6 +42,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -161,9 +163,9 @@ final class DefaultIItemResultSet implements IItemResultSet {
 		}
 
 		if (completedTask < totalAssignedTasks.size()) {
-			System.out.println(
-					"The results may be inaccurate as JMC is unable to process all the class entries to determine "
-							+ "the class leak results. Please increase the configured timeout in preferences to see the accurate results.  ");
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "The results may be inaccurate as JMC is unable to process all"
+					+ " the class entries to determine the class leak results."
+					+ " Please increase the configured timeout in preferences to see the accurate results.");
 		}
 	}
 
