@@ -163,9 +163,10 @@ final class DefaultIItemResultSet implements IItemResultSet {
 		}
 
 		if (completedTask < totalAssignedTasks.size()) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, "The results may be inaccurate as JMC is unable to process all"
-					+ " the class entries to determine the class leak results."
-					+ " Please increase the configured timeout in preferences to see the accurate results.");
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,
+					"The results may be inaccurate as JMC is unable to process all"
+							+ " the class entries to determine the class leak results."
+							+ " Please increase the configured timeout in preferences to see the accurate results.");
 		}
 	}
 
