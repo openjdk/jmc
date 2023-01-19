@@ -55,12 +55,15 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jctools.version>4.0.1</jctools.version>
 		<junit.version>4.13.2</junit.version>
-		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
-		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
-		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
-		<mockito.core.version>3.12.4</mockito.core.version>
-		<mockito.inline.version>3.12.4</mockito.inline.version>
+		<junit.jupiter.api.version>5.9.0</junit.jupiter.api.version>
+		<junit.jupiter.params.version>5.9.0</junit.jupiter.params.version>
+		<junit.jupiter.engine.version>5.9.0</junit.jupiter.engine.version>
+		<mockito.core.version>4.8.0</mockito.core.version>
+		<mockito.inline.version>4.8.0</mockito.inline.version>
+		<mockito.jupiter.version>4.8.0</mockito.jupiter.version>
+		<slf4j.version>2.0.3</slf4j.version>
 		<surefireArgLine></surefireArgLine>
 	</properties>
 	<profiles>
@@ -142,6 +145,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.jctools</groupId>
+				<artifactId>jctools-core</artifactId>
+				<version>${jctools.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
@@ -170,6 +178,21 @@
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-inline</artifactId>
 				<version>${mockito.inline.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-junit-jupiter</artifactId>
+				<version>${mockito.jupiter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

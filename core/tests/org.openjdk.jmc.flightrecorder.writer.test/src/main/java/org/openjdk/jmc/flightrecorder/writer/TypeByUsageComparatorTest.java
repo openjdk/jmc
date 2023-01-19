@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("restriction")
 class TypeByUsageComparatorTest {
 	private TypesImpl types;
 	private org.openjdk.jmc.flightrecorder.writer.util.TypeByUsageComparator instance;

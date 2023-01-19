@@ -84,22 +84,6 @@ abstract class ScalarQuantity<U extends TypedUnit<U>> extends Number implements 
 	public abstract int hashCode();
 
 	@Override
-	public IQuantity in(IUnit targetUnit) {
-		if (targetUnit == unit) {
-			return this;
-		}
-		return targetUnit.quantity(numberValueIn(targetUnit));
-	}
-
-	@Override
-	public ITypedQuantity<U> in(U targetUnit) {
-		if (targetUnit == unit) {
-			return this;
-		}
-		return targetUnit.quantity(numberValueIn(targetUnit));
-	}
-
-	@Override
 	public long longValueIn(IUnit targetUnit) throws QuantityConversionException {
 		return longValueIn(targetUnit, Long.MAX_VALUE);
 	}
@@ -190,6 +174,30 @@ abstract class ScalarQuantity<U extends TypedUnit<U>> extends Number implements 
 		@Override
 		public Number numberValue() {
 			return numericalValue;
+		}
+
+		@Override
+		public IQuantity in(IUnit targetUnit) {
+			if (unit == targetUnit) {
+				return this;
+			}
+			IScalarAffineTransform transform = unit.valueTransformTo(targetUnit);
+			if (transform.targetOutOfRange(numericalValue, Long.MAX_VALUE)) {
+				return targetUnit.quantity(doubleValueIn(targetUnit));
+			}
+			return targetUnit.quantity(clampedLongValueIn(targetUnit));
+		}
+
+		@Override
+		public ITypedQuantity<U> in(U targetUnit) {
+			if (unit == targetUnit) {
+				return this;
+			}
+			IScalarAffineTransform transform = unit.valueTransformTo(targetUnit);
+			if (transform.targetOutOfRange(numericalValue, Long.MAX_VALUE)) {
+				return targetUnit.quantity(doubleValueIn(targetUnit));
+			}
+			return targetUnit.quantity(clampedLongValueIn(targetUnit));
 		}
 
 		@Override
@@ -372,6 +380,22 @@ abstract class ScalarQuantity<U extends TypedUnit<U>> extends Number implements 
 		@Override
 		public Number numberValue() {
 			return numericalValue;
+		}
+
+		@Override
+		public IQuantity in(IUnit targetUnit) {
+			if (targetUnit == unit) {
+				return this;
+			}
+			return targetUnit.quantity(doubleValueIn(targetUnit));
+		}
+
+		@Override
+		public ITypedQuantity<U> in(U targetUnit) {
+			if (targetUnit == unit) {
+				return this;
+			}
+			return targetUnit.quantity(doubleValueIn(targetUnit));
 		}
 
 		@Override

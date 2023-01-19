@@ -47,7 +47,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("restriction")
 class TypedValueBuilderImplTest {
 	private static final String CUSTOM_FIELD_NAME = "custom_field";
 	private static final String CUSTOM_FIELD_ARRAY_NAME = "custom_field_arr";
@@ -179,6 +179,7 @@ class TypedValueBuilderImplTest {
 		assertThrows(IllegalArgumentException.class, () -> instance.putField(CUSTOM_FIELD_NAME, 0L));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void putFieldCustomBuilderArray() {
 		TypedFieldValue value = instance.putFields(CUSTOM_FIELD_ARRAY_NAME, fld1 -> {
@@ -191,6 +192,7 @@ class TypedValueBuilderImplTest {
 		assertNotNull(value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void putFieldCustomBuilderArrayNonArrayField() {
 		assertThrows(IllegalArgumentException.class, () -> {
@@ -202,6 +204,7 @@ class TypedValueBuilderImplTest {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void putFieldCustomBuilderArrayNonExistingField() {
 		assertThrows(IllegalArgumentException.class, () -> {

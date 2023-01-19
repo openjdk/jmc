@@ -49,7 +49,7 @@ public interface IScalarAffineTransform {
 	 * @return the offset to be added (after the source value has been multiplied with the
 	 *         {@link #getMultiplier() multiplier})
 	 */
-	Number getOffset();
+	double getOffset();
 
 	/**
 	 * @return the multiplier which source values should be multiplied with (before the

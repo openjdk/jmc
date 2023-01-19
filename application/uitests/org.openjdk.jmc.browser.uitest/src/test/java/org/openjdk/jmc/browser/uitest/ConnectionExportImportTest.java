@@ -132,7 +132,7 @@ public class ConnectionExportImportTest extends MCJemmyTestBase {
 	 */
 	@Test
 	public void testSetMasterPassword() {
-		MC.jvmBrowser.createConnection("localhost", "0", "username", "password", true, "PasswordConnection");
+		MC.jvmBrowser.createConnection("localhost", "0", "username", "Password@123", true, "PasswordConnection");
 		MC.jvmBrowser.deleteItem("PasswordConnection");
 	}
 

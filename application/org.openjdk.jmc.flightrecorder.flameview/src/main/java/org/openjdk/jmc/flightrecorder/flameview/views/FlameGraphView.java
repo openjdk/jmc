@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,12 +47,22 @@ import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT
 import static org.openjdk.jmc.flightrecorder.flameview.Messages.FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES;
 import static org.openjdk.jmc.flightrecorder.flameview.MessagesUtils.getFlameviewMessage;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -65,7 +75,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
@@ -85,7 +98,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
@@ -94,15 +109,24 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.flameview.FlameviewImages;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.CoreImages;
@@ -118,6 +142,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private static final String TOOLTIP_PACKAGE = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_PACKAGE);
 	private static final String TOOLTIP_SAMPLES = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_SAMPLES);
 	private static final String TOOLTIP_DESCRIPTION = getFlameviewMessage(FLAMEVIEW_SELECT_HTML_TOOLTIP_DESCRIPTION);
+	private static final String ATTRIBUTE_SELECTION_ID = "AttributeSelection"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_SELECTION_SEP_ID = "AttrSelectionSep"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
 		// from: https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css
@@ -168,6 +194,9 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
+	private IAttribute<IQuantity> currentAttribute;
+	private AttributeSelection attributeSelection;
+	private IToolBarManager toolBar;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -279,13 +308,15 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 	private static class ModelRebuildRunnable implements Runnable {
 
-		private FlameGraphView view;
-		private IItemCollection items;
+		private final FlameGraphView view;
+		private final IItemCollection items;
+		private final IAttribute<IQuantity> attribute;
 		private volatile boolean isInvalid;
 
-		private ModelRebuildRunnable(FlameGraphView view, IItemCollection items) {
+		private ModelRebuildRunnable(FlameGraphView view, IItemCollection items, IAttribute<IQuantity> attribute) {
 			this.view = view;
 			this.items = items;
+			this.attribute = attribute;
 		}
 
 		private void setInvalid() {
@@ -298,18 +329,40 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			StacktraceTreeModel treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
+			IItemCollection filteredItems = items;
+			if (attribute != null) {
+				filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
+			}
+			StacktraceTreeModel treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator,
+					!view.threadRootAtTop, attribute);
 			if (isInvalid) {
 				return;
 			}
 			String flameGraphJson = FlameGraphJsonSerializer.toJson(treeModel);
+
 			if (isInvalid) {
 				return;
 			} else {
 				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, flameGraphJson));
+				DisplayToolkit.inDisplayThread().execute(() -> {
+					view.setModel(items, flameGraphJson);
+
+					List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(items);
+					String attrName = attribute != null ? attribute.getName() : null;
+					view.createAttributeSelection(attrName, attrList);
+				});
 			}
 		}
+	}
+
+	private void createAttributeSelection(String attrName, Collection<Pair<String, IAttribute<IQuantity>>> items) {
+		if (attributeSelection != null) {
+			toolBar.remove(attributeSelection.getId());
+		}
+		attributeSelection = new AttributeSelection(items, attrName, this::getCurrentAttribute,
+				this::setCurrentAttribute, () -> triggerRebuildTask(currentItems));
+		toolBar.insertAfter(ATTRIBUTE_SELECTION_SEP_ID, attributeSelection);
+		toolBar.update(true);
 	}
 
 	@Override
@@ -329,14 +382,26 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
 		// addOptions(siteMenu);
-		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		toolBar = site.getActionBars().getToolBarManager();
 
 		Stream.of(groupByFlameviewActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
 		Stream.of(groupByActions).forEach(toolBar::add);
 		toolBar.add(new Separator());
 		Stream.of(exportActions).forEach(toolBar::add);
+
+		toolBar.add(new Separator(ATTRIBUTE_SELECTION_SEP_ID));
+		createAttributeSelection(null, Collections.emptyList());
+
 		getSite().getPage().addSelectionListener(this);
+	}
+
+	private IAttribute<IQuantity> getCurrentAttribute() {
+		return currentAttribute;
+	}
+
+	private void setCurrentAttribute(IAttribute<IQuantity> attr) {
+		currentAttribute = attr;
 	}
 
 	@Override
@@ -388,7 +453,7 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items, currentAttribute);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}

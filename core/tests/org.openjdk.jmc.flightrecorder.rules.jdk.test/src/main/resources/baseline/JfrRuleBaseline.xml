@@ -110,6 +110,10 @@
             <summary>There are no file write events in this recording.</summary>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -408,6 +412,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>There are no file write events in this recording.</summary>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -670,6 +678,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -938,6 +950,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -1187,6 +1203,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1447,6 +1467,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1701,6 +1725,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1983,6 +2011,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -2274,6 +2306,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
         </rule>
+         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FlightRecordingSupport</id>
             <severity>Warning</severity>
@@ -2552,6 +2588,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FlightRecordingSupport</id>
@@ -2862,6 +2902,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>No long file write pauses were found in this recording (the longest was 172.408 ms).</summary>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FlightRecordingSupport</id>
             <severity>OK</severity>
             <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
@@ -3047,7 +3091,8 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
 The heap is around 22.3 % full. There is likely no big benefit from enabling string deduplication.</summary>
             <explanation>String deduplication is enabled using the JVM flag '-XX:+UseStringDeduplication'. This flag can be used together with the G1 garbage collector in JDK 8u20 or later, or with the Shenandoah garbage collector.
 To validate if this gives a performance improvement for your application, create flight recordings both with and without string deduplication. For the run with string deduplication enabled, also enable statistics with '-XX:+PrintStringDeduplicationStatistics' for JDK 8 or '-Xlog:stringdedup*=debug' for JDK 9. Check if the heap live set decrease in the recording with string deduplication enabled is larger than the size of the string deduplication metadata table. The size of the metadata table is printed in the statistics output as 'Table/Memory Usage: XX MB'
-You can read more about string deduplication in the java options documentation or in [JEP 192](https://openjdk.java.net/jeps/192).&lt;p&gt;String deduplication is only supported when using the G1 (JDK 8u20+) or Shenandoah garbage collectors. If you want to use this feature you can enable G1 by using '-XX:+UseG1GC', or enable Shenandoah by using '-XX:+UseShenandoahGC'.</explanation>
+You can read more about string deduplication in the java options documentation or in [JEP 192](https://openjdk.java.net/jeps/192).
+String deduplication is only supported when using the G1 (JDK 8u20+) or Shenandoah garbage collectors. If you want to use this feature you can enable G1 by using '-XX:+UseG1GC', or enable Shenandoah by using '-XX:+UseShenandoahGC'.</explanation>
         </rule>
         <rule>
             <id>SystemGc</id>
@@ -3168,6 +3213,10 @@ You can read more about string deduplication in the java options documentation o
         </rule>
         <rule>
             <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3416,6 +3465,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3653,6 +3706,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3917,6 +3974,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -4095,6 +4156,247 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>biasedLockingRevocation</id>
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
+        </rule>
+    </report>
+    <report>
+        <file>jdk18-finalizers.jfr</file>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Information</severity>
+            <summary>26.5 ×10⁶ finalizers were run.</summary>
+            <explanation>Finalization can lead to performance issues, deadlocks, or hangs, and has been marked for removal in a future Java version. The following finalizable classes have been detected: &lt;ul&gt;&lt;li&gt;my_package.Main$MyFinalizableObject&lt;/li&gt;&lt;/ul&gt;</explanation>
+            <solution>Remove finalize method implementations from your application, and consider making use of the [Cleaner API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/Cleaner.html) instead.</solution>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with stack traces were recorded.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
         </rule>
     </report>
 </reportcollection>

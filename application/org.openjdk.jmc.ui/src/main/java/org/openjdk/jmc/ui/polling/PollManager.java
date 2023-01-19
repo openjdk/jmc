@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,8 +52,8 @@ public class PollManager implements Runnable, IPropertyChangeListener {
 	}
 
 	private final Vector<Pollable> m_pollableObjects = new Vector<>();
-	volatile private int m_pollingInterval = 0;
-	volatile private boolean m_keepAlive = false;
+	volatile private int m_pollingInterval;
+	volatile private boolean m_keepAlive;
 	private final String m_propertyName;
 
 	public PollManager(int pollingInterval, String propertyName) {

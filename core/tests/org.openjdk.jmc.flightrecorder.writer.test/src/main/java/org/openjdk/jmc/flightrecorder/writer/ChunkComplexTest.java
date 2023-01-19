@@ -62,6 +62,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class ChunkComplexTest {
 	private Recording recording;
 	private Path jfrPath;

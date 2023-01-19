@@ -43,9 +43,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.PrintoutsToolkit;
@@ -58,6 +56,7 @@ import jdk.jfr.Recording;
 /**
  * Test for making sure events with {@code char} attributes can be parsed.
  */
+@SuppressWarnings("restriction")
 public class CharAttributeTest {
 
 	@Test

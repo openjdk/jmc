@@ -295,6 +295,7 @@ public interface TypedValueBuilder {
 	 *            other field value builder callbacks field value builders
 	 * @return a {@linkplain TypedValueBuilder} instance for invocation chaining
 	 */
+	@SuppressWarnings("unchecked")
 	TypedValueBuilder putFields(
 		String name, Consumer<TypedValueBuilder> callback1, Consumer<TypedValueBuilder> callback2,
 		Consumer<TypedValueBuilder> ... otherCallbacks);

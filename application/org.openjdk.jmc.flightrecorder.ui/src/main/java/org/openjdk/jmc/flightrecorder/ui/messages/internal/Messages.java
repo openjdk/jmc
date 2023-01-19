@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -264,6 +264,8 @@ public class Messages extends NLS {
 	public static String HeapPage_SELECTED_CLASSES;
 	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE;
 	public static String HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC;
+	public static String HeapPage_SIZE_TOTAL_PERCENTAGE;
+	public static String HeapPage_SIZE_TOTAL_PERCENTAGE_DESC;
 	public static String INFORMATION_COMPONENT_NOT_AVAILABLE;
 	public static String IO_PAGE_DURATIONS_DESCRIPTION;
 	public static String IO_PAGE_EVENT_LOG_DESCRIPTION;
@@ -497,6 +499,7 @@ public class Messages extends NLS {
 	public static String ResultOverview_EXPORT_DIALOG_TITLE;
 	public static String ResultOverview_PAGE_DESC;
 	public static String ResultOverview_PAGE_NAME;
+	public static String ResultOverview_BROWSER_ACTION;
 	public static String ResultTableUi_SCORE_TOOLTIP;
 	public static String RuleManager_NULL_RESULT_DESCRIPTION;
 	public static String SAVE_AS_ERROR_MSG;

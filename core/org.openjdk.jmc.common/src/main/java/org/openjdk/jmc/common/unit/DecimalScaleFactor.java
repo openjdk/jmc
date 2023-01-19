@@ -124,11 +124,7 @@ public class DecimalScaleFactor extends ScaleFactor {
 			if (innerFactor instanceof DecimalScaleFactor) {
 				return get(powerOf10 + ((DecimalScaleFactor) innerFactor).powerOf10);
 			}
-			Number multiplier = innerFactor.targetNumber(longMultiplier);
-			if (multiplier instanceof Long) {
-				return new LongScaleFactor(multiplier.longValue());
-			}
-			return new ImpreciseScaleFactor(multiplier);
+			return innerFactor.scale(longMultiplier);
 		}
 
 		@Override

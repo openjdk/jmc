@@ -41,9 +41,7 @@
 	<artifactId>common.test</artifactId>
 	<properties>
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<fail.if.no.tests>false</fail.if.no.tests>
 	</properties>
-	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
@@ -55,4 +53,7 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<testSourceDirectory>${project.basedir}/src/main/java</testSourceDirectory>
+	</build>
 </project>

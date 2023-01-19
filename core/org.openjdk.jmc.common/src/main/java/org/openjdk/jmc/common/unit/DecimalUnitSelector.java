@@ -157,7 +157,7 @@ public class DecimalUnitSelector implements LinearUnitSelector {
 		int log10 = DecimalPrefix.getFloorLog1000(absVal) * 3;
 
 		// FIXME: Iterate over a collection of specified units/prefixes instead (capped by absVal).
-		final int minLog10 = DecimalPrefix.YOCTO.powerOf10();
+		final int minLog10 = DecimalPrefix.QUECTO.powerOf10();
 
 		while (log10 >= minLog10) {
 			DecimalScaleFactor inverseFactor = DecimalScaleFactor.get(-log10);

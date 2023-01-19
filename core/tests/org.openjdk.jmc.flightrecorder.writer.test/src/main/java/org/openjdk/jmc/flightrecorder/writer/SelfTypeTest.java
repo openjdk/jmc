@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("restriction")
 class SelfTypeTest {
 	@Test
 	void isBuiltin() {
