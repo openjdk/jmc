@@ -2813,9 +2813,9 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         </rule>
         <rule>
             <id>ClassLeak</id>
-            <severity>OK</severity>
-            <summary>com.oracle.medrec.model.User was loaded -1 time(s) without being unloaded</summary>
-            <explanation>Some classes have been loaded multiple times, and the difference between the number of times a class have been loaded and the number of times it has been unloaded has exceeded the user specified limit. This in itself need not be a problem, but check to see if you expect these classes to be loaded multiple times to make sure that you do not have a class loader leak. The following classes were detected as potential problems: &lt;ul&gt;&lt;li&gt;com.oracle.medrec.model.User (-1)&lt;/li&gt;&lt;li&gt;com.oracle.medrec.service.PatientService (-1)&lt;/li&gt;&lt;li&gt;com.oracle.medrec.service.PhysicianService (-1)&lt;/li&gt;&lt;li&gt;com.oracle.medrec.facade.PatientFacade (-1)&lt;/li&gt;&lt;li&gt;com.oracle.medrec.common.messaging.MessageClient (-1)&lt;/li&gt;&lt;/ul&gt;</explanation>
+            <severity>Information</severity>
+            <summary>java.lang.Object was loaded 258 time(s) without being unloaded</summary>
+            <explanation>Some classes have been loaded multiple times, and the difference between the number of times a class have been loaded and the number of times it has been unloaded has exceeded the user specified limit. This in itself need not be a problem, but check to see if you expect these classes to be loaded multiple times to make sure that you do not have a class loader leak. The following classes were detected as potential problems: &lt;ul&gt;&lt;li&gt;java.lang.Object (258)&lt;/li&gt;&lt;li&gt;java.lang.String (95)&lt;/li&gt;&lt;li&gt;java.lang.Class (81)&lt;/li&gt;&lt;li&gt;java.lang.Integer (52)&lt;/li&gt;&lt;li&gt;oracle.jrockit.jfr.VMJFR (46)&lt;/li&gt;&lt;/ul&gt;</explanation>
         </rule>
         <rule>
             <id>ClassLoading</id>
