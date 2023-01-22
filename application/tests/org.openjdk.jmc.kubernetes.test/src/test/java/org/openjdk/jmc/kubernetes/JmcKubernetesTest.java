@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.awaitility.Awaitility;
-import org.jolokia.util.Base64Util;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -240,7 +240,7 @@ public class JmcKubernetesTest {
 				.postRequestedFor(
 						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
-						WireMock.equalTo("Basic " + Base64Util.encode("admin:admin".getBytes()))));
+						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))));
 	}
 
 	@Test
@@ -257,7 +257,7 @@ public class JmcKubernetesTest {
 				.postRequestedFor(
 						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
-						WireMock.equalTo("Basic " + Base64Util.encode("admin:secret".getBytes()))));
+						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("admin:secret".getBytes()))));
 	}
 
 	@Test
@@ -272,7 +272,7 @@ public class JmcKubernetesTest {
 				.postRequestedFor(
 						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
-						WireMock.equalTo("Basic " + Base64Util.encode("user:***".getBytes()))));
+						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("user:***".getBytes()))));
 	}
 
 	private void testThatJvmIsFound(TestParameters parameters) throws Exception {
