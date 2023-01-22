@@ -14,7 +14,7 @@ Require-Bundle: org.junit,
  org.openjdk.jmc.rjmx;bundle-version="9.0.0",
  org.eclipse.ui,
  org.awaitility;bundle-version="4.0.0",
- org.hamcrest;bundle-version="2.1.0",
+ org.hamcrest;bundle-version="2.1",
  org.openjdk.jmc.kubernetes;bundle-version="9.0.0",
  com.github.tomakehurst.wiremock-standalone;bundle-version="2.27.2"
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test
