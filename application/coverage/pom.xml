@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-   Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2021, Red Hat Inc. All rights reserved.
+   Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2023, Red Hat Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -98,11 +98,6 @@
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.console.persistence</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.console.twitter</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
@@ -208,11 +203,6 @@
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.feature.rcp.update</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.feature.twitter</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
