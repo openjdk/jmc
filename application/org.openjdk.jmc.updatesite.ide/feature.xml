@@ -67,10 +67,6 @@ copyright or other irrelevant stuff in here.
          version="0.0.0"/>
 
    <includes
-         id="org.openjdk.jmc.feature.twitter"
-         version="0.0.0"/>
-
-   <includes
          id="org.openjdk.jmc.feature.ide.launch"
          version="0.0.0"/>
 

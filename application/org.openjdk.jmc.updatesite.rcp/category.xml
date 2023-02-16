@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -53,10 +53,6 @@
 	<feature
 		url="features/org.openjdk.jmc.feature.console.ui.subscriptions_0.0.0.jar"
 		id="org.openjdk.jmc.feature.console.ui.subscriptions" version="0.0.0">
-		<category name="Console (Experimental)" />
-	</feature>
-	<feature url="features/org.openjdk.jmc.feature.twitter_0.0.0.jar"
-		id="org.openjdk.jmc.feature.twitter" version="0.0.0">
 		<category name="Console (Experimental)" />
 	</feature>
 	<feature
