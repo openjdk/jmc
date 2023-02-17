@@ -10,4 +10,3 @@ Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.test,
  org.junit
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.serializers.test
-Export-Package: org.openjdk.jmc.flightrecorder.serializers.dot.test

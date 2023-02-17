@@ -5,9 +5,7 @@ Bundle-Name: Common Test
 Bundle-SymbolicName: org.openjdk.jmc.common.test;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-ActivationPolicy: lazy
 Require-Bundle: org.openjdk.jmc.common,
  org.openjdk.jmc.testlib,
  org.junit
-Export-Package: org.openjdk.jmc.common.test
 Automatic-Module-Name: org.openjdk.jmc.common.test
