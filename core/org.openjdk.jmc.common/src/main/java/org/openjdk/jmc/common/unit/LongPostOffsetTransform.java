@@ -46,7 +46,7 @@ public class LongPostOffsetTransform implements IScalarAffineTransform {
 	}
 
 	@Override
-	public Number getOffset() {
+	public double getOffset() {
 		return offset;
 	}
 
@@ -154,7 +154,7 @@ public class LongPostOffsetTransform implements IScalarAffineTransform {
 			return new LongPostOffsetTransform(multiplier * innerTransform.getMultiplier(), offset);
 		}
 		return SimpleAffineTransform.createWithPostOffset(multiplier * innerTransform.getMultiplier(),
-				targetNumber(innerTransform.getOffset()));
+				targetValue(innerTransform.getOffset()));
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class LongPostOffsetTransform implements IScalarAffineTransform {
 			return invert();
 		}
 		double invertedMultiplier = 1.0 / multiplier;
-		double otherOffset = innerTransform.getOffset().doubleValue();
+		double otherOffset = innerTransform.getOffset();
 		return new SimpleAffineTransform(innerTransform.getMultiplier() * invertedMultiplier,
 				(otherOffset - offset) * invertedMultiplier);
 	}

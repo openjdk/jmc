@@ -58,8 +58,8 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.KILO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.MICRO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.MILLI;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.NONE;
-import static org.openjdk.jmc.common.unit.DecimalPrefix.YOCTO;
-import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUECTO;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUETTA;
 
 /**
  * Simple, ad-hoc testing of quantities. Start testing new constructs here, to show their usability
@@ -85,7 +85,7 @@ public class AdHocQuantityTest extends MCTestCase {
 		// Only needed when this suite is run on its own.
 		@SuppressWarnings("unused")
 		Object classInitWorkaround = UnitLookup.RAW_NUMBER;
-		length = new LinearKindOfQuantity("length", "m", YOCTO, YOTTA);
+		length = new LinearKindOfQuantity("length", "m", QUECTO, QUETTA);
 		um = length.getUnit(MICRO);
 		mm = length.getUnit(MILLI);
 		cm = length.getUnit(CENTI);

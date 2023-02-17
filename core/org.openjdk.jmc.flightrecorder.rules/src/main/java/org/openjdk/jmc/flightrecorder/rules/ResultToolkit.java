@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.rules;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +41,6 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
@@ -98,8 +98,33 @@ public class ResultToolkit {
 							s = s.replace(group, collection.toString());
 						} else {
 							Collection<?> results = result.getResult((TypedCollectionResult<?>) typedResult);
-							String joined = StringToolkit.join(results, ","); //$NON-NLS-1$
-							s = s.replace(group, encodeIfNeeded(joined, withHtml));
+							StringBuilder collection = new StringBuilder();
+
+							Iterator<?> iter = results.iterator();
+							while (iter.hasNext()) {
+								Object typedResultInstance = iter.next();
+								if (typedResultInstance instanceof IDisplayable) {
+									collection.append(encodeIfNeeded(
+											((IDisplayable) typedResultInstance).displayUsing(IDisplayable.AUTO),
+											withHtml));
+								} else if (typedResultInstance instanceof IMCFrame) {
+									collection.append(encodeIfNeeded(StacktraceFormatToolkit
+											.formatFrame((IMCFrame) typedResultInstance, DEFAULT_SEPARATOR), withHtml));
+								} else if (typedResultInstance instanceof IMCStackTrace) {
+									collection.append(encodeIfNeeded(
+											FormatToolkit.getHumanReadable((IMCStackTrace) typedResultInstance),
+											withHtml));
+								} else {
+									collection
+											.append(encodeIfNeeded(typedResult.format(typedResultInstance), withHtml));
+								}
+
+								if (!iter.hasNext()) {
+									break;
+								}
+								collection.append(",");
+							}
+							s = s.replace(group, collection.toString());
 						}
 					} else {
 						Object typedResultInstance = result.getResult(typedResult);

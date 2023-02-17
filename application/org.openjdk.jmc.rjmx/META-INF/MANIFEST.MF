@@ -57,7 +57,6 @@ Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.triggers;
   x-friends:="org.openjdk.jmc.console.ui.notification,
    org.openjdk.jmc.alert,
-   org.openjdk.jmc.console.twitter,
    org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.triggers.actions.internal;x-friends:="org.openjdk.jmc.console.ui.notification",
  org.openjdk.jmc.rjmx.triggers.condition.internal;x-friends:="org.openjdk.jmc.console.ui.notification,org.openjdk.jmc.test.jemmy",
