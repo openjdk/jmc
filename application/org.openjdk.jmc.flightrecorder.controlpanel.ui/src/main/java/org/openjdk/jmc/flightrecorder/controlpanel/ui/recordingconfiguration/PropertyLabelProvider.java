@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration;
 
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.PERIOD_EVERY_CHUNK;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.SETTING_PERIOD;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.PERIOD_EVERY_CHUNK;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.SETTING_PERIOD;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.FontDescriptor;

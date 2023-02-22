@@ -38,7 +38,6 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.openjdk.jmc.common.util.SortedHead;
-
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")

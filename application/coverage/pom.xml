@@ -365,18 +365,6 @@
 		<!-- Second, all the modules in application/tests -->
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.flightrecorder.configuration.test</artifactId>
-			<scope>test</scope>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.test</artifactId>
-			<scope>test</scope>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.flightrecorder.controlpanel.ui.test</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>

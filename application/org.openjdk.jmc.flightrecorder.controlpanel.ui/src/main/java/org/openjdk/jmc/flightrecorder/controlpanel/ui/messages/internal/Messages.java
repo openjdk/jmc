@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -180,8 +180,6 @@ public class Messages extends NLS {
 	public static String UPDATE_RECORDING_JOB_SUCCESS_MSG;
 	public static String VOLATILE_CONFIGURATION_LAST_STARTED;
 	public static String VOLATILE_CONFIGURATION_ON_SERVER;
-	public static String VOLATILE_CONFIGURATION_RUNNING_RECORDING;
-	public static String VOLATILE_CONFIGURATION_WORKING_COPY;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
