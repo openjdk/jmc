@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.configuration.model.xml;
 
-abstract class XMLNode {
+public abstract class XMLNode {
 	private final String m_name;
 	private final XMLNodeType m_type;
 
