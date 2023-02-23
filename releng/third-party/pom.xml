@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -43,8 +43,10 @@
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<!-- Versions -->
 		<hdrhistogram.version>2.1.12</hdrhistogram.version>
-		<jakarta.activation.version>2.0.1</jakarta.activation.version>
 		<jakarta.mail.version>2.0.1</jakarta.mail.version>
+		<angus.activation.version>2.0.0</angus.activation.version>
+		<jakarta.activation.version>2.1.1</jakarta.activation.version>
+		<osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 		<javax.websocket.version>1.1</javax.websocket.version>
 		<jetty.version>10.0.12</jetty.version>
 		<jemmy.version>2.0.0</jemmy.version>
@@ -72,15 +74,16 @@
 								<!-- specify third party non-OSGi dependencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>com.sun.mail:jakarta.mail:${jakarta.mail.version}</id>
-									<override>true</override>
-									<instructions>
-										<Import-Package>*;resolution:=optional</Import-Package>
-										<Export-Package>*</Export-Package>
-									</instructions>
+									<id>org.eclipse.angus:jakarta.mail:${jakarta.mail.version}</id>
+								</artifact>	
+								<artifact>
+									<id>org.eclipse.angus:angus-activation:${angus.activation.version}</id>
+								</artifact>	
+								<artifact>
+									<id>jakarta.activation:jakarta.activation-api:${jakarta.activation.version}</id>
 								</artifact>
 								<artifact>
-									<id>com.sun.activation:jakarta.activation:${jakarta.activation.version}</id>
+									<id>org.glassfish.hk2:osgi-resource-locator:${osgi-resource-locator.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.owasp.encoder:encoder:${owasp.encoder.version}</id>
