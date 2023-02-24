@@ -42,6 +42,7 @@
 	<artifactId>missioncontrol.core.tests</artifactId>
 	<packaging>pom</packaging>
 	<modules>
+		<module>org.openjdk.jmc.testlib</module>
 		<module>org.openjdk.jmc.common.test</module>
 		<module>org.openjdk.jmc.flightrecorder.test</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.test</module>

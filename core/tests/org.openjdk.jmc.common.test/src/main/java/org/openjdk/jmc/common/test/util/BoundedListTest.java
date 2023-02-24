@@ -38,7 +38,7 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openjdk.jmc.common.collection.BoundedList;
-import org.openjdk.jmc.common.test.SlowTests;
+import org.openjdk.jmc.test.SlowTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

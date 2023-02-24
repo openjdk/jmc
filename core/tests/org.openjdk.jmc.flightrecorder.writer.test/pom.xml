@@ -51,12 +51,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.writer</artifactId>
+			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder</artifactId>
+			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
