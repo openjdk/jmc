@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Mission Control Flight Recorder Rules JDK
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.rules.jdk;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.openjdk.jmc.flightrecorder.rules.jdk.cpu;x-friends:="org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.flightrecorder.rules.jdk.dataproviders,
  org.openjdk.jmc.flightrecorder.rules.jdk.exceptions;x-friends:="org.openjdk.jmc.flightrecorder.ui",
@@ -12,18 +12,6 @@ Export-Package: org.openjdk.jmc.flightrecorder.rules.jdk.cpu;x-friends:="org.ope
  org.openjdk.jmc.flightrecorder.rules.jdk.io;x-friends:="org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.flightrecorder.rules.jdk.latency;x-friends:="org.openjdk.jmc.flightrecorder.ui",
  org.openjdk.jmc.flightrecorder.rules.jdk.memory;x-friends:="org.openjdk.jmc.flightrecorder.ui"
-Import-Package: org.openjdk.jmc.common,
- org.openjdk.jmc.common.collection,
- org.openjdk.jmc.common.item,
- org.openjdk.jmc.common.unit,
- org.openjdk.jmc.common.util,
- org.openjdk.jmc.common.version,
- org.openjdk.jmc.flightrecorder,
- org.openjdk.jmc.flightrecorder.jdk,
- org.openjdk.jmc.flightrecorder.memleak,
- org.openjdk.jmc.flightrecorder.rules,
- org.openjdk.jmc.flightrecorder.rules.tree,
- org.openjdk.jmc.flightrecorder.rules.util,
- org.openjdk.jmc.flightrecorder.stacktrace,
- org.owasp.encoder
+Require-Bundle: org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.rules
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.rules.jdk
