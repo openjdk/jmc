@@ -166,7 +166,8 @@ public class FlameGraphView extends ViewPart implements ISelectionListener {
 
 		// formatter arguments for the template: %1 - CSSs stylesheets,
 		// %2 - Search Icon Base64, %3 - 3rd party scripts, %4 - Flameview Coloring,
-		HTML_PAGE = String.format(fileContent("page.template"), styleheets, magnifierIcon, jsD3Lib, jsFlameviewColoring);
+		HTML_PAGE = String.format(fileContent("page.template"), styleheets, magnifierIcon, jsD3Lib,
+				jsFlameviewColoring);
 	}
 
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
