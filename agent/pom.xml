@@ -163,6 +163,7 @@
 						<exclude>TestDefineEventProbes.java</exclude>
 						<exclude>TestCustomClassloader.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
+						<exclude>TestDynamicallyLoadedClasses.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 						<exclude>TestRetrieveEventProbes.java</exclude>
 					</excludes>
@@ -277,6 +278,17 @@
 						<configuration>
 							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
 							<includes>TestRetrieveEventProbes.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-dynamically-loaded-classes</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
+							<includes>TestDynamicallyLoadedClasses.java</includes>
 						</configuration>
 					</execution>
 					<execution>
