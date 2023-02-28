@@ -85,7 +85,7 @@ public class AgentController implements AgentControllerMXBean {
 	private Class<?>[] retransformClasses(Set<String> classNames) {
 		List<Class<?>> classesToRetransform = new ArrayList<>();
 		classNames = classNames.stream().map((name) -> name.replace('/', '.')).collect(Collectors.toSet());
-		for (Class<?> clazz: instrumentation.getAllLoadedClasses()) {
+		for (Class<?> clazz : instrumentation.getAllLoadedClasses()) {
 			if (classNames.contains(clazz.getName())) {
 				classesToRetransform.add(clazz);
 			}

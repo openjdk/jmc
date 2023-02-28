@@ -158,7 +158,7 @@ public class Agent {
 	private static void retransformClasses(Set<String> clazzes, Instrumentation instrumentation) {
 		List<Class<?>> classesToRetransform = new ArrayList<>();
 		clazzes = clazzes.stream().map((name) -> name.replace('/', '.')).collect(Collectors.toSet());
-		for (Class<?> clazz: instrumentation.getAllLoadedClasses()) {
+		for (Class<?> clazz : instrumentation.getAllLoadedClasses()) {
 			if (clazzes.contains(clazz.getName())) {
 				classesToRetransform.add(clazz);
 			}

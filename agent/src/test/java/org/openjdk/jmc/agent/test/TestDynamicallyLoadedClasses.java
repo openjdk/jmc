@@ -51,13 +51,12 @@ public class TestDynamicallyLoadedClasses {
 	private static final String AGENT_OBJECT_NAME = "org.openjdk.jmc.jfr.agent:type=AgentController";
 
 	private static final String XML_TEST_DESCRIPTION = "<jfragent>" + "<config>" + "<classprefix>"
-	        + "__JFRTestDynamicallyLoadedClasses" + "</classprefix>" + "<allowconverter>" + true
-	        + "</allowconverter>" + "</config>" + "<events>" + "<event id=\"demo.jfr.test.dynamic\">"
-	        + "<label>" + "JFR Dynamic" + "</label>" + "<description>" + "desc" + "</description>"
-	        + "<path>" + "demo/dynamic" + "</path>" +  "<class>" + Target.class.getName() + "</class>"
-	        + "<method>" + "<name>" + "testStaticWithParameter" + "</name>" + "<descriptor>"
-	        + "(I)Ljava/lang/Object;" + "</descriptor>" + "<returnvalue>" + "<name>" + "val" + "</name>"
-			+ "<description>" + "value" + "</description>" + "<converter>"
+			+ "__JFRTestDynamicallyLoadedClasses" + "</classprefix>" + "<allowconverter>" + true + "</allowconverter>"
+			+ "</config>" + "<events>" + "<event id=\"demo.jfr.test.dynamic\">"	+ "<label>" + "JFR Dynamic" + "</label>"
+			+ "<description>" + "desc" + "</description>" + "<path>" + "demo/dynamic" + "</path>" +  "<class>"
+			+ Target.class.getName() + "</class>" + "<method>" + "<name>" + "testStaticWithParameter" + "</name>"
+			+ "<descriptor>" + "(I)Ljava/lang/Object;" + "</descriptor>" + "<returnvalue>" + "<name>" + "val"
+			+ "</name>"	+ "<description>" + "value" + "</description>" + "<converter>"
 			+ TestDynamicallyLoadedClasses.class.getName() + "</converter>" + "</returnvalue>" + "</method>"
 			+ "<location>" + "WRAP" + "</location>" + "</event>" + "</events>" + "</jfragent>";
 
