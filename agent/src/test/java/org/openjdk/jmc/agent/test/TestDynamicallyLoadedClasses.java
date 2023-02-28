@@ -52,11 +52,11 @@ public class TestDynamicallyLoadedClasses {
 
 	private static final String XML_TEST_DESCRIPTION = "<jfragent>" + "<config>" + "<classprefix>"
 			+ "__JFRTestDynamicallyLoadedClasses" + "</classprefix>" + "<allowconverter>" + true + "</allowconverter>"
-			+ "</config>" + "<events>" + "<event id=\"demo.jfr.test.dynamic\">"	+ "<label>" + "JFR Dynamic" + "</label>"
-			+ "<description>" + "desc" + "</description>" + "<path>" + "demo/dynamic" + "</path>" +  "<class>"
+			+ "</config>" + "<events>" + "<event id=\"demo.jfr.test.dynamic\">" + "<label>" + "JFR Dynamic" + "</label>"
+			+ "<description>" + "desc" + "</description>" + "<path>" + "demo/dynamic" + "</path>" + "<class>"
 			+ Target.class.getName() + "</class>" + "<method>" + "<name>" + "testStaticWithParameter" + "</name>"
 			+ "<descriptor>" + "(I)Ljava/lang/Object;" + "</descriptor>" + "<returnvalue>" + "<name>" + "val"
-			+ "</name>"	+ "<description>" + "value" + "</description>" + "<converter>"
+			+ "</name>" + "<description>" + "value" + "</description>" + "<converter>"
 			+ TestDynamicallyLoadedClasses.class.getName() + "</converter>" + "</returnvalue>" + "</method>"
 			+ "<location>" + "WRAP" + "</location>" + "</event>" + "</events>" + "</jfragent>";
 
@@ -70,7 +70,7 @@ public class TestDynamicallyLoadedClasses {
 		Method m = cls.getDeclaredMethod("testStaticWithParameter", int.class);
 
 		Assert.assertNotEquals(Target.class.getClassLoader(), cls.getClassLoader());
-		
+
 		AgentControllerMXBean mbean = JMX.newMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
 				new ObjectName(AGENT_OBJECT_NAME), AgentControllerMXBean.class, false);
 		mbean.defineEventProbes(XML_TEST_DESCRIPTION);
