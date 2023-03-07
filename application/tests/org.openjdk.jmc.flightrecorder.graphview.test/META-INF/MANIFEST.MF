@@ -7,6 +7,6 @@ Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.flightrecorder.graphview
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Import-Package: org.junit
+Require-Bundle: org.junit
 Export-Package: org.openjdk.jmc.flightrecorder.ext.graphview.graph
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.graphview.test
