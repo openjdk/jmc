@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.openjdk.jmc.agent.TransformDescriptor;
 import org.openjdk.jmc.agent.TransformRegistry;
@@ -82,13 +83,11 @@ public class AgentController implements AgentControllerMXBean {
 	}
 
 	private Class<?>[] retransformClasses(Set<String> classNames) {
-		Set<Class<?>> classesToRetransform = new HashSet<>();
-		for (String className : classNames) {
-			try {
-				Class<?> classToRetransform = Class.forName(className.replace('/', '.'));
-				classesToRetransform.add(classToRetransform);
-			} catch (ClassNotFoundException cnfe) {
-				logger.log(Level.SEVERE, "Unable to find class: " + className, cnfe);
+		List<Class<?>> classesToRetransform = new ArrayList<>();
+		classNames = classNames.stream().map((name) -> name.replace('/', '.')).collect(Collectors.toSet());
+		for (Class<?> clazz : instrumentation.getAllLoadedClasses()) {
+			if (classNames.contains(clazz.getName())) {
+				classesToRetransform.add(clazz);
 			}
 		}
 		return classesToRetransform.toArray(new Class<?>[0]);
