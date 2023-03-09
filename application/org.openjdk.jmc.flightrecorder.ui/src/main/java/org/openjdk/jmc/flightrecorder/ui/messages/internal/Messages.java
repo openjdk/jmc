@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -515,6 +515,7 @@ public class Messages extends NLS {
 	public static String STACKTRACE_VIEW_COUNT_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME;
+	public static String STACKTRACE_VIEW_DURATION_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_DISTINGUISH_FRAMES_BY;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_CHOOSE;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_NEXT;
@@ -630,6 +631,16 @@ public class Messages extends NLS {
 		return NLS.bind(message, new Object[] {itemCount, frameFraction, totalCount});
 	}
 
+	public static String stackTraceMessage(String itemCount, String totalCount, String frameFraction) {
+		String message;
+		if (itemCount.equals("1")) {
+			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL;
+		} else {
+			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL;
+		}
+		return NLS.bind(message, new Object[] {itemCount, frameFraction, totalCount});
+	}
+
 	public static String siblingMessage(int itemsInSiblings, int nSiblings) {
 		String message;
 		if (itemsInSiblings == 1) {
@@ -648,13 +659,15 @@ public class Messages extends NLS {
 		return NLS.bind(message, itemsInSiblings, nSiblings);
 	}
 
-	public static String stackTraceMessage(double duration, double totalDuration, String frameFraction) {
+	public static String stackTraceMessage(
+		double duration, String durationUnit, double totalDuration, String totalDurationUnit, String frameFraction) {
 		String message;
 		if (duration == 1) {
 			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL;
 		} else {
 			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL;
 		}
-		return NLS.bind(message, new Object[] {duration, frameFraction, totalDuration});
+		return NLS.bind(message,
+				new Object[] {duration, durationUnit, frameFraction, totalDuration, totalDurationUnit});
 	}
 }
