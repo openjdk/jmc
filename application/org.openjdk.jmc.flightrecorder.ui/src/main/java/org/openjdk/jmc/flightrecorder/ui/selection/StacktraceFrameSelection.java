@@ -43,9 +43,9 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
 public class StacktraceFrameSelection extends FlavoredSelectionBase {
@@ -77,7 +77,7 @@ public class StacktraceFrameSelection extends FlavoredSelectionBase {
 
 			@Override
 			public String getName() {
-				return MessageFormat.format(Messages.FLAVOR_CONTAINS, JdkAttributes.STACK_TRACE_STRING.getName(),
+				return MessageFormat.format(Messages.FLAVOR_CONTAINS, JfrAttributes.EVENT_STACKTRACE.getName(),
 						FormatToolkit.getHumanReadable(method));
 			}
 
@@ -88,7 +88,7 @@ public class StacktraceFrameSelection extends FlavoredSelectionBase {
 
 			@Override
 			public IItemFilter getFilter() {
-				return ItemFilters.contains(JdkAttributes.STACK_TRACE_STRING, FormatToolkit.getHumanReadable(method));
+				return new JdkFilters.MethodFilterObject(method);
 			}
 		};
 	}

@@ -325,10 +325,10 @@ class StructTypes {
 		private void convertNames() {
 			if (!convertedNames) {
 				if (name != null) {
-					name = MethodToolkit.refTypeToBinaryJLS((String) name);
+					name = MethodToolkit.refTypeToBinaryJLS((String) name).intern();
 				}
 				if (getPackageName() != null && getPackageName().length() > 0) {
-					typeName = ((String) name).substring(getPackageName().length() + 1);
+					typeName = ((String) name).substring(getPackageName().length() + 1).intern();
 				} else {
 					typeName = (String) name;
 				}

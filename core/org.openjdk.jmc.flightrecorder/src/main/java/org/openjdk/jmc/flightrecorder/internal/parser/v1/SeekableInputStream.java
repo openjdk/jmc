@@ -163,14 +163,14 @@ class SeekableInputStream implements IDataInput {
 			int start = pos;
 			pos += size;
 			return new String(buffer, start, size,
-					encoding == STRING_ENCODING_UTF8_BYTE_ARRAY ? StandardCharsets.UTF_8 : StandardCharsets.ISO_8859_1);
+					encoding == STRING_ENCODING_UTF8_BYTE_ARRAY ? StandardCharsets.UTF_8 : StandardCharsets.ISO_8859_1).intern();
 		case STRING_ENCODING_CHAR_ARRAY:
 			int charCount = readInt();
 			char[] c = new char[charCount];
 			for (int i = 0; i < c.length; i++) {
 				c[i] = readChar();
 			}
-			return new String(c);
+			return new String(c).intern();
 		default:
 			throw new IOException("Disallowed raw string encoding: " + encoding); //$NON-NLS-1$
 		}

@@ -37,6 +37,7 @@ import java.util.function.Predicate;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCStackTrace;
+import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IMemberAccessor;
@@ -188,6 +189,52 @@ public final class JdkFilters {
 							IMCMethod method = frame.getMethod();
 							if (typeName.equals(method.getType().getFullName())
 									&& methodName.equals(method.getMethodName())) {
+								return true;
+							}
+						}
+					}
+					return false;
+				}
+			};
+		}
+	}
+	
+	public static class MethodFilterObject implements IItemFilter {
+		
+		private final IMCMethod methodObject;
+		
+		/**
+		 * Constructs a filter that accepts stack trace frames matching the provided method
+		 * name and type (class name)
+
+		 * @param methoObject
+		 *            Method object to match
+		 */
+		public MethodFilterObject(IMCMethod methodObject) {
+			this.methodObject = methodObject;
+		}
+		
+		@Override
+		public Predicate<IItem> getPredicate(IType<IItem> type) {
+			final IMemberAccessor<?, IItem> accessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(type);
+			if (accessor == null) {
+				return PredicateToolkit.falsePredicate();
+			}
+
+			return new Predicate<IItem>() {
+
+				@Override
+				public boolean test(IItem o) {
+					IMCStackTrace st = (IMCStackTrace) accessor.getMember(o);
+					IMCType typeObject = methodObject.getType();
+					if (st != null) {
+						for (IMCFrame frame : st.getFrames()) {
+							IMCMethod method = frame.getMethod();
+							IMCType type = method.getType();
+							// String reference equality should work as I *hopefully* have interned the
+							// strings
+							if ((typeObject.getFullName() == type.getFullName())
+									&& (methodObject.getMethodName() == method.getMethodName())) {
 								return true;
 							}
 						}
