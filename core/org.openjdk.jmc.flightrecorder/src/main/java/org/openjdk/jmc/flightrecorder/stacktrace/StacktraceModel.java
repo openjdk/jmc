@@ -134,7 +134,7 @@ public class StacktraceModel {
 		} else if (obj instanceof StacktraceModel) {
 			StacktraceModel other = (StacktraceModel) obj;
 			return threadRootAtTop == other.threadRootAtTop && frameSeparator.equals(other.frameSeparator)
-					&& items.equals(other.items) ;
+					&& items.equals(other.items) && Objects.equals(attribute, other.attribute);
 		}
 		return false;
 	}
