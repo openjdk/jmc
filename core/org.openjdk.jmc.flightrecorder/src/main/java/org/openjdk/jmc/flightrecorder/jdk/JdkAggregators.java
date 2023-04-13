@@ -279,7 +279,7 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE_DESC), SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> SOCKET_READ_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SOCKET_READ_SIZE), Messages.getString(Messages.AGGR_SOCKET_READ_SIZE_DESC),
-			SOCKET_READ, IO_SOCKET_BYTES_READ);
+			SOCKET_READ, IO_SOCKET_BYTES_READ, (value -> value >= 0));
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_COUNT),
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_COUNT_DESC), JdkFilters.SOCKET_WRITE);
