@@ -768,7 +768,8 @@ public class Aggregators {
 	}
 
 	public static IAggregator<IQuantity, ?> sum(
-		String name, String description, final String typeId, final IAttribute<IQuantity> attribute, Predicate<Double> predicate) {
+		String name, String description, final String typeId, final IAttribute<IQuantity> attribute,
+		Predicate<Double> predicate) {
 		ContentType<IQuantity> contentType = attribute.getContentType();
 		if (contentType instanceof LinearKindOfQuantity) {
 			return new Sum(name, description, (LinearKindOfQuantity) contentType) {
