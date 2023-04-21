@@ -12,5 +12,6 @@ Export-Package: org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.flightrecorder.rules.tree,
  org.openjdk.jmc.flightrecorder.rules.util
 Require-Bundle: org.openjdk.jmc.common;visibility:=reexport,
- org.openjdk.jmc.flightrecorder
+  org.openjdk.jmc.flightrecorder
+Import-Package: org.owasp.encoder
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.rules
