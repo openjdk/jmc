@@ -59,10 +59,10 @@
             <repository location="http://download.eclipse.org/releases/2023-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.23.0.v20230221055001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.23.0.v20230221055001"/>
-            <!-- No new release yet - using 2021-12 -->
-            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.20.0/2022-03/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.26.0.v20230220105658"/>
+            <unit id="org.eclipse.babel.nls_eclipse_zh.feature.group" version="4.26.0.v20230220105658"/>
+            <!-- No new release yet - using 2022-12 -->
+            <repository location="https://archive.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
