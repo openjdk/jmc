@@ -203,7 +203,7 @@ public class StringDeduplicationRule extends AbstractRule {
 		Boolean useShenandoahGC = items.getAggregate(JdkAggregators.USE_SHENANDOAH_GC);
 		String extraCompatInfo = ""; //$NON-NLS-1$
 		if (!(Boolean.TRUE.equals(useG1GC)) && !(Boolean.TRUE.equals(useShenandoahGC))) {
-			extraCompatInfo += "<p>" + Messages.getString(Messages.StringDeduplicationRule_RESULT_GC_LONG); //$NON-NLS-1$
+			extraCompatInfo += "\n" + Messages.getString(Messages.StringDeduplicationRule_RESULT_GC_LONG); //$NON-NLS-1$
 		}
 
 		// Calculate string internal array ratios depending on available event types

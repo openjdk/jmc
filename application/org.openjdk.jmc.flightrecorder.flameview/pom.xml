@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, Datadog, Inc. All rights reserved.
+   Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -65,19 +65,19 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.css</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
-						<id>d3-v6-js</id>
+						<id>download-d3</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v6.min.js</url>
+							<url>https://d3js.org/d3.v7.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
@@ -89,7 +89,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph-tooltip.js</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph-tooltip.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>
@@ -101,7 +101,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.0.6/dist/d3-flamegraph.js</url>
+							<url>https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 						</configuration>

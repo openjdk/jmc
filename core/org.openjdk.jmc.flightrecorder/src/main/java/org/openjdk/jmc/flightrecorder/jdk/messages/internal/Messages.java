@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -152,8 +152,14 @@ public class Messages {
 	public static final String AGGR_OBJ_ALLOC_SUM_DESC = "AGGR_OBJ_ALLOC_SUM_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES = "AGGR_OBJECT_COUNT_MAX_INSTANCES"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC = "AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_INSTANCES = "AGGR_OBJECT_COUNT_AVG_INSTANCES"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_INSTANCES_DESC = "AGGR_OBJECT_COUNT_AVG_INSTANCES_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE = "AGGR_OBJECT_COUNT_MAX_SIZE"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE_DESC = "AGGR_OBJECT_COUNT_MAX_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_SIZE = "AGGR_OBJECT_COUNT_AVG_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_SIZE_DESC = "AGGR_OBJECT_COUNT_AVG_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_TOTAL_SIZE = "AGGR_OBJECT_COUNT_TOTAL_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_TOTAL_SIZE_DESC = "AGGR_OBJECT_COUNT_TOTAL_SIZE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OUTSIDE_TLAB_COUNT = "AGGR_OUTSIDE_TLAB_COUNT"; //$NON-NLS-1$
 	public static final String AGGR_OUTSIDE_TLAB_COUNT_DESC = "AGGR_OUTSIDE_TLAB_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_SOCKET_READ_COUNT = "AGGR_SOCKET_READ_COUNT"; //$NON-NLS-1$
@@ -275,6 +281,12 @@ public class Messages {
 	public static final String ATTR_EXPLICIT_GC_DISABLED_DESC = "ATTR_EXPLICIT_GC_DISABLED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTED_PACKAGE = "ATTR_EXPORTED_PACKAGE"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTING_MODULE = "ATTR_EXPORTING_MODULE"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS = "ATTR_FINALIZABLE_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_DESC = "ATTR_FINALIZABLE_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME = "ATTR_FINALIZABLE_CLASS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME_DESC = "ATTR_FINALIZABLE_CLASS_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN = "ATTR_TOTAL_FINALIZERS_RUN"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN_DESC = "ATTR_TOTAL_FINALIZERS_RUN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NAME = "ATTR_FLAG_NAME"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_BOOLEAN = "ATTR_FLAG_NEW_VALUE BOOLEAN"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_NUMBER = "ATTR_FLAG_NEW_VALUE_NUMBER"; //$NON-NLS-1$

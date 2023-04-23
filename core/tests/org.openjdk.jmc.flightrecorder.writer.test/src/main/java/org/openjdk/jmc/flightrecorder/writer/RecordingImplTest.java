@@ -39,17 +39,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.openjdk.jmc.flightrecorder.testutils.parser.ChunkHeader;
+import org.openjdk.jmc.flightrecorder.testutils.parser.ChunkParserListener;
+import org.openjdk.jmc.flightrecorder.testutils.parser.StreamingChunkParser;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
+@SuppressWarnings("restriction")
 class RecordingImplTest {
 	private RecordingImpl recording;
 	private ByteArrayOutputStream bos;
@@ -63,6 +72,35 @@ class RecordingImplTest {
 	@AfterEach
 	void tearDown() throws Exception {
 		recording.close();
+	}
+
+	@ParameterizedTest
+	@MethodSource("recordingSettings")
+	void testChunkHeaderTimestamps(RecordingSettings settings) throws IOException {
+		StreamingChunkParser parser = new StreamingChunkParser();
+		ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+		RecordingImpl recording1 = new RecordingImpl(bos1, settings);
+		recording1.close();
+
+		parser.parse(new ByteArrayInputStream(bos1.toByteArray()), new ChunkParserListener() {
+			@Override
+			public boolean onChunkStart(int chunkIndex, ChunkHeader header) {
+				assertTrue(header.startNanos > -1);
+				assertTrue(header.startTicks > -1);
+				assertTrue(header.duration > -1);
+
+				assertTrue(settings.getStartTimestamp() == -1 || settings.getStartTimestamp() == header.startNanos);
+				assertTrue(settings.getStartTicks() == -1 || settings.getStartTicks() == header.startTicks);
+				assertTrue(settings.getDuration() == -1 || settings.getDuration() == header.duration);
+				// skip the rest
+				return false;
+			}
+		});
+	}
+
+	private static Stream<Arguments> recordingSettings() {
+		return Stream.of(Arguments.of(new RecordingSettings()),
+				Arguments.of(new RecordingSettings(0, 0, 500_000_000L, true)));
 	}
 
 	@Test

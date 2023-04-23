@@ -47,6 +47,7 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("restriction")
 public class MetadataImplTest {
 	private static final String TYPE_NAME = "dummy.Type";
 

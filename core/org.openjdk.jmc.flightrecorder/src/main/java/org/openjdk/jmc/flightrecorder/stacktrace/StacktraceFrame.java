@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +32,14 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace;
 
+import static org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.aggregateItems;
+
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 
 /**
@@ -52,17 +57,20 @@ public class StacktraceFrame {
 	private final IMCFrame frame;
 	private final Branch branch;
 	private final int indexInBranch;
+	private final IAttribute<IQuantity> attribute;
 	// TODO: Consider adding a frameSeparator field so that it becomes possible to tell how specific the frame is
 
-	StacktraceFrame(IItem[] items, IMCFrame frame, Branch branch, int indexInBranch) {
-		this(new SimpleArray<>(items, items.length), frame, branch, indexInBranch);
+	StacktraceFrame(IItem[] items, IMCFrame frame, Branch branch, int indexInBranch, IAttribute<IQuantity> attribute) {
+		this(new SimpleArray<>(items, items.length), frame, branch, indexInBranch, attribute);
 	}
 
-	StacktraceFrame(SimpleArray<IItem> items, IMCFrame frame, Branch branch, int indexInBranch) {
+	StacktraceFrame(SimpleArray<IItem> items, IMCFrame frame, Branch branch, int indexInBranch,
+			IAttribute<IQuantity> attribute) {
 		this.items = items;
 		this.frame = frame;
 		this.branch = branch;
 		this.indexInBranch = indexInBranch;
+		this.attribute = attribute;
 	}
 
 	/**
@@ -98,6 +106,20 @@ public class StacktraceFrame {
 	 */
 	public int getItemCount() {
 		return items.size();
+	}
+
+	/**
+	 * @return the value of the aggregation on the attribute
+	 */
+	public long getAttributeAggregate() {
+		IMemberAccessor<IQuantity, IItem> accessor = StacktraceModel.getAccessor(items, attribute);
+		if (accessor != null) {
+			IQuantity quantity = aggregateItems(items, accessor);
+			if (quantity != null) {
+				return quantity.longValue();
+			}
+		}
+		return getItemCount();
 	}
 
 	@Override

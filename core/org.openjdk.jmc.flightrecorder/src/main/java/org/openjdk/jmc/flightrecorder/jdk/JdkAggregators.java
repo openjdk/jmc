@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -177,7 +177,7 @@ public final class JdkAggregators {
 			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
 	public static final IAggregator<IQuantity, ?> YOUNG_GENERATION_MAX_SIZE = min(
 			JdkAttributes.YOUNG_GENERATION_MAX_SIZE.getName(), null, GC_CONF_YOUNG_GENERATION,
-			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
+			JdkAttributes.YOUNG_GENERATION_MAX_SIZE);
 	public static final IAggregator<IQuantity, ?> NEW_RATIO_MIN = min(NEW_RATIO.getName(), null,
 			GC_CONF_YOUNG_GENERATION, NEW_RATIO);
 	public static final IAggregator<IQuantity, ?> TENURING_THRESHOLD_INITIAL_MIN = min(
@@ -204,9 +204,18 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> OBJECT_COUNT_MAX_SIZE = max(
 			Messages.getString(Messages.AGGR_OBJECT_COUNT_MAX_SIZE),
 			Messages.getString(Messages.AGGR_OBJECT_COUNT_MAX_SIZE_DESC), OBJECT_COUNT, HEAP_TOTAL);
+	public static final IAggregator<IQuantity, ?> OBJECT_COUNT_AVG_SIZE = avg(
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_AVG_SIZE),
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_AVG_SIZE_DESC), OBJECT_COUNT, HEAP_TOTAL);
+	public static final IAggregator<IQuantity, ?> OBJECT_COUNT_TOTAL_SIZE = sum(
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_TOTAL_SIZE),
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_TOTAL_SIZE_DESC), OBJECT_COUNT, HEAP_TOTAL);
 	public static final IAggregator<IQuantity, ?> OBJECT_COUNT_MAX_INSTANCES = max(
 			Messages.getString(Messages.AGGR_OBJECT_COUNT_MAX_INSTANCES),
 			Messages.getString(Messages.AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC), OBJECT_COUNT, JdkAttributes.COUNT);
+	public static final IAggregator<IQuantity, ?> OBJECT_COUNT_AVG_INSTANCES = avg(
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_AVG_INSTANCES),
+			Messages.getString(Messages.AGGR_OBJECT_COUNT_AVG_INSTANCES_DESC), OBJECT_COUNT, JdkAttributes.COUNT);
 	public static final IAggregator<Boolean, ?> UNLOCK_EXPERIMENTAL_VM_OPTIONS = filter(
 			Messages.getString(Messages.AGGR_UNLOCK_EXPERIMENTAL_VM_OPTIONS), null,
 			or(BOOLEAN_FLAG, FLAG_VALUE_BOOLEAN), ItemFilters.equals(FLAG_NAME, "UnlockExperimentalVMOptions")); //$NON-NLS-1$

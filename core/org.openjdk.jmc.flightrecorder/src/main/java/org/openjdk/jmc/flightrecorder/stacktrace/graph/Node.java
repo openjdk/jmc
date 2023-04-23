@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,9 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.graph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A node in the graph of aggregated stack traces.
  */
@@ -46,6 +49,42 @@ public final class Node {
 	 * The frame associated with this node.
 	 */
 	private final AggregatableFrame frame;
+
+	static class NodeWrapper {
+		int nodeId;
+		Node node;
+
+		NodeWrapper(int nodeId, Node node) {
+			this.nodeId = nodeId;
+			this.node = node;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + nodeId;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			NodeWrapper other = (NodeWrapper) obj;
+			if (nodeId != other.nodeId)
+				return false;
+			return true;
+		}
+
+	}
+
+	private final Map<NodeWrapper, Edge> in = new HashMap<>();
+	private final Map<NodeWrapper, Edge> out = new HashMap<>();
 
 	/**
 	 * The number of times being the top frame.
@@ -130,5 +169,13 @@ public final class Node {
 	public String toString() {
 		return String.format("%s counts:%d(%d),weights:%.2f(%.2f)", frame.toString(), count, cumulativeCount, weight,
 				cumulativeWeight);
+	}
+
+	Map<NodeWrapper, Edge> getIn() {
+		return in;
+	}
+
+	Map<NodeWrapper, Edge> getOut() {
+		return out;
 	}
 }

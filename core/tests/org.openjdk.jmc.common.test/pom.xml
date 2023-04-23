@@ -42,11 +42,15 @@
 	<properties>
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
-	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>testlib</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

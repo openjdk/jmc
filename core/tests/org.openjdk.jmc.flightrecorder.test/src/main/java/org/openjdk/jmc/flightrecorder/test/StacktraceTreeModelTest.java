@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,8 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.test;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +43,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
@@ -53,6 +50,10 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
+import org.openjdk.jmc.test.io.IOResourceSet;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 public class StacktraceTreeModelTest {
 
@@ -82,9 +83,9 @@ public class StacktraceTreeModelTest {
 
 		assertEquals(leafValues.size(), 3);
 		Map<String, List<Double>> expected = new HashMap<>();
-		expected.put("Arrays.copyOfRange(char[], int, int)", asList(104.00));
-		expected.put("TimerThread.mainLoop()", asList(112.00));
-		expected.put("AbstractCollection.toArray()", asList(24.00));
+		expected.put("Arrays.copyOfRange(char[], int, int)", asList(104.0 / 1024));
+		expected.put("TimerThread.mainLoop()", asList(112.0 / 1024));
+		expected.put("AbstractCollection.toArray()", asList(24.0 / 1024));
 		assertEquals(expected, leafValues);
 	}
 
@@ -101,9 +102,9 @@ public class StacktraceTreeModelTest {
 
 		assertEquals(leafValues.size(), 3);
 		Map<String, List<Double>> expected = new HashMap<>();
-		expected.put("JFRImpl.onNewChunk()", asList(24.0));
-		expected.put("TimerThread.run()", asList(112.00));
-		expected.put("Thread.run()", asList(104.0));
+		expected.put("JFRImpl.onNewChunk()", asList(24.0 / 1024));
+		expected.put("TimerThread.run()", asList(112.0 / 1024));
+		expected.put("Thread.run()", asList(104.0 / 1024));
 		assertEquals(expected, leafValues);
 	}
 

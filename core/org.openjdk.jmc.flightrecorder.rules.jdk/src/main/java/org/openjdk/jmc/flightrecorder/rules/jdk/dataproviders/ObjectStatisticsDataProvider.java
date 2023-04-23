@@ -102,8 +102,8 @@ public class ObjectStatisticsDataProvider {
 	}
 
 	/**
-	 * @return an aggregator for the increase in the live set between the first and last garbage
-	 *         collections
+	 * @return an aggregator for the increase in the live set size between the first and last
+	 *         garbage collections
 	 */
 	public static IAggregator<IQuantity, ?> getIncreaseAggregator() {
 		return new Aggregators.MergingAggregator<IQuantity, IncreaseCalculator>(
@@ -130,4 +130,35 @@ public class ObjectStatisticsDataProvider {
 			}
 		};
 	}
+
+	/**
+	 * @return an aggregator for the increase in the live set instances between the first and last
+	 *         garbage collections
+	 */
+	public static IAggregator<IQuantity, ?> getIncreaseInstancesAggregator() {
+		return new Aggregators.MergingAggregator<IQuantity, IncreaseCalculator>(
+				Messages.getString(Messages.ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE),
+				Messages.getString(Messages.ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE_DESC),
+				UnitLookup.MEMORY) {
+
+			@Override
+			public boolean acceptType(IType<IItem> type) {
+				return JdkTypeIDs.OBJECT_COUNT.equals(type.getIdentifier());
+			}
+
+			@Override
+			public IncreaseCalculator newItemConsumer(IType<IItem> type) {
+				IType<IItem> iType = type;
+				return new IncreaseCalculator(JfrAttributes.END_TIME.getAccessor(iType),
+						JdkAttributes.COUNT.getAccessor(iType));
+			}
+
+			@Override
+			public IQuantity getValue(IncreaseCalculator consumer) {
+				return consumer == null || consumer.maxX == null ? null : consumer.yAtMaxX.subtract(consumer.yAtMinX);
+
+			}
+		};
+	}
+
 }

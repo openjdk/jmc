@@ -58,15 +58,27 @@ import java.util.NoSuchElementException;
 public class FastAccessNumberMap<T> implements Iterable<T> {
 
 	private final int pagesUpperLimit;
-	private final int pageSize;
-	private Object[][] pages;
+	private Page[] pages;
 	private Map<Long, T> overflow;
 
 	/**
-	 * Constructs a map with O(1) access up to index 5000.
+	 * Constructs a map with O(1) access up to approximately index 5000.
 	 */
 	public FastAccessNumberMap() {
-		this(100, 50);
+		this(5000);
+	}
+
+	/**
+	 * Constructs a map with O(1) access up to index {@code expectedSize}.
+	 *
+	 * @param expectedSize
+	 *            - the maximum number of elements expected to be inserted into the map before
+	 *            overflowing to slower storage.
+	 */
+	public FastAccessNumberMap(int expectedSize) {
+		// round up to the next multiple of Page.SIZE
+		this.pagesUpperLimit = (expectedSize + Page.SIZE - 1) & -Page.SIZE;
+		this.pages = new Page[1];
 	}
 
 	/**
@@ -78,18 +90,16 @@ public class FastAccessNumberMap<T> implements Iterable<T> {
 	 *            max page count
 	 */
 	public FastAccessNumberMap(int pageSize, int maxPageCount) {
-		this.pagesUpperLimit = pageSize * maxPageCount;
-		this.pageSize = pageSize;
-		this.pages = new Object[1][];
+		this(pageSize * maxPageCount);
 	}
 
-	private Object[] getPage(int pageIndex) {
+	private Page getPage(int pageIndex) {
 		if (pages.length <= pageIndex) {
 			pages = Arrays.copyOf(pages, pageIndex + 1);
 		}
-		Object[] page = pages[pageIndex];
+		Page page = pages[pageIndex];
 		if (page == null) {
-			page = new Object[pageSize];
+			page = new Page();
 			pages[pageIndex] = page;
 		}
 		return page;
@@ -97,14 +107,16 @@ public class FastAccessNumberMap<T> implements Iterable<T> {
 	}
 
 	private T getLow(int index) {
-		Object value = getPage(index / pageSize)[index % pageSize];
+		// masking by Page.SIZE - 1 is equivalent to % Page.SIZE
+		Object value = getPage(index / Page.SIZE).get(index & (Page.SIZE - 1));
 		@SuppressWarnings("unchecked")
 		T tValue = (T) value;
 		return tValue;
 	}
 
 	private void putLow(int index, T object) {
-		getPage(index / pageSize)[index % pageSize] = object;
+		// masking by Page.SIZE - 1 is equivalent to % Page.SIZE
+		getPage(index / Page.SIZE).set(index & (Page.SIZE - 1), object);
 	}
 
 	/**
@@ -149,19 +161,19 @@ public class FastAccessNumberMap<T> implements Iterable<T> {
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
 			T next;
-			Iterator<Object[]> pageIterator = IteratorToolkit.of(pages);
-			Iterator<Object> elementIterator;
+			Iterator<Page> pageIterator = IteratorToolkit.of(pages);
+			PageIteratorFlyweight elementIterator = new PageIteratorFlyweight();
 			Iterator<T> highIterator = overflow == null ? Collections.<T> emptyList().iterator()
 					: overflow.values().iterator();
 
 			@Override
 			public boolean hasNext() {
 				while (next == null) {
-					if (elementIterator == null || !elementIterator.hasNext()) {
+					if (!elementIterator.hasNext()) {
 						if (pageIterator.hasNext()) {
-							Object[] nextPage = pageIterator.next();
+							Page nextPage = pageIterator.next();
 							if (nextPage != null) {
-								elementIterator = IteratorToolkit.of(nextPage);
+								elementIterator.wrap(nextPage);
 							}
 						} else if (highIterator.hasNext()) {
 							next = highIterator.next();
@@ -192,5 +204,55 @@ public class FastAccessNumberMap<T> implements Iterable<T> {
 				throw new UnsupportedOperationException();
 			}
 		};
+	}
+
+	private static final class Page {
+		// choose a fixed power of 2 so that divisions and mods can be replaced by shifts and masks
+		public static final int SIZE = 64;
+		private long mask;
+		private final Object[] values;
+
+		Page() {
+			this.values = new Object[SIZE];
+		}
+
+		public Object get(int index) {
+			return values[index];
+		}
+
+		public void set(int index, Object value) {
+			values[index] = value;
+			// mark presence of the element so iteration can skip nulls quickly
+			mask |= (1L << index);
+		}
+	}
+
+	private static final class PageIteratorFlyweight implements Iterator<Object> {
+		private long mask;
+		private Object[] values;
+
+		public void wrap(Page page) {
+			this.mask = page.mask;
+			this.values = page.values;
+		}
+
+		@Override
+		public boolean hasNext() {
+			// when there are no bits left, the page has been iterated entirely
+			return mask != 0;
+		}
+
+		@Override
+		public Object next() {
+			// get the index of the lowest bit, then switch it off
+			int index = Long.numberOfTrailingZeros(mask);
+			mask &= (mask - 1);
+			return values[index];
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

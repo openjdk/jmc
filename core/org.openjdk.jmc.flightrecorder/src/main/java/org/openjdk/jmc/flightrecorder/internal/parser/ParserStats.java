@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.common.IDescribable;
@@ -73,10 +74,10 @@ public class ParserStats {
 	private final AtomicLong skippedEventCount = new AtomicLong();
 	private final ConcurrentHashMap<String, EventTypeStats> statsByType = new ConcurrentHashMap<>();
 	private final ConcurrentLinkedDeque<ConstantPoolInfo> constantPoolInfoList = new ConcurrentLinkedDeque<>();
-	private final ConcurrentHashMap<String, Long> entryPoolSizeByType = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, AtomicLong> entryPoolSizeByType = new ConcurrentHashMap<>();
 	private IItemCollection poolStats;
 	private IItemCollection constants;
-	private Map<String, IConstantPoolExtension> constantPoolExtensions = new ConcurrentHashMap<>();
+	private final Map<String, IConstantPoolExtension> constantPoolExtensions = new ConcurrentHashMap<>();
 
 	public void setVersion(short majorVersion, short minorVersion) {
 		this.majorVersion = majorVersion;
@@ -92,13 +93,7 @@ public class ParserStats {
 	}
 
 	public void updateEventStats(String eventTypeName, long size) {
-		statsByType.compute(eventTypeName, (key, stats) -> {
-			if (stats == null) {
-				return new EventTypeStats(eventTypeName, size);
-			}
-			stats.add(size);
-			return stats;
-		});
+		statsByType.computeIfAbsent(eventTypeName, EventTypeStats::new).add(size);
 	}
 
 	public void addConstantPool(long id, String name, FastAccessNumberMap<Object> constantPool) {
@@ -106,12 +101,7 @@ public class ParserStats {
 	}
 
 	public void addEntryPoolSize(String typeIdentifier, long size) {
-		entryPoolSizeByType.compute(typeIdentifier, (key, value) -> {
-			if (value == null) {
-				return size;
-			}
-			return value + size;
-		});
+		entryPoolSizeByType.computeIfAbsent(typeIdentifier, id -> new AtomicLong()).addAndGet(size);
 	}
 
 	public void addConstantPoolExtension(IConstantPoolExtension extension) {
@@ -145,7 +135,7 @@ public class ParserStats {
 		if (stats == null) {
 			return 0;
 		}
-		return stats.count;
+		return stats.getCount();
 	}
 
 	public long getTotalSize(String eventTypeName) {
@@ -153,14 +143,14 @@ public class ParserStats {
 		if (stats == null) {
 			return 0;
 		}
-		return stats.totalSize;
+		return stats.getTotalSize();
 	}
 
 	public IItemCollection getConstantPools() {
 		if (poolStats == null) {
 			Map<String, ConstPoolItem> poolStatsByName = new HashMap<>();
 			for (ConstantPoolInfo info : constantPoolInfoList) {
-				ConstPoolItem poolItem = poolStatsByName.computeIfAbsent(info.name, key -> createPoolItem(info));
+				ConstPoolItem poolItem = poolStatsByName.computeIfAbsent(info.name, this::createPoolItem);
 				poolItem.count += getConstantPoolCount(info.constantPool);
 			}
 			poolStats = ItemCollectionToolkit.build(poolStatsByName.values().stream());
@@ -321,10 +311,10 @@ public class ParserStats {
 		}
 	}
 
-	private ConstPoolItem createPoolItem(ConstantPoolInfo info) {
-		Long totalSize = entryPoolSizeByType.get(info.name);
+	private ConstPoolItem createPoolItem(String infoName) {
+		AtomicLong totalSize = entryPoolSizeByType.get(infoName);
 		long entrySize = totalSize != null ? totalSize.longValue() : 0;
-		return new ConstPoolItem(info.name, 0, entrySize);
+		return new ConstPoolItem(infoName, 0, entrySize);
 	}
 
 	private long getConstantPoolCount(FastAccessNumberMap<Object> constantPool) {
@@ -339,18 +329,20 @@ public class ParserStats {
 
 	private static class EventTypeStats implements IEventStats {
 		private final String eventTypeName;
-		private long count;
-		private long totalSize;
+		private static final AtomicLongFieldUpdater<EventTypeStats> COUNT_UPDATER = AtomicLongFieldUpdater
+				.newUpdater(EventTypeStats.class, "count");
+		private volatile long count;
+		private static final AtomicLongFieldUpdater<EventTypeStats> TOTAL_SIZE_UPDATER = AtomicLongFieldUpdater
+				.newUpdater(EventTypeStats.class, "totalSize");
+		private volatile long totalSize;
 
-		public EventTypeStats(String eventTypeName, long size) {
+		public EventTypeStats(String eventTypeName) {
 			this.eventTypeName = eventTypeName;
-			this.count = 1;
-			this.totalSize = size;
 		}
 
 		public void add(long size) {
-			count++;
-			totalSize += size;
+			COUNT_UPDATER.incrementAndGet(this);
+			TOTAL_SIZE_UPDATER.addAndGet(this, size);
 		}
 
 		@Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.updatesite.rcp"
       label="JDK Mission Control Supported RCP Site"
-      version="8.3.0.qualifier">
+      version="9.0.0.qualifier">
 
    <description>
       This is a release engineering internal &quot;feature&quot;. It just happen
@@ -64,10 +64,6 @@ copyright or other irrelevant stuff in here.
 
    <includes
          id="org.openjdk.jmc.feature.console.ui.subscriptions"
-         version="0.0.0"/>
-
-   <includes
-         id="org.openjdk.jmc.feature.twitter"
          version="0.0.0"/>
 
 </feature>

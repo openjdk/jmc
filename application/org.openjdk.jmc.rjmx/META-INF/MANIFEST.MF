@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: RJMX
 Bundle-SymbolicName: org.openjdk.jmc.rjmx;singleton:=true
-Bundle-Version: 8.3.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Activator: org.openjdk.jmc.rjmx.RJMXPlugin
 Eclipse-BuddyPolicy: app
 Import-Package: jakarta.mail,
@@ -57,7 +57,6 @@ Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.triggers;
   x-friends:="org.openjdk.jmc.console.ui.notification,
    org.openjdk.jmc.alert,
-   org.openjdk.jmc.console.twitter,
    org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.triggers.actions.internal;x-friends:="org.openjdk.jmc.console.ui.notification",
  org.openjdk.jmc.rjmx.triggers.condition.internal;x-friends:="org.openjdk.jmc.console.ui.notification,org.openjdk.jmc.test.jemmy",

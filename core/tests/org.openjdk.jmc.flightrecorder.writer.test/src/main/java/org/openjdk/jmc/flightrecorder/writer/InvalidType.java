@@ -41,6 +41,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.NamedType;
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
 
+@SuppressWarnings("restriction")
 final class InvalidType implements TypeImpl {
 	@Override
 	public long getId() {

@@ -41,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 
+@SuppressWarnings("restriction")
 class CompositeTypeImplTest {
 	private static final String TYPE_NAME = "test.Type";
 	private static final String FIELD_NAME = "field1";

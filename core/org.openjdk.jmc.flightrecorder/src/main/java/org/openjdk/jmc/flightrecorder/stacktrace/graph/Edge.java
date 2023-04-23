@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,12 +50,13 @@ public final class Edge {
 	 * @param to
 	 *            non null to node.
 	 */
-	public Edge(Node from, Node to) {
+	public Edge(Node from, Node to, double value) {
 		if (from == null || to == null) {
 			throw new NullPointerException("Nodes must not be null");
 		}
 		this.from = from;
 		this.to = to;
+		this.value = value;
 	}
 
 	public Node getFrom() {
