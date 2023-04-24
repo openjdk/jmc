@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -84,6 +84,8 @@ public class RuleManager {
 
 	public static final String RULE_CONFIGURATION_PREFERENCE_ID = "ruleConfiguration"; //$NON-NLS-1$
 	public static final String UNMAPPED_REMAINDER_TOPIC = ""; //$NON-NLS-1$
+	private static final String BULLET_CHARACTER = "\\u2022 "; //$NON-NLS-1$
+	private static final String NEW_LINE = "\n"; //$NON-NLS-1$
 
 	/**
 	 * A unique object to mark this editor's job family for rule evaluation
@@ -160,8 +162,15 @@ public class RuleManager {
 						Thread.sleep(100);
 					}
 				} else {
+					StringBuffer ignoreReason = new StringBuffer(NEW_LINE);
+					ignoreReason.append(NLS.bind(Messages.JFR_EDITOR_RULES_IGNORED_REASON, rule.getName()));
+					ignoreReason.append(NEW_LINE);
+					rule.getRequiredEvents().entrySet().forEach(entry -> {
+						ignoreReason.append(BULLET_CHARACTER + entry.getKey() + " - " + entry.getValue());
+						ignoreReason.append(NEW_LINE);
+					});
 					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
-							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED).build();
+							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED + NEW_LINE + ignoreReason).build();
 					evaluatedRules.put(rule.getClass(), Severity.NA);
 				}
 			} catch (Exception e) {
