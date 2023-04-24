@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,6 +88,7 @@ public class ImageConstants {
 	public static final String ICON_HEATMAP = "heatmap.png"; //$NON-NLS-1$
 	public static final String ICON_OVERVIEW = "overview.png"; //$NON-NLS-1$
 	public static final String ICON_TABLE = "table.gif"; //$NON-NLS-1$
+	public static final String ICON_BROWSER = "browser-16.png";
 
 	public static final String ICON_WARNING_OVERLAY = "warning_overlay.png"; //$NON-NLS-1$
 	public static final String ICON_INFO_OVERLAY = "info_overlay.png"; //$NON-NLS-1$

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -50,7 +50,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2021, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -72,10 +72,10 @@
 	<properties>
 		<revision>1.0.1</revision>
 		<changelist>-SNAPSHOT</changelist>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<asm.version>8.0.1</asm.version>
-		<junit.version>4.13.1</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spotless.version>1.26.0</spotless.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
@@ -93,12 +93,91 @@
 			<url>${snapshot.repo}</url>
 		</snapshotRepository>
 	</distributionManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>${asm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-commons</artifactId>
+			<version>${asm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-util</artifactId>
+			<version>${asm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/license</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/license</directory>
+									<includes>
+										<include>LICENSE.txt</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M7</version>
+				<configuration>
+					<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder</argLine>
+					<excludes>
+						<exclude>TestDefineEventProbes.java</exclude>
+						<exclude>TestCustomClassloader.java</exclude>
+						<exclude>TestPermissionChecks.java</exclude>
+						<exclude>TestDynamicallyLoadedClasses.java</exclude>
+						<exclude>TestRetrieveCurrentTransforms.java</exclude>
+						<exclude>TestRetrieveEventProbes.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.3.0</version>
 				<configuration>
 					<artifactSet>
 						<includes>
@@ -144,53 +223,35 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
-				<configuration>
-					<argLine> --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
-						-XX:+FlightRecorder</argLine>
-					<excludes>
-						<exclude>TestDefineEventProbes.java</exclude>
-						<exclude>TestCustomClassloader.java</exclude>
-						<exclude>TestPermissionChecks.java</exclude>
-						<exclude>TestRetrieveCurrentTransforms.java</exclude>
-						<exclude>TestRetrieveEventProbes.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M3</version>
+				<version>3.0.0-M7</version>
 				<executions>
 					<execution>
-					<id>test-permissions</id>
-					<goals>
-						<goal>integration-test</goal>
-						<goal>verify</goal>
-					</goals>
+						<id>test-permissions</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
 						<configuration>
-							<argLine> -Djava.security.manager -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy
-								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
-								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
+							<argLine>
+							    -Djava.security.manager -Djdk.io.permissionsUseCanonicalPath=true -Djava.security.policy=target/test-classes/org/openjdk/jmc/agent/test/failing_control_permission.policy
+							    -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+							    -cp target/agent-${revision}${changelist}.jar:target/test-classes/
+							</argLine>
 							<includes>TestPermissionChecks.java</includes>
 						</configuration>
 					</execution>
-          			<execution>
+					<execution>
 						<id>test-retransform</id>
-            			<goals>
-              				<goal>integration-test</goal>
-              				<goal>verify</goal>
-            			</goals>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
-								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
+							    -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_template.xml
+							    -cp target/agent-${revision}${changelist}.jar:target/test-classes/
+							</argLine>
 							<includes>TestDefineEventProbes.java</includes>
 						</configuration>
 					</execution>
@@ -202,8 +263,9 @@
 						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
-								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
+							    -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple_2.xml
+							    -cp target/agent-${revision}${changelist}.jar:target/test-classes/
+							</argLine>
 							<includes>TestCustomClassloader.java</includes>
 						</configuration>
 					</execution>
@@ -214,10 +276,19 @@
 							<goal>verify</goal>
 						</goals>
 						<configuration>
-							<argLine>
-								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar
-								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
+							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
 							<includes>TestRetrieveEventProbes.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-dynamically-loaded-classes</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
+							<includes>TestDynamicallyLoadedClasses.java</includes>
 						</configuration>
 					</execution>
 					<execution>
@@ -228,37 +299,18 @@
 						</goals>
 						<configuration>
 							<argLine>
-								-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple.xml
-								 -cp target/agent-${revision}${changelist}.jar:target/test-classes/ </argLine>
+							    -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/jfrprobes_simple.xml
+							    -cp target/agent-${revision}${changelist}.jar:target/test-classes/
+							</argLine>
 							<includes>TestRetrieveCurrentTransforms.java</includes>
 						</configuration>
 					</execution>
-        		</executions>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/classes/license</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/license</directory>
-									<includes>
-										<include>LICENSE.txt</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.0.0-M1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
@@ -291,33 +343,13 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<id>enforce-java</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireJavaVersion>
-									<version>11</version>
-								</requireJavaVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
 				<version>${spotless.version}</version>
 				<configuration>
 					<java>
 						<eclipse>
-	  						<file>${spotless.config.path}</file>
+							<file>${spotless.config.path}</file>
 	 						<version>4.8.0</version>
  						</eclipse>
 					</java>
@@ -325,27 +357,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>${asm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-commons</artifactId>
-			<version>${asm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
-			<version>${asm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 </project>

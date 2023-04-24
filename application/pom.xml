@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -59,7 +59,6 @@
 		<module>org.openjdk.jmc.console.jconsole</module>
 		<module>org.openjdk.jmc.console.pde</module>
 		<module>org.openjdk.jmc.console.persistence</module>
-		<module>org.openjdk.jmc.console.twitter</module>
 		<module>org.openjdk.jmc.console.ui</module>
 		<module>org.openjdk.jmc.console.ui.diagnostic</module>
 		<module>org.openjdk.jmc.console.ui.mbeanbrowser</module>
@@ -81,7 +80,6 @@
 		<module>org.openjdk.jmc.feature.pde</module>
 		<module>org.openjdk.jmc.feature.rcp</module>
 		<module>org.openjdk.jmc.feature.rcp.update</module>
-		<module>org.openjdk.jmc.feature.twitter</module>
 		<module>org.openjdk.jmc.feature.console.agent</module>
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
@@ -89,6 +87,7 @@
 		<module>org.openjdk.jmc.flightrecorder.flameview</module>
 		<module>org.openjdk.jmc.flightrecorder.graphview</module>
 		<module>org.openjdk.jmc.flightrecorder.heatmap</module>
+		<module>org.openjdk.jmc.flightrecorder.dependencyview</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.g1</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.jfx</module>
 		<module>org.openjdk.jmc.flightrecorder.metadata</module>

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, Datadog, Inc. All rights reserved.
-   
+<!--
+   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -42,6 +42,7 @@
 	<artifactId>missioncontrol.core.tests</artifactId>
 	<packaging>pom</packaging>
 	<modules>
+		<module>org.openjdk.jmc.testlib</module>
 		<module>org.openjdk.jmc.common.test</module>
 		<module>org.openjdk.jmc.flightrecorder.test</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.test</module>
@@ -54,17 +55,16 @@
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<junit.version>4.13.1</junit.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<junit.jupiter.api.version>5.5.2</junit.jupiter.api.version>
-		<junit.jupiter.params.version>5.5.2</junit.jupiter.params.version>
-		<junit.jupiter.engine.version>5.5.2</junit.jupiter.engine.version>
-		<mockito.core.version>3.7.7</mockito.core.version>
-		<mockito.inline.version>3.7.7</mockito.inline.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
+		<jctools.version>4.0.1</jctools.version>
+		<junit.version>4.13.2</junit.version>
+		<junit.jupiter.api.version>5.9.0</junit.jupiter.api.version>
+		<junit.jupiter.params.version>5.9.0</junit.jupiter.params.version>
+		<junit.jupiter.engine.version>5.9.0</junit.jupiter.engine.version>
+		<mockito.core.version>4.8.0</mockito.core.version>
+		<mockito.inline.version>4.8.0</mockito.inline.version>
+		<mockito.jupiter.version>4.8.0</mockito.jupiter.version>
+		<slf4j.version>2.0.3</slf4j.version>
 		<surefireArgLine></surefireArgLine>
 	</properties>
 	<profiles>
@@ -146,10 +146,54 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.jctools</groupId>
+				<artifactId>jctools-core</artifactId>
+				<version>${jctools.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
-				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.jupiter.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit.jupiter.params.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${junit.jupiter.engine.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${mockito.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-inline</artifactId>
+				<version>${mockito.inline.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-junit-jupiter</artifactId>
+				<version>${mockito.jupiter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -158,7 +202,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
 				<configuration>
 					<argLine>-Duser.language=en -Duser.region=nl -Duser.timezone=GMT -Djava.locale.providers=COMPAT @{surefireArgLine}</argLine>
 					<includes>${test.includes}</includes>
@@ -170,37 +213,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.version}</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build.helper.maven.version}</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>add-source</goal>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${basedir}/license</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-deploy-plugin</artifactId>
-			  <version>3.0.0-M1</version>
-			  <configuration>
-			    <skip>true</skip>
-			  </configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

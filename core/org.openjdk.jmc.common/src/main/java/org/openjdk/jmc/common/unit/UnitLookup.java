@@ -43,8 +43,8 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.NANO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.NONE;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.PICO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.TERA;
-import static org.openjdk.jmc.common.unit.DecimalPrefix.YOCTO;
-import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUECTO;
+import static org.openjdk.jmc.common.unit.DecimalPrefix.QUETTA;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -452,7 +452,7 @@ final public class UnitLookup {
 
 	private static LinearKindOfQuantity createFrequency() {
 		LinearKindOfQuantity frequency = new LinearKindOfQuantity("frequency", "Hz", EnumSet.range(NONE, TERA),
-				EnumSet.range(YOCTO, YOTTA));
+				EnumSet.range(QUECTO, QUETTA));
 
 		frequency.addFormatter(new LinearKindOfQuantity.AutoFormatter(frequency, "Dynamic"));
 		frequency.addFormatter(new KindOfQuantity.ExactFormatter<>(frequency));
@@ -472,7 +472,7 @@ final public class UnitLookup {
 		EnumSet<DecimalPrefix> commonPrefixes = EnumSet.range(PICO, MILLI);
 		commonPrefixes.add(NONE);
 		LinearKindOfQuantity timeSpan = new LinearKindOfQuantity("timespan", "s", commonPrefixes,
-				EnumSet.range(YOCTO, YOTTA));
+				EnumSet.range(QUECTO, QUETTA));
 		LinearUnit second = timeSpan.atomUnit;
 		LinearUnit minute = timeSpan.makeUnit("min", second.quantity(60));
 		LinearUnit hour = timeSpan.makeUnit("h", minute.quantity(60));

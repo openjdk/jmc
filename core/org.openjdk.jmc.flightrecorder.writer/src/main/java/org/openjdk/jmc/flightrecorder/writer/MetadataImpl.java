@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -74,7 +74,7 @@ final class MetadataImpl {
 	private final Map<Integer, String> reverseStringTable = new ConcurrentSkipListMap<>();
 	private final Set<ResolvableType> unresolvedTypes = new CopyOnWriteArraySet<>();
 
-	private volatile TypesImpl types = null;
+	private volatile TypesImpl types;
 
 	MetadataImpl(ConstantPools constantPools) {
 		this.constantPools = constantPools;

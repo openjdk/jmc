@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+	<component>
+		<!-- ******************************* GENERAL ****************************************** -->
+		<name>General</name>
+		<note version="8.2">
+			<title>JMC 8.2 - New Release!</title>
+			<description>
+				This is a new minor release of JDK Mission Control. The
+				JMC application requires JDK 11+ to run, but can still be used to
+				connect to, and parse JFR recordings from, OpenJDK 8u272+ and Oracle
+				JDK 7u40+. It can also still open and visualize flight recordings
+				from JDK 7 and 8.
+			</description>
+			<image>general/jmc.png</image>
+		</note>
+		<note version="8.2">
+			<title>Eclipse 4.22 support</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2021-06 and later. To install JDK Mission Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be vendor specific, and some vendors
+				will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="8.2">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are 83 fixes and improvements in this release.
+				Check out the JMC 8.2 Result Dashboard
+				(https://bugs.openjdk.java.net/secure/Dashboard.jspa?selectPageId=20804)
+				for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+		<note version="8.2">
+			<title>Binary build for Apple ARM</title>
+			<description>
+				JDK Mission Control is now built for Apple ARM, allowing
+				JMC to be run natively (without Rosetta x86 emulation) on Apple M1.
+			</description>
+			<image>general/apple.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JMC Core ************************** -->
+		<name>Core</name>
+		<note version="8.2">
+			<title>Parser support for async profiler</title>
+			<description>
+				Parser support has been added for frame types generated
+				by async profiler, such as Native, C++ and Kernel.
+			</description>
+			<image>special/noimage.png</image>
+		</note>
+		<note version="8.2">
+			<title>System.gc() rule</title>
+			<description>
+				There is now a new rule for explicit invocations of
+				System.gc().
+			</description>
+			<image>core/dukegc.png</image>
+		</note>
+	</component>
+	<component>
+		<!-- ******************************* JFR ******************************* -->
+		<name>Java Flight Recorder (JFR)</name>
+		<note version="8.2">
+			<title>Heat map view</title>
+			<description>
+				A new heat map view has been added, which is handy for
+				seeing when events are taking place. Use Window | Show View | Other...,
+				and select the Heatmap View under Mission Control and click Open to
+				open the view.
+			</description>
+			<image>jfr/heatmap.png</image>
+		</note>
+		<note version="8.2">
+			<title>Websocket for selections</title>
+			<description>
+				There is a new websocket API available that pushes stack
+				trace data from selections in the JFR UI as JSON on a user defined
+				port. This allows for programmatic control of the visualization
+				directly in the browser. Tools like observablehq.com can be used to
+				invent new visualizations, or to alter the visualization. To get
+				started, simply go to the Flight Recorder preferences in JMC, and
+				select the Websocket port to use (0 to disable). A set of example
+				visualizations are available here:
+				https://observablehq.com/collection/@cimi/java-mission-control.
+			</description>
+			<image>jfr/websocket.png</image>
+		</note>
+	</component>
+	<!-- ******************************* Agent ******************************* -->
+	<!-- <component> <name>JMC Agent Plug-in</name> <note version="8.1.0"> <title>New 
+		JMC Agent Plug-in</title> <description> There is now a new agent plug-in 
+		available for JMC, which allows configuring where to emit flight recording 
+		events in an already running process. </description> <image>agent/agent.png</image> 
+		</note> </component> -->
+	<!-- ******************************* Bugfixes ****************************************** -->
+	<bugfixes>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7403</bugid>
+			<synopsis>JFR parser struct types hashcode problem</synopsis>
+			<description>
+				Some JFR parser struct types were using lazily
+				initialized attributes which happen to be a part of hashCode/equals
+				computations.
+			</description>
+		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7532</bugid>
+			<synopsis>
+				Delays in rendering of JMX console graphs
+			</synopsis>
+			<description>
+				Sometimes the updates of the JMX console graphs would be
+				severely delayed on MacOS. This is now fixed.
+			</description>
+		</bugfix>
+		<bugfix>
+			<area>JFR</area>
+			<bugid>7068</bugid>
+			<synopsis>
+				JfrRecordingTest (uitest) hangs on the automated analysis
+				page
+			</synopsis>
+			<description>
+				Trying to run uitests on Fedora hangs on JfrRecordingTest. 
+				This was fixed after the Eclipse platform update.
+			</description>
+		</bugfix>
+	</bugfixes>
+	<!-- ******************************* Known issues ****************************************** -->
+	<knownissues>
+		<issue>
+			<area>General</area>
+			<bugid>4270</bugid>
+			<synopsis>Hibernation and time</synopsis>
+			<description>
+				After the bugfix of
+				https://bugs.openjdk.java.net/browse/JDK-6523160 in JDK 8, the
+				RuntimeMXBean#getUptime() attribute was re-implemented to mean
+				"Elapsed time of JVM process", whilst it previously was implemented
+				as time since start of the JVM process. The uptime attribute is used
+				by JMC, together with RuntimeMXBean#getStartTime(), to estimate the
+				actual server time. This means that time stamps, as well as
+				remaining time for a flight recording, can be wrong for processes on
+				machines that have been hibernated.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>
+				This one is still under investigation, but it seems JMC
+				can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph and flame graph view does not work on Windows
+			</synopsis>
+			<description>
+				This is due to a problem with the Windows based browser
+				component in SWT. We're hoping for a fix in the component for a
+				future version of the Eclipse platform.
+			</description>
+		</issue>
+	</knownissues>
+</notes>

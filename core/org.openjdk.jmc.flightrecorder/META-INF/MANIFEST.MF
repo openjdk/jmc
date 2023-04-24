@@ -3,8 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: Flight Recorder Model Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder;singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
+Eclipse-BuddyPolicy: app
+Eclipse-ExtensibleAPI: true
 Export-Package: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.internal;x-friends:="org.openjdk.jmc.flightrecorder.ui,org.openjdk.jmc.flightrecorder.configuration",
  org.openjdk.jmc.flightrecorder.internal.util;x-friends:="org.openjdk.jmc.flightrecorder.test",
@@ -18,6 +20,4 @@ Export-Package: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.stacktrace.messages.internal,
  org.openjdk.jmc.flightrecorder.util
 Require-Bundle: org.openjdk.jmc.common;visibility:=reexport
-Eclipse-BuddyPolicy: app
-Eclipse-ExtensibleAPI: true
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder

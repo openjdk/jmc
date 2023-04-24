@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -56,7 +56,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
  */
 public class UpdateSiteTest extends MCJemmyTestBase {
 	private static final String UPDATESITE_PROP_PREFIX = "updatesite.";
-	private static final String JMC_VERSION = System.getProperty("jmc.test.jmc.version", "8.2.0");
+	private static final String JMC_VERSION = System.getProperty("jmc.test.jmc.version", "9.0.0");
 	private static final String KEY_UPDATE_PROPERTIES_PATH = "org.openjdk.jmc.updatesites.properties";
 
 	/**

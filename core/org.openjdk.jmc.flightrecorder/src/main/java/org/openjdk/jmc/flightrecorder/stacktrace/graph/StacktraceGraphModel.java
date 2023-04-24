@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +59,7 @@ import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.graph.Node.NodeWrapper;
 
 /**
  * A model for holding multiple stack traces and their relations to each other as a directed graph.
@@ -110,7 +112,14 @@ public final class StacktraceGraphModel {
 		this.frameSeparator = frameSeparator;
 		this.items = items;
 		this.attribute = attribute;
-		buildModel();
+		buildModel(Collections.emptySet());
+	}
+
+	StacktraceGraphModel(StacktraceGraphModel model, Set<AggregatableFrame> keptNodes) {
+		this.frameSeparator = model.frameSeparator;
+		this.items = model.items;
+		this.attribute = model.attribute;
+		buildModel(keptNodes);
 	}
 
 	public Collection<Edge> getEdges() {
@@ -258,13 +267,13 @@ public final class StacktraceGraphModel {
 				nodes.size(), edges.size(), nodes.toString(), edges.toString());
 	}
 
-	private void buildModel() {
+	private void buildModel(Set<AggregatableFrame> keptNodes) {
 		for (IItemIterable iterable : items) {
 			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = getAccessor(iterable, EVENT_STACKTRACE);
 			if (stacktraceAccessor == null) {
 				continue;
 			}
-			iterable.forEach((item) -> addItem(item, stacktraceAccessor, getAccessor(iterable, attribute)));
+			iterable.forEach((item) -> addItem(item, stacktraceAccessor, getAccessor(iterable, attribute), keptNodes));
 		}
 	}
 
@@ -274,7 +283,7 @@ public final class StacktraceGraphModel {
 
 	private void addItem(
 		IItem item, IMemberAccessor<IMCStackTrace, IItem> stackTraceAccessor,
-		IMemberAccessor<IQuantity, IItem> quantityAccessor) {
+		IMemberAccessor<IQuantity, IItem> quantityAccessor, Set<AggregatableFrame> keptNodes) {
 		IMCStackTrace stackTrace = stackTraceAccessor.getMember(item);
 		if (stackTrace == null) {
 			return;
@@ -284,7 +293,7 @@ public final class StacktraceGraphModel {
 			return;
 		}
 
-		double value = 0;
+		double value = 1;
 		if (quantityAccessor != null) {
 			value = quantityAccessor.getMember(item).doubleValue();
 		}
@@ -293,47 +302,56 @@ public final class StacktraceGraphModel {
 		// actually responsible for whatever is being tracked (e.g. the method being on
 		// CPU, the method triggering the allocation etc) - it is for this node we
 		// increment the count...
-		IMCFrame firstFrame = frames.get(0);
-		Node n = getOrCreateNode(firstFrame);
-		totalTraceCount++;
-		n.count++;
-		n.weight += value;
+		AggregatableFrame firstFrame = new AggregatableFrame(frameSeparator, frames.get(0));
+		if (keepFrame(keptNodes, firstFrame)) {
+			Node n = getOrCreateNode(firstFrame);
+			totalTraceCount++;
+			n.count++;
+			n.weight += value;
 
-		// Next go through all frames from the thread root, and up the cumulative counts
-		for (int i = frames.size() - 1; i > 0; i--) {
-			// Process two frames sliding window, from and to
-			IMCFrame currentFrame = frames.get(i);
-			IMCFrame nextFrame = frames.get(i - 1);
+			// Next go through all frames from the thread root, and up the cumulative counts
+			for (int i = frames.size() - 1; i > 0; i--) {
+				// Process two frames sliding window, from and to
+				AggregatableFrame currentFrame = new AggregatableFrame(frameSeparator, frames.get(i));
+				AggregatableFrame nextFrame = new AggregatableFrame(frameSeparator, frames.get(i - 1));
 
-			Node currentNode = getOrCreateNode(currentFrame);
-			Node nextNode = getOrCreateNode(nextFrame);
-
-			currentNode.cumulativeCount++;
-			nextNode.cumulativeCount++;
-			currentNode.cumulativeWeight += value;
-			nextNode.cumulativeWeight += value;
-			Edge e = getOrCreateLink(currentNode, nextNode);
-			e.count++;
-			totalEdgeCount++;
+				if (keepFrame(keptNodes, currentFrame)) {
+					Node currentNode = getOrCreateNode(currentFrame);
+					currentNode.cumulativeCount++;
+					currentNode.cumulativeWeight += value;
+					if (keepFrame(keptNodes, nextFrame)) {
+						Node nextNode = getOrCreateNode(nextFrame);
+						nextNode.cumulativeCount++;
+						nextNode.cumulativeWeight += value;
+						Edge e = getOrCreateLink(currentNode, nextNode, value);
+						e.count++;
+						totalEdgeCount++;
+					}
+				}
+			}
 		}
 	}
 
-	private Node getOrCreateNode(IMCFrame frame) {
-		AggregatableFrame aframe = new AggregatableFrame(frameSeparator, frame);
-		Node n = nodes.get(aframe);
+	private boolean keepFrame(Set<AggregatableFrame> keptNodes, AggregatableFrame frame) {
+		return keptNodes.isEmpty() || keptNodes.contains(frame);
+	}
+
+	private Node getOrCreateNode(AggregatableFrame frame) {
+		Node n = nodes.get(frame);
 		if (n == null) {
-			n = new Node(Integer.valueOf(nodeCounter++), aframe);
-			nodes.put(aframe, n);
+			n = new Node(Integer.valueOf(nodeCounter++), frame);
+			nodes.put(frame, n);
 		}
 		return n;
 	}
 
-	private Edge getOrCreateLink(Node fromNode, Node toNode) {
+	private Edge getOrCreateLink(Node fromNode, Node toNode, double value) {
 		if (!edges.containsKey(fromNode.getNodeId())) {
-			Edge edge = new Edge(fromNode, toNode);
+			Edge edge = new Edge(fromNode, toNode, value);
 			Set<Edge> newEdgeSet = new HashSet<>();
 			newEdgeSet.add(edge);
 			edges.put(fromNode.getNodeId(), newEdgeSet);
+			updateNodeEdges(fromNode, toNode, edge, value);
 			return edge;
 		}
 		Set<Edge> toSet = edges.get(fromNode.getNodeId());
@@ -344,9 +362,19 @@ public final class StacktraceGraphModel {
 				return edge;
 			}
 		}
-		Edge edge = new Edge(fromNode, toNode);
+		Edge edge = new Edge(fromNode, toNode, value);
 		toSet.add(edge);
+		updateNodeEdges(fromNode, toNode, edge, value);
 		return edge;
+	}
+
+	private void updateNodeEdges(Node fromNode, Node toNode, Edge edge, double value) {
+		Edge outEdge = fromNode.getOut().get(new NodeWrapper(toNode.getNodeId(), toNode));
+		if (outEdge != null) {
+			outEdge.value += value;
+		}
+		fromNode.getOut().put(new NodeWrapper(toNode.getNodeId(), toNode), edge);
+		toNode.getIn().put(new NodeWrapper(fromNode.getNodeId(), fromNode), edge);
 	}
 
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {

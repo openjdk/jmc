@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -78,6 +78,7 @@ import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+import org.openjdk.jmc.flightrecorder.stacktrace.graph.Pruning;
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
@@ -86,14 +87,14 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 public class GraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
-		String jsD3V5 = "jslibs/d3.v5.min.js";
+		String jsD3 = "jslibs/d3.v7.min.js";
 		String jsGraphviz = "jslibs/index.js";
 		String wasmGraphviz = "jslibs/graphvizlib.wasm";
 		String jsGraphizD3 = "jslibs/d3-graphviz.js";
 
 		String wasmBase64 = loadBase64FromFile(wasmGraphviz);
 
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V5),
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3),
 				// we inline base64 wasm in the library code to avoid fetching it at runtime
 				loadStringFromFile(jsGraphviz, "wasmBinaryFile=\"graphvizlib.wasm\";",
 						"wasmBinaryFile=dataURIPrefix + '" + wasmBase64 + "';"),
@@ -134,12 +135,18 @@ public class GraphView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
+
+			model = Pruning.prune(model, maxNodesRendered, false);
+			int currentNodeCount = model.getNodes().size();
 			String dotString = GraphView.toDot(model, maxNodesRendered);
 			if (isInvalid) {
 				return;
 			} else {
 				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, dotString));
+				DisplayToolkit.inDisplayThread().execute(() -> {
+					view.setModel(items, dotString);
+					view.nodeThresholdSelection.setText(String.valueOf(currentNodeCount));
+				});
 			}
 		}
 	}
@@ -164,6 +171,7 @@ public class GraphView extends ViewPart implements ISelectionListener {
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 	private int maxNodesRendered = 100;
+	private NodeThresholdSelection nodeThresholdSelection;
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -171,7 +179,8 @@ public class GraphView extends ViewPart implements ISelectionListener {
 		frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
 
 		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
-		toolBar.add(new NodeThresholdSelection());
+		nodeThresholdSelection = new NodeThresholdSelection();
+		toolBar.add(nodeThresholdSelection);
 
 		getSite().getPage().addSelectionListener(this);
 	}
@@ -184,8 +193,9 @@ public class GraphView extends ViewPart implements ISelectionListener {
 
 	private class NodeThresholdSelection extends Action implements IMenuCreator {
 		private Menu menu;
-		private final List<Pair<String, Integer>> items = Arrays.asList(new Pair<>("100", 100), new Pair<>("500", 500),
-				new Pair<>("1000", 1000));
+		private final List<Pair<String, Integer>> items = Arrays.asList(new Pair<>("10", 10), new Pair<>("20", 20),
+				new Pair<>("30", 30), new Pair<>("40", 40), new Pair<>("50", 50), new Pair<>("100", 100),
+				new Pair<>("500", 500), new Pair<>("1000", 1000));
 
 		NodeThresholdSelection() {
 			super("Max Nodes", IAction.AS_DROP_DOWN_MENU);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -55,7 +55,7 @@ public class ValueWitIntIdMap<V extends ValueWithIntId> {
 	private V[] values;
 	private int size, capacity, threshold;
 
-	volatile Collection<V> valuesCollectionView = null;
+	volatile Collection<V> valuesCollectionView;
 
 	private long rehashTime; // Debugging
 

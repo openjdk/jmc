@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -106,7 +106,6 @@
 		<setEntry value="org.openjdk.jmc.feature.ide:default" />
 		<setEntry value="org.openjdk.jmc.feature.jconsole:default" />
 		<setEntry value="org.openjdk.jmc.feature.pde:default" />
-		<setEntry value="org.openjdk.jmc.feature.twitter:default" />
 		<setEntry value="org.openjdk.jmc.feature.joverflow:default" />
 	</setAttribute>
 	<setAttribute key="additional_plugins">

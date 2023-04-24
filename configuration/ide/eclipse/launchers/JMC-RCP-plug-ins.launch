@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -32,7 +32,14 @@
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
-	<setAttribute key="additional_plugins" />
+	<setAttribute key="additional_plugins">
+		<setEntry value="org.eclipse.jetty.http:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.io:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.security:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.server:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.servlet:10.0.11:default:true:default:default"/>
+        	<setEntry value="org.eclipse.jetty.util:10.0.11:default:true:default:default"/>
+	</setAttribute>
 	<booleanAttribute key="append.args" value="true" />
 	<stringAttribute key="application" value="org.openjdk.jmc.rcp.application.app" />
 	<booleanAttribute key="askclear" value="true" />
@@ -89,7 +96,6 @@
 		<setEntry value="org.openjdk.jmc.feature.jconsole:default" />
 		<setEntry value="org.openjdk.jmc.feature.joverflow:default" />
 		<setEntry value="org.openjdk.jmc.feature.rcp:default" />
-		<setEntry value="org.openjdk.jmc.feature.twitter:default" />
 		<setEntry value="org.openjdk.jmc.rcp.product:default" />
 	</setAttribute>
 	<booleanAttribute key="show_selected_only" value="false" />

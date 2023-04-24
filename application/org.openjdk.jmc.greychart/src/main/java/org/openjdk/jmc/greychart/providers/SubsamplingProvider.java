@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -68,7 +68,7 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	private int m_requestedResolution = 0;
 	private long m_requestedStartX = Long.MIN_VALUE;
 	private long m_requestedEndX = Long.MAX_VALUE;
-	private volatile boolean dataChangeOccured = false;
+	private volatile boolean dataChangeOccured;
 	private final boolean m_integrate;
 	private final CancelService m_cancelService;
 

@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Name: Common Plug-in
+Bundle-Name: Flight Recorder Serializers Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.serializers;singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.serializers.json,
  org.openjdk.jmc.flightrecorder.serializers.dot
+Require-Bundle: org.openjdk.jmc.flightrecorder
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.serializers
-Require-Bundle: org.lz4.lz4-java, org.openjdk.jmc.flightrecorder

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -92,7 +92,7 @@ public class DefaultTransformRegistry implements TransformRegistry {
 	// First step in update should be to check if we even have transformations for the given class
 	private final HashMap<String, List<TransformDescriptor>> transformData = new HashMap<>();
 
-	private volatile boolean revertInstrumentation = false;
+	private volatile boolean revertInstrumentation;
 
 	private String currentConfiguration = "";
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,10 @@ package org.openjdk.jmc.flightrecorder.internal.parser.v1;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -409,7 +412,6 @@ class ValueReaders {
 			switch (typeIdentifier) {
 			case BYTE:
 			case SHORT:
-			case CHAR:
 			case INT:
 			case LONG:
 			case FLOAT:
@@ -507,6 +509,7 @@ class ValueReaders {
 	static class ReflectiveReader extends AbstractStructReader {
 		// FIXME: Change the reflective setting of fields to avoid the conversion workarounds that some classes have to make. See JMC-5966
 
+		private final Map<String, Field> identifiersToFields;
 		// String to prefix reserved java keywords with when looking for a class field
 		private static final String RESERVED_IDENTIFIER_PREFIX = "_"; //$NON-NLS-1$
 		private final List<Field> fields;
@@ -516,6 +519,7 @@ class ValueReaders {
 		<T> ReflectiveReader(Class<T> klass, int fieldCount, ContentType<? super T> ct) {
 			super(fieldCount);
 			this.klass = klass;
+			this.identifiersToFields = IdentifierFieldCache.INSTANCE.get(klass);
 			this.ct = ct;
 			fields = new ArrayList<>(fieldCount);
 		}
@@ -524,15 +528,15 @@ class ValueReaders {
 		public Object read(IDataInput in, boolean allowUnresolvedReference)
 				throws IOException, InvalidJfrFileException {
 			try {
-				Object thread = klass.newInstance();
+				Object instance = klass.newInstance();
 				for (int i = 0; i < valueReaders.size(); i++) {
 					Object val = valueReaders.get(i).read(in, allowUnresolvedReference);
 					Field f = fields.get(i);
 					if (f != null) {
-						f.set(thread, val);
+						f.set(instance, val);
 					}
 				}
-				return thread;
+				return instance;
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
@@ -563,18 +567,31 @@ class ValueReaders {
 		void addField(String identifier, String name, String description, IValueReader reader)
 				throws InvalidJfrFileException {
 			valueReaders.add(reader);
-			try {
-				try {
-					fields.add(klass.getField(identifier));
-				} catch (NoSuchFieldException e) {
-					fields.add(klass.getField(RESERVED_IDENTIFIER_PREFIX + identifier));
-				}
-			} catch (NoSuchFieldException e) {
+			Field field = identifiersToFields.get(identifier);
+			if (field == null) {
+				field = identifiersToFields.get(RESERVED_IDENTIFIER_PREFIX + identifier);
+			}
+			if (field == null) {
 				Logger.getLogger(ReflectiveReader.class.getName()).log(Level.WARNING,
 						"Could not find field with name '" + identifier + "' in reader for '" + ct.getIdentifier() //$NON-NLS-1$ //$NON-NLS-2$
 								+ "'"); //$NON-NLS-1$
-				fields.add(null);
 			}
+			fields.add(field);
+		}
+	}
+
+	static class IdentifierFieldCache extends ClassValue<Map<String, Field>> {
+
+		public static final IdentifierFieldCache INSTANCE = new IdentifierFieldCache();
+
+		@Override
+		protected Map<String, Field> computeValue(Class<?> type) {
+			Field[] fields = type.getFields();
+			Map<String, Field> map = new HashMap<>(fields.length);
+			for (Field field : fields) {
+				map.put(field.getName(), field);
+			}
+			return Collections.unmodifiableMap(map);
 		}
 	}
 }

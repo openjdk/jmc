@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.ui.views">
+		<view
+          allowMultiple="false"
+          category="org.openjdk.jmc.ui.main"
+          class="org.openjdk.jmc.flightrecorder.dependencyview.DependencyView"
+          icon="icons/chord.png"
+          id="org.openjdk.jmc.flightrecorder.dependencyview"
+          name="Dependency View"
+          restorable="true">
+		</view>
+	</extension>
+</plugin>

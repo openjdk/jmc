@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -185,22 +185,7 @@ public class ChartComposite extends SelectionCanvas {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
 			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
 			m_chart.setXAxis(m_chart.getXAxis());
-			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
-				GC gc = new GC(this);
-				paint(gc);
-				if (isFocusControl()) {
-					FocusTracker.drawFocusOn(this, gc);
-				}
-				gc.dispose();
-			} else {
-				redraw();
-				/*
-				 * Explicit calls to update() should be avoided unless absolutely necessary. They
-				 * may have a negative performance impact and may cause issues on Mac OS X Cocoa
-				 * (SWT 3.6). If it is required here, there must be a justifying comment.
-				 */
-				// update();
-			}
+			redraw();
 		}
 	}
 
