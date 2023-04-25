@@ -147,7 +147,7 @@ public class Aggregators {
 		}
 
 		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate predicate) {
-			super(accessor);
+			this(accessor);
 			this.predicate = predicate;
 		}
 
