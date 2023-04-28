@@ -53,8 +53,8 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<maven.jar.version>3.2.0</maven.jar.version>

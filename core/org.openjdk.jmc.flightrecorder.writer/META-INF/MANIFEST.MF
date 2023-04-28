@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Name: Mission Control Flight Recorder Writer
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.writer;singleton:=true
 Bundle-Version: 9.0.0.qualifier
