@@ -68,8 +68,6 @@ Click next, and browse into the `jmc/core` folder. Select all the core projects 
 
 Next select _File | Import…_ and select _Maven / Existing Maven Project_ again, but this time from the root.
 
-Next we will import the project which contains the launchers. Select _File | Import…_ and then select _Existing Projects into Workspace_. Find the `configuration/ide/eclipse` folder and click Ok.
-
 ![Eclipse Config](images/eclipseconfig.png)
 
 After importing that project, we can now launch / debug JMC from within Eclipse:
