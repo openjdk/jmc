@@ -12,7 +12,7 @@ Require-Bundle: org.openjdk.jmc.rjmx.ui;visibility:=reexport,
  org.openjdk.jmc.flightrecorder.configuration,
  org.eclipse.help,
  org.openjdk.jmc.ui.common
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.actions,

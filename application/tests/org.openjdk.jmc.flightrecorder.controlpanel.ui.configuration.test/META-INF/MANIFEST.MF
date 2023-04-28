@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuratio
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.test

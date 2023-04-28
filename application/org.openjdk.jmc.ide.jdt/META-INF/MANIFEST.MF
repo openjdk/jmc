@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Name: Support for Eclipse JDT
 Bundle-SymbolicName: org.openjdk.jmc.ide.jdt;singleton:=true
 Bundle-Version: 9.0.0.qualifier

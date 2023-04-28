@@ -49,8 +49,5 @@
 		<module>platform-definition-2023-03</module>
 		<module>platform-definition-2022-12</module>
 		<module>platform-definition-2022-09</module>
-		<module>platform-definition-2022-06</module>
-		<module>platform-definition-2022-03</module>
-		<module>platform-definition-2021-12</module>
 	</modules>
 </project>

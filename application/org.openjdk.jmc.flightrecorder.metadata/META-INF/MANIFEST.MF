@@ -6,7 +6,7 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.flightrecorder.metadata
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.metadata

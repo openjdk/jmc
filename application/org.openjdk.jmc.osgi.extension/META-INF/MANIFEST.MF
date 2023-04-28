@@ -6,4 +6,4 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.eclipse.osgi;bundle-version="[3.10.0,4.0.0)"
 Automatic-Module-Name: org.openjdk.jmc.ext.hook
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
