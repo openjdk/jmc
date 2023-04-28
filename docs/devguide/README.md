@@ -32,8 +32,6 @@ _Compiler compliance level_ choose `11`.
 
 ![Se compiler comliance level](images/setcompilercompliancelevel.png)
 
-Okay, we now have our JDKs set up. If you want to import not only the JMC core project, you will next need to set up a user library for things that JMC will need from the JDK. Go to _Preferences | Java / Build Path / User Libraries_ and create a new library named `JMC_JDK`. Add (_Add External JARs…_) the following JARs from a JDK 8 (u40 or above) to the User Library: `tools.jar` (`/lib/tools.jar`) and finally `jconsole.jar` (`/lib/jconsole.jar`).
-
 Creating the user library:
 
 ![Create User Library](images/createuserlibrary.png)
@@ -45,7 +43,7 @@ Adding the jars:
 Now we need to check a few things…
 
 ### Checkpoint
-* Is the Jetty server from the build instructions still up and running? (`cd releng/third-party; mvn p2:site && mvn jetty:run`)
+* Is the Jetty server from the build instructions still up and running? (`mvn p2:site --file releng/third-party/pom.xml; mvn jetty:run --file releng/third-party/pom.xml`)
    ![](images/p2site.png)
 
 
