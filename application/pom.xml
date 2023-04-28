@@ -46,6 +46,9 @@
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 	<modules>
