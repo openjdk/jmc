@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.joverflow
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.openjdk.jmc.joverflow,
  org.openjdk.jmc.joverflow.descriptors,
  org.openjdk.jmc.joverflow.heap.model,

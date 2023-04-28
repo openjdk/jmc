@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Name: Simplified Chinese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.rjmx.ui.zh_CN
 Bundle-Version: 9.0.0.qualifier

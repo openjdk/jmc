@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.openjdk.jmc.console.ui,
  org.openjdk.jmc.rjmx
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.openjdk.jmc.rcp.intro

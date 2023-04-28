@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Name: Subscriptions
 Bundle-SymbolicName: org.openjdk.jmc.console.ui.subscriptions;singleton:=true
 Bundle-Version: 0.0.3.qualifier

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Plug-in
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-SymbolicName: org.openjdk.jmc.ui.common;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Activator: org.openjdk.jmc.ui.common.CorePlugin

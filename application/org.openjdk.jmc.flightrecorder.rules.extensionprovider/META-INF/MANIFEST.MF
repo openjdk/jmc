@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.rules.extensionprovider
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.flightrecorder.rules
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.core.runtime
 Import-Package: org.openjdk.jmc.flightrecorder.rules
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.rules.extensionprovider

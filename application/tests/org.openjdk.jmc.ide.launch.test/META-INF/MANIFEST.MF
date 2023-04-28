@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.ide.launch.test;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.ide.launch
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit
 Automatic-Module-Name: org.openjdk.jmc.ide.launch.test
