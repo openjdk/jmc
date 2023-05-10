@@ -402,8 +402,8 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[11,)</version>
-									<message>Building JMC requires Java 11 or later</message>
+									<version>[17,)</version>
+									<message>Building JMC requires Java 17 or later</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
