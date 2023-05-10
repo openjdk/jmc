@@ -17,7 +17,7 @@ Install it, start it and create a new workspace for your JMC work. Creating a ne
 ## Installing JDKs
 If you haven't already, you should now first build JMC using the instructions in the [README.md](../../README.md). 
 
-Next set up your JDKs in your Eclipse. Download and install a JDK 8 and JDK 11 (or the very latest update of the latest JDK), then open _Window | Preferences_ and then select _Java / Installed JREs_. Add your favourite JKD 8 and JDK 11 JDKs (_Add…_) and then use _Java / Installed JREs / Execution Environments_ to set them as defaults for the JDK 8 and JDK 11 execution environments.
+Next set up your JDKs in your Eclipse. Download and install a JDK 17 distribution, then open _Window | Preferences_ and then select _Java / Installed JREs_. Add your favourite JDK 17 (_Add…_) and then use _Java / Installed JREs / Execution Environments_ to set them as defaults for the JDK 17 execution environments.
 
 Setting installed JREs:
 
@@ -27,8 +27,8 @@ Setting execution environments:
 
 ![Set Execution Environment](images/setexecutionenvironment.png)
 
-Ensure Eclipse compiler is set to Java 11, go to _Preferences | Java / Compiler_ then for
-_Compiler compliance level_ choose `11`.
+Ensure Eclipse compiler is set to Java 17, go to _Preferences | Java / Compiler_ then for
+_Compiler compliance level_ choose `17`.
 
 ![Se compiler comliance level](images/setcompilercompliancelevel.png)
 
