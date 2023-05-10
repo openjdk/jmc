@@ -130,20 +130,6 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>no-jfr</id>
-			<activation>
-				<property>
-					<name>java.runtime.name</name>
-					<value>OpenJDK Runtime Environment</value>
-				</property>
-				<jdk>(,11)</jdk>
-			</activation>
-			<properties>
-				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest,org.openjdk.jmc.flightrecorder.uitest.JfrWizardTest,org.openjdk.jmc.flightrecorder.uitest.TemplateManagerTest,org.openjdk.jmc.flightrecorder.uitest.ControlRecordingsTest,org.openjdk.jmc.console.uitest.DiagnosticCommandsTabTest</jfr.tests>
-				<jfr.vmargs/>
-			</properties>
-		</profile>
-		<profile>
 			<id>uitests</id>
 			<modules>
 				<module>uitests</module>
