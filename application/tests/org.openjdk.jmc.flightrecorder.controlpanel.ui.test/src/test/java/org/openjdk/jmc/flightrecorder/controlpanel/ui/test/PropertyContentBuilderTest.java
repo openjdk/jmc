@@ -152,12 +152,10 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		// FIXME: Should we include extraTestOption and enabledButWrongForTest here,
 		// with either IN_CONFIGURATION style, or some new disabled/error style?
 		EventNode threadAllocation = javaStatistics.getEvent(threadAllocationID, PathElementKind.IN_BOTH);
-		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption",
-																									// "IN_CONFIGURATION"
+		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption", "IN_CONFIGURATION"
 
 		EventNode classLoadingStatistics = javaStatistics.getEvent(classLoadingStatisticsID, PathElementKind.IN_BOTH);
-		assertOptions(classLoadingStatistics, Arrays.asList("Period", "IN_BOTH", "Enabled", "IN_BOTH")); // "enabledButWrongForTest",
-																											// "IN_CONFIGURATION"
+		assertOptions(classLoadingStatistics, Arrays.asList("Period", "IN_BOTH", "Enabled", "IN_BOTH")); // "enabledButWrongForTest", "IN_CONFIGURATION"
 	}
 
 	private FolderNode find(String name, List<? extends PathElement> propertyRoots) {
@@ -193,12 +191,10 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		// FIXME: Should we include extraTestOption and enabledButWrongForTest here,
 		// with either IN_CONFIGURATION style, or some new disabled/error style?
 		EventNode threadAllocation = javaStatistics.getEvent(threadAllocationID, PathElementKind.IN_BOTH);
-		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption",
-																									// "IN_CONFIGURATION"
+		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption", "IN_CONFIGURATION"
 
 		EventNode classLoadingStatistics = javaStatistics.getEvent(classLoadingStatisticsID, PathElementKind.IN_BOTH);
-		assertOptions(classLoadingStatistics, Arrays.asList("Period", "IN_BOTH", "Enabled", "IN_SERVER")); // "enabledButWrongForTest",
-																											// "IN_CONFIGURATION"
+		assertOptions(classLoadingStatistics, Arrays.asList("Period", "IN_BOTH", "Enabled", "IN_SERVER")); // "enabledButWrongForTest", "IN_CONFIGURATION"
 	}
 
 	@Test
