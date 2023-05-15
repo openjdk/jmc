@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -248,7 +248,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		List<String> props = optionKeys.stream().map(p -> p.getLabel()).collect(Collectors.toList());
 		String[] expected = new String[] {"Enabled", "Period", "Stack Trace", "Threshold"};
 		if (ConnectionToolkit.isJavaVersionAboveOrEqual(getConnectionHandle(), JavaVersionSupport.JDK_16)) {
-			// probably related to https://bugs.openjdk.java.net/browse/JDK-8257602
+			// probably related to https://bugs.openjdk.org/browse/JDK-8257602
 			expected = new String[] {"Enabled", "Event Emission Throttle", "Period", "Stack Trace", "Threshold"};
 		}
 		assertArrayEquals("Options from the " + javaApplicationNode.getName() + " sub tree does not match expected",
