@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -175,14 +175,22 @@
          unpack="false"/>
 
    <plugin
-         id="com.sun.mail.jakarta.mail"
+         id="angus-activation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   
+   <plugin
+         id="jakarta.activation-api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.sun.activation.jakarta.activation"
+         id="org.eclipse.angus.jakarta.mail"
          download-size="0"
          install-size="0"
          version="0.0.0"

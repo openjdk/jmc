@@ -49,11 +49,5 @@
 			<artifactId>common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>

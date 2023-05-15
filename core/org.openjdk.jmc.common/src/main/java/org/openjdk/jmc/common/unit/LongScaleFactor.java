@@ -47,11 +47,7 @@ public class LongScaleFactor extends ScaleFactor {
 		if (innerFactor.isUnity()) {
 			return this;
 		}
-		Number multiplier = innerFactor.targetNumber(longMultiplier);
-		if (multiplier instanceof Long) {
-			return new LongScaleFactor(multiplier.longValue());
-		}
-		return new ImpreciseScaleFactor(multiplier);
+		return innerFactor.scale(longMultiplier);
 	}
 
 	@Override

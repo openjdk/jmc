@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -177,7 +177,7 @@ public final class JdkAggregators {
 			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
 	public static final IAggregator<IQuantity, ?> YOUNG_GENERATION_MAX_SIZE = min(
 			JdkAttributes.YOUNG_GENERATION_MAX_SIZE.getName(), null, GC_CONF_YOUNG_GENERATION,
-			JdkAttributes.YOUNG_GENERATION_MIN_SIZE);
+			JdkAttributes.YOUNG_GENERATION_MAX_SIZE);
 	public static final IAggregator<IQuantity, ?> NEW_RATIO_MIN = min(NEW_RATIO.getName(), null,
 			GC_CONF_YOUNG_GENERATION, NEW_RATIO);
 	public static final IAggregator<IQuantity, ?> TENURING_THRESHOLD_INITIAL_MIN = min(
@@ -279,7 +279,7 @@ public final class JdkAggregators {
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_SIZE_DESC), SOCKET_WRITE, IO_SOCKET_BYTES_WRITTEN);
 	public static final IAggregator<IQuantity, ?> SOCKET_READ_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_SOCKET_READ_SIZE), Messages.getString(Messages.AGGR_SOCKET_READ_SIZE_DESC),
-			SOCKET_READ, IO_SOCKET_BYTES_READ);
+			SOCKET_READ, IO_SOCKET_BYTES_READ, (value -> value >= 0));
 	public static final IAggregator<IQuantity, ?> SOCKET_WRITE_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_COUNT),
 			Messages.getString(Messages.AGGR_SOCKET_WRITE_COUNT_DESC), JdkFilters.SOCKET_WRITE);

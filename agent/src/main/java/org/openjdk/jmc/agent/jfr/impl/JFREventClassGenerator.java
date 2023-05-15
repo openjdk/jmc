@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -124,9 +124,11 @@ public class JFREventClassGenerator {
 		av.visitEnd();
 
 		// Description
-		av = fv.visitAnnotation("Ljdk/jfr/Description;", true);
-		av.visit("value", attribute.getDescription());
-		av.visitEnd();
+		if (attribute.getDescription() != null) {
+			av = fv.visitAnnotation("Ljdk/jfr/Description;", true);
+			av.visit("value", attribute.getDescription());
+			av.visitEnd();
+		}
 
 		// "ContentType"
 		// We support the old JDK 7 style content types transparently.
@@ -224,9 +226,11 @@ public class JFREventClassGenerator {
 		av.visitEnd();
 
 		// Description
-		av = cw.visitAnnotation("Ljdk/jfr/Description;", true);
-		av.visit("value", td.getEventDescription());
-		av.visitEnd();
+		if (td.getEventDescription() != null) {
+			av = cw.visitAnnotation("Ljdk/jfr/Description;", true);
+			av.visit("value", td.getEventDescription());
+			av.visitEnd();
+		}
 
 		// Category (path)
 		String[] pathElements = td.getEventPath().split("/");

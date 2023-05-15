@@ -8,5 +8,5 @@ Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.serializers.json,
  org.openjdk.jmc.flightrecorder.serializers.dot
+Require-Bundle: org.openjdk.jmc.flightrecorder
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.serializers
-Require-Bundle: lz4-java, org.openjdk.jmc.flightrecorder

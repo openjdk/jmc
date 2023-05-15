@@ -46,27 +46,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.test</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common.test</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.serializers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder.test</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

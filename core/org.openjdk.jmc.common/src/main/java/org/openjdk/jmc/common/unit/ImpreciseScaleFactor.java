@@ -37,9 +37,9 @@ package org.openjdk.jmc.common.unit;
  * (rational) converters.
  */
 public class ImpreciseScaleFactor extends ScaleFactor {
-	private final Number numberFactor;
+	private final double numberFactor;
 
-	public ImpreciseScaleFactor(Number factor) {
+	public ImpreciseScaleFactor(double factor) {
 		numberFactor = factor;
 	}
 
@@ -48,17 +48,17 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 		if (innerFactor.isUnity()) {
 			return this;
 		}
-		return new ImpreciseScaleFactor(innerFactor.targetValue(numberFactor.doubleValue()));
+		return new ImpreciseScaleFactor(innerFactor.targetValue(numberFactor));
 	}
 
 	@Override
 	public ScaleFactor invert() {
-		return new ImpreciseScaleFactor(1.0 / numberFactor.doubleValue());
+		return new ImpreciseScaleFactor(1.0 / numberFactor);
 	}
 
 	@Override
 	public boolean targetOutOfRange(long srcNumericalValue, long maxAbsValue) {
-		if (numberFactor.doubleValue() >= 1.0) {
+		if (numberFactor >= 1.0) {
 			if (srcNumericalValue >= 0) {
 				return srcNumericalValue > (maxAbsValue / getMultiplier());
 			} else {
@@ -75,7 +75,7 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 
 	@Override
 	public boolean targetOutOfRange(double srcNumericalValue, long maxAbsValue) {
-		if (numberFactor.doubleValue() >= 1.0) {
+		if (numberFactor >= 1.0) {
 			if (srcNumericalValue >= 0) {
 				return srcNumericalValue > (maxAbsValue / getMultiplier());
 			} else {
@@ -92,17 +92,17 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 
 	@Override
 	public double targetValue(double srcNumericalValue) {
-		return srcNumericalValue * numberFactor.doubleValue();
+		return srcNumericalValue * numberFactor;
 	}
 
 	@Override
 	public long targetValue(long srcNumericalValue) {
-		return Math.round(srcNumericalValue * numberFactor.doubleValue());
+		return Math.round(srcNumericalValue * numberFactor);
 	}
 
 	@Override
 	public long targetFloor(long srcNumericalValue) {
-		return (long) Math.floor(srcNumericalValue * numberFactor.doubleValue());
+		return (long) Math.floor(srcNumericalValue * numberFactor);
 	}
 
 	@Override
@@ -130,21 +130,21 @@ public class ImpreciseScaleFactor extends ScaleFactor {
 	@Override
 	public boolean equals(Object other) {
 		return (other instanceof ImpreciseScaleFactor)
-				&& numberFactor.equals(((ImpreciseScaleFactor) other).numberFactor);
+				&& Double.compare(numberFactor, ((ImpreciseScaleFactor) other).numberFactor) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return numberFactor.hashCode();
+		return Double.hashCode(numberFactor);
 	}
 
 	@Override
 	public String toString() {
-		return numberFactor.toString();
+		return Double.toString(numberFactor);
 	}
 
 	@Override
 	public double getMultiplier() {
-		return numberFactor.doubleValue();
+		return numberFactor;
 	}
 }

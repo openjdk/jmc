@@ -1,11 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Name: JDP Client Test
 Bundle-SymbolicName: org.openjdk.jmc.jdp.test;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.jdp
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ActivationPolicy: lazy
-Require-Bundle: org.junit
+Require-Bundle: org.openjdk.jmc.jdp,
+ org.junit
 Automatic-Module-Name: org.openjdk.jmc.jdp.test

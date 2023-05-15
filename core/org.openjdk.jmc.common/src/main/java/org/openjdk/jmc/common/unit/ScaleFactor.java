@@ -58,7 +58,7 @@ public abstract class ScaleFactor implements IScalarAffineTransform, Comparable<
 			return new LongPreOffsetTransform(preOT.preOffset, preOT.getMultiplier() * getMultiplier());
 		}
 		return SimpleAffineTransform.createWithPostOffset(innerTransform.getMultiplier() * getMultiplier(),
-				targetNumber(innerTransform.getOffset()));
+				targetValue(innerTransform.getOffset()));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class ScaleFactor implements IScalarAffineTransform, Comparable<
 	public abstract ScaleFactor invert();
 
 	@Override
-	public final Number getOffset() {
+	public final double getOffset() {
 		return 0;
 	}
 
@@ -125,6 +125,13 @@ public abstract class ScaleFactor implements IScalarAffineTransform, Comparable<
 			return targetValue(srcNumericalValue);
 		}
 		return targetValue((double) srcNumericalValue);
+	}
+
+	public ScaleFactor scale(long multiplier) {
+		if (isInteger() && !targetOutOfRange(multiplier, Long.MAX_VALUE)) {
+			return new LongScaleFactor(targetValue(multiplier));
+		}
+		return new ImpreciseScaleFactor(targetValue((double) multiplier));
 	}
 
 	@Override
