@@ -142,25 +142,6 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-toolchains-plugin</artifactId>
-					<version>3.0.0</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>toolchain</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<toolchains>
-							<jdk>
-								<version>17</version>
-							</jdk>
-						</toolchains>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${maven.jar.version}</version>
 					<configuration>
@@ -267,6 +248,25 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>17</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
 				<artifactId>directory-maven-plugin</artifactId>
