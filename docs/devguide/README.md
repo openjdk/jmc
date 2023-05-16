@@ -75,13 +75,13 @@ Next select _File | Import…_ and select _Maven / Existing Maven Project_ again
 
 <details><summary>Import launchers manually if not found</summary>
 
-If the launchers ar enot detected by Elipse they can be imported manually. Select _File | Import…_ and then select _Existing Projects into Workspace_. Find the `configuration/ide/eclipse` folder and click Ok.
+If the launchers are not detected by Elipse they can be imported manually. Select _File | Import…_ and then select _Existing Projects into Workspace_. Find the `configuration/ide/eclipse` folder and click Ok.
 
 ![Eclipse Config](images/eclipseconfig.png)
 
 </details>
 
-The project should have build error because the `org.openjdk.jmc.browser.attach` project requires JDK internal module exports, this is not compatible with `--release` (which only tracks public symbols). Right click on this module, select _Properties_, then go to _Java Compiler_, and untick `Use '--release' option`.
+The project should have build errors because the `org.openjdk.jmc.browser.attach` project requires JDK internal module exports, this is not compatible with `--release` (which only tracks public symbols). Right click on this module, select _Properties_, then go to _Java Compiler_, and untick `Use '--release' option`.
 
 ![Unset release on org.openjdk.jmc.browser.attach](images/unsetrelease-on-jmc.browser.attach.png)
 
