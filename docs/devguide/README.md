@@ -6,7 +6,7 @@ First of all you should download the latest version of Eclipse. JMC is an RCP ap
 
 There are various Eclipse bundles out there. Get (at least) the Eclipse IDE for Eclipse Committers. It adds some useful things, like PDE (the Plugin Development Environment), Git, the Marketplace client and more. You can also use the Eclipse IDE for Java Enterprise Developers.
 
-**You will need an Eclipse 2021-06 or later!**
+**You will need an Eclipse 2022-09 or later!**
 
 To get to the screen where you can select another packaging than the standard, click on the [Download Packages](https://www.eclipse.org/downloads/eclipse-packages) link on the Eclipse download page.
 
@@ -30,21 +30,24 @@ Setting execution environments:
 Ensure Eclipse compiler is set to Java 17, go to _Preferences | Java / Compiler_ then for
 _Compiler compliance level_ choose `17`.
 
-![Se compiler comliance level](images/setcompilercompliancelevel.png)
+![Set compiler comliance level](images/setcompilercompliancelevel.png)
 
-Creating the user library:
+**Optional: Show diff against git**
 
-![Create User Library](images/createuserlibrary.png)
+By default Eclipse use the version on disk. It may be practical to use instead the git version. Open _Window | Preferences_ then _General | Editors | Text Editors | Quick Diff_. Select _Git Revision for the reference source.
 
-Adding the jars:
-
-![image](images/addingjars.png)
+![Set quick diff reference source](images/setquickdiffreferencesource.png)
 
 Now we need to check a few things…
 
 ### Checkpoint
-* Is the Jetty server from the build instructions still up and running? (`mvn p2:site --file releng/third-party/pom.xml; mvn jetty:run --file releng/third-party/pom.xml`)
-   ![](images/p2site.png)
+* Is the Jetty server from the build instructions still up and running? 
+
+   ```
+   mvn p2:site --file releng/third-party/pom.xml; mvn jetty:run --file releng/third-party/pom.xml
+   ```
+
+   ![Jetty running](images/p2site.png)
 
 
 If yes, go ahead and open up the most recent target file you can find, available under `releng/platform-definitions/platform-definition-{year}-{month}` (__File | Open File__). You should see something like this:
@@ -66,9 +69,23 @@ First we will have to import the `core/` projects, since they are built separate
 
 Click next, and browse into the `jmc/core` folder. Select all the core projects and import them.
 
-Next select _File | Import…_ and select _Maven / Existing Maven Project_ again, but this time from the root.
+Next select _File | Import…_ and select _Maven / Existing Maven Project_ again, but this time from the repository root (`jmc`). During that step, Eclipse should find the launchers
+
+![JMC Launchers](images/launchers.png)
+
+<details><summary>Import launchers manually if not found</summary>
+
+If the launchers ar enot detected by Elipse they can be imported manually. Select _File | Import…_ and then select _Existing Projects into Workspace_. Find the `configuration/ide/eclipse` folder and click Ok.
 
 ![Eclipse Config](images/eclipseconfig.png)
+
+</details>
+
+The project should have build error because the `org.openjdk.jmc.browser.attach` project requires JDK internal module exports, this is not compatible with `--release` (which only tracks public symbols). Right click on this module, select _Properties_, then go to _Java Compiler_, and untick `Use '--release' option`.
+
+![Unset release on org.openjdk.jmc.browser.attach](images/unsetrelease-on-jmc.browser.attach.png)
+
+Eclipse should propose the rebuild.
 
 After importing that project, we can now launch / debug JMC from within Eclipse:
 
