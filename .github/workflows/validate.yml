@@ -53,7 +53,7 @@ jobs:
        shell: bash
     env:
       MAVEN_OPTS: -Xmx2048m
-      MAVENPARAMS: --no-transfer-progress
+      MAVENPARAMS: --batch-mode --no-transfer-progress
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -61,8 +61,9 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: temurin
-        java-version: '11.0.18'
+        java-version: '17'
         java-package: jdk
+        mvn-toolchain-id: 'JavaSE-17'
     - name: Cache local Maven repository
       uses: actions/cache@v3
       with:
