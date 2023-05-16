@@ -79,7 +79,7 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.version>2.7.1</tycho.version>
+		<tycho.version>3.0.4</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
@@ -391,6 +391,26 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<id>JavaSE-17</id>
+							<version>17</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<version>${maven.enforcer.version}</version>
 				<executions>
@@ -402,8 +422,8 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[11,)</version>
-									<message>Building JMC requires Java 11 or later</message>
+									<version>[17,)</version>
+									<message>Building JMC requires Java 17 or later</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -591,6 +611,30 @@
 							</configuration>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -75,7 +75,7 @@ public class ChunkLoaderV1 implements IChunkLoader {
 		while (delta != 0) {
 			constantPoolOffset += delta;
 			input.seek(constantPoolOffset);
-			delta = readConstantPoolEvent(input, manager);
+			delta = readConstantPoolEvent(input, manager, header.isIntegersCompressed());
 		}
 		manager.resolveConstants();
 
@@ -98,9 +98,14 @@ public class ChunkLoaderV1 implements IChunkLoader {
 		return data;
 	}
 
-	private static long readConstantPoolEvent(IDataInput input, TypeManager manager)
+	private static long readConstantPoolEvent(IDataInput input, TypeManager manager, boolean compressedInts)
 			throws IOException, InvalidJfrFileException {
-		input.readInt(); // size
+		// size (see JMC-7993)
+		if (compressedInts) {
+			input.readLong();
+		} else {
+			input.readInt();
+		}
 		ParserToolkit.assertValue(input.readLong(), CONSTANT_POOL_EVENT_TYPE); // type;
 		input.readLong(); // start
 		input.readLong(); // duration

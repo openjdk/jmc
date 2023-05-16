@@ -206,7 +206,7 @@
 								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
 								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
 								<Can-Retransform-Classes>true</Can-Retransform-Classes>
-								<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+								<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
 								<Built-By></Built-By>
 							</manifestEntries>
 						</transformer>

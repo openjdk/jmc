@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -64,4 +64,9 @@ public class JavaVersionSupport {
 	public static final JavaVersion JFR_NOT_COMMERCIAL = JDK_11_EA;
 	public static final JavaVersion JDK_11 = new JavaVersion(11, 0);
 	public static final JavaVersion JDK_12 = new JavaVersion(12, 0);
+	public static final JavaVersion JDK_13 = new JavaVersion(13, 0);
+	public static final JavaVersion JDK_14 = new JavaVersion(14, 0);
+	public static final JavaVersion JDK_15 = new JavaVersion(15, 0);
+	public static final JavaVersion JDK_16 = new JavaVersion(16, 0);
+	public static final JavaVersion JDK_17 = new JavaVersion(17, 0);
 }
