@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>17</version>
+      <vendor>azul</vendor>
+      <id>JavaSE-17</id>
+    </provides>
+    <configuration>
+      <jdkHome>/usr/lib/jvm/zulu17</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
