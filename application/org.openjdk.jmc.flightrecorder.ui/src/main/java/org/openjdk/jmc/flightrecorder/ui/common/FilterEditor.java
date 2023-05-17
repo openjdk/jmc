@@ -437,12 +437,8 @@ public class FilterEditor {
 		Transfer[] localTransfer = new Transfer[] {LocalSelectionTransfer.getTransfer()};
 		tree.addDragSupport(DND.DROP_MOVE | DND.DROP_COPY, localTransfer,
 				DndToolkit.createLocalDragSource(tree, this::deleteNodes));
-		ViewerDropAdapter dropTarget = DndToolkit.createLocalDropListTarget(tree,
-				CompositeNode.class,
-				FilterNode.class,
-				this::performDrop,
-				this::validateDrop
-		);
+		ViewerDropAdapter dropTarget = DndToolkit.createLocalDropListTarget(tree, CompositeNode.class, FilterNode.class,
+				this::performDrop, this::validateDrop);
 		dropTarget.setFeedbackEnabled(false);
 		tree.addDropSupport(DND.DROP_MOVE | DND.DROP_COPY, localTransfer, dropTarget);
 		ColumnViewerToolTipSupport.enableFor(tree);
