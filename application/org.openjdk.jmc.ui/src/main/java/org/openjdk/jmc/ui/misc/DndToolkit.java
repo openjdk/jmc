@@ -112,8 +112,12 @@ public class DndToolkit {
 	}
 
 	public static <T, U> ViewerDropAdapter createLocalDropListTarget(
-		Viewer viewer, Class<T> targetType, Class<U> srcType, IDropAction<List<? extends U>, T> action,
-		IDropValidator<List<? extends U>, T> validator) {
+		Viewer viewer,
+		Class<T> targetType,
+		Class<U> srcType,
+		IDropAction<List<U>, T> action,
+		IDropValidator<List<U>, T> validator
+	) {
 		return createLocalDropTarget(viewer, targetType, new IDropAction<ISelection, T>() {
 
 			@SuppressWarnings("unchecked")

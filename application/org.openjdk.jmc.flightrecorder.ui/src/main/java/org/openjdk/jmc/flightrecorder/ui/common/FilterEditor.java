@@ -437,8 +437,12 @@ public class FilterEditor {
 		Transfer[] localTransfer = new Transfer[] {LocalSelectionTransfer.getTransfer()};
 		tree.addDragSupport(DND.DROP_MOVE | DND.DROP_COPY, localTransfer,
 				DndToolkit.createLocalDragSource(tree, this::deleteNodes));
-		ViewerDropAdapter dropTarget = DndToolkit.createLocalDropListTarget(tree, CompositeNode.class, FilterNode.class,
-				this::performDrop, this::validateDrop);
+		ViewerDropAdapter dropTarget = DndToolkit.createLocalDropListTarget(tree,
+				CompositeNode.class,
+				FilterNode.class,
+				this::performDrop,
+				this::validateDrop
+		);
 		dropTarget.setFeedbackEnabled(false);
 		tree.addDropSupport(DND.DROP_MOVE | DND.DROP_COPY, localTransfer, dropTarget);
 		ColumnViewerToolTipSupport.enableFor(tree);
@@ -562,7 +566,7 @@ public class FilterEditor {
 		notifyListener();
 	}
 
-	private int validateDrop(List<? extends FilterNode> src, CompositeNode target, int operation) {
+	private <N extends FilterNode> int validateDrop(List<N> src, CompositeNode target, int operation) {
 		if (target == null ? root.children.containsAll(src) : target.children.containsAll(src)) {
 			return DND.DROP_NONE;
 		} else if (find(target, src)) {
@@ -582,7 +586,7 @@ public class FilterEditor {
 		return false;
 	}
 
-	private boolean performDrop(List<? extends FilterNode> src, CompositeNode target, int operation, int location) {
+	private <N extends FilterNode> boolean performDrop(List<N> src, CompositeNode target, int operation, int location) {
 		if (target == null) {
 			target = root;
 		}
