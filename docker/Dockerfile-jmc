@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk:17-latest AS builder
+FROM eclipse-temurin:17-jammy AS builder
 
 RUN apt-get update && apt-get install -y maven
 
