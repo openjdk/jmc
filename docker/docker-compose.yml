@@ -4,8 +4,6 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile-p2
-    ports:
-      - "8080:8080"
   jmc:
     build:
       context: ..
