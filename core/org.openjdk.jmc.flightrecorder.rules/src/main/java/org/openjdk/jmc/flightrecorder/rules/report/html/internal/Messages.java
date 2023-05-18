@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ public class Messages {
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	public static final String RULESPAGE_SHOW_OK_RESULTS_ACTION = "RULESPAGE_SHOW_OK_RESULTS_ACTION"; //$NON-NLS-1$
+	public static final String RULESPAGE_SHOW_IGNORE_RESULTS_ACTION = "RULESPAGE_SHOW_IGNORE_RESULTS_ACTION"; //$NON-NLS-1$
 	public static final String RULES_ALL_IGNORED_MESSAGE = "RULES_ALL_IGNORED_MESSAGE"; //$NON-NLS-1$
 	public static final String RULES_NO_PROBLEMS_FOUND = "RULES_NO_PROBLEMS_FOUND"; //$NON-NLS-1$
 	public static final String RULES_NO_PROBLEMS_FOUND_DETAILS = "RULES_NO_PROBLEMS_FOUND_DETAILS"; //$NON-NLS-1$

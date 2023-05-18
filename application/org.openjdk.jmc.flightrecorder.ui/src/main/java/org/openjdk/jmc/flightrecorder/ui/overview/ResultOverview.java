@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -151,6 +151,18 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		}
 	}
 
+	class ShowIgnoreAction extends Action {
+		public ShowIgnoreAction(String text) {
+			super(text, IAction.AS_CHECK_BOX);
+			super.setImageDescriptor(ResultOverview.ICON_IGNORE);
+		}
+
+		@Override
+		public void run() {
+			report.setShowIgnore(this.isChecked());
+		}
+	}
+
 	class BrowserAction extends Action {
 		public BrowserAction(String text) {
 			super(text, IAction.AS_CHECK_BOX);
@@ -198,6 +210,8 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 			.getMCImageDescriptor(ImageConstants.ICON_OK);
 	public static final ImageDescriptor ICON_NA = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_NA);
+	public static final ImageDescriptor ICON_IGNORE = FlightRecorderUI.getDefault()
+			.getMCImageDescriptor(ImageConstants.ICON_IGNORE);
 
 	private static final ImageDescriptor ICON_OVERVIEW = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_OVERVIEW);
@@ -214,6 +228,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 	private IState loadedState;
 	private ExportAction exportAction;
 	private ShowOkAction showOkAction;
+	private ShowIgnoreAction showIgnoreAction;
 	private Separator separator;
 	private BrowserAction browserAction;
 
@@ -234,6 +249,9 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		showOkAction = new ShowOkAction(Messages.RULESPAGE_SHOW_OK_RESULTS_ACTION);
 		showOkAction.setId("showOk"); //$NON-NLS-1$
 		form.getToolBarManager().add(showOkAction);
+		showIgnoreAction = new ShowIgnoreAction(Messages.RULESPAGE_SHOW_IGNORE_RESULTS_ACTION);
+		showIgnoreAction.setId("showIgnore"); //$NON-NLS-1$
+		form.getToolBarManager().add(showIgnoreAction);
 		exportAction = new ExportAction(Messages.ResultOverview_EXPORT_ACTION, ICON_EXPORT, editor);
 		exportAction.setId("exportAction"); //$NON-NLS-1$
 		form.getToolBarManager().add(exportAction);
@@ -261,6 +279,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 
 	private void setVisibleActions(boolean visible) {
 		form.getToolBarManager().find(showOkAction.getId()).setVisible(visible);
+		form.getToolBarManager().find(showIgnoreAction.getId()).setVisible(visible);
 		form.getToolBarManager().find(exportAction.getId()).setVisible(visible);
 		form.getToolBarManager().find(separator.getId()).setVisible(visible);
 		form.getToolBarManager().find(browserAction.getId()).setVisible(false);
@@ -295,6 +314,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 					report = null;
 				} else {
 					showOkAction.setChecked(report.getShowOk());
+					showIgnoreAction.setChecked(report.getShowIgnore());
 				}
 			} catch (SWTException | SWTError e) {
 				reportAction.setEnabled(false);
@@ -360,6 +380,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 	 */
 	public void enableBrowserAction() {
 		form.getToolBarManager().find(showOkAction.getId()).setVisible(false);
+		form.getToolBarManager().find(showIgnoreAction.getId()).setVisible(false);
 		form.getToolBarManager().find(exportAction.getId()).setVisible(false);
 		form.getToolBarManager().find(separator.getId()).setVisible(false);
 		form.getToolBarManager().find(browserAction.getId()).setVisible(true);

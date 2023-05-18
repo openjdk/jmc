@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -298,6 +298,7 @@ public class Messages extends NLS {
 	public static String JFR_EDITOR_RULES_CANCELLED;
 	public static String JFR_EDITOR_RULES_EVALUATING;
 	public static String JFR_EDITOR_RULES_IGNORED;
+	public static String JFR_EDITOR_RULES_IGNORED_REASON;
 	public static String JFR_EDITOR_RULES_SCHEDULED;
 	public static String JFR_EDITOR_RULES_TASK_NAME;
 	public static String JFR_EDITOR_RULES_WAITING;
@@ -471,6 +472,7 @@ public class Messages extends NLS {
 	public static String RESULT_VIEW_ANALYSIS_DISABLED;
 	public static String RESULT_VIEW_NO_EDITOR_SELECTED;
 	public static String RULESPAGE_SHOW_OK_RESULTS_ACTION;
+	public static String RULESPAGE_SHOW_IGNORE_RESULTS_ACTION;
 	public static String RULES_SHOW_RESULTS_ACTION;
 	public static String RULES_STATISTICS;
 	public static String RecordingPage_CONCURRENT_RECORDINGS_SELECTION;
