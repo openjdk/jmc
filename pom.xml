@@ -81,6 +81,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.version>3.0.4</tycho.version>
 		<maven.buildnumber.version>1.4</maven.buildnumber.version>
+		<maven.checkstyle.version>3.2.2</maven.checkstyle.version>
+		<checkstyle.config.path>${session.executionRootDirectory}/configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
 		<maven.deploy.version>2.8.2</maven.deploy.version>
 		<maven.directory.version>0.3.1</maven.directory.version>
 		<maven.enforcer.version>3.0.0</maven.enforcer.version>
@@ -387,6 +389,27 @@
 						</configuration>
 					</execution>
 					<!-- TODO: Maybe add the create-metadata goal after we've made the switch to Mercurial -->
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<executions>
+					<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<configuration>
+						<configLocation>${checkstyle.config.path}</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<encoding>UTF-8</encoding>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+					</configuration>
+					<goals>
+						<goal>check</goal>
+					</goals>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
