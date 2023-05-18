@@ -472,6 +472,7 @@ public class Messages extends NLS {
 	public static String RESULT_VIEW_ANALYSIS_DISABLED;
 	public static String RESULT_VIEW_NO_EDITOR_SELECTED;
 	public static String RULESPAGE_SHOW_OK_RESULTS_ACTION;
+	public static String RULESPAGE_SHOW_IGNORE_RESULTS_ACTION;
 	public static String RULES_SHOW_RESULTS_ACTION;
 	public static String RULES_STATISTICS;
 	public static String RecordingPage_CONCURRENT_RECORDINGS_SELECTION;

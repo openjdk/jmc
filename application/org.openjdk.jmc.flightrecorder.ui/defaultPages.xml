@@ -45,6 +45,7 @@
 			</table>
 			<report>
 				<showOk value="false" />
+				<showIgnore value="false" />
 			</report>
 		</state>
 	</page>

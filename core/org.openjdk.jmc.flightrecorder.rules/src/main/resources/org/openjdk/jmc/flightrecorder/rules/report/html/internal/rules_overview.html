@@ -1,5 +1,5 @@
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
    Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 -->
 <html lang="en">
@@ -137,6 +137,10 @@ section {
 	background-color: gray;
 }
 
+.rule_score.ignore {
+	background-color: lightblue;
+}
+
 .rule_score.error {
     background-color: #FF0000;
 }
@@ -159,6 +163,10 @@ section {
 
 .rule_bar.na {
 	background-color: gray;
+}
+
+.rule_bar.ignore {
+	background-color: lightblue;
 }
 
 .rule_bar.error {
@@ -242,6 +250,12 @@ section {
 	font-family: sans-serif;
 	font-size: 85%;
 }
+
+.showIgnoreText {
+	font-family: sans-serif;
+	font-size: 85%;
+}
+
 .anchorTag {
 	cursor:pointer;
 	color:blue;
@@ -260,6 +274,7 @@ section {
 	});
 	
 	var showOk = false;
+	var showIgnore = false;
 	
 	var overview = {
 		initializeRuleOverview : function() {
@@ -305,6 +320,20 @@ section {
 			showOk = ok;
 		},
 		
+		showIgnore : function(ignore) {
+			var newDisplay = ignore ? "block" : "none";
+			var css = document.all ? 'rules' : 'cssRules';
+			var rule = document.styleSheets[0][css];
+			for (var i = 0; i < rule.length; i++) {
+				if (rule[i].selectorText == ".ignore") {
+					rule[i].style.display = newDisplay;
+				}
+			}
+			overview.updateElementsDisplay("ignore", newDisplay);
+			overview.updatePageHeadersVisibility();
+			showIgnore = ignore;
+		},
+
 		updatePageHeadersVisibility : function() {
 			var headers = document.getElementsByClassName("page_heading");
 			for (var i = 0; i < headers.length; i++) {
@@ -400,7 +429,7 @@ section {
 				score = 'N/A';
 			} else if (score == -3) {
 				severity = 'ignore';
-				score = 'I';
+				score = 'Ignored';
 			} else if (score == -2) {
 				severity = 'error';
 				score = '';
@@ -423,7 +452,7 @@ section {
 			for (var i = 0; i < elements.length; i++)  {
 				elements[i].className = 'rule ' + severity;
 				if (showOk) {
-					if (severity !== 'ignore') {
+					if (severity === 'ok' || severity === 'na') {
 						elements[i].style.display = 'block';
 					} else {
 						elements[i].style.display = 'none';
@@ -436,6 +465,19 @@ section {
 					}
 				}
 			}
+
+			for (var i = 0; i < elements.length; i++)  {
+				elements[i].className = 'rule ' + severity;
+				if (showIgnore) {
+					if (severity === 'ignore') {
+						elements[i].style.display = 'block';
+					} else {
+						elements[i].style.display = 'none';
+					}
+				}
+
+			}
+
 			var scoreBarElements = document.getElementsByName(id + '_score_bar');
 			for (var i = 0; i < scoreBarElements.length; i++) {
 				var scoreBar = scoreBarElements[i];
