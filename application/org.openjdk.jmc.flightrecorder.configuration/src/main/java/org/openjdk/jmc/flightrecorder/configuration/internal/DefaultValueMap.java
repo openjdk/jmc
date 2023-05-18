@@ -59,7 +59,6 @@ public class DefaultValueMap<K> implements IDescribedMap<K> {
 		this(knownOptions, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public DefaultValueMap(IMapper<K, IOptionDescriptor<?>> fallbacks) {
 		this(Collections.emptyMap(), fallbacks);
 	}

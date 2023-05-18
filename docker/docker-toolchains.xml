@@ -4,11 +4,11 @@
     <type>jdk</type>
     <provides>
       <version>17</version>
-      <vendor>azul</vendor>
+      <vendor>temurin</vendor>
       <id>JavaSE-17</id>
     </provides>
     <configuration>
-      <jdkHome>/usr/lib/jvm/zulu17</jdkHome>
+      <jdkHome>/opt/java/openjdk/</jdkHome>
     </configuration>
   </toolchain>
 </toolchains>
