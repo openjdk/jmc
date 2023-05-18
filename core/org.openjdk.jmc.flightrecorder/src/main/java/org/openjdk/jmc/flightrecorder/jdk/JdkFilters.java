@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -109,6 +109,7 @@ public final class JdkFilters {
 	public static final IItemFilter EXECUTION_SAMPLE = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE);
 	public static final IItemFilter CONTEXT_SWITCH_RATE = ItemFilters.type(JdkTypeIDs.CONTEXT_SWITCH_RATE);
 	public static final IItemFilter CPU_LOAD = ItemFilters.type(JdkTypeIDs.CPU_LOAD);
+	public static final IItemFilter GC_G1MMU = ItemFilters.type(JdkTypeIDs.GC_G1MMU);
 	public static final IItemFilter GC_PAUSE = ItemFilters.type(JdkTypeIDs.GC_PAUSE);
 	public static final IItemFilter GC_PAUSE_PHASE = ItemFilters.type(JdkTypeIDs.GC_PAUSE_L1, JdkTypeIDs.GC_PAUSE_L2,
 			JdkTypeIDs.GC_PAUSE_L3, JdkTypeIDs.GC_PAUSE_L4);
