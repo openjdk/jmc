@@ -631,16 +631,6 @@ public class Messages extends NLS {
 		return NLS.bind(message, new Object[] {itemCount, frameFraction, totalCount});
 	}
 
-	public static String stackTraceMessage(String itemCount, String totalCount, String frameFraction) {
-		String message;
-		if (itemCount.equals("1")) {
-			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL;
-		} else {
-			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL;
-		}
-		return NLS.bind(message, new Object[] {itemCount, frameFraction, totalCount});
-	}
-
 	public static String siblingMessage(int itemsInSiblings, int nSiblings) {
 		String message;
 		if (itemsInSiblings == 1) {
