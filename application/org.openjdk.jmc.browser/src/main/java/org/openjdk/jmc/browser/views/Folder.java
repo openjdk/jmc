@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,8 +41,8 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.common.tree.IParent;
-import org.openjdk.jmc.common.util.ICopyable;
+import org.openjdk.jmc.ui.common.tree.IParent;
+import org.openjdk.jmc.ui.common.util.ICopyable;
 
 public class Folder implements IParent<Object>, ICopyable, IDescribable {
 

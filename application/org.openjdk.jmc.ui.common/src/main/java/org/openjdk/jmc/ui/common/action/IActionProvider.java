@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,25 +30,25 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.util;
+package org.openjdk.jmc.ui.common.action;
+
+import java.util.Collection;
+
+import org.openjdk.jmc.ui.common.tree.IParent;
 
 /**
- * Interface for objects that may be copied. This is similar to {@link Cloneable}, but with the
- * addition of {@link ICopyable#isCopyable()} that can tell if the object is truly copyable or not.
+ * A tree of {@link IUserAction}.
  */
-public interface ICopyable {
+public interface IActionProvider extends IParent<IActionProvider> {
 
 	/**
-	 * @return {@code true} if this object can be copied
+	 * @return The default action for this provider. This action should be a member of the
+	 *         {@link #getActions()} collection.
 	 */
-	boolean isCopyable();
+	IUserAction getDefaultAction();
 
 	/**
-	 * Create a deep copy of this object. If the object is not copyable, then the behavior is
-	 * undefined. {@link ICopyable#isCopyable()} should be called before copying to determine
-	 * whether it is safe.
-	 * 
-	 * @return a deep copy of this object
+	 * @return a collection of actions for this provider
 	 */
-	Object copy();
+	Collection<? extends IUserAction> getActions();
 }

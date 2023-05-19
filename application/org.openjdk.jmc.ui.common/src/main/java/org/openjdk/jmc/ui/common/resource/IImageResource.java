@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,25 +30,12 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.action;
-
-import java.util.Collection;
-
-import org.openjdk.jmc.common.tree.IParent;
+package org.openjdk.jmc.ui.common.resource;
 
 /**
- * A tree of {@link IUserAction}.
+ * Interface for classes that can provide an image resource.
  */
-public interface IActionProvider extends IParent<IActionProvider> {
+public interface IImageResource {
 
-	/**
-	 * @return The default action for this provider. This action should be a member of the
-	 *         {@link #getActions()} collection.
-	 */
-	IUserAction getDefaultAction();
-
-	/**
-	 * @return a collection of actions for this provider
-	 */
-	Collection<? extends IUserAction> getActions();
+	public Resource getImageResource();
 }

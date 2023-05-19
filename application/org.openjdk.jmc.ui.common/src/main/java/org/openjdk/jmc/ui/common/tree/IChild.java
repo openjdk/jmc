@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,12 +30,18 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.resource;
+package org.openjdk.jmc.ui.common.tree;
 
 /**
- * Interface for classes that can provide an image resource.
+ * Interface for objects that are children of another object.
+ * 
+ * @param <T>
+ *            parent object type
  */
-public interface IImageResource {
+public interface IChild<T> {
 
-	public Resource getImageResource();
+	/**
+	 * @return the parent object
+	 */
+	T getParent();
 }

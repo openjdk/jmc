@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,18 +30,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.tree;
+package org.openjdk.jmc.ui.common.action;
+
+import org.openjdk.jmc.common.IDescribable;
 
 /**
- * Interface for objects that are children of another object.
- * 
- * @param <T>
- *            parent object type
+ * An action that may be displayed in a user interface and also may be executed.
  */
-public interface IChild<T> {
+public interface IUserAction extends IDescribable, Executable {
 
-	/**
-	 * @return the parent object
-	 */
-	T getParent();
 }

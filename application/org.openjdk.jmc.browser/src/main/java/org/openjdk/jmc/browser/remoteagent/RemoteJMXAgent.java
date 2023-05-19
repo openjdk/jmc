@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,11 +36,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.openjdk.jmc.common.action.IActionProvider;
-import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.actionprovider.IActionProviderFactory;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
+import org.openjdk.jmc.ui.common.action.IActionProvider;
+import org.openjdk.jmc.ui.common.action.IUserAction;
 
 public class RemoteJMXAgent implements IActionProviderFactory {
 

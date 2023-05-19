@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,8 +35,8 @@ package org.openjdk.jmc.ui.misc;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ResourceLocator;
-import org.openjdk.jmc.common.resource.IImageResource;
-import org.openjdk.jmc.common.resource.Resource;
+import org.openjdk.jmc.ui.common.resource.IImageResource;
+import org.openjdk.jmc.ui.common.resource.Resource;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 
 public class ImageDescriptorAdapterFactory implements IAdapterFactory {

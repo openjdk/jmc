@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,32 +30,25 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.resource;
+package org.openjdk.jmc.ui.common.util;
 
 /**
- * Class identifying a resource in an Eclipse plugin.
+ * Interface for objects that may be copied. This is similar to {@link Cloneable}, but with the
+ * addition of {@link ICopyable#isCopyable()} that can tell if the object is truly copyable or not.
  */
-public class Resource {
-
-	private final String pluginId;
-	private final String resource;
+public interface ICopyable {
 
 	/**
-	 * @param pluginId
-	 *            id of the Eclipse plugin containing the resource
-	 * @param resource
-	 *            resource path within the Eclipse plugin
+	 * @return {@code true} if this object can be copied
 	 */
-	public Resource(String pluginId, String resource) {
-		this.pluginId = pluginId;
-		this.resource = resource;
-	}
+	boolean isCopyable();
 
-	public String getPluginId() {
-		return pluginId;
-	}
-
-	public String getResourcePath() {
-		return resource;
-	}
+	/**
+	 * Create a deep copy of this object. If the object is not copyable, then the behavior is
+	 * undefined. {@link ICopyable#isCopyable()} should be called before copying to determine
+	 * whether it is safe.
+	 * 
+	 * @return a deep copy of this object
+	 */
+	Object copy();
 }

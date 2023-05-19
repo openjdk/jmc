@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,24 +30,32 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.tree;
+package org.openjdk.jmc.ui.common.util;
 
-import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
- * An interface for objects that are parents of other objects.
- * 
- * @param <T>
- *            child object type
+ * An observable object. This is a solution to make interface observable since {@link Observable} is
+ * not an interface. Actual instance will probably (but not necessarily) extend the class
+ * {@link Observable}.
  */
-public interface IParent<T> {
-	/**
-	 * @return {@code true} if {@link #getChildren()} would return a non-empty collection
-	 */
-	boolean hasChildren();
+public interface IObservable {
 
 	/**
-	 * @return a collection with the child objects
+	 * Adds an observer to the set of observers. The order in which notifications will be delivered
+	 * to multiple observers is not specified.
+	 *
+	 * @param o
+	 *            an observer to be added
 	 */
-	Collection<? extends T> getChildren();
+	void addObserver(Observer o);
+
+	/**
+	 * Deletes an observer from the set of observers.
+	 *
+	 * @param o
+	 *            the observer to be deleted
+	 */
+	void deleteObserver(Observer o);
 }

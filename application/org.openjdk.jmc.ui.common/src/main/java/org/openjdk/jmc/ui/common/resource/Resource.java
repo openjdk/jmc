@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,23 +30,32 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.tree;
+package org.openjdk.jmc.ui.common.resource;
 
 /**
- * Interface for objects that can be viewed as an array.
- * 
- * @param <T>
- *            object type of the array elements
+ * Class identifying a resource in an Eclipse plugin.
  */
-public interface IArray<T> {
+public class Resource {
+
+	private final String pluginId;
+	private final String resource;
 
 	/**
-	 * @return {@code true} if {@link #elements()} would return an array with length zero
+	 * @param pluginId
+	 *            id of the Eclipse plugin containing the resource
+	 * @param resource
+	 *            resource path within the Eclipse plugin
 	 */
-	boolean isEmpty();
+	public Resource(String pluginId, String resource) {
+		this.pluginId = pluginId;
+		this.resource = resource;
+	}
 
-	/**
-	 * @return an array representation of this object
-	 */
-	T[] elements();
+	public String getPluginId() {
+		return pluginId;
+	}
+
+	public String getResourcePath() {
+		return resource;
+	}
 }

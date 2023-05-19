@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,9 +35,9 @@ package org.openjdk.jmc.rjmx.util.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
+import org.openjdk.jmc.ui.common.tree.IParent;
 
 public class PartitionedList<T> implements IParent<T>, Comparable<PartitionedList<T>> {
 	private final int firstObjectIndex;
