@@ -33,6 +33,7 @@
 package org.openjdk.jmc.ui.misc;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+
 import org.openjdk.jmc.ui.common.action.IUserAction;
 
 /**
