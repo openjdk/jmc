@@ -426,8 +426,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		treeAction.setChecked(treeLayout);
 		layoutActions = new IAction[] {treeAction, reducedTreeAction};
 
-		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration,
-				Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION, CoreImages.TIMESPAN);
+		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration, Messages.STACKTRACE_VIEW_DURATION,
+				CoreImages.TIMESPAN);
 		treeAction.setChecked(perDuration);
 
 		NavigateAction forwardAction = new NavigateAction(true);
@@ -916,8 +916,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			if (duration.doubleValue() > 0) {
 				return UnitLookup.PERCENT_UNITY.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
 						.displayUsing(IDisplayable.AUTO);
-			} else
+			} else {
 				return UnitLookup.PERCENT_UNITY.quantity(0).displayUsing(IDisplayable.AUTO);
+			}
 		}
 
 		@Override
@@ -986,12 +987,14 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private String formatDuration(long duration, String unit) {
 		Duration rawDuration = null;
 		String formattedTime = "NA";
-		if (unit.equalsIgnoreCase("ns"))
+		if (unit.equalsIgnoreCase("ns")) {
 			rawDuration = Duration.ofNanos(duration);
-		if (unit.equalsIgnoreCase("s"))
-			rawDuration = Duration.ofSeconds(duration);
-		if (unit.equalsIgnoreCase("ms"))
+		} else if (unit.equalsIgnoreCase("ms")) {
 			rawDuration = Duration.ofMillis(duration);
+		} else if (unit.equalsIgnoreCase("s")) {
+			rawDuration = Duration.ofSeconds(duration);
+		}
+
 		if (rawDuration != null) {
 			formattedTime = String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(),
 					rawDuration.toMinutesPart(), rawDuration.toSecondsPart(), rawDuration.toMillisPart(),

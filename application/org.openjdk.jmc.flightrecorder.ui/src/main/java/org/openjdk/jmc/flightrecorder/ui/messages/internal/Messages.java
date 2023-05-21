@@ -529,7 +529,7 @@ public class Messages extends NLS {
 	public static String STACKTRACE_VIEW_REDUCE_TREE_DEPTH;
 	public static String STACKTRACE_VIEW_SELECTION;
 	public static String STACKTRACE_VIEW_TREE_VIEW;
-	public static String STACKTRACE_VIEW_PERCENTAGE_BY_DURATION;
+	public static String STACKTRACE_VIEW_DURATION;
 	public static String STACKTRACE_VIEW_STACK_TRACE;
 	public static String STACKTRACE_VIEW_THREAD_ROOT;
 	public static String STACKTRACE_VIEW_TRACES_IN_GROUP;
