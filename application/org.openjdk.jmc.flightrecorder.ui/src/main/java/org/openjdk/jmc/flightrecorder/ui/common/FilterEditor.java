@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -562,7 +562,7 @@ public class FilterEditor {
 		notifyListener();
 	}
 
-	private int validateDrop(List<? extends FilterNode> src, CompositeNode target, int operation) {
+	private <N extends FilterNode> int validateDrop(List<N> src, CompositeNode target, int operation) {
 		if (target == null ? root.children.containsAll(src) : target.children.containsAll(src)) {
 			return DND.DROP_NONE;
 		} else if (find(target, src)) {
@@ -582,7 +582,7 @@ public class FilterEditor {
 		return false;
 	}
 
-	private boolean performDrop(List<? extends FilterNode> src, CompositeNode target, int operation, int location) {
+	private <N extends FilterNode> boolean performDrop(List<N> src, CompositeNode target, int operation, int location) {
 		if (target == null) {
 			target = root;
 		}
