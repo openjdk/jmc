@@ -35,7 +35,6 @@ package org.openjdk.jmc.common.jvm;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openjdk.jmc.common.jvm.JVMCommandLineToolkit;
 
 public class JVMCommandLineToolkitTest {
 
