@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,63 +30,84 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.openjdk.jmc.common.jvm;
 
 /**
- * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy
- * loaded on demand.
+ * Metadata for a running JVM
  */
-public class PersistentCredentials implements ICredentials {
+public class JVMDescriptor {
+	private final String javaVersion;
+	private final JVMType jvmType;
+	private final String jvmName;
+	private final String jvmVendor;
+	private final JVMArch jvmArch;
+	private final String javaCommand;
+	private final String jvmArguments;
+	private final Integer pid;
+	private final Boolean debug;
+	private final Connectable connectable;
 
-	private final String id;
-	private String[] wrapped;
-
-	private static final Pattern PASSWORD_PATTERN = Pattern
-			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
-
-	public PersistentCredentials(String id) {
-		this.id = id;
+	public JVMDescriptor(String javaVersion, JVMType jvmType, JVMArch jvmArch, String javaCommand, String jvmArguments,
+			String jvmName, String jvmVendor, Integer pid, boolean debug, Connectable attachable) {
+		super();
+		this.javaVersion = javaVersion;
+		this.jvmType = jvmType;
+		this.jvmArch = jvmArch;
+		this.javaCommand = javaCommand;
+		this.jvmArguments = jvmArguments;
+		this.jvmName = jvmName;
+		this.jvmVendor = jvmVendor;
+		this.pid = pid;
+		this.debug = debug;
+		connectable = attachable;
 	}
 
-	public PersistentCredentials(String username, String password) throws SecurityException {
-		this(username, password, null);
+	public String getJavaVersion() {
+		return javaVersion;
 	}
 
-	public PersistentCredentials(String username, String password, String family) throws SecurityException {
-		wrapped = new String[] {username, password};
-		id = SecurityManagerFactory.getSecurityManager().storeInFamily(family, wrapped);
+	public JVMType getJvmType() {
+		return jvmType;
+	}
+
+	public JVMArch getJvmArch() {
+		return jvmArch;
+	}
+
+	public String getJavaCommand() {
+		return javaCommand;
+	}
+
+	public String getJVMArguments() {
+		return jvmArguments;
+	}
+
+	public String getJvmName() {
+		return jvmName;
+	}
+
+	public String getJvmVendor() {
+		return jvmVendor;
+	}
+
+	public Integer getPid() {
+		return pid;
+	}
+
+	public Boolean isDebug() {
+		return debug;
+	}
+
+	public Boolean isUnconnectable() {
+		return connectable.isUnconnectable();
+	}
+
+	public Boolean isAttachable() {
+		return connectable.isAttachable();
 	}
 
 	@Override
-	public String getUsername() throws SecurityException {
-		return getCredentials()[0];
-	}
-
-	@Override
-	public String getPassword() throws SecurityException {
-		return getCredentials()[1];
-	}
-
-	private String[] getCredentials() throws SecurityException {
-		if (wrapped == null) {
-			wrapped = (String[]) SecurityManagerFactory.getSecurityManager().get(id);
-		}
-		if (wrapped == null || wrapped.length != 2) {
-			throw new CredentialsNotAvailableException();
-		}
-		return wrapped;
-	}
-
-	@Override
-	public String getExportedId() {
-		return id;
-	}
-
-	public static boolean isPasswordValid(final String password) {
-		Matcher matcher = PASSWORD_PATTERN.matcher(password);
-		return matcher.matches();
+	public String toString() {
+		return "[JVMDescriptor] Java command: " + getJavaCommand() + " PID: " + getPid(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

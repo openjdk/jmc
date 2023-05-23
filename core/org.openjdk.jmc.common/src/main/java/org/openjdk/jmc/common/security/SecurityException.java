@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,20 +30,28 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.security;
 
 /**
- * Interface for data points on an X/Y chart.
- * 
- * @param <X>
- *            X axis data type
- * @param <Y>
- *            Y axis data type
+ * This is the main exception thrown by the Security API.
  */
-public interface IXYData<X, Y> {
+public class SecurityException extends Exception {
+	private static final long serialVersionUID = 6644781676988195632L;
 
-	X getX();
+	public SecurityException() {
+		super();
+	}
 
-	Y getY();
+	public SecurityException(String message, Throwable cause) {
+		super(message);
+		initCause(cause);
+	}
 
+	public SecurityException(String message) {
+		super(message);
+	}
+
+	public SecurityException(Throwable cause) {
+		initCause(cause);
+	}
 }

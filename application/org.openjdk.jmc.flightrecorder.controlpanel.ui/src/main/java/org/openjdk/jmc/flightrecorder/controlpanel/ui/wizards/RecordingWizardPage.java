@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,13 +65,13 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.unit.IDescribedMap;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.recording.RecordingOptionsBuilder;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.common.resource.MCFile;
-import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.misc.QuantityKindProposal;
 
 /**

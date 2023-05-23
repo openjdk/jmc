@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,28 +30,48 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * This is the main exception thrown by the Security API.
+ * This is the global security manager factory for Mission Control. You can only have one
+ * SecurityManager, and it is initialized at start. It can not be changed once initialized. The only
+ * way to change security manager is to set the system property
+ * org.openjdk.jmc.rjmx.security.manager=&lt;class&gt; before this factory class is instantiated.
+ * The class must implement ISecurityManager, and it must have a default constructor.
  */
-public class SecurityException extends Exception {
-	private static final long serialVersionUID = 6644781676988195632L;
+public final class SecurityManagerFactory {
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.common.security"); //$NON-NLS-1$
 
-	public SecurityException() {
-		super();
+	private static ISecurityManager instance;
+
+	static {
+		String className = System.getProperty("org.openjdk.jmc.common.security.manager"); //$NON-NLS-1$
+		try {
+			if (className != null) {
+				Class<? extends Object> c = Class.forName(className);
+				instance = (ISecurityManager) c.newInstance();
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Could not create Security manager for className. Using default! Exception was:", //$NON-NLS-1$
+					e);
+		}
 	}
 
-	public SecurityException(String message, Throwable cause) {
-		super(message);
-		initCause(cause);
+	public synchronized final static void setDefaultSecurityManager(ISecurityManager manager) {
+		if (instance == null) {
+			instance = manager;
+		}
 	}
 
-	public SecurityException(String message) {
-		super(message);
+	public synchronized final static ISecurityManager getSecurityManager() {
+		return instance;
 	}
 
-	public SecurityException(Throwable cause) {
-		initCause(cause);
+	private SecurityManagerFactory() {
+		throw new AssertionError("This class is not to be instantiated!"); //$NON-NLS-1$
 	}
+
 }

@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
 import org.openjdk.jmc.greychart.GreyChartPanel;
 import org.openjdk.jmc.greychart.TickFormatter;
@@ -46,7 +47,6 @@ import org.openjdk.jmc.greychart.impl.DateXAxis;
 import org.openjdk.jmc.greychart.impl.DefaultXYGreyChart;
 import org.openjdk.jmc.greychart.impl.DefaultYAxis;
 import org.openjdk.jmc.greychart.util.ChartRenderingToolkit;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 /**
  * Little test program creating a graph containing a huge amount of data.

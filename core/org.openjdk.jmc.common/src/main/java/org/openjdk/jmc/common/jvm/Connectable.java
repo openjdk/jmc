@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,12 +30,31 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.jvm;
 
 /**
- * A data point on an X/Y chart where the X axis is a timestamp in epoch ns and the Y axis is a
- * natural number.
+ * Enum describing different JVM connectability possibilities.
  */
-public interface ITimestampedData extends IXYData<Long, Number> {
+public enum Connectable {
+	/**
+	 * The JVM can be connected to using attach.
+	 */
+	ATTACHABLE,
+	/**
+	 * The JVM can be connected to using the management agent.
+	 */
+	MGMNT_AGENT_STARTED,
+	/**
+	 * The JVM can't be connected to.
+	 */
+	NO,
+	UNKNOWN;
 
+	public boolean isUnconnectable() {
+		return this == NO;
+	}
+
+	public boolean isAttachable() {
+		return this == ATTACHABLE;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,28 +30,55 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.jvm;
 
-import java.util.Iterator;
+import java.util.StringTokenizer;
 
-/**
- * Interface for objects that can produce a series of data points arranged on an X axis.
- * 
- * @param <T>
- *            Data type of the data points. In order to implement the interval checking of
- *            {@link #createIterator(long, long)}, it can be desirable that an X value can somehow
- *            be retrieved from the objects of this type.
- */
-public interface DataSeries<T> {
+public class JVMCommandLineToolkit {
+
 	/**
-	 * Return an iterator with data points matching a specified X interval. The X interval is only a
-	 * hint and the iterator may contain data points outside of the interval.
-	 * 
-	 * @param min
-	 *            the minimum X value of returned data points
-	 * @param max
-	 *            the maximum X value of returned data points
-	 * @return an iterator of data points
+	 * @param commandLine
+	 * @return the class/jar that is being run.
 	 */
-	Iterator<T> createIterator(long min, long max);
+	public static String getMainClassOrJar(String commandLine) {
+		if (commandLine == null || commandLine.length() == 0) {
+			return commandLine;
+		}
+		// Does not handle the case where directory name contains ' -'.
+		String[] s = commandLine.split(" -"); //$NON-NLS-1$
+		return s[0];
+	}
+
+	/**
+	 * Removes jvm flags from full commandline Does not handle space in paths.
+	 *
+	 * @param cmdLine
+	 *            Full commandline of jvm
+	 * @return Commandline with only main class or jar file, and args to the java application.
+	 */
+	public static String getJavaCommandLine(String cmdLine) {
+		if (cmdLine == null || cmdLine.length() == 0) {
+			return cmdLine;
+		}
+		StringTokenizer tokenizer = new StringTokenizer(cmdLine, " "); //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
+		boolean foundJava = false;
+		String token = ""; //$NON-NLS-1$
+		String previousToken;
+		while (tokenizer.hasMoreElements()) {
+			previousToken = token;
+			token = tokenizer.nextToken();
+			if (!foundJava) {
+				// Find the first token that does not start with -, or is the first after -cp or -classpath, that should
+				// be the classname or jarfile
+				if (!token.startsWith("-") && !previousToken.equals("-cp") && !previousToken.equals("-classpath")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					foundJava = true;
+					sb.append(token).append(" "); //$NON-NLS-1$
+				}
+			} else {
+				sb.append(token).append(" "); //$NON-NLS-1$
+			}
+		}
+		return sb.toString().trim();
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,31 +30,29 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
+package org.openjdk.jmc.common.security;
 
-/**
- * Enum describing different JVM connectability possibilities.
- */
-public enum Connectable {
-	/**
-	 * The JVM can be connected to using attach.
-	 */
-	ATTACHABLE,
-	/**
-	 * The JVM can be connected to using the management agent.
-	 */
-	MGMNT_AGENT_STARTED,
-	/**
-	 * The JVM can't be connected to.
-	 */
-	NO,
-	UNKNOWN;
+public class SecurelyStoredByteArray {
 
-	public boolean isUnconnectable() {
-		return this == NO;
+	private final String id;
+
+	public SecurelyStoredByteArray(String id) {
+		this.id = id;
 	}
 
-	public boolean isAttachable() {
-		return this == ATTACHABLE;
+	public boolean exists() {
+		return SecurityManagerFactory.getSecurityManager().hasKey(id);
+	}
+
+	public byte[] get() throws Exception {
+		return (byte[]) SecurityManagerFactory.getSecurityManager().get(id);
+	}
+
+	public void set(byte ... value) throws Exception {
+		SecurityManagerFactory.getSecurityManager().storeWithKey(id, value);
+	}
+
+	public void remove() throws Exception {
+		SecurityManagerFactory.getSecurityManager().withdraw(id);
 	}
 }

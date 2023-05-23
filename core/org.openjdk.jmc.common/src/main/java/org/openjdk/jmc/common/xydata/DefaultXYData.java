@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,50 +30,27 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
-
-import org.openjdk.jmc.common.collection.BoundedList;
-import org.openjdk.jmc.common.collection.BoundedList.INode;
+package org.openjdk.jmc.common.xydata;
 
 /**
- * A default implementation of {@link ITimestampedData} (which is an {@link IXYData} of epoch ns and
- * natural numbers).
- * <p>
- * It implements {@link INode} in order to save some memory when placed in a {@link BoundedList}
- * although this dependency is not really clean and should eventually be fixed.
+ * A default implementation of {@link IXYData} that simply holds a final value for X and Y.
  */
-public class DefaultTimestampedData extends DefaultXYData<Long, Number>
-		implements ITimestampedData, INode<DefaultTimestampedData> {
+public class DefaultXYData<X, Y> implements IXYData<X, Y> {
+	private final X x;
+	private final Y y;
 
-	private INode<DefaultTimestampedData> next;
-
-	/**
-	 * @param x
-	 *            a timestamp in epoch ns
-	 * @param y
-	 *            a natural number
-	 */
-	public DefaultTimestampedData(Long x, Number y) {
-		super(x, y);
+	public DefaultXYData(X x, Y y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
-	public String toString() {
-		return "Time: " + getX() + " Y: " + getY(); //$NON-NLS-1$ //$NON-NLS-2$
+	public X getX() {
+		return x;
 	}
 
 	@Override
-	public INode<DefaultTimestampedData> getNext() {
-		return next;
-	}
-
-	@Override
-	public void setNext(INode<DefaultTimestampedData> next) {
-		this.next = next;
-	}
-
-	@Override
-	public DefaultTimestampedData getValue() {
-		return this;
+	public Y getY() {
+		return y;
 	}
 }

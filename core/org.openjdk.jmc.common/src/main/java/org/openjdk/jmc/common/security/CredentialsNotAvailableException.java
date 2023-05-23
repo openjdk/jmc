@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,12 +30,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
 
-public class FailedToSaveException extends SecurityException {
-	private static final long serialVersionUID = 8887494261316929780L;
+/**
+ * Exception thrown when credentials cannot be loaded
+ */
+public class CredentialsNotAvailableException extends SecurityException {
 
-	public FailedToSaveException(Throwable t) {
-		super(t);
-	}
+	private static final long serialVersionUID = -8098399684811165719L;
+
 }

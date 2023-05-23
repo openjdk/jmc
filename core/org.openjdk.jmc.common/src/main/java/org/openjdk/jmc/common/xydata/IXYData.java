@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,26 +30,20 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.xydata;
 
 /**
- * An object holding a username and a password.
+ * Interface for data points on an X/Y chart.
+ * 
+ * @param <X>
+ *            X axis data type
+ * @param <Y>
+ *            Y axis data type
  */
-public interface ICredentials {
+public interface IXYData<X, Y> {
 
-	/**
-	 * @return the username
-	 */
-	public String getUsername() throws SecurityException;
+	X getX();
 
-	/**
-	 * @return the password
-	 */
-	public String getPassword() throws SecurityException;
-
-	/**
-	 * @return the id of the exported credentials, or null if the object is not exported.
-	 */
-	public String getExportedId();
+	Y getY();
 
 }

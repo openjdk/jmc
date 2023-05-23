@@ -53,11 +53,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IFormColors;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.AccessibilityConstants;
 import org.openjdk.jmc.ui.accessibility.MCAccessibleListener;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.misc.IRefreshable;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 

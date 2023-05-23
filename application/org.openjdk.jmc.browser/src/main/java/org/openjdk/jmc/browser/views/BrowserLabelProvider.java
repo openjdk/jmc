@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,11 +42,11 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import org.openjdk.jmc.browser.JVMBrowserPlugin;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
 import org.openjdk.jmc.rjmx.servermodel.IDiscoveryInfo;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.AdaptingLabelProvider;
 import org.openjdk.jmc.ui.misc.OverlayImageDescriptor;

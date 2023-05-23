@@ -9,8 +9,11 @@ Export-Package: org.openjdk.jmc.common,
  org.openjdk.jmc.common.collection,
  org.openjdk.jmc.common.io,
  org.openjdk.jmc.common.item,
+ org.openjdk.jmc.common.jvm,
+ org.openjdk.jmc.common.security,
  org.openjdk.jmc.common.unit,
  org.openjdk.jmc.common.util,
- org.openjdk.jmc.common.version
+ org.openjdk.jmc.common.version,
+ org.openjdk.jmc.common.xydata
 Require-Bundle: org.owasp.encoder, lz4-java
 Automatic-Module-Name: org.openjdk.jmc.common

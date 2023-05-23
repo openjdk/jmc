@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,48 +30,50 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.xydata;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.openjdk.jmc.common.collection.BoundedList;
+import org.openjdk.jmc.common.collection.BoundedList.INode;
 
 /**
- * This is the global security manager factory for Mission Control. You can only have one
- * SecurityManager, and it is initialized at start. It can not be changed once initialized. The only
- * way to change security manager is to set the system property
- * org.openjdk.jmc.rjmx.security.manager=&lt;class&gt; before this factory class is instantiated.
- * The class must implement ISecurityManager, and it must have a default constructor.
+ * A default implementation of {@link ITimestampedData} (which is an {@link IXYData} of epoch ns and
+ * natural numbers).
+ * <p>
+ * It implements {@link INode} in order to save some memory when placed in a {@link BoundedList}
+ * although this dependency is not really clean and should eventually be fixed.
  */
-public final class SecurityManagerFactory {
-	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.common.security"); //$NON-NLS-1$
+public class DefaultTimestampedData extends DefaultXYData<Long, Number>
+		implements ITimestampedData, INode<DefaultTimestampedData> {
 
-	private static ISecurityManager instance;
+	private INode<DefaultTimestampedData> next;
 
-	static {
-		String className = System.getProperty("org.openjdk.jmc.common.security.manager"); //$NON-NLS-1$
-		try {
-			if (className != null) {
-				Class<? extends Object> c = Class.forName(className);
-				instance = (ISecurityManager) c.newInstance();
-			}
-		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Could not create Security manager for className. Using default! Exception was:", //$NON-NLS-1$
-					e);
-		}
+	/**
+	 * @param x
+	 *            a timestamp in epoch ns
+	 * @param y
+	 *            a natural number
+	 */
+	public DefaultTimestampedData(Long x, Number y) {
+		super(x, y);
 	}
 
-	public synchronized final static void setDefaultSecurityManager(ISecurityManager manager) {
-		if (instance == null) {
-			instance = manager;
-		}
+	@Override
+	public String toString() {
+		return "Time: " + getX() + " Y: " + getY(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public synchronized final static ISecurityManager getSecurityManager() {
-		return instance;
+	@Override
+	public INode<DefaultTimestampedData> getNext() {
+		return next;
 	}
 
-	private SecurityManagerFactory() {
-		throw new AssertionError("This class is not to be instantiated!"); //$NON-NLS-1$
+	@Override
+	public void setNext(INode<DefaultTimestampedData> next) {
+		this.next = next;
 	}
 
+	@Override
+	public DefaultTimestampedData getValue() {
+		return this;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.rjmx.services.internal;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.ConnectionException;
@@ -40,7 +41,6 @@ import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
 import org.openjdk.jmc.rjmx.services.IServiceFactory;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 public class CommercialFeaturesServiceFactory implements IServiceFactory<ICommercialFeaturesService> {
 

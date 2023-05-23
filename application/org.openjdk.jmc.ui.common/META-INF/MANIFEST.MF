@@ -13,11 +13,9 @@ Import-Package: org.eclipse.core.expressions
 Export-Package: org.openjdk.jmc.ui.common,
  org.openjdk.jmc.ui.common.action,
  org.openjdk.jmc.ui.common.idesupport,
- org.openjdk.jmc.ui.common.jvm,
  org.openjdk.jmc.ui.common.labelingrules,
  org.openjdk.jmc.ui.common.resource,
  org.openjdk.jmc.ui.common.security,
  org.openjdk.jmc.ui.common.tree,
- org.openjdk.jmc.ui.common.util,
- org.openjdk.jmc.ui.common.xydata
+ org.openjdk.jmc.ui.common.util
 Automatic-Module-Name: org.openjdk.jmc.ui.common

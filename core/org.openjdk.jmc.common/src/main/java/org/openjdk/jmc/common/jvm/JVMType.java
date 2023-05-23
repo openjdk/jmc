@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,27 +30,45 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.xydata;
+package org.openjdk.jmc.common.jvm;
+
+import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 
 /**
- * A default implementation of {@link IXYData} that simply holds a final value for X and Y.
+ * Enum for the different JVMs.
  */
-public class DefaultXYData<X, Y> implements IXYData<X, Y> {
-	private final X x;
-	private final Y y;
+public enum JVMType {
+	/**
+	 * The JVM is JRockit.
+	 */
+	JROCKIT,
+	/**
+	 * The JVM is Hotspot.
+	 */
+	HOTSPOT,
+	/**
+	 * The JVM is unknown.
+	 */
+	UNKNOWN,
+	/**
+	 * The JVM is some other JVM.
+	 */
+	OTHER;
 
-	public DefaultXYData(X x, Y y) {
-		this.x = x;
-		this.y = y;
+	/**
+	 * Derive the {@link JVMType} from a jvm name, e.g. the system property java.vm.name.
+	 *
+	 * @param jvmName
+	 *            the jvm name to get the JVMType for.
+	 * @return the {@link JVMType} for the jvm name.
+	 */
+	public static JVMType getJVMType(String jvmName) {
+		if (JavaVMVersionToolkit.isJRockitJVMName(jvmName)) {
+			return JVMType.JROCKIT;
+		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
+			return JVMType.HOTSPOT;
+		}
+		return JVMType.OTHER;
 	}
 
-	@Override
-	public X getX() {
-		return x;
-	}
-
-	@Override
-	public Y getY() {
-		return y;
-	}
 }

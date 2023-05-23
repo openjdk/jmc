@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +32,9 @@
  */
 package org.openjdk.jmc.rjmx.internal;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 public class ServerToolkit {
 

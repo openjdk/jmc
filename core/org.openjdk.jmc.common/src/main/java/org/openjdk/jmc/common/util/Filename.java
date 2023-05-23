@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,45 +30,50 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
+package org.openjdk.jmc.common.util;
 
-import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
+import java.text.SimpleDateFormat;
+import java.util.Random;
 
 /**
- * Enum for the different JVMs.
+ * Class for handling file names. Primarily used for creating unique file names.
  */
-public enum JVMType {
-	/**
-	 * The JVM is JRockit.
-	 */
-	JROCKIT,
-	/**
-	 * The JVM is Hotspot.
-	 */
-	HOTSPOT,
-	/**
-	 * The JVM is unknown.
-	 */
-	UNKNOWN,
-	/**
-	 * The JVM is some other JVM.
-	 */
-	OTHER;
+public class Filename {
 
-	/**
-	 * Derive the {@link JVMType} from a jvm name, e.g. the system property java.vm.name.
-	 *
-	 * @param jvmName
-	 *            the jvm name to get the JVMType for.
-	 * @return the {@link JVMType} for the jvm name.
-	 */
-	public static JVMType getJVMType(String jvmName) {
-		if (JavaVMVersionToolkit.isJRockitJVMName(jvmName)) {
-			return JVMType.JROCKIT;
-		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
-			return JVMType.HOTSPOT;
-		}
-		return JVMType.OTHER;
+	private static Random RAND = new Random();
+	private final String name;
+	private final String ext;
+
+	public Filename(String name, String ext) {
+		this.name = name;
+		this.ext = ext;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public String getExtension() {
+		return ext;
+	}
+
+	public Filename asRandomFilename() {
+		int nextInt = RAND.nextInt();
+		SimpleDateFormat sf = new SimpleDateFormat("_yyyy-MM-dd_HH-mm-ss_"); //$NON-NLS-1$
+		return new Filename(name + sf.format(System.currentTimeMillis()) + Integer.toHexString(nextInt), ext);
+	}
+
+	@Override
+	public String toString() {
+		return ext.isEmpty() ? name : name + "." + ext; //$NON-NLS-1$
+	}
+
+	public static Filename splitFilename(String name) {
+		int lastPeriod = name.lastIndexOf('.');
+		if (lastPeriod < 0) {
+			return new Filename(name, ""); //$NON-NLS-1$
+		} else {
+			return new Filename(name.substring(0, lastPeriod), name.substring(lastPeriod + 1));
+		}
+	}
 }

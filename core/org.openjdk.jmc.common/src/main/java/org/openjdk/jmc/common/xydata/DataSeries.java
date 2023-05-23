@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,13 +30,28 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.xydata;
+
+import java.util.Iterator;
 
 /**
- * Exception thrown when an action is not permitted
+ * Interface for objects that can produce a series of data points arranged on an X axis.
+ * 
+ * @param <T>
+ *            Data type of the data points. In order to implement the interval checking of
+ *            {@link #createIterator(long, long)}, it can be desirable that an X value can somehow
+ *            be retrieved from the objects of this type.
  */
-public class ActionNotGrantedException extends SecurityException {
-
-	private static final long serialVersionUID = 4241246317937726872L;
-
+public interface DataSeries<T> {
+	/**
+	 * Return an iterator with data points matching a specified X interval. The X interval is only a
+	 * hint and the iterator may contain data points outside of the interval.
+	 * 
+	 * @param min
+	 *            the minimum X value of returned data points
+	 * @param max
+	 *            the maximum X value of returned data points
+	 * @return an iterator of data points
+	 */
+	Iterator<T> createIterator(long min, long max);
 }

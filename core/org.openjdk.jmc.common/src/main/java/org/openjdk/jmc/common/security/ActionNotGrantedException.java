@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,50 +30,13 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.util;
-
-import java.text.SimpleDateFormat;
-import java.util.Random;
+package org.openjdk.jmc.common.security;
 
 /**
- * Class for handling file names. Primarily used for creating unique file names.
+ * Exception thrown when an action is not permitted
  */
-public class Filename {
+public class ActionNotGrantedException extends SecurityException {
 
-	private static Random RAND = new Random();
-	private final String name;
-	private final String ext;
+	private static final long serialVersionUID = 4241246317937726872L;
 
-	public Filename(String name, String ext) {
-		this.name = name;
-		this.ext = ext;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getExtension() {
-		return ext;
-	}
-
-	public Filename asRandomFilename() {
-		int nextInt = RAND.nextInt();
-		SimpleDateFormat sf = new SimpleDateFormat("_yyyy-MM-dd_HH-mm-ss_"); //$NON-NLS-1$
-		return new Filename(name + sf.format(System.currentTimeMillis()) + Integer.toHexString(nextInt), ext);
-	}
-
-	@Override
-	public String toString() {
-		return ext.isEmpty() ? name : name + "." + ext; //$NON-NLS-1$
-	}
-
-	public static Filename splitFilename(String name) {
-		int lastPeriod = name.lastIndexOf('.');
-		if (lastPeriod < 0) {
-			return new Filename(name, ""); //$NON-NLS-1$
-		} else {
-			return new Filename(name.substring(0, lastPeriod), name.substring(lastPeriod + 1));
-		}
-	}
 }

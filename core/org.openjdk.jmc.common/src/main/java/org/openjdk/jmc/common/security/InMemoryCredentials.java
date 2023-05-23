@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,84 +30,32 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
+package org.openjdk.jmc.common.security;
 
 /**
- * Metadata for a running JVM
+ * Credentials only stored in memory
  */
-public class JVMDescriptor {
-	private final String javaVersion;
-	private final JVMType jvmType;
-	private final String jvmName;
-	private final String jvmVendor;
-	private final JVMArch jvmArch;
-	private final String javaCommand;
-	private final String jvmArguments;
-	private final Integer pid;
-	private final Boolean debug;
-	private final Connectable connectable;
+public class InMemoryCredentials implements ICredentials {
+	private final String username;
+	private final String password;
 
-	public JVMDescriptor(String javaVersion, JVMType jvmType, JVMArch jvmArch, String javaCommand, String jvmArguments,
-			String jvmName, String jvmVendor, Integer pid, boolean debug, Connectable attachable) {
-		super();
-		this.javaVersion = javaVersion;
-		this.jvmType = jvmType;
-		this.jvmArch = jvmArch;
-		this.javaCommand = javaCommand;
-		this.jvmArguments = jvmArguments;
-		this.jvmName = jvmName;
-		this.jvmVendor = jvmVendor;
-		this.pid = pid;
-		this.debug = debug;
-		connectable = attachable;
-	}
-
-	public String getJavaVersion() {
-		return javaVersion;
-	}
-
-	public JVMType getJvmType() {
-		return jvmType;
-	}
-
-	public JVMArch getJvmArch() {
-		return jvmArch;
-	}
-
-	public String getJavaCommand() {
-		return javaCommand;
-	}
-
-	public String getJVMArguments() {
-		return jvmArguments;
-	}
-
-	public String getJvmName() {
-		return jvmName;
-	}
-
-	public String getJvmVendor() {
-		return jvmVendor;
-	}
-
-	public Integer getPid() {
-		return pid;
-	}
-
-	public Boolean isDebug() {
-		return debug;
-	}
-
-	public Boolean isUnconnectable() {
-		return connectable.isUnconnectable();
-	}
-
-	public Boolean isAttachable() {
-		return connectable.isAttachable();
+	public InMemoryCredentials(String username, String password) {
+		this.username = username;
+		this.password = password;
 	}
 
 	@Override
-	public String toString() {
-		return "[JVMDescriptor] Java command: " + getJavaCommand() + " PID: " + getPid(); //$NON-NLS-1$ //$NON-NLS-2$
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getExportedId() {
+		return null;
 	}
 }

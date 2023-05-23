@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,32 +30,28 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.jvm;
+
+import java.util.Properties;
 
 /**
- * Credentials only stored in memory
+ * Enum for the different JVM architectures.
  */
-public class InMemoryCredentials implements ICredentials {
-	private final String username;
-	private final String password;
+public enum JVMArch {
+	BIT32, BIT64, UNKNOWN, OTHER;
 
-	public InMemoryCredentials(String username, String password) {
-		this.username = username;
-		this.password = password;
+	public static JVMArch getCurrentJVMArch() {
+		return getJVMArch(System.getProperties());
 	}
 
-	@Override
-	public String getUsername() {
-		return username;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
-	@Override
-	public String getExportedId() {
-		return null;
+	public static JVMArch getJVMArch(Properties props) {
+		String jreArch = System.getProperty("sun.arch.data.model"); //$NON-NLS-1$
+		if (jreArch.contains("64")) { //$NON-NLS-1$
+			return JVMArch.BIT64;
+		} else if (jreArch.contains("32")) { //$NON-NLS-1$
+			return JVMArch.BIT32;
+		} else {
+			return OTHER;
+		}
 	}
 }

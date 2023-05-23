@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,13 +30,26 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.security;
+package org.openjdk.jmc.common.security;
 
 /**
- * Exception thrown when credentials cannot be loaded
+ * An object holding a username and a password.
  */
-public class CredentialsNotAvailableException extends SecurityException {
+public interface ICredentials {
 
-	private static final long serialVersionUID = -8098399684811165719L;
+	/**
+	 * @return the username
+	 */
+	public String getUsername() throws SecurityException;
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() throws SecurityException;
+
+	/**
+	 * @return the id of the exported credentials, or null if the object is not exported.
+	 */
+	public String getExportedId();
 
 }

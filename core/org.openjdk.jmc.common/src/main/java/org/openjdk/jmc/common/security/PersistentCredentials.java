@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,55 +30,63 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.ui.common.jvm;
+package org.openjdk.jmc.common.security;
 
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class JVMCommandLineToolkit {
+/**
+ * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy
+ * loaded on demand.
+ */
+public class PersistentCredentials implements ICredentials {
 
-	/**
-	 * @param commandLine
-	 * @return the class/jar that is being run.
-	 */
-	public static String getMainClassOrJar(String commandLine) {
-		if (commandLine == null || commandLine.length() == 0) {
-			return commandLine;
-		}
-		// Does not handle the case where directory name contains ' -'.
-		String[] s = commandLine.split(" -"); //$NON-NLS-1$
-		return s[0];
+	private final String id;
+	private String[] wrapped;
+
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#(&)[{-}]:;',?/*~$^+=<>]).{8,20}$"); //$NON-NLS-1$
+
+	public PersistentCredentials(String id) {
+		this.id = id;
 	}
 
-	/**
-	 * Removes jvm flags from full commandline Does not handle space in paths.
-	 *
-	 * @param cmdLine
-	 *            Full commandline of jvm
-	 * @return Commandline with only main class or jar file, and args to the java application.
-	 */
-	public static String getJavaCommandLine(String cmdLine) {
-		if (cmdLine == null || cmdLine.length() == 0) {
-			return cmdLine;
+	public PersistentCredentials(String username, String password) throws SecurityException {
+		this(username, password, null);
+	}
+
+	public PersistentCredentials(String username, String password, String family) throws SecurityException {
+		wrapped = new String[] {username, password};
+		id = SecurityManagerFactory.getSecurityManager().storeInFamily(family, wrapped);
+	}
+
+	@Override
+	public String getUsername() throws SecurityException {
+		return getCredentials()[0];
+	}
+
+	@Override
+	public String getPassword() throws SecurityException {
+		return getCredentials()[1];
+	}
+
+	private String[] getCredentials() throws SecurityException {
+		if (wrapped == null) {
+			wrapped = (String[]) SecurityManagerFactory.getSecurityManager().get(id);
 		}
-		StringTokenizer tokenizer = new StringTokenizer(cmdLine, " "); //$NON-NLS-1$
-		StringBuilder sb = new StringBuilder();
-		boolean foundJava = false;
-		String token = ""; //$NON-NLS-1$
-		String previousToken;
-		while (tokenizer.hasMoreElements()) {
-			previousToken = token;
-			token = tokenizer.nextToken();
-			if (!foundJava) {
-				// Find the first token that does not start with -, or is the first after -cp or -classpath, that should
-				// be the classname or jarfile
-				if (!token.startsWith("-") && !previousToken.equals("-cp") && !previousToken.equals("-classpath")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					foundJava = true;
-					sb.append(token).append(" "); //$NON-NLS-1$
-				}
-			} else {
-				sb.append(token).append(" "); //$NON-NLS-1$
-			}
+		if (wrapped == null || wrapped.length != 2) {
+			throw new CredentialsNotAvailableException();
 		}
-		return sb.toString().trim();
+		return wrapped;
+	}
+
+	@Override
+	public String getExportedId() {
+		return id;
+	}
+
+	public static boolean isPasswordValid(final String password) {
+		Matcher matcher = PASSWORD_PATTERN.matcher(password);
+		return matcher.matches();
 	}
 }
