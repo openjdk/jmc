@@ -60,6 +60,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
 		<maven.jar.version>3.3.0</maven.jar.version>
+		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
 		<spotless.version>2.34.0</spotless.version>
 		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
 		<maven.directory.version>1.0</maven.directory.version>
