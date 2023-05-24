@@ -53,24 +53,26 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<manifest-location>META-INF</manifest-location>
+		<checkstyle.config.path>${session.executionRootDirectory}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
+		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<manifest-location>META-INF</manifest-location>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<maven.jar.version>3.2.0</maven.jar.version>
-		<spotless.version>2.14.0</spotless.version>
-		<maven.checkstyle.version>3.2.2</maven.checkstyle.version>
-		<checkstyle.config.path>${session.executionRootDirectory}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
+		<maven.jar.version>3.3.0</maven.jar.version>
+		<spotless.version>2.36.0</spotless.version>
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
 		<maven.directory.version>1.0</maven.directory.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<maven.antrun.version>3.0.0</maven.antrun.version>
-		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.3.2</maven.javadoc.version>
-		<maven.gpg.version>1.6</maven.gpg.version>
-		<maven.flatten.version>1.2.2</maven.flatten.version>
-		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
-		<maven.deploy.version>3.0.0-M2</maven.deploy.version>
-		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.antrun.version>3.1.0</maven.antrun.version>
+		<maven.source.version>3.3.0</maven.source.version>
+		<maven.javadoc.version>3.5.0</maven.javadoc.version>
+		<maven.gpg.version>3.1.0</maven.gpg.version>
+		<maven.flatten.version>1.5.0</maven.flatten.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.deploy.version>3.1.1</maven.deploy.version>
+		<maven.compiler.version>3.11.0</maven.compiler.version>
+		<maven.toolchains.version>3.1.0</maven.toolchains.version>
 	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
@@ -78,7 +80,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -210,6 +212,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven.javadoc.version}</version>
 				</plugin>
@@ -253,7 +260,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${maven.toolchains.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -338,7 +345,7 @@
 					<configuration>
 						<configLocation>${checkstyle.config.path}</configLocation>
 						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-						<encoding>UTF-8</encoding>
+						<inputEncoding>UTF-8</inputEncoding>
 						<consoleOutput>true</consoleOutput>
 						<failsOnError>true</failsOnError>
 					</configuration>
