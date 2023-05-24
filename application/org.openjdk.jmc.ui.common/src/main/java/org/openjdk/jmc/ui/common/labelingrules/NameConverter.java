@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,12 +44,12 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.openjdk.jmc.common.jvm.JVMCommandLineToolkit;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.ui.common.CorePlugin;
 import org.openjdk.jmc.ui.common.idesupport.IDESupportFactory;
-import org.openjdk.jmc.ui.common.jvm.JVMCommandLineToolkit;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.resource.Resource;
-import org.openjdk.jmc.ui.common.util.Environment;
 
 /**
  * Converts names according to rules specified with the {@value #LABELING_RULES_EXTENSION_POINT}

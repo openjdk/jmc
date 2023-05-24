@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -244,6 +244,7 @@ public class ResultReportUi {
 
 	private final HashMap<String, Boolean> resultExpandedStates = new HashMap<>();
 	private Boolean showOk = false;
+	private Boolean showIgnore = false;
 	private Boolean isLoaded = false;
 
 	private Browser browser;
@@ -330,8 +331,27 @@ public class ResultReportUi {
 		}
 	}
 
+	public void setShowIgnore(boolean showIgnore) {
+		this.showIgnore = showIgnore;
+		if (!isSinglePage) {
+			try {
+				// FIXME: Avoid implicit dependency on HTML/javascript template. Generate script in RulesHtmlToolkit instead
+				browser.evaluate(String.format("overview.showIgnore(%b);", showIgnore)); //$NON-NLS-1$
+			} catch (SWTException swte) {
+				String html = RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor),
+						descriptors, resultExpandedStates, false);
+				String adjustedHtml = adjustAnchorFollowAction(html);
+				browser.setText(adjustedHtml);
+			}
+		}
+	}
+
 	boolean getShowOk() {
 		return showOk;
+	}
+
+	boolean getShowIgnore() {
+		return showIgnore;
 	}
 
 	private ConcurrentLinkedQueue<String> commandQueue = new ConcurrentLinkedQueue<>();
@@ -415,6 +435,11 @@ public class ResultReportUi {
 		} catch (NullPointerException npe) {
 			// ignore NPE when there is no state value is available 
 		}
+		try {
+			this.showIgnore = Boolean.valueOf(state.getChild("report").getChild("showIgnore").getAttribute("value")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} catch (NullPointerException npe) {
+			// ignore NPE when there is no state value is available 
+		}
 		browser.addListener(SWT.MenuDetect, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -435,6 +460,7 @@ public class ResultReportUi {
 					new Linker(browser, "linker", descriptors, editor); //$NON-NLS-1$
 					new Expander(browser, "expander"); //$NON-NLS-1$
 					browser.execute(String.format("overview.showOk(%b);", showOk)); //$NON-NLS-1$
+					browser.execute(String.format("overview.showIgnore(%b);", showIgnore)); //$NON-NLS-1$
 					if (isSinglePage) {
 						browser.execute(OVERVIEW_MAKE_SCALABLE);
 					}
@@ -458,6 +484,7 @@ public class ResultReportUi {
 
 	public void saveTo(IWritableState state) {
 		state.createChild("report").createChild("showOk").putString("value", showOk.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		state.createChild("report").createChild("showIgnore").putString("value", showIgnore.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 }

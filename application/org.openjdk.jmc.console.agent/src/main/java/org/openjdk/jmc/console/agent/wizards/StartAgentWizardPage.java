@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2021 Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.openjdk.jmc.console.agent.AgentJmxHelper;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 
 public class StartAgentWizardPage extends BaseWizardPage {
 

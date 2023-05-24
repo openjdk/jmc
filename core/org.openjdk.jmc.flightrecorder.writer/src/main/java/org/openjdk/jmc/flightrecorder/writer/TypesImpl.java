@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,7 +42,15 @@ import org.openjdk.jmc.flightrecorder.writer.api.Types;
 import java.util.function.Consumer;
 
 import static org.openjdk.jmc.flightrecorder.writer.api.Annotation.ANNOTATION_SUPER_TYPE_NAME;
-import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.*;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.BOOLEAN;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.BYTE;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.CHAR;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.DOUBLE;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.FLOAT;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.INT;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.LONG;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.SHORT;
+import static org.openjdk.jmc.flightrecorder.writer.api.Types.Builtin.STRING;
 
 /** An access class for various {@linkplain Type} related operations */
 public final class TypesImpl extends Types {

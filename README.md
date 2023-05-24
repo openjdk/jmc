@@ -4,7 +4,7 @@ Mission Control is an open source production time profiling and diagnostics tool
 
 Builds of Mission Control can currently be found in the Oracle JDK on supported platforms and in the Eclipse marketplace. 
 
-For more information on Mission Control, see http://www.oracle.com/missioncontrol.
+For more information on Mission Control, see https://www.oracle.com/missioncontrol.
 
 ## Downloading Builds
 Binary distributions of JDK Mission Control are provided by different downstream vendors.
@@ -213,11 +213,11 @@ public class RunRulesOnFile {
 
 Prerequisites for building Mission Control:
 
-1. Install JDK 11, and make sure it is the JDK in use (java -version)
+1. Install a JDK 17 distribution and make sure it is declared in the local maven toolchain `~/.m2/toolchains.xml`
 
 2. Install Maven (version 3.5.x. or above)
 
-On Linux or macOS you can use the build.sh script to build JMC:
+On Linux or macOS you can use the `build.sh` script to build JMC:
 ```
 usage: call ./build.sh with the following options:
    --installCore to install the core artifacts
@@ -229,24 +229,71 @@ usage: call ./build.sh with the following options:
 
 Otherwise follow the steps manually:
 
-First get third party dependencies into a local p2 repo and make it available on localhost:
+First get third party dependencies into a local _p2_ repo and make it available on localhost:
 
 ```bash
-cd missioncontrolfolder [where you just cloned the sources]
-cd releng/third-party
-mvn p2:site
-mvn jetty:run
+cd missioncontrol-folder # where you just cloned the sources
+mvn p2:site --file releng/third-party/pom.xml; mvn jetty:run --file releng/third-party/pom.xml
 ```
 
 Then in another terminal (in the project root):
 
 ```bash
-cd core
-mvn clean install
-cd ..
-mvn package
+mvn clean install --file core/pom.xml # Install JMC's flight recorder libraries
+mvn package # Package JMC
 ```
-Note that you may need to define proxy settings if you happen to be behind a firewall. In your ~/.m2/settings.xml file (if you have none, simply create one), add:
+
+If maven reports a toolchain error, e.g. :
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-toolchains-plugin:3.0.0:toolchain (default) on project missioncontrol: Cannot find matching toolchain definitions for the following toolchain types:
+[ERROR] jdk [ version='17' ]
+[ERROR] Please make sure you define the required toolchains in your ~/.m2/toolchains.xml file.
+```
+
+Create or amend the local maven toolchain file by pointing to the right JDK (here any JDK 17).
+
+<details><summary><code>~/.m2/toolchains.xml</code></summary>
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains>
+  <!-- JDK toolchains -->
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <id>JavaSE-11</id>
+      <version>11</version>
+      <vendor>amazon</vendor>
+    </provides>
+    <configuration>
+	    <jdkHome>/Library/Java/JavaVirtualMachines/corretto-11.jdk/Contents/Home</jdkHome>
+    </configuration>
+  </toolchain>
+
+  <!-- 
+    Declare the JDK 17 toolchain installed on the local machine, 
+    make sure the id is : JavaSE-17
+
+    Tycho needs this to find the right _execution environment_.
+  -->
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <id>JavaSE-17</id>
+      <version>17</version>
+      <vendor>amazon</vendor>
+    </provides>
+    <configuration>
+      <jdkHome>/Users/brice.dutheil/.asdf/installs/java/corretto-17.0.7.7.1</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+```
+
+</details>
+
+Note that you may need to define proxy settings if you happen to be behind a firewall. In your `~/.m2/settings.xml` file (if you have none, simply create one), add:
 
 ```xml
 <settings>
@@ -269,7 +316,6 @@ Note that you may need to define proxy settings if you happen to be behind a fir
     </proxy>
   </proxies>
 </settings>
-
 ```
 
 ## Running Tests
@@ -311,9 +357,9 @@ For example:
 mvn verify -P uitests -Dtest.includes=**/*SystemTabTest*,**/*TestRulesWithJfr*,**/*StacktraceModelTest* -Dtest.excludes=**/*ModelTest*
 ```
 
-The above will not run StacktraceModelTest, as that is also matched by "test.excludes".
+The above will not run `StacktraceModelTest`, as that is also matched by `test.excludes`.
 
-Note that if UI-tests are supposed to be part of the filtered run the "uitests" profile needs to be specified as well. Otherwise the UI won't start up and so the tests fail.
+Note that if UI-tests are supposed to be part of the filtered run the `uitests` profile needs to be specified as well. Otherwise the UI won't start up and so the tests fail.
 
 
 ## Building using docker and docker-compose
@@ -327,7 +373,7 @@ Once build has finished the results will be in the `target` directory
 ## Running the Locally Built JMC
 The built JMC will end up in the `target` folder in the root. The launcher is located in `target/products/org.openjdk.jmc/<platform>`. By default whichever JRE is on the path 
 will be used. Remember to set it to a JDK (rather than a JRE) if you want the launched mission control to automatically discover locally running JVMs. To override which JVM 
-to use when launching, add -vm and the path to a directory where a JDK java launcher is located, for example -vm $JAVA_HOME/bin.
+to use when launching, add `-vm` and the path to a directory where a JDK java launcher is located, for example `-vm $JAVA_HOME/bin`.
 
 Here is an example for Mac OS X:
 
@@ -376,11 +422,11 @@ application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide
 Please follow the [Developer Guide](docs/devguide/README.md).
 
 ## FAQ
-For help with frequently asked questions, see the [JMC FAQ](https://wiki.openjdk.java.net/display/jmc/JMC+FAQ) on the JMC Wiki.
+For help with frequently asked questions, see the [JMC FAQ](https://wiki.openjdk.org/display/jmc/JMC+FAQ) on the JMC Wiki.
 
 ## License
 The Mission Control source code is made available under the Universal Permissive License (UPL), Version 1.0 or a BSD-style license, alternatively. The full open source license text is available at license/LICENSE.txt in the JMC project.
 
 ## About
-Mission Control is an open source project of the [OpenJDK](http://openjdk.java.net/).
+Mission Control is an open source project of the [OpenJDK](https://openjdk.org/).
 The Mission Control project originated from the JRockit JVM project.

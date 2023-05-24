@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,8 +44,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.preferences.PreferenceConstants;
 
 public class AwtCanvas {

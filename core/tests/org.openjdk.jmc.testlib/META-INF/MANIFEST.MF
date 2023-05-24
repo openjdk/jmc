@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Name: Common Test
 Bundle-SymbolicName: org.openjdk.jmc.testlib;singleton:=true
 Bundle-Version: 9.0.0.qualifier

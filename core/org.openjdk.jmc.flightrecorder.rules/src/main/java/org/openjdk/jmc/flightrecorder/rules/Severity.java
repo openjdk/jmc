@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,7 +52,9 @@ public enum Severity {
 	/**
 	 * Results with this severity score should be presented as warnings.
 	 */
-	WARNING(75, Messages.getString(Messages.Severity_WARNING));
+	WARNING(75, Messages.getString(Messages.Severity_WARNING)),
+
+	IGNORE(-3, Messages.getString(Messages.Severity_IGNORE));
 
 	private final double score;
 	private final String localizedName;
@@ -70,7 +72,7 @@ public enum Severity {
 		return score;
 	}
 
-	private static final Severity[] VALUES = {WARNING, INFO, OK, NA};
+	private static final Severity[] VALUES = {WARNING, INFO, OK, NA, IGNORE};
 
 	public static Severity get(double score) {
 		for (Severity s : VALUES) {

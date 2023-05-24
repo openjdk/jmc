@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -53,12 +53,14 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<maven.jar.version>3.2.0</maven.jar.version>
 		<spotless.version>2.14.0</spotless.version>
+		<maven.checkstyle.version>3.2.2</maven.checkstyle.version>
+		<checkstyle.config.path>${session.executionRootDirectory}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
 		<maven.directory.version>1.0</maven.directory.version>
 		<maven.resources.version>3.2.0</maven.resources.version>
 		<maven.antrun.version>3.0.0</maven.antrun.version>
@@ -221,9 +223,52 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>${maven.deploy.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>17</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
 				<artifactId>directory-maven-plugin</artifactId>
@@ -279,6 +324,27 @@
 								<replace token=".qualifier" value="${qualifier.value}" dir="${project.build.directory}/${manifest-location}"/>
 							</target>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<executions>
+					<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<configuration>
+						<configLocation>${checkstyle.config.path}</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<encoding>UTF-8</encoding>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+					</configuration>
+					<goals>
+						<goal>check</goal>
+					</goals>
 					</execution>
 				</executions>
 			</plugin>

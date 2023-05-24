@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,11 +35,10 @@ package org.openjdk.jmc.rjmx.triggers.fields.internal;
 import java.util.logging.Level;
 
 import org.w3c.dom.Element;
-
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.ui.common.security.SecurityException;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 
 /**
  * A field holding a password. Actually what is stored in the field is a key to the password stored

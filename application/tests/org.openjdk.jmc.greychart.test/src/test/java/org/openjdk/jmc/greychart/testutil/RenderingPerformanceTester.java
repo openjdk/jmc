@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,8 @@ import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.util.HashSet;
 
+import org.openjdk.jmc.common.xydata.DefaultTimestampedData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
 import org.openjdk.jmc.greychart.GreyChartPanel;
 import org.openjdk.jmc.greychart.YAxis.Position;
@@ -47,8 +49,6 @@ import org.openjdk.jmc.greychart.impl.DefaultVerticalIndexRenderer;
 import org.openjdk.jmc.greychart.impl.DefaultXYGreyChart;
 import org.openjdk.jmc.greychart.impl.DefaultYAxis;
 import org.openjdk.jmc.greychart.util.ChartRenderingToolkit;
-import org.openjdk.jmc.ui.common.xydata.DefaultTimestampedData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 /**
  * Tests the rendering performance of the ordinary XY line graph.

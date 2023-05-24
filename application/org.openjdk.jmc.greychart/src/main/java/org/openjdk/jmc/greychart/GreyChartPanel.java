@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 
 /**
  * Simple JComponent containing a GreyChart. Thanks to: Janne Andersson @ MINQ
