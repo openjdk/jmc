@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2022, Datadog, Inc. All rights reserved.
+   Copyright (c) 2022, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -41,8 +41,7 @@
 	</parent>
 	<artifactId>platform-definition-2022-12</artifactId>
 	<packaging>eclipse-target-definition</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
 </project>
