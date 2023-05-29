@@ -994,7 +994,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		} else if (unit.equalsIgnoreCase("s")) {
 			rawDuration = Duration.ofSeconds(duration);
 		} else if (unit.equalsIgnoreCase("ticks")) {
-			rawDuration = Duration.ofNanos(duration*100);
+			rawDuration = Duration.ofNanos(duration * 100);
 		}
 
 		if (rawDuration != null) {
