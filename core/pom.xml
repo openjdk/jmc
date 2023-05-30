@@ -47,35 +47,37 @@
 	</description>
 	<inceptionYear>${project.inceptionYear}</inceptionYear>
 	<properties>
-		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
-		<project.inceptionYear>2018</project.inceptionYear>
+		<!-- Config -->
 		<revision>9.0.0</revision>
 		<changelist>-SNAPSHOT</changelist>
+		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
+		<project.inceptionYear>2018</project.inceptionYear>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<manifest-location>META-INF</manifest-location>
-		<checkstyle.config.path>${session.executionRootDirectory}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
-		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
-		<maven.jar.version>3.3.0</maven.jar.version>
+		<!-- Plugin Versions -->
+		<maven.toolchains.version>3.1.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
 		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
 		<spotless.version>2.34.0</spotless.version>
-		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
 		<maven.directory.version>1.0</maven.directory.version>
 		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.flatten.version>1.5.0</maven.flatten.version>
+		<maven.compiler.version>3.11.0</maven.compiler.version>
 		<maven.antrun.version>3.1.0</maven.antrun.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.jar.version>3.3.0</maven.jar.version>
 		<maven.source.version>3.3.0</maven.source.version>
 		<maven.javadoc.version>3.5.0</maven.javadoc.version>
-		<maven.gpg.version>3.1.0</maven.gpg.version>
-		<maven.flatten.version>1.5.0</maven.flatten.version>
-		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.install.version>3.1.1</maven.install.version>
 		<maven.deploy.version>3.1.1</maven.deploy.version>
-		<maven.compiler.version>3.11.0</maven.compiler.version>
-		<maven.toolchains.version>3.1.0</maven.toolchains.version>
+		<maven.gpg.version>3.1.0</maven.gpg.version>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
 	</properties>
-	<url>http://jdk.java.net/jmc</url>
+	<url>https://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
 			<name>Universal Permissive License Version 1.0</name>
@@ -90,14 +92,14 @@
 	</organization>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+		<url>https://bugs.openjdk.org/projects/JMC/issues</url>
 	</issueManagement>
 	<mailingLists>
 		<mailingList>
 			<name>jmc dev</name>
-			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
-			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
-			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+			<subscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>https://mail.openjdk.org/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
 	<scm>
@@ -110,7 +112,7 @@
 		<developer>
 			<id>jmc</id>
 			<name>JDK Mission Control</name>
-			<email>jmc-dev@openjdk.java.net</email>
+			<email>jmc-dev@openjdk.org</email>
 			<url>https://www.oracle.com/java/technologies/jdk-mission-control.html</url>
 		</developer>
 	</developers>
@@ -156,25 +158,12 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>com.diffplug.spotless</groupId>
-					<artifactId>spotless-maven-plugin</artifactId>
-					<version>${spotless.version}</version>
-					<configuration>
-						<java>
-							<eclipse>
-								<file>${spotless.config.path}</file>
-								<version>4.8.0</version>
-							</eclipse>
-						</java>
-					</configuration>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>${maven.resources.version}</version>
 					<executions>
 						<execution>
-							<id>copy-resources</id>
+							<id>copy-license</id>
 							<phase>process-resources</phase>
 							<goals>
 								<goal>copy-resources</goal>
@@ -215,11 +204,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven.compiler.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${maven.javadoc.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -285,10 +269,32 @@
 				<configuration>
 					<toolchains>
 						<jdk>
-							<version>17</version>
+							<version>${maven.compiler.source}</version>
 						</jdk>
 					</toolchains>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<eclipse>
+							<file>${jmc.config.path}/ide/eclipse/formatting/formatting.xml</file>
+							<version>4.8.0</version>
+						</eclipse>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
@@ -352,20 +358,20 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${maven.checkstyle.version}</version>
+				<configuration>
+					<configLocation>${jmc.config.path}/checkstyle/checkstyle.xml</configLocation>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<inputEncoding>UTF-8</inputEncoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+				</configuration>
 				<executions>
 					<execution>
-					<id>validate</id>
-					<phase>validate</phase>
-					<configuration>
-						<configLocation>${checkstyle.config.path}</configLocation>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-						<inputEncoding>UTF-8</inputEncoding>
-						<consoleOutput>true</consoleOutput>
-						<failsOnError>true</failsOnError>
-					</configuration>
-					<goals>
-						<goal>check</goal>
-					</goals>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -385,6 +391,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -394,7 +401,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<source>8</source>
+					<release>${maven.compiler.source}</release>
+					<sourcepath>src/main/java</sourcepath>
 					<noindex>true</noindex>
 					<additionalOptions>
 						<additionalOption>-Xdoclint:all</additionalOption>
@@ -409,6 +417,11 @@
 						</p>]]>
 					</bottom>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>${maven.install.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

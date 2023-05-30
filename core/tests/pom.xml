@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -55,7 +55,7 @@
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 		<jctools.version>4.0.1</jctools.version>
 		<junit.version>4.13.2</junit.version>
 		<junit.jupiter.api.version>5.9.0</junit.jupiter.api.version>
@@ -201,6 +201,36 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources.version}</version>
+				<executions>
+					<execution>
+						<id>copy-license</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>copy-manifest</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.version}</version>
+				<executions>
+					<execution>
+						<id>check for manifest</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>fix qualifier</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>-Duser.language=en -Duser.region=nl -Duser.timezone=GMT -Djava.locale.providers=COMPAT @{surefireArgLine}</argLine>
@@ -213,9 +243,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-install</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

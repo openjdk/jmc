@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2022, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -41,7 +41,7 @@
 	<artifactId>testlib</artifactId>
 	<properties>
 		<fail.if.no.tests>false</fail.if.no.tests>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -50,8 +50,77 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>flightrecorder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources.version}</version>
+				<executions>
+					<execution>
+						<id>copy-license</id>
+						<phase>process-resources</phase>
+					</execution>
+					<execution>
+						<id>copy-manifest</id>
+						<phase>process-resources</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.version}</version>
+				<executions>
+					<execution>
+						<id>check for manifest</id>
+						<phase>compile</phase>
+					</execution>
+					<execution>
+						<id>fix qualifier</id>
+						<phase>compile</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-install</id>
+						<phase>install</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
