@@ -74,7 +74,7 @@ Click next, and browse into the `jmc/core` folder. Select all the core projects 
 Next select _File | Import…_ and select _Maven / Existing Maven Project_ again, but this time from the repository root (`jmc`).
 
 The projects will likely have build errors because the `org.openjdk.jmc.browser.attach` project requires JDK internal module exports and this is not compatible with the `--release` Java compiler option (which only tracks public symbols).
-There is an [open issue at Ecliple M2E](https://github.com/eclipse-m2e/m2e-core/issues/1375) currently but until this is solved, you have to manually fix this. To do so, right click on the `org.openjdk.jmc.browser.attach` project, select _Properties_, then go to _Java Compiler_, and untick `Use '--release' option`.
+There is an [open issue at Eclipse M2E](https://github.com/eclipse-m2e/m2e-core/issues/1375) currently but until this is solved, you have to manually fix this. To do so, right click on the `org.openjdk.jmc.browser.attach` project, select _Properties_, then go to _Java Compiler_, and untick `Use '--release' option`.
 
 ![Unset release on org.openjdk.jmc.browser.attach](images/unsetrelease-on-jmc.browser.attach.png)
 
