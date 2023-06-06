@@ -105,6 +105,7 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StateToolkit;
@@ -980,23 +981,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		public String getText(Object element) {
 			StacktraceFrame frame = (StacktraceFrame) element;
 			IQuantity duration = getDurationCount(frame.getItems());
-			return formatDuration(duration.longValue(), duration.getUnit().getIdentifier());
+			try {
+				return formatDuration(duration.longValueIn(UnitLookup.NANOSECOND));
+			} catch (QuantityConversionException e) {
+				return Messages.N_A;
+			}
 		}
 	};
 
-	private String formatDuration(long duration, String unit) {
+	private String formatDuration(long duration) {
 		Duration rawDuration = null;
-		String formattedTime = "NA";
-		if (unit.equalsIgnoreCase("ns")) {
-			rawDuration = Duration.ofNanos(duration);
-		} else if (unit.equalsIgnoreCase("ms")) {
-			rawDuration = Duration.ofMillis(duration);
-		} else if (unit.equalsIgnoreCase("s")) {
-			rawDuration = Duration.ofSeconds(duration);
-		} else if (unit.equalsIgnoreCase("ticks")) {
-			rawDuration = Duration.ofNanos(duration * 100);
-		}
-
+		String formattedTime = Messages.N_A;
+		rawDuration = Duration.ofNanos(duration);
 		if (rawDuration != null) {
 			formattedTime = String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(),
 					rawDuration.toMinutesPart(), rawDuration.toSecondsPart(), rawDuration.toMillisPart(),
