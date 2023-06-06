@@ -990,15 +990,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	};
 
 	private String formatDuration(long duration) {
-		Duration rawDuration = null;
-		String formattedTime = Messages.N_A;
-		rawDuration = Duration.ofNanos(duration);
-		if (rawDuration != null) {
-			formattedTime = String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(),
-					rawDuration.toMinutesPart(), rawDuration.toSecondsPart(), rawDuration.toMillisPart(),
-					rawDuration.toNanosPart() % 1000000L);
-		}
-		return formattedTime;
+		Duration rawDuration = Duration.ofNanos(duration);
+		return String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(), rawDuration.toMinutesPart(),
+				rawDuration.toSecondsPart(), rawDuration.toMillisPart(), rawDuration.toNanosPart() % 1000000L);
 	}
 
 	private final ColumnLabelProvider stackTraceLabelProvider = new ColumnLabelProvider() {
