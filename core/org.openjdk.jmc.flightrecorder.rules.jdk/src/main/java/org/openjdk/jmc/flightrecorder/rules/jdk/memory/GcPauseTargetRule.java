@@ -111,7 +111,8 @@ public class GcPauseTargetRule implements IRule {
 							.addResult(PAUSE_TARGET, pauseTarget).build();
 				} else {
 					IItemCollection g1mmuItems = items.apply(JdkFilters.GC_G1MMU);
-					IItemFilter filter = ItemFilters.buildComparisonFilter(Kind.MORE, JdkAttributes.GC_TIME, pauseTarget);
+					IItemFilter filter = ItemFilters.buildComparisonFilter(Kind.MORE, JdkAttributes.GC_TIME,
+							pauseTarget);
 					IQuantity g1mmuTotal = g1mmuItems.getAggregate(Aggregators.count());
 					IQuantity g1mmuExceeded = g1mmuItems.apply(filter).getAggregate(Aggregators.count());
 					IQuantity exceededPercent = RulesToolkit.toRatioPercent(g1mmuExceeded, g1mmuTotal);
