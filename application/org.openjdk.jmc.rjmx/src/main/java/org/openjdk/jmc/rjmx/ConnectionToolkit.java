@@ -366,6 +366,20 @@ public final class ConnectionToolkit {
 	}
 
 	/**
+	 * Returns {@code true} if the connection handle is connected to a Substrate VM, {@code false}
+	 * otherwise. This method requires the connection handle to be connected.
+	 *
+	 * @param connectionHandle
+	 *            the connection handle to check.
+	 * @return {@code true} if the connection handle is connected to a Substrate VM, {@code false}
+	 *         otherwise.
+	 */
+	public static boolean isSubstrateVM(IConnectionHandle connectionHandle) {
+		String vmName = getVMName(connectionHandle);
+		return vmName != null && JavaVMVersionToolkit.isSubstrateVMName(vmName);
+	}
+
+	/**
 	 * Returns {@code true} if the connection handle is associated with an Oracle built JVM,
 	 * {@code false} otherwise. If the information is already present in the {@link JVMDescriptor},
 	 * this method will not cause any JMXRMI calls. If the information is lacking, an attempt will

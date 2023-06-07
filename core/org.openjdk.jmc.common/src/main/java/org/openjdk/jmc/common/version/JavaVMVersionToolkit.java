@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -114,6 +114,21 @@ public class JavaVMVersionToolkit {
 			return false;
 		}
 		return vmName.startsWith("Java HotSpot") || isOpenJDKJVMName(vmName) || vmName.startsWith("SAP"); //$NON-NLS-1$ //$NON-NLS-2$;
+	}
+
+	/**
+	 * Returns whether this is a Substrate VM or not.
+	 *
+	 * @param vmName
+	 *            the VM name to check.
+	 * @return {@code true} if it is a Substrate VM, {@code false} if it isn't or if was not
+	 *         possible to tell.
+	 */
+	public static boolean isSubstrateVMName(String vmName) {
+		if (vmName == null) {
+			return false;
+		}
+		return vmName.startsWith("Substrate VM"); //$NON-NLS-1$
 	}
 
 	/**
