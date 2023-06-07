@@ -43,9 +43,10 @@ import java.util.concurrent.RunnableFuture;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
-import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.PersistableItemFilter.Kind;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -109,17 +110,10 @@ public class GcPauseTargetRule implements IRule {
 							.setSeverity(Severity.OK).setSummary(Messages.getString(Messages.GcPauseTargetRule_TEXT_OK))
 							.addResult(PAUSE_TARGET, pauseTarget).build();
 				} else {
-					int exceededCount = 0;
 					IItemCollection g1mmuItems = items.apply(JdkFilters.GC_G1MMU);
-					for (IItemIterable item : g1mmuItems) {
-						for (IItem event : item) {
-							if (RulesToolkit.getValue(event, JdkAttributes.GC_TIME).compareTo(pauseTarget) < 1) {
-								exceededCount++;
-							}
-						}
-					}
+					IItemFilter filter = ItemFilters.buildComparisonFilter(Kind.MORE, JdkAttributes.GC_TIME, pauseTarget);
 					IQuantity g1mmuTotal = g1mmuItems.getAggregate(Aggregators.count());
-					IQuantity g1mmuExceeded = UnitLookup.NUMBER_UNITY.quantity(exceededCount);
+					IQuantity g1mmuExceeded = g1mmuItems.apply(filter).getAggregate(Aggregators.count());
 					IQuantity exceededPercent = RulesToolkit.toRatioPercent(g1mmuExceeded, g1mmuTotal);
 					return ResultBuilder.createFor(GcPauseTargetRule.this, preferenceValueProvider)
 							.setSeverity(Severity.WARNING)
