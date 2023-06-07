@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -32,6 +32,17 @@
  */
 package org.openjdk.jmc.common.test.unit;
 
+import org.junit.Test;
+import org.openjdk.jmc.common.unit.BinaryScaleFactor;
+import org.openjdk.jmc.common.unit.DecimalScaleFactor;
+import org.openjdk.jmc.common.unit.IScalarAffineTransform;
+import org.openjdk.jmc.common.unit.ImpreciseScaleFactor;
+import org.openjdk.jmc.common.unit.ScaleFactor;
+import org.openjdk.jmc.test.MCTestCase;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.openjdk.jmc.common.unit.BinaryPrefix.EXBI;
 import static org.openjdk.jmc.common.unit.BinaryPrefix.KIBI;
 import static org.openjdk.jmc.common.unit.BinaryPrefix.NOBI;
@@ -41,17 +52,6 @@ import static org.openjdk.jmc.common.unit.DecimalPrefix.EXA;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.KILO;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.NONE;
 import static org.openjdk.jmc.common.unit.DecimalPrefix.YOTTA;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.openjdk.jmc.common.test.MCTestCase;
-import org.openjdk.jmc.common.unit.BinaryScaleFactor;
-import org.openjdk.jmc.common.unit.DecimalScaleFactor;
-import org.openjdk.jmc.common.unit.IScalarAffineTransform;
-import org.openjdk.jmc.common.unit.ImpreciseScaleFactor;
-import org.openjdk.jmc.common.unit.ScaleFactor;
 
 @SuppressWarnings("nls")
 public class TransformTest extends MCTestCase {

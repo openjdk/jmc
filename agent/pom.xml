@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -76,6 +76,8 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<asm.version>8.0.1</asm.version>
 		<junit.version>4.13.2</junit.version>
+		<maven.checkstyle.version>3.2.2</maven.checkstyle.version>
+		<checkstyle.config.path>${project.basedir}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spotless.version>1.26.0</spotless.version>
 		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
@@ -163,6 +165,7 @@
 						<exclude>TestDefineEventProbes.java</exclude>
 						<exclude>TestCustomClassloader.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
+						<exclude>TestDynamicallyLoadedClasses.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 						<exclude>TestRetrieveEventProbes.java</exclude>
 					</excludes>
@@ -205,7 +208,7 @@
 								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
 								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
 								<Can-Retransform-Classes>true</Can-Retransform-Classes>
-								<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+								<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
 								<Built-By></Built-By>
 							</manifestEntries>
 						</transformer>
@@ -280,6 +283,17 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>test-dynamically-loaded-classes</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
+							<includes>TestDynamicallyLoadedClasses.java</includes>
+						</configuration>
+					</execution>
+					<execution>
 						<id>test-retrieve-transforms</id>
 						<goals>
 							<goal>integration-test</goal>
@@ -308,6 +322,27 @@
 				<configuration>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<executions>
+					<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<configuration>
+						<configLocation>${checkstyle.config.path}</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<encoding>UTF-8</encoding>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+					</configuration>
+					<goals>
+						<goal>check</goal>
+					</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

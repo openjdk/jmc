@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -59,13 +59,13 @@
 				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>d3-v6-js</id>
+						<id>download-d3</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v6.min.js</url>
+							<url>https://d3js.org/d3.v7.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>

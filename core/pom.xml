@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -53,22 +53,27 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<maven.jar.version>3.2.0</maven.jar.version>
-		<spotless.version>2.14.0</spotless.version>
-		<maven.directory.version>1.0</maven.directory.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<maven.antrun.version>3.0.0</maven.antrun.version>
-		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.3.2</maven.javadoc.version>
-		<maven.gpg.version>1.6</maven.gpg.version>
-		<maven.flatten.version>1.2.2</maven.flatten.version>
-		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
-		<maven.deploy.version>3.0.0-M2</maven.deploy.version>
+		<checkstyle.config.path>${session.executionRootDirectory}/../configuration/checkstyle/checkstyle.xml</checkstyle.config.path>
 		<spotless.config.path>${project.basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
+		<maven.jar.version>3.3.0</maven.jar.version>
+		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
+		<spotless.version>2.34.0</spotless.version>
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<maven.directory.version>1.0</maven.directory.version>
+		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.antrun.version>3.1.0</maven.antrun.version>
+		<maven.source.version>3.3.0</maven.source.version>
+		<maven.javadoc.version>3.5.0</maven.javadoc.version>
+		<maven.gpg.version>3.1.0</maven.gpg.version>
+		<maven.flatten.version>1.5.0</maven.flatten.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.deploy.version>3.1.1</maven.deploy.version>
+		<maven.compiler.version>3.11.0</maven.compiler.version>
+		<maven.toolchains.version>3.1.0</maven.toolchains.version>
 	</properties>
 	<url>http://jdk.java.net/jmc</url>
 	<licenses>
@@ -76,7 +81,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -208,6 +213,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven.javadoc.version}</version>
 				</plugin>
@@ -221,9 +231,65 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>${maven.deploy.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-checkstyle-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>check</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>${maven.toolchains.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>17</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
 				<artifactId>directory-maven-plugin</artifactId>
@@ -279,6 +345,27 @@
 								<replace token=".qualifier" value="${qualifier.value}" dir="${project.build.directory}/${manifest-location}"/>
 							</target>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<executions>
+					<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<configuration>
+						<configLocation>${checkstyle.config.path}</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<inputEncoding>UTF-8</inputEncoding>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+					</configuration>
+					<goals>
+						<goal>check</goal>
+					</goals>
 					</execution>
 				</executions>
 			</plugin>

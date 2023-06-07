@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -154,6 +154,8 @@ public class JfrRulesReport {
 					minSeverity = Severity.INFO;
 				} else if (minString.equalsIgnoreCase("warning")) { //$NON-NLS-1$
 					minSeverity = Severity.WARNING;
+				} else if (minString.equalsIgnoreCase("ignore")) { //$NON-NLS-1$
+					minSeverity = Severity.IGNORE;
 				} else {
 					System.out.println("Unrecognized value of -min"); //$NON-NLS-1$
 					return;

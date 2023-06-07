@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2022, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,8 +88,8 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.dependencyview"; //$NON-NLS-1$
 	private static final String HTML_PAGE;
 	static {
-		String jsD3V6 = "jslibs/d3.v6.min.js";
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V6),
+		String jsD3 = "jslibs/d3.v7.min.js";
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3),
 				loadStringFromFile("main.js"), loadStringFromFile("utils.js"),
 				loadStringFromFile("hierarchical-edge.js"), loadStringFromFile("chord.js"));
 	}

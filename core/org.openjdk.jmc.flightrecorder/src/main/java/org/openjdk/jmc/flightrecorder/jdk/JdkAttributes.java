@@ -1289,4 +1289,26 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
+
+	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = attr("totalFinalizersRun", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER);
+	public static final IAttribute<IMCType> FINALIZABLE_CLASS = attr("finalizableClass", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS),
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_DESC), CLASS);
+	public static final IAttribute<String> FINALIZABLE_CLASS_NAME = Attribute.canonicalize(
+			new Attribute<String>("finalizableClassName", Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME_DESC), PLAIN_TEXT) {
+				@Override
+				public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IMCType, U> accessor = FINALIZABLE_CLASS.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<String, U>() {
+						@Override
+						public String getMember(U i) {
+							IMCType type = accessor.getMember(i);
+							return type == null ? null : type.getFullName();
+						}
+					};
+				}
+			});
 }

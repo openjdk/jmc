@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -49,6 +49,8 @@ import org.eclipse.core.runtime.Assert;
 import org.osgi.service.prefs.Preferences;
 
 import org.openjdk.jmc.common.io.ValidatingObjectInputStream;
+import org.openjdk.jmc.common.security.FailedToSaveException;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.ui.common.CorePlugin;
 
 /**

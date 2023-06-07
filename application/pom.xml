@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -46,6 +46,9 @@
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<modules>
@@ -59,7 +62,6 @@
 		<module>org.openjdk.jmc.console.jconsole</module>
 		<module>org.openjdk.jmc.console.pde</module>
 		<module>org.openjdk.jmc.console.persistence</module>
-		<module>org.openjdk.jmc.console.twitter</module>
 		<module>org.openjdk.jmc.console.ui</module>
 		<module>org.openjdk.jmc.console.ui.diagnostic</module>
 		<module>org.openjdk.jmc.console.ui.mbeanbrowser</module>
@@ -81,7 +83,6 @@
 		<module>org.openjdk.jmc.feature.pde</module>
 		<module>org.openjdk.jmc.feature.rcp</module>
 		<module>org.openjdk.jmc.feature.rcp.update</module>
-		<module>org.openjdk.jmc.feature.twitter</module>
 		<module>org.openjdk.jmc.feature.console.agent</module>
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
@@ -127,20 +128,6 @@
 			<modules>
 				<module>coverage</module>
 			</modules>
-		</profile>
-		<profile>
-			<id>no-jfr</id>
-			<activation>
-				<property>
-					<name>java.runtime.name</name>
-					<value>OpenJDK Runtime Environment</value>
-				</property>
-				<jdk>(,11)</jdk>
-			</activation>
-			<properties>
-				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest,org.openjdk.jmc.flightrecorder.uitest.JfrWizardTest,org.openjdk.jmc.flightrecorder.uitest.TemplateManagerTest,org.openjdk.jmc.flightrecorder.uitest.ControlRecordingsTest,org.openjdk.jmc.console.uitest.DiagnosticCommandsTabTest</jfr.tests>
-				<jfr.vmargs/>
-			</properties>
 		</profile>
 		<profile>
 			<id>uitests</id>

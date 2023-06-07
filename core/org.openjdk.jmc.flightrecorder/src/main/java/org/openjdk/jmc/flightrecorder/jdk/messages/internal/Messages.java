@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -281,6 +281,12 @@ public class Messages {
 	public static final String ATTR_EXPLICIT_GC_DISABLED_DESC = "ATTR_EXPLICIT_GC_DISABLED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTED_PACKAGE = "ATTR_EXPORTED_PACKAGE"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTING_MODULE = "ATTR_EXPORTING_MODULE"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS = "ATTR_FINALIZABLE_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_DESC = "ATTR_FINALIZABLE_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME = "ATTR_FINALIZABLE_CLASS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME_DESC = "ATTR_FINALIZABLE_CLASS_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN = "ATTR_TOTAL_FINALIZERS_RUN"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN_DESC = "ATTR_TOTAL_FINALIZERS_RUN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NAME = "ATTR_FLAG_NAME"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_BOOLEAN = "ATTR_FLAG_NEW_VALUE BOOLEAN"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_NUMBER = "ATTR_FLAG_NEW_VALUE_NUMBER"; //$NON-NLS-1$

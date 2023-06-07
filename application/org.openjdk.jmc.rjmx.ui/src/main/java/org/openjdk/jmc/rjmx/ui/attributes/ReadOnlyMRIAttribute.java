@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.osgi.util.NLS;
 
 import org.openjdk.jmc.common.unit.IUnit;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.common.util.ExceptionToolkit;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
@@ -73,7 +74,6 @@ import org.openjdk.jmc.rjmx.ui.RJMXUIPlugin;
 import org.openjdk.jmc.rjmx.util.internal.AbstractReadOnlyAttribute;
 import org.openjdk.jmc.rjmx.util.internal.PartitionedList;
 import org.openjdk.jmc.rjmx.util.internal.SimpleAttributeInfo;
-import org.openjdk.jmc.ui.common.util.Environment;
 
 public class ReadOnlyMRIAttribute extends AbstractReadOnlyAttribute implements IUpdateInterval, IAdaptable {
 

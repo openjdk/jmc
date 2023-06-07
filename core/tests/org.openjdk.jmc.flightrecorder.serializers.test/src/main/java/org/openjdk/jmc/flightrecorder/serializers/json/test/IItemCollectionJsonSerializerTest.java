@@ -33,21 +33,21 @@
  */
 package org.openjdk.jmc.flightrecorder.serializers.json.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.test.io.IOResourceSet;
 import org.openjdk.jmc.common.util.StringToolkit;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
 import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
+import org.openjdk.jmc.test.io.IOResourceSet;
+
+import static org.junit.Assert.assertEquals;
 
 public class IItemCollectionJsonSerializerTest {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,10 +32,10 @@
  */
 package org.openjdk.jmc.rjmx.servermodel.internal;
 
-import org.openjdk.jmc.ui.common.security.ICredentials;
-import org.openjdk.jmc.ui.common.security.InMemoryCredentials;
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
+import org.openjdk.jmc.common.security.ICredentials;
+import org.openjdk.jmc.common.security.InMemoryCredentials;
+import org.openjdk.jmc.common.security.PersistentCredentials;
+import org.openjdk.jmc.common.security.SecurityException;
 
 public class ServerModelCredentials implements ICredentials {
 

@@ -39,6 +39,9 @@
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>common</artifactId>
+	<properties>
+		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.owasp.encoder</groupId>
@@ -51,7 +54,4 @@
 			<version>1.8.0</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-	</properties>
 </project>

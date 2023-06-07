@@ -5,6 +5,7 @@ flight_recording_hidden.jfr
 full_gc_cms.jfr
 full_gc_g1.jfr
 jdk15.jfr
+jdk18-finalizers.jfr
 openjdk8u292.jfr
 openjdk8u302ea.jfr
 parallel-gc_cpu.jfr

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,8 +38,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
 import org.openjdk.jmc.greychart.GreyChartPanel;
 import org.openjdk.jmc.greychart.data.SeriesProviderSet;
