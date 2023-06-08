@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui,
  fireplace-swt-awt-bridge,
  fireplace-swing-animation,
  radiance-animation
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Oracle Corporation
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flamegraph
 Export-Package: org.openjdk.jmc.flightrecorder.flamegraph,
