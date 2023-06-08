@@ -47,6 +47,7 @@ import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_
 import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
 import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlameviewMessage;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -420,8 +421,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		container.setMaximizedControl(embeddingComposite);
 
 		// done here to avoid SWT complain about wrong thread
-		var embedSize = embeddingComposite.getSize();
-		java.awt.Color bgColorAwtColor = SWT_AWTBridge.toAWTColor(container.getBackground());
+		var bgColorAwtColor = SWT_AWTBridge.toAWTColor(container.getBackground());
 
 		var tooltip = new StyledToolTip(embeddingComposite, ToolTip.NO_RECREATE, true);
 		{
@@ -480,10 +480,9 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			var scrollPane = (JScrollPane) mouseEvent.getComponent();
 			var canvas = scrollPane.getViewport().getView();
 
-			java.awt.Point pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
+			var pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
 			pointOnCanvas.y = frameRect.y + frameRect.height;
-			java.awt.Point componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas,
-					flamegraphView.component);
+			var componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
 
 			if (frameBox.isRoot()) {
 				return;
@@ -627,8 +626,28 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
                             ).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
 
                     try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {
-                        ImageIO.write(
-                                generator.get(),
+                    	var renderImg = generator.get();
+                    	
+                    	var img = switch(type) {
+                    		case "png" -> renderImg;
+                    		case "jpg" -> {
+                    			// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
+                    			// to workaround this it is required to copy the image to a BufferedImage without alpha channel
+                            	var newBufferedImage = new BufferedImage(
+                            			renderImg.getWidth(),
+                            			renderImg.getHeight(),
+                            			BufferedImage.TYPE_INT_RGB
+                            			);
+								renderImg.copyData(newBufferedImage.getRaster());
+								
+                				yield newBufferedImage;
+                    		}
+                    		default -> throw new IllegalStateException("Type is checked above");
+                    	};
+                    	
+                    	
+                        var result = ImageIO.write(
+                                img,
                                 type,
                                 os
                         );
