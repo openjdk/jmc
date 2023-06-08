@@ -254,10 +254,10 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private enum ExportActionType {
 		SAVE_AS(getFlameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench()
 				.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench()
-						.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
+				.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
 		PRINT(getFlameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
-						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
 		private final String message;
 		private final int action;
@@ -265,7 +265,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		private final ImageDescriptor disabledImageDescriptor;
 
 		private ExportActionType(String message, int action, ImageDescriptor imageDescriptor,
-				ImageDescriptor disabledImageDescriptor) {
+								 ImageDescriptor disabledImageDescriptor) {
 			this.message = message;
 			this.action = action;
 			this.imageDescriptor = imageDescriptor;
@@ -287,12 +287,12 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		@Override
 		public void run() {
 			switch (actionType) {
-			case SAVE_AS:
-				Executors.newSingleThreadExecutor().execute(FlamegraphSwingView.this::saveFlamegraph);
-				break;
-			case PRINT:
-				// not supported
-				break;
+				case SAVE_AS:
+					Executors.newSingleThreadExecutor().execute(FlamegraphSwingView.this::saveFlamegraph);
+					break;
+				case PRINT:
+					// not supported
+					break;
 			}
 		}
 	}
@@ -384,11 +384,11 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
-		groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
+		groupByActions = new GroupByAction[]{new GroupByAction(GroupActionType.LAST_FRAME),
 				new GroupByAction(GroupActionType.THREAD_ROOT)};
-		groupByFlameviewActions = new ViewModeAction[] {new ViewModeAction(GroupActionType.FLAME_GRAPH),
+		groupByFlameviewActions = new ViewModeAction[]{new ViewModeAction(GroupActionType.FLAME_GRAPH),
 				new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
-		exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
+		exportActions = new ExportAction[]{new ExportAction(ExportActionType.SAVE_AS),
 				/* new ExportAction(ExportActionType.PRINT) */};
 		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
@@ -468,7 +468,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(),
 						frame -> frame.isRoot() ? ""
 								: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false,
-										false, false, true, false),
+								false, false, true, false),
 						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()),
 				new DimmingFrameColorProvider<>(frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
 						.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
@@ -542,7 +542,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	}
 
 	private void setModel(
-		final IItemCollection items, final List<FrameBox<Node>> flatFrameList, String rootFrameDescription) {
+			final IItemCollection items, final List<FrameBox<Node>> flatFrameList, String rootFrameDescription) {
 		if (ModelState.FINISHED.equals(modelState) && items.equals(currentItems)) {
 			SwingUtilities.invokeLater(() -> {
 				flamegraphView.setModel(new FrameModel<>(rootFrameDescription,
@@ -560,102 +560,102 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	}
 
 	private void saveFlamegraph() {
-        var future = new CompletableFuture<Path>();
+		var future = new CompletableFuture<Path>();
 
-        DisplayToolkit.inDisplayThread().execute(() -> {
-            var fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
-            fd.setText(getFlameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
-            fd.setFilterNames(
-                    new String[]{getFlameviewMessage(FLAMEVIEW_JPEG_IMAGE), getFlameviewMessage(FLAMEVIEW_PNG_IMAGE)});
-            fd.setFilterExtensions(new String[]{"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
-            fd.setFileName("flame_graph"); //$NON-NLS-1$
-            fd.setOverwrite(true);
-            if (fd.open() == null) {
-                future.cancel(true);
-                return;
-            }
+		DisplayToolkit.inDisplayThread().execute(() -> {
+			var fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
+			fd.setText(getFlameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
+			fd.setFilterNames(
+					new String[]{getFlameviewMessage(FLAMEVIEW_JPEG_IMAGE), getFlameviewMessage(FLAMEVIEW_PNG_IMAGE)});
+			fd.setFilterExtensions(new String[]{"*.jpg", "*.png"}); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFileName("flame_graph"); //$NON-NLS-1$
+			fd.setOverwrite(true);
+			if (fd.open() == null) {
+				future.cancel(true);
+				return;
+			}
 
-            var fileName = fd.getFileName().toLowerCase();
-            // FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
-            if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$
-                return;
-            }
-            future.complete(Paths.get(fd.getFilterPath(), fd.getFileName()));
-        });
+			var fileName = fd.getFileName().toLowerCase();
+			// FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
+			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$
+				return;
+			}
+			future.complete(Paths.get(fd.getFilterPath(), fd.getFileName()));
+		});
 
-        Supplier<RenderedImage> generator = () -> {
-            var fgImage = new FlamegraphImage<>(
-                    FrameTextsProvider.of(
-                            frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(), //$NON-NLS-1$
-                            frame -> frame.isRoot() ? "" //$NON-NLS-1$
-                                    : FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false,
-                                    false, false, false, true, false),
-                            frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()), //$NON-NLS-1$
-                    new DimmingFrameColorProvider<Node>(
-                            frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
-                                    .apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
-                    FrameFontProvider.defaultFontProvider());
+		Supplier<RenderedImage> generator = () -> {
+			var fgImage = new FlamegraphImage<>(
+					FrameTextsProvider.of(
+							frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(), //$NON-NLS-1$
+							frame -> frame.isRoot() ? "" //$NON-NLS-1$
+									: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false,
+									false, false, false, true, false),
+							frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()), //$NON-NLS-1$
+					new DimmingFrameColorProvider<Node>(
+							frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
+									.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
+					FrameFontProvider.defaultFontProvider());
 
-            return fgImage.generate(flamegraphView.getFrameModel(), flamegraphView.getMode(), 2000);
-        };
+			return fgImage.generate(flamegraphView.getFrameModel(), flamegraphView.getMode(), 2000);
+		};
 
-        Optional.of(future)
-                .map(f -> {
-                    try {
-                        return f.get();
-                    } catch (CancellationException e) {
-                        // noop : model calculation is canceled when is still running
-                    } catch (InterruptedException | ExecutionException e) {
-                        FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
-                    }
-                    return null;
-                })
-                .ifPresent(destinationPath -> {
-                    // make spotbugs happy about NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE
-                    var type = Optional.ofNullable(destinationPath.getFileName())
-                            .map(p -> p.toString().toLowerCase())
-                            .map(f ->
-                                    switch (f.substring(f.lastIndexOf('.') + 1)) { //$NON-NLS-1$
-                                        case "jpeg", "jpg" -> //$NON-NLS-1$ //$NON-NLS-2$
-                                                "jpg"; //$NON-NLS-1$
-                                        case "png" -> //$NON-NLS-1$
-                                                "png"; //$NON-NLS-1$
-                                        default -> null;
-                                    }
-                            ).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
+		Optional.of(future)
+				.map(f -> {
+					try {
+						return f.get();
+					} catch (CancellationException e) {
+						// noop : model calculation is canceled when is still running
+					} catch (InterruptedException | ExecutionException e) {
+						FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
+					}
+					return null;
+				})
+				.ifPresent(destinationPath -> {
+					// make spotbugs happy about NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE
+					var type = Optional.ofNullable(destinationPath.getFileName())
+							.map(p -> p.toString().toLowerCase())
+							.map(f ->
+									switch (f.substring(f.lastIndexOf('.') + 1)) { //$NON-NLS-1$
+										case "jpeg", "jpg" -> //$NON-NLS-1$ //$NON-NLS-2$
+												"jpg"; //$NON-NLS-1$
+										case "png" -> //$NON-NLS-1$
+												"png"; //$NON-NLS-1$
+										default -> null;
+									}
+							).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
 
-                    try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {
-                    	var renderImg = generator.get();
-                    	
-                    	var img = switch(type) {
-                    		case "png" -> renderImg;
-                    		case "jpg" -> {
-                    			// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
-                    			// to workaround this it is required to copy the image to a BufferedImage without alpha channel
-                            	var newBufferedImage = new BufferedImage(
-                            			renderImg.getWidth(),
-                            			renderImg.getHeight(),
-                            			BufferedImage.TYPE_INT_RGB
-                            			);
+					try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {
+						var renderImg = generator.get();
+
+						var img = switch (type) {
+							case "png" -> renderImg;
+							case "jpg" -> {
+								// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
+								// to workaround this it is required to copy the image to a BufferedImage without alpha channel
+								var newBufferedImage = new BufferedImage(
+										renderImg.getWidth(),
+										renderImg.getHeight(),
+										BufferedImage.TYPE_INT_RGB
+								);
 								renderImg.copyData(newBufferedImage.getRaster());
-								
-                				yield newBufferedImage;
-                    		}
-                    		default -> throw new IllegalStateException("Type is checked above");
-                    	};
-                    	
-                    	
-                        var result = ImageIO.write(
-                                img,
-                                type,
-                                os
-                        );
-                    } catch (IOException e) {
-                        FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
-                    }
-                });
-    }
+
+								yield newBufferedImage;
+							}
+							default -> throw new IllegalStateException("Type is checked above");
+						};
+
+
+						var result = ImageIO.write(
+								img,
+								type,
+								os
+						);
+					} catch (IOException e) {
+						FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
+					}
+				});
+	}
 
 	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
 		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
