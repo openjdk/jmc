@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.forms.widgets.FormText;
 
 /**
- * This tool tip extends the Jface implementation and relies on the {@link FormText} control
- * to render the text.
+ * This tool tip extends the Jface implementation and relies on the {@link FormText} control to
+ * render the text.
  * 
  * @author brice.dutheil
  * @see FormText
@@ -62,7 +62,7 @@ public class StyledToolTip extends DefaultToolTip {
 		final Composite container = setDefaultLayout(new Composite(parent, SWT.NULL), event);
 		GridLayoutFactory.fillDefaults().margins(2, 2).generateLayout(container);
 		FormText formText = setDefaultLayout(new FormText(container, SWT.NONE), event);
-		
+
 		String pseudoHtml = getText(event);
 
 		formText.setText(pseudoHtml, true, false);
