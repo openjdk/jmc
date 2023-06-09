@@ -33,28 +33,21 @@
  */
 package org.openjdk.jmc.flightrecorder.flamegraph.views;
 
-import static java.util.Collections.reverseOrder;
-import static java.util.Map.Entry.comparingByValue;
-import static java.util.stream.Collectors.toMap;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PNG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PRINT;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_RESET_ZOOM;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_AS;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
-import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlameviewMessage;
-
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import io.github.bric3.fireplace.core.ui.Colors;
+import io.github.bric3.fireplace.flamegraph.ColorMapper;
+import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
+import io.github.bric3.fireplace.flamegraph.FlamegraphImage;
+import io.github.bric3.fireplace.flamegraph.FlamegraphView;
+import io.github.bric3.fireplace.flamegraph.FrameBox;
+import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
+import io.github.bric3.fireplace.flamegraph.FrameModel;
+import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
+import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
+import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
+import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,17 +60,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.stream.Stream;
-
-import javax.imageio.ImageIO;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ResourceLocator;
@@ -99,64 +86,74 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.flightrecorder.flamegraph.FlamegraphImages;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-import io.github.bric3.fireplace.core.ui.Colors;
-import io.github.bric3.fireplace.flamegraph.ColorMapper;
-import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
-import io.github.bric3.fireplace.flamegraph.FlamegraphImage;
-import io.github.bric3.fireplace.flamegraph.FlamegraphView;
-import io.github.bric3.fireplace.flamegraph.FrameBox;
-import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
-import io.github.bric3.fireplace.flamegraph.FrameModel;
-import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
-import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
-import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
-import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.stream.Stream;
+
+import static java.util.Collections.reverseOrder;
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.*;
+import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlameviewMessage;
 
 public class FlamegraphSwingView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
 	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flamegraph"; //$NON-NLS-1$
-
+	private static final String ATTRIBUTE_SELECTION_SEPARATOR_ID = "AttrSelectionSep"; //$NON-NLS-1$
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
 			new ThreadFactory() {
-				private final ThreadGroup group = new ThreadGroup("FlameGraphModelCalculationGroup"); //$NON-NLS-1$
+				private final ThreadGroup group = new ThreadGroup("FlamegraphModelCalculationGroup"); //$NON-NLS-1$
 				private final AtomicInteger counter = new AtomicInteger();
 
 				@Override
 				public Thread newThread(Runnable r) {
-					var t = new Thread(group, r, "FlamegraphJavaModelCalculation-" + counter.getAndIncrement()); //$NON-NLS-1$
+					var t = new Thread(group, r, "FlamegraphModelCalculation-" + counter.getAndIncrement()); //$NON-NLS-1$
 					t.setDaemon(true);
 					return t;
 				}
 			});
-	private FrameSeparator frameSeparator;
 
-	private SashForm container;
+	private FrameSeparator frameSeparator;
 	private EmbeddingComposite embeddingComposite;
 	private FlamegraphView<Node> flamegraphView;
-
-	private GroupByAction[] groupByActions;
-	private ViewModeAction[] groupByFlameviewActions;
 	private ExportAction[] exportActions;
 	private boolean threadRootAtTop = true;
 	private boolean icicleViewActive = true;
 	private IItemCollection currentItems;
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
+	private IAttribute<IQuantity> currentAttribute;
+	private AttributeSelection attributeSelection;
+	private IToolBarManager toolBar;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -301,11 +298,13 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 		private final FlamegraphSwingView view;
 		private final IItemCollection items;
+		private final IAttribute<IQuantity> attribute;
 		private volatile boolean isInvalid;
 
-		private ModelRebuildRunnable(FlamegraphSwingView view, IItemCollection items) {
+		private ModelRebuildRunnable(FlamegraphSwingView view, IItemCollection items, IAttribute<IQuantity> attribute) {
 			this.view = view;
 			this.items = items;
+			this.attribute = attribute;
 		}
 
 		private void setInvalid() {
@@ -318,25 +317,45 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			if (isInvalid) {
 				return;
 			}
-			var treeModel = new StacktraceTreeModel(items, view.frameSeparator, !view.threadRootAtTop);
+			var filteredItems = items;
+			if (attribute != null) {
+				filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
+			}
+			var treeModel = new StacktraceTreeModel(
+					filteredItems,
+					view.frameSeparator,
+					!view.threadRootAtTop,
+					attribute
+			);
 			if (isInvalid) {
 				return;
 			}
 			var rootFrameDescription = createRootNodeDescription(items);
 			var frameBoxList = convert(treeModel);
-			if (isInvalid) {
-				return;
-			} else {
+			if (!isInvalid) {
 				view.modelState = ModelState.FINISHED;
 				view.setModel(items, frameBoxList, rootFrameDescription);
+				DisplayToolkit.inDisplayThread().execute(() -> {
+					var attributeList = AttributeSelection.extractAttributes(items);
+					String attrName = attribute != null ? attribute.getName() : null;
+					view.createAttributeSelection(attrName, attributeList);
+				});
 			}
 		}
 
 		private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
 			var nodes = new ArrayList<FrameBox<Node>>();
 
-			FrameBox.flattenAndCalculateCoordinate(nodes, model.getRoot(), Node::getChildren, Node::getCumulativeWeight,
-					node -> node.getChildren().stream().mapToDouble(Node::getCumulativeWeight).sum(), 0.0d, 1.0d, 0);
+			FrameBox.flattenAndCalculateCoordinate(
+					nodes,
+					model.getRoot(),
+					Node::getChildren,
+					Node::getCumulativeWeight,
+					node -> node.getChildren().stream().mapToDouble(Node::getCumulativeWeight).sum(),
+					0.0d,
+					1.0d,
+					0
+			);
 
 			return nodes;
 		}
@@ -380,31 +399,63 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		}
 	}
 
+	private void createAttributeSelection(String attrName, Collection<Pair<String, IAttribute<IQuantity>>> items) {
+		if (attributeSelection != null) {
+			toolBar.remove(attributeSelection.getId());
+		}
+		attributeSelection = new AttributeSelection(
+				items,
+				attrName,
+				this::getCurrentAttribute,
+				this::setCurrentAttribute,
+				() -> triggerRebuildTask(currentItems)
+		);
+		toolBar.insertAfter(ATTRIBUTE_SELECTION_SEPARATOR_ID, attributeSelection);
+		toolBar.update(true);
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
-		groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
-				new GroupByAction(GroupActionType.THREAD_ROOT)};
-		groupByFlameviewActions = new ViewModeAction[] {new ViewModeAction(GroupActionType.FLAME_GRAPH),
-				new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
-		exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS),
-				/* new ExportAction(ExportActionType.PRINT) */};
-		Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 
 		var siteMenu = site.getActionBars().getMenuManager();
-		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
-		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
+		{
+			siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
+			siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
+		}
 
-		var toolBar = site.getActionBars().getToolBarManager();
-		toolBar.add(new ResetZoomAction());
-		toolBar.add(new ToggleMinimapAction());
-		toolBar.add(new Separator());
-		Stream.of(groupByFlameviewActions).forEach(toolBar::add);
-		toolBar.add(new Separator());
-		Stream.of(groupByActions).forEach(toolBar::add);
-		toolBar.add(new Separator());
-		Stream.of(exportActions).forEach(toolBar::add);
+		toolBar = site.getActionBars().getToolBarManager();
+		{
+			toolBar.add(new ResetZoomAction());
+			toolBar.add(new ToggleMinimapAction());
+
+			toolBar.add(new Separator());
+
+			ViewModeAction[] groupByFlamegraphActions = new ViewModeAction[]{
+					new ViewModeAction(GroupActionType.FLAME_GRAPH),
+					new ViewModeAction(GroupActionType.ICICLE_GRAPH)
+			};
+			Stream.of(groupByFlamegraphActions).forEach(toolBar::add);
+
+			toolBar.add(new Separator());
+
+			GroupByAction[] groupByActions = new GroupByAction[]{
+					new GroupByAction(GroupActionType.LAST_FRAME),
+					new GroupByAction(GroupActionType.THREAD_ROOT)
+			};
+			Stream.of(groupByActions).forEach(toolBar::add);
+
+			toolBar.add(new Separator());
+
+			exportActions = new ExportAction[] { new ExportAction(ExportActionType.SAVE_AS) };
+			Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
+			Stream.of(exportActions).forEach(toolBar::add);
+
+			toolBar.add(new Separator(ATTRIBUTE_SELECTION_SEPARATOR_ID));
+			createAttributeSelection(null, Collections.emptyList());
+		}
+
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -416,7 +467,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	@Override
 	public void createPartControl(Composite parent) {
-		container = new SashForm(parent, SWT.HORIZONTAL);
+		SashForm container = new SashForm(parent, SWT.HORIZONTAL);
 		embeddingComposite = new EmbeddingComposite(container);
 		container.setMaximizedControl(embeddingComposite);
 
@@ -535,10 +586,18 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, items);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items, currentAttribute);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
+	}
+
+	private IAttribute<IQuantity> getCurrentAttribute() {
+		return currentAttribute;
+	}
+
+	private void setCurrentAttribute(IAttribute<IQuantity> attr) {
+		currentAttribute = attr;
 	}
 
 	private void setModel(
