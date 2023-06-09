@@ -121,8 +121,16 @@ import java.util.stream.Stream;
 import static java.util.Collections.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.*;
-import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlameviewMessage;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PNG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PRINT;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_RESET_ZOOM;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
+import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlamegraphMessage;
 
 public class FlamegraphSwingView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
@@ -158,10 +166,16 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
 		LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
-		ICICLE_GRAPH(getFlameviewMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-				FlamegraphImages.ICON_ICICLE_FLIP)),
-		FLAME_GRAPH(getFlameviewMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flameviewImageDescriptor(
-				FlamegraphImages.ICON_FLAME_FLIP));
+		ICICLE_GRAPH(
+				getFlamegraphMessage(FLAMEVIEW_ICICLE_GRAPH),
+				IAction.AS_RADIO_BUTTON,
+				flamegraphImageDescriptor(FlamegraphImages.ICON_ICICLE_FLIP)
+		),
+		FLAME_GRAPH(
+				getFlamegraphMessage(FLAMEVIEW_FLAME_GRAPH),
+				IAction.AS_RADIO_BUTTON,
+				flamegraphImageDescriptor(FlamegraphImages.ICON_FLAME_FLIP)
+		);
 
 		private final String message;
 		private final int action;
@@ -220,9 +234,9 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	private class ToggleMinimapAction extends Action {
 		private ToggleMinimapAction() {
-			super(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP), IAction.AS_CHECK_BOX);
-			setToolTipText(getFlameviewMessage(FLAMEVIEW_TOGGLE_MINIMAP));
-			setImageDescriptor(flameviewImageDescriptor(FlamegraphImages.ICON_MINIMAP));
+			super(getFlamegraphMessage(FLAMEVIEW_TOGGLE_MINIMAP), IAction.AS_CHECK_BOX);
+			setToolTipText(getFlamegraphMessage(FLAMEVIEW_TOGGLE_MINIMAP));
+			setImageDescriptor(flamegraphImageDescriptor(FlamegraphImages.ICON_MINIMAP));
 
 			setChecked(false);
 		}
@@ -237,9 +251,9 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	private class ResetZoomAction extends Action {
 		private ResetZoomAction() {
-			super(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM), IAction.AS_PUSH_BUTTON);
-			setToolTipText(getFlameviewMessage(FLAMEVIEW_RESET_ZOOM));
-			setImageDescriptor(flameviewImageDescriptor(FlamegraphImages.ICON_RESET_ZOOM));
+			super(getFlamegraphMessage(FLAMEVIEW_RESET_ZOOM), IAction.AS_PUSH_BUTTON);
+			setToolTipText(getFlamegraphMessage(FLAMEVIEW_RESET_ZOOM));
+			setImageDescriptor(flamegraphImageDescriptor(FlamegraphImages.ICON_RESET_ZOOM));
 		}
 
 		@Override
@@ -249,12 +263,18 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	}
 
 	private enum ExportActionType {
-		SAVE_AS(getFlameviewMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench()
-				.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench()
-						.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
-		PRINT(getFlameviewMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
-						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
+		SAVE_AS(
+				getFlamegraphMessage(FLAMEVIEW_SAVE_AS),
+				IAction.AS_PUSH_BUTTON,
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT),
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)
+		),
+		PRINT(
+				getFlamegraphMessage(FLAMEVIEW_PRINT),
+				IAction.AS_PUSH_BUTTON,
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT),
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED)
+		);
 
 		private final String message;
 		private final int action;
@@ -623,10 +643,10 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			var fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
-			fd.setText(getFlameviewMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
+			fd.setText(getFlamegraphMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
 			fd.setFilterNames(new String[]{
-					getFlameviewMessage(FLAMEVIEW_PNG_IMAGE),
-					getFlameviewMessage(FLAMEVIEW_JPEG_IMAGE)
+					getFlamegraphMessage(FLAMEVIEW_PNG_IMAGE),
+					getFlamegraphMessage(FLAMEVIEW_JPEG_IMAGE)
 			});
 			fd.setFilterExtensions(new String[]{"*.png", "*.jpg"}); //$NON-NLS-1$ //$NON-NLS-2$
 			fd.setFileName("flame_graph"); //$NON-NLS-1$
@@ -718,7 +738,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				});
 	}
 
-	private static ImageDescriptor flameviewImageDescriptor(String iconName) {
+	private static ImageDescriptor flamegraphImageDescriptor(String iconName) {
 		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
 	}
 }

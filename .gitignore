@@ -45,7 +45,6 @@ core/coverage/coverage-report
 application/coverage/coverage-report
 
 # Ignore the fetched JS libraries
-application/org.openjdk.jmc.flightrecorder.flameview/src/main/resources/jslibs/
 application/org.openjdk.jmc.flightrecorder.graphview/src/main/resources/jslibs/
 application/org.openjdk.jmc.flightrecorder.heatmap/src/main/resources/jslibs/
 application/org.openjdk.jmc.flightrecorder.dependencyview/src/main/resources/jslibs/

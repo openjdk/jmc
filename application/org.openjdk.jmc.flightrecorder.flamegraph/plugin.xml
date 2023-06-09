@@ -41,7 +41,7 @@
 			class="org.openjdk.jmc.flightrecorder.flamegraph.views.FlamegraphSwingView"
 			icon="icons/flame.png"
 			id="org.openjdk.jmc.flightrecorder.flamegraph"
-			name="%FLAME_VIEW_NAME"/>
+			name="%FLAME_GRAPH_VIEW_NAME"/>
 	</extension>
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">

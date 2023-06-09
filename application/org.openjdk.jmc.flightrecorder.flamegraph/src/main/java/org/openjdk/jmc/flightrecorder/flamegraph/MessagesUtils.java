@@ -49,23 +49,23 @@ public final class MessagesUtils {
 	}
 
 	/**
-	 * Localized Flameview Message
+	 * Localized Flamegraph Message
 	 * 
 	 * @param key
-	 *            flameview message
+	 *            flamegraph message
 	 * @param values
 	 *            message values
 	 * @return message
 	 */
-	public static String getFlameviewMessage(String key, Object ... values) {
+	public static String getFlamegraphMessage(String key, Object ... values) {
 		if (values == null || values.length == 0) {
-			return getFlameviewMessage(key);
+			return getFlamegraphMessage(key);
 		} else {
-			return MessageFormat.format(getFlameviewMessage(key), values);
+			return MessageFormat.format(getFlamegraphMessage(key), values);
 		}
 	}
 
-	private static String getFlameviewMessage(String key) {
+	private static String getFlamegraphMessage(String key) {
 		return org.openjdk.jmc.flightrecorder.flamegraph.Messages.getString(key);
 	}
 
