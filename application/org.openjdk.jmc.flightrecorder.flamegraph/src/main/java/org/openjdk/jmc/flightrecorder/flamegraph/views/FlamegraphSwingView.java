@@ -45,10 +45,20 @@ import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
 import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
 import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
 import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +70,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -105,19 +125,7 @@ import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.stream.Stream;
-
+import static java.util.Collections.emptySet;
 import static java.util.Collections.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
@@ -423,13 +431,13 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 			toolBar.add(new Separator());
 
-			ViewModeAction[] groupByFlamegraphActions = new ViewModeAction[] {
+			var groupByFlamegraphActions = new ViewModeAction[] {
 					new ViewModeAction(GroupActionType.FLAME_GRAPH), new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
 			Stream.of(groupByFlamegraphActions).forEach(toolBar::add);
 
 			toolBar.add(new Separator());
 
-			GroupByAction[] groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
+			var groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
 					new GroupByAction(GroupActionType.THREAD_ROOT)};
 			Stream.of(groupByActions).forEach(toolBar::add);
 
@@ -454,7 +462,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	@Override
 	public void createPartControl(Composite parent) {
-		SashForm container = new SashForm(parent, SWT.HORIZONTAL);
+		var container = new SashForm(parent, SWT.HORIZONTAL);
 		embeddingComposite = new EmbeddingComposite(container);
 		container.setMaximizedControl(embeddingComposite);
 
@@ -470,11 +478,21 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		}
 
 		embeddingComposite.init(() -> {
-			flamegraphView = createFlameGraph(embeddingComposite, tooltip);
-			new ZoomAnimation().install(flamegraphView);
+			var panel = new JPanel(new BorderLayout());
+			{
+				var searchControl = createSearchControl();
+				searchControl.setBackground(bgColorAwtColor);
+				panel.add(searchControl, BorderLayout.NORTH);
+			}
+			{
+				flamegraphView = createFlameGraph(embeddingComposite, tooltip);
+				new ZoomAnimation().install(flamegraphView);
 
-			flamegraphView.component.setBackground(bgColorAwtColor);
-			return flamegraphView.component;
+				flamegraphView.component.setBackground(bgColorAwtColor);
+				panel.add(flamegraphView.component, BorderLayout.CENTER);
+			}
+			panel.setBackground(bgColorAwtColor);
+			return panel;
 		});
 	}
 
@@ -494,6 +512,43 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	@Override
 	public void setFocus() {
 		embeddingComposite.setFocus();
+	}
+
+	private JComponent createSearchControl() {
+		var searchField = new JTextField("", 60);
+
+		searchField.addActionListener(e -> {
+			var searched = searchField.getText();
+			if (searched.isBlank() && flamegraphView != null) {
+				flamegraphView.highlightFrames(emptySet(), searched);
+				return;
+			}
+
+			CompletableFuture.runAsync(() -> {
+				try {
+					if (flamegraphView == null) {
+						return;
+					}
+					var matches = flamegraphView.getFrames().stream().filter(frame -> {
+						var method = frame.actualNode.getFrame().getMethod();
+						return (method.getMethodName().contains(searched)
+								|| method.getType().getTypeName().contains(searched)
+								|| method.getType().getPackage().getName() != null
+										&& method.getType().getPackage().getName().contains(searched))
+								|| method.getType().getPackage().getModule() != null
+										&& method.getType().getPackage().getModule().getName().contains(searched)
+								|| method.getFormalDescriptor().replace('/', '.').contains(searched);
+					}).collect(Collectors.toCollection(() -> Collections.newSetFromMap(new IdentityHashMap<>())));
+					flamegraphView.highlightFrames(matches, searched);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			});
+		});
+		var panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panel.add(new JLabel(getFlamegraphMessage("FLAMEVIEW_SEARCH")));
+		panel.add(searchField);
+		return panel;
 	}
 
 	private FlamegraphView<Node> createFlameGraph(Composite owner, DefaultToolTip tooltip) {
