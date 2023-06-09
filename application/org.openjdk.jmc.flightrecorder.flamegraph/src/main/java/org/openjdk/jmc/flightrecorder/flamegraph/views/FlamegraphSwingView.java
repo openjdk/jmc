@@ -536,6 +536,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 								|| method.getType().getPackage().getName() != null
 										&& method.getType().getPackage().getName().contains(searched))
 								|| method.getType().getPackage().getModule() != null
+										&& method.getType().getPackage().getModule().getName() != null
 										&& method.getType().getPackage().getModule().getName().contains(searched)
 								|| method.getFormalDescriptor().replace('/', '.').contains(searched);
 					}).collect(Collectors.toCollection(() -> Collections.newSetFromMap(new IdentityHashMap<>())));
