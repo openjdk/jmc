@@ -431,8 +431,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 			toolBar.add(new Separator());
 
-			var groupByFlamegraphActions = new ViewModeAction[] {
-					new ViewModeAction(GroupActionType.FLAME_GRAPH), new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
+			var groupByFlamegraphActions = new ViewModeAction[] {new ViewModeAction(GroupActionType.FLAME_GRAPH),
+					new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
 			Stream.of(groupByFlamegraphActions).forEach(toolBar::add);
 
 			toolBar.add(new Separator());
