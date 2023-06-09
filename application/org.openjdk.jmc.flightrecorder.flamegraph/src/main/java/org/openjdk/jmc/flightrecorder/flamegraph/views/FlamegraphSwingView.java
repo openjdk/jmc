@@ -166,16 +166,10 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
 		LAST_FRAME(Messages.STACKTRACE_VIEW_LAST_FRAME, IAction.AS_RADIO_BUTTON, CoreImages.METHOD_NON_OPTIMIZED),
-		ICICLE_GRAPH(
-				getFlamegraphMessage(FLAMEVIEW_ICICLE_GRAPH),
-				IAction.AS_RADIO_BUTTON,
-				flamegraphImageDescriptor(FlamegraphImages.ICON_ICICLE_FLIP)
-		),
-		FLAME_GRAPH(
-				getFlamegraphMessage(FLAMEVIEW_FLAME_GRAPH),
-				IAction.AS_RADIO_BUTTON,
-				flamegraphImageDescriptor(FlamegraphImages.ICON_FLAME_FLIP)
-		);
+		ICICLE_GRAPH(getFlamegraphMessage(FLAMEVIEW_ICICLE_GRAPH), IAction.AS_RADIO_BUTTON, flamegraphImageDescriptor(
+				FlamegraphImages.ICON_ICICLE_FLIP)),
+		FLAME_GRAPH(getFlamegraphMessage(FLAMEVIEW_FLAME_GRAPH), IAction.AS_RADIO_BUTTON, flamegraphImageDescriptor(
+				FlamegraphImages.ICON_FLAME_FLIP));
 
 		private final String message;
 		private final int action;
@@ -263,18 +257,12 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	}
 
 	private enum ExportActionType {
-		SAVE_AS(
-				getFlamegraphMessage(FLAMEVIEW_SAVE_AS),
-				IAction.AS_PUSH_BUTTON,
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT),
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)
-		),
-		PRINT(
-				getFlamegraphMessage(FLAMEVIEW_PRINT),
-				IAction.AS_PUSH_BUTTON,
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT),
-				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED)
-		);
+		SAVE_AS(getFlamegraphMessage(FLAMEVIEW_SAVE_AS), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench()
+				.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT), PlatformUI.getWorkbench()
+						.getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVEAS_EDIT_DISABLED)),
+		PRINT(getFlamegraphMessage(FLAMEVIEW_PRINT), IAction.AS_PUSH_BUTTON, PlatformUI.getWorkbench().getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT), PlatformUI.getWorkbench().getSharedImages()
+						.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED));
 
 		private final String message;
 		private final int action;
@@ -341,12 +329,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			if (attribute != null) {
 				filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
 			}
-			var treeModel = new StacktraceTreeModel(
-					filteredItems,
-					view.frameSeparator,
-					!view.threadRootAtTop,
-					attribute
-			);
+			var treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator, !view.threadRootAtTop,
+					attribute);
 			if (isInvalid) {
 				return;
 			}
@@ -366,16 +350,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		private static List<FrameBox<Node>> convert(StacktraceTreeModel model) {
 			var nodes = new ArrayList<FrameBox<Node>>();
 
-			FrameBox.flattenAndCalculateCoordinate(
-					nodes,
-					model.getRoot(),
-					Node::getChildren,
-					Node::getCumulativeWeight,
-					node -> node.getChildren().stream().mapToDouble(Node::getCumulativeWeight).sum(),
-					0.0d,
-					1.0d,
-					0
-			);
+			FrameBox.flattenAndCalculateCoordinate(nodes, model.getRoot(), Node::getChildren, Node::getCumulativeWeight,
+					node -> node.getChildren().stream().mapToDouble(Node::getCumulativeWeight).sum(), 0.0d, 1.0d, 0);
 
 			return nodes;
 		}
@@ -423,13 +399,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		if (attributeSelection != null) {
 			toolBar.remove(attributeSelection.getId());
 		}
-		attributeSelection = new AttributeSelection(
-				items,
-				attrName,
-				this::getCurrentAttribute,
-				this::setCurrentAttribute,
-				() -> triggerRebuildTask(currentItems)
-		);
+		attributeSelection = new AttributeSelection(items, attrName, this::getCurrentAttribute,
+				this::setCurrentAttribute, () -> triggerRebuildTask(currentItems));
 		toolBar.insertAfter(ATTRIBUTE_SELECTION_SEPARATOR_ID, attributeSelection);
 		toolBar.update(true);
 	}
@@ -452,23 +423,19 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 			toolBar.add(new Separator());
 
-			ViewModeAction[] groupByFlamegraphActions = new ViewModeAction[]{
-					new ViewModeAction(GroupActionType.FLAME_GRAPH),
-					new ViewModeAction(GroupActionType.ICICLE_GRAPH)
-			};
+			ViewModeAction[] groupByFlamegraphActions = new ViewModeAction[] {
+					new ViewModeAction(GroupActionType.FLAME_GRAPH), new ViewModeAction(GroupActionType.ICICLE_GRAPH)};
 			Stream.of(groupByFlamegraphActions).forEach(toolBar::add);
 
 			toolBar.add(new Separator());
 
-			GroupByAction[] groupByActions = new GroupByAction[]{
-					new GroupByAction(GroupActionType.LAST_FRAME),
-					new GroupByAction(GroupActionType.THREAD_ROOT)
-			};
+			GroupByAction[] groupByActions = new GroupByAction[] {new GroupByAction(GroupActionType.LAST_FRAME),
+					new GroupByAction(GroupActionType.THREAD_ROOT)};
 			Stream.of(groupByActions).forEach(toolBar::add);
 
 			toolBar.add(new Separator());
 
-			exportActions = new ExportAction[] { new ExportAction(ExportActionType.SAVE_AS) };
+			exportActions = new ExportAction[] {new ExportAction(ExportActionType.SAVE_AS)};
 			Stream.of(exportActions).forEach((action) -> action.setEnabled(false));
 			Stream.of(exportActions).forEach(toolBar::add);
 
