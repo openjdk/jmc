@@ -314,9 +314,9 @@ public class ChartTextCanvas extends Canvas {
 		@Override
 		public void keyReleased(KeyEvent event) {
 			switch (event.keyCode) {
-				case SWT.CTRL:
-					isCtrlHeld = false;
-					break;
+			case SWT.CTRL:
+				isCtrlHeld = false;
+				break;
 			}
 		}
 	}
