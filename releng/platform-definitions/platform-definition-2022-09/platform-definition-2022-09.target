@@ -56,7 +56,7 @@
             <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1800.v20220720-1949"/>
             <unit id="org.eclipse.pde.feature.group" version="3.14.1300.v20220831-1800"/>
             <unit id="org.eclipse.platform.sdk" version="4.25.0.I20220831-1800"/>
-            <repository location="http://download.eclipse.org/releases/2022-09/"/>
+            <repository location="https://download.eclipse.org/releases/2022-09/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.25.0.v20230221050449"/>
