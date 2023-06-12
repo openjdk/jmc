@@ -304,6 +304,21 @@ public class ChartTextCanvas extends Canvas {
 						redrawChartText();
 						break;
 					}
+				case SWT.ARROW_DOWN:
+					awtChart.selectNextThread(laneHeight);
+					if (selectionListener != null) {
+						selectionListener.run();
+					}
+					redrawChart();
+					redrawChartText();
+					break;
+				case SWT.ARROW_UP:
+					awtChart.selectPrevThread(laneHeight);
+					if (selectionListener != null) {
+						selectionListener.run();
+					}
+					redrawChart();
+					redrawChartText();
 					break;
 				default:
 					// Ignore

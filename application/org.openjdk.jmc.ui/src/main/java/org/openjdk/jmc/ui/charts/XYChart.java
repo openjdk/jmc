@@ -699,6 +699,20 @@ public class XYChart {
 		currentEnd = end;
 	}
 
+	private int selectedThreadHeight;
+
+	public void selectNextThread(int laneHeight) {
+		if (getSelectedRows().length == 1) {
+			select(null, null, selectedThreadHeight + laneHeight, selectedThreadHeight + laneHeight, true);
+		}
+	}
+
+	public void selectPrevThread(int laneHeight) {
+		if (getSelectedRows().length == 1) {
+			select(null, null, selectedThreadHeight - laneHeight, selectedThreadHeight - laneHeight, true);
+		}
+	}
+
 	public boolean select(int x1, int x2, int y1, int y2, boolean clear) {
 		int xStart = Math.min(x1, x2);
 		int xEnd = Math.max(x1, x2);
@@ -724,10 +738,14 @@ public class XYChart {
 		}
 		if (clear) {
 			selectedRows.clear();
+			selectedThreadHeight = 0;
 		}
 		addSelectedRows(rendererResult, 0, Math.min(y1, y2), Math.max(y1, y2));
 		selectionStart = xStart;
 		selectionEnd = xEnd;
+		if (y1 == y2) {
+			selectedThreadHeight = y1;
+		}
 		return (oldRows == null) || !oldRows.equals(selectedRows);
 	}
 
@@ -740,6 +758,7 @@ public class XYChart {
 			return false;
 		}
 		selectedRows.clear();
+		selectedThreadHeight = 0;
 		selectionStart = selectionEnd = null;
 		return true;
 	}
