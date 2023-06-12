@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -622,6 +622,8 @@ public final class JdkAttributes {
 	public static final IAttribute<Boolean> USE_DYNAMIC_GC_THREADS = attr("usesDynamicGCThreads", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS),
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS_DESC), FLAG);
+	public static final IAttribute<IQuantity> GC_TIME = attr("gcTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_TIME_RATIO = attr("gcTimeRatio", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_TIME_RATIO), Messages.getString(Messages.ATTR_GC_TIME_RATIO_DESC),
 			NUMBER);
@@ -713,6 +715,8 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> GC_CLASSSPACE_USED = attr("classSpace:used", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED),
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
+	public static final IAttribute<IQuantity> GC_PAUSE_TARGET = attr("pauseTarget", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_PAUSE_TARGET), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);
