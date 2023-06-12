@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -729,6 +729,10 @@ public class XYChart {
 		selectionStart = xStart;
 		selectionEnd = xEnd;
 		return (oldRows == null) || !oldRows.equals(selectedRows);
+	}
+
+	public void selectAll(int numItems, int laneHeight) {
+		select(0, 0, 0, numItems * laneHeight, true);
 	}
 
 	public boolean clearSelection() {
