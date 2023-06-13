@@ -91,7 +91,7 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return {@code true} of it is a JRockit, {@code false} if it isn't or if it was not possible
+	 * @return {@code true} if it is a JRockit, {@code false} if it isn't or if it was not possible
 	 *         to tell.
 	 */
 	public static boolean isJRockitJVMName(String vmName) {
