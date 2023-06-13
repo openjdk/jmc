@@ -91,7 +91,7 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return {@code true} of it is a JRockit, {@code false} if it isn't or if was not possible to
+	 * @return {@code true} of it is a JRockit, {@code false} if it isn't or if it was not possible to
 	 *         tell.
 	 */
 	public static boolean isJRockitJVMName(String vmName) {
@@ -106,7 +106,7 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return {@code true} if it is a HotSpot, {@code false} if it isn't or if was not possible to
+	 * @return {@code true} if it is a HotSpot, {@code false} if it isn't or if it was not possible to
 	 *         tell.
 	 */
 	public static boolean isHotspotJVMName(String vmName) {
@@ -121,7 +121,7 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the VM name to check.
-	 * @return {@code true} if it is a Substrate VM, {@code false} if it isn't or if was not
+	 * @return {@code true} if it is a Substrate VM, {@code false} if it isn't or if if was not
 	 *         possible to tell.
 	 */
 	public static boolean isSubstrateVMName(String vmName) {
@@ -136,7 +136,7 @@ public class JavaVMVersionToolkit {
 	 *
 	 * @param vmName
 	 *            the JVM name to check.
-	 * @return {@code true} if it is a OpenJDK JVM, {@code false} if it isn't or if was not possible
+	 * @return {@code true} if it is a OpenJDK JVM, {@code false} if it isn't or if it was not possible
 	 *         to tell.
 	 */
 	public static boolean isOpenJDKJVMName(String vmName) {
