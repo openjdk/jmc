@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -87,7 +87,7 @@
 		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
-		<module>org.openjdk.jmc.flightrecorder.flameview</module>
+		<module>org.openjdk.jmc.flightrecorder.flamegraph</module>
 		<module>org.openjdk.jmc.flightrecorder.graphview</module>
 		<module>org.openjdk.jmc.flightrecorder.heatmap</module>
 		<module>org.openjdk.jmc.flightrecorder.dependencyview</module>
