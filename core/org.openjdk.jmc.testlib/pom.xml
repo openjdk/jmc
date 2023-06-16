@@ -35,15 +35,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.core.tests</artifactId>
+		<artifactId>missioncontrol.core</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>testlib</artifactId>
 	<properties>
-		<fail.if.no.tests>false</fail.if.no.tests>
-		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
@@ -54,73 +57,5 @@
 			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.resources.version}</version>
-				<executions>
-					<execution>
-						<id>copy-license</id>
-						<phase>process-resources</phase>
-					</execution>
-					<execution>
-						<id>copy-manifest</id>
-						<phase>process-resources</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven.antrun.version}</version>
-				<executions>
-					<execution>
-						<id>check for manifest</id>
-						<phase>compile</phase>
-					</execution>
-					<execution>
-						<id>fix qualifier</id>
-						<phase>compile</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<phase>package</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-jar</id>
-						<phase>package</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-install</id>
-						<phase>install</phase>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

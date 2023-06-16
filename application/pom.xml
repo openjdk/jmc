@@ -144,11 +144,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common.test</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
@@ -170,11 +165,6 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.test</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
 	</dependencies>

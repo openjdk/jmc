@@ -76,6 +76,8 @@
 		<maven.deploy.version>3.1.1</maven.deploy.version>
 		<maven.gpg.version>3.1.0</maven.gpg.version>
 		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
+		<!-- Versions -->
+		<junit.version>4.13.2</junit.version>
 	</properties>
 	<url>https://jdk.java.net/jmc</url>
 	<licenses>
@@ -124,6 +126,7 @@
 		<module>org.openjdk.jmc.flightrecorder.serializers</module>
 		<module>org.openjdk.jmc.flightrecorder.writer</module>
 		<module>org.openjdk.jmc.jdp</module>
+		<module>org.openjdk.jmc.testlib</module>
 		<module>tests</module>
 	</modules>
 	<profiles>
@@ -144,6 +147,15 @@
 			<url>${snapshot.repo}</url>
 		</snapshotRepository>
 	</distributionManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<pluginManagement>
 			<plugins>

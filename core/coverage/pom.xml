@@ -82,11 +82,15 @@
 			<artifactId>jdp</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>testlib</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Second all the modules in core/tests/ -->
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common.test</artifactId>
-			<type>test-jar</type>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>

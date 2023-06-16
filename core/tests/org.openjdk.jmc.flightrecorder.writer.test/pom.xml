@@ -46,17 +46,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

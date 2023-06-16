@@ -50,7 +50,6 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<jmc.version>${revision}${changelist}</jmc.version>
 	</properties>
 	
 	<modules>
@@ -65,38 +64,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common.test</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.rules</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.serializers</artifactId>
-			<version>${jmc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.writer</artifactId>
-			<version>${jmc.version}</version>
+			<artifactId>testlib</artifactId>
+			<version>${revision}${changelist}</version>
 		</dependency>
 	</dependencies>
 	<profiles>

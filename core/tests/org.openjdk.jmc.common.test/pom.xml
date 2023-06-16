@@ -53,10 +53,6 @@
 			<artifactId>testlib</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<testSourceDirectory>${project.basedir}/src/main/java</testSourceDirectory>

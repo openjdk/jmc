@@ -56,12 +56,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.test</artifactId>
+			<artifactId>testlib</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

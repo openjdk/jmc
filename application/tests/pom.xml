@@ -137,6 +137,13 @@
 			</build>
 		</profile>
 	</profiles>
+	<dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>testlib</artifactId>
+			<version>${revision}${changelist}</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

@@ -6,8 +6,9 @@ Bundle-SymbolicName: org.openjdk.jmc.testlib;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.openjdk.jmc.common,
- org.junit
+Require-Bundle: org.junit,
+ org.openjdk.jmc.common;visibility:=reexport,
+ org.openjdk.jmc.flightrecorder
 Export-Package: org.openjdk.jmc.test,
  org.openjdk.jmc.test.io,
  org.openjdk.jmc.test.mock.item
