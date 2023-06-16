@@ -65,7 +65,7 @@ public class GcStallRule implements IRule {
 	private static final String GC_STALL_RESULT_ID = "GcStall"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED).build();
 
 	@Override

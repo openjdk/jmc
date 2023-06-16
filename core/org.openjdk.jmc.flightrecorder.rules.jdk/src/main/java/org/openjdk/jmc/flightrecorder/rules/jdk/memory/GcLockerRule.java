@@ -79,7 +79,7 @@ public class GcLockerRule implements IRule {
 			.<TypedResult<?>> asList(TypedResult.SCORE, GC_LOCKER_RATIO);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE).build();
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {

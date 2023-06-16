@@ -80,7 +80,7 @@ public class HeapInspectionRule implements IRule {
 			.<TypedResult<?>> asList(TypedResult.SCORE, OBJECT_COUNT_GCS);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED).build();
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE).build();
 
 	@Override
 	public RunnableFuture<IResult> createEvaluation(
