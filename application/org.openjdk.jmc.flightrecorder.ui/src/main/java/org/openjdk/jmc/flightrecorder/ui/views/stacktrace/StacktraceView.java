@@ -1,4 +1,5 @@
 /*
+
  * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -207,6 +208,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private boolean treeLayout;
 	private boolean perDuration;
 	private boolean reducedTree;
+	private boolean updated;
 	private IAction reducedTreeAction;
 	private boolean threadRootAtTop;
 	private IItemCollection itemsToShow;
@@ -769,6 +771,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	private void rebuildModel() {
 		// Release old model before building the new
+		updated = false;
 		setViewerInput(null);
 		CompletableFuture<StacktraceModel> modelPreparer = getModelPreparer(createStacktraceModel(), !treeLayout);
 		modelPreparer.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
@@ -795,8 +798,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setModel(StacktraceModel model) {
-		if (model.equals(createStacktraceModel()) && !viewer.getControl().isDisposed()) {
+		//if (model.equals(createStacktraceModel()) && !viewer.getControl().isDisposed()) {
+		if (!updated && !viewer.getControl().isDisposed()) {
 			setViewerInput(model.getRootFork());
+			updated = true;
 		}
 		List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
 		String attrName = currentAttribute != null ? currentAttribute.getName() : null;
