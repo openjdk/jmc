@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,7 +65,7 @@ public class GcStallRule implements IRule {
 	private static final String GC_STALL_RESULT_ID = "GcStall"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.ENABLED)
+			.addEventType(JdkTypeIDs.GARBAGE_COLLECTION, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.ENABLED).build();
 
 	@Override
