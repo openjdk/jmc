@@ -45,34 +45,6 @@
 		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common.test</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.rules</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.rules.jdk</artifactId>
-			<version>${revision}${changelist}</version>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
