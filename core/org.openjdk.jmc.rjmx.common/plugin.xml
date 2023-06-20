@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   
+   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+   
+   The contents of this file are subject to the terms of either the Universal Permissive License 
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   
+   or the following license:
+   
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+   
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+   
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+   
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="service" name="JMX Services" schema="schema/service.exsd"/>
+   <extension-point id="attributeTransformation" name="MBean Attribute Transformation" schema="schema/attributeTransformation.exsd"/>
+   <extension-point id="syntheticattribute" name="Synthetic MBeans and Attributes" schema="schema/syntheticattribute.exsd"/>
+   <extension-point id="syntheticnotification" name="Synthetic MBeans Notification" schema="schema/syntheticnotification.exsd"/>
+   <extension-point id="actionProvider" name="Action Provider" schema="schema/actionProvider.exsd"/>
+   <extension-point id="descriptorProvider" name="Connection Descriptor Provider" schema="schema/descriptorProvider.exsd"/>
+   <extension-point id="metadataprovider" name="MRI Metadata Provider" schema="schema/metadataprovider.exsd"/>
+   <extension-point id="triggerConstraints" name="Trigger Constraints" schema="schema/triggerConstraints.exsd"/>
+   <extension-point id="triggerActions" name="Trigger Actions" schema="schema/triggerActions.exsd"/>
+   <extension-point id="triggerEvaluators" name="Trigger Evaluators" schema="schema/triggerEvaluators.exsd"/>
+   <extension-point id="triggerActionExceptionHandlers" name="Trigger Action Exception Handlers" schema="schema/triggerActionExceptionHandlers.exsd"/>
+  
+   <extension
+         point="org.openjdk.jmc.rjmx.service">
+      <service
+            factory="org.openjdk.jmc.rjmx.services.internal.DiagnosticCommandServiceFactory"
+            description="Diagnostic Commands"
+            name="Diagnostic Commands">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.services.internal.SubscriptionServiceFactory"
+            description="Service for controlling the client side attribute subscription engine"
+            name="Subscription Engine">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.services.internal.MRIMetadataServiceFactory"
+            description="Service for getting attribute subscription related information and metadata"
+            name="Attribute Info">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.services.internal.AttributeStorageServiceFactory"
+            description="Service for storing attribute values"
+            name="Attribute Storage">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.services.internal.CommercialFeaturesServiceFactory"
+            description="Service for checking and enabling the state of the commercial features in hotspot."
+            name="Commercial Features">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.persistence.internal.PersistenceServiceFactory"
+            description="Service for controlling data persistence"
+            name="Data Persistence Service">
+      </service>
+   </extension>
+
+	<extension
+            point="org.eclipse.core.runtime.adapters">
+         <factory
+               adaptableType="org.openjdk.jmc.ui.common.action.IActionProvider"
+               class="org.openjdk.jmc.rjmx.actionprovider.internal.DefaultActionFactory">
+            <adapter
+                  type="org.openjdk.jmc.ui.common.action.IUserAction">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.openjdk.jmc.rjmx.servermodel.IServer"
+               class="org.openjdk.jmc.rjmx.actionprovider.internal.DefaultActionFactory">
+            <adapter
+                  type="org.openjdk.jmc.ui.common.action.IUserAction">
+            </adapter>
+         </factory>
+      </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.syntheticattribute">
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Memory/FreeHeapMemory"
+            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            readable="true"
+            type="long"
+            writeable="false">
+         <properties>
+            <string
+                  key="minuend"
+                  value="attribute://java.lang:type=Memory/HeapMemoryUsage/committed">
+            </string>
+            <string
+                  key="subtrahend"
+                  value="attribute://java.lang:type=Memory/HeapMemoryUsage/used">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Memory/FreeNonHeapMemory"
+            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            readable="true"
+            type="long"
+            writeable="false">
+         <properties>
+            <string
+                  key="minuend"
+                  value="attribute://java.lang:type=Memory/NonHeapMemoryUsage/committed">
+            </string>
+            <string
+                  key="subtrahend"
+                  value="attribute://java.lang:type=Memory/NonHeapMemoryUsage/used">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Memory/HeapMemoryUsagePercent"
+            class="org.openjdk.jmc.rjmx.subscription.internal.DivisionAttribute"
+            readable="true"
+            type="double"
+            writeable="false">
+         <properties>
+            <string
+                  key="dividend"
+                  value="attribute://java.lang:type=Memory/HeapMemoryUsage/used">
+            </string>
+            <string
+                  key="divisor"
+                  value="attribute://java.lang:type=Memory/HeapMemoryUsage/committed">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=OperatingSystem/PhysicalMemoryUsagePercent"
+            class="org.openjdk.jmc.rjmx.subscription.internal.DivisionAttribute"
+            readable="true"
+            type="double"
+            writeable="false">
+         <properties>
+            <string
+                  key="dividend"
+                  value="attribute://java.lang:type=OperatingSystem/UsedPhysicalMemorySize">
+            </string>
+            <string
+                  key="divisor"
+                  value="attribute://java.lang:type=OperatingSystem/TotalPhysicalMemorySize">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=OperatingSystem/UsedPhysicalMemorySize"
+            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            readable="true"
+            type="long"
+            writeable="false">
+         <properties>
+            <string
+                  key="minuend"
+                  value="attribute://java.lang:type=OperatingSystem/TotalPhysicalMemorySize">
+            </string>
+            <string
+                  key="subtrahend"
+                  value="attribute://java.lang:type=OperatingSystem/FreePhysicalMemorySize">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=OperatingSystem/UsedSwapSpaceSize"
+            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            readable="true"
+            type="long"
+            writeable="false">
+         <properties>
+            <string
+                  key="minuend"
+                  value="attribute://java.lang:type=OperatingSystem/TotalSwapSpaceSize">
+            </string>
+            <string
+                  key="subtrahend"
+                  value="attribute://java.lang:type=OperatingSystem/FreeSwapSpaceSize">
+            </string>
+         </properties>
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Threading/DeadlockedThreadCount"
+            class="org.openjdk.jmc.rjmx.subscription.internal.DeadlockedThreadCountAttribute"
+            readable="true"
+            type="int"
+            writeable="false">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://java.lang:type=Threading/MonitoredDeadlockedThreadCount"
+            class="org.openjdk.jmc.rjmx.subscription.internal.MonitoredDeadlockedThreadCountAttribute"
+            readable="true"
+            type="int"
+            writeable="false">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://com.sun.management:type=GarbageCollectionAggregator/HeapLiveSet"
+            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotLiveSetAttribute"
+            description="The remaining heap memory after the last major GC, measured in percent of committed heap."
+            readable="true"
+            type="double"
+            writeable="false">
+      </syntheticAttribute>
+      <syntheticAttribute
+            attributeName="attribute://com.sun.management:type=GarbageCollectionAggregator/LastGcInfo"
+            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotLastGcAttribute"
+            description="Information from the last time a garbage collection took place."
+            readable="true"
+            type="javax.management.openmbean.CompositeData"
+            writeable="false">
+      </syntheticAttribute>
+   </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.syntheticnotification">
+      <syntheticNotification
+            notificationName="notification://com.sun.management:type=GarbageCollectionAggregator/com.sun.management.gc.notification"
+            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotGcNotification"
+            description="Sends an event every time a garbage collection has taken place."
+            message=""
+            type="javax.management.openmbean.CompositeData" />
+   </extension>
+
+	<extension
+         point="org.openjdk.jmc.rjmx.triggerActions">
+      <triggerAction
+            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionMail"
+            description="%TRIGGER_ACTION_EMAIL_DESCRIPTION"
+            icon="icons/send-email-16.png"
+            id="org.openjdk.jmc.rjmx.triggers.actions.TriggerActionMail"
+            name="%TRIGGER_ACTION_EMAIL_NAME">      
+         <string
+               description="%TRIGGER_ACTION_EMAIL_SENDER_DESCRIPTION"
+               id="email_from"
+               name="%TRIGGER_ACTION_EMAIL_SENDER_LABEL"
+               preference="false"/>
+         <string
+               description="%TRIGGER_ACTION_EMAIL_RECEIVER_DESCRIPTION"
+               id="email_to"
+               name="%TRIGGER_ACTION_EMAIL_RECEIVER_LABEL"
+               preference="false"/>
+         <string
+               description="%TRIGGER_ACTION_EMAIL_CC_DESCRIPTION"
+               id="email_cc"
+               name="%TRIGGER_ACTION_EMAIL_CC_LABEL"
+               preference="false"/>
+      </triggerAction>
+      <triggerAction
+            name="%TRIGGER_ACTION_HPROF_NAME"
+            icon="icons/hprof-16.png"
+            description="%TRIGGER_ACTION_HPROF_DESCRIPTION"
+            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionHPROF"
+            id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionHPROF">
+         <boolean
+               description="%TRIGGER_ACTION_HPROF_ONLY_LIVE_DESCRIPTION"
+               id="only_live"
+               name="%TRIGGER_ACTION_HPROF_ONLY_LIVE_NAME"
+               value="true">
+         </boolean>
+         <string
+               description="%TRIGGER_ACTION_HPROF_FILENAME_DESCRIPTION"
+               id="filename"
+               name="%TRIGGER_ACTION_HPROF_FILENAME_NAME"
+               value="default.hprof">
+         </string>
+      </triggerAction>
+
+      <triggerAction
+            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionDiagnosticCommand"
+            description="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_DESCRIPTION"
+            icon="icons/diagnostic-command-16.png"
+            id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionDiagnosticCommand"
+            name="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_NAME">
+         <file
+               description="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_LOG_FILE_DESCRIPTION"
+               id="log_file"
+               name="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_LOG_FILE_NAME"
+               value="command.log"/>
+         <boolean
+               description="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_APPEND_DESCRIPTION"
+               id="append"
+               name="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_APPEND_NAME"
+               value="true"/>
+         <string
+               description="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_COMMAND_DESCRIPTION"
+               id="command"
+               name="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_COMMAND_NAME"
+               value="Thread.print"/>
+      </triggerAction>
+
+      <!-- Activate extension when we have a working headless console
+			      <triggerAction
+			            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionDigest"
+			            description="%TRIGGER_ACTION_DIGEST_DESCRIPTION"
+			            icon="icons/send-email-16.png"
+			            id="org.openjdk.jmc.rjmx.triggers.actions.TriggerActionDigest"
+			            name="%TRIGGER_ACTION_DIGEST_NAME">
+			     	<integer
+			               description="How often reports should be sent, in minutes."
+			               id="report_interval"
+			               label="%TRIGGER_ACTION_DIGEST_REPORT_INTERVAL"
+			               min="1"
+			               value="120"/>
+			         <string
+			               description="%TRIGGER_ACTION_EMAIL_SMTP_DESCRIPTION"
+			               id="smtp_server"
+			               label="%TRIGGER_ACTION_EMAIL_SMTP_LABEL"
+			               preference="true"/>
+			         <string
+			               description="%TRIGGER_ACTION_EMAIL_SENDER_DESCRIPTION"
+			               id="email_from"
+			               label="%TRIGGER_ACTION_EMAIL_SENDER_LABEL"
+			               preference="false"/>
+			         <string
+			               description="%TRIGGER_ACTION_EMAIL_RECEIVER_DESCRIPTION"
+			               id="email_to"
+			               label="%TRIGGER_ACTION_EMAIL_RECEIVER_LABEL"
+			               preference="true"/>
+			         <string
+			               description="%TRIGGER_ACTION_EMAIL_CC_DESCRIPTION"
+			               id="email_cc"
+			               label="%TRIGGER_ACTION_EMAIL_CC_LABEL"
+			               preference="true"/>
+			         <string
+			               description="%TRIGGER_ACTION_EMAIL_BCC_DESCRIPTION"
+			               id="email_bcc"
+			               label="%TRIGGER_ACTION_EMAIL_BCC_LABEL"
+			               preference="true"/>
+			      </triggerAction>
+       -->
+
+      <triggerAction
+            name="%TRIGGER_ACTION_LOG_TO_FILE_NAME"
+            icon="icons/console_view.png"
+            description="%TRIGGER_ACTION_LOG_TO_FILE_DESCRIPTION"
+            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionLogToFile"
+            id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionLogToFile">
+         <file
+               description="%TRIGGER_ACTION_LOG_TO_FILE_FILENAME_DESCRIPTION"
+               id="filename"
+               name="%TRIGGER_ACTION_LOG_TO_FILE_FILENAME_NAME"
+               value="log.txt">
+         </file>
+      </triggerAction>
+      
+      <triggerAction
+            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionSystemOut"
+            description="%TRIGGER_ACTION_SYSTEM_OUT_DESCRIPTION"
+            icon="icons/console_view.png"
+            id="org.openjdk.jmc.rjmx.triggers.actions.TriggerActionSystemOut"
+            name="%TRIGGER_ACTION_SYSTEM_OUT_NAME"/>
+   </extension>
+
+   <extension
+         point="org.openjdk.jmc.rjmx.triggerConstraints">
+      <triggerConstraint
+            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintDateRange"
+            description="%TRIGGER_CONSTRAINT_DATE_RANGE_DESCRIPTION"
+            icon="icons/date-span-16.png"
+            id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintDateRange"
+            name="%TRIGGER_CONSTRAINT_DATE_RANGE_NAME">
+         <date
+               description="%TRIGGER_CONSTRAINT_DATE_RANGE_FROM_DESCRIPTION"
+               id="from"
+               name="%TRIGGER_CONSTRAINT_DATE_RANGE_FROM_LABEL"/>
+         <date
+               description="%TRIGGER_CONSTRAINT_DATE_RANGE_TO_DESCRIPTION"
+               id="to"
+               name="%TRIGGER_CONSTRAINT_DATE_RANGE_TO_LABEL"/>
+      </triggerConstraint>
+      <triggerConstraint
+            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintTimeRange"
+            description="%TRIGGER_CONSTRAINT_TIME_RANGE_DESCRIPTION"
+            icon="icons/time-span-16.png"
+            id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintTimeRange"
+            name="%TRIGGER_CONSTRAINT_TIME_RANGE_NAME">
+         <time
+               description="%TRIGGER_CONSTRAINT_TIME_RANGE_FROM_DESCRIPTION"
+               id="from"
+               name="%TRIGGER_CONSTRAINT_TIME_RANGE_FROM_LABEL"/>
+         <time
+               description="%TRIGGER_CONSTRAINT_TIME_RANGE_TO_DESCRIPTION"
+               id="to"
+               name="%TRIGGER_CONSTRAINT_TIME_RANGE_TO_LABEL"/>
+      </triggerConstraint>
+      <triggerConstraint
+            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintDayOfWeek"
+            description="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_DESCRIPTION"
+            icon="icons/day-of-week-16.png"
+            id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintDayOfWeek"
+            name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_NAME">
+         <boolean
+               id="monday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_MONDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="tuesday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_TUESDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="wednesday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_WEDNESDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="thursday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_THURSDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="friday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_FRIDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="saturday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_SATURDAY_LABEL"
+               value="true"/>
+         <boolean
+               id="sunday"
+               name="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_SUNDAY_LABEL"
+               value="true"/>
+      </triggerConstraint>
+   </extension>
+   
+    <extension
+         point="org.openjdk.jmc.rjmx.triggerEvaluators">
+      <triggerEvaluator
+            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorBoolean"
+            description="A true boolean value evaluator"
+            id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorBoolean"
+            name="ValueEvaluatorBoolean">
+      </triggerEvaluator>
+      <triggerEvaluator
+            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax"
+            description="A maximum number value evaluator"
+            id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorNumberMax"
+            name="ValueEvaluatorNumberMax">
+      </triggerEvaluator>
+      <triggerEvaluator
+            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMin"
+            description="A minimum number value evaluator"
+            id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorNumberMin"
+            name="ValueEvaluatorNumberMin">
+      </triggerEvaluator>
+      <triggerEvaluator
+            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorStringMatch"
+            description="An equal String value evaluator"
+            id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorStringMatch"
+            name="ValueEvaluatorStringMatch">
+      </triggerEvaluator>
+   </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.triggerActionExceptionHandlers">
+      <exceptionHandler
+            class="org.openjdk.jmc.rjmx.triggers.internal.DefaultExceptionHandler">
+      </exceptionHandler>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.openjdk.jmc.rjmx.preferences.Initializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.openjdk.jmc.rjmx.attributeTransformation">
+      <attributeTransformation
+            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            transformationName="difference">
+         <property name="visualizeLabel" value="%DIFFERENCE_TRANSFORMATION_VISUALIZATION_LABEL" />
+         <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
+         <transformationProperties>
+            <property name="displayName" value="%DIFFERENCE_TRANSFORMATION_DISPLAY_NAME" />
+         </transformationProperties>
+      </attributeTransformation>
+      <attributeTransformation
+            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            transformationName="rate">
+         <property name="visualizeLabel" value="%RATE_TRANSFORMATION_VISUALIZATION_LABEL" />
+         <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
+         <transformationProperties>
+            <property name="displayName" value="%RATE_TRANSFORMATION_DISPLAY_NAME" />
+            <property name="rate" value="1000" />
+         </transformationProperties>
+      </attributeTransformation>
+      <attributeTransformation
+            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            transformationName="average">
+         <property name="visualizeLabel" value="%AVERAGE_TRANSFORMATION_VISUALIZATION_LABEL" />
+         <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.AverageTransformation" />
+         <transformationProperties>
+         	<property name="terms" value="30" />
+            <property name="displayName" value="%AVERAGE_TRANSFORMATION_DISPLAY_NAME" />
+         </transformationProperties>
+      </attributeTransformation>
+      <attributeTransformation
+            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            transformationName="delta">
+         <property name="visualizeLabel" value="%DELTA_TRANSFORMATION_VISUALIZATION_LABEL" />
+         <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DeltaTransformation" />
+         <transformationProperties>
+            <property name="displayName" value="%DELTA_TRANSFORMATION_DISPLAY_NAME" />
+         </transformationProperties>
+      </attributeTransformation>
+   </extension>   
+</plugin>

@@ -1,0 +1,5 @@
+This plug-in is the osgi headless layer plug-in for RJMX. It exposes a life cycle for RJMX and 
+extension points for plugging into RJMX using equinox. 
+
+Internal packages are not supposed to be relied upon by external parties. 
+They are subject to change or removed completely.
