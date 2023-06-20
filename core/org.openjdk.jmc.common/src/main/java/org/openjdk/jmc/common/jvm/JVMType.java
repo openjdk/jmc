@@ -47,6 +47,10 @@ public enum JVMType {
 	 */
 	HOTSPOT,
 	/**
+	 * The JVM is Substrate VM.
+	 */
+	SUBSTRATE,
+	/**
 	 * The JVM is unknown.
 	 */
 	UNKNOWN,
@@ -67,6 +71,8 @@ public enum JVMType {
 			return JVMType.JROCKIT;
 		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
 			return JVMType.HOTSPOT;
+		} else if (JavaVMVersionToolkit.isSubstrateVMName(jvmName)) {
+			return JVMType.SUBSTRATE;
 		}
 		return JVMType.OTHER;
 	}
