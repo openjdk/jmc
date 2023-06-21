@@ -36,6 +36,7 @@ package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -132,6 +133,25 @@ public class StacktraceTreeModel {
 	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
 			IAttribute<IQuantity> attribute) {
+		this(items, frameSeparator, invertedStacks, attribute, () -> false);
+	}
+
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events.
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 * @param frameSeparator
+	 *            defines what represents a node in the tree. Defaults to METHOD.
+	 * @param invertedStacks
+	 *            defines how the stacks are aggregated. Defaults to false (i.e. bottom-up,
+	 *            Thread.run() at the root of the tree).
+	 * @param attribute
+	 *            defines what we use as node weights. If null, the weight is the number of
+	 *            occurrences for the frame.
+	 */
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
+			IAttribute<IQuantity> attribute, BooleanSupplier stopFlag) {
 		this.items = items;
 		this.frameSeparator = frameSeparator;
 		this.attribute = attribute;
@@ -140,6 +160,9 @@ public class StacktraceTreeModel {
 		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
 		this.root = Node.newRootNode(rootFrame);
 		for (IItemIterable iterable : items) {
+			if (stopFlag.getAsBoolean()) {
+				return;
+			}
 			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = getAccessor(iterable, EVENT_STACKTRACE);
 			if (stacktraceAccessor == null) {
 				continue;
