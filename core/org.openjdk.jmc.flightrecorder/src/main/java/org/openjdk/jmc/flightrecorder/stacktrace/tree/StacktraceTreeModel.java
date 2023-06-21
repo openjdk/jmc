@@ -243,13 +243,19 @@ public class StacktraceTreeModel {
 	}
 
 	private Node getOrCreateNode(Node parent, AggregatableFrame frame) {
-		return parent.children.stream()
-				// TODO: consider a map lookup instead of linear search
-				.filter(child -> child.getFrame().equals(frame)).findAny().orElseGet(() -> {
-					Node result = new Node(parent, frame);
-					parent.children.add(result);
-					return result;
-				});
+		Node result = null;
+		// TODO: consider a map lookup instead of linear search
+		for (final var child : parent.children) {
+			if (child.getFrame().equals(frame)) {
+				result = child;
+				break;
+			}
+		}
+		if (result == null) {
+			result = new Node(parent, frame);
+			parent.children.add(result);
+		}
+		return result;
 	}
 
 	private static <T> IMemberAccessor<T, IItem> getAccessor(IItemIterable iterable, IAttribute<T> attr) {
