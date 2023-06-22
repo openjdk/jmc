@@ -168,7 +168,9 @@ public class StacktraceTreeModel {
 				continue;
 			}
 			IMemberAccessor<IQuantity, IItem> quantityAccessor = getAccessor(iterable, attribute);
-			iterable.forEach((item) -> addItem(item, stacktraceAccessor, quantityAccessor));
+			for (final var item : iterable) {
+				addItem(item, stacktraceAccessor, quantityAccessor);
+			}
 		}
 	}
 
