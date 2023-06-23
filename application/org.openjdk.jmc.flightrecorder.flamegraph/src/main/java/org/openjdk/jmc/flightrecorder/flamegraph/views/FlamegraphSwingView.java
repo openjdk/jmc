@@ -361,7 +361,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				}
 			} finally {
 				final var duration = Duration.ofMillis(System.currentTimeMillis() - start);
-				FlightRecorderUI.getDefault().getLogger().info("model rebuild in " + duration);
+				FlightRecorderUI.getDefault().getLogger()
+						.info("model rebuild with isInvalid:" + isInvalid + " in " + duration);
 			}
 		}
 

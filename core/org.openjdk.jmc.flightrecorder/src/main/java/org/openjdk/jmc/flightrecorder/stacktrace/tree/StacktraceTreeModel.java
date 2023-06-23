@@ -137,7 +137,10 @@ public class StacktraceTreeModel {
 	}
 
 	/**
-	 * Builds a StacktraceTreeModel from a given collection of events.
+	 * Builds a StacktraceTreeModel from a given collection of events. Given that creating this
+	 * object can be very time consuming, this constructor supports early termination using the stop
+	 * flag. If the constructor was terminated using the stop flag the object is in an invalid state
+	 * and should not be used.
 	 *
 	 * @param items
 	 *            the data we want to represent.
@@ -149,6 +152,9 @@ public class StacktraceTreeModel {
 	 * @param attribute
 	 *            defines what we use as node weights. If null, the weight is the number of
 	 *            occurrences for the frame.
+	 * @param stopFlag
+	 *            enables concurrent interruption. The stop flag is polled and if it every returns
+	 *            true the constructor will return early.
 	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
 			IAttribute<IQuantity> attribute, BooleanSupplier stopFlag) {
@@ -169,6 +175,9 @@ public class StacktraceTreeModel {
 			}
 			IMemberAccessor<IQuantity, IItem> quantityAccessor = getAccessor(iterable, attribute);
 			for (final var item : iterable) {
+				if (stopFlag.getAsBoolean()) {
+					return;
+				}
 				addItem(item, stacktraceAccessor, quantityAccessor);
 			}
 		}
