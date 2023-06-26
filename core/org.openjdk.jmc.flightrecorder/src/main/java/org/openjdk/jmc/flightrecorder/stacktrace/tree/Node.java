@@ -42,12 +42,6 @@ import java.util.Objects;
  * A node in the graph of aggregated stack traces.
  */
 public final class Node {
-	private static final Object NOT_COMPUTED = new Object();
-
-	/**
-	 * Integer uniquely identifying this node within our data structure.
-	 */
-	private Object nodeId = NOT_COMPUTED;
 
 	/**
 	 * The frame associated with this node.
@@ -84,20 +78,6 @@ public final class Node {
 		if (frame == null) {
 			throw new NullPointerException("Frame cannot be null!");
 		}
-	}
-
-	private static Integer computeNodeId(Node parent, AggregatableFrame frame) {
-		return Objects.hash(parent != null ? parent.getNodeId() : null, frame.hashCode());
-	}
-
-	/**
-	 * @return the unique identifier associated with this node.
-	 */
-	public Integer getNodeId() {
-		if (nodeId == NOT_COMPUTED) {
-			nodeId = computeNodeId(parent, frame);
-		}
-		return (Integer) nodeId;
 	}
 
 	/**
@@ -159,8 +139,8 @@ public final class Node {
 			return false;
 		Node other = (Node) obj;
 
-		return Objects.equals(getNodeId(), other.getNodeId()) && Objects.equals(frame, other.frame)
-				&& weight == other.weight && cumulativeWeight == other.cumulativeWeight;
+		return Objects.equals(parent, other.parent) && Objects.equals(frame, other.frame) && weight == other.weight
+				&& cumulativeWeight == other.cumulativeWeight;
 	}
 
 	@Override
