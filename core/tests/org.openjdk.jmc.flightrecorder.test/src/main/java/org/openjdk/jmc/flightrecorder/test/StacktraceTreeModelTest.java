@@ -33,6 +33,9 @@
  */
 package org.openjdk.jmc.flightrecorder.test;
 
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,9 +54,6 @@ import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 import org.openjdk.jmc.flightrecorder.test.util.StacktraceTestToolkit;
 import org.openjdk.jmc.test.io.IOResourceSet;
-
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 
 public class StacktraceTreeModelTest {
 
@@ -87,6 +87,25 @@ public class StacktraceTreeModelTest {
 		expected.put("TimerThread.mainLoop()", asList(112.0 / 1024));
 		expected.put("AbstractCollection.toArray()", asList(24.0 / 1024));
 		assertEquals(expected, leafValues);
+	}
+
+	@Test
+	public void testTreeModelStopFlag() {
+		// when the stop flag is always set from the start the nodes should not be populated past the root
+		{
+			final var model = new StacktraceTreeModel(testRecording, separator, false, JdkAttributes.ALLOCATION_SIZE,
+					() -> true);
+			final var root = model.getRoot();
+			assertEquals(0, root.getChildren().size());
+		}
+		// sanity check that when the stop flag is never set the root node contains at least something
+		// the rest of the expected content of the nodes is checked in other tests
+		{
+			final var model = new StacktraceTreeModel(testRecording, separator, false, JdkAttributes.ALLOCATION_SIZE,
+					() -> false);
+			final var root = model.getRoot();
+			assertEquals(3, root.getChildren().size());
+		}
 	}
 
 	@Test
