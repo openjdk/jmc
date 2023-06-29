@@ -43,16 +43,4 @@
 	<properties>
 		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<pomDependencies>consider</pomDependencies>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
