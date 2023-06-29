@@ -42,21 +42,16 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.graphview</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<properties>
-		<download.maven.plugin.version>1.6.7</download.maven.plugin.version>
 		<download-maven-plugin.phase>process-resources</download-maven-plugin.phase>
 		<download-maven-plugin.output>${project.basedir}/src/main/resources/jslibs</download-maven-plugin.output>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotless.config.path.js>${basedir}/../../configuration/ide/eclipse/formatting/formattingjs.xml</spotless.config.path.js>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.googlecode.maven-download-plugin</groupId>
 				<artifactId>download-maven-plugin</artifactId>
-				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>download-d3</id>

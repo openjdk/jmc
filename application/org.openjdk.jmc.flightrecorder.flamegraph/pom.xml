@@ -42,9 +42,7 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.flamegraph</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotless.config.path.js>${basedir}/../../configuration/ide/eclipse/formatting/formattingjs.xml</spotless.config.path.js>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
 </project>

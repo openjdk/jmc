@@ -40,17 +40,11 @@
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
 	</properties>
-
 	<modules>
 		<module>org.openjdk.jmc.alert</module>
 		<module>org.openjdk.jmc.attach</module>

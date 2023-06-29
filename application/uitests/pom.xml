@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -40,7 +40,6 @@
 	</parent>
 	<artifactId>missioncontrol.application.uitests</artifactId>
 	<packaging>pom</packaging>
-
 	<properties>
 		<ui.test.vmargs>-XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:+FlightRecorder -Djava.net.preferIPv4Stack=true -Djdk.attach.allowAttachSelf=true --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED --add-exports=java.management/sun.management=ALL-UNNAMED --add-exports=java.management/sun.management.counter.perf=ALL-UNNAMED --add-exports=jdk.management.agent/jdk.internal.agent=ALL-UNNAMED --add-exports=jdk.attach/sun.tools.attach=ALL-UNNAMED --add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=jdk.attach/sun.tools.attach=ALL-UNNAMED</ui.test.vmargs>
 		<ui.test.osvmargs/>
@@ -49,9 +48,8 @@
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<ui.test.excludes>**/uitest/**,${test.excludes.default}</ui.test.excludes>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
-	
 	<modules>
 		<module>org.openjdk.jmc.browser.uitest</module>
 		<module>org.openjdk.jmc.console.jconsole.uitest</module>
@@ -206,7 +204,7 @@
 			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>1.1</version>
+				<version>${maven.toolchains.version}</version>
 				<executions>
 					<execution>
 						<goals>

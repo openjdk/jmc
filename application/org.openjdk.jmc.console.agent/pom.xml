@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
+<!--
+   Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
    Copyright (c) 2021, Red Hat Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
    or the following license:
@@ -41,8 +41,7 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.console.agent</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
 </project>
