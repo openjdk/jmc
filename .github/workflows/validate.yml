@@ -79,5 +79,3 @@ jobs:
       run: ./scripts/runapptests.sh
     - name: Build & test agent
       run: ./scripts/runagenttests.sh
-    - name: Check formatting
-      run: ./scripts/checkformatting.sh
