@@ -8,11 +8,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.common,
  org.openjdk.jmc.rjmx
-Import-Package: org.openjdk.jmc.rjmx,
- org.openjdk.jmc.rjmx.services,
- org.openjdk.jmc.rjmx.services.internal,
- org.openjdk.jmc.rjmx.subscription,
- org.eclipse.osgi.util
+Import-Package: org.eclipse.osgi.util,
+ org.openjdk.jmc.rjmx.common,
+ org.openjdk.jmc.rjmx.common.services,
+ org.openjdk.jmc.rjmx.common.services.internal,
+ org.openjdk.jmc.rjmx.common.subscription
 Export-Package: org.openjdk.jmc.rjmx.services.jfr,
  org.openjdk.jmc.rjmx.services.jfr.internal;x-friends:="org.openjdk.jmc.rjmx.services.jfr.test"
 Automatic-Module-Name: org.openjdk.jmc.rjmx.services.jfr

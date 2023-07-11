@@ -48,27 +48,27 @@
    <extension
          point="org.openjdk.jmc.rjmx.service">
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.DiagnosticCommandServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.DiagnosticCommandServiceFactory"
             description="Diagnostic Commands"
             name="Diagnostic Commands">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.SubscriptionServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.SubscriptionServiceFactory"
             description="Service for controlling the client side attribute subscription engine"
             name="Subscription Engine">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.MRIMetadataServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.MRIMetadataServiceFactory"
             description="Service for getting attribute subscription related information and metadata"
             name="Attribute Info">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.AttributeStorageServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.AttributeStorageServiceFactory"
             description="Service for storing attribute values"
             name="Attribute Storage">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.CommercialFeaturesServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.CommercialFeaturesServiceFactory"
             description="Service for checking and enabling the state of the commercial features in hotspot."
             name="Commercial Features">
       </service>
@@ -100,7 +100,7 @@
          point="org.openjdk.jmc.rjmx.syntheticattribute">
       <syntheticAttribute
             attributeName="attribute://java.lang:type=Memory/FreeHeapMemory"
-            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.LongDifferenceAttribute"
             readable="true"
             type="long"
             writeable="false">
@@ -117,7 +117,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=Memory/FreeNonHeapMemory"
-            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.LongDifferenceAttribute"
             readable="true"
             type="long"
             writeable="false">
@@ -134,7 +134,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=Memory/HeapMemoryUsagePercent"
-            class="org.openjdk.jmc.rjmx.subscription.internal.DivisionAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.DivisionAttribute"
             readable="true"
             type="double"
             writeable="false">
@@ -151,7 +151,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=OperatingSystem/PhysicalMemoryUsagePercent"
-            class="org.openjdk.jmc.rjmx.subscription.internal.DivisionAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.DivisionAttribute"
             readable="true"
             type="double"
             writeable="false">
@@ -168,7 +168,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=OperatingSystem/UsedPhysicalMemorySize"
-            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.LongDifferenceAttribute"
             readable="true"
             type="long"
             writeable="false">
@@ -185,7 +185,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=OperatingSystem/UsedSwapSpaceSize"
-            class="org.openjdk.jmc.rjmx.subscription.internal.LongDifferenceAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.LongDifferenceAttribute"
             readable="true"
             type="long"
             writeable="false">
@@ -202,21 +202,21 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=Threading/DeadlockedThreadCount"
-            class="org.openjdk.jmc.rjmx.subscription.internal.DeadlockedThreadCountAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.DeadlockedThreadCountAttribute"
             readable="true"
             type="int"
             writeable="false">
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://java.lang:type=Threading/MonitoredDeadlockedThreadCount"
-            class="org.openjdk.jmc.rjmx.subscription.internal.MonitoredDeadlockedThreadCountAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.MonitoredDeadlockedThreadCountAttribute"
             readable="true"
             type="int"
             writeable="false">
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://com.sun.management:type=GarbageCollectionAggregator/HeapLiveSet"
-            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotLiveSetAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.HotSpotLiveSetAttribute"
             description="The remaining heap memory after the last major GC, measured in percent of committed heap."
             readable="true"
             type="double"
@@ -224,7 +224,7 @@
       </syntheticAttribute>
       <syntheticAttribute
             attributeName="attribute://com.sun.management:type=GarbageCollectionAggregator/LastGcInfo"
-            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotLastGcAttribute"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.HotSpotLastGcAttribute"
             description="Information from the last time a garbage collection took place."
             readable="true"
             type="javax.management.openmbean.CompositeData"
@@ -235,7 +235,7 @@
          point="org.openjdk.jmc.rjmx.syntheticnotification">
       <syntheticNotification
             notificationName="notification://com.sun.management:type=GarbageCollectionAggregator/com.sun.management.gc.notification"
-            class="org.openjdk.jmc.rjmx.subscription.internal.HotSpotGcNotification"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.HotSpotGcNotification"
             description="Sends an event every time a garbage collection has taken place."
             message=""
             type="javax.management.openmbean.CompositeData" />
@@ -244,7 +244,7 @@
 	<extension
          point="org.openjdk.jmc.rjmx.triggerActions">
       <triggerAction
-            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionMail"
+            class="org.openjdk.jmc.rjmx.common.triggers.actions.internal.TriggerActionMail"
             description="%TRIGGER_ACTION_EMAIL_DESCRIPTION"
             icon="icons/send-email-16.png"
             id="org.openjdk.jmc.rjmx.triggers.actions.TriggerActionMail"
@@ -269,7 +269,7 @@
             name="%TRIGGER_ACTION_HPROF_NAME"
             icon="icons/hprof-16.png"
             description="%TRIGGER_ACTION_HPROF_DESCRIPTION"
-            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionHPROF"
+            class="org.openjdk.jmc.rjmx.common.triggers.actions.internal.TriggerActionHPROF"
             id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionHPROF">
          <boolean
                description="%TRIGGER_ACTION_HPROF_ONLY_LIVE_DESCRIPTION"
@@ -286,7 +286,7 @@
       </triggerAction>
 
       <triggerAction
-            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionDiagnosticCommand"
+            class="org.openjdk.jmc.rjmx.common.triggers.actions.internal.TriggerActionDiagnosticCommand"
             description="%TRIGGER_ACTION_DIAGNOSTIC_COMMAND_DESCRIPTION"
             icon="icons/diagnostic-command-16.png"
             id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionDiagnosticCommand"
@@ -353,7 +353,7 @@
             name="%TRIGGER_ACTION_LOG_TO_FILE_NAME"
             icon="icons/console_view.png"
             description="%TRIGGER_ACTION_LOG_TO_FILE_DESCRIPTION"
-            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionLogToFile"
+            class="org.openjdk.jmc.rjmx.common.triggers.actions.internal.TriggerActionLogToFile"
             id="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionLogToFile">
          <file
                description="%TRIGGER_ACTION_LOG_TO_FILE_FILENAME_DESCRIPTION"
@@ -364,7 +364,7 @@
       </triggerAction>
       
       <triggerAction
-            class="org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionSystemOut"
+            class="org.openjdk.jmc.rjmx.common.triggers.actions.internal.TriggerActionSystemOut"
             description="%TRIGGER_ACTION_SYSTEM_OUT_DESCRIPTION"
             icon="icons/console_view.png"
             id="org.openjdk.jmc.rjmx.triggers.actions.TriggerActionSystemOut"
@@ -374,7 +374,7 @@
    <extension
          point="org.openjdk.jmc.rjmx.triggerConstraints">
       <triggerConstraint
-            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintDateRange"
+            class="org.openjdk.jmc.rjmx.common.triggers.constraints.internal.TriggerConstraintDateRange"
             description="%TRIGGER_CONSTRAINT_DATE_RANGE_DESCRIPTION"
             icon="icons/date-span-16.png"
             id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintDateRange"
@@ -389,7 +389,7 @@
                name="%TRIGGER_CONSTRAINT_DATE_RANGE_TO_LABEL"/>
       </triggerConstraint>
       <triggerConstraint
-            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintTimeRange"
+            class="org.openjdk.jmc.rjmx.common.triggers.constraints.internal.TriggerConstraintTimeRange"
             description="%TRIGGER_CONSTRAINT_TIME_RANGE_DESCRIPTION"
             icon="icons/time-span-16.png"
             id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintTimeRange"
@@ -404,7 +404,7 @@
                name="%TRIGGER_CONSTRAINT_TIME_RANGE_TO_LABEL"/>
       </triggerConstraint>
       <triggerConstraint
-            class="org.openjdk.jmc.rjmx.triggers.constraints.internal.TriggerConstraintDayOfWeek"
+            class="org.openjdk.jmc.rjmx.common.triggers.constraints.internal.TriggerConstraintDayOfWeek"
             description="%TRIGGER_CONSTRAINT_DAY_OF_WEEK_DESCRIPTION"
             icon="icons/day-of-week-16.png"
             id="org.openjdk.jmc.rjmx.triggers.constraints.TriggerConstraintDayOfWeek"
@@ -443,25 +443,25 @@
     <extension
          point="org.openjdk.jmc.rjmx.triggerEvaluators">
       <triggerEvaluator
-            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorBoolean"
+            class="org.openjdk.jmc.rjmx.common.triggers.internal.ValueEvaluatorBoolean"
             description="A true boolean value evaluator"
             id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorBoolean"
             name="ValueEvaluatorBoolean">
       </triggerEvaluator>
       <triggerEvaluator
-            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMax"
+            class="org.openjdk.jmc.rjmx.common.triggers.internal.ValueEvaluatorNumberMax"
             description="A maximum number value evaluator"
             id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorNumberMax"
             name="ValueEvaluatorNumberMax">
       </triggerEvaluator>
       <triggerEvaluator
-            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorNumberMin"
+            class="org.openjdk.jmc.rjmx.common.triggers.internal.ValueEvaluatorNumberMin"
             description="A minimum number value evaluator"
             id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorNumberMin"
             name="ValueEvaluatorNumberMin">
       </triggerEvaluator>
       <triggerEvaluator
-            class="org.openjdk.jmc.rjmx.triggers.internal.ValueEvaluatorStringMatch"
+            class="org.openjdk.jmc.rjmx.common.triggers.internal.ValueEvaluatorStringMatch"
             description="An equal String value evaluator"
             id="org.openjdk.jmc.rjmx.triggers.evaluators.ValueEvaluatorStringMatch"
             name="ValueEvaluatorStringMatch">
@@ -470,7 +470,7 @@
    <extension
          point="org.openjdk.jmc.rjmx.triggerActionExceptionHandlers">
       <exceptionHandler
-            class="org.openjdk.jmc.rjmx.triggers.internal.DefaultExceptionHandler">
+            class="org.openjdk.jmc.rjmx.common.triggers.internal.DefaultExceptionHandler">
       </exceptionHandler>
    </extension>
    <extension
@@ -482,7 +482,7 @@
    <extension
          point="org.openjdk.jmc.rjmx.attributeTransformation">
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="difference">
          <property name="visualizeLabel" value="%DIFFERENCE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
@@ -491,7 +491,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="rate">
          <property name="visualizeLabel" value="%RATE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
@@ -501,7 +501,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="average">
          <property name="visualizeLabel" value="%AVERAGE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.AverageTransformation" />
@@ -511,7 +511,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="delta">
          <property name="visualizeLabel" value="%DELTA_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DeltaTransformation" />
