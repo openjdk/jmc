@@ -49,8 +49,10 @@ import org.openjdk.jmc.rjmx.messages.internal.Messages;
 public class JVMSupportToolkitTest {
 	private static final String NAME_OPEN_JDK = "OpenJDK 64-Bit Server VM";
 	private static final String NAME_ORACLE = "Java HotSpot(TM) 64-Bit Server VM";
+	private static final String NAME_SUBSTRATE = "Substrate VM";
 	private static final String VENDOR_OPEN_JDK = "Oracle Corporation";
 	private static final String VENDOR_ORACLE = "Oracle Corporation";
+	private static final String VENDOR_GRAAL = "GraalVM Community";
 	// FIXME: Add tests for the methods that take IConnectionHandle as a parameter.
 
 	private static final String SUPPORTED_MESSAGE = null;
@@ -160,5 +162,16 @@ public class JVMSupportToolkitTest {
 				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
 		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
 		assertNotNull(errorMessage);
+	}
+
+	@Test
+	public void testSubstrateVMSupported() {
+		ServerHandle server = new ServerHandle(
+				new ServerDescriptor(null, null,
+						new JVMDescriptor("20", JVMType.SUBSTRATE, JVMArch.UNKNOWN, null, null, NAME_SUBSTRATE,
+								VENDOR_GRAAL, null, false, null)),
+				new ConnectionDescriptorBuilder().hostName("localhost").port(0).build(), null);
+		String errorMessage = JVMSupportToolkit.checkFlightRecorderSupport(server, false);
+		assertEquals(SUPPORTED_MESSAGE, errorMessage);
 	}
 }

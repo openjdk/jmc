@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+   Copyright (c) 2023, Datadog, Inc. All rights reserved.
+
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+   or the following license:
+
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<svg
+        width="200"
+        height="200"
+        viewBox="0 0 52.916665 52.916666"
+        version="1.1"
+        id="svg12313"
+        xmlns="http://www.w3.org/2000/svg">
+    <g id="layer1">
+        <path
+                fill="none"
+                stroke="#637CA5"
+                stroke-width="5"
+                d="M 4.9131315,7.8985343 5.0413641,48.702044 18.634017,45.322612 34.278392,48.952371 47.871044,45.948432 V 5.2700874 L 34.801926,8.688152 19.112941,4.5848932 Z"
+                id="map"
+        />
+        <path
+                fill="none"
+                stroke="#297437"
+                stroke-width="4"
+                style="paint-order:markers fill stroke"
+                d="M 10.583333,40.216666 19.05,37.967708 l 15.120469,4.051517 7.539902,-2.020311 -0.170788,0.08546"
+                id="root-frame"
+        />
+        <path
+                fill="none"
+                stroke="#948334"
+                stroke-width="4"
+                style="paint-order:markers fill stroke"
+                d="m 20.902083,32.808333 13.11252,3.51349 2.894772,-0.867656"
+                id="frame-a"
+        />
+        <path
+                fill="none"
+                stroke="#944434"
+                stroke-width="4"
+                style="paint-order:markers fill stroke"
+                d="m 30.294791,30.294791 3.042709,0.79375"
+                id="frame-b1"
+        />
+        <path
+                fill="none"
+                stroke="#944434"
+                stroke-width="4"
+                style="paint-order:markers fill stroke"
+                d="M 12.303125,34.528125 18.25625,32.808333"
+                id="frame-b2"
+        />
+    </g>
+</svg>

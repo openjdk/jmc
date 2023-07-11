@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -331,6 +331,7 @@ public class Messages {
 	public static final String ATTR_GC_METASPACE_USED_DESC = "ATTR_GC_METASPACE_USED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME = "ATTR_GC_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME_DESC = "ATTR_GC_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_PAUSE_TARGET = "ATTR_GC_PAUSE_TARGET"; //$NON-NLS-1$
 	public static final String ATTR_GC_PHASE_NAME = "ATTR_GC_PHASE_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT = "ATTR_GC_ROOT"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT_DESC = "ATTR_GC_ROOT_DESC"; //$NON-NLS-1$
@@ -338,6 +339,7 @@ public class Messages {
 	public static final String ATTR_GC_SUM_OF_PAUSES_DESC = "ATTR_GC_SUM_OF_PAUSES_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD = "ATTR_GC_THRESHOLD"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD_DESC = "ATTR_GC_THRESHOLD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME = "ATTR_GC_TIME"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO = "ATTR_GC_TIME_RATIO"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO_DESC = "ATTR_GC_TIME_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_WHEN = "ATTR_GC_WHEN"; //$NON-NLS-1$
