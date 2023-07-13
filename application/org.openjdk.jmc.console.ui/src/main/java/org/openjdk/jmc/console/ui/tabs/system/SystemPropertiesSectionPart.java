@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -75,8 +75,7 @@ public class SystemPropertiesSectionPart extends MCSectionPart {
 		Composite body = createSectionBody(MCLayoutFactory.createMarginFreeFormPageLayout());
 		Composite filterComposite = toolkit.createComposite(body);
 		filterComposite.setLayoutData(MCLayoutFactory.createFormPageLayoutData(SWT.DEFAULT, SWT.DEFAULT, true, false));
-		Table table = toolkit.createTable(body,
-				SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL);
+		Table table = toolkit.createTable(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		table.setLayoutData(MCLayoutFactory.createFormPageLayoutData());
 		TableViewer viewer = new TableViewer(table);
 		viewer.setContentProvider(new TreeStructureContentProvider());
@@ -122,6 +121,7 @@ public class SystemPropertiesSectionPart extends MCSectionPart {
 		Object v = event.getValue();
 		if (v instanceof TabularData) {
 			columnManager.getViewer().setInput(((TabularData) v).values());
+			columnManager.packColumns();
 		}
 	}
 }
