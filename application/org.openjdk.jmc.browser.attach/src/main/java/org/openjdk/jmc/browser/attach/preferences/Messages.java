@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.browser.attach.preferences.messages"; //$NON-NLS-1$
 
 	public static String AttachPreferencePage_ATTACH_PREFERENCES_DESCRIPTION;
+	public static String AttachPreferencePage_BROWSER_REFRESH_INTERVAL;
 	public static String AttachPreferencePage_CAPTION_AUTO_START;
 	public static String AttachPreferencePage_CAPTION_SHOW_UNCONNECTABLE;
 	public static String AttachPreferencePage_NOTE_SHOW_UNCONNECTABLE;
