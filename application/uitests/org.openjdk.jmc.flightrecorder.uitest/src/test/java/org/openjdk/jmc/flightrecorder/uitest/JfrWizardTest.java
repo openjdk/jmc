@@ -83,11 +83,7 @@ public class JfrWizardTest extends MCJemmyTestBase {
 		recordingWizard.setDurationText("1 s");
 
 		// Disable all events except "Flight Recorder|Recording Setting"
-		recordingWizard.disableEvent("Flight Recorder");
-		recordingWizard.disableEvent("Java Application");
-		recordingWizard.disableEvent("Java Virtual Machine");
-		recordingWizard.disableEvent("Operating System");
-		recordingWizard.enableEvent("Flight Recorder", "Recording Setting");
+		recordingWizard.enableEventDisableOthers("Flight Recorder", "Recording Setting");
 
 		// Get the current settings (in the wizard)
 		EventSettingsData wizardEventSettings = recordingWizard.getCurrentEventSettings();
