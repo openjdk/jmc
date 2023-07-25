@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.browser.attach.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.openjdk.jmc.browser.attach.BrowserAttachPlugin;
@@ -64,6 +65,10 @@ public class AttachPreferencePage extends FieldEditorPreferencePage implements I
 				Messages.AttachPreferencePage_CAPTION_AUTO_START, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.P_SHOW_UNCONNECTABLE,
 				Messages.AttachPreferencePage_CAPTION_SHOW_UNCONNECTABLE, getFieldEditorParent()));
+		IntegerFieldEditor browserScanInterval = new IntegerFieldEditor(PreferenceConstants.P_REFRESH_INTERVAL,
+				Messages.AttachPreferencePage_BROWSER_REFRESH_INTERVAL, getFieldEditorParent());
+		browserScanInterval.setValidRange(1000, Integer.MAX_VALUE);
+		addField(browserScanInterval);
 		PreferencesToolkit.fillNoteControl(getFieldEditorParent(),
 				Messages.AttachPreferencePage_NOTE_SHOW_UNCONNECTABLE);
 	}
