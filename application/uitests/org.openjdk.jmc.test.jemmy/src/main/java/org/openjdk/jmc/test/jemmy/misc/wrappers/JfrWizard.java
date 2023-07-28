@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,7 +46,6 @@ import org.jemmy.lookup.Any;
 import org.jemmy.resources.StringComparePolicy;
 import org.jemmy.swt.ComboWrap;
 import org.junit.Assert;
-
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.helpers.EventSettingsData;
@@ -307,6 +306,16 @@ public class JfrWizard extends MCJemmyBase {
 	}
 
 	/**
+	 * Enable the recording of the event and disable all other events.
+	 *
+	 * @param path
+	 *            the path of the event
+	 */
+	public void enableEventDisableOthers(String ... path) {
+		setEventSettingInvertOthers(true, ENABLED_BUTTON_NAME, path);
+	}
+
+	/**
 	 * Disable the recording of the event
 	 * 
 	 * @param path
@@ -444,6 +453,22 @@ public class JfrWizard extends MCJemmyBase {
 			button.setState(desiredState);
 		}
 		return currentState;
+	}
+
+	public void setEventSettingInvertOthers(boolean desiredState, String settingName, String ... path) {
+		// invert everything
+		// the actual names are observed to always at least contain the roots of the tree
+		// and setting them also sets all their children
+		{
+			final var eventSettingsTree = getEventSettingsTree();
+			final var names = eventSettingsTree.getAllItemTexts();
+			for (var name : names) {
+				final var currentPath = name.toArray(String[]::new);
+				setEventSetting(!desiredState, settingName, currentPath);
+			}
+		}
+		// lastly reset the desired state for the event the caller wanted
+		setEventSetting(desiredState, settingName, path);
 	}
 
 	private EventSettings setEventTextSetting(String desiredText, String settingName, String ... path) {
