@@ -66,7 +66,7 @@ start "%1" cmd /C "mvn -f releng\third-party\pom.xml jetty:run --log-file %JETTY
 :wait_jetty
 echo Waiting for jetty server to start
 timeout /t 1
-findstr "[INFO] Started Jetty Server" %JETTY_LOG%
+findstr "[INFO] Started Server@" %JETTY_LOG%
 if not %ERRORLEVEL% == 0 goto :wait_jetty
 echo %time% jetty server up and running
 call :installCore
