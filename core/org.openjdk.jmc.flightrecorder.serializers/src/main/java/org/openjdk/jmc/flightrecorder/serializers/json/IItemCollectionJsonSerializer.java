@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -59,7 +59,7 @@ import org.openjdk.jmc.common.item.ItemToolkit;
 public class IItemCollectionJsonSerializer extends JsonWriter {
 	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.flightrecorder.json");
 
-	public static String toJsonString(IItemCollection items) {
+	public synchronized static String toJsonString(IItemCollection items) {
 		StringWriter sw = new StringWriter();
 		IItemCollectionJsonSerializer marshaller = new IItemCollectionJsonSerializer(sw);
 		try {
@@ -70,7 +70,7 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		return sw.getBuffer().toString();
 	}
 
-	public static String toJsonString(Iterable<IItem> items) {
+	public synchronized static String toJsonString(Iterable<IItem> items) {
 		StringWriter sw = new StringWriter();
 		IItemCollectionJsonSerializer marshaller = new IItemCollectionJsonSerializer(sw);
 		try {
