@@ -9,7 +9,8 @@ Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.openjdk.jmc.common;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.core.expressions
+Import-Package: org.eclipse.core.expressions,
+ org.openjdk.jmc.flightrecorder.serializers.json
 Export-Package: org.openjdk.jmc.ui.common,
  org.openjdk.jmc.ui.common.action,
  org.openjdk.jmc.ui.common.idesupport,

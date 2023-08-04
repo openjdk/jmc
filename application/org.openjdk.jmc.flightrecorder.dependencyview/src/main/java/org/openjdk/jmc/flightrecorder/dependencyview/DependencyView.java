@@ -78,9 +78,9 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StringToolkit;
-import org.openjdk.jmc.flightrecorder.serializers.json.IItemCollectionJsonSerializer;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
+import org.openjdk.jmc.ui.common.util.VisualizationUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class DependencyView extends ViewPart implements ISelectionListener {
@@ -120,7 +120,7 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 			if (isInvalid) {
 				return;
 			}
-			String eventsJson = IItemCollectionJsonSerializer.toJsonString(items);
+			String eventsJson = VisualizationUtil.toJsonString(items);
 			if (isInvalid) {
 				return;
 			} else {
@@ -165,7 +165,7 @@ public class DependencyView extends ViewPart implements ISelectionListener {
 			if (this.isChecked()) {
 				diagramType = type;
 				if (currentItems != null) {
-					String eventsJson = IItemCollectionJsonSerializer.toJsonString(currentItems);
+					String eventsJson = VisualizationUtil.toJsonString(currentItems);
 					browser.execute(String.format("updateGraph(`%s`, %d, `%s`);", eventsJson, packageDepth,
 							diagramType.name()));
 				}
