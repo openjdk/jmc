@@ -9,5 +9,5 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.pde
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.openjdk.jmc.pde

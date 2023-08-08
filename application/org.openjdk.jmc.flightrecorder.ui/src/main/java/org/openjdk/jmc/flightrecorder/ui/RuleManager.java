@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -160,9 +160,10 @@ public class RuleManager {
 						Thread.sleep(100);
 					}
 				} else {
-					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.NA)
-							.setSummary(Messages.JFR_EDITOR_RULES_IGNORED).build();
-					evaluatedRules.put(rule.getClass(), Severity.NA);
+					String reason = RulesToolkit.getIgnoreReason(items.getItems(), rule);
+					result = ResultBuilder.createFor(rule, config::getValue).setSeverity(Severity.IGNORE)
+							.setSummary(reason).build();
+					evaluatedRules.put(rule.getClass(), Severity.IGNORE);
 				}
 			} catch (Exception e) {
 				FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not evaluate " + rule.getName(), e); //$NON-NLS-1$

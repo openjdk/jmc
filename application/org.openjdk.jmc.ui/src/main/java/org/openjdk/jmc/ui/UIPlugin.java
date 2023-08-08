@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,9 +37,9 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.misc.TrayManager;
 import org.openjdk.jmc.ui.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.security.DialogSecurityManager;

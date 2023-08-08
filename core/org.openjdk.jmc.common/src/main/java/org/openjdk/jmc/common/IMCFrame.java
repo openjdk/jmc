@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.common;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -104,14 +105,15 @@ public interface IMCFrame {
 		 * instances. The expectation is that the number of unrecognized frame types will be very
 		 * small, usually zero, so the memory overhead of the cache stays negligible.
 		 */
-		private static final Map<String, Type> TYPE_CACHE = new LinkedHashMap<String, Type>() {
-			private static final long serialVersionUID = 6330800425284157773L;
+		private static final Map<String, Type> TYPE_CACHE = Collections
+				.synchronizedMap(new LinkedHashMap<String, Type>() {
+					private static final long serialVersionUID = 6330800425284157773L;
 
-			@Override
-			protected boolean removeEldestEntry(Map.Entry<String, Type> eldest) {
-				return size() > TYPE_CACHE_MAX_SIZE;
-			}
-		};
+					@Override
+					protected boolean removeEldestEntry(Map.Entry<String, Type> eldest) {
+						return size() > TYPE_CACHE_MAX_SIZE;
+					}
+				});
 
 		private final String id;
 		private final String name;

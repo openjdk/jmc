@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.openjdk.jmc.rjmx.ext;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.rjmx
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.openjdk.jmc.rjmx.ext

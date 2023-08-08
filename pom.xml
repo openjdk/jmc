@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -39,19 +39,19 @@
 	<version>${revision}${changelist}</version>
 	<packaging>pom</packaging>
 	<name>JDK Mission Control</name>
-	<description>JDK Mission Control is an advanced set of tools that enables 
-		efficient and detailed analysis of the extensive of data collected by 
-		JDK Flight Recorder. The tool chain enables developers and 
-		administrators to collect and analyze data from Java applications 
+	<description>JDK Mission Control is an advanced set of tools that enables
+		efficient and detailed analysis of the extensive of data collected by
+		JDK Flight Recorder. The tool chain enables developers and
+		administrators to collect and analyze data from Java applications
 		running locally or deployed in production environments.
 	</description>
-	<url>http://jdk.java.net/jmc</url>
+	<url>https://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -60,14 +60,14 @@
 	</organization>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+		<url>https://bugs.openjdk.org/projects/JMC/issues</url>
 	</issueManagement>
 	<mailingLists>
 		<mailingList>
 			<name>jmc dev</name>
-			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
-			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
-			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+			<subscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>https://mail.openjdk.org/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
 	<modules>
@@ -75,28 +75,40 @@
 		<module>releng</module>
 	</modules>
 	<properties>
+		<!-- Config -->
 		<revision>9.0.0</revision>
 		<changelist>-SNAPSHOT</changelist>
+		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.version>2.7.1</tycho.version>
-		<maven.buildnumber.version>1.4</maven.buildnumber.version>
-		<maven.deploy.version>2.8.2</maven.deploy.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.enforcer.version>3.0.0</maven.enforcer.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<spotless.version>2.17.2</spotless.version>
-		<spotless.config.path>${basedir}/configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotbugs.version>4.5.2.0</spotbugs.version>
 		<buildId>${user.name}</buildId>
-		<!-- The version of the JDK embedded. When not embedding a JDK (this is 
-			usually the case), leave this empty. If embedding a JDK, include a comma 
-			and space, e.g. <jdkVersion>, JDK 12.0.2</jdkVersion> -->
+		<!-- The version of the JDK embedded. When not embedding a JDK (this is
+			usually the case), leave this empty. If embedding a JDK, include a comma
+			and space, e.g. <jdkVersion>, JDK 17.0.7</jdkVersion> -->
 		<jdkVersion></jdkVersion>
 		<!-- Critical Patch Update Id. Used in a release where _only_ the embedded
 			JDK has changed. Set to .[cpu sequence number], e.g. .1 -->
 		<patchId></patchId>
-		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
+		<jmc.config.path>${project.basedir}/configuration</jmc.config.path>
+		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<!-- Plugin Versions -->
+		<tycho.version>3.0.4</tycho.version>
+		<maven.toolchains.version>3.1.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
+		<spotless.version>2.34.0</spotless.version>
+		<maven.directory.version>1.0</maven.directory.version>
+		<maven.enforcer.version>3.3.0</maven.enforcer.version>
+		<maven.buildnumber.version>3.2.0</maven.buildnumber.version>
+		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.flatten.version>1.5.0</maven.flatten.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<download.maven.plugin.version>1.6.8</download.maven.plugin.version>
+		<maven.deploy.version>3.1.1</maven.deploy.version>
+		<spotbugs.version>4.7.3.5</spotbugs.version>
+		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 	</properties>
 	<scm>
 		<connection>${scmConnection}</connection>
@@ -113,10 +125,31 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2022-12</id>
+			<id>2023-03</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.openjdk.jmc</groupId>
+									<artifactId>platform-definition-2023-03</artifactId>
+									<version>${revision}${changelist}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>2022-12</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -157,69 +190,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>2022-06</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-06</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2022-03</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-03</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2021-12</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2021-12</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>		
 	</profiles>
 	<build>
 		<plugins>
@@ -298,7 +268,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Built-By />
+							<Built-By/>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -327,7 +297,7 @@
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
-					<excludeFilterFile>${rootDir}/configuration/spotbugs/spotbugs-exclude.xml</excludeFilterFile>
+					<excludeFilterFile>${jmc.config.path}/spotbugs/spotbugs-exclude.xml</excludeFilterFile>
 				</configuration>
 				<executions>
 					<execution>
@@ -365,8 +335,48 @@
 							<timestampPropertyName>build.date</timestampPropertyName>
 						</configuration>
 					</execution>
-					<!-- TODO: Maybe add the create-metadata goal after we've made the switch to Mercurial -->
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<configuration>
+					<configLocation>${jmc.config.path}/checkstyle/checkstyle.xml</configLocation>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<inputEncoding>UTF-8</inputEncoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>${maven.toolchains.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<id>JavaSE-${maven.compiler.source}</id>
+							<version>${maven.compiler.source}</version>
+						</jdk>
+					</toolchains>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -381,8 +391,8 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[11,)</version>
-									<message>Building JMC requires Java 11 or later</message>
+									<version>[${maven.compiler.source},)</version>
+									<message>Building JMC requires Java ${maven.compiler.source} or later</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -410,16 +420,25 @@
 				<configuration>
 					<java>
 						<eclipse>
-							<file>${spotless.config.path}</file>
+							<file>${jmc.config.path}/ide/eclipse/formatting/formatting.xml</file>
 							<version>4.8.0</version>
 						</eclipse>
 					</java>
 				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>${maven.flatten.version}</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -440,6 +459,16 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<version>${download.maven.plugin.version}</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -492,8 +521,7 @@
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/x86_64/legal
-								</outputDirectory>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/x86_64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>
@@ -513,8 +541,7 @@
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/win32/win32/x86_64/legal
-								</outputDirectory>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/win32/win32/x86_64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>
@@ -534,8 +561,7 @@
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/x86_64/legal
-								</outputDirectory>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/x86_64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>
@@ -555,8 +581,7 @@
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/aarch64/legal
-								</outputDirectory>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/macosx/cocoa/aarch64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>
@@ -570,6 +595,56 @@
 							</configuration>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-checkstyle-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>check</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>buildnumber-maven-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>create-timestamp</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

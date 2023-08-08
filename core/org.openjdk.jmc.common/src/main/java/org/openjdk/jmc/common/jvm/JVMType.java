@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,6 +47,13 @@ public enum JVMType {
 	 */
 	HOTSPOT,
 	/**
+<<<<<<< HEAD
+=======
+	 * The JVM is Substrate VM.
+	 */
+	SUBSTRATE,
+	/**
+>>>>>>> upstream/master
 	 * The JVM is unknown.
 	 */
 	UNKNOWN,
@@ -67,6 +74,11 @@ public enum JVMType {
 			return JVMType.JROCKIT;
 		} else if (JavaVMVersionToolkit.isHotspotJVMName(jvmName)) {
 			return JVMType.HOTSPOT;
+<<<<<<< HEAD
+=======
+		} else if (JavaVMVersionToolkit.isSubstrateVMName(jvmName)) {
+			return JVMType.SUBSTRATE;
+>>>>>>> upstream/master
 		}
 		return JVMType.OTHER;
 	}

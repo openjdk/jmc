@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -155,13 +156,11 @@ public class Agent {
 	 *            the {@link Instrumentation} instance.
 	 */
 	private static void retransformClasses(Set<String> clazzes, Instrumentation instrumentation) {
-		List<Class<?>> classesToRetransform = new ArrayList<Class<?>>();
-		for (String clazz : clazzes) {
-			try {
-				Class<?> classToRetransform = Class.forName(clazz.replace('/', '.'));
-				classesToRetransform.add(classToRetransform);
-			} catch (ClassNotFoundException cnfe) {
-				getLogger().log(Level.SEVERE, "Unable to find class: " + clazz, cnfe);
+		List<Class<?>> classesToRetransform = new ArrayList<>();
+		clazzes = clazzes.stream().map((name) -> name.replace('/', '.')).collect(Collectors.toSet());
+		for (Class<?> clazz : instrumentation.getAllLoadedClasses()) {
+			if (clazzes.contains(clazz.getName())) {
+				classesToRetransform.add(clazz);
 			}
 		}
 		try {

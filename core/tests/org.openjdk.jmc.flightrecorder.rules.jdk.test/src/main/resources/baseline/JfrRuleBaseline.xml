@@ -158,6 +158,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>OK</severity>
+            <summary>All GCs completed before the GC pause target time of 200 ms.</summary>
+        </rule>
+        <rule>
             <id>GcStall</id>
             <severity>OK</severity>
             <summary>No indications that the garbage collector could not keep up with the workload were detected.</summary>
@@ -452,6 +457,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>HeapContent</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -717,6 +726,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>Application efficiency was not highly affected by GC pauses.</summary>
             <explanation>The highest ratio between garbage collection pauses and execution time was 0 % during 4/24/2018 10:16:27.000 AM – 10:17:27 AM. The garbage collection pause ratio of the entire recording was 0 %.</explanation>
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>HeapContent</id>
@@ -986,6 +999,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>HeapContent</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1242,6 +1259,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1506,6 +1527,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcStall</id>
             <severity>Warning</severity>
             <summary>There occurred Concurrent Mode failures during certain garbage collections.</summary>
@@ -1764,6 +1789,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2053,6 +2082,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>Application efficiency was not highly affected by GC pauses.</summary>
             <explanation>The highest ratio between garbage collection pauses and execution time was 0 % during 4/4/2014 11:17:05.000 AM – 11:18:05 AM. The garbage collection pause ratio of the entire recording was 0 %.</explanation>
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>HeapContent</id>
@@ -2349,6 +2382,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>HeapContent</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2632,6 +2669,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>Application efficiency was not highly affected by GC pauses.</summary>
             <explanation>The highest ratio between garbage collection pauses and execution time was 0.0397 % during 4/24/2018 10:08:52.000 AM – 10:09:52 AM. The garbage collection pause ratio of the entire recording was 0.486 %.</explanation>
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>OK</severity>
+            <summary>All GCs completed before the GC pause target time of 200 ms.</summary>
         </rule>
         <rule>
             <id>GcStall</id>
@@ -2948,6 +2990,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcStall</id>
             <severity>OK</severity>
             <summary>No indications that the garbage collector could not keep up with the workload were detected.</summary>
@@ -3253,6 +3299,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>HeapContent</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3431,6 +3481,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3676,6 +3730,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3941,6 +3999,11 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <summary>Application efficiency was not highly affected by GC pauses.</summary>
             <explanation>The highest ratio between garbage collection pauses and execution time was 0.0311 % during 7/13/2021 6:23:54.000 AM – 6:24:54 AM. The garbage collection pause ratio of the entire recording was 0.00178 %.</explanation>
             <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>OK</severity>
+            <summary>All GCs completed before the GC pause target time of 200 ms.</summary>
         </rule>
         <rule>
             <id>GcOptions</id>
@@ -4226,6 +4289,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
         </rule>
         <rule>
             <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>

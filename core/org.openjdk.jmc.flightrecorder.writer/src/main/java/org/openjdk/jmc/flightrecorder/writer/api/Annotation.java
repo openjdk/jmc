@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -168,11 +168,10 @@ public final class Annotation {
 
 	/**
 	 * Check whether a particular {@linkplain Type} is an annotation type
-	 * 
+	 *
 	 * @param type
 	 *            {@linkplain Type} to check
-	 * @return {@linkplain true} if the type extends {@linkplain java.lang.annotation.Annotation}
-	 *         type
+	 * @return true if the type extends {@linkplain java.lang.annotation.Annotation} type
 	 */
 	public static boolean isAnnotationType(Type type) {
 		return ANNOTATION_SUPER_TYPE_NAME.equals(type.getSupertype());
@@ -180,7 +179,7 @@ public final class Annotation {
 
 	/**
 	 * Get the list of the associated {@link Annotation annotations}
-	 * 
+	 *
 	 * @return the associated {@link Annotation annotations}
 	 */
 	public List<Annotation> getAnnotations() {
@@ -203,7 +202,7 @@ public final class Annotation {
 
 	/**
 	 * Get the attribute value by its name and type
-	 * 
+	 *
 	 * @param valueType
 	 *            the expected value type
 	 * @param name

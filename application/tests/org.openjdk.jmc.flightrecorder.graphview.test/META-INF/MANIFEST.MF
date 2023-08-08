@@ -5,8 +5,8 @@ Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview.test;singleton:=tr
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.flightrecorder.graphview
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
-Import-Package: org.junit
+Require-Bundle: org.junit
 Export-Package: org.openjdk.jmc.flightrecorder.ext.graphview.graph
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.graphview.test

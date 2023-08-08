@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,8 @@ import java.util.logging.Level;
 
 import javax.management.remote.JMXServiceURL;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.security.ICredentials;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
@@ -47,11 +49,9 @@ import org.openjdk.jmc.rjmx.internal.ServerHandle;
 import org.openjdk.jmc.rjmx.servermodel.IDiscoveryInfo;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.ui.common.labelingrules.NameConverter;
 import org.openjdk.jmc.ui.common.resource.IImageResource;
 import org.openjdk.jmc.ui.common.resource.Resource;
-import org.openjdk.jmc.ui.common.security.ICredentials;
 import org.openjdk.jmc.ui.common.util.ICopyable;
 
 public class Server implements IServer, ICopyable, IImageResource {

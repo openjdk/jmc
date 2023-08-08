@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity.DualUnitFormatter;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.actions.CloseRecordingAction;
@@ -69,7 +70,6 @@ import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor.RecordingState;
 import org.openjdk.jmc.ui.common.action.IActionProvider;
 import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.resource.MCFile;
-import org.openjdk.jmc.ui.common.util.Environment;
 import org.openjdk.jmc.ui.misc.IGraphical;
 
 /**

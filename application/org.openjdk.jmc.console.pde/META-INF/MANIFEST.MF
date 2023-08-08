@@ -10,5 +10,5 @@ Require-Bundle: org.eclipse.pde.ui,
  org.openjdk.jmc.pde,
  org.eclipse.ui
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.openjdk.jmc.console.pde

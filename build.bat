@@ -66,7 +66,7 @@ start "%1" cmd /C "mvn -f releng\third-party\pom.xml jetty:run --log-file %JETTY
 :wait_jetty
 echo Waiting for jetty server to start
 timeout /t 1
-findstr "[INFO] Started Jetty Server" %JETTY_LOG%
+findstr "[INFO] Started Server@" %JETTY_LOG%
 if not %ERRORLEVEL% == 0 goto :wait_jetty
 echo %time% jetty server up and running
 call :installCore
@@ -140,13 +140,13 @@ set TIMESTAMP=%LOCALDATETIME:~0,14%
 set PACKAGE_LOG=%cd%\build_%TIMESTAMP%.5.package.log
 cd agent
 call mvn install --log-file "%PACKAGE_LOG%"
-cd ..
 if %ERRORLEVEL% == 0  (
 	echo Agent library build complete. You can now run an example with the agent using --runAgentExample or --runAgentConverterExample
 	echo See agent/README.md for more information
-) else {
+) else (
+	echo Building the agent library failed.
 	exit /B 1
-}
+)
 exit /B 0
 
 :runAgentExample
