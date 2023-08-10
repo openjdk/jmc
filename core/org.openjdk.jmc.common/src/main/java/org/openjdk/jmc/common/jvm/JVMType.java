@@ -47,14 +47,11 @@ public enum JVMType {
 	 */
 	HOTSPOT,
 	/**
-<<<<<<< HEAD
-=======
-	 * The JVM is Substrate VM.
+	 * <<<<<<< HEAD ======= The JVM is Substrate VM.
 	 */
 	SUBSTRATE,
 	/**
->>>>>>> upstream/master
-	 * The JVM is unknown.
+	 * >>>>>>> upstream/master The JVM is unknown.
 	 */
 	UNKNOWN,
 	/**
