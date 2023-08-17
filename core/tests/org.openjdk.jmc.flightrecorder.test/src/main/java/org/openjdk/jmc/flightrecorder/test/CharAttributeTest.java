@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, Red Hat, Inc. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Red Hat, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -60,9 +61,10 @@ import jdk.jfr.Recording;
 public class CharAttributeTest {
 
 	@Test
-	public void shouldParseEventWithCharAttribute() throws IOException, CouldNotLoadRecordingException {
+	public void shouldParseEventWithCharAttribute()
+			throws IOException, CouldNotLoadRecordingException, URISyntaxException {
 		File recordingFile = new File(
-				CharAttributeTest.class.getClassLoader().getResource("recordings/char_attribute.jfr").getFile());
+				CharAttributeTest.class.getClassLoader().getResource("recordings/char_attribute.jfr").toURI());
 		IItemCollection items = JfrLoaderToolkit.loadEvents(Arrays.asList(recordingFile))
 				.apply(ItemFilters.type("jmc.CharTestEvent"));
 

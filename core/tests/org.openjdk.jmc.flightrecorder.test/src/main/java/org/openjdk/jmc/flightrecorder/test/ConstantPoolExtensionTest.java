@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Datadog, Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -112,11 +113,11 @@ public class ConstantPoolExtensionTest {
 			"java.lang.Class", "jdk.types.Package", "jdk.types.OldObject",};
 
 	@Test
-	public void constantResolution() throws IOException, CouldNotLoadRecordingException {
+	public void constantResolution() throws IOException, CouldNotLoadRecordingException, URISyntaxException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 		extensions.add(new MyParserExtension());
 		File recordingFile = new File(
-				ConstantPoolExtensionTest.class.getClassLoader().getResource("recordings/metadata_new.jfr").getFile());
+				ConstantPoolExtensionTest.class.getClassLoader().getResource("recordings/metadata_new.jfr").toURI());
 		IItemCollection items = JfrLoaderToolkit.loadEvents(Arrays.asList(recordingFile), extensions);
 		Assert.assertTrue(items.hasItems());
 		IConstantPoolExtension ext = ((IParserStats) items).getConstantPoolExtensions()
