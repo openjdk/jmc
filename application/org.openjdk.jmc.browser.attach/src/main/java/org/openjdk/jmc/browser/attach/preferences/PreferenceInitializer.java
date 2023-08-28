@@ -46,6 +46,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// See http://visualvm.sourcearchive.com/documentation/1.2.1-0ubuntu3/MainClassApplicationTypeFactory_8java-source.html
 		IPreferenceStore store = BrowserAttachPlugin.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_REFRESH_INTERVAL, 5000);
+		store.setDefault(PreferenceConstants.P_JVM_ATTACH_DELAY, 0);
 		store.setDefault(PreferenceConstants.P_AUTO_START_AGENT, true);
 		store.setDefault(PreferenceConstants.P_SHOW_UNCONNECTABLE, true);
 	}
