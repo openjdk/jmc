@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,10 +42,6 @@ import java.util.Objects;
  * A node in the graph of aggregated stack traces.
  */
 public final class Node {
-	/**
-	 * Integer uniquely identifying this node within our data structure.
-	 */
-	private final Integer nodeId;
 
 	/**
 	 * The frame associated with this node.
@@ -77,23 +73,11 @@ public final class Node {
 	}
 
 	public Node(Node parent, AggregatableFrame frame) {
-		this.nodeId = computeNodeId(parent, frame);
 		this.parent = parent;
 		this.frame = frame;
 		if (frame == null) {
 			throw new NullPointerException("Frame cannot be null!");
 		}
-	}
-
-	private static Integer computeNodeId(Node parent, AggregatableFrame frame) {
-		return Objects.hash(parent != null ? parent.getNodeId() : null, frame.hashCode());
-	}
-
-	/**
-	 * @return the unique identifier associated with this node.
-	 */
-	public Integer getNodeId() {
-		return nodeId;
 	}
 
 	/**
@@ -155,7 +139,7 @@ public final class Node {
 			return false;
 		Node other = (Node) obj;
 
-		return Objects.equals(nodeId, other.nodeId) && Objects.equals(frame, other.frame) && weight == other.weight
+		return Objects.equals(parent, other.parent) && Objects.equals(frame, other.frame) && weight == other.weight
 				&& cumulativeWeight == other.cumulativeWeight;
 	}
 
