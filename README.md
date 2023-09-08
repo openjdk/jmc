@@ -381,14 +381,18 @@ Here is an example for Mac OS X:
 # on x86_64
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 
-# on M1
+# on M1/aarch64
 target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 ```
 
 Here is an example for Linux:
 
 ```bash
+# on x86_64
 target/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc
+
+# on M1/aarch64
+target/products/org.openjdk.jmc/linux/gtk/aarch64/JDK\ Mission\ Control/jmc
 ```
 
 And here is an example for Windows x64:
