@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1999, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -112,6 +112,13 @@ public class Transform {
 	private static void transform(Path inputFile, Path outputFile, Path sylesheetFile)
 			throws IOException, TransformerException {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		try {
+			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		} catch (TransformerConfigurationException e) {
+			// This should not happen anyway
+			throw new RuntimeException(e);
+		}
 		try (InputStream xslIn = newInputStream(sylesheetFile);
 				InputStream in = newInputStream(inputFile);
 				OutputStream out = newOutputStream(outputFile)) {
