@@ -189,39 +189,19 @@ public interface ISecurityManager {
 	 * Sets the encryption ciphers to use.
 	 *
 	 * @param encryptionCipher
-	 *            the encryption cipher to use. <<<<<<< HEAD
-	 * @throws CipherNotAvailableException
-	 *             if the provided cipher is not available.
-	 * @throws ActionNotGrantedException
-	 *             if the master password was not given.
+	 *            the encryption cipher to use.
 	 * @throws SecurityException
-	 *             for other security problems. =======
-	 * @throws SecurityException
-	 *             for security problems, e.g. provided cipher is not available. >>>>>>>
-	 *             upstream/master
+	 *             for security problems, e.g. provided cipher is not available.
 	 */
 	void setEncryptionCipher(String encryptionCipher) throws SecurityException;
 
 	/**
-	 * Triggers a change of the master password. <<<<<<< HEAD
+	 * Triggers a change of the master password.
 	 * 
-	 * @throws CipherNotAvailableException
-	 *             if no cipher is available.
 	 * @throws ActionNotGrantedException
 	 *             if the master password was not given.
 	 * @throws SecurityException
-	 *             for other security problems.
+	 *             for other security problems. e.g. provided cipher is not available.
 	 */
 	void changeMasterPassword() throws SecurityException;
-
-	=======*@throws ActionNotGrantedException*if
-
-	the master
-	password was
-	not given.*@throws SecurityException*for
-	other security problems,
-	e.g.provided cipher
-	is not available.*/
-
-	void changeMasterPassword() throws SecurityException;>>>>>>>upstream/master
 }

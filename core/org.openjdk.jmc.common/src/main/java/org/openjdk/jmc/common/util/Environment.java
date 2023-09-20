@@ -90,12 +90,8 @@ public class Environment {
 	}
 
 	/**
-	 * <<<<<<< HEAD
-	 * 
-	 * @return the "normal" 100% scaled DPI setting of the OS, 96 for Windows & Linux and 72 for
-	 *         =======
 	 * @return the "normal" 100% scaled DPI setting of the OS, 96 for Windows/Linux and 72 for
-	 *         >>>>>>> upstream/master MacOS.
+	 * upstream/master MacOS.
 	 */
 	public static double getNormalDPI() {
 		return OS_TYPE.equals(OSType.MAC) ? 72d : 96d;
