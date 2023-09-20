@@ -33,18 +33,6 @@
  */
 package org.openjdk.jmc.flightrecorder.flamegraph.views;
 
-import io.github.bric3.fireplace.core.ui.Colors;
-import io.github.bric3.fireplace.flamegraph.ColorMapper;
-import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
-import io.github.bric3.fireplace.flamegraph.FlamegraphImage;
-import io.github.bric3.fireplace.flamegraph.FlamegraphView;
-import io.github.bric3.fireplace.flamegraph.FrameBox;
-import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
-import io.github.bric3.fireplace.flamegraph.FrameModel;
-import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
-import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
-import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
-import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
@@ -54,6 +42,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -75,6 +64,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -82,6 +72,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -124,6 +115,19 @@ import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
+
+import io.github.bric3.fireplace.core.ui.Colors;
+import io.github.bric3.fireplace.flamegraph.ColorMapper;
+import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
+import io.github.bric3.fireplace.flamegraph.FlamegraphImage;
+import io.github.bric3.fireplace.flamegraph.FlamegraphView;
+import io.github.bric3.fireplace.flamegraph.FrameBox;
+import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
+import io.github.bric3.fireplace.flamegraph.FrameModel;
+import io.github.bric3.fireplace.flamegraph.FrameTextsProvider;
+import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
+import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
+import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.reverseOrder;
@@ -329,29 +333,36 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 		@Override
 		public void run() {
-			view.modelState = ModelState.STARTED;
-			if (isInvalid) {
-				return;
-			}
-			var filteredItems = items;
-			if (attribute != null) {
-				filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
-			}
-			var treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator, !view.threadRootAtTop,
-					attribute);
-			if (isInvalid) {
-				return;
-			}
-			var rootFrameDescription = createRootNodeDescription(items);
-			var frameBoxList = convert(treeModel);
-			if (!isInvalid) {
-				view.modelState = ModelState.FINISHED;
-				view.setModel(items, frameBoxList, rootFrameDescription);
-				DisplayToolkit.inDisplayThread().execute(() -> {
-					var attributeList = AttributeSelection.extractAttributes(items);
-					String attrName = attribute != null ? attribute.getName() : null;
-					view.createAttributeSelection(attrName, attributeList);
-				});
+			final var start = System.currentTimeMillis();
+			try {
+				view.modelState = ModelState.STARTED;
+				if (isInvalid) {
+					return;
+				}
+				var filteredItems = items;
+				if (attribute != null) {
+					filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
+				}
+				var treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator, !view.threadRootAtTop,
+						attribute, () -> isInvalid);
+				if (isInvalid) {
+					return;
+				}
+				var rootFrameDescription = createRootNodeDescription(items);
+				var frameBoxList = convert(treeModel);
+				if (!isInvalid) {
+					view.modelState = ModelState.FINISHED;
+					view.setModel(items, frameBoxList, rootFrameDescription);
+					DisplayToolkit.inDisplayThread().execute(() -> {
+						var attributeList = AttributeSelection.extractAttributes(items);
+						String attrName = attribute != null ? attribute.getName() : null;
+						view.createAttributeSelection(attrName, attributeList);
+					});
+				}
+			} finally {
+				final var duration = Duration.ofMillis(System.currentTimeMillis() - start);
+				FlightRecorderUI.getDefault().getLogger()
+						.info("model rebuild with isInvalid:" + isInvalid + " in " + duration);
 			}
 		}
 
@@ -667,11 +678,9 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			var fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
 			fd.setText(getFlamegraphMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
-			fd.setFilterNames(new String[]{
-					getFlamegraphMessage(FLAMEVIEW_PNG_IMAGE),
-					getFlamegraphMessage(FLAMEVIEW_JPEG_IMAGE)
-			});
-			fd.setFilterExtensions(new String[]{"*.png", "*.jpg"}); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFilterNames(new String[] {getFlamegraphMessage(FLAMEVIEW_PNG_IMAGE),
+					getFlamegraphMessage(FLAMEVIEW_JPEG_IMAGE)});
+			fd.setFilterExtensions(new String[] {"*.png", "*.jpg"}); //$NON-NLS-1$ //$NON-NLS-2$
 			fd.setFileName("flame_graph"); //$NON-NLS-1$
 			fd.setOverwrite(true);
 			if (fd.open() == null) {
@@ -694,7 +703,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 							frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(), //$NON-NLS-1$
 							frame -> frame.isRoot() ? "" //$NON-NLS-1$
 									: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false,
-									false, false, false, true, false),
+											false, false, false, true, false),
 							frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()), //$NON-NLS-1$
 					new DimmingFrameColorProvider<Node>(
 							frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
@@ -704,61 +713,48 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			return fgImage.generate(flamegraphView.getFrameModel(), flamegraphView.getMode(), 2000);
 		};
 
-		Optional.of(future)
-				.map(f -> {
-					try {
-						return f.get();
-					} catch (CancellationException e) {
-						// noop : model calculation is canceled when is still running
-					} catch (InterruptedException | ExecutionException e) {
-						FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
-					}
-					return null;
-				})
-				.ifPresent(destinationPath -> {
-					// make spotbugs happy about NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE
-					var type = Optional.ofNullable(destinationPath.getFileName())
-							.map(p -> p.toString().toLowerCase())
-							.map(f ->
-									switch (f.substring(f.lastIndexOf('.') + 1)) { //$NON-NLS-1$
-										case "jpeg", "jpg" -> //$NON-NLS-1$ //$NON-NLS-2$
-												"jpg"; //$NON-NLS-1$
-										case "png" -> //$NON-NLS-1$
-												"png"; //$NON-NLS-1$
-										default -> null;
-									}
-							).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
+		Optional.of(future).map(f -> {
+			try {
+				return f.get();
+			} catch (CancellationException e) {
+				// noop : model calculation is canceled when is still running
+			} catch (InterruptedException | ExecutionException e) {
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
+			}
+			return null;
+		}).ifPresent(destinationPath -> {
+			// make spotbugs happy about NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE
+			var type = Optional.ofNullable(destinationPath.getFileName()).map(p -> p.toString().toLowerCase())
+					.map(f -> switch (f.substring(f.lastIndexOf('.') + 1)) { //$NON-NLS-1$
+					case "jpeg", "jpg" -> //$NON-NLS-1$ //$NON-NLS-2$
+							"jpg"; //$NON-NLS-1$
+					case "png" -> //$NON-NLS-1$
+							"png"; //$NON-NLS-1$
+					default -> null;
+					}).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
 
-					try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {
-						var renderImg = generator.get();
+			try (var os = new BufferedOutputStream(Files.newOutputStream(destinationPath))) {
+				var renderImg = generator.get();
 
-						var img = switch (type) {
-							case "png" -> renderImg;
-							case "jpg" -> {
-								// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
-								// to workaround this it is required to copy the image to a BufferedImage without alpha channel
-								var newBufferedImage = new BufferedImage(
-										renderImg.getWidth(),
-										renderImg.getHeight(),
-										BufferedImage.TYPE_INT_RGB
-								);
-								renderImg.copyData(newBufferedImage.getRaster());
+				var img = switch (type) {
+				case "png" -> renderImg;
+				case "jpg" -> {
+					// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
+					// to workaround this it is required to copy the image to a BufferedImage without alpha channel
+					var newBufferedImage = new BufferedImage(renderImg.getWidth(), renderImg.getHeight(),
+							BufferedImage.TYPE_INT_RGB);
+					renderImg.copyData(newBufferedImage.getRaster());
 
-								yield newBufferedImage;
-							}
-							default -> throw new IllegalStateException("Type is checked above");
-						};
+					yield newBufferedImage;
+				}
+				default -> throw new IllegalStateException("Type is checked above");
+				};
 
-
-						ImageIO.write(
-								img,
-								type,
-								os
-						);
-					} catch (IOException e) {
-						FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
-					}
-				});
+				ImageIO.write(img, type, os);
+			} catch (IOException e) {
+				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to save flame graph", e); //$NON-NLS-1$
+			}
+		});
 	}
 
 	private static ImageDescriptor flamegraphImageDescriptor(String iconName) {

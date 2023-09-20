@@ -282,10 +282,10 @@ section {
 				e = window.event ? event.srcElement : e.target;
 				if (e.className && e.className.indexOf("rule_") != -1
 						&& e.className.indexOf("text") == -1) {
-					var loc = (e.id.includes("_score_value")) ? e.id.indexOf("_score_value") :
-						((e.id.includes("_name")) ? e.id.indexOf("_name") :
-						((e.id.includes("_heading")) ? e.id.indexOf("_heading") :
-					 	((e.id.includes("_text_hide")) ? e.id.indexOf("_text_hide") : null)));
+					var loc = (e.id.indexOf("_score_value") !== -1) ? e.id.indexOf("_score_value") :
+						((e.id.indexOf("_name") !== -1) ? e.id.indexOf("_name") :
+						((e.id.indexOf("_heading") !== -1) ? e.id.indexOf("_heading") :
+					 	((e.id.indexOf("_text_hide") !== -1) ? e.id.indexOf("_text_hide") : null)));
 					if (loc != null) {
 						id_to_toggle = e.id.slice(0, loc) + "_text";
 						overview.toggleVisibility(id_to_toggle, document

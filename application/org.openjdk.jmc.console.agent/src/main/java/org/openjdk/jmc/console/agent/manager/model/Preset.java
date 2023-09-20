@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2021 Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -86,6 +87,8 @@ public class Preset implements IPreset {
 	private static final Pattern ID_COUNT_SUFFIX_PATTERN = Pattern.compile("^\\.(\\d+)$"); // $NON-NLS-1$
 	private static final Pattern NAME_WITH_COUNT_PATTERN = Pattern.compile("^(.*)\\s*\\((\\d+)\\)$"); //$NON-NLS-1$
 	private static final Pattern NAME_COUNT_SUFFIX_PATTERN = Pattern.compile("^\\s*\\((\\d+)\\)$"); //$NON-NLS-1$
+
+	private static final String XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE = "http://apache.org/xml/features/disallow-doctype-decl"; //$NON-NLS-1$
 
 	private final PresetRepository presetRepository;
 	private IPresetStorageDelegate storageDelegate;
@@ -157,6 +160,9 @@ public class Preset implements IPreset {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
 		try {
+			factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+			factory.setXIncludeAware(false);
+			factory.setExpandEntityReferences(false);
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
@@ -221,6 +227,9 @@ public class Preset implements IPreset {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
 		try {
+			factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+			factory.setXIncludeAware(false);
+			factory.setExpandEntityReferences(false);
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
@@ -249,6 +258,8 @@ public class Preset implements IPreset {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer;
 		try {
+			tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 			transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
 			// This should not happen anyway

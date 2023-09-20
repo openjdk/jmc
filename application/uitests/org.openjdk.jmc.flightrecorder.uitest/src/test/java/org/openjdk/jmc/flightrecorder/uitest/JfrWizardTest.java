@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -83,11 +83,7 @@ public class JfrWizardTest extends MCJemmyTestBase {
 		recordingWizard.setDurationText("1 s");
 
 		// Disable all events except "Flight Recorder|Recording Setting"
-		recordingWizard.disableEvent("Flight Recorder");
-		recordingWizard.disableEvent("Java Application");
-		recordingWizard.disableEvent("Java Virtual Machine");
-		recordingWizard.disableEvent("Operating System");
-		recordingWizard.enableEvent("Flight Recorder", "Recording Setting");
+		recordingWizard.enableEventDisableOthers("Flight Recorder", "Recording Setting");
 
 		// Get the current settings (in the wizard)
 		EventSettingsData wizardEventSettings = recordingWizard.getCurrentEventSettings();

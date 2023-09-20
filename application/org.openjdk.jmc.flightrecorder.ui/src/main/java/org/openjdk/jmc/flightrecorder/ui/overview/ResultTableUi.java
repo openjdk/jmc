@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -98,6 +98,8 @@ class ResultTableUi {
 				return image(ResultOverview.ICON_INFO);
 			case OK:
 				return image(ResultOverview.ICON_OK);
+			case IGNORE:
+				return image(ResultOverview.ICON_IGNORE);
 			case NA:
 				return image(ResultOverview.ICON_NA);
 			}
