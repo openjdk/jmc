@@ -70,7 +70,7 @@ public class PollManager implements Runnable, IPropertyChangeListener {
 
 	/**
 	 * Adds a pollable object to the PollManager. This object will be polled constantly with the
-	 * interval specicified in the constructor
+	 * interval specified in the constructor
 	 *
 	 * @param pollee
 	 */

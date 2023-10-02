@@ -48,7 +48,7 @@ public class AttributeExceptionEvent extends MRIValueEvent {
 	 * @param source
 	 *            the subscription that failed .
 	 * @param timestamp
-	 *            the time the failure occured.
+	 *            the time the failure occurred.
 	 * @param exception
 	 *            the exception that caused the subscription to fail.
 	 */

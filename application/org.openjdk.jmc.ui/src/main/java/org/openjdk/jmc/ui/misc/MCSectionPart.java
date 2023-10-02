@@ -73,12 +73,12 @@ import org.eclipse.ui.forms.widgets.Section;
  * available so it's possible to access the model, but because model initialization could be
  * expensive it should be avoided, if possible. During this phase the {@link SectionSite} for the
  * part is constructed and should be available for classes that want to subclass. Note, you need to
- * call super.initialize(IManangedForm) in {@link SectionPart#initialize(IManagedForm)} method if
+ * call super.initialize(IManagedForm) in {@link SectionPart#initialize(IManagedForm)} method if
  * you override.
  * </p>
  * <p>
  * <b>Model initialization</b><br>
- * This happens when {@link MCSectionPart#initializePart()} is called and it typcally occurs the
+ * This happens when {@link MCSectionPart#initializePart()} is called and it typically occurs the
  * first time a user flips to a page containing the {@link SectionPart}. During this phase model
  * initialization should be done. In this phase you should set {@link IContentProvider}s for viewers
  * and fill widgets with data. If necessary in a job thread, posting widget updates to the

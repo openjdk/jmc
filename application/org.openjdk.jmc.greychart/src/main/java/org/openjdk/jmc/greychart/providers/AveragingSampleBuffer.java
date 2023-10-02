@@ -36,8 +36,8 @@ import org.openjdk.jmc.greychart.impl.SamplePoint;
 import org.openjdk.jmc.greychart.util.ChartRenderingToolkit;
 
 /**
- * This is an averaging sampler. It will typically contains as many samples as the drawing area is
- * pixles wide.
+ * This is an averaging sampler. It will typically contain as many samples as the drawing area is
+ * pixels wide.
  * <p>
  * Each bucket represents the average value of the events that span the bucket. Events must be added
  * in order.

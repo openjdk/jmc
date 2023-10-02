@@ -87,7 +87,7 @@ public final class Command implements Comparable<Command> {
 	}
 
 	/**
-	 * REturn the name of the command
+	 * Returns the name of the command
 	 *
 	 * @return the command
 	 */

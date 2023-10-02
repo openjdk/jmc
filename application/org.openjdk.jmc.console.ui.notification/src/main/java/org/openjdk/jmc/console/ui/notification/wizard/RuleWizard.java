@@ -154,7 +154,7 @@ public class RuleWizard extends Wizard {
 
 		// create action
 		Collection<?> actions = factory.getActionExtensions().getPrototypes();
-		// Try to select ApplicationAlet by default
+		// Try to select ApplicationAlert by default
 		for (Object protoAction : actions) {
 			String className = protoAction.getClass().getName();
 			if (className.endsWith("ApplicationAlert")) //$NON-NLS-1$

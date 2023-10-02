@@ -95,7 +95,7 @@ public class TreeMapDescriptor extends AbstractLinkedCollectionDescriptor {
 		// like something really outside a normal TreeMap. If such a node is reached
 		// first, it ends up with impl-inclusive size updated for its own class,
 		// so if we subsequently update impl-inclusive size for TreeMap here, the
-		// sum total of inclusive sizes for all classess will end up being greater
+		// sum total of inclusive sizes for all classes will end up being greater
 		// than the sum total of shallow sizes. So here we take measures to fix
 		// the sizes properly
 		int entrySize = entry.getSize();
