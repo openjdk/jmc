@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +117,8 @@ public final class TestToolkit {
 		BufferedReader readerExp = null;
 		BufferedReader readerAct = null;
 		try {
-			readerExp = new BufferedReader(new InputStreamReader(expected.open(), "UTF-8"));
-			readerAct = new BufferedReader(new InputStreamReader(actual.open(), "UTF-8"));
+			readerExp = new BufferedReader(new InputStreamReader(expected.open(), StandardCharsets.UTF_8));
+			readerAct = new BufferedReader(new InputStreamReader(actual.open(), StandardCharsets.UTF_8));
 			int lineNumber = 0;
 			String expLine = null;
 			while ((expLine = readerExp.readLine()) != null) {
