@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,9 +34,10 @@ package org.openjdk.jmc.greychart.testutil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
 import org.openjdk.jmc.greychart.GreyChartPanel;
 import org.openjdk.jmc.greychart.TickFormatter;
@@ -46,14 +47,11 @@ import org.openjdk.jmc.greychart.impl.DateXAxis;
 import org.openjdk.jmc.greychart.impl.DefaultXYGreyChart;
 import org.openjdk.jmc.greychart.impl.DefaultYAxis;
 import org.openjdk.jmc.greychart.util.ChartRenderingToolkit;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 /**
  * Little test program creating a graph containing a huge amount of data.
  */
 public class GreyChartPanelTester {
-	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("HH:mm:ss");
-
 	/**
 	 * Program entry point.
 	 *
@@ -64,11 +62,14 @@ public class GreyChartPanelTester {
 		DefaultXYGreyChart<ITimestampedData> graph = new DefaultXYGreyChart<>();
 		final SeriesProviderSet<ITimestampedData> provider = TimestampedDataProviderTest.getTestSet();
 		DateXAxis xaxis = new DateXAxis(graph);
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
 		xaxis.setRange(TimestampedDataProviderTest.getMinX(), TimestampedDataProviderTest.getMaxX());
 		xaxis.setFormatter(new TickFormatter() {
 			@Override
 			public String format(Number value, Number min, Number max, Number labelDistance) {
-				return FORMATTER.format(new Date(value.longValue()));
+				return dateTimeFormatter.format(Instant.ofEpochMilli(value.longValue()));
 			}
 
 			@Override

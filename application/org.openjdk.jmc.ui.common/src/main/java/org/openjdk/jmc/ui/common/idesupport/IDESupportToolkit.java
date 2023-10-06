@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 219, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,10 +42,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
-
+import org.openjdk.jmc.common.util.Filename;
 import org.openjdk.jmc.ui.common.CorePlugin;
 import org.openjdk.jmc.ui.common.resource.MCFile;
-import org.openjdk.jmc.ui.common.util.Filename;
 
 /**
  * Convenience methods for the IDESupport.

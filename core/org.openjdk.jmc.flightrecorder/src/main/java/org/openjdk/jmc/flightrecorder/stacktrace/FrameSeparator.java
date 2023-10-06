@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -63,11 +63,21 @@ public class FrameSeparator {
 		/**
 		 * Java class
 		 */
-		CLASS(Messages.getString(Messages.STACKTRACE_CLASS)),
+		CLASS(Messages.getString(Messages.STACKTRACE_CLASS)) {
+			@Override
+			protected Object getCategory(IMCFrame frame) {
+				return frame.getMethod().getType();
+			}
+		},
 		/**
 		 * Java package
 		 */
-		PACKAGE(Messages.getString(Messages.STACKTRACE_PACKAGE));
+		PACKAGE(Messages.getString(Messages.STACKTRACE_PACKAGE)) {
+			@Override
+			protected Object getCategory(IMCFrame frame) {
+				return frame.getMethod().getType().getPackage();
+			}
+		};
 
 		private final String localizedName;
 
@@ -77,6 +87,10 @@ public class FrameSeparator {
 
 		public String getLocalizedName() {
 			return localizedName;
+		}
+
+		protected Object getCategory(IMCFrame frame) {
+			return frame.getMethod();
 		}
 	}
 
@@ -115,14 +129,7 @@ public class FrameSeparator {
 	 * equality checks.
 	 */
 	Object getCategory(IMCFrame frame) {
-		switch (categorization) {
-		case PACKAGE:
-			return frame.getMethod().getType().getPackage();
-		case CLASS:
-			return frame.getMethod().getType();
-		default:
-			return frame.getMethod();
-		}
+		return categorization.getCategory(frame);
 	}
 
 	/**

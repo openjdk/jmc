@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,19 +33,22 @@
 package org.openjdk.jmc.rjmx;
 
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
 import org.openjdk.jmc.rjmx.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.services.internal.HotspotManagementToolkit;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 /**
  * Checks the JVM capabilities of a connection.
  */
 public final class JVMSupportToolkit {
+
+	private final static String JFR_MBEAN_OBJECT_NAME = "jdk.management.jfr:type=FlightRecorder"; //$NON-NLS-1$
 
 	private JVMSupportToolkit() {
 		throw new IllegalArgumentException("Don't instantiate this toolkit"); //$NON-NLS-1$
@@ -66,7 +69,7 @@ public final class JVMSupportToolkit {
 		if (ConnectionToolkit.isJRockit(connection)) {
 			title = Messages.JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
 			message = Messages.JVMSupport_MESSAGE_JROCKIT_NOT_SUPPORTED;
-		} else if (!ConnectionToolkit.isHotSpot(connection)) {
+		} else if (!ConnectionToolkit.isHotSpot(connection) && !ConnectionToolkit.isSubstrateVM(connection)) {
 			title = Messages.JVMSupport_TITLE_UNKNOWN_JVM;
 			message = Messages.JVMSupport_MESSAGE_UNKNOWN_JVM;
 		} else if (!ConnectionToolkit.isJavaVersionAboveOrEqual(connection,
@@ -98,8 +101,12 @@ public final class JVMSupportToolkit {
 		}
 		MBeanServerConnection server = connection.getServiceOrNull(MBeanServerConnection.class);
 		try {
-			HotspotManagementToolkit.getVMOption(server, "FlightRecorder");
-			return true;
+			if (ConnectionToolkit.isSubstrateVM(connection)) {
+				return server.isRegistered(new ObjectName(JFR_MBEAN_OBJECT_NAME));
+			} else {
+				HotspotManagementToolkit.getVMOption(server, "FlightRecorder");
+				return true;
+			}
 		} catch (Exception e) { // RuntimeMBeanException thrown if FlightRecorder is not present
 			return false;
 		}
@@ -177,6 +184,9 @@ public final class JVMSupportToolkit {
 				return getJfrJRockitNotSupported(shortMessage);
 			}
 			if (jvmInfo.getJvmType() == JVMType.UNKNOWN) {
+				return null;
+			}
+			if (jvmInfo.getJvmType() == JVMType.SUBSTRATE) {
 				return null;
 			}
 			if (jvmInfo.getJvmType() != JVMType.HOTSPOT) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,6 +80,7 @@ public class ImageConstants {
 
 	public static final String ICON_OK = "ok.png"; //$NON-NLS-1$
 	public static final String ICON_NA = "na.png"; //$NON-NLS-1$
+	public static final String ICON_IGNORE = "na.png"; //$NON-NLS-1$
 	public static final String ICON_INFO = "info.png"; //$NON-NLS-1$
 	public static final String ICON_WARNING = "warning.png"; //$NON-NLS-1$
 	public static final String ICON_ERROR = "Erreur-icon.png"; //$NON-NLS-1$

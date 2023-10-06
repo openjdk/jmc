@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-   Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -59,7 +59,7 @@
 	</listAttribute>
 	<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true" />
 	<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER"
-		value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11" />
+		value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17" />
 	<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS"
 		value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog" />
 	<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER"
@@ -106,7 +106,6 @@
 		<setEntry value="org.openjdk.jmc.feature.ide:default" />
 		<setEntry value="org.openjdk.jmc.feature.jconsole:default" />
 		<setEntry value="org.openjdk.jmc.feature.pde:default" />
-		<setEntry value="org.openjdk.jmc.feature.twitter:default" />
 		<setEntry value="org.openjdk.jmc.feature.joverflow:default" />
 	</setAttribute>
 	<setAttribute key="additional_plugins">

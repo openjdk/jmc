@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,7 +45,8 @@ import java.util.HashSet;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.util.Environment;
 import org.osgi.service.prefs.Preferences;
 
 @SuppressWarnings("nls")

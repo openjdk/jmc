@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.rjmx.test;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.ConnectionException;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
@@ -52,7 +53,6 @@ import org.openjdk.jmc.rjmx.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
 import org.openjdk.jmc.rjmx.subscription.PolicyFactory;
-import org.openjdk.jmc.ui.common.util.Environment;
 
 /**
  * This test suite is supposed to test the example code that we ship with the documentation for the

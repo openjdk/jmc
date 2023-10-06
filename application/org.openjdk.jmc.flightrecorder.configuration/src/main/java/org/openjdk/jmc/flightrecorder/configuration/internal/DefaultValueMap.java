@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -59,10 +59,8 @@ public class DefaultValueMap<K> implements IDescribedMap<K> {
 		this(knownOptions, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public DefaultValueMap(IMapper<K, IOptionDescriptor<?>> fallbacks) {
-		// NOTE: Cast is just to circumvent issue in Eclipse 4.5.2 with JDK 7 compiler/libs.
-		this((Map<K, ? extends IOptionDescriptor<?>>) Collections.emptyMap(), fallbacks);
+		this(Collections.emptyMap(), fallbacks);
 	}
 
 	public DefaultValueMap(Map<K, ? extends IOptionDescriptor<?>> knownOptions,

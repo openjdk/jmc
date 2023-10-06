@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -31,26 +31,25 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
-	<version>${revision}${changelist}</version>
 	<artifactId>agent</artifactId>
+	<version>${revision}${changelist}</version>
 	<packaging>jar</packaging>
 	<name>JDK Mission Control Agent</name>
 	<description>The JMC agent allows users to add JFR instrumentation declaratively to a
 	    running program. The agent can, for example, be used to add flight recorder events
 	    to third party code for which the source is not available.
 	</description>
-	<url>http://jdk.java.net/jmc</url>
+	<url>https://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -59,26 +58,41 @@
 	</organization>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+		<url>https://bugs.openjdk.org/projects/JMC/issues</url>
 	</issueManagement>
 	<mailingLists>
 		<mailingList>
 			<name>jmc dev</name>
-			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
-			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
-			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+			<subscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>https://mail.openjdk.org/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
 	<properties>
+		<!-- Config -->
 		<revision>1.0.1</revision>
 		<changelist>-SNAPSHOT</changelist>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
+		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
+		<!-- Plugin Versions -->
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<spotless.version>2.34.0</spotless.version>
+		<maven.clean.version>3.2.0</maven.clean.version>
+		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.compiler.version>3.11.0</maven.compiler.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.jar.version>3.3.0</maven.jar.version>
+		<maven.shade.version>3.4.1</maven.shade.version>
+		<maven.failsafe.version>3.1.2</maven.failsafe.version>
+		<maven.install.version>3.1.1</maven.install.version>
+		<nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
+		<maven.gpg.version>3.1.0</maven.gpg.version>
+		<!-- Dependency Versions -->
 		<asm.version>8.0.1</asm.version>
 		<junit.version>4.13.2</junit.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spotless.version>1.26.0</spotless.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 	</properties>
 	<scm>
 		<connection>${scmConnection}</connection>
@@ -121,12 +135,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.clean.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.resources.version}</version>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
@@ -151,18 +165,19 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>${maven.compiler.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M7</version>
+				<version>${maven.surefire.version}</version>
 				<configuration>
 					<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder</argLine>
 					<excludes>
 						<exclude>TestDefineEventProbes.java</exclude>
 						<exclude>TestCustomClassloader.java</exclude>
 						<exclude>TestPermissionChecks.java</exclude>
+						<exclude>TestDynamicallyLoadedClasses.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 						<exclude>TestRetrieveEventProbes.java</exclude>
 					</excludes>
@@ -171,12 +186,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>${maven.jar.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>${maven.shade.version}</version>
 				<configuration>
 					<artifactSet>
 						<includes>
@@ -205,7 +220,7 @@
 								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
 								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
 								<Can-Retransform-Classes>true</Can-Retransform-Classes>
-								<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+								<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
 								<Built-By></Built-By>
 							</manifestEntries>
 						</transformer>
@@ -223,7 +238,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M7</version>
+				<version>${maven.failsafe.version}</version>
 				<executions>
 					<execution>
 						<id>test-permissions</id>
@@ -280,6 +295,17 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>test-dynamically-loaded-classes</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>-XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar -cp target/agent-${revision}${changelist}.jar:target/test-classes/</argLine>
+							<includes>TestDynamicallyLoadedClasses.java</includes>
+						</configuration>
+					</execution>
+					<execution>
 						<id>test-retrieve-transforms</id>
 						<goals>
 							<goal>integration-test</goal>
@@ -298,12 +324,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>3.0.0-M1</version>
+				<version>${maven.install.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
+				<version>${nexus.staging.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
@@ -311,8 +337,29 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<configuration>
+					<configLocation>${jmc.config.path}/checkstyle/checkstyle.xml</configLocation>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<inputEncoding>UTF-8</inputEncoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+				</configuration>
+				<executions>
+					<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<goals>
+						<goal>check</goal>
+					</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
+				<version>${maven.gpg.version}</version>
 				<configuration>
 					<!-- Prevent gpg from using pinentry programs -->
 					<gpgArguments>
@@ -337,11 +384,20 @@
 				<configuration>
 					<java>
 						<eclipse>
-							<file>${spotless.config.path}</file>
+							<file>${jmc.config.path}/ide/eclipse/formatting/formatting.xml</file>
 	 						<version>4.8.0</version>
  						</eclipse>
 					</java>
 				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

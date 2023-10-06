@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -104,6 +105,7 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StateToolkit;
@@ -425,8 +427,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		treeAction.setChecked(treeLayout);
 		layoutActions = new IAction[] {treeAction, reducedTreeAction};
 
-		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration,
-				Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION, CoreImages.TIMESPAN);
+		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration, Messages.STACKTRACE_VIEW_DURATION,
+				CoreImages.TIMESPAN);
 		treeAction.setChecked(perDuration);
 
 		NavigateAction forwardAction = new NavigateAction(true);
@@ -571,11 +573,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		CopySelectionAction copyAction;
 		if (perDuration) {
 			headers = Arrays.asList(Messages.STACKTRACE_VIEW_STACK_TRACE, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME,
-					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME,
+					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, Messages.STACKTRACE_VIEW_DURATION_COLUMN_NAME,
 					Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME);
 			copyAction = new CopySelectionAction(viewer,
 					FormatToolkit.selectionFormatter(headers, stackTraceLabelProvider, countLabelProvider,
-							percentageLabelProvider, percentageByDurationLabelProvider));
+							percentageLabelProvider, durationLabelProvider, percentageByDurationLabelProvider));
 		} else {
 			headers = Arrays.asList(Messages.STACKTRACE_VIEW_STACK_TRACE, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME,
 					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME);
@@ -609,9 +611,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		valueColumn.setLabelProvider(countLabelProvider);
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
 				.setLabelProvider(percentageLabelProvider);
-		if (perDuration)
+
+		if (perDuration) {
+			buildColumn(viewer, Messages.STACKTRACE_VIEW_DURATION_COLUMN_NAME, SWT.RIGHT, 300)
+					.setLabelProvider(durationLabelProvider);
 			buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME, SWT.RIGHT, 300)
 					.setLabelProvider(percentageByDurationLabelProvider);
+		}
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), HELP_CONTEXT_ID);
 
 		if (UIPlugin.getDefault().getAccessibilityMode()) {
@@ -850,7 +856,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 3 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 3 => percentage (by duration) column
+			if (event.index == 4 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 4 => percentage (by duration) column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
 				long forkOffset = parentFork.getItemOffset();
@@ -908,8 +914,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			IQuantity duration = getDurationCount(frame.getItems());
 			IQuantity totalDuration = getDurationCount(
 					getRootFork(frame.getBranch().getParentFork()).getAllItemsInFork());
-			return UnitLookup.PERCENT_UNITY.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
-					.displayUsing(IDisplayable.AUTO);
+			if (duration.doubleValue() > 0) {
+				return UnitLookup.PERCENT_UNITY.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
+						.displayUsing(IDisplayable.AUTO);
+			} else {
+				return UnitLookup.PERCENT_UNITY.quantity(0).displayUsing(IDisplayable.AUTO);
+			}
 		}
 
 		@Override
@@ -920,12 +930,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			IQuantity totalDuration = getDurationCount(rootFork.getAllItemsInFork());
 			Fork parentFork = frame.getBranch().getParentFork();
 			int itemsInSiblings = parentFork.getItemsInFork() - frame.getBranch().getFirstFrame().getItemCount();
-			String frameFraction = UnitLookup.PERCENT_UNITY
-					.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
-					.displayUsing(IDisplayable.AUTO);
+			String frameFraction = "";
+			if (duration.doubleValue() > 0) {
+				frameFraction = UnitLookup.PERCENT_UNITY
+						.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
+						.displayUsing(IDisplayable.AUTO);
+			} else {
+				frameFraction = UnitLookup.PERCENT_UNITY.quantity(0).displayUsing(IDisplayable.AUTO);
+			}
 			StringBuilder sb = new StringBuilder("<form>"); //$NON-NLS-1$
 			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
-			sb.append(Messages.stackTraceMessage(duration.doubleValue(), totalDuration.doubleValue(), frameFraction));
+			sb.append(Messages.stackTraceMessage(duration.doubleValue(), duration.getUnit().getIdentifier(),
+					totalDuration.doubleValue(), totalDuration.getUnit().getIdentifier(), frameFraction));
 			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.siblingMessage(itemsInSiblings, parentFork.getBranchCount() - 1));
@@ -959,6 +975,25 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			return Long.toString(((StacktraceFrame) element).getAttributeAggregate());
 		}
 	};
+
+	private final ColumnLabelProvider durationLabelProvider = new ColumnLabelProvider() {
+		@Override
+		public String getText(Object element) {
+			StacktraceFrame frame = (StacktraceFrame) element;
+			IQuantity duration = getDurationCount(frame.getItems());
+			try {
+				return formatDuration(duration.longValueIn(UnitLookup.NANOSECOND));
+			} catch (QuantityConversionException e) {
+				return Messages.N_A;
+			}
+		}
+	};
+
+	private String formatDuration(long duration) {
+		Duration rawDuration = Duration.ofNanos(duration);
+		return String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(), rawDuration.toMinutesPart(),
+				rawDuration.toSecondsPart(), rawDuration.toMillisPart(), rawDuration.toNanosPart() % 1000000L);
+	}
 
 	private final ColumnLabelProvider stackTraceLabelProvider = new ColumnLabelProvider() {
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -40,22 +40,29 @@
 
 	<properties>
 		<!-- Config -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<!-- Plugin Versions -->
+		<p2-maven-plugin.version>2.1.0</p2-maven-plugin.version>
+		<jetty-maven-plugin.version>11.0.15</jetty-maven-plugin.version>
+		<maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
 		<!-- Versions -->
-		<hdrhistogram.version>2.1.12</hdrhistogram.version>
-		<jakarta.activation.version>2.0.1</jakarta.activation.version>
 		<jakarta.mail.version>2.0.1</jakarta.mail.version>
-		<javax.websocket.version>1.1</javax.websocket.version>
-		<jetty.version>10.0.12</jetty.version>
-		<jemmy.version>2.0.0</jemmy.version>
-		<jetty-maven-plugin.version>9.4.46.v20220331</jetty-maven-plugin.version>
-		<lz4.version>1.8.0</lz4.version>
-		<maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+		<angus.activation.version>2.0.0</angus.activation.version>
+		<jakarta.activation.version>2.1.1</jakarta.activation.version>
+		<osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 		<owasp.encoder.version>1.2.3</owasp.encoder.version>
-		<p2-maven-plugin.version>2.0.0</p2-maven-plugin.version>
+		<lz4.version>1.8.0</lz4.version>
+		<hdrhistogram.version>2.1.12</hdrhistogram.version>
+		<jemmy.version>2.0.0</jemmy.version>
+		<jetty.version>10.0.12</jetty.version>
 		<spifly.version>1.3.6</spifly.version>
 		<jolokia.version>1.7.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
+		<fireplace.version>0.0.1-rc3</fireplace.version>
+		<radiance.version>6.0.0</radiance.version>
 	</properties>
 
 	<build>
@@ -74,15 +81,16 @@
 								<!-- specify third party non-OSGi dependencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>com.sun.mail:jakarta.mail:${jakarta.mail.version}</id>
-									<override>true</override>
-									<instructions>
-										<Import-Package>*;resolution:=optional</Import-Package>
-										<Export-Package>*</Export-Package>
-									</instructions>
+									<id>org.eclipse.angus:jakarta.mail:${jakarta.mail.version}</id>
+								</artifact>	
+								<artifact>
+									<id>org.eclipse.angus:angus-activation:${angus.activation.version}</id>
+								</artifact>	
+								<artifact>
+									<id>jakarta.activation:jakarta.activation-api:${jakarta.activation.version}</id>
 								</artifact>
 								<artifact>
-									<id>com.sun.activation:jakarta.activation:${jakarta.activation.version}</id>
+									<id>org.glassfish.hk2:osgi-resource-locator:${osgi-resource-locator.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.owasp.encoder:encoder:${owasp.encoder.version}</id>
@@ -145,6 +153,29 @@
 									<id>com.github.tomakehurst:wiremock-standalone:${wiremock.version}</id>
 									<transitive>false</transitive>
 								</artifact>
+								<artifact>
+									<id>io.github.bric3.fireplace:fireplace-swing:${fireplace.version}</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>io.github.bric3.fireplace:fireplace-swt-awt-bridge:${fireplace.version}</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>io.github.bric3.fireplace:fireplace-swing-animation:${fireplace.version}</id>
+									<source>true</source>
+								</artifact>
+								<!-- Dependency of fireplace-swing-animation -->
+								<artifact>
+									<id>org.pushing-pixels:radiance-animation:${radiance.version}</id>
+									<source>true</source>
+									<override>true</override>
+									<instructions>
+										<Bundle-Name>radiance-animation</Bundle-Name>
+										<Bundle-SymbolicName>radiance-animation</Bundle-SymbolicName>
+										<Export-Package>org.pushingpixels.radiance.animation.api.*</Export-Package>
+									</instructions>
+								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>
@@ -155,7 +186,6 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty-maven-plugin.version}</version>
 				<configuration>
-					<scanIntervalSeconds>60</scanIntervalSeconds>
 					<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
 					<webApp>
 						<contextPath>/site</contextPath>
@@ -178,8 +208,8 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[1.8.0-40,)</version>
-									<message>Building JMC requires Java 8 version JDK 1.8.0_40 or later</message>
+									<version>[17,)</version>
+									<message>Building JMC requires Java 17 or later</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -192,8 +222,8 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.3.1</version>
-									<message>Building JMC requires at least Maven 3.3.1</message>
+									<version>3.5.0</version>
+									<message>Building JMC requires at least Maven 3.5.0</message>
 								</requireMavenVersion>
 							</rules>
 						</configuration>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,8 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
+import static org.openjdk.jmc.common.unit.UnitLookup.MINUTE;
+import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,8 +103,13 @@ public class ClassLeakingRule implements IRule {
 			Messages.getString(Messages.General_CONFIG_CLASS_LIMIT),
 			Messages.getString(Messages.General_CONFIG_CLASS_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(5));
 
+	public static final TypedPreference<IQuantity> ClassLeakingRule_MAX_TIMEOUT = new TypedPreference<>(
+			"classLeaking.calculation.timeout", //$NON-NLS-1$
+			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT),
+			Messages.getString(Messages.ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG), TIMESPAN,
+			MINUTE.quantity(5));
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays.<TypedPreference<?>> asList(WARNING_LIMIT,
-			MAX_NUMBER_OF_CLASSES_TO_REPORT);
+			MAX_NUMBER_OF_CLASSES_TO_REPORT, ClassLeakingRule_MAX_TIMEOUT);
 
 	public static final TypedCollectionResult<ClassEntry> LOADED_CLASSES = new TypedCollectionResult<>("loadedClasses", //$NON-NLS-1$
 			Messages.getString(Messages.ClassLeakingRule_RESULT_LOADED_CLASSES_NAME),
@@ -145,21 +152,25 @@ public class ClassLeakingRule implements IRule {
 	}
 
 	private IResult getResult(
-		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults) {
+		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider dependencyResults,
+		int timeout) {
 		int warningLimit = (int) valueProvider.getPreferenceValue(WARNING_LIMIT).longValue();
+		int configuredTimeout = (int) valueProvider.getPreferenceValue(ClassLeakingRule_MAX_TIMEOUT)
+				.clampedLongValueIn(UnitLookup.MINUTE);
 
 		ItemQueryBuilder queryLoad = ItemQueryBuilder.fromWhere(JdkFilters.CLASS_LOAD);
 		queryLoad.groupBy(JdkAttributes.CLASS_LOADED);
 		queryLoad.select(JdkAttributes.CLASS_LOADED);
 		queryLoad.select(Aggregators.count(COUNT_AGGREGATOR_ID, "classesLoaded")); //$NON-NLS-1$
-		Map<String, ClassEntry> entriesLoad = extractClassEntriesFromQuery(items, queryLoad.build());
+		Map<String, ClassEntry> entriesLoad = extractClassEntriesFromQuery(items, queryLoad.build(), configuredTimeout);
 
 		ItemQueryBuilder queryUnload = ItemQueryBuilder.fromWhere(ItemFilters.and(JdkFilters.CLASS_UNLOAD,
 				createClassAttributeFilter(JdkAttributes.CLASS_UNLOADED, entriesLoad)));
 		queryUnload.groupBy(JdkAttributes.CLASS_UNLOADED);
 		queryUnload.select(JdkAttributes.CLASS_UNLOADED);
 		queryUnload.select(Aggregators.count(COUNT_AGGREGATOR_ID, "classesUnloaded")); //$NON-NLS-1$
-		Map<String, ClassEntry> entriesUnload = extractClassEntriesFromQuery(items, queryUnload.build());
+		Map<String, ClassEntry> entriesUnload = extractClassEntriesFromQuery(items, queryUnload.build(),
+				configuredTimeout);
 		Map<String, ClassEntry> diff = diff(entriesLoad, entriesUnload);
 		List<ClassEntry> entries = new ArrayList<>(diff.values());
 
@@ -170,13 +181,15 @@ public class ClassLeakingRule implements IRule {
 			long maxCount = 0;
 			entries.sort(null);
 			Collection<ClassEntry> entriesOverLimit = new ArrayList<>();
-			for (int i = 0; i < classLimit; i++) {
-				ClassEntry entry = entries.get(i);
+
+			int totalEntries = entries.size() - 1;
+			for (int i = 0, j = totalEntries; i < classLimit; i++, j--) {
+				ClassEntry entry = entries.get(j);
 				entriesOverLimit.add(entry);
 				maxCount = Math.max(entry.getCount().longValue(), maxCount);
 			}
 			double maxScore = RulesToolkit.mapExp100(maxCount, warningLimit) * 0.75;
-			ClassEntry worst = entries.get(0);
+			ClassEntry worst = entries.get(totalEntries);
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(maxScore))
 					.setSummary(Messages.getString(Messages.ClassLeakingRule_RESULT_SUMMARY))
 					.setExplanation(Messages.getString(Messages.ClassLeakingRule_RESULT_EXPLANATION))
@@ -215,9 +228,10 @@ public class ClassLeakingRule implements IRule {
 		return diffMap;
 	}
 
-	private Map<String, ClassEntry> extractClassEntriesFromQuery(IItemCollection items, IItemQuery query) {
+	private Map<String, ClassEntry> extractClassEntriesFromQuery(
+		IItemCollection items, IItemQuery query, int configuredTimeout) {
 		Map<String, ClassEntry> entries = new HashMap<>();
-		IItemResultSet resultSet = new ItemResultSetFactory().createResultSet(items, query);
+		IItemResultSet resultSet = new ItemResultSetFactory().createResultSet(items, query, configuredTimeout);
 		ColumnInfo countColumn = resultSet.getColumnMetadata().get(COUNT_AGGREGATOR_ID); // $NON-NLS-1$
 		ColumnInfo classColumn = resultSet.getColumnMetadata().get(query.getGroupBy().getIdentifier());
 
@@ -247,7 +261,9 @@ public class ClassLeakingRule implements IRule {
 		FutureTask<IResult> evaluationTask = new FutureTask<>(new Callable<IResult>() {
 			@Override
 			public IResult call() throws Exception {
-				return getResult(items, preferenceValueProvider, dependencyResults);
+				int timeout = (int) preferenceValueProvider.getPreferenceValue(ClassLeakingRule_MAX_TIMEOUT)
+						.longValue();
+				return getResult(items, preferenceValueProvider, dependencyResults, timeout);
 			}
 		});
 		return evaluationTask;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,10 +53,10 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 import javax.management.remote.JMXServiceURL;
 
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.rjmx.internal.RJMXConnection;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
 
 /**
  * Toolkit providing utility methods to retrieve MBean proxy objects, invoke JMX operations and
@@ -363,6 +363,20 @@ public final class ConnectionToolkit {
 	public static boolean isHotSpot(IConnectionHandle connectionHandle) {
 		String vmName = getVMName(connectionHandle);
 		return vmName != null && JavaVMVersionToolkit.isHotspotJVMName(vmName);
+	}
+
+	/**
+	 * Returns {@code true} if the connection handle is connected to a Substrate VM, {@code false}
+	 * otherwise. This method requires the connection handle to be connected.
+	 *
+	 * @param connectionHandle
+	 *            the connection handle to check.
+	 * @return {@code true} if the connection handle is connected to a Substrate VM, {@code false}
+	 *         otherwise.
+	 */
+	public static boolean isSubstrateVM(IConnectionHandle connectionHandle) {
+		String vmName = getVMName(connectionHandle);
+		return vmName != null && JavaVMVersionToolkit.isSubstrateVMName(vmName);
 	}
 
 	/**

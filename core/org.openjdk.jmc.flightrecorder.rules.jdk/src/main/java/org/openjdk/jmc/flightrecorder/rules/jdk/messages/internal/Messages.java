@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -100,6 +100,8 @@ public class Messages {
 	public static final String BufferLostRuleFactory_RESULT_SOLUTION = "BufferLostRuleFactory_RESULT_SOLUTION"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_CONFIG_WARNING_LIMIT = "ClassLeakingRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_CONFIG_WARNING_LIMIT_LONG = "ClassLeakingRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT = "ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT"; //$NON-NLS-1$
+	public static final String ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG = "ClassLeakingRule_CONFIG_CALCULATION_TIMEOUT_LONG"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_NAME = "ClassLeakingRule_NAME"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_RESULT_SUMMARY = "ClassLeakingRule_RESULT_SUMMARY"; //$NON-NLS-1$
 	public static final String ClassLeakingRule_RESULT_EXPLANATION = "ClassLeakingRule_RESULT_EXPLANATION"; //$NON-NLS-1$
@@ -267,6 +269,17 @@ public class Messages {
 	public static final String FileWriteRuleFactory_TEXT_WARN_LONG = "FileWriteRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT = "FileWriteRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT_LONG = "FileWriteRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_EXPLANATION = "FinalizersRunRule_EXPLANATION"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES = "FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES_DESC = "FinalizersRunRule_RESULT_FINALIZERS_RUN_CLASSES_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT = "FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT_DESC = "FinalizersRunRule_RESULT_FINALIZERS_RUN_COUNT_DESC"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_RULE_NAME = "FinalizersRunRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SOLUTION = "FinalizersRunRule_SOLUTION"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SUMMARY_OK = "FinalizersRunRule_SUMMARY_OK"; //$NON-NLS-1$
+	public static final String FinalizersRunRule_SUMMARY_WARN = "FinalizersRunRule_SUMMARY_WARN"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_EA_TEXT_WARN_LONG = "FlightRecordingSupportRule_EA_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_EA_TEXT_WARN_SHORT = "FlightRecordingSupportRule_EA_TEXT_WARN_SHORT"; //$NON-NLS-1$
 	public static final String FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT = "FlightRecordingSupportRule_NO_JVM_VERSION_EVENTS_TEXT"; //$NON-NLS-1$
@@ -311,6 +324,10 @@ public class Messages {
 	public static final String GcPauseRatioRule_WARNING_LIMIT_DESC = "GcPauseRatioRule_WARNING_LIMIT_DESC"; //$NON-NLS-1$
 	public static final String GcPauseRatioRule_WINDOW_SIZE = "GcPauseRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcPauseRatioRule_WINDOW_SIZE_DESC = "GcPauseRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_RULE_NAME = "GcPauseTargetRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_OK = "GcPauseTargetRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_WARN_SHORT = "GcPauseTargetRule_TEXT_WARN_SHORT"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_WARN_LONG = "GcPauseTargetRule_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String GcStallRule_RULE_NAME = "GcStallRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcStallRule_TEXT_OK = "GcStallRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String General_CONFIG_CLASS_LIMIT = "General_CONFIG_CLASS_LIMIT"; //$NON-NLS-1$

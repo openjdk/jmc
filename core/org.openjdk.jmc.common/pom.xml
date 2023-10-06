@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -39,6 +39,9 @@
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>common</artifactId>
+	<properties>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.owasp.encoder</groupId>
@@ -51,7 +54,4 @@
 			<version>1.8.0</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-	</properties>
 </project>

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2022, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -87,7 +87,7 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 public class GraphView extends ViewPart implements ISelectionListener {
 	private static final String HTML_PAGE;
 	static {
-		String jsD3 = "jslibs/d3.v6.min.js";
+		String jsD3 = "jslibs/d3.v7.min.js";
 		String jsGraphviz = "jslibs/index.js";
 		String wasmGraphviz = "jslibs/graphvizlib.wasm";
 		String jsGraphizD3 = "jslibs/d3-graphviz.js";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,10 +36,10 @@ import java.io.PrintStream;
 
 import org.openjdk.jmc.commands.IExecute;
 import org.openjdk.jmc.commands.Statement;
+import org.openjdk.jmc.common.security.InMemoryCredentials;
 import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.ui.common.security.InMemoryCredentials;
 
 /**
  * Abstract base class for commands that can be used to start up tools on a RJMX connection.

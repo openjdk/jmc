@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -622,6 +622,8 @@ public final class JdkAttributes {
 	public static final IAttribute<Boolean> USE_DYNAMIC_GC_THREADS = attr("usesDynamicGCThreads", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS),
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS_DESC), FLAG);
+	public static final IAttribute<IQuantity> GC_TIME = attr("gcTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_TIME_RATIO = attr("gcTimeRatio", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_TIME_RATIO), Messages.getString(Messages.ATTR_GC_TIME_RATIO_DESC),
 			NUMBER);
@@ -713,6 +715,8 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> GC_CLASSSPACE_USED = attr("classSpace:used", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED),
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
+	public static final IAttribute<IQuantity> GC_PAUSE_TARGET = attr("pauseTarget", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_PAUSE_TARGET), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);
@@ -1289,4 +1293,26 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
+
+	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = attr("totalFinalizersRun", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER);
+	public static final IAttribute<IMCType> FINALIZABLE_CLASS = attr("finalizableClass", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS),
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_DESC), CLASS);
+	public static final IAttribute<String> FINALIZABLE_CLASS_NAME = Attribute.canonicalize(
+			new Attribute<String>("finalizableClassName", Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME_DESC), PLAIN_TEXT) {
+				@Override
+				public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IMCType, U> accessor = FINALIZABLE_CLASS.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<String, U>() {
+						@Override
+						public String getMember(U i) {
+							IMCType type = accessor.getMember(i);
+							return type == null ? null : type.getFullName();
+						}
+					};
+				}
+			});
 }

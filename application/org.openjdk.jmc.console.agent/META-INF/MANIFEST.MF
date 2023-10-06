@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.openjdk.jmc.console.ui,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.rjmx
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: javax.inject,
  org.eclipse.debug.core.sourcelookup.containers
 Bundle-ActivationPolicy: lazy

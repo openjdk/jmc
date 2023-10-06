@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -121,6 +121,7 @@ public class RulesToolkit {
 	private static final String REC_SETTING_NAME_THRESHOLD = "threshold"; //$NON-NLS-1$
 	public static final String REC_SETTING_NAME_PERIOD = "period"; //$NON-NLS-1$
 	public static final String REC_SETTING_PERIOD_EVERY_CHUNK = "everyChunk"; //$NON-NLS-1$
+	private static final String NEW_LINE = "\n"; //$NON-NLS-1$
 
 	/*
 	 * Returns the type name, as available in the recording settings, or simply the type id, if not
@@ -194,6 +195,14 @@ public class RulesToolkit {
 		 */
 		public boolean isLessAvailableThan(EventAvailability availability) {
 			return availabilityScore < availability.availabilityScore;
+		}
+
+		public static EventAvailability getEventAvailability(int availabilityScore) {
+			for (EventAvailability event : EventAvailability.values()) {
+				if (event.availabilityScore == availabilityScore)
+					return event;
+			}
+			throw new IllegalArgumentException("EventAvailability not found.");
 		}
 	}
 
@@ -506,6 +515,36 @@ public class RulesToolkit {
 			}
 		}
 		return true;
+	}
+
+	public static String getIgnoreReason(IItemCollection items, IRule rule) {
+		StringBuffer ignoreReason = new StringBuffer();
+		StringBuffer lessAvailableEvents = new StringBuffer();
+		int numberOfIssues = 0;
+		Map<String, EventAvailability> availabilityMap = rule.getRequiredEvents();
+		for (Entry<String, EventAvailability> entry : availabilityMap.entrySet()) {
+			EventAvailability eventAvailability = getEventAvailability(items, entry.getKey());
+			if (eventAvailability.isLessAvailableThan(entry.getValue())) {
+				numberOfIssues++;
+				lessAvailableEvents.append(numberOfIssues + " ");
+				lessAvailableEvents.append(
+						MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULES_IGNORED_EVENT_AVAILABILITY),
+								entry.getKey(), eventAvailability, entry.getValue()));
+				lessAvailableEvents.append(NEW_LINE);
+			}
+		}
+		if (numberOfIssues > 0) {
+			if (numberOfIssues == 1) {
+				ignoreReason.append(MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULE_IGNORED_REASON),
+						numberOfIssues));
+			} else {
+				ignoreReason.append(MessageFormat.format(Messages.getString(Messages.RulesToolkit_RULES_IGNORED_REASON),
+						numberOfIssues));
+			}
+			ignoreReason.append(NEW_LINE);
+			ignoreReason.append(lessAvailableEvents);
+		}
+		return ignoreReason.toString();
 	}
 
 	/**

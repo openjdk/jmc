@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -298,6 +298,7 @@ public class Messages extends NLS {
 	public static String JFR_EDITOR_RULES_CANCELLED;
 	public static String JFR_EDITOR_RULES_EVALUATING;
 	public static String JFR_EDITOR_RULES_IGNORED;
+	public static String JFR_EDITOR_RULES_IGNORED_REASON;
 	public static String JFR_EDITOR_RULES_SCHEDULED;
 	public static String JFR_EDITOR_RULES_TASK_NAME;
 	public static String JFR_EDITOR_RULES_WAITING;
@@ -471,6 +472,7 @@ public class Messages extends NLS {
 	public static String RESULT_VIEW_ANALYSIS_DISABLED;
 	public static String RESULT_VIEW_NO_EDITOR_SELECTED;
 	public static String RULESPAGE_SHOW_OK_RESULTS_ACTION;
+	public static String RULESPAGE_SHOW_IGNORE_RESULTS_ACTION;
 	public static String RULES_SHOW_RESULTS_ACTION;
 	public static String RULES_STATISTICS;
 	public static String RecordingPage_CONCURRENT_RECORDINGS_SELECTION;
@@ -515,6 +517,7 @@ public class Messages extends NLS {
 	public static String STACKTRACE_VIEW_COUNT_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME;
+	public static String STACKTRACE_VIEW_DURATION_COLUMN_NAME;
 	public static String STACKTRACE_VIEW_DISTINGUISH_FRAMES_BY;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_CHOOSE;
 	public static String STACKTRACE_VIEW_FRAME_GROUP_NEXT;
@@ -528,7 +531,7 @@ public class Messages extends NLS {
 	public static String STACKTRACE_VIEW_REDUCE_TREE_DEPTH;
 	public static String STACKTRACE_VIEW_SELECTION;
 	public static String STACKTRACE_VIEW_TREE_VIEW;
-	public static String STACKTRACE_VIEW_PERCENTAGE_BY_DURATION;
+	public static String STACKTRACE_VIEW_DURATION;
 	public static String STACKTRACE_VIEW_STACK_TRACE;
 	public static String STACKTRACE_VIEW_THREAD_ROOT;
 	public static String STACKTRACE_VIEW_TRACES_IN_GROUP;
@@ -648,13 +651,15 @@ public class Messages extends NLS {
 		return NLS.bind(message, itemsInSiblings, nSiblings);
 	}
 
-	public static String stackTraceMessage(double duration, double totalDuration, String frameFraction) {
+	public static String stackTraceMessage(
+		double duration, String durationUnit, double totalDuration, String totalDurationUnit, String frameFraction) {
 		String message;
 		if (duration == 1) {
 			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL;
 		} else {
 			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL;
 		}
-		return NLS.bind(message, new Object[] {duration, frameFraction, totalDuration});
+		return NLS.bind(message,
+				new Object[] {duration, durationUnit, frameFraction, totalDuration, totalDurationUnit});
 	}
 }

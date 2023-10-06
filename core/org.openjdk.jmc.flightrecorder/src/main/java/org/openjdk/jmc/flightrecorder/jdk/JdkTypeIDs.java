@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -170,12 +170,12 @@ public final class JdkTypeIDs {
 	public static final String GC_METASPACE_ALLOCATION_FAILURE = PREFIX + "MetaspaceAllocationFailure";
 	public static final String GC_METASPACE_CHUNK_FREE_LIST_SUMMARY = PREFIX + "MetaspaceChunkFreeListSummary";
 	public static final String GC_METASPACE_GC_THRESHOLD = PREFIX + "MetaspaceGCThreshold";
-	public static final String GC_G1MMU = PREFIX + "G1MMU";
 	public static final String GC_G1_EVACUATION_YOUNG_STATS = PREFIX + "G1EvacuationYoungStatistics";
 	public static final String GC_G1_EVACUATION_OLD_STATS = PREFIX + "G1EvacuationOldStatistics";
 	public static final String GC_G1_BASIC_IHOP = PREFIX + "G1BasicIHOP";
 	public static final String GC_G1_HEAP_REGION_TYPE_CHANGE = PREFIX + "G1HeapRegionTypeChange";
 	public static final String GC_G1_HEAP_REGION_INFORMATION = PREFIX + "G1HeapRegionInformation";
+	public static final String GC_G1MMU = PREFIX + "G1MMU";
 	public static final String BIASED_LOCK_SELF_REVOCATION = PREFIX + "BiasedLockSelfRevocation";
 	public static final String BIASED_LOCK_REVOCATION = PREFIX + "BiasedLockRevocation";
 	public static final String BIASED_LOCK_CLASS_REVOCATION = PREFIX + "BiasedLockClassRevocation";
@@ -205,4 +205,7 @@ public final class JdkTypeIDs {
 	public static final String HEAP_DUMP = PREFIX + "HeapDump";
 
 	public static final String PROCESS_START = PREFIX + "ProcessStart";
+
+	public static final String FINALIZER_STATISTICS = PREFIX + "FinalizerStatistics";
+
 }

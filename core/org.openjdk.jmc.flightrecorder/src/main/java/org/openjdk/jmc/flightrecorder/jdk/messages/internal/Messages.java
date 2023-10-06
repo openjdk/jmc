@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -281,6 +281,12 @@ public class Messages {
 	public static final String ATTR_EXPLICIT_GC_DISABLED_DESC = "ATTR_EXPLICIT_GC_DISABLED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTED_PACKAGE = "ATTR_EXPORTED_PACKAGE"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTING_MODULE = "ATTR_EXPORTING_MODULE"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS = "ATTR_FINALIZABLE_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_DESC = "ATTR_FINALIZABLE_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME = "ATTR_FINALIZABLE_CLASS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME_DESC = "ATTR_FINALIZABLE_CLASS_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN = "ATTR_TOTAL_FINALIZERS_RUN"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN_DESC = "ATTR_TOTAL_FINALIZERS_RUN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NAME = "ATTR_FLAG_NAME"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_BOOLEAN = "ATTR_FLAG_NEW_VALUE BOOLEAN"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_NUMBER = "ATTR_FLAG_NEW_VALUE_NUMBER"; //$NON-NLS-1$
@@ -325,6 +331,7 @@ public class Messages {
 	public static final String ATTR_GC_METASPACE_USED_DESC = "ATTR_GC_METASPACE_USED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME = "ATTR_GC_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME_DESC = "ATTR_GC_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_PAUSE_TARGET = "ATTR_GC_PAUSE_TARGET"; //$NON-NLS-1$
 	public static final String ATTR_GC_PHASE_NAME = "ATTR_GC_PHASE_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT = "ATTR_GC_ROOT"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT_DESC = "ATTR_GC_ROOT_DESC"; //$NON-NLS-1$
@@ -332,6 +339,7 @@ public class Messages {
 	public static final String ATTR_GC_SUM_OF_PAUSES_DESC = "ATTR_GC_SUM_OF_PAUSES_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD = "ATTR_GC_THRESHOLD"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD_DESC = "ATTR_GC_THRESHOLD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME = "ATTR_GC_TIME"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO = "ATTR_GC_TIME_RATIO"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO_DESC = "ATTR_GC_TIME_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_WHEN = "ATTR_GC_WHEN"; //$NON-NLS-1$

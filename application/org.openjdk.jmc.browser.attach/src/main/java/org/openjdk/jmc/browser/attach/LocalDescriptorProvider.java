@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,8 +37,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.openjdk.jmc.attach.AttachToolkit;
 import org.openjdk.jmc.browser.attach.LocalJVMToolkit.DiscoveryEntry;
+import org.openjdk.jmc.browser.attach.preferences.PreferenceConstants;
 import org.openjdk.jmc.rjmx.descriptorprovider.AbstractDescriptorProvider;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
@@ -48,7 +51,6 @@ import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
  * proxy for the singleton is returned as the executable extension.
  */
 public class LocalDescriptorProvider extends AbstractDescriptorProvider {
-	private static final long LOCAL_REFRESH_INTERVAL = 5000;
 	private LocalScanner scanner;
 	private Thread scannerThread;
 	private static final LocalDescriptorProvider instance = new LocalDescriptorProvider();
@@ -70,7 +72,7 @@ public class LocalDescriptorProvider extends AbstractDescriptorProvider {
 			while (isRunning) {
 				try {
 					scan();
-					Thread.sleep(LOCAL_REFRESH_INTERVAL);
+					Thread.sleep(getRefreshInterval());
 				} catch (InterruptedException e) {
 					// Don't mind being interrupted.
 				}
@@ -144,6 +146,23 @@ public class LocalDescriptorProvider extends AbstractDescriptorProvider {
 			return;
 		}
 
+		BrowserAttachPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(PreferenceConstants.P_REFRESH_INTERVAL)) {
+					if (scanner != null) {
+						scanner.shutdown();
+						scannerThread.interrupt();
+						startScanner();
+					}
+				}
+			}
+		});
+
+		startScanner();
+	}
+
+	private void startScanner() {
 		scanner = new LocalScanner();
 		scannerThread = new Thread(scanner, "Local Descriptor Scanner"); //$NON-NLS-1$
 		scannerThread.start();
@@ -170,6 +189,10 @@ public class LocalDescriptorProvider extends AbstractDescriptorProvider {
 				scannerThread.interrupt();
 			}
 		}
+	}
+
+	private static final int getRefreshInterval() {
+		return BrowserAttachPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.P_REFRESH_INTERVAL);
 	}
 
 	/**

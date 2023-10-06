@@ -109,6 +109,7 @@
       <property name="eclipse.product" value="org.openjdk.jmc.rcp.application.product" />
       <property name="osgi.instance.area.default" value="@user.home/.jmc/9.0.0" />
       <property name="osgi.bundles.defaultStartLevel" value="4" />
+      <property name="osgi.requiredJavaVersion" value="17" />
    </configurations>
 
    <preferencesInfo>
