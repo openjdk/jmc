@@ -146,7 +146,7 @@ public interface CollectionInstanceDescriptor {
 
 		/**
 		 * Returns the current capacity of this instance. It is greater or equal to the number of
-		 * elements in the colleciton.
+		 * elements in the collection.
 		 */
 		int getCapacity();
 	}

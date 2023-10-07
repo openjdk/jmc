@@ -94,7 +94,7 @@ public class CommonConstraints {
 		private static final IQuantity MIN_REPRESENTABLE = NANOSECOND.quantity(1);
 
 		static {
-			// Error message claims: '1 min' is not a valid timespan. Shoule be numeric value followed by a unit, i.e. 20 ms. Valid units are ns, us, s, m, h and d.
+			// Error message claims: '1 min' is not a valid timespan. Should be numeric value followed by a unit, i.e. 20 ms. Valid units are ns, us, s, m, h and d.
 			DecimalPrefix[] prefixes = {NANO, MICRO, MILLI, NONE};
 			LinearUnitSelector systemSelector = new DecimalUnitSelector(TIMESPAN, Arrays.asList(prefixes));
 			// Omitting MINUTE since JFR cannot handle SI and we do not want to spread non-SI.

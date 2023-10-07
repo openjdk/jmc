@@ -63,7 +63,7 @@ public interface INotificationFactory {
 	public ITriggerConstraint createConstraint(String className) throws Exception;
 
 	/**
-	 * Creates an evaluiator
+	 * Creates an evaluator
 	 *
 	 * @param className
 	 *            the class name for which to create the evaluator.

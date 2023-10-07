@@ -215,7 +215,7 @@ public class MemoryLeakPage extends AbstractDataPage {
 				ReferenceTreeObject object = (ReferenceTreeObject) element;
 				List<ReferenceTreeObject> children = object.getChildren();
 				if (timeRange != null) {
-					// oldObjectRef has more than 1 child, Select only thos node which are from OldObjectSampleRef (leaf node) Objects
+					// oldObjectRef has more than 1 child, Select only those nodes which are from OldObjectSampleRef (leaf node) Objects
 					if (children.size() > 1) {
 						return children.stream().filter(withinTimeRangePredicate).toArray();
 					} else {

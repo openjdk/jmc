@@ -42,7 +42,7 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
 
 /**
- * LabelPovider for recording templates
+ * LabelProvider for recording templates
  */
 final class TemplateLabelProvider extends LabelProvider implements IStyledLabelProvider {
 	private boolean displayVersion;

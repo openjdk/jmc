@@ -79,7 +79,7 @@ public class DiagnosticPlugin extends MCAbstractUIPlugin {
 	}
 
 	/**
-	 * Initialize image regsitry
+	 * Initialize image registry
 	 */
 	@Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
