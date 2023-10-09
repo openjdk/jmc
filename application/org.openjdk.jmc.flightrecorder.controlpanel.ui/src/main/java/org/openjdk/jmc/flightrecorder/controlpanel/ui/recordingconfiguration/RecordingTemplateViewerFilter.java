@@ -45,7 +45,7 @@ import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;
  */
 class RecordingTemplateViewerFilter extends ViewerFilter {
 	private String m_filterString;
-	private final FilterMatcher m_filterMatcher = FilterMatcher.getInstance();;
+	private final FilterMatcher m_filterMatcher = FilterMatcher.getInstance();
 	private HashSet<PathElement> m_filterCache;
 
 	public void update(String filterString) {

@@ -79,7 +79,7 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 	private static final String NOTIFICATIONS_TAB = org.openjdk.jmc.console.ui.mbeanbrowser.tab.Messages.FeatureSectionPart_NOTIFICATIONS_TAB_TITLE_TEXT;
 	private static final String ATTRIBUTES_TAB = org.openjdk.jmc.console.ui.mbeanbrowser.tab.Messages.FeatureSectionPart_ATTRIBUTES_TAB_TITLE_TEXT;
 	private static final String MBEANBROWSER_TREE_NAME = org.openjdk.jmc.console.ui.mbeanbrowser.tree.MBeanTreeSectionPart.MBEANBROWSER_MBEAN_TREE_NAME;
-	private static final String RESULT_TREE_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TREE_NAME;;
+	private static final String RESULT_TREE_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TREE_NAME;
 	private static final String RESULT_TAB_NAME = org.openjdk.jmc.rjmx.ui.operations.ExecuteOperationForm.RESULT_TAB_NAME;
 	private static final String MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME = org.openjdk.jmc.console.ui.mbeanbrowser.notifications.MBeanNotificationLogInspector.MBEANBROWSER_NOTIFICATIONSTAB_LOGTREE_NAME;
 	private static final String VALUE_COLUMN_NAME = org.openjdk.jmc.rjmx.ui.attributes.Messages.AttributeInspector_VALUE_COLUMN_HEADER;

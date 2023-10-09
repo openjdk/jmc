@@ -88,7 +88,7 @@ public final class JFCGrammar {
 	public static final XMLTag TAG_SELECTION = new XMLTag("selection");
 	public static final XMLTag TAG_OPTION = new XMLTag("option", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_FLAG = new XMLTag("flag", XMLNodeType.ELEMENT_WITH_CONTENT);
-	public static final XMLTag TAG_TEXT = new XMLTag("text", XMLNodeType.ELEMENT_WITH_CONTENT);;
+	public static final XMLTag TAG_TEXT = new XMLTag("text", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_VARIABLE = new XMLTag("variable", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_CONDITION = new XMLTag("condition");
 	public static final XMLTag TAG_AND = new XMLTag("and", XMLNodeType.ELEMENT_WITH_AT_LEAST_ONE_CHILD);
