@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.State;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -611,7 +612,7 @@ public class LocalJVMToolkit {
 		do {
 			n = in.read(b);
 			if (n > 0) {
-				String s = new String(b, 0, n, "UTF-8"); //$NON-NLS-1$
+				String s = new String(b, 0, n, StandardCharsets.UTF_8);
 				buf.append(s);
 			}
 		} while (n > 0);

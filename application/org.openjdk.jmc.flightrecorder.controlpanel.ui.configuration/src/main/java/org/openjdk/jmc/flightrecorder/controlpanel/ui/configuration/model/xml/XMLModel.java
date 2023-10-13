@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,6 +42,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -259,7 +260,7 @@ public final class XMLModel extends Observable {
 	public void saveToFile(File file) throws IOException {
 		// NOTE: The pretty printer writes that the encoding is UTF-8, so we must make sure it is.
 		// Ensure charset exists before opening file for writing.
-		Charset charset = Charset.forName("UTF-8"); //$NON-NLS-1$
+		Charset charset = StandardCharsets.UTF_8;
 		try (Writer osw = new OutputStreamWriter(new FileOutputStream(file), charset)) {
 			if (writeTo(osw)) {
 				setDirty(false);
