@@ -45,6 +45,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -112,13 +113,8 @@ public class Transform {
 	private static void transform(Path inputFile, Path outputFile, Path sylesheetFile)
 			throws IOException, TransformerException {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		try {
-			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-		} catch (TransformerConfigurationException e) {
-			// This should not happen anyway
-			throw new RuntimeException(e);
-		}
+		transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 		try (InputStream xslIn = newInputStream(sylesheetFile);
 				InputStream in = newInputStream(inputFile);
 				OutputStream out = newOutputStream(outputFile)) {
