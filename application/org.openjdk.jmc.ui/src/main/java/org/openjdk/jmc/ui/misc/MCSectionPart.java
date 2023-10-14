@@ -73,8 +73,8 @@ import org.eclipse.ui.forms.widgets.Section;
  * available so it's possible to access the model, but because model initialization could be
  * expensive it should be avoided, if possible. During this phase the {@link SectionSite} for the
  * part is constructed and should be available for classes that want to subclass. Note, you need to
- * call super.initialize(IManagedForm) in {@link SectionPart#initialize(IManagedForm)} method if
- * you override.
+ * call super.initialize(IManagedForm) in {@link SectionPart#initialize(IManagedForm)} method if you
+ * override.
  * </p>
  * <p>
  * <b>Model initialization</b><br>

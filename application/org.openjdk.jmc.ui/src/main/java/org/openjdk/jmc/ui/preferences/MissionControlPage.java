@@ -159,8 +159,8 @@ public class MissionControlPage extends FieldEditorPreferencePage implements IWo
 
 	/**
 	 * Since {@link FieldEditorPreferencePage} messes around with the layout this method is used to
-	 * get some formatting on the accessibility options. It basically wraps a {@link Composite} around
-	 * the component by "inserting" it between the real parent and the field editor.
+	 * get some formatting on the accessibility options. It basically wraps a {@link Composite}
+	 * around the component by "inserting" it between the real parent and the field editor.
 	 *
 	 * @param parent
 	 *            the real {@link Composite}.
