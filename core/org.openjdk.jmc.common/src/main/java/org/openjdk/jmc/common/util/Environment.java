@@ -131,12 +131,6 @@ public class Environment {
 	}
 
 	private static int initPID() {
-		try {
-			return (int) ProcessHandle.current().pid();
-		} catch (Exception e) {
-			Logger.getLogger("org.openjdk.jmc.common.mbean").log(Level.FINE, //$NON-NLS-1$
-					"Could not retrieve PID of this running jvm instance", e); //$NON-NLS-1$
-		}
-		return 0;
+		return (int) ProcessHandle.current().pid();
 	}
 }
