@@ -45,7 +45,7 @@
 	<packaging>eclipse-test-plugin</packaging>
 
 	<properties>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
 
 	<dependencies>
