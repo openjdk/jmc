@@ -32,7 +32,6 @@
  */
 package org.openjdk.jmc.flightrecorder.internal.parser.v0;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -62,11 +61,7 @@ final class UTFStringParser implements IArrayElementParser<String>, IValueReader
 		offset.increase(2);
 		int index = offset.get();
 		offset.increase(len);
-		try {
-			return new String(bytes, index, len, CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		return new String(bytes, index, len, CHARSET);
 	}
 
 	private static int readUnsignedShort(byte[] bytes, int offset) {
