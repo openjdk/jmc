@@ -239,6 +239,11 @@
 							<arch>x86_64</arch>
 						</environment>
 						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>aarch64</arch>
+						</environment>
+						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
@@ -536,13 +541,33 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>copy-resources-to-linux</id>
+							<id>copy-resources-to-linux-x86_64</id>
 							<phase>prepare-package</phase>
 							<goals>
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/x86_64/legal</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-linux-aarch64</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/aarch64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>
