@@ -45,7 +45,7 @@
 	<packaging>eclipse-test-plugin</packaging>
 
 	<properties>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
 
 	<dependencies>
@@ -65,6 +65,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-jmx-adapter</artifactId>
+			<version>${jolokia.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -75,11 +80,13 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<includes>${test.includes}</includes>
-					<!-- Start jolokia on a random free port to avoid requiring specific 
+					<!-- Start jolokia on a random free port to avoid requiring
+					specific 
 						ports to run test -->
-					<argLine>-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
+					<argLine>
+						-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
 				</configuration>
-			</plugin>	
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>

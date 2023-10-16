@@ -52,8 +52,8 @@ public interface KubernetesScanningParameters {
 	String jolokiaProtocol();
 
 	String requireLabel();
-	
+
 	ICredentials storeCredentials(String username, String password) throws SecurityException;
-	
+
 	void logError(String message, Throwable error);
 }

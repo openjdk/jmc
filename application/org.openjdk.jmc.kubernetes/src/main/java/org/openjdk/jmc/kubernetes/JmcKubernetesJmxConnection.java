@@ -46,6 +46,7 @@ import org.jolokia.client.exception.J4pRemoteException;
 import org.jolokia.client.request.J4pResponse;
 import org.openjdk.jmc.jolokia.JmcJolokiaJmxConnection;
 import org.openjdk.jmc.rjmx.ConnectionException;
+
 /**
  * Jolokia based MBeanServerConnector tailored for JMC needs
  */

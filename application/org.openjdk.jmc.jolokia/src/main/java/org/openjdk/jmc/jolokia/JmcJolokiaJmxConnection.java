@@ -56,9 +56,8 @@ import org.jolokia.converter.Converters;
 import org.jolokia.converter.json.JsonConvertOptions;
 
 /**
- * Make JMC specific adjustments to Jolokia JMX connection. 
- * May consider to use the decorator pattern if differences are big,
- * but for now subclass
+ * Make JMC specific adjustments to Jolokia JMX connection. May consider to use the decorator
+ * pattern if differences are big, but for now subclass
  */
 public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
@@ -91,7 +90,8 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 			MBeanOperationInfo[] modifiedOperations = new MBeanOperationInfo[mBeanInfo.getOperations().length];
 
 			for (int i = 0; i < mBeanInfo.getOperations().length; i++) {
-				modifiedOperations[i] = stealOrBuildOperationInfo(mBeanInfo.getOperations()[i], checkForLocalOperationInfo(name));
+				modifiedOperations[i] = stealOrBuildOperationInfo(mBeanInfo.getOperations()[i],
+						checkForLocalOperationInfo(name));
 			}
 			//create a copy with modified operations in place of the original MBeanInfo in the cache
 			final MBeanInfo modifiedMBeanInfo = new MBeanInfo(mBeanInfo.getClassName(), mBeanInfo.getDescription(),
@@ -131,19 +131,19 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 	}
 
 	/**
-	 * Build MBeanOperationInfo by taking information from the corresponding 
-	 * MBean in the local JVM for a more precise signature. 
-	 * If it is not available locally, attempt to construct it from the metadata from Jolokia.
+	 * Build MBeanOperationInfo by taking information from the corresponding MBean in the local JVM
+	 * for a more precise signature. If it is not available locally, attempt to construct it from
+	 * the metadata from Jolokia.
 	 * 
-	 * @param original MBeanInfo from Jolokia list.
+	 * @param original
+	 *            MBeanInfo from Jolokia list.
 	 * @param localInfo
 	 *            MBeanInfo from this JVM to use for getting descriptor.
 	 * @return Descriptor
 	 */
-	private MBeanOperationInfo stealOrBuildOperationInfo(MBeanOperationInfo original, Optional<MBeanInfo> localInfo) {			
-		return localInfo
-				.map(info -> checkForMatchingLocalOperation(original, info))// first attempt to get descriptor from local copy
-				.orElseGet(()->reverseEngineerOperationInfo(original));// if not, reverse engineer descriptor from operation info
+	private MBeanOperationInfo stealOrBuildOperationInfo(MBeanOperationInfo original, Optional<MBeanInfo> localInfo) {
+		return localInfo.map(info -> checkForMatchingLocalOperation(original, info))// first attempt to get descriptor from local copy
+				.orElseGet(() -> reverseEngineerOperationInfo(original));// if not, reverse engineer descriptor from operation info
 	}
 
 	private MBeanOperationInfo checkForMatchingLocalOperation(MBeanOperationInfo original, MBeanInfo info) {

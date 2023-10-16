@@ -82,9 +82,8 @@ import snippet.INCLUDING;
 import snippet.OR;
 
 /**
- * I test that JMX connections done with JmcKubernetesJmxConnectionProvider are
- * functional. In order to be able to test this in a contained environment, the
- * kubernetes API is mocked with wiremock.
+ * I test that JMX connections done with JmcKubernetesJmxConnectionProvider are functional. In order
+ * to be able to test this in a contained environment, the kubernetes API is mocked with wiremock.
  */
 @SuppressWarnings("restriction")
 public class JmcKubernetesTest {
@@ -286,8 +285,9 @@ public class JmcKubernetesTest {
 		final KubernetesDiscoveryListener scanner = new KubernetesDiscoveryListener(parameters);
 		final Map<String, IServerDescriptor> foundVms = new HashMap<>();
 		IDescriptorListener descriptorListener = new IDescriptorListener() {
-			public void onDescriptorDetected(IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
-					IConnectionDescriptor connectionDescriptor, IDescribable provider) {
+			public void onDescriptorDetected(
+				IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
+				IConnectionDescriptor connectionDescriptor, IDescribable provider) {
 				foundVms.put(serverDescriptor.getGUID(), serverDescriptor);
 			}
 

@@ -81,9 +81,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.fabric8.kubernetes.client.Config;
 
 /**
- * I test that JMX connections done with JmcKubernetesJmxConnectionProvider are
- * functional. In order to be able to test this in a contained environment, the
- * kubernetes API is mocked with wiremock.
+ * I test that JMX connections done with JmcKubernetesJmxConnectionProvider are functional. In order
+ * to be able to test this in a contained environment, the kubernetes API is mocked with wiremock.
  */
 @SuppressWarnings("restriction")
 public class JmcKubernetesTest {
@@ -237,8 +236,7 @@ public class JmcKubernetesTest {
 		testThatJvmIsFound(parameters);
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
-				.postRequestedFor(
-						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.postRequestedFor(WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))));
 	}
@@ -254,8 +252,7 @@ public class JmcKubernetesTest {
 		testThatJvmIsFound(parameters);
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
-				.postRequestedFor(
-						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.postRequestedFor(WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("admin:secret".getBytes()))));
 	}
@@ -269,8 +266,7 @@ public class JmcKubernetesTest {
 		testThatJvmIsFound(parameters);
 		// Verify that the expected authorization was picked up
 		WireMock.verify(WireMock
-				.postRequestedFor(
-						WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
+				.postRequestedFor(WireMock.urlPathMatching("/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*"))
 				.withHeader("X-jolokia-authorization",
 						WireMock.equalTo("Basic " + Base64.getEncoder().encodeToString("user:***".getBytes()))));
 	}
@@ -280,8 +276,9 @@ public class JmcKubernetesTest {
 		final KubernetesDiscoveryListener scanner = new KubernetesDiscoveryListener(parameters);
 		final Map<String, IServerDescriptor> foundVms = new HashMap<>();
 		IDescriptorListener descriptorListener = new IDescriptorListener() {
-			public void onDescriptorDetected(IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
-					IConnectionDescriptor connectionDescriptor, IDescribable provider) {
+			public void onDescriptorDetected(
+				IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
+				IConnectionDescriptor connectionDescriptor, IDescribable provider) {
 				foundVms.put(serverDescriptor.getGUID(), serverDescriptor);
 			}
 
