@@ -8,12 +8,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.jolokia,
- org.openjdk.jmc.common.test,
  org.eclipse.osgi;bundle-version="3.16.200",
  org.eclipse.ui.workbench,
- org.openjdk.jmc.rjmx;bundle-version="9.0.0",
+ org.openjdk.jmc.rjmx,
  org.eclipse.ui,
- org.awaitility;bundle-version="4.0.0",
+ org.awaitility,
  org.hamcrest;bundle-version="2.1.0"
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test
-Import-Package: org.openjdk.jmc.rjmx.descriptorprovider

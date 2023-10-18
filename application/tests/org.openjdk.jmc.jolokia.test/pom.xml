@@ -54,22 +54,6 @@
 			<artifactId>awaitility</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-jvm</artifactId>
-			<version>${jolokia.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun</groupId>
-					<artifactId>tools</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-jmx-adapter</artifactId>
-			<version>${jolokia.version}</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -85,22 +69,6 @@
 						ports to run test -->
 					<argLine>
 						-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<extraClasspathElements>
-						<dependency>
-
-							<groupId>org.awaitility</groupId>
-							<artifactId>awaitility</artifactId>
-							<version>4.0.0</version>
-						</dependency>
-
-					</extraClasspathElements>
 				</configuration>
 			</plugin>
 

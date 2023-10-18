@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/jolokia/**"/>
+			<accessrule kind="accessible" pattern="org/json/simple/*"/>
+			<accessrule kind="accessible" pattern="io/fabric8/kubernetes/client/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="output" path="target/test-classes"/>
+</classpath>

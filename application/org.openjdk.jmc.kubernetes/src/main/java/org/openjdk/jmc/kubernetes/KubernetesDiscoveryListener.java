@@ -95,7 +95,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		this(JmcKubernetesPlugin.getDefault());
 	}
 
-	KubernetesDiscoveryListener(KubernetesScanningParameters parameters) {
+	//Public constructor in order for test plugin to be able to rig tests in an easier manner
+	public KubernetesDiscoveryListener(KubernetesScanningParameters parameters) {
 		this.settings = parameters;
 	}
 

@@ -64,24 +64,22 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.jvm.JVMType;
+import org.openjdk.jmc.common.security.ICredentials;
+import org.openjdk.jmc.common.security.InMemoryCredentials;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
 import org.openjdk.jmc.rjmx.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
-import org.openjdk.jmc.ui.common.security.ICredentials;
-import org.openjdk.jmc.ui.common.security.InMemoryCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import io.fabric8.kubernetes.client.Config;
-
 /**
- * I test that JMX connections done with JmcKubernetesJmxConnectionProvider are functional. In order
+ * Test that JMX connections done with JmcKubernetesJmxConnectionProvider are functional. In order
  * to be able to test this in a contained environment, the kubernetes API is mocked with wiremock.
  */
 @SuppressWarnings("restriction")
@@ -160,7 +158,8 @@ public class JmcKubernetesTest {
 		File configFile = File.createTempFile("mock-kube-config", ".yml");
 		configResponse.getEntity().writeTo(new FileOutputStream(configFile));
 		// we set this so the KubernetesDiscoveryListener will work
-		System.setProperty(Config.KUBERNETES_KUBECONFIG_FILE, configFile.getAbsolutePath());
+		//Setting taken from: https://github.com/fabric8io/kubernetes-client/blob/77a65f7d40f31a5dc37492cd9de3c317c2702fb4/kubernetes-client-api/src/main/java/io/fabric8/kubernetes/client/Config.java#L120, unlikely to change
+		System.setProperty("kubeconfig", configFile.getAbsolutePath());
 		jolokiaConnection = getKubernetesMBeanConnector();
 	}
 
