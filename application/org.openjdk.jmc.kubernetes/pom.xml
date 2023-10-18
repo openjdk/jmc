@@ -43,28 +43,6 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.kubernetes</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho.version}</version>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-kubernetes</artifactId>
-			<version>${jolokia.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 	<properties>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>

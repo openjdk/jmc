@@ -61,8 +61,8 @@ import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
 import org.openjdk.jmc.jolokia.JolokiaAgentDescriptor;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.security.SecurityException;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.security.SecurityException;
 
 import io.fabric8.kubernetes.api.model.NamedContext;
 import io.fabric8.kubernetes.api.model.ObjectMeta;

@@ -43,7 +43,7 @@ import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.discovery.JolokiaDiscovery;
 import org.jolokia.util.JulLogHandler;
 import org.json.simple.JSONObject;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 
 /**

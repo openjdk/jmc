@@ -43,54 +43,6 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.jolokia</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<build>
-
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<extraClasspathElements>
-						<dependency>
-							<groupId>org.jolokia</groupId>
-							<artifactId>jolokia-jmx-adapter</artifactId>
-							<version>${jolokia.version}</version>
-						</dependency>
-					</extraClasspathElements>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-jmx-adapter</artifactId>
-			<version>${jolokia.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.rjmx</artifactId>
-			<version>8.3.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-jvm</artifactId>
-			<version>${jolokia.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun</groupId>
-					<artifactId>tools</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
 	<properties>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>

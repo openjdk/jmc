@@ -52,10 +52,10 @@ import javax.management.remote.JMXServiceURL;
 
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.json.simple.JSONObject;
-import org.openjdk.jmc.ui.common.jvm.Connectable;
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
+import org.openjdk.jmc.common.jvm.Connectable;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 
 /**
  * Provide data about JVMs accessed over Jolokia for the JVM browser

@@ -40,7 +40,7 @@ import javax.management.remote.JMXServiceURL;
 
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 

@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.openjdk.jmc.common.security.CredentialsNotAvailableException;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.kubernetes.JmcKubernetesPlugin;
-import org.openjdk.jmc.ui.common.security.CredentialsNotAvailableException;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 
 /**
  * This class represents a preference page that is contributed to the Preferences dialog. By

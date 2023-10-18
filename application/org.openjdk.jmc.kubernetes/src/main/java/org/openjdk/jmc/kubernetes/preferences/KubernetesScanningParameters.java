@@ -33,8 +33,8 @@
  */
 package org.openjdk.jmc.kubernetes.preferences;
 
-import org.openjdk.jmc.ui.common.security.ICredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
+import org.openjdk.jmc.common.security.ICredentials;
+import org.openjdk.jmc.common.security.SecurityException;
 
 public interface KubernetesScanningParameters {
 	boolean scanForInstances();

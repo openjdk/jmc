@@ -5,17 +5,15 @@ Bundle-SymbolicName: org.openjdk.jmc.kubernetes;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Automatic-Module-Name: org.openjdk.jmc.kubernetes
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.openjdk.jmc.jolokia;bundle-version="9.0.0",
+Require-Bundle: org.openjdk.jmc.jolokia,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.openjdk.jmc.ui,
  org.eclipse.swt,
  org.jolokia.kubernetes.standalone;bundle-version="1.7.2",
- org.openjdk.jmc.rjmx;bundle-version="9.0.0"
+ org.openjdk.jmc.rjmx
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
-Import-Package: org.apache.commons.logging;version="1.2.0",
- org.openjdk.jmc.rjmx,
- org.openjdk.jmc.rjmx.descriptorprovider
+Import-Package: org.apache.commons.logging;version="1.2.0"
 Bundle-Activator: org.openjdk.jmc.kubernetes.JmcKubernetesPlugin
 Bundle-ActivationPolicy: lazy
