@@ -150,7 +150,7 @@ public class ObjectHistogram {
 	/**
 	 * Returns all classes with instances that have some multi-byte primitive fields (char, short,
 	 * int or long), and some of these fields don't use their high byte(s) in either all the
-	 * instances (if percentile == 1.0), or in the given precentile of instances. For example, if
+	 * instances (if percentile == 1.0), or in the given percentile of instances. For example, if
 	 * percentile == 0.9f, it would return classes with some fields underutilized in 90% or more of
 	 * their instances.
 	 * <p>

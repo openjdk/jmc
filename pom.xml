@@ -125,10 +125,31 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2023-03</id>
+			<id>2023-09</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.openjdk.jmc</groupId>
+									<artifactId>platform-definition-2023-09</artifactId>
+									<version>${revision}${changelist}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>2023-03</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -216,6 +237,11 @@
 							<os>linux</os>
 							<ws>gtk</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>aarch64</arch>
 						</environment>
 						<environment>
 							<os>macosx</os>
@@ -515,13 +541,33 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>copy-resources-to-linux</id>
+							<id>copy-resources-to-linux-x86_64</id>
 							<phase>prepare-package</phase>
 							<goals>
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/x86_64/legal</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${rootDir}/license</directory>
+										<includes>
+											<include>LICENSE.txt</include>
+											<include>THIRDPARTYREADME.txt</include>
+											<include>COPYRIGHT</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-to-linux-aarch64</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/products/org.openjdk.jmc/linux/gtk/aarch64/legal</outputDirectory>
 								<resources>
 									<resource>
 										<directory>${rootDir}/license</directory>

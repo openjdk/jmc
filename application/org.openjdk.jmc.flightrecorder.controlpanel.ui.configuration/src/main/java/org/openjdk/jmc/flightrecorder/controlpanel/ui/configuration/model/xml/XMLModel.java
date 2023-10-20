@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,6 +42,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -249,7 +250,7 @@ public final class XMLModel extends Observable {
 	}
 
 	/**
-	 * Saves the model to the given {@link File}. If successful, sets dirtyness to false, as
+	 * Saves the model to the given {@link File}. If successful, sets dirtiness to false, as
 	 * returned by {@link #isModified()}.
 	 *
 	 * @param writer
@@ -259,7 +260,7 @@ public final class XMLModel extends Observable {
 	public void saveToFile(File file) throws IOException {
 		// NOTE: The pretty printer writes that the encoding is UTF-8, so we must make sure it is.
 		// Ensure charset exists before opening file for writing.
-		Charset charset = Charset.forName("UTF-8"); //$NON-NLS-1$
+		Charset charset = StandardCharsets.UTF_8;
 		try (Writer osw = new OutputStreamWriter(new FileOutputStream(file), charset)) {
 			if (writeTo(osw)) {
 				setDirty(false);
@@ -268,7 +269,7 @@ public final class XMLModel extends Observable {
 	}
 
 	/**
-	 * Writes the model to the given {@link Writer}. Does not change dirtyness, as returned by
+	 * Writes the model to the given {@link Writer}. Does not change dirtiness, as returned by
 	 * {@link #isModified()}.
 	 *
 	 * @param writer
@@ -293,7 +294,7 @@ public final class XMLModel extends Observable {
 	public void markDirty() {
 		/*
 		 * FIXME: Mixing up "dirty" as in not-saved-to-file, with notification of
-		 * in-memory-model-change? Or is it that the observable state is the dirtyness? Still, only
+		 * in-memory-model-change? Or is it that the observable state is the dirtiness? Still, only
 		 * the transition from non-dirty to dirty is reported. And only if this method is used. This
 		 * can be called if the underlying file has changed to some other reason, and result in the
 		 * JFCEditor being marked dirty, when it shouldn't.

@@ -42,6 +42,11 @@ public class PreferenceConstants {
 	public static final String P_REFRESH_INTERVAL = "refreshInterval"; //$NON-NLS-1$
 
 	/**
+	 * Preference key for setting a delay when creating the attachable JVM Descriptor
+	 */
+	public static final String P_JVM_ATTACH_DELAY = "jvmAttachDelay"; //$NON-NLS-1$
+
+	/**
 	 * Preferences key for automatically starting the agent.
 	 */
 	public static final String P_AUTO_START_AGENT = "autoStartPreference"; //$NON-NLS-1$

@@ -12,7 +12,13 @@ There are various Eclipse bundles out there. Get (at least) the Eclipse IDE for 
 
 To get to the screen where you can select another packaging than the standard, click on the [Download Packages](https://www.eclipse.org/downloads/eclipse-packages) link on the Eclipse download page.
 
-Install it, start it and create a new workspace for your JMC work. Creating a new workspace is as easy as picking a new name when starting up your Eclipse in the dialog asking for a directory for the workspace:
+Install Eclipse, and before starting it, add the following two lines to the eclipse.ini file:
+   ```
+   -Dp2.httpRule=allow
+   -Dp2.trustedAuthorities=https://download.eclipse.org,https://archive.eclipse.org,http://localhost
+   ```
+
+Next start Eclipse and create a new workspace for your JMC work. Creating a new workspace is as easy as picking a new name when starting up your Eclipse in the dialog asking for a directory for the workspace:
 
 ![Workspace Selection](images/workspace.png)
 

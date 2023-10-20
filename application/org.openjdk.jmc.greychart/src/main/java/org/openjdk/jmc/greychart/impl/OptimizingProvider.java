@@ -59,7 +59,7 @@ public interface OptimizingProvider {
 
 	/**
 	 * @param width
-	 * @return samples in data series coordinates (not neccessarily the same as world coordinates)
+	 * @return samples in data series coordinates (not necessarily the same as world coordinates)
 	 */
 	Iterator<SamplePoint> getSamples(int width);
 

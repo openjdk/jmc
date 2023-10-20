@@ -192,7 +192,7 @@ public abstract class AbstractAxis extends AbstractSeriesRenderer implements Axi
 	}
 
 	/**
-	 * @return true if grid lines will be painted from the tick markes on the background of the plot
+	 * @return true if grid lines will be painted from the tick marks on the background of the plot
 	 *         area.
 	 */
 	public boolean isPaintGridLinesEnabled() {
@@ -200,7 +200,7 @@ public abstract class AbstractAxis extends AbstractSeriesRenderer implements Axi
 	}
 
 	/**
-	 * Set this attribute to true if you want grid lines to be painted on the backround of the plot
+	 * Set this attribute to true if you want grid lines to be painted on the background of the plot
 	 * area.
 	 *
 	 * @param paintGridLinesEnabled

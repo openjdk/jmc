@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.browser.attach.preferences;
 
+import java.time.Duration;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -69,6 +71,10 @@ public class AttachPreferencePage extends FieldEditorPreferencePage implements I
 				Messages.AttachPreferencePage_BROWSER_REFRESH_INTERVAL, getFieldEditorParent());
 		browserScanInterval.setValidRange(1000, Integer.MAX_VALUE);
 		addField(browserScanInterval);
+		IntegerFieldEditor jvmAttachOffset = new IntegerFieldEditor(PreferenceConstants.P_JVM_ATTACH_DELAY,
+				Messages.AttachPreferencePage_JVM_ATTACH_DELAY, getFieldEditorParent());
+		jvmAttachOffset.setValidRange(0, (int) Duration.ofMinutes(1).toMillis());
+		addField(jvmAttachOffset);
 		PreferencesToolkit.fillNoteControl(getFieldEditorParent(),
 				Messages.AttachPreferencePage_NOTE_SHOW_UNCONNECTABLE);
 	}

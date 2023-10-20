@@ -62,7 +62,7 @@ public class StringInterner {
 	static {
 		// Set maximum intern table size such that it generally does not grow over
 		// more than 1 per cent of max heap size, assuming a single string in it
-		// takes rougly 100 bytes.
+		// takes roughly 100 bytes.
 		int length = (int) (Runtime.getRuntime().totalMemory() / 100 / 100);
 		length = Integer.highestOneBit(length); // Round down to a power of 2
 		table = new WeakReference[length];
