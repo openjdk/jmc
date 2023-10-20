@@ -51,7 +51,6 @@ import javax.management.openmbean.TabularDataSupport;
 import javax.management.remote.JMXServiceURL;
 
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
-import org.json.simple.JSONObject;
 import org.openjdk.jmc.common.jvm.Connectable;
 import org.openjdk.jmc.common.jvm.JVMArch;
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
@@ -65,10 +64,10 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 	public static final JVMDescriptor NULL_DESCRIPTOR = new JVMDescriptor(null, null, null, null, null, null, null,
 			null, false, Connectable.UNKNOWN);
 	private final JMXServiceURL serviceUrl;
-	private final JSONObject agentData;
+	private final Map<String, ?> agentData;
 	private final JVMDescriptor jvmDescriptor;
 
-	public JolokiaAgentDescriptor(JSONObject agentData, JVMDescriptor jvmDescriptor)
+	public JolokiaAgentDescriptor(Map<String, ?> agentData, JVMDescriptor jvmDescriptor)
 			throws URISyntaxException, MalformedURLException {
 		super();
 		URI uri = new URI((String) agentData.get("url")); //$NON-NLS-1$

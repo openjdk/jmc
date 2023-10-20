@@ -153,7 +153,9 @@ public abstract class AbstractCachedDescriptorProvider extends AbstractDescripto
 	 * Shuts down the scanner thread.
 	 */
 	public void shutdown() {
-		scanner.shutdown();
+		if (scanner != null) {
+			scanner.shutdown();
+		}
 	}
 
 }

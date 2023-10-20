@@ -42,7 +42,6 @@ import java.util.Map;
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.discovery.JolokiaDiscovery;
 import org.jolokia.util.JulLogHandler;
-import org.json.simple.JSONObject;
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 
@@ -62,7 +61,8 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 			for (Object object : new JolokiaDiscovery("jmc", new JulLogHandler()).lookupAgents()) { //$NON-NLS-1$
 				try {
 
-					JSONObject response = (JSONObject) object;
+					@SuppressWarnings("unchecked")
+					Map<String, ?> response = (Map<String, ?>) object;
 					JVMDescriptor jvmInfo;
 					try {// if it is connectable, see if we can get info from connection
 						jvmInfo = JolokiaAgentDescriptor
