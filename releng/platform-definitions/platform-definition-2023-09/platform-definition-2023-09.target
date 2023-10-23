@@ -45,6 +45,10 @@
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
+            <unit id="org.jolokia.jmx-adapter.standalone" version="1.7.2"/>
+            <unit id="org.jolokia.jvm" version="1.7.2"/>
+            <unit id="org.jolokia.kubernetes.standalone" version="1.7.2"/>
+            <unit id="com.github.tomakehurst.wiremock-standalone" version="2.27.2"/>
             <unit id="org.eclipse.jetty.websocket.api" version="10.0.12"/>
             <unit id="org.eclipse.jetty.websocket.server" version="10.0.12"/>
             <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.12"/>
