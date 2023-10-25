@@ -33,6 +33,7 @@
 package org.openjdk.jmc.common.security;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * {@link ICredentials} stored in the {@link ISecurityManager}. The username and password are lazy

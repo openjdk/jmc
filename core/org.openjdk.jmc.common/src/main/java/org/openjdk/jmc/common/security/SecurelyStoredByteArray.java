@@ -32,8 +32,6 @@
  */
 package org.openjdk.jmc.common.security;
 
-import org.openjdk.jmc.common.security.SecurityManagerFactory;
-
 public class SecurelyStoredByteArray {
 
 	private final String id;
