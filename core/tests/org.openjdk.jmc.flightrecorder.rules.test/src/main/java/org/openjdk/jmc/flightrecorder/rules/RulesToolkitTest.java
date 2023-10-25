@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,7 +50,7 @@ import org.openjdk.jmc.flightrecorder.test.util.RecordingToolkit;
 @SuppressWarnings("nls")
 public class RulesToolkitTest {
 	private static final String JAVA_7_14_EA = "Java HotSpot(TM) Client VM (24.0-b36) for windows-x86 JRE (1.7.0_14-ea-b17), built on Mar 20 2013 10:28:38 by \"java_re\" with unknown MS VC++:1600";
-	private static final String JAVA_8_40 = "Java HotSpot(TM) 64-Bit Server VM (25.60-b23) for windows-amd64 JRE (1.8.0_60-b31), built on Aug 12 2015 14:45:33 by \"java_re\" with MS VC++ 10.0 (VS2010)";;
+	private static final String JAVA_8_40 = "Java HotSpot(TM) 64-Bit Server VM (25.60-b23) for windows-amd64 JRE (1.8.0_60-b31), built on Aug 12 2015 14:45:33 by \"java_re\" with MS VC++ 10.0 (VS2010)";
 
 	@Test
 	public void testMapLin100Straight() {
