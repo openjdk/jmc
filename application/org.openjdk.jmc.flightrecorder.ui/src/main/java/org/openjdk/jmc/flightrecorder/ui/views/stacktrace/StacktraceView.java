@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -202,8 +201,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		@Override
 		public void run() {
 			System.err.println("Export to collapsed");
-			String content = CollapsedSerializer.toCollapsed(
-					new StacktraceTreeModel(itemsToShow, new FrameSeparator(FrameCategorization.METHOD, false), false));
+			String content = CollapsedSerializer.toCollapsed(new StacktraceTreeModel(itemsToShow,
+					new FrameSeparator(FrameCategorization.METHOD, false), false, currentAttribute));
 			ClipboardManager.setClipboardContents(new Object[] {content}, new Transfer[] {TextTransfer.getInstance()});
 		}
 	}
