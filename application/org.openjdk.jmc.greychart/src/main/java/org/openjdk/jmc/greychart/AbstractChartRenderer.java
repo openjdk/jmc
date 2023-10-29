@@ -96,7 +96,7 @@ public abstract class AbstractChartRenderer implements ChartRenderer {
 	 * Sets the font size to use when render the tick values and the axis title.
 	 *
 	 * @param fontSize
-	 *            if 0, the font size will be relatice to the graph size and calculated
+	 *            if 0, the font size will be relative to the graph size and calculated
 	 *            automatically. If non zero, this is the font size that will be used.
 	 */
 	public void setFontSize(int fontSize) {

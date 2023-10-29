@@ -36,7 +36,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Combo;
 
 /**
- * Provides type completion for a select coomand.
+ * Provides type completion for a select command.
  */
 public final class SelectHelper extends WidgetHelper {
 	public SelectHelper() {

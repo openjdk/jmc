@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,8 +36,9 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -45,7 +46,6 @@ import java.util.Iterator;
  * A toolkit for strings.
  */
 public final class StringToolkit {
-	private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
 
 	private StringToolkit() {
 		throw new AssertionError("This is not the constructor you are looking for!"); //$NON-NLS-1$
@@ -61,7 +61,23 @@ public final class StringToolkit {
 	 *             if something went wrong
 	 */
 	public static String readString(InputStream in) throws IOException {
-		return readString(in, UTF_8);
+		return readString(in, StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * Reads the contents of a stream with specified character encoding to a string.
+	 *
+	 * @param in
+	 *            the stream to read from
+	 * @param charset
+	 *            the {@link java.nio.charset.Charset charset}
+	 * @return a string with the contents available from the stream
+	 * @throws IOException
+	 *             if something went wrong
+	 */
+	public static String readString(InputStream in, Charset charset) throws IOException {
+		ByteArrayOutputStream buf = read(in);
+		return buf.toString(charset);
 	}
 
 	/**
@@ -76,6 +92,11 @@ public final class StringToolkit {
 	 *             if something went wrong
 	 */
 	public static String readString(InputStream in, String charsetName) throws IOException {
+		ByteArrayOutputStream buf = read(in);
+		return buf.toString(charsetName);
+	}
+
+	private static ByteArrayOutputStream read(InputStream in) throws IOException {
 		BufferedInputStream bis = new BufferedInputStream(in);
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		int result = bis.read();
@@ -83,7 +104,7 @@ public final class StringToolkit {
 			buf.write((byte) result);
 			result = bis.read();
 		}
-		return buf.toString(charsetName);
+		return buf;
 	}
 
 	/**
@@ -94,11 +115,7 @@ public final class StringToolkit {
 	 * @return a string usable as a file name
 	 */
 	public static String encodeFilename(String string) {
-		try {
-			return URLEncoder.encode(string, UTF_8);
-		} catch (UnsupportedEncodingException e) {
-			return string.replaceAll("\\W+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return URLEncoder.encode(string, StandardCharsets.UTF_8);
 	}
 
 	/**

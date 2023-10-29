@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,16 @@ package org.openjdk.jmc.browser.attach.preferences;
  * Constant definitions for plug-in preferences
  */
 public class PreferenceConstants {
+	/**
+	 * Preference key for setting the refresh interval of the JVM Browser
+	 */
+	public static final String P_REFRESH_INTERVAL = "refreshInterval"; //$NON-NLS-1$
+
+	/**
+	 * Preference key for setting a delay when creating the attachable JVM Descriptor
+	 */
+	public static final String P_JVM_ATTACH_DELAY = "jvmAttachDelay"; //$NON-NLS-1$
+
 	/**
 	 * Preferences key for automatically starting the agent.
 	 */

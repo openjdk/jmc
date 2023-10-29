@@ -63,7 +63,7 @@ public class JavaClass extends JavaHeapObject {
 	private final String name;
 	/** Human-friendly name, initialized lazily */
 	private String humanFriendlyName;
-	/** For array classes, it's the number of array dimensions; otherwize 0 */
+	/** For array classes, it's the number of array dimensions; otherwise 0 */
 	private final byte numArrayDimensions;
 
 	// These are JavaObjectRef before resolve

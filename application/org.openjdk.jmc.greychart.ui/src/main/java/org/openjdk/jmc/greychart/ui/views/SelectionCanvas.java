@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Display;
 import org.openjdk.jmc.common.util.Environment;
 
 /**
- * Canvas typcially used for a grey chart that you want to make a selection on
+ * Canvas typically used for a grey chart that you want to make a selection on
  */
 public abstract class SelectionCanvas extends Canvas {
 	private int selectionStart = -1;

@@ -1,0 +1,10 @@
+com.oracle.jdk.OSInformation;1;139
+com.oracle.jdk.SocketWrite;2;83
+com.oracle.jdk.CPULoad;6;150
+com.oracle.jdk.SocketRead;11;516
+com.oracle.jdk.JavaMonitorWait;27;1004
+com.oracle.jdk.ObjectAllocationOutsideTLAB;58;1160
+com.oracle.jdk.ThreadAllocationStatistics;60;974
+com.oracle.jdk.ActiveSetting;218;7579
+com.oracle.jdk.ObjectAllocationInNewTLAB;270;5739
+com.oracle.jdk.ClassLoaderStatistics;294;8890

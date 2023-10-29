@@ -7,6 +7,7 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.serializers.json,
- org.openjdk.jmc.flightrecorder.serializers.dot
+ org.openjdk.jmc.flightrecorder.serializers.dot, 
+ org.openjdk.jmc.flightrecorder.serializers.stacktraces
 Require-Bundle: org.openjdk.jmc.flightrecorder
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.serializers

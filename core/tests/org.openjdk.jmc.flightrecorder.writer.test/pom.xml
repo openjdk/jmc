@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, 2022, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -41,22 +41,17 @@
 	</parent>
 	<artifactId>flightrecorder.writer.test</artifactId>
 	<properties>
-		<spotless.config.path>${basedir}/../../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.writer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

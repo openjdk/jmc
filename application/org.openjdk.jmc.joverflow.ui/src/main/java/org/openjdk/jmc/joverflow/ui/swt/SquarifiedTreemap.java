@@ -414,7 +414,7 @@ class SquarifiedTreemap {
 
 	/**
 	 * This method check which from the values in input, that represent rectangles' aspect ratio,
-	 * produces more approximatively a square. It checks if one of the aspect ratio values gives a
+	 * produces more approximately a square. It checks if one of the aspect ratio values gives a
 	 * value nearest to 1 against the other, which means that width and height are similar.
 	 *
 	 * @param actualAR

@@ -85,7 +85,7 @@ public interface ITriggerAction {
 	 * @param node
 	 *            the XML node representing the object
 	 * @throws Exception
-	 *             if an exception occured during initialization.
+	 *             if an exception occurred during initialization.
 	 */
 	void initializeFromXml(Element node) throws Exception;
 

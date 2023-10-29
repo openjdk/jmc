@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -104,6 +104,10 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 	}
 
 	private boolean isDynamicFlightRecorderSupported(IConnectionHandle handle) {
+		if (ConnectionToolkit.isSubstrateVM(handle)) {
+			// JFR may not have been built into the native image. Check that FlightRecorderMXBean is accessible from the MBean server.
+			return isAvailable(handle);
+		}
 		// All OpenJDK versions of JFR support dynamic enablement of JFR, so if there are no commercial features in play
 		// all is A-OK.
 		return !cfs.hasCommercialFeatures() || (ConnectionToolkit.isHotSpot(handle)
@@ -111,7 +115,10 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 	}
 
 	private boolean isFlightRecorderDisabled(IConnectionHandle handle) {
-		if (cfs != null && cfs.hasCommercialFeatures()) {
+		if (ConnectionToolkit.isSubstrateVM(handle)) {
+			// For native image, commercial features may be available but disabled while JFR is still enabled
+			return !isAvailable(handle);
+		} else if (cfs != null && cfs.hasCommercialFeatures()) {
 			return !cfs.isCommercialFeaturesEnabled() || JVMSupportToolkit.isFlightRecorderDisabled(handle, false);
 		} else {
 			return JVMSupportToolkit.isFlightRecorderDisabled(handle, false);
@@ -128,7 +135,7 @@ public class FlightRecorderServiceV2 implements IFlightRecorderService {
 		if (!isDynamicFlightRecorderSupported(handle) && isFlightRecorderDisabled(handle)) {
 			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
 		}
-		if (JVMSupportToolkit.isFlightRecorderDisabled(handle, true)) {
+		if (!ConnectionToolkit.isSubstrateVM(handle) && JVMSupportToolkit.isFlightRecorderDisabled(handle, true)) {
 			throw new ServiceNotAvailableException(""); //$NON-NLS-1$
 		}
 		connection = handle;

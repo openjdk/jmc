@@ -251,7 +251,7 @@ If maven reports a toolchain error, e.g. :
 [ERROR] Please make sure you define the required toolchains in your ~/.m2/toolchains.xml file.
 ```
 
-Create or amend the local maven toolchain file by pointing to the right JDK (here any JDK 17).
+Create or amend the local maven toolchain file by pointing to the right/any JDK 17.
 
 <details><summary><code>~/.m2/toolchains.xml</code></summary>
 
@@ -259,18 +259,6 @@ Create or amend the local maven toolchain file by pointing to the right JDK (her
 <?xml version="1.0" encoding="UTF-8"?>
 <toolchains>
   <!-- JDK toolchains -->
-  <toolchain>
-    <type>jdk</type>
-    <provides>
-      <id>JavaSE-11</id>
-      <version>11</version>
-      <vendor>amazon</vendor>
-    </provides>
-    <configuration>
-	    <jdkHome>/Library/Java/JavaVirtualMachines/corretto-11.jdk/Contents/Home</jdkHome>
-    </configuration>
-  </toolchain>
-
   <!-- 
     Declare the JDK 17 toolchain installed on the local machine, 
     make sure the id is : JavaSE-17
@@ -378,17 +366,21 @@ to use when launching, add `-vm` and the path to a directory where a JDK java la
 Here is an example for Mac OS X:
 
 ```bash
-# on x86_64
+# on Intel
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 
-# on M1
+# on M1/M2
 target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 ```
 
 Here is an example for Linux:
 
 ```bash
+# on x86_64
 target/products/org.openjdk.jmc/linux/gtk/x86_64/JDK\ Mission\ Control/jmc
+
+# on aarch64
+target/products/org.openjdk.jmc/linux/gtk/aarch64/JDK\ Mission\ Control/jmc
 ```
 
 And here is an example for Windows x64:

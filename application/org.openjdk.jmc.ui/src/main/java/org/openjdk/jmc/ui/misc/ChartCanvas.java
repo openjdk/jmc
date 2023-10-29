@@ -407,6 +407,8 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
+	private boolean isCtrlHeld;
+
 	class KeyNavigator implements KeyListener {
 
 		@Override
@@ -428,6 +430,20 @@ public class ChartCanvas extends Canvas {
 					redrawChart();
 					redrawChartText();
 					break;
+				case SWT.CTRL:
+					isCtrlHeld = true;
+					break;
+				case 'a':
+					if (isCtrlHeld) {
+						awtChart.selectAll(numItems, laneHeight);
+						if (selectionListener != null) {
+							selectionListener.run();
+						}
+						redrawChart();
+						redrawChartText();
+						break;
+					}
+					break;
 				case SWT.ARROW_RIGHT:
 					pan(10);
 					break;
@@ -448,9 +464,12 @@ public class ChartCanvas extends Canvas {
 
 		@Override
 		public void keyReleased(KeyEvent event) {
-			// Ignore
+			switch (event.keyCode) {
+			case SWT.CTRL:
+				isCtrlHeld = false;
+				break;
+			}
 		}
-
 	}
 
 	private class AntiAliasingListener implements IPropertyChangeListener {

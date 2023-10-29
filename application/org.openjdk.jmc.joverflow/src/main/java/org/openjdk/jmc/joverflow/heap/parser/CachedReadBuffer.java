@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  * The need for this cache arises due to the fact that ReadBuffer impl-n that uses mmap()
  * (MappedReadBuffer and MappedReadMultiBuffer) takes memory outside the JVM heap, and we can't
  * control how much it takes. It looks like at times that amount is pretty high, maybe even higher
- * than .hprof file size (which is rather surprising). It's inconvenietn to use a tool that needs an
+ * than .hprof file size (which is rather surprising). It's inconvenient to use a tool that needs an
  * unknown amount of memory in addition to the -Xmx setting, and/or is slow when that amount is
  * short, though the JVM heap fits into the machine's RAM. It also looks like a specialized cache,
  * which takes advantage of knowledge of JOverflow heap dump access patterns, may work better than

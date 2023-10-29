@@ -50,13 +50,17 @@
             <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.12"/>
             <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.12"/>
             <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.6"/>
+            <unit id="fireplace-swing" version="0.0.1.rc3"/>
+            <unit id="fireplace-swt-awt-bridge" version="0.0.1.rc3"/>
+            <unit id="fireplace-swing-animation" version="0.0.1.rc3"/>
+            <unit id="radiance-animation" version="6.0.0"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1900.v20221108-1024"/>
             <unit id="org.eclipse.pde.feature.group" version="3.14.1400.v20221123-1800"/>
             <unit id="org.eclipse.platform.sdk" version="4.26.0.I20221123-1800"/>
-            <repository location="http://download.eclipse.org/releases/2022-12/"/>
+            <repository location="https://download.eclipse.org/releases/2022-12/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.26.0.v20230220105658"/>

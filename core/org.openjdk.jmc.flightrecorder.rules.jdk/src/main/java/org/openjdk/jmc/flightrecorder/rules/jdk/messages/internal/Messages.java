@@ -324,6 +324,10 @@ public class Messages {
 	public static final String GcPauseRatioRule_WARNING_LIMIT_DESC = "GcPauseRatioRule_WARNING_LIMIT_DESC"; //$NON-NLS-1$
 	public static final String GcPauseRatioRule_WINDOW_SIZE = "GcPauseRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcPauseRatioRule_WINDOW_SIZE_DESC = "GcPauseRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_RULE_NAME = "GcPauseTargetRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_OK = "GcPauseTargetRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_WARN_SHORT = "GcPauseTargetRule_TEXT_WARN_SHORT"; //$NON-NLS-1$
+	public static final String GcPauseTargetRule_TEXT_WARN_LONG = "GcPauseTargetRule_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String GcStallRule_RULE_NAME = "GcStallRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcStallRule_TEXT_OK = "GcStallRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String General_CONFIG_CLASS_LIMIT = "General_CONFIG_CLASS_LIMIT"; //$NON-NLS-1$
