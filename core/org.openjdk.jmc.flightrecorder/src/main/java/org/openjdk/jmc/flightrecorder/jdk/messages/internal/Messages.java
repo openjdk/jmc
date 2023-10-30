@@ -340,6 +340,9 @@ public class Messages {
 	public static final String ATTR_GC_THRESHOLD = "ATTR_GC_THRESHOLD"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD_DESC = "ATTR_GC_THRESHOLD_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME = "ATTR_GC_TIME"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_REAL = "ATTR_GC_TIME_REAL"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_SYSTEM = "ATTR_GC_TIME_SYSTEM"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_USER = "ATTR_GC_TIME_USER"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO = "ATTR_GC_TIME_RATIO"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO_DESC = "ATTR_GC_TIME_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_WHEN = "ATTR_GC_WHEN"; //$NON-NLS-1$

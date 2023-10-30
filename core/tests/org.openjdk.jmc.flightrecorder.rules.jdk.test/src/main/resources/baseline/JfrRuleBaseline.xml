@@ -141,6 +141,10 @@ If the garbage collector can free a lot of memory, it may be because the applica
 This recording is only 9.903 s long, consider creating a recording longer than 20 s for improved rule accuracy.</explanation>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -445,6 +449,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>OK</severity>
             <summary>No problems were found with the GC configuration.</summary>
@@ -713,6 +721,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -990,6 +1002,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>OK</severity>
             <summary>No problems were found with the GC configuration.</summary>
@@ -1246,6 +1262,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1514,6 +1534,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -1776,6 +1800,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2069,6 +2097,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>GcFreedRatio</id>
             <severity>OK</severity>
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>GcOptions</id>
@@ -2369,6 +2401,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>Information</severity>
             <summary>The runtime used a parallel GC on a single-core machine.</summary>
@@ -2651,6 +2687,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2973,6 +3013,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <explanation>61.4 MiB per second was freed by garbage collections during 9/24/2015 10:09:18.000 AM – 10:09:28 AM. The average liveset was 130 MiB. This is likely a reasonable amount.</explanation>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -3290,6 +3334,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>Not Applicable</severity>
             <summary>Too few events to calculate the result.</summary>
@@ -3493,6 +3541,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3742,6 +3794,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -4013,6 +4069,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>GcFreedRatio</id>
             <severity>OK</severity>
             <summary>Only 6 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>GarbageCollectionInfoRule</id>
@@ -4301,6 +4361,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>

@@ -161,6 +161,7 @@ public final class JdkTypeIDs {
 	public static final String GC_COLLECTOR_PAROLD_GARBAGE_COLLECTION = PREFIX + "ParallelOldGarbageCollection";
 	public static final String GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION = PREFIX + "YoungGarbageCollection";
 	public static final String GC_COLLECTOR_SYSTEM_GC = PREFIX + "SystemGC";
+	public static final String GC_CPU_TIME = PREFIX + "GCCPUTime";
 	public static final String GC_DETAILED_ALLOCATION_REQUIRING_GC = PREFIX + "AllocationRequiringGC";
 	public static final String GC_DETAILED_EVACUATION_FAILED = PREFIX + "EvacuationFailed";
 	public static final String GC_DETAILED_EVACUATION_INFO = PREFIX + "EvacuationInformation";
