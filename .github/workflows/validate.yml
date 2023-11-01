@@ -41,6 +41,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_copyright_year:
+    runs-on: 'ubuntu-latest'
+    defaults:
+      run:
+       shell: bash
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name : Check latest copyright year
+      run: ./scripts/checkcopyrightyear.sh
   build_and_test:
     name: Build and Test on ${{ matrix.os }}
     strategy:
