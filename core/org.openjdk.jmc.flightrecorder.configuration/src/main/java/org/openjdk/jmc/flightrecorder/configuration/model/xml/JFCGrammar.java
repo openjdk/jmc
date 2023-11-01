@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -88,7 +88,7 @@ public final class JFCGrammar {
 	public static final XMLTag TAG_SELECTION = new XMLTag("selection");
 	public static final XMLTag TAG_OPTION = new XMLTag("option", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_FLAG = new XMLTag("flag", XMLNodeType.ELEMENT_WITH_CONTENT);
-	public static final XMLTag TAG_TEXT = new XMLTag("text", XMLNodeType.ELEMENT_WITH_CONTENT);;
+	public static final XMLTag TAG_TEXT = new XMLTag("text", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_VARIABLE = new XMLTag("variable", XMLNodeType.ELEMENT_WITH_CONTENT);
 	public static final XMLTag TAG_CONDITION = new XMLTag("condition");
 	public static final XMLTag TAG_AND = new XMLTag("and", XMLNodeType.ELEMENT_WITH_AT_LEAST_ONE_CHILD);

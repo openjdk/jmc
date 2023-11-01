@@ -73,6 +73,8 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
@@ -110,6 +112,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.serializers.stacktraces.CollapsedSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
@@ -117,6 +120,7 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
@@ -136,6 +140,7 @@ import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.handlers.MethodFormatter;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
+import org.openjdk.jmc.ui.misc.ClipboardManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.CopySettings;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
@@ -185,6 +190,20 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				threadRootAtTop = newValue;
 				rebuildModel();
 			}
+		}
+	}
+
+	private class ExportCollpasedAction extends Action {
+		ExportCollpasedAction() {
+			super("Collapsed");
+		}
+
+		@Override
+		public void run() {
+			System.err.println("Export to collapsed");
+			String content = CollapsedSerializer.toCollapsed(new StacktraceTreeModel(itemsToShow,
+					new FrameSeparator(FrameCategorization.METHOD, false), false, currentAttribute));
+			ClipboardManager.setClipboardContents(new Object[] {content}, new Transfer[] {TextTransfer.getInstance()});
 		}
 	}
 
@@ -691,6 +710,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		menu.appendToGroup(MCContextMenuManager.GROUP_VIEWER_SETUP, methodFormatter.createMenu());
 		SelectionStoreActionToolkit.addSelectionStoreActions(viewer, this::getSelectionStore,
 				this::getFlavoredSelection, menu);
+		MenuManager exportMenu = new MenuManager("Export stacktraces");
+		exportMenu.setRemoveAllWhenShown(true);
+		exportMenu.addMenuListener((manager) -> manager.add(new ExportCollpasedAction()));
+		menu.appendToGroup(MCContextMenuManager.GROUP_EDIT, exportMenu);
+
 	}
 
 	private IFlavoredSelection getFlavoredSelection() {

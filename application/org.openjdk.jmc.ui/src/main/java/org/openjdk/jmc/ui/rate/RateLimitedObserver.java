@@ -64,7 +64,7 @@ public abstract class RateLimitedObserver extends RateLimitedRefresher implement
 	 * @param oldArg
 	 *            previously determined argument, or null right after a refresh.
 	 * @param newArg
-	 *            newly recieved argument, might be null.
+	 *            newly received argument, might be null.
 	 * @return
 	 */
 	protected Object updateArg(Object oldArg, Object newArg) {

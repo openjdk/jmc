@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,54 +31,52 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.internal.parser.v0;
+package org.openjdk.jmc.flightrecorder.serializers.stacktraces;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 
-import org.openjdk.jmc.common.unit.ContentType;
-import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Reads a UTF-8 string.
+ * Converts a {@link StacktraceTreeModel} to a collapsed format that can be used as input for the
+ * flamegraph perl script from https://github.com/brendangregg/FlameGraph repository.
  */
-final class UTFStringParser implements IArrayElementParser<String>, IValueReader {
-	private static final Charset CHARSET = StandardCharsets.UTF_8;
-	public static final UTFStringParser INSTANCE = new UTFStringParser();
+public class CollapsedSerializer {
 
-	@Override
-	public Object readValue(byte[] bytes, Offset offset, long timestamp) throws InvalidJfrFileException {
-		return readString(bytes, offset);
+	/**
+	 * Serializes a {@link StacktraceTreeModel} to collasped format.
+	 *
+	 * @param model
+	 *            the {@link StacktraceTreeModel} to serialize to collapsed format.
+	 * @return a String containing the serialized model.
+	 */
+	public static String toCollapsed(StacktraceTreeModel model) {
+		StringBuilder sb = new StringBuilder();
+		List<String> lines = new ArrayList<>();
+		toCollapsed(sb, lines, model, model.getRoot());
+		return String.join("\n", lines);
 	}
 
-	@Override
-	public String readElement(byte[] bytes, Offset offset) throws InvalidJfrFileException {
-		return readString(bytes, offset);
+	private static void toCollapsed(StringBuilder sb, List<String> lines, StacktraceTreeModel model, Node node) {
+		if (!node.isRoot()) {
+			appendFrame(sb, node.getFrame(), node.getCumulativeWeight());
+		}
+		if (node.getChildren().isEmpty()) {
+			lines.add(sb.toString() + " " + (int) node.getCumulativeWeight());
+			return;
+		}
+		for (Node child : node.getChildren()) {
+			toCollapsed(new StringBuilder(sb), lines, model, child);
+		}
 	}
 
-	public static String readString(byte[] bytes, Offset offset) throws InvalidJfrFileException {
-		int len = readUnsignedShort(bytes, offset.get());
-		offset.increase(2);
-		int index = offset.get();
-		offset.increase(len);
-		return new String(bytes, index, len, CHARSET);
+	private static void appendFrame(StringBuilder sb, AggregatableFrame frame, double value) {
+		if (sb.length() > 0) {
+			sb.append(";");
+		}
+		sb.append(frame.getHumanReadableShortString());
 	}
-
-	private static int readUnsignedShort(byte[] bytes, int offset) {
-		int ch1 = (bytes[offset] & 0xff);
-		int ch2 = (bytes[offset + 1] & 0xff);
-		return (ch1 << 8) + (ch2 << 0);
-	}
-
-	@Override
-	public String[] createArray(int length) {
-		return new String[length];
-	}
-
-	@Override
-	public ContentType<?> getValueType() {
-		return UnitLookup.PLAIN_TEXT;
-	}
-
 }

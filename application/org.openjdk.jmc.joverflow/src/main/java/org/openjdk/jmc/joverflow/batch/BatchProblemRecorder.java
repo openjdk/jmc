@@ -58,7 +58,7 @@ import org.openjdk.jmc.joverflow.util.ObjectToIntMap;
 import org.openjdk.jmc.joverflow.util.SmallSet;
 
 /**
- * Implementaiton of ProblemRecorder that is used by the command-line (batch) JOverflow tool. It
+ * Implementation of ProblemRecorder that is used by the command-line (batch) JOverflow tool. It
  * collects information about clusters of problematic objects in the form that is compact enough and
  * suitable for printing in the batch report. However, it might not be flexible enough to manipulate
  * with in an interactive tool.

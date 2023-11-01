@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -170,7 +171,7 @@ public final class JDPPacket implements Discoverable {
 		if (dis.read(buf) != length) {
 			throw new IOException("Problem decoding string!"); //$NON-NLS-1$
 		}
-		return new String(buf, "UTF-8"); //$NON-NLS-1$
+		return new String(buf, StandardCharsets.UTF_8);
 
 	}
 

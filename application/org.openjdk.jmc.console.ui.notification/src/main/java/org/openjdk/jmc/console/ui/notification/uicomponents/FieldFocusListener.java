@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.Field;
 
 /**
- * Updates field when fokcus is lost in an item
+ * Updates field when focus is lost in an item
  */
 public class FieldFocusListener implements FocusListener {
 	private final Text m_text;

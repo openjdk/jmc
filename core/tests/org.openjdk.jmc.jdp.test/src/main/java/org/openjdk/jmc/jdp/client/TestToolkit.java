@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,12 +33,12 @@
 package org.openjdk.jmc.jdp.client;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.logging.Level;
 
@@ -107,11 +107,7 @@ public final class TestToolkit {
 	public static String parseCommaSeparatedByteString(String str) {
 		String[] tmp = str.split(", ");
 		byte[] bytes = toBytes(tmp);
-		try {
-			return new String(bytes, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 	public static Configuration createConfiguration() {

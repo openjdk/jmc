@@ -214,7 +214,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	}
 
 	/**
-	 * Overriddden to lazily establish a service URL if needed. If the JVM is attachable, it will
+	 * Overridden to lazily establish a service URL if needed. If the JVM is attachable, it will
 	 * attach to the JVM, start up the management server, and set up the URL. If the service URL is
 	 * already established, it will be returned as is.
 	 */

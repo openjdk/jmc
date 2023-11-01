@@ -119,7 +119,7 @@ public class MovingDial implements IDialProvider {
 	}
 
 	/**
-	 * Sets the position of the dial momentarily. Typically uised to set up the initial position.
+	 * Sets the position of the dial momentarily. Typically used to set up the initial position.
 	 * Zero by default
 	 *
 	 * @param position

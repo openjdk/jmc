@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -450,7 +451,7 @@ public final class XmlToolkit {
 	 *             if the file could not written
 	 */
 	public static void storeDocumentToFile(Document doc, File file) throws IOException {
-		try (PrintWriter pw = new PrintWriter(file, "UTF-8")) { //$NON-NLS-1$
+		try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
 			prettyPrint(doc.getDocumentElement(), pw);
 		}
 	}

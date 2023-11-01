@@ -66,11 +66,11 @@ public interface IConfigurationStorageDelegate {
 	 * <p>
 	 * NOTE: Passing the contents as a String are fine for small files that are seldom written to.
 	 * Should this method be used more often or with larger files, a callback with methods for
-	 * writing to a output stream and for providing an input stream (for IResource destinations)
+	 * writing to an output stream and for providing an input stream (for IResource destinations)
 	 * could be passed instead.
 	 *
 	 * @param fileContent
-	 * @return true iff the save operation succeded.
+	 * @return true iff the save operation succeeded.
 	 * @throws IOException
 	 *             if some problem occurred while writing to the underlying storage. The contents
 	 *             might have been partially written.

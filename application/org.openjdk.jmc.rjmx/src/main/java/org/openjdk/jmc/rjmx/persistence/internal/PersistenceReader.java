@@ -37,8 +37,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -251,10 +251,7 @@ public class PersistenceReader implements IMRIService, IAttributeStorageService 
 		}
 		MRI mri;
 		try {
-			mri = MRI.createFromQualifiedName(URLDecoder.decode(attributeDir.getName(), "UTF-8")); //$NON-NLS-1$
-		} catch (UnsupportedEncodingException e) {
-			// This should never happen
-			throw new RuntimeException(e);
+			mri = MRI.createFromQualifiedName(URLDecoder.decode(attributeDir.getName(), StandardCharsets.UTF_8));
 		} catch (IllegalArgumentException e) {
 			// Log warning and ignore directory
 			RJMXPlugin.getDefault().getLogger().log(Level.WARNING,

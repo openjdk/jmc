@@ -41,6 +41,7 @@ public class Messages extends NLS {
 	public static String AttachPreferencePage_BROWSER_REFRESH_INTERVAL;
 	public static String AttachPreferencePage_CAPTION_AUTO_START;
 	public static String AttachPreferencePage_CAPTION_SHOW_UNCONNECTABLE;
+	public static String AttachPreferencePage_JVM_ATTACH_DELAY;
 	public static String AttachPreferencePage_NOTE_SHOW_UNCONNECTABLE;
 
 	static {

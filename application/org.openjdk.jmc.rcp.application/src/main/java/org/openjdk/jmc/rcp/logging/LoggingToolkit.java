@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -153,7 +154,7 @@ public final class LoggingToolkit {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			props.store(baos, ""); //$NON-NLS-1$
 			String newProps = baos.toString();
-			return new ByteArrayInputStream(newProps.getBytes("UTF-8")); //$NON-NLS-1$
+			return new ByteArrayInputStream(newProps.getBytes(StandardCharsets.UTF_8));
 		}
 	}
 

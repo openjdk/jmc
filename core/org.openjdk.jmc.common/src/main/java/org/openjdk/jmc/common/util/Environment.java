@@ -32,7 +32,6 @@
  */
 package org.openjdk.jmc.common.util;
 
-import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,16 +131,6 @@ public class Environment {
 	}
 
 	private static int initPID() {
-		try {
-			String name = ManagementFactory.getRuntimeMXBean().getName();
-			if (name != null) {
-				String s = name.split("@")[0]; //$NON-NLS-1$
-				return Integer.parseInt(s);
-			}
-		} catch (Exception e) {
-			Logger.getLogger("org.openjdk.jmc.common.mbean").log(Level.FINE, //$NON-NLS-1$
-					"Could not retrieve PID of this running jvm instance", e); //$NON-NLS-1$
-		}
-		return 0;
+		return (int) ProcessHandle.current().pid();
 	}
 }

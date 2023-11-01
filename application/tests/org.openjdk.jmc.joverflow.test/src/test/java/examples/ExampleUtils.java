@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,16 +32,13 @@
  */
 package examples;
 
-import java.lang.management.ManagementFactory;
-
 /**
  * Utilities to be used in examples that generate heap dumps.
  */
 class ExampleUtils {
 
 	static void printPidAndSleep(String dumpFileName) {
-		String pidAtLocalhost = ManagementFactory.getRuntimeMXBean().getName(); // Returns something like 12345@localhost
-		int pid = Integer.parseInt(pidAtLocalhost.substring(0, pidAtLocalhost.indexOf('@')));
+		long pid = ProcessHandle.current().pid();
 
 		int sleepTimeSec = 30;
 		System.out.println("Initialized data, going to sleep for " + sleepTimeSec + " sec");
