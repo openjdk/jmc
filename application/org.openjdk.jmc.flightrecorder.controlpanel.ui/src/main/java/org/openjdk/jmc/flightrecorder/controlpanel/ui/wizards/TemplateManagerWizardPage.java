@@ -71,6 +71,7 @@ import org.openjdk.jmc.flightrecorder.configuration.ConfigurationToolkit;
 import org.openjdk.jmc.flightrecorder.configuration.events.EventOptionID;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
+import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeInfo;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
@@ -79,7 +80,6 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationMo
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationRepository;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.PrivateStorageDelegate;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
-import org.openjdk.jmc.rjmx.services.jfr.IEventTypeInfo;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.wizards.OnePageWizardDialog;
 

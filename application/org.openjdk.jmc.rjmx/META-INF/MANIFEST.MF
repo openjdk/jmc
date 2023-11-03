@@ -43,10 +43,9 @@ Export-Package: org.openjdk.jmc.rjmx,
    org.openjdk.jmc.console.uitest,
    org.openjdk.jmc.flightrecorder.controlpanel.ui,
    org.openjdk.jmc.rjmx.ui,
-   org.openjdk.jmc.rjmx.services.jfr,
    org.openjdk.jmc.rjmx.services.jfr.test,
    org.openjdk.jmc.rjmx.test",
- org.openjdk.jmc.rjmx.services.internal;x-friends:="org.openjdk.jmc.rjmx.services.jfr,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.services.internal;x-friends:="org.openjdk.jmc.rjmx.test",
  org.openjdk.jmc.rjmx.subscription,
  org.openjdk.jmc.rjmx.subscription.internal;
   x-friends:="org.openjdk.jmc.console.persistence,
@@ -67,7 +66,8 @@ Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.util.internal;x-friends:="org.openjdk.jmc.console.ui.mbeanbrowser,org.openjdk.jmc.console.ui,org.openjdk.jmc.rjmx.ui"
 Require-Bundle: org.openjdk.jmc.ui.common;visibility:=reexport,
  org.openjdk.jmc.commands,
- org.openjdk.jmc.common;visibility:=reexport
+ org.openjdk.jmc.common;visibility:=reexport,
+ org.openjdk.jmc.rjmx.common;visibility:=reexport
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

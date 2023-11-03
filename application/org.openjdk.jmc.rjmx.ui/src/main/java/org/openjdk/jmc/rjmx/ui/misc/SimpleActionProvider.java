@@ -42,10 +42,10 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 
 import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.rjmx.ui.RJMXUIPlugin;
 import org.openjdk.jmc.rjmx.ui.internal.IconConstants;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.misc.IGraphical;
 import org.openjdk.jmc.ui.misc.IPrintable;
 

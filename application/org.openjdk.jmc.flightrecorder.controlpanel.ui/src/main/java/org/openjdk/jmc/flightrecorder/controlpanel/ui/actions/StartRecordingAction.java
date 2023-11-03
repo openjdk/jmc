@@ -33,16 +33,17 @@
 package org.openjdk.jmc.flightrecorder.controlpanel.ui.actions;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.openjdk.jmc.flightrecorder.configuration.FlightRecorderException;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.FlightRecorderProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.RecordingWizardModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.StartRecordingWizard;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
-import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.ui.common.resource.MCFile;
 import org.openjdk.jmc.ui.wizards.AbstractWizardUserAction;
 
@@ -60,7 +61,7 @@ public class StartRecordingAction extends AbstractWizardUserAction {
 	public IWizard doCreateWizard() throws Exception {
 		try (IConnectionHandle handle = recorder.getServerHandle().connect(Messages.ACTION_START_RECORDING_LABEL)) {
 			IFlightRecorderService flrService = handle.getServiceOrNull(IFlightRecorderService.class);
-			if (flrService == null || !JVMSupportToolkit.hasFlightRecorder(handle)) {
+			if (flrService == null || !ConnectionToolkit.hasFlightRecorder(handle)) {
 				throw new FlightRecorderException(JVMSupportToolkit.getNoFlightRecorderErrorMessage(handle, false));
 			} else if (flrService.isEnabled()
 					|| ControlPanel.askUserForEnable(flrService, Messages.COMMERCIAL_FEATURES_QUESTION)) {

@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.triggers;
 
 import java.util.Date;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 
 /**
  * Event sent to registered TriggerActions when a certain condition is met (after a constraint and

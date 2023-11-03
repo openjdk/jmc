@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.IManagedForm;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 
 /**
  * JConsole plug-in plug-in. :)

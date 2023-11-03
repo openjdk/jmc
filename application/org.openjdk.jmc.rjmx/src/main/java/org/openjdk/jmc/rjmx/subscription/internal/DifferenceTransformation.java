@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 
 import java.util.Properties;
 
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
 
 /**
  * A difference transformation. Will keep track of the last value and on each update return the

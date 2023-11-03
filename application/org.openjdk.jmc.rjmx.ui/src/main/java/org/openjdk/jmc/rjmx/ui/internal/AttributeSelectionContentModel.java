@@ -41,10 +41,10 @@ import java.util.Set;
 
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataProvider;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.IMRIService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataProvider;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public class AttributeSelectionContentModel {
 

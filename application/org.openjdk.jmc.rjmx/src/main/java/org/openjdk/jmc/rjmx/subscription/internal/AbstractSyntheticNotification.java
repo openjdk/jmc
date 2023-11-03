@@ -38,8 +38,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.Notification;
 import javax.management.modelmbean.ModelMBeanNotificationBroadcaster;
 
-import org.openjdk.jmc.rjmx.ISyntheticNotification;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.common.ISyntheticNotification;
 
 /**
  * This is the base class to extend from for synthetic notifications.

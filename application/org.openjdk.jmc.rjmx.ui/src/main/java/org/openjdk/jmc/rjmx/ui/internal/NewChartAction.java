@@ -33,8 +33,7 @@
 package org.openjdk.jmc.rjmx.ui.internal;
 
 import org.eclipse.jface.action.Action;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.ui.RJMXUIPlugin;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.misc.MCSectionPart;

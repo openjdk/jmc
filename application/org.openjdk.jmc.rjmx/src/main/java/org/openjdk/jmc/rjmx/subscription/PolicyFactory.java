@@ -32,9 +32,11 @@
  */
 package org.openjdk.jmc.rjmx.subscription;
 
-import org.openjdk.jmc.rjmx.subscription.internal.DefaultUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.internal.OneShotUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.internal.SimpleUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.IMRISubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.DefaultUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.OneShotUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.SimpleUpdatePolicy;
 
 /**
  * Factory for commonly used subscription update policies.

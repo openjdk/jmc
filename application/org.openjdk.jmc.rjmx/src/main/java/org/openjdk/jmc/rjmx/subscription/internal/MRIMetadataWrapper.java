@@ -32,10 +32,10 @@
  */
 package org.openjdk.jmc.rjmx.subscription.internal;
 
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataProvider;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataProvider;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public class MRIMetadataWrapper implements IMRIMetadata {
 

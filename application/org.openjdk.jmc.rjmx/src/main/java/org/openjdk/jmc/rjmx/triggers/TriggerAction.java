@@ -33,8 +33,7 @@
 package org.openjdk.jmc.rjmx.triggers;
 
 import org.w3c.dom.Element;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.triggers.extension.internal.TriggerComponent;
 
 /**

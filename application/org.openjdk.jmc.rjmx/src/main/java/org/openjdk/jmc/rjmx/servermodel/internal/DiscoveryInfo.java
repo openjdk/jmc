@@ -33,7 +33,7 @@
 package org.openjdk.jmc.rjmx.servermodel.internal;
 
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.rjmx.servermodel.IDiscoveryInfo;
+import org.openjdk.jmc.rjmx.common.servermodel.IDiscoveryInfo;
 
 class DiscoveryInfo implements IDiscoveryInfo {
 

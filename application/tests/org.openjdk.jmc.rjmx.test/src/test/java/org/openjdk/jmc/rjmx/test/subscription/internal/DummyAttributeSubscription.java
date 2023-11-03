@@ -36,8 +36,8 @@ import java.io.IOException;
 
 import javax.management.MalformedObjectNameException;
 
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.internal.AbstractAttributeSubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.internal.AbstractAttributeSubscription;
 
 /**
  * Support class for testing the persistence framework.

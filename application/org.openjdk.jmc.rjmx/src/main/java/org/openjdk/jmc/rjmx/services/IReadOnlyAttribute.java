@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.services;
 
+import org.openjdk.jmc.rjmx.common.services.IAttributeInfo;
+
 public interface IReadOnlyAttribute {
 
 	Object getValue();

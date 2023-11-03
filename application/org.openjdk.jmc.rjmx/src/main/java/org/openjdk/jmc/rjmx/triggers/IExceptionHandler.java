@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.rjmx.triggers;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 
 public interface IExceptionHandler {
 	void handleException(IConnectionHandle connectionHandle, TriggerRule rule, Throwable throwable);

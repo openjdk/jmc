@@ -47,7 +47,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.ReflectionException;
 
 import org.openjdk.jmc.rjmx.IPropertySyntheticAttribute;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.internal.AttributeValueToolkit;
 
 /**
  * Abstract base class for synthetic property attributes that needs to retrieve values from MBeans

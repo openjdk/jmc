@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import org.openjdk.jmc.console.ui.diagnostic.DiagnosticPlugin;
-import org.openjdk.jmc.rjmx.services.IOperation.OperationImpact;
+import org.openjdk.jmc.rjmx.common.services.IOperation.OperationImpact;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override

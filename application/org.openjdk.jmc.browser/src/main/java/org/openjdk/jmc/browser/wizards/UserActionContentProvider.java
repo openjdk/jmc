@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.browser.wizards;
 
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
 
 /**

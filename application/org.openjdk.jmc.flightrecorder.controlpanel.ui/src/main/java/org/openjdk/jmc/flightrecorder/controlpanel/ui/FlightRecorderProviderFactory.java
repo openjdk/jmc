@@ -35,11 +35,11 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.actions.StartRecordingAction;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.actionprovider.IActionProviderFactory;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 
 public class FlightRecorderProviderFactory implements IActionProviderFactory {
 

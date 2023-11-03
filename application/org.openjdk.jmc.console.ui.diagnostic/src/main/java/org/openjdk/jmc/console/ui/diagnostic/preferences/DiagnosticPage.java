@@ -39,7 +39,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import org.openjdk.jmc.console.ui.diagnostic.DiagnosticPlugin;
-import org.openjdk.jmc.rjmx.services.IOperation.OperationImpact;
+import org.openjdk.jmc.rjmx.common.services.IOperation.OperationImpact;
 import org.openjdk.jmc.rjmx.ui.operations.OperationsLabelProvider;
 
 /**

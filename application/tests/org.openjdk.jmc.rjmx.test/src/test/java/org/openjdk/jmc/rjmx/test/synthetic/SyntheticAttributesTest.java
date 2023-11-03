@@ -53,11 +53,10 @@ import javax.management.ObjectName;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
-import org.openjdk.jmc.rjmx.subscription.internal.AttributeValueToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.internal.AttributeValueToolkit;
 import org.openjdk.jmc.rjmx.test.ServerHandleTestCase;
 
 public class SyntheticAttributesTest extends ServerHandleTestCase {

@@ -36,7 +36,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.management.MBeanServerConnection;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 
 import com.sun.tools.jconsole.JConsoleContext;
 

@@ -43,4 +43,11 @@
 	<properties>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>rjmx.common</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

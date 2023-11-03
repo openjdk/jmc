@@ -34,6 +34,8 @@ package org.openjdk.jmc.rjmx;
 
 import java.util.Map;
 
+import org.openjdk.jmc.rjmx.common.ISyntheticAttribute;
+
 /**
  * Defines a client side evaluated attribute which accepts properties defined in the extension. The
  * properties callback will be called after the synthetic attribute has been created, but before it

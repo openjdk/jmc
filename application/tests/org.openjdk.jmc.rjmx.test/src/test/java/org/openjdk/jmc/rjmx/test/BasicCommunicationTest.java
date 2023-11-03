@@ -40,19 +40,18 @@ import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXServiceURL;
 
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
-import org.openjdk.jmc.rjmx.ConnectionToolkit;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.rjmx.internal.JMXConnectionDescriptor;
-import org.openjdk.jmc.rjmx.subscription.IMRISubscription;
-import org.openjdk.jmc.rjmx.subscription.IMRIValueListener;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.internal.JMXConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.subscription.IMRISubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.subscription.PolicyFactory;
 
 /**

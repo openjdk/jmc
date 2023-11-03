@@ -35,8 +35,7 @@ package org.openjdk.jmc.rjmx.ui.internal;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public class AttributeConfiguratorWizardPage extends WizardPage {
 

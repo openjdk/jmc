@@ -115,7 +115,7 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 		}
 	};
 
-	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.common.item"); //$NON-NLS-1$
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.rjmx.common"); //$NON-NLS-1$
 	private static final String KEY_KIND = "kind"; //$NON-NLS-1$
 	static final String KEY_FILTER = "filter"; //$NON-NLS-1$
 	// FIXME: Rename "field" identifier which is now an attribute id

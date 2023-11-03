@@ -42,13 +42,13 @@ import org.openjdk.jmc.common.collection.BoundedList;
 import org.openjdk.jmc.common.xydata.DefaultTimestampedData;
 import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.common.services.MRIDataSeries;
+import org.openjdk.jmc.rjmx.common.services.IAttributeStorage;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
-import org.openjdk.jmc.rjmx.services.IAttributeStorage;
-import org.openjdk.jmc.rjmx.services.MRIDataSeries;
-import org.openjdk.jmc.rjmx.subscription.IMRIValueListener;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
 
 /**
  * Simple attribute storage that contains attribute events.

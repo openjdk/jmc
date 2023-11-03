@@ -49,10 +49,10 @@ import org.eclipse.core.runtime.Platform;
 import org.w3c.dom.Document;
 
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorProvider;
 import org.openjdk.jmc.rjmx.servermodel.IServer;

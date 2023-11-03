@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.IAdaptable;
 
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IUnit;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public class StatisticsCalculator implements IAdaptable {
 

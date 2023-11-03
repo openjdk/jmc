@@ -36,12 +36,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.subscription.IMRISubscription;
-import org.openjdk.jmc.rjmx.subscription.IMRIValueListener;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.IMRISubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 import org.openjdk.jmc.rjmx.test.testutil.TestToolkit;
 
@@ -52,7 +51,7 @@ public class CompositeDataSubscriptionTest extends RjmxTestCase implements IMRIV
 	private final static int SLEEP_TIME = 10000;
 
 	/**
-	 * @see org.openjdk.jmc.rjmx.subscription.IMRIValueListener#valueChanged(org.openjdk.jmc.rjmx.subscription.MRIValueEvent)
+	 * @see org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener#valueChanged(org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent)
 	 */
 	@Override
 	public void valueChanged(MRIValueEvent event) {

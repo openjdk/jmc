@@ -72,6 +72,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.tree.IArray;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -93,7 +94,6 @@ import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorSta
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.tree.IArray;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
 import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;
 import org.openjdk.jmc.ui.handlers.CopySelectionAction;

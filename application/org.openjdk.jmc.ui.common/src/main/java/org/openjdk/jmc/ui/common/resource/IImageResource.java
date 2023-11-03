@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.ui.common.resource;
 
+import org.openjdk.jmc.common.resource.Resource;
+
 /**
  * Interface for classes that can provide an image resource.
  */

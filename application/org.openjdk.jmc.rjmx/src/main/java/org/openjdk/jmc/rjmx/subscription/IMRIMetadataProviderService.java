@@ -32,6 +32,9 @@
  */
 package org.openjdk.jmc.rjmx.subscription;
 
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+
 /**
  * A service that will provide metadata through the org.openjdk.jmc.rjmx.metadataprovider extension.
  */

@@ -35,8 +35,7 @@ package org.openjdk.jmc.ui.misc;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-
-import org.openjdk.jmc.ui.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IArray;
 
 public class MCArrayContentProvider extends AbstractStructuredContentProvider {
 

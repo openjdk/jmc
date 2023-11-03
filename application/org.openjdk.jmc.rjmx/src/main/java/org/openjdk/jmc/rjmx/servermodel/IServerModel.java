@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.rjmx.servermodel;
 
-import org.openjdk.jmc.ui.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IArray;
 
 /**
  * A container with all available servers

@@ -35,8 +35,8 @@ package org.openjdk.jmc.rjmx.actionprovider.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 
 public class ActionProvider implements IActionProvider {
 	private final List<IActionProvider> providers = new ArrayList<>();

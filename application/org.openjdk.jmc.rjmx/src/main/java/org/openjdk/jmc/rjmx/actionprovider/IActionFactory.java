@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.actionprovider;
 
+import org.openjdk.jmc.common.action.Executable;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.ui.common.action.Executable;
 
 /**
  * Factory interface that is implemented by contributors to the

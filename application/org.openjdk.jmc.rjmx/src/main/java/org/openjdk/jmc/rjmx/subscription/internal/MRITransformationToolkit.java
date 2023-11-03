@@ -47,12 +47,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataProvider;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.IMRITransformation;
-import org.openjdk.jmc.rjmx.subscription.IMRITransformationFactory;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataProvider;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRITransformation;
+import org.openjdk.jmc.rjmx.common.subscription.IMRITransformationFactory;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 /**
  * An MRI transformation toolkit responsible for creating transformations from MRI, finding

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.browser.IJVMBrowserContextIDs;
 import org.openjdk.jmc.browser.views.BrowserLabelProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.wizards.RelinkableWizardPage;

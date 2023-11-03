@@ -51,13 +51,12 @@ import javax.management.ObjectName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle;
-import org.openjdk.jmc.rjmx.internal.JMXConnectionDescriptor;
-import org.openjdk.jmc.rjmx.internal.RJMXConnection;
-import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.internal.DefaultConnectionHandle;
+import org.openjdk.jmc.rjmx.common.internal.JMXConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 
 /**

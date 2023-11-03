@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.ui.internal;
 
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.ui.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IArray;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public interface IAttributeSet extends IArray<MRI> {
 

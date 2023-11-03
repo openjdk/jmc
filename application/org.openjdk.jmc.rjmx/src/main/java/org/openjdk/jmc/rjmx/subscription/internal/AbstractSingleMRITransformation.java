@@ -34,10 +34,10 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 
 import java.util.Properties;
 
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.IMRITransformation;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRITransformation;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 /**
  * Base class for transformation depending on a single MRI for input.

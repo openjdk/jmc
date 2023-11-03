@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.console.ui.tabs.threads;
 
-import org.openjdk.jmc.ui.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IArray;
 import org.openjdk.jmc.ui.polling.PollManager;
 
 /**

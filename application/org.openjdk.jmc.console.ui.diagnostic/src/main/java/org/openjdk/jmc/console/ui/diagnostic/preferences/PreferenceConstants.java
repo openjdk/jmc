@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.console.ui.diagnostic.preferences;
 
-import org.openjdk.jmc.rjmx.services.IOperation.OperationImpact;
+import org.openjdk.jmc.rjmx.common.services.IOperation.OperationImpact;
 
 public final class PreferenceConstants {
 	private static final String PROPERTY_DIAGNOSTIC_PROMPT_FOR = "console.ui.diagnostic.promptFor."; //$NON-NLS-1$

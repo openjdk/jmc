@@ -32,23 +32,19 @@
  */
 package org.openjdk.jmc.rjmx;
 
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
 import org.openjdk.jmc.rjmx.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.services.internal.HotspotManagementToolkit;
 
 /**
  * Checks the JVM capabilities of a connection.
  */
 public final class JVMSupportToolkit {
-
-	private final static String JFR_MBEAN_OBJECT_NAME = "jdk.management.jfr:type=FlightRecorder"; //$NON-NLS-1$
 
 	private JVMSupportToolkit() {
 		throw new IllegalArgumentException("Don't instantiate this toolkit"); //$NON-NLS-1$
@@ -88,58 +84,6 @@ public final class JVMSupportToolkit {
 	}
 
 	/**
-	 * Checks if Flight Recorder is available for use
-	 * 
-	 * @param connection
-	 * @return If it is an Oracle JVM or there is a FlightRecorder VM option, then return true.
-	 *         Otherwise, return false. This is used for verifying JDK 8 JVMs that are not built
-	 *         with JFR enabled, e.g., OpenJDK 8
-	 */
-	public static boolean hasFlightRecorder(IConnectionHandle connection) {
-		if (ConnectionToolkit.isOracle(connection)) {
-			return true;
-		}
-		MBeanServerConnection server = connection.getServiceOrNull(MBeanServerConnection.class);
-		try {
-			if (ConnectionToolkit.isSubstrateVM(connection)) {
-				return server.isRegistered(new ObjectName(JFR_MBEAN_OBJECT_NAME));
-			} else {
-				HotspotManagementToolkit.getVMOption(server, "FlightRecorder");
-				return true;
-			}
-		} catch (Exception e) { // RuntimeMBeanException thrown if FlightRecorder is not present
-			return false;
-		}
-	}
-
-	/**
-	 * Checks if Flight Recorder is disabled.
-	 *
-	 * @param connection
-	 *            the connection to check
-	 * @param explicitFlag
-	 *            If the flag has to be explicitly disabled on the command line with
-	 *            -XX:-FlightRecorder
-	 * @return If explicitFlag is true, then returns true only if Flight Recorder is explicitly
-	 *         disabled on the command line. If explicitFlag is false, then returns true if Flight
-	 *         Recorder is currently not enabled.
-	 */
-	public static boolean isFlightRecorderDisabled(IConnectionHandle connection, boolean explicitFlag) {
-		try {
-			MBeanServerConnection server = connection.getServiceOrThrow(MBeanServerConnection.class);
-			boolean disabled = !Boolean
-					.parseBoolean(HotspotManagementToolkit.getVMOption(server, "FlightRecorder").toString()); //$NON-NLS-1$
-			if (explicitFlag) {
-				return (disabled && HotspotManagementToolkit.isVMOptionExplicit(server, "FlightRecorder")); //$NON-NLS-1$
-			} else {
-				return disabled;
-			}
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	/**
 	 * Returns a descriptive error message about why Flight Recorder is unavailable.
 	 *
 	 * @param handle
@@ -158,7 +102,7 @@ public final class JVMSupportToolkit {
 		if (!ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JFR_ENGINE_SUPPORTED)) {
 			return getJfrOldHotSpotNotSupported(shortMessage);
 		}
-		if (isFlightRecorderDisabled(handle, true)) {
+		if (ConnectionToolkit.isFlightRecorderDisabled(handle, true)) {
 			return getJfrDisabled(shortMessage);
 		}
 		return getJfrNotEnabled(shortMessage);

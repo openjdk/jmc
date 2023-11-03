@@ -35,12 +35,12 @@ package org.openjdk.jmc.rjmx.test.services;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
-import org.openjdk.jmc.rjmx.services.IOperation;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.services.IDiagnosticCommandService;
+import org.openjdk.jmc.rjmx.common.services.IOperation;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 
 /**

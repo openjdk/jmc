@@ -43,11 +43,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
-import org.openjdk.jmc.rjmx.subscription.internal.AttributeValueToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.internal.AttributeValueToolkit;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 import org.openjdk.jmc.rjmx.test.internal.RJMXConnectionTest;
 

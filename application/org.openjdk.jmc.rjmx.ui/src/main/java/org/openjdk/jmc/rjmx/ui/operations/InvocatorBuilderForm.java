@@ -70,11 +70,11 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.util.TypeHandling;
+import org.openjdk.jmc.rjmx.common.services.IAttributeInfo;
+import org.openjdk.jmc.rjmx.common.services.IOperation;
+import org.openjdk.jmc.rjmx.common.services.IllegalOperandException;
 import org.openjdk.jmc.rjmx.services.IAttribute;
-import org.openjdk.jmc.rjmx.services.IAttributeInfo;
-import org.openjdk.jmc.rjmx.services.IOperation;
 import org.openjdk.jmc.rjmx.services.IReadOnlyAttribute;
-import org.openjdk.jmc.rjmx.services.IllegalOperandException;
 import org.openjdk.jmc.rjmx.ui.attributes.AttributeTreeBuilder;
 import org.openjdk.jmc.rjmx.ui.attributes.ChangeValueAction;
 import org.openjdk.jmc.rjmx.ui.attributes.ValueColumnLabelProvider;

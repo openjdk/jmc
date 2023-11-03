@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDescribable;
-import org.openjdk.jmc.ui.common.tree.IParent;
+import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.ui.common.util.ICopyable;
 
 public class Folder implements IParent<Object>, ICopyable, IDescribable {

@@ -48,12 +48,17 @@
    <extension
          point="org.openjdk.jmc.rjmx.service">
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.DiagnosticCommandServiceFactory"
+         factory="org.openjdk.jmc.rjmx.common.services.jfr.internal.FlightRecorderServiceFactory"
+         description="Service for controlling the flight recorder"
+         name="Flight Recorder">
+      </service>
+      <service
+            factory="org.openjdk.jmc.rjmx.common.services.internal.DiagnosticCommandServiceFactory"
             description="Diagnostic Commands"
             name="Diagnostic Commands">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.SubscriptionServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.SubscriptionServiceFactory"
             description="Service for controlling the client side attribute subscription engine"
             name="Subscription Engine">
       </service>
@@ -63,12 +68,12 @@
             name="Attribute Info">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.AttributeStorageServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.AttributeStorageServiceFactory"
             description="Service for storing attribute values"
             name="Attribute Storage">
       </service>
       <service
-            factory="org.openjdk.jmc.rjmx.services.internal.CommercialFeaturesServiceFactory"
+            factory="org.openjdk.jmc.rjmx.common.services.internal.CommercialFeaturesServiceFactory"
             description="Service for checking and enabling the state of the commercial features in hotspot."
             name="Commercial Features">
       </service>
@@ -82,17 +87,17 @@
 	<extension
             point="org.eclipse.core.runtime.adapters">
          <factory
-               adaptableType="org.openjdk.jmc.ui.common.action.IActionProvider"
+               adaptableType="org.openjdk.jmc.common.action.IActionProvider"
                class="org.openjdk.jmc.rjmx.actionprovider.internal.DefaultActionFactory">
             <adapter
-                  type="org.openjdk.jmc.ui.common.action.IUserAction">
+                  type="org.openjdk.jmc.common.action.IUserAction">
             </adapter>
          </factory>
          <factory
                adaptableType="org.openjdk.jmc.rjmx.servermodel.IServer"
                class="org.openjdk.jmc.rjmx.actionprovider.internal.DefaultActionFactory">
             <adapter
-                  type="org.openjdk.jmc.ui.common.action.IUserAction">
+                  type="org.openjdk.jmc.common.action.IUserAction">
             </adapter>
          </factory>
       </extension>
@@ -482,7 +487,7 @@
    <extension
          point="org.openjdk.jmc.rjmx.attributeTransformation">
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="difference">
          <property name="visualizeLabel" value="%DIFFERENCE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
@@ -491,7 +496,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="rate">
          <property name="visualizeLabel" value="%RATE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DifferenceTransformation" />
@@ -501,7 +506,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="average">
          <property name="visualizeLabel" value="%AVERAGE_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.AverageTransformation" />
@@ -511,7 +516,7 @@
          </transformationProperties>
       </attributeTransformation>
       <attributeTransformation
-            class="org.openjdk.jmc.rjmx.subscription.internal.SingleMRITransformationFactory"
+            class="org.openjdk.jmc.rjmx.common.subscription.internal.SingleMRITransformationFactory"
             transformationName="delta">
          <property name="visualizeLabel" value="%DELTA_TRANSFORMATION_VISUALIZATION_LABEL" />
          <property name="transformationClass" value="org.openjdk.jmc.rjmx.subscription.internal.DeltaTransformation" />

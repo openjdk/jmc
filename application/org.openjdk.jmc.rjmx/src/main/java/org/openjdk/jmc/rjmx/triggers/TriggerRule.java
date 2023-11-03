@@ -37,7 +37,7 @@ import java.util.logging.Level;
 import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.rjmx.subscription.IMRIValueListener;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
 import org.openjdk.jmc.rjmx.triggers.internal.INotificationFactory;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationRegistry;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationToolkit;

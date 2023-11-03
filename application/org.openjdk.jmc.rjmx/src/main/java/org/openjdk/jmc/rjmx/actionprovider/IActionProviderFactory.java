@@ -34,9 +34,9 @@ package org.openjdk.jmc.rjmx.actionprovider;
 
 import java.util.Collection;
 
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
 import org.openjdk.jmc.rjmx.IServerHandle;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 
 /**
  * Factory interface that is implemented by contributors to the org.openjdk.jmc.rjmx.actionProvider

@@ -35,8 +35,7 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 import java.util.Properties;
 
 import org.eclipse.osgi.util.NLS;
-
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
 
 /**
  * Takes an existing attribute as input and creates an averaging transformation. It is possible to

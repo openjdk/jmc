@@ -41,10 +41,10 @@ import org.w3c.dom.Element;
 
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.util.XmlToolkit;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
 import org.openjdk.jmc.rjmx.subscription.internal.ExtendedMRIMetadataToolkit;
 import org.openjdk.jmc.rjmx.triggers.IExceptionHandler;
 import org.openjdk.jmc.rjmx.triggers.ITrigger;

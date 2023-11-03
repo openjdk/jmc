@@ -32,7 +32,7 @@
  */
 package org.openjdk.jmc.alert;
 
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.triggers.IExceptionHandler;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
 

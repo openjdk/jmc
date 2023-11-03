@@ -32,8 +32,8 @@
  */
 /**
  * This package contains everything related to the subscription of values. Attributes, notifications
- * and transformations are addressed with {@link org.openjdk.jmc.rjmx.subscription.MRI} combining
- * the MBean {@link javax.management.ObjectName} and the actual resource name.
+ * and transformations are addressed with {@link org.openjdk.jmc.rjmx.common.subscription.MRI}
+ * combining the MBean {@link javax.management.ObjectName} and the actual resource name.
  * <p>
  * See {@link org.openjdk.jmc.rjmx} for an usage example.
  */

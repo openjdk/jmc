@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 
 import javax.management.MBeanServerConnection;
 
-import org.openjdk.jmc.rjmx.ISyntheticAttribute;
+import org.openjdk.jmc.rjmx.common.ISyntheticAttribute;
 
 /**
  * Abstract base class for synthetic attributes.

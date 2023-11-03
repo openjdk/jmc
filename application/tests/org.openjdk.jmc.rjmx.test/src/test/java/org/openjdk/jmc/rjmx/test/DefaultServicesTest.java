@@ -40,8 +40,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import org.junit.Test;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 
 /**
  * Sanity test for the default services available from the default implementation of

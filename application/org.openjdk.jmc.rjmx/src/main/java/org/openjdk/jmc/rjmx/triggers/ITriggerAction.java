@@ -32,9 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.triggers;
 
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.w3c.dom.Element;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 
 /**
  * Interface for actions taken when a NotificationRule triggers.

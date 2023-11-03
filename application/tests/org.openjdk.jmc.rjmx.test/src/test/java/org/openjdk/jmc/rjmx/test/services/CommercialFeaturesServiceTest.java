@@ -36,9 +36,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openjdk.jmc.rjmx.ConnectionException;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.services.ICommercialFeaturesService;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.services.ICommercialFeaturesService;
 import org.openjdk.jmc.rjmx.test.ServerHandleTestCase;
 
 public class CommercialFeaturesServiceTest extends ServerHandleTestCase {

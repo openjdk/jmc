@@ -40,7 +40,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.subscription.IMBeanServerChangeListener;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanServerChangeListener;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.misc.IRefreshable;
 

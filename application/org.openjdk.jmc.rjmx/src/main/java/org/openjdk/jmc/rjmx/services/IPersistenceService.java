@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.services;
 
 import java.io.IOException;
 
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public interface IPersistenceService {
 

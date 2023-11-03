@@ -34,6 +34,7 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.actions;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.osgi.util.NLS;
+import org.openjdk.jmc.flightrecorder.configuration.FlightRecorderException;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.FlightRecorderProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
@@ -41,8 +42,7 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.RecordingProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.DumpRecordingWizardModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards.DumpRecordingWizardPage;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.ui.wizards.AbstractWizardUserAction;
 import org.openjdk.jmc.ui.wizards.OnePageWizard;
 
