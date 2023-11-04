@@ -111,7 +111,7 @@ public final class EventTypeMetadataV2 implements IEventTypeInfo {
 			// Should not happen here. If it does, it has already been detected and then T can only be String.
 			RJMXCorePlugin.getDefault().getLogger().log(Level.WARNING, e.getMessage(), e);
 			@SuppressWarnings("unchecked")
-			T strDef = (T) "<bad default>";
+			T strDef = (T) Messages.getString(Messages.EventTypeMetadataV2_BAD_DEFAULT_VALUE);
 			defaultValue = strDef;
 		}
 		return new OptionInfo<>(label, description, constraint, defaultValue);
