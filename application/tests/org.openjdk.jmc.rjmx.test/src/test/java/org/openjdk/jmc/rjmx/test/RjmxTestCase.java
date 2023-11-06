@@ -180,7 +180,6 @@ public class RjmxTestCase extends MCTestCase {
 	public static IServerDescriptor createDefaultServerDesciptor(IConnectionDescriptor descriptor) throws IOException {
 		RJMXConnection rjmxConnection = new RJMXConnection(descriptor, RjmxTestCase.createDefaultServerDesciptor(),
 				null);
-//				null, SyntheticRepositoryInitializer.intializeAttributeEntries(), SyntheticRepositoryInitializer.initializeNotificationEntries());
 		if (!rjmxConnection.connect()) {
 			rjmxConnection.close();
 			throw new IOException("Could not connect to " + descriptor);
@@ -287,7 +286,7 @@ public class RjmxTestCase extends MCTestCase {
 		m_connectionDescriptor = getTestConnectionDescriptor();
 		m_host = ConnectionToolkit.getHostName(m_connectionDescriptor.createJMXServiceURL());
 		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor),
-				null, SyntheticRepositoryInitializer.intializeAttributeEntries(),
+				null, SyntheticRepositoryInitializer.initializeAttributeEntries(),
 				SyntheticRepositoryInitializer.initializeNotificationEntries());
 		m_connection.connect();
 		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null,

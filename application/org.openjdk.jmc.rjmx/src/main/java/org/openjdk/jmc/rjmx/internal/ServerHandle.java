@@ -77,7 +77,7 @@ public final class ServerHandle implements IServerHandle {
 	public ServerHandle(IServerDescriptor server, IConnectionDescriptor descriptor, Runnable observer) {
 		this.observer = observer;
 		connection = new RJMXConnection(descriptor, server, connectionListener,
-				SyntheticRepositoryInitializer.intializeAttributeEntries(),
+				SyntheticRepositoryInitializer.initializeAttributeEntries(),
 				SyntheticRepositoryInitializer.initializeNotificationEntries());
 	}
 

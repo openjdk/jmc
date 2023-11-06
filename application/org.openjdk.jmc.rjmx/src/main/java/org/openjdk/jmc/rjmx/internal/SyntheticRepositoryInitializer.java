@@ -55,7 +55,7 @@ import org.openjdk.jmc.rjmx.common.internal.SyntheticNotificationEntry;
 import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 public class SyntheticRepositoryInitializer {
-	public static List<SyntheticAttributeEntry> intializeAttributeEntries() {
+	public static List<SyntheticAttributeEntry> initializeAttributeEntries() {
 		IExtensionRegistry er = Platform.getExtensionRegistry();
 		IExtensionPoint ep = er.getExtensionPoint("org.openjdk.jmc.rjmx.syntheticattribute"); //$NON-NLS-1$
 		IExtension[] extensions = ep.getExtensions();
