@@ -204,11 +204,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.flightrecorder.configuration</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.flightrecorder.controlpanel.ui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
