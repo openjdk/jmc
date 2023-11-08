@@ -99,7 +99,7 @@ public final class MBeanMRIMetadataDB implements IMRIService, IMBeanServerChange
 	}
 
 	private boolean isTransformationAvailable(MRI mri) {
-		IMRITransformation transformation = MRITransformationToolkit.createTransformation(mri);
+		IMRITransformation transformation = MRITransformationBaseToolkit.createTransformation(mri);
 		for (MRI attribute : transformation.getAttributes()) {
 			if (!isMRIAvailable(attribute)) {
 				return false;

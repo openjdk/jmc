@@ -48,76 +48,19 @@ import org.openjdk.jmc.rjmx.common.subscription.MRI;
 
 /**
  * An MRI transformation toolkit responsible for creating transformations from MRI, finding
- * attributes they depend on, etc. Will read available transformation factories from the extension
- * "org.openjdk.jmc.rjmx.attributeTransformation".
+ * attributes they depend on, etc.
  */
-public class MRITransformationToolkit {
+public class MRITransformationBaseToolkit {
 
-	static final String TRANSFORMATION_EXTENSION_NAME = "org.openjdk.jmc.rjmx.attributeTransformation"; //$NON-NLS-1$
-	static final String TRANSFORMATION_ELEMENT = "attributeTransformation"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_EXTENSION_NAME = "org.openjdk.jmc.rjmx.attributeTransformation"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_ELEMENT = "attributeTransformation"; //$NON-NLS-1$
 	public static final String TRANSFORMATION_NAME_ATTRIBUTE = "transformationName"; //$NON-NLS-1$
-	static final String TRANSFORMATION_PROPERTY_ELEMENT = "property"; //$NON-NLS-1$
-	static final String TRANSFORMATION_PROPERTY_NAME = "name"; //$NON-NLS-1$
-	static final String TRANSFORMATION_PROPERTY_VALUE = "value"; //$NON-NLS-1$
-	static final String TRANSFORMATION_PROPERTIES_ELEMENT = "transformationProperties"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_PROPERTY_ELEMENT = "property"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_PROPERTY_NAME = "name"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_PROPERTY_VALUE = "value"; //$NON-NLS-1$
+	protected static final String TRANSFORMATION_PROPERTIES_ELEMENT = "transformationProperties"; //$NON-NLS-1$
 
-	private static final Map<String, IMRITransformationFactory> TRANSFORMATION_FACTORIES = new HashMap<>();
-
-	private MRITransformationToolkit() {
-		throw new AssertionError("Not to be instantiated!"); //$NON-NLS-1$
-	}
-
-	static {
-		initialize();
-	}
-
-	private static void initialize() {
-		IMRITransformationFactory transformationFactory = new SingleMRITransformationFactory();
-		String transformationName = "difference";
-		Properties props = new Properties();
-		props.put("visualizeLabel", "Visualize difference...");
-		props.put("transformationClass", "org.openjdk.jmc.rjmx.common.subscription.internal.DifferenceTransformation");
-		Properties transProps = new Properties();
-		transProps.put("displayName", "%s (difference)");
-		props.put(TRANSFORMATION_NAME_ATTRIBUTE, transformationName);
-		transformationFactory.setFactoryProperties(props, transProps);
-		TRANSFORMATION_FACTORIES.put(transformationName, transformationFactory);
-
-		transformationFactory = new SingleMRITransformationFactory();
-		transformationName = "rate";
-		props = new Properties();
-		props.put("visualizeLabel", "Visualize rate per second...");
-		props.put("transformationClass", "org.openjdk.jmc.rjmx.common.subscription.internal.DifferenceTransformation");
-		transProps = new Properties();
-		transProps.put("displayName", "%s (rate per second)");
-		transProps.put("rate", "1000");
-		props.put(TRANSFORMATION_NAME_ATTRIBUTE, transformationName);
-		transformationFactory.setFactoryProperties(props, transProps);
-		TRANSFORMATION_FACTORIES.put(transformationName, transformationFactory);
-
-		transformationFactory = new SingleMRITransformationFactory();
-		transformationName = "average";
-		props = new Properties();
-		props.put("visualizeLabel", "Visualize average...");
-		props.put("transformationClass", "org.openjdk.jmc.rjmx.common.subscription.internal.AverageTransformation");
-		transProps = new Properties();
-		transProps.put("terms", "30");
-		transProps.put("displayName", "%%s (average over %s samples)");
-		props.put(TRANSFORMATION_NAME_ATTRIBUTE, transformationName);
-		transformationFactory.setFactoryProperties(props, transProps);
-		TRANSFORMATION_FACTORIES.put(transformationName, transformationFactory);
-
-		transformationFactory = new SingleMRITransformationFactory();
-		transformationName = "delta";
-		props = new Properties();
-		props.put("visualizeLabel", "Visualize delta...");
-		props.put("transformationClass", "org.openjdk.jmc.rjmx.common.subscription.internal.DeltaTransformation");
-		transProps = new Properties();
-		transProps.put("displayName", "%s (delta)");
-		props.put(TRANSFORMATION_NAME_ATTRIBUTE, transformationName);
-		transformationFactory.setFactoryProperties(props, transProps);
-		TRANSFORMATION_FACTORIES.put(transformationName, transformationFactory);
-	}
+	protected static final Map<String, IMRITransformationFactory> TRANSFORMATION_FACTORIES = new HashMap<>();
 
 	public void initializeFromExtensions(Map<String, IMRITransformationFactory> transformationFactories) {
 		TRANSFORMATION_FACTORIES.clear();

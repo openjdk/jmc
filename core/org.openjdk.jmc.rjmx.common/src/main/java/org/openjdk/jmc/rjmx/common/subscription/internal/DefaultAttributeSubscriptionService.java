@@ -335,7 +335,7 @@ public final class DefaultAttributeSubscriptionService
 					"The attribute name associated with the attribute info must be resolved before being used to create subscriptions."); //$NON-NLS-1$
 		}
 		if (info.getMRI().getType() == Type.TRANSFORMATION) {
-			IMRITransformation transformation = MRITransformationToolkit.createTransformation(info.getMRI());
+			IMRITransformation transformation = MRITransformationBaseToolkit.createTransformation(info.getMRI());
 			return new TransformationSubscription(handle, info, transformation);
 		} else {
 			AbstractAttributeSubscription subscription = new DefaultAttributeSubscription(handle, info);

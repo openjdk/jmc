@@ -89,7 +89,8 @@ public class SingleMRITransformationFactory implements IMRITransformationFactory
 
 	@Override
 	public MRI createTransformationMRI(MRI mri) {
-		String transformationName = m_properties.getProperty(MRITransformationToolkit.TRANSFORMATION_NAME_ATTRIBUTE);
+		String transformationName = m_properties
+				.getProperty(MRITransformationBaseToolkit.TRANSFORMATION_NAME_ATTRIBUTE);
 		// FIXME: Would be nice to not have to specify an ObjectName but until then let us use something meaningful.
 		return new MRI(MRI.Type.TRANSFORMATION, "transformation:type=" + transformationName, //$NON-NLS-1$
 				transformationName + "?attribute=" + mri); //$NON-NLS-1$
