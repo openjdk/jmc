@@ -99,6 +99,10 @@
             <summary>There are fewer sampled threads than the total number of hardware threads (cores).</summary>
             <explanation>1 threads with at least 4 method samples were found, but the machine has 32 hardware threads (cores). The application might benefit from a higher level of parallelism. This could also be caused by threads doing something else than running Java code, for example running native code or spending time in the JVM internals.</explanation>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>OK</severity>
@@ -406,6 +410,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>There are fewer sampled threads than the total number of hardware threads (cores).</summary>
             <explanation>1 threads with at least 4 method samples were found, but the machine has 32 hardware threads (cores). The application might benefit from a higher level of parallelism. This could also be caused by threads doing something else than running Java code, for example running native code or spending time in the JVM internals.</explanation>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>OK</severity>
@@ -676,6 +684,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -954,6 +966,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>Not Applicable</severity>
@@ -1212,6 +1228,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1479,6 +1499,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>Not Applicable</severity>
@@ -1742,6 +1766,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2030,6 +2058,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>There were no problems with the amount of sampled threads.</summary>
             <explanation>There are more sampled threads than the amount of hardware threads. This indicates that the application has enough parallelism for the available hardware.</explanation>
+        </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FileRead</id>
@@ -2329,6 +2361,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>There were no problems with the amount of sampled threads.</summary>
             <explanation>There are more sampled threads than the amount of hardware threads. This indicates that the application has enough parallelism for the available hardware.</explanation>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>OK</severity>
@@ -2615,6 +2651,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>Information</severity>
             <summary>There are fewer sampled threads than the total number of hardware threads (cores).</summary>
             <explanation>1 threads with at least 4 method samples were found, but the machine has 32 hardware threads (cores). The application might benefit from a higher level of parallelism. This could also be caused by threads doing something else than running Java code, for example running native code or spending time in the JVM internals.</explanation>
+        </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FileRead</id>
@@ -2932,6 +2972,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>There were no problems with the amount of sampled threads.</summary>
             <explanation>There are more sampled threads than the amount of hardware threads. This indicates that the application has enough parallelism for the available hardware.</explanation>
+        </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FileRead</id>
@@ -3253,6 +3297,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FileRead</id>
             <severity>Not Applicable</severity>
@@ -3526,6 +3574,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
             <id>FewSampledThreads</id>
             <severity>Not Applicable</severity>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>Exceptions</id>
             <severity>Not Applicable</severity>
@@ -3772,6 +3824,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -4042,6 +4098,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -4326,6 +4386,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
         </rule>
         <rule>
             <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+		<rule>
+            <id>FileForce</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>

@@ -94,6 +94,9 @@ public class Messages {
 	public static final String AGGR_FILE_WRITE_COUNT_DESC = "AGGR_FILE_WRITE_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FILE_WRITE_SIZE = "AGGR_FILE_WRITE_SIZE"; //$NON-NLS-1$
 	public static final String AGGR_FILE_WRITE_SIZE_DESC = "AGGR_FILE_WRITE_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_FORCE_COUNT = "AGGR_FILE_FORCE_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_FILE_FORCE_COUNT_DESC = "AGGR_FILE_FORCE_COUNT_DESC"; //$NON-NLS-1$
+
 	public static final String AGGR_FIRST_ATTRIBUTE = "AGGR_FIRST_ATTRIBUTE"; //$NON-NLS-1$
 	public static final String AGGR_FIRST_ATTRIBUTE_DESC = "AGGR_FIRST_ATTRIBUTE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FLR_DATA_LOST_SIZE = "AGGR_FLR_DATA_LOST_SIZE"; //$NON-NLS-1$
@@ -363,6 +366,8 @@ public class Messages {
 	public static final String ATTR_IO_ADDRESS = "ATTR_IO_ADDRESS"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_READ = "ATTR_IO_FILE_BYTES_READ"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_READ_DESC = "ATTR_IO_FILE_BYTES_READ_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_FORCE_METADATA = "ATTR_IO_FILE_FORCE_METADATA"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_FORCE_METADATA_DESC = "ATTR_IO_FILE_FORCE_METADATA_DESC"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_WRITTEN = "ATTR_IO_FILE_BYTES_WRITTEN"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_WRITTEN_DESC = "ATTR_IO_FILE_BYTES_WRITTEN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_READ_EOF = "ATTR_IO_FILE_READ_EOF"; //$NON-NLS-1$

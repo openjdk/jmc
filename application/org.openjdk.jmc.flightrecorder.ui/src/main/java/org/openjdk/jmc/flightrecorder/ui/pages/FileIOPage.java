@@ -128,22 +128,29 @@ public class FileIOPage extends AbstractDataPage {
 
 	private static final Color WRITE_COLOR = TypeLabelProvider.getColor(JdkTypeIDs.FILE_WRITE);
 	private static final Color READ_COLOR = TypeLabelProvider.getColor(JdkTypeIDs.FILE_READ);
+	private static final Color FORCE_COLOR = TypeLabelProvider.getColor(JdkTypeIDs.FILE_FORCE);
 	private static final Color WRITE_ALPHA_COLOR = ColorToolkit.withAlpha(WRITE_COLOR, 80);
 	private static final Color READ_ALPHA_COLOR = ColorToolkit.withAlpha(READ_COLOR, 80);
-	private static final IItemFilter TABLE_ITEMS = ItemFilters.type(JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE);
+	private static final Color FORCE_ALPHA_COLOR = ColorToolkit.withAlpha(FORCE_COLOR, 80);
+	private static final IItemFilter TABLE_ITEMS = ItemFilters.type(JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE,
+			JdkTypeIDs.FILE_FORCE);
 	private static final String TOTAL_TIME = "totalTime"; //$NON-NLS-1$
 	private static final String MAX_TIME = "maxTime"; //$NON-NLS-1$
 	private static final String AVG_TIME = "avgTime"; //$NON-NLS-1$
 	private static final String STDDEV_TIME = "stddevTime"; //$NON-NLS-1$
 	private static final String READ_COUNT = "readCount"; //$NON-NLS-1$
 	private static final String WRITE_COUNT = "writeCount"; //$NON-NLS-1$
+	private static final String FORCE_COUNT = "forceCount"; //$NON-NLS-1$
 	private static final String READ_SIZE = "readSize"; //$NON-NLS-1$
 	private static final String WRITE_SIZE = "writeSize"; //$NON-NLS-1$
+	private static final String FORCE_SIZE = "forceSize"; //$NON-NLS-1$
 	private static final String READ_EOF = "endOfFile"; //$NON-NLS-1$
 	private static final String PERCENTILE_READ_TIME = "percentileReadTime"; //$NON-NLS-1$
 	private static final String PERCENTILE_READ_COUNT = "percentileReadCount"; //$NON-NLS-1$
 	private static final String PERCENTILE_WRITE_TIME = "percentileWriteTime"; //$NON-NLS-1$
 	private static final String PERCENTILE_WRITE_COUNT = "percentileWriteCount"; //$NON-NLS-1$
+	private static final String PERCENTILE_FORCE_TIME = "percentileForceTime"; //$NON-NLS-1$
+	private static final String PERCENTILE_FORCE_COUNT = "percentileForceCount"; //$NON-NLS-1$
 
 	private static final ItemHistogramBuilder HISTOGRAM = new ItemHistogramBuilder();
 	private static final ItemListBuilder LIST = new ItemListBuilder();
@@ -157,8 +164,10 @@ public class FileIOPage extends AbstractDataPage {
 		HISTOGRAM.addColumn(STDDEV_TIME, JdkAggregators.STDDEV_IO_TIME);
 		HISTOGRAM.addColumn(READ_COUNT, JdkAggregators.FILE_READ_COUNT);
 		HISTOGRAM.addColumn(WRITE_COUNT, JdkAggregators.FILE_WRITE_COUNT);
+		HISTOGRAM.addColumn(FORCE_COUNT, JdkAggregators.FILE_FORCE_COUNT);
 		HISTOGRAM.addColumn(READ_SIZE, JdkAggregators.FILE_READ_SIZE);
 		HISTOGRAM.addColumn(WRITE_SIZE, JdkAggregators.FILE_WRITE_SIZE);
+		HISTOGRAM.addColumn(FORCE_SIZE, JdkAggregators.FILE_FORCE_METADATA);
 		LIST.addColumn(JdkAttributes.IO_PATH);
 		LIST.addColumn(JfrAttributes.START_TIME);
 		LIST.addColumn(JfrAttributes.END_TIME);
@@ -172,6 +181,8 @@ public class FileIOPage extends AbstractDataPage {
 				JdkAggregators.FILE_READ_COUNT.getName(), JdkTypeIDs.FILE_READ);
 		PERCENTILES.addSeries(PERCENTILE_WRITE_TIME, Messages.FileIOPage_ROW_FILE_WRITE, PERCENTILE_WRITE_COUNT,
 				JdkAggregators.FILE_WRITE_COUNT.getName(), JdkTypeIDs.FILE_WRITE);
+		PERCENTILES.addSeries(PERCENTILE_FORCE_TIME, Messages.FileIOPage_ROW_FILE_FORCE, PERCENTILE_FORCE_COUNT,
+				JdkAggregators.FILE_FORCE_COUNT.getName(), JdkTypeIDs.FILE_FORCE);
 	}
 
 	private class IOPageUi implements IPageUI {
@@ -389,6 +400,18 @@ public class FileIOPage extends AbstractDataPage {
 						JdkAggregators.FILE_WRITE_COUNT.getDescription(), writeItems, JdkAggregators.FILE_WRITE_COUNT,
 						WRITE_COLOR, JdkAttributes.IO_FILE_BYTES_WRITTEN));
 			}
+			IItemCollection forceItems = selectedItems.apply(JdkFilters.FILE_FORCE);
+			if (forceItems.hasItems()) {
+				timelineRows.add(DataPageToolkit.buildSizeRow(Messages.FileIOPage_ROW_FILE_FORCE + pathCount,
+						JdkAggregators.FILE_FORCE_COUNT.getDescription(), forceItems, JdkAggregators.FILE_FORCE_COUNT,
+						FORCE_COLOR, FileIOPage::getColor));
+				durationRows.add(DataPageToolkit.buildDurationHistogram(Messages.FileIOPage_ROW_FILE_FORCE + pathCount,
+						JdkAggregators.FILE_FORCE_COUNT.getDescription(), forceItems, JdkAggregators.FILE_FORCE_COUNT,
+						FORCE_COLOR));
+				sizeRows.add(DataPageToolkit.buildSizeHistogram(Messages.FileIOPage_ROW_FILE_FORCE + pathCount,
+						JdkAggregators.FILE_FORCE_COUNT.getDescription(), forceItems, JdkAggregators.FILE_FORCE_COUNT,
+						FORCE_COLOR, JdkAttributes.IO_FILE_BYTES_READ));
+			}
 //			ItemRow[] pathRows = selection.getSelectedRows(FileIOPage::buildPathLane).toArray(ItemRow[]::new);
 
 			timelineCanvas.replaceRenderer(RendererToolkit.uniformRows(timelineRows));
@@ -469,7 +492,17 @@ public class FileIOPage extends AbstractDataPage {
 //	}
 
 	private static Color getColor(IItem item) {
-		return JdkTypeIDs.FILE_READ.equals(item.getType().getIdentifier()) ? READ_ALPHA_COLOR : WRITE_ALPHA_COLOR;
+
+		switch (item.getType().getIdentifier()) {
+		case JdkTypeIDs.FILE_READ:
+			return READ_ALPHA_COLOR;
+		case JdkTypeIDs.FILE_WRITE:
+			return WRITE_ALPHA_COLOR;
+		case JdkTypeIDs.FILE_FORCE:
+			return FORCE_ALPHA_COLOR;
+		default:
+			return null;
+		}
 	}
 
 	@Override

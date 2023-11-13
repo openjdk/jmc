@@ -75,6 +75,7 @@ public final class JdkTypeIDs {
 
 	public static final String FILE_WRITE = PREFIX + "FileWrite";
 	public static final String FILE_READ = PREFIX + "FileRead";
+	public static final String FILE_FORCE = PREFIX + "FileForce";
 	public static final String SOCKET_WRITE = PREFIX + "SocketWrite";
 	public static final String SOCKET_READ = PREFIX + "SocketRead";
 

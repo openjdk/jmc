@@ -166,6 +166,7 @@ public class Messages extends NLS {
 	public static String FileIOPage_PERCENTILE_SELECTION;
 	public static String FileIOPage_ROW_FILE_READ;
 	public static String FileIOPage_ROW_FILE_WRITE;
+	public static String FileIOPage_ROW_FILE_FORCE;
 	public static String FileIOPage_SELECTED_PATH;
 	public static String FileIOPage_SELECTED_PATHS;
 	public static String FileIOPage_TIMELINE_SELECTION;

@@ -59,6 +59,8 @@ public class TypeLabelProvider {
 			return Palette.PF_ORANGE_300.getAWTColor();
 		case JdkTypeIDs.FILE_WRITE:
 			return Palette.PF_CYAN_600.getAWTColor();
+		case JdkTypeIDs.FILE_FORCE:
+			return Palette.PF_RED_500.getAWTColor();
 		case JdkTypeIDs.ERRORS_THROWN:
 			return Palette.PF_RED_100.getAWTColor();
 		case JdkTypeIDs.EXCEPTIONS_THROWN:

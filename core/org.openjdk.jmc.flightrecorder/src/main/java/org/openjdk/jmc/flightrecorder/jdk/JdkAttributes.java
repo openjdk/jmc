@@ -471,6 +471,9 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> IO_FILE_BYTES_READ = attr("bytesRead", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ),
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ_DESC), MEMORY);
+	public static final IAttribute<Boolean> IO_FILE_FORCE_METADATA = attr("metaData", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA),
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA_DESC), FLAG);
 	public static final IAttribute<Boolean> IO_FILE_READ_EOF = attr("endOfFile", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_READ_EOF), Messages.getString(Messages.ATTR_IO_FILE_READ_EOF_DESC),
 			FLAG);
