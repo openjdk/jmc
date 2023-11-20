@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -350,6 +350,8 @@ public class EventBrowserPage extends AbstractDataPage {
 					newColumns.add(0, new ColumnSettings(combinedId, false, null, null));
 				}
 			});
+			// add a column for the event type id, hidden by default
+			itemListBuilder.addColumn(JfrAttributes.EVENT_TYPE_ID);
 			listColumns.addAll(0, newColumns);
 
 			saveFilterActionStates();
