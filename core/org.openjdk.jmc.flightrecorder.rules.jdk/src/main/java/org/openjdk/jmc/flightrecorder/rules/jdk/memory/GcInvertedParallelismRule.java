@@ -77,6 +77,7 @@ public class GcInvertedParallelismRule implements IRule {
 	// Requires the jdk.GCCPUTime event introduced in JDK 20
 	// See: JDK-8291753
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
+			.addEventType(JdkTypeIDs.GC_CONF, EventAvailability.AVAILABLE)
 			.addEventType(JdkTypeIDs.GC_CPU_TIME, EventAvailability.AVAILABLE).build();
 
 	public static final TypedResult<IQuantity> GC_CPU_TIME_EVENT_COUNT = new TypedResult<>("gcCpuTimeEventCount", //$NON-NLS-1$
