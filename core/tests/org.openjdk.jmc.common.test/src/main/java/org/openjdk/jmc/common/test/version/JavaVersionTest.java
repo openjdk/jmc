@@ -34,6 +34,7 @@ package org.openjdk.jmc.common.test.version;
 
 import org.junit.Test;
 import org.openjdk.jmc.common.version.JavaVersion;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
