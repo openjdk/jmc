@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,22 +33,22 @@
 package org.openjdk.jmc.flightrecorder.controlpanel.ui.model;
 
 import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_CONTENT_TYPE;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_CONTROL_REFERENCE;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_DESCRIPTION;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL_MANDATORY;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_NAME;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_PATH;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_URI;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.ATTRIBUTE_VERSION;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_CATEGORY;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_CONFIGURATION_V1;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_CONTROL;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_EVENTTYPE_V1;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_EVENTTYPE_V2;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_PRODUCER;
-import static org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar.TAG_SETTING;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_CONTENT_TYPE;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_CONTROL_REFERENCE;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_DESCRIPTION;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_LABEL_MANDATORY;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_NAME;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_PATH;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_URI;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.ATTRIBUTE_VERSION;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_CATEGORY;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_CONFIGURATION_V1;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_CONTROL;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_EVENTTYPE_V1;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_EVENTTYPE_V2;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_PRODUCER;
+import static org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar.TAG_SETTING;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,14 +83,15 @@ import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.configuration.internal.CommonConstraints;
+import org.openjdk.jmc.flightrecorder.configuration.model.VolatileStorageDelegate;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCGrammar;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.JFCXMLValidator;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLAttribute;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTag;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLTagInstance;
 import org.openjdk.jmc.flightrecorder.configuration.spi.IConfigurationStorageDelegate;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCGrammar;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.JFCXMLValidator;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLAttribute;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLTag;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLTagInstance;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.services.jfr.IEventTypeInfo;
 import org.xml.sax.InputSource;

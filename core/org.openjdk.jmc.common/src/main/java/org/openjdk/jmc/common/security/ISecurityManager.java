@@ -197,11 +197,11 @@ public interface ISecurityManager {
 
 	/**
 	 * Triggers a change of the master password.
-	 *
+	 * 
 	 * @throws ActionNotGrantedException
 	 *             if the master password was not given.
 	 * @throws SecurityException
-	 *             for other security problems, e.g. provided cipher is not available.
+	 *             for other security problems. e.g. provided cipher is not available.
 	 */
 	void changeMasterPassword() throws SecurityException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,7 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test;
 import java.io.InputStream;
 
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml.XMLModel;
+import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 import org.openjdk.jmc.rjmx.services.jfr.test.JfrTestCase;
 

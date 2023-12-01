@@ -22,7 +22,7 @@ Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.model,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.wizards
-Import-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml,
+Import-Package: org.openjdk.jmc.flightrecorder.configuration.model.xml,
  org.openjdk.jmc.rjmx.services.jfr,
  org.eclipse.core.expressions
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui
