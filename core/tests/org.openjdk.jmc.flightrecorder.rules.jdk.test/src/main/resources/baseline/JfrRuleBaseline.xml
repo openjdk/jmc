@@ -141,6 +141,10 @@ If the garbage collector can free a lot of memory, it may be because the applica
 This recording is only 9.903 s long, consider creating a recording longer than 20 s for improved rule accuracy.</explanation>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -445,6 +449,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>OK</severity>
             <summary>No problems were found with the GC configuration.</summary>
@@ -713,6 +721,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -990,6 +1002,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>OK</severity>
             <summary>No problems were found with the GC configuration.</summary>
@@ -1246,6 +1262,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1514,6 +1534,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -1776,6 +1800,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2069,6 +2097,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>GcFreedRatio</id>
             <severity>OK</severity>
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>GcOptions</id>
@@ -2369,6 +2401,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>Only 0 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>Information</severity>
             <summary>The runtime used a parallel GC on a single-core machine.</summary>
@@ -2651,6 +2687,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2973,6 +3013,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <explanation>61.4 MiB per second was freed by garbage collections during 9/24/2015 10:09:18.000 AM – 10:09:28 AM. The average liveset was 130 MiB. This is likely a reasonable amount.</explanation>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcLocker</id>
             <severity>OK</severity>
             <summary>No GCs were affected by the GC Locker.</summary>
@@ -3290,6 +3334,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GcOptions</id>
             <severity>Not Applicable</severity>
             <summary>Too few events to calculate the result.</summary>
@@ -3493,6 +3541,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3742,6 +3794,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -4013,6 +4069,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>GcFreedRatio</id>
             <severity>OK</severity>
             <summary>Only 6 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>GarbageCollectionInfoRule</id>
@@ -4304,6 +4364,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>GarbageCollectionInfoRule</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -4464,6 +4528,556 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>BufferLost</id>
             <severity>OK</severity>
             <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+    </report>
+    <report>
+        <file>jdk21-inverted-parallelism.jfr</file>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>OK</severity>
+            <summary>No Stop-the-World, Full GC events detected.</summary>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Warning</severity>
+            <summary>Inverted Parallelism detected 1 times out of 11 recorded events.</summary>
+            <explanation>There is evidence of inverted parallelism. With parallel (multi-threaded) collector events, the "user" + "sys" time should be approximately equal to the "real" (wall) time multiplied by the # of GC threads. For example, if there are 3 GC threads we would expect a parallel collection that takes 1 second of "real" time to take approximately 3 seconds of "user" + "sys" time. The parallelism is 3x. If the parallelism is 1x ("user" + "sys" = "real"), the parallel collection is not offering any efficiency over a serial (single-threaded) collection. When "user" + "sys" &lt; "real", the parallelism is inverted. Inverted parallelism can be a sign of high i/o (e.g. disk or network access) or not enough CPU (e.g. GC threads competing with each other or other processes). Check for swapping and if the number of GC threads (-XX:ParallelGCThreads=&lt;n&gt;) is appropriate for the number of cpu/cores and any processes sharing cpu.</explanation>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>Not Applicable</severity>
+            <summary>No events with stack traces were recorded.</summary>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+    </report>
+    <report>
+        <file>jdk21.jfr</file>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>OK</severity>
+            <summary>Application efficiency was not highly affected by halts.</summary>
+            <explanation>The highest ratio of application halts to execution time was 0.172 % during 11/20/2023 4:22:52.000 PM – 4:23:52 PM. 0.118 % of the halts were for reasons other than GC. The halts ratio for the entire recording was 0.275 %. 0.114 % of the total halts were for reasons other than GC.</explanation>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>OK</severity>
+            <summary>No classes with identical names have been loaded more times than the limit.</summary>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>OK</severity>
+            <summary>No significant time was spent loading new classes during this recording.</summary>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>OK</severity>
+            <summary>No problems were found with the VM options.</summary>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>OK</severity>
+            <summary>There are no file read events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>OK</severity>
+            <summary>There are no file write events in this recording.</summary>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Information</severity>
+            <summary>80 finalizers were run.</summary>
+            <explanation>Finalization can lead to performance issues, deadlocks, or hangs, and has been marked for removal in a future Java version. The following finalizable classes have been detected: &lt;ul&gt;&lt;li&gt;org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle&lt;/li&gt;&lt;li&gt;org.openjdk.jmc.rjmx.internal.ServerHandle&lt;/li&gt;&lt;/ul&gt;</explanation>
+            <solution>Remove finalize method implementations from your application, and consider making use of the [Cleaner API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/Cleaner.html) instead.</solution>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Warning</severity>
+            <summary>Full GC detected.</summary>
+            <explanation>At least one Full, Stop-The-World Garbage Collection occurred during this recording. For the CMS and G1 collectors, Full GC events are a strong negative performance indicator. Tunable GC parameters can be used to allow the collector to operate in concurrent mode, avoiding Stop-The-World pauses and increasing GC and application performance.</explanation>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>OK</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>OK</severity>
+            <summary>Only 4 heap summary events were found, this rule requires at least 10 events to be able to calculate a relevant result. This likely means that only a few garbage collections occurred during the recording. Having few garbage collections is generally a good sign.</summary>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>OK</severity>
+            <summary>OK</summary>
+        </rule>
+        <rule>
+            <id>GcLocker</id>
+            <severity>OK</severity>
+            <summary>No GCs were affected by the GC Locker.</summary>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>OK</severity>
+            <summary>Application efficiency was not highly affected by GC pauses.</summary>
+            <explanation>The highest ratio between garbage collection pauses and execution time was 0.172 % during 11/20/2023 4:22:52.000 PM – 4:23:52 PM. The garbage collection pause ratio of the entire recording was 0.275 %.</explanation>
+            <solution>Pause times may be reduced by increasing the heap size or by trying to reduce allocation.</solution>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcStall</id>
+            <severity>OK</severity>
+            <summary>No indications that the garbage collector could not keep up with the workload were detected.</summary>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Warning</severity>
+            <summary>Most of the heap was used by only a few classes.</summary>
+            <explanation>If the heap usage needs to be reduced, then this would be a good place to start.</explanation>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>OK</severity>
+            <summary>No heap dump performed.</summary>
+        </rule>
+        <rule>
+            <id>HeapInspectionGc</id>
+            <severity>Information</severity>
+            <summary>The JVM performed 2 heap inspection garbage collections.</summary>
+            <explanation>Performing heap inspection garbage collections may be a problem since they usually take a lot of time.
+Some of these inspections were caused by the 'Object Count' JFR event. It triggers a full garbage collection at the beginning and end of every recording where that event is enabled. If recordings are only made on demand or not too often, then these garbage collections are usually not a problem since the resulting pauses are not part of the normal application behavior. If recordings are collected often, for example by automatic scripts, or if the application is sensitive to pauses, then it might become an issue. In that case you can consider disabling the 'Object Count' event.</explanation>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>OK</severity>
+            <summary>The JVM was paused for 100 % during 11/20/2023 4:23:22.169.000 PM – .272</summary>
+            <explanation>The time spent performing garbage collection may be reduced by increasing the heap size or by trying to reduce allocation.</explanation>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+            <summary>Too few events to calculate the result.</summary>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>OK</severity>
+            <summary>The class data does not seem to increase during the recording.</summary>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>OK</severity>
+            <summary>No excessive problems with lock contention found.</summary>
+            <explanation>The following regular expression was used to exclude threads from this rule: ''(.*weblogic\.socket\.Muxer.*)''</explanation>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>OK</severity>
+            <summary>The longest GC pause was 103.247 ms.</summary>
+            <explanation/>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>OK</severity>
+            <summary>The metaspace was not exhausted during this recording.</summary>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>OK</severity>
+            <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>OK</severity>
+            <summary>No allocation was caused by conversion from primitive types to the corresponding object types.</summary>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>OK</severity>
+            <summary>No stack traces were truncated in this recording.</summary>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SystemGc</id>
+            <severity>OK</severity>
+            <summary>No garbage collections were caused by System.gc().</summary>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>OK</severity>
+            <summary>The program allocated 4.04 % of the memory outside of TLABs.</summary>
+            <solution>Allocating objects outside of Thread Local Allocation Buffers (TLABs) is more expensive than allocating inside TLABs. This may be acceptable if the individual allocations are intended to be larger than a reasonable TLAB. It may be possible to avoid this by decreasing the size of the individual allocations. There are some TLAB related JVM flags that you can experiment with, but it is usually better to let the JVM manage TLAB sizes automatically.</solution>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>OK</severity>
+            <summary>No excessively long VM operations were found in this recording (the longest was 103.369 ms).</summary>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>OK</severity>
+            <summary>No revocation of biased locks found.</summary>
         </rule>
     </report>
 </reportcollection>

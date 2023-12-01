@@ -717,6 +717,12 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
 	public static final IAttribute<IQuantity> GC_PAUSE_TARGET = attr("pauseTarget", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_PAUSE_TARGET), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_REAL = attr("realTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_REAL), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_SYSTEM = attr("systemTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_SYSTEM), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_USER = attr("userTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_USER), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);

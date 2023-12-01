@@ -306,6 +306,9 @@ public class Messages {
 	public static final String GcFreedRatioRule_RULE_NAME = "GcFreedRatioRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE = "GcFreedRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE_DESC = "GcFreedRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_RULE_NAME = "GcInvertedParallelism_RULE_NAME"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_TEXT_WARN_SHORT = "GcInvertedParallelism_TEXT_WARN_SHORT"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_TEXT_WARN_LONG = "GcInvertedParallelism_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_RULE_NAME = "GcLockerRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_TEXT_INFO = "GcLockerRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_TEXT_INFO_LONG = "GcLockerRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$

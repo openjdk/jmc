@@ -85,6 +85,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.memory.GarbageCollectionInfoRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcLockerRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcStallRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcFreedRatioRule
+org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcInvertedParallelismRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcPauseRatioRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.GcPauseTargetRule
 org.openjdk.jmc.flightrecorder.rules.jdk.memory.HeapContentRule
