@@ -39,7 +39,10 @@
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>rjmx.common</artifactId>
-   <dependencies>
+	<properties>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
+	</properties>
+	<dependencies>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>common</artifactId>
@@ -50,13 +53,10 @@
 			<artifactId>flightrecorder</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-      <dependency>
+    	<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>flightrecorder.configuration</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
-	</properties>
 </project>

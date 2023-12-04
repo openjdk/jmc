@@ -52,7 +52,6 @@ Export-Package: org.openjdk.jmc.rjmx,
    org.openjdk.jmc.rjmx.ui,
    org.openjdk.jmc.console.ui.subscriptions,
    org.openjdk.jmc.rjmx.test",
- org.openjdk.jmc.rjmx.subscription.storage.internal;x-internal:=true,
  org.openjdk.jmc.rjmx.triggers;
   x-friends:="org.openjdk.jmc.console.ui.notification,
    org.openjdk.jmc.alert,
