@@ -60,7 +60,7 @@ public interface ISyntheticNotification {
 	 *
 	 * @param connection
 	 *            the MBean server to use for resource lookup
-	 * @return <tt>true</tt> if resources are present, <tt>false</tt> otherwise
+	 * @return true if resources are present, false otherwise
 	 */
 	boolean hasResolvedDependencies(MBeanServerConnection connection);
 

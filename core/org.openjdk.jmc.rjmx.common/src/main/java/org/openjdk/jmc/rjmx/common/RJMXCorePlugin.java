@@ -37,8 +37,8 @@ import java.util.logging.Logger;
 //import org.openjdk.jmc.rjmx.internal.RJMXSingleton;
 
 /**
- * There is one instance of the RJMX plugin available from {@link RJMXPlugin#getDefault()}. The
- * plugin provides:
+ * There is one instance of the RJMX Core plugin available from {@link RJMXCorePlugin#getDefault()}.
+ * The plugin provides:
  * <ul>
  * <li>access to the connection manager</li>
  * <li>access to the description repository</li>

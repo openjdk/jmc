@@ -45,8 +45,7 @@ import org.openjdk.jmc.common.resource.Resource;
 import org.openjdk.jmc.common.util.Environment;
 
 /**
- * Converts names according to rules specified with the {@value #LABELING_RULES_EXTENSION_POINT}
- * extension point.
+ * Converts names according to rules specified with the <code>labelingRules</code> extension point.
  */
 public class NameConverter {
 	private static final Comparator<NamingRule> COMPARATOR = new Comparator<NamingRule>() {
@@ -140,7 +139,7 @@ public class NameConverter {
 	 * Adds a rule to the name converter.
 	 * <p>
 	 * Adding rules should normally not be done using this method, but rather through the
-	 * {@value #LABELING_RULES_EXTENSION_POINT} extension point.
+	 * <code>labelingRules</code> extension point.
 	 *
 	 * @param rule
 	 *            the rule to add.

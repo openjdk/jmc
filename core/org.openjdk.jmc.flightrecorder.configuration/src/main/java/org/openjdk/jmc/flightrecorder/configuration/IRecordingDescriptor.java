@@ -120,7 +120,7 @@ public interface IRecordingDescriptor {
 	/**
 	 * Returns the start time for this recording.
 	 *
-	 * @return the start time for this recording, or <tt>null</tt> if not available
+	 * @return the start time for this recording, or null if not available
 	 */
 	public IQuantity getStartTime();
 
@@ -134,14 +134,14 @@ public interface IRecordingDescriptor {
 	/**
 	 * Returns the recording was created as continuous or not.
 	 *
-	 * @return <tt>true</tt> if the recording was created continuous, or <tt>false</tt> if not
+	 * @return true if the recording was created continuous, or false if not
 	 */
 	public boolean isContinuous();
 
 	/**
 	 * Returns whether the recording is stored to disk.
 	 *
-	 * @return <tt>true</tt> if the recording is stored to disk, <tt>false</tt> otherwise
+	 * @return true if the recording is stored to disk, false otherwise
 	 */
 	public boolean getToDisk();
 

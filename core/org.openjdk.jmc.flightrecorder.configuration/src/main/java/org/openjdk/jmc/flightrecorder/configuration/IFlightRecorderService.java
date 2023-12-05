@@ -50,7 +50,7 @@ import org.openjdk.jmc.flightrecorder.configuration.recording.RecordingOptionsBu
  * This is the interface for the JDK Flight Recorder controller.
  * <p>
  * Implementation, if available, can be retrieved from an
- * {@link IConnectionHandle#getServiceOrNull(Class)}
+ * <code>IConnectionHandle.getServiceOrNull(Class)</code>
  */
 public interface IFlightRecorderService extends IRecorderConfigurationService {
 	/**

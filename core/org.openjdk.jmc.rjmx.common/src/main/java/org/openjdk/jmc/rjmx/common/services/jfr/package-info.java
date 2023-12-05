@@ -64,9 +64,9 @@
  * 	IFlightRecorderService jfr = handle.getServiceOrThrow(IFlightRecorderService.class);
  *
  * 	long duration = 5000;
- * 	IConstrainedMap<String> defaultRecordingOptions = jfr.getDefaultRecordingOptions();
- *  IDescribedMap<EventOptionID> defaultEventOptions = jfr.getDefaultEventOptions();
- * 	IConstrainedMap<String> recordingOptions = new RecordingOptionsBuilder(defaultRecordingOptions.mutableCopy())
+ * 	IConstrainedMap&lt;String&gt; defaultRecordingOptions = jfr.getDefaultRecordingOptions();
+ *  IDescribedMap&lt;EventOptionID&gt; defaultEventOptions = jfr.getDefaultEventOptions();
+ * 	IConstrainedMap&lt;String&gt; recordingOptions = new RecordingOptionsBuilder(defaultRecordingOptions.mutableCopy())
  * 			.name("MyRecording").duration(duration).build();
  * 	IRecordingDescriptor recording = jfr.start(recordingOptions, defaultEventOptions);
  * 	Thread.sleep(duration);
