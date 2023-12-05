@@ -65,7 +65,7 @@
  *
  * 	long duration = 5000;
  * 	IConstrainedMap&lt;String&gt; defaultRecordingOptions = jfr.getDefaultRecordingOptions();
- *  IDescribedMap&lt;EventOptionID&gt; defaultEventOptions = jfr.getDefaultEventOptions();
+ * 	IDescribedMap&lt;EventOptionID&gt; defaultEventOptions = jfr.getDefaultEventOptions();
  * 	IConstrainedMap&lt;String&gt; recordingOptions = new RecordingOptionsBuilder(defaultRecordingOptions.mutableCopy())
  * 			.name("MyRecording").duration(duration).build();
  * 	IRecordingDescriptor recording = jfr.start(recordingOptions, defaultEventOptions);
