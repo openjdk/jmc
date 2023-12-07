@@ -127,6 +127,7 @@
 		<module>org.openjdk.jmc.flightrecorder.serializers</module>
 		<module>org.openjdk.jmc.flightrecorder.writer</module>
 		<module>org.openjdk.jmc.jdp</module>
+		<module>org.openjdk.jmc.rjmx.common</module>
 		<module>org.openjdk.jmc.testlib</module>
 		<module>tests</module>
 	</modules>

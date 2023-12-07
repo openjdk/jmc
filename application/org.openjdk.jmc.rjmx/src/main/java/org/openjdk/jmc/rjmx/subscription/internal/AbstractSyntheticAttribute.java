@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,7 +34,7 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 
 import javax.management.MBeanServerConnection;
 
-import org.openjdk.jmc.rjmx.ISyntheticAttribute;
+import org.openjdk.jmc.rjmx.common.ISyntheticAttribute;
 
 /**
  * Abstract base class for synthetic attributes.

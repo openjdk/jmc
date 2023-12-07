@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,12 +39,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
-import org.openjdk.jmc.rjmx.subscription.internal.IIntervalUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.internal.IIntervalUpdatePolicy;
 import org.openjdk.jmc.rjmx.subscription.internal.UpdatePolicyToolkit;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;

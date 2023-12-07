@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -76,18 +76,19 @@ for (IServer server : model.elements()) {
  * </pre>
  *
  * Certain services provided by RJMX are available through dependency injection. These include
- * {@link org.openjdk.jmc.rjmx.IConnectionHandle},
- * {@link org.openjdk.jmc.rjmx.subscription.ISubscriptionService} and
+ * {@link org.openjdk.jmc.rjmx.common.IConnectionHandle},
+ * {@link org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService} and
  * {@link javax.management.MBeanServerConnection}. See the classes for examples.
  * <p>
  * Notable interfaces and starting points:
  * <ul>
- * <li>{@link org.openjdk.jmc.rjmx.IConnectionDescriptor} represents a way to reach a server.</li>
- * <li>{@link org.openjdk.jmc.rjmx.IConnectionHandle} is an active connection to a server. Must
- * always be closed when not used anymore.</li>
+ * <li>{@link org.openjdk.jmc.rjmx.common.IConnectionDescriptor} represents a way to reach a
+ * server.</li>
+ * <li>{@link org.openjdk.jmc.rjmx.common.IConnectionHandle} is an active connection to a server.
+ * Must always be closed when not used anymore.</li>
  * <li>{@link org.openjdk.jmc.rjmx.IServerHandle} is a handle used to connect to a server, share the
- * connection between users ( {@link org.openjdk.jmc.rjmx.IConnectionHandle}s), keep track of all
- * open connection handles and close the connection when all connection handles are closed.</li>
+ * connection between users ( {@link org.openjdk.jmc.rjmx.common.IConnectionHandle}s), keep track of
+ * all open connection handles and close the connection when all connection handles are closed.</li>
  * <li>{@link org.openjdk.jmc.rjmx.servermodel.IServer} represents the entry point to a single
  * server in the model.</li>
  * </ul>

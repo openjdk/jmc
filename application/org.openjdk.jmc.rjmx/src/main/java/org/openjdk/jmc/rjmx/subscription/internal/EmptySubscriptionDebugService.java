@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,9 @@ package org.openjdk.jmc.rjmx.subscription.internal;
 
 import java.util.Collection;
 import java.util.Collections;
+
+import org.openjdk.jmc.rjmx.common.subscription.internal.IMRISubscriptionDebugInformation;
+import org.openjdk.jmc.rjmx.common.subscription.internal.ISubscriptionDebugService;
 
 public class EmptySubscriptionDebugService implements ISubscriptionDebugService {
 

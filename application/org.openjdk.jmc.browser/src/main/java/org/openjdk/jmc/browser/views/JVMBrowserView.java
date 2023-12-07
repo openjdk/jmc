@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -84,15 +84,15 @@ import org.openjdk.jmc.browser.IJVMBrowserContextIDs;
 import org.openjdk.jmc.browser.JVMBrowserPlugin;
 import org.openjdk.jmc.browser.preferences.PreferenceConstants;
 import org.openjdk.jmc.browser.wizards.ConnectionWizard;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.IServerHandle.State;
+import org.openjdk.jmc.common.action.IActionProvider;
+import org.openjdk.jmc.common.action.IUserAction;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.IServerHandle.State;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.rjmx.servermodel.internal.Server;
 import org.openjdk.jmc.rjmx.servermodel.internal.ServerModel;
 import org.openjdk.jmc.ui.accessibility.AccessibilityToolkit;
-import org.openjdk.jmc.ui.common.action.IActionProvider;
-import org.openjdk.jmc.ui.common.action.IUserAction;
 import org.openjdk.jmc.ui.common.action.UserActionJob;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.common.util.IDisconnectable;

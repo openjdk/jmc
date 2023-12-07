@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import org.openjdk.jmc.console.ui.diagnostic.DiagnosticPlugin;
-import org.openjdk.jmc.rjmx.services.IOperation.OperationImpact;
+import org.openjdk.jmc.rjmx.common.services.IOperation.OperationImpact;
 import org.openjdk.jmc.rjmx.ui.operations.OperationsLabelProvider;
 
 /**

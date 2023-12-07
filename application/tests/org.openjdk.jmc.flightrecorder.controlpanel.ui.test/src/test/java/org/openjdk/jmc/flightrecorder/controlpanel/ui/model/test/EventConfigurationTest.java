@@ -38,11 +38,10 @@ import static org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion.
 import java.io.InputStream;
 
 import org.junit.Test;
-
+import org.openjdk.jmc.flightrecorder.configuration.events.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
 import org.openjdk.jmc.flightrecorder.configuration.model.xml.XMLModel;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 
 @SuppressWarnings("nls")
 public class EventConfigurationTest {

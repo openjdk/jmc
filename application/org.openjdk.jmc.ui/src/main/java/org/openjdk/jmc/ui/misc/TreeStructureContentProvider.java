@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,10 +36,9 @@ import java.util.Collection;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeNode;
-
-import org.openjdk.jmc.ui.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IArray;
+import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.ui.common.tree.IChild;
-import org.openjdk.jmc.ui.common.tree.IParent;
 import org.openjdk.jmc.ui.common.tree.ITreeNode;
 
 public class TreeStructureContentProvider extends MCArrayContentProvider implements ITreeContentProvider {

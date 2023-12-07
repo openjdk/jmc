@@ -252,10 +252,6 @@ public final class XMLModel extends Observable {
 	/**
 	 * Saves the model to the given {@link File}. If successful, sets dirtiness to false, as
 	 * returned by {@link #isModified()}.
-	 *
-	 * @param writer
-	 * @param oneLineElements
-	 *            XML tags to output on a single line
 	 */
 	public void saveToFile(File file) throws IOException {
 		// NOTE: The pretty printer writes that the encoding is UTF-8, so we must make sure it is.
@@ -272,9 +268,6 @@ public final class XMLModel extends Observable {
 	 * Writes the model to the given {@link Writer}. Does not change dirtiness, as returned by
 	 * {@link #isModified()}.
 	 *
-	 * @param writer
-	 * @param oneLineElements
-	 *            XML tags to output on a single line
 	 * @return true iff the model was successfully written to the {@link Writer}.
 	 */
 	public boolean writeTo(Writer writer) {

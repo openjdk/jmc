@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +32,11 @@
  */
 package org.openjdk.jmc.rjmx.subscription;
 
-import org.openjdk.jmc.rjmx.subscription.internal.DefaultUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.internal.OneShotUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.internal.SimpleUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.IMRISubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.DefaultUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.OneShotUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.SimpleUpdatePolicy;
 
 /**
  * Factory for commonly used subscription update policies.

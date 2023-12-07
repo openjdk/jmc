@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,13 +40,12 @@ import java.util.Collection;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.internal.IMRISubscriptionDebugInformation;
+import org.openjdk.jmc.rjmx.common.subscription.internal.ISubscriptionDebugService;
 import org.openjdk.jmc.rjmx.subscription.internal.EmptySubscriptionDebugService;
-import org.openjdk.jmc.rjmx.subscription.internal.IMRISubscriptionDebugInformation;
-import org.openjdk.jmc.rjmx.subscription.internal.ISubscriptionDebugService;
 
 public class SubscriptionTableContentProvider implements IStructuredContentProvider {
 

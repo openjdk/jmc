@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -64,7 +64,7 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.jobs.DumpRecordingJob;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
-import org.openjdk.jmc.rjmx.ConnectionException;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.ui.common.idesupport.IDESupportToolkit;
 import org.openjdk.jmc.ui.common.resource.MCFile;
 import org.openjdk.jmc.ui.misc.DateTimeChooser;

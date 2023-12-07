@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -70,11 +70,11 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.util.TypeHandling;
+import org.openjdk.jmc.rjmx.common.services.IAttributeInfo;
+import org.openjdk.jmc.rjmx.common.services.IOperation;
+import org.openjdk.jmc.rjmx.common.services.IllegalOperandException;
 import org.openjdk.jmc.rjmx.services.IAttribute;
-import org.openjdk.jmc.rjmx.services.IAttributeInfo;
-import org.openjdk.jmc.rjmx.services.IOperation;
 import org.openjdk.jmc.rjmx.services.IReadOnlyAttribute;
-import org.openjdk.jmc.rjmx.services.IllegalOperandException;
 import org.openjdk.jmc.rjmx.ui.attributes.AttributeTreeBuilder;
 import org.openjdk.jmc.rjmx.ui.attributes.ChangeValueAction;
 import org.openjdk.jmc.rjmx.ui.attributes.ValueColumnLabelProvider;

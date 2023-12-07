@@ -39,9 +39,9 @@ import org.junit.Test;
 import org.openjdk.jmc.common.jvm.JVMArch;
 import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.common.jvm.JVMType;
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
-import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
 import org.openjdk.jmc.rjmx.internal.ServerHandle;
 import org.openjdk.jmc.rjmx.messages.internal.Messages;
 
