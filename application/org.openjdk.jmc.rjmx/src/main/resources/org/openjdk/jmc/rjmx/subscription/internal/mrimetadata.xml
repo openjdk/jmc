@@ -5749,7 +5749,7 @@
 		<metadata>
 			<mri.dataPath>TotalPhysicalMemorySize</mri.dataPath>
 			<mri.objectName>java.lang:type=OperatingSystem</mri.objectName>
-			<displayname>Total Physical Memory (Deprecated)</displayname>
+			<displayname>Total Physical Memory (deprecated)</displayname>
 			<description>The total amount of physical memory - deprecated since JDK 14. Use TotalMemorySize.</description>
 			<unitstring>memory:B</unitstring>
 		</metadata>
