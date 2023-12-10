@@ -274,8 +274,8 @@ public class Messages {
 	public static final String FileForceRuleFactory_TEXT_OK = "FileForceRuleFactory_TEXT_OK"; //$NON-NLS-1$
 	public static final String FileForceRuleFactory_TEXT_WARN = "FileForceRuleFactory_TEXT_WARN"; //$NON-NLS-1$
 	public static final String FileForceRuleFactory_TEXT_WARN_LONG = "FileForceRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
-	public static final String FileForceRule_CONFIG_WARNING_LIMIT = "FileForceRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
-	public static final String FileForceRule_CONFIG_WARNING_LIMIT_LONG = "FileForceRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String FileForceRule_CONFIG_INFO_LIMIT = "FileForceRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
+	public static final String FileForceRule_CONFIG_INFO_LIMIT_LONG = "FileForceRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_EXPLANATION = "FinalizersRunRule_EXPLANATION"; //$NON-NLS-1$

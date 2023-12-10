@@ -67,21 +67,18 @@ import org.owasp.encoder.Encode;
 
 public class FileForceRule implements IRule {
 
-	public static final TypedPreference<IQuantity> FORCE_WARNING_LIMIT = new TypedPreference<>(
-			"io.file.force.warning.limit", //$NON-NLS-1$
-			Messages.getString(Messages.FileForceRule_CONFIG_WARNING_LIMIT),
-			Messages.getString(Messages.FileForceRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
-			UnitLookup.MILLISECOND.quantity(4000));
+	public static final TypedPreference<IQuantity> FORCE_INFO_LIMIT = new TypedPreference<>("io.file.force.info.limit", //$NON-NLS-1$
+			Messages.getString(Messages.FileForceRule_CONFIG_INFO_LIMIT),
+			Messages.getString(Messages.FileForceRule_CONFIG_INFO_LIMIT_LONG), UnitLookup.TIMESPAN,
+			UnitLookup.MILLISECOND.quantity(50));
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
-			.<TypedPreference<?>> asList(FORCE_WARNING_LIMIT);
+			.<TypedPreference<?>> asList(FORCE_INFO_LIMIT);
 	private static final String RESULT_ID = "FileForce"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.FILE_FORCE, EventAvailability.ENABLED).build();
+			.addEventType(JdkTypeIDs.FILE_FORCE, EventAvailability.AVAILABLE).build();
 
-	//public static final TypedResult<IQuantity> LONGEST_FORCE_AMOUNT = new TypedResult<>("longestForceAmount", //$NON-NLS-1$
-	//	"Longest Force (Amount)", "The amount force for the longest file force.", UnitLookup.MEMORY, IQuantity.class);
 	public static final TypedResult<IQuantity> LONGEST_FORCE_TIME = new TypedResult<>("longestForceTime", //$NON-NLS-1$
 			"Longest Force (Time)", "The longest time it took to perform a file force.", UnitLookup.TIMESPAN,
 			IQuantity.class);
@@ -101,23 +98,15 @@ public class FileForceRule implements IRule {
 			TOTAL_FILE_FORCE);
 
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
-		IQuantity warningLimit = vp.getPreferenceValue(FORCE_WARNING_LIMIT);
-		IQuantity infoLimit = warningLimit.multiply(0.5);
+		long infoLimit = vp.getPreferenceValue(FORCE_INFO_LIMIT).longValue();
 
 		IItemCollection fileForceEvents = items.apply(JdkFilters.FILE_FORCE);
 		IItem longestEvent = fileForceEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
-		// Aggregate of all file forced events - if null, then we had no events
-		if (longestEvent == null) {
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
-					.setSummary(Messages.getString(Messages.FileForceRuleFactory_TEXT_NO_EVENTS)).build();
-		}
 		IQuantity longestDuration = RulesToolkit.getValue(longestEvent, JfrAttributes.DURATION);
-		double score = RulesToolkit.mapExp100(longestDuration.doubleValueIn(UnitLookup.SECOND),
-				infoLimit.doubleValueIn(UnitLookup.SECOND), warningLimit.doubleValueIn(UnitLookup.SECOND));
-
+		double score = RulesToolkit.mapExp74(longestDuration.doubleValueIn(UnitLookup.MILLISECOND), infoLimit);
 		Severity severity = Severity.get(score);
-		if (severity == Severity.WARNING || severity == Severity.INFO) {
+		if (score >= infoLimit) {
 			String longestIOPath = RulesToolkit.getValue(longestEvent, JdkAttributes.IO_PATH);
 			String fileName = sanitizeFileName(longestIOPath);
 			IQuantity avgDuration = fileForceEvents

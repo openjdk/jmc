@@ -96,7 +96,6 @@ public class Messages {
 	public static final String AGGR_FILE_WRITE_SIZE_DESC = "AGGR_FILE_WRITE_SIZE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FILE_FORCE_COUNT = "AGGR_FILE_FORCE_COUNT"; //$NON-NLS-1$
 	public static final String AGGR_FILE_FORCE_COUNT_DESC = "AGGR_FILE_FORCE_COUNT_DESC"; //$NON-NLS-1$
-
 	public static final String AGGR_FIRST_ATTRIBUTE = "AGGR_FIRST_ATTRIBUTE"; //$NON-NLS-1$
 	public static final String AGGR_FIRST_ATTRIBUTE_DESC = "AGGR_FIRST_ATTRIBUTE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FLR_DATA_LOST_SIZE = "AGGR_FLR_DATA_LOST_SIZE"; //$NON-NLS-1$
