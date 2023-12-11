@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -381,6 +381,11 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> STDDEV_BLOCKED_TIME = Aggregators.stddevp(
 			Messages.getString(Messages.AGGR_STDDEV_BLOCKED_TIME),
 			Messages.getString(Messages.AGGR_STDDEV_BLOCKED_TIME_DESC), DURATION);
+	public static final IAggregator<IQuantity, ?> TOTAL_INFLATED_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_TOTAL_INFLATED_COUNT),
+			Messages.getString(Messages.AGGR_TOTAL_INFLATED_COUNT_DESC), JdkFilters.MONITOR_INFLATE);
+	public static final IAggregator<String, ?> MONITOR_INFLATE_REASON = distinctAsString(JdkTypeIDs.MONITOR_INFLATE,
+			JdkAttributes.INFLATION_REASON);
 	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_AVG = Aggregators.avg(
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,

@@ -783,6 +783,9 @@ public final class JdkAttributes {
 		}
 	});
 
+	public static final IAttribute<String> INFLATION_REASON = attr("cause", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_INFLATION_REASON), Messages.getString(Messages.ATTR_INFLATION_REASON_DESC),
+			PLAIN_TEXT);
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);

@@ -99,6 +99,7 @@ public final class JdkFilters {
 	public static final IItemFilter CLASS_LOADER_EVENTS = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD, CLASS_DEFINE,
 			CLASS_LOADER_STATISTICS);
 	public static final IItemFilter MONITOR_ENTER = ItemFilters.type(JdkTypeIDs.MONITOR_ENTER);
+	public static final IItemFilter MONITOR_INFLATE = ItemFilters.type(JdkTypeIDs.MONITOR_INFLATE);
 	public static final IItemFilter FILE_OR_SOCKET_IO = ItemFilters.type(JdkTypeIDs.SOCKET_READ,
 			JdkTypeIDs.SOCKET_WRITE, JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE);
 	// NOTE: Are there more types to add (i.e. relevant types with duration)?
