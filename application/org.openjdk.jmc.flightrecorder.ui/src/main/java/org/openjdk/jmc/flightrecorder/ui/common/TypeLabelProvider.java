@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -59,6 +59,8 @@ public class TypeLabelProvider {
 			return Palette.PF_ORANGE_300.getAWTColor();
 		case JdkTypeIDs.FILE_WRITE:
 			return Palette.PF_CYAN_600.getAWTColor();
+		case JdkTypeIDs.FILE_FORCE:
+			return Palette.PF_RED_500.getAWTColor();
 		case JdkTypeIDs.ERRORS_THROWN:
 			return Palette.PF_RED_100.getAWTColor();
 		case JdkTypeIDs.EXCEPTIONS_THROWN:

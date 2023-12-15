@@ -63,6 +63,7 @@ public final class JdkFilters {
 	public static final IItemFilter ENVIRONMENT_VARIABLE = ItemFilters.type(JdkTypeIDs.ENVIRONMENT_VARIABLE);
 	public static final IItemFilter FILE_READ = ItemFilters.type(JdkTypeIDs.FILE_READ);
 	public static final IItemFilter FILE_WRITE = ItemFilters.type(JdkTypeIDs.FILE_WRITE);
+	public static final IItemFilter FILE_FORCE = ItemFilters.type(JdkTypeIDs.FILE_FORCE);
 	public static final IItemFilter CODE_CACHE_FULL = ItemFilters.type(JdkTypeIDs.CODE_CACHE_FULL);
 	public static final IItemFilter CODE_CACHE_STATISTICS = ItemFilters.type(JdkTypeIDs.CODE_CACHE_STATISTICS);
 	public static final IItemFilter CODE_CACHE_CONFIGURATION = ItemFilters.type(JdkTypeIDs.CODE_CACHE_CONFIG);

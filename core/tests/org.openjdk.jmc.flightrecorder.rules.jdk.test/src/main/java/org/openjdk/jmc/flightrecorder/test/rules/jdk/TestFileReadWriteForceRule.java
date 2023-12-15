@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2020, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -47,9 +47,10 @@ import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule;
+import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileForceRule;
 
 @SuppressWarnings("restriction")
-public class TestFileReadWriteRule {
+public class TestFileReadWriteForceRule {
 	private static final String FILE_NAME_1 = "/user/dir/file1.dat";
 	private static final String FILE_NAME_2 = "/user/dir/file2.dat";
 
@@ -63,6 +64,43 @@ public class TestFileReadWriteRule {
 	public void testWriteRule() {
 		testFileRule(JdkTypeIDs.FILE_WRITE, new FileWriteRule(),
 				"The longest recorded file write took 5 s to write 4 KiB to /user/dir/file1.dat. Average time of recorded IO: 4.500 s. Total time of recorded IO: 13.500 s. Total time of recorded IO for the file /user/dir/file1.dat: 9.500 s."); //$NON-NLS-1$
+	}
+
+	@Test
+	public void testForceRuleOK() {
+		TestEvent[] testEvents = new TestEvent[] {new FileTestEvent(JdkTypeIDs.FILE_FORCE, FILE_NAME_1, 50, 4096)};
+		IItemCollection events = new MockEventCollection(testEvents);
+		RunnableFuture<IResult> future = new FileForceRule().createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
+		try {
+			future.run();
+			IResult res = future.get();
+			String summary = ResultToolkit.populateMessage(res, res.getSummary(), false);
+			Assert.assertEquals("No long file force pauses were found in this recording (the longest was 50 ms).", //$NON-NLS-1$
+					summary);
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	public void testForceRuleINFO() {
+		TestEvent[] testEvents = new TestEvent[] {new FileTestEvent(JdkTypeIDs.FILE_FORCE, FILE_NAME_1, 5000, 4096)};
+		IItemCollection events = new MockEventCollection(testEvents);
+		RunnableFuture<IResult> future = new FileForceRule().createEvaluation(events,
+				IPreferenceValueProvider.DEFAULT_VALUES, new ResultProvider());
+		try {
+			future.run();
+			IResult res = future.get();
+			String longDesc = ResultToolkit.populateMessage(res, res.getExplanation(), false);
+			Assert.assertEquals(
+					"The longest recorded file force took 5 s from /user/dir/file1.dat. Average time of recorded IO: 5 s. Total time of recorded IO: 5 s. Total time of recorded IO for the file /user/dir/file1.dat: 5 s.", //$NON-NLS-1$
+					longDesc);
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void testFileRule(String eventType, IRule rule, String expectedLongDesc) {

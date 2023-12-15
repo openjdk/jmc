@@ -67,6 +67,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.general.StackDepthSettingRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.VerifyNoneRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule
+org.openjdk.jmc.flightrecorder.rules.jdk.io.FileForceRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketReadRule
 org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketWriteRule
 org.openjdk.jmc.flightrecorder.rules.jdk.latency.BiasedLockingRevocationPauseRule
