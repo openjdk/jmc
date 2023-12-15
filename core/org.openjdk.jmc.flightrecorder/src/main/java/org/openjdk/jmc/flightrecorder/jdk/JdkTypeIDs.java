@@ -83,6 +83,7 @@ public final class JdkTypeIDs {
 	public static final String THREAD_SLEEP = PREFIX + "ThreadSleep";
 	public static final String MONITOR_ENTER = PREFIX + "JavaMonitorEnter";
 	public static final String MONITOR_WAIT = PREFIX + "JavaMonitorWait";
+	public static final String MONITOR_INFLATE = PREFIX + "JavaMonitorInflate";
 
 	public static final String METASPACE_OOM = PREFIX + "MetaspaceOOM";
 

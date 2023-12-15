@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -55,7 +55,6 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IDataPageFactory;
@@ -117,7 +116,7 @@ public class LockInstancesPage extends AbstractDataPage {
 
 	}
 
-	private static final IItemFilter TABLE_ITEMS = ItemFilters.type(JdkTypeIDs.MONITOR_ENTER);
+	private static final IItemFilter TABLE_ITEMS = ItemFilters.or(JdkFilters.MONITOR_ENTER, JdkFilters.MONITOR_INFLATE);
 
 	private static final ItemHistogramBuilder BY_CLASS_HISTOGRAM = new ItemHistogramBuilder();
 	private static final ItemHistogramBuilder BY_ADDRESS_HISTOGRAM = new ItemHistogramBuilder();
@@ -125,6 +124,8 @@ public class LockInstancesPage extends AbstractDataPage {
 	private static final String STD_DEV_DURATION = "stdDevDuration"; //$NON-NLS-1$
 	private static final String AVG_DURATION = "avgDuration"; //$NON-NLS-1$
 	private static final String MAX_DURATION = "maxDuration"; //$NON-NLS-1$
+	private static final String INFLATED_COUNT = "countInflated"; //$NON-NLS-1$
+	private static final String INFLATED_CAUSE = "causeOfInflation"; //$NON-NLS-1$
 
 	static {
 		BY_CLASS_HISTOGRAM.addCountColumn();
@@ -134,17 +135,23 @@ public class LockInstancesPage extends AbstractDataPage {
 		BY_CLASS_HISTOGRAM.addColumn(STD_DEV_DURATION, JdkAggregators.STDDEV_BLOCKED_TIME);
 		BY_CLASS_HISTOGRAM.addColumn(JdkAttributes.MONITOR_CLASS.getIdentifier(), BY_ADDRESS_AGGREGATOR);
 		BY_CLASS_HISTOGRAM.addColumn(JfrAttributes.EVENT_THREAD.getIdentifier(), BY_THREAD_AGGREGATOR);
+		BY_CLASS_HISTOGRAM.addColumn(INFLATED_COUNT, JdkAggregators.TOTAL_INFLATED_COUNT);
+		BY_CLASS_HISTOGRAM.addColumn(INFLATED_CAUSE, JdkAggregators.MONITOR_INFLATE_REASON);
 		BY_ADDRESS_HISTOGRAM.addCountColumn();
 		BY_ADDRESS_HISTOGRAM.addColumn(JfrAttributes.DURATION.getIdentifier(), JdkAggregators.TOTAL_BLOCKED_TIME);
 		BY_ADDRESS_HISTOGRAM.addColumn(MAX_DURATION, JdkAggregators.MAX_BLOCKED_TIME);
 		BY_ADDRESS_HISTOGRAM.addColumn(AVG_DURATION, JdkAggregators.AVG_BLOCKED_TIME);
 		BY_ADDRESS_HISTOGRAM.addColumn(STD_DEV_DURATION, JdkAggregators.STDDEV_BLOCKED_TIME);
 		BY_ADDRESS_HISTOGRAM.addColumn(JfrAttributes.EVENT_THREAD.getIdentifier(), BY_THREAD_AGGREGATOR);
+		BY_ADDRESS_HISTOGRAM.addColumn(INFLATED_COUNT, JdkAggregators.TOTAL_INFLATED_COUNT);
+		BY_ADDRESS_HISTOGRAM.addColumn(INFLATED_CAUSE, JdkAggregators.MONITOR_INFLATE_REASON);
 		BY_THREAD_HISTOGRAM.addCountColumn();
 		BY_THREAD_HISTOGRAM.addColumn(JfrAttributes.DURATION.getIdentifier(), JdkAggregators.TOTAL_BLOCKED_TIME);
 		BY_THREAD_HISTOGRAM.addColumn(MAX_DURATION, JdkAggregators.MAX_BLOCKED_TIME);
 		BY_THREAD_HISTOGRAM.addColumn(AVG_DURATION, JdkAggregators.AVG_BLOCKED_TIME);
 		BY_THREAD_HISTOGRAM.addColumn(STD_DEV_DURATION, JdkAggregators.STDDEV_BLOCKED_TIME);
+		BY_THREAD_HISTOGRAM.addColumn(INFLATED_COUNT, JdkAggregators.TOTAL_INFLATED_COUNT);
+		BY_THREAD_HISTOGRAM.addColumn(INFLATED_CAUSE, JdkAggregators.MONITOR_INFLATE_REASON);
 	}
 
 	private class LockInstancesPageUi implements IPageUI {

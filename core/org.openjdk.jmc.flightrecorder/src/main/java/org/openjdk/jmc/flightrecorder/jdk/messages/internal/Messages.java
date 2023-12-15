@@ -188,6 +188,8 @@ public class Messages {
 	public static final String AGGR_THROWABLES_COUNT_DESC = "AGGR_THROWABLES_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_COUNT = "AGGR_TOTAL_BLOCKED_COUNT"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_COUNT_DESC = "AGGR_TOTAL_BLOCKED_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_INFLATED_COUNT = "AGGR_TOTAL_INFLATED_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_INFLATED_COUNT_DESC = "AGGR_TOTAL_INFLATED_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_TIME = "AGGR_TOTAL_BLOCKED_TIME"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_TIME_DESC = "AGGR_TOTAL_BLOCKED_TIME_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_GC_PAUSE = "AGGR_TOTAL_GC_PAUSE"; //$NON-NLS-1$
@@ -529,6 +531,8 @@ public class Messages {
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; //$NON-NLS-1$
+	public static final String ATTR_INFLATION_REASON = "ATTR_INFLATION_REASON"; //$NON-NLS-1$
+	public static final String ATTR_INFLATION_REASON_DESC = "ATTR_INFLATION_REASON_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$
 	public static final String ATTR_SYSTEM_LOAD = "ATTR_SYSTEM_LOAD"; //$NON-NLS-1$
 	public static final String ATTR_SYSTEM_LOAD_DESC = "ATTR_SYSTEM_LOAD_DESC"; //$NON-NLS-1$
