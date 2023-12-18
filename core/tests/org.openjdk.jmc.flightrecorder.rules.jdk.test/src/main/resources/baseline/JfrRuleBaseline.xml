@@ -4685,6 +4685,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>FileWrite</id>
             <severity>Not Applicable</severity>
         </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
         <rule>
             <id>FinalizersRun</id>
             <severity>Not Applicable</severity>
@@ -4939,6 +4943,10 @@ Events of the following types have truncated stack traces: &#x3C;ul&#x3E;&#x3C;l
             <id>FileWrite</id>
             <severity>OK</severity>
             <summary>There are no file write events in this recording.</summary>
+        </rule>
+		<rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>FinalizersRun</id>
