@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.common.test.util;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -64,8 +65,22 @@ public class IOToolkitTest {
 	}
 
 	@Test
+	public void testUncompressUncompressedWithoutMark() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(withoutMark(getStream(UNCOMPRESSED)));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
 	public void testUncompressZipped() throws IOException {
 		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(ZIP));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
+	public void testUncompressZippedWithoutMark() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(withoutMark(getStream(ZIP)));
 		String string = readFromStream(uncompressedStream);
 		Assert.assertEquals("String should be " + GURKA, GURKA, string);
 	}
@@ -78,8 +93,22 @@ public class IOToolkitTest {
 	}
 
 	@Test
+	public void testUncompressGZippedWithoutMark() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(withoutMark(getStream(GZ)));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
 	public void testUncompressLZ4() throws IOException {
 		InputStream uncompressedStream = IOToolkit.openUncompressedStream(getStream(LZ4));
+		String string = readFromStream(uncompressedStream);
+		Assert.assertEquals("String should be " + GURKA, GURKA, string);
+	}
+
+	@Test
+	public void testUncompressLZ4WithoutMark() throws IOException {
+		InputStream uncompressedStream = IOToolkit.openUncompressedStream(withoutMark(getStream(LZ4)));
 		String string = readFromStream(uncompressedStream);
 		Assert.assertEquals("String should be " + GURKA, GURKA, string);
 	}
@@ -99,5 +128,25 @@ public class IOToolkitTest {
 			builder.append((char) c);
 		}
 		return builder.toString();
+	}
+
+	/** Wraps the provided {@link InputStream} such that it doesn't allow mark/reset. */
+	private static InputStream withoutMark(InputStream stream) {
+		return new FilterInputStream(stream) {
+			@Override
+			public void reset() throws IOException {
+				throw new IOException("reset is not supported");
+			}
+
+			@Override
+			public void mark(int limit) {
+				// nop
+			}
+
+			@Override
+			public boolean markSupported() {
+				return false;
+			}
+		};
 	}
 }
