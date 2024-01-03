@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+   Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2023, Datadog, Inc. All rights reserved.
+
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+   or the following license:
+
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?pde version="3.8"?><target name="third-party" sequenceNumber="47">
+    <locations>
+	    <location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" label="OSGI Dependencies" missingManifest="error" type="Maven">
+		    <dependencies>
+			    <dependency>
+				    <groupId>org.apache.aries.spifly</groupId>
+				    <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+				    <version>1.3.6</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.hdrhistogram</groupId>
+				    <artifactId>HdrHistogram</artifactId>
+				    <version>2.1.12</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.lz4</groupId>
+				    <artifactId>lz4-java</artifactId>
+				    <version>1.8.0</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.owasp.encoder</groupId>
+				    <artifactId>encoder</artifactId>
+				    <version>1.2.3</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.eclipse.angus</groupId>
+				    <artifactId>angus-activation</artifactId>
+				    <version>2.0.0</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.eclipse.angus</groupId>
+				    <artifactId>jakarta.mail</artifactId>
+				    <version>2.0.1</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.glassfish.hk2</groupId>
+				    <artifactId>osgi-resource-locator</artifactId>
+				    <version>1.0.3</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.eclipse.jetty.websocket</groupId>
+				    <artifactId>websocket-javax-server</artifactId>
+				    <version>10.0.17</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.eclipse.jetty.websocket</groupId>
+				    <artifactId>websocket-jetty-api</artifactId>
+				    <version>10.0.17</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.eclipse.jetty.websocket</groupId>
+				    <artifactId>websocket-jetty-server</artifactId>
+				    <version>10.0.17</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>io.github.bric3.fireplace</groupId>
+				    <artifactId>fireplace-swing-animation</artifactId>
+				    <version>0.0.1-rc3</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>io.github.bric3.fireplace</groupId>
+				    <artifactId>fireplace-swing</artifactId>
+				    <version>0.0.1-rc3</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>io.github.bric3.fireplace</groupId>
+				    <artifactId>fireplace-swt-awt-bridge</artifactId>
+				    <version>0.0.1-rc3</version>
+				    <type>jar</type>
+			    </dependency>
+		    </dependencies>
+	    </location>
+	    <location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" label="Non-OSGI Dependencies" missingManifest="generate" type="Maven">
+		    <dependencies>
+			    <dependency>
+				    <groupId>org.adoptopenjdk</groupId>
+				    <artifactId>jemmy-swt</artifactId>
+				    <version>2.0.0</version>
+				    <type>jar</type>
+			    </dependency>
+			    <dependency>
+				    <groupId>org.pushing-pixels</groupId>
+				    <artifactId>radiance-animation</artifactId>
+				    <version>6.0.0</version>
+				    <type>jar</type>
+			    </dependency>
+		    </dependencies>
+		    <instructions><![CDATA[
+Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
+version:               ${version_cleanup;${mvnVersion}}
+Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
+Bundle-Version:        ${version}
+Import-Package:        *;resolution:=optional
+Export-Package:        *;version="${version}";-noimport:=true
+DynamicImport-Package: *
+]]></instructions>
+	    </location>
+    </locations>
+</target>

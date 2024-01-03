@@ -50,32 +50,6 @@ if "%1" == "--run" goto run
 echo unknown argument %1
 goto print_usage
 
-:startJetty
-for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
-set TIMESTAMP=%LOCALDATETIME:~0,14%
-set P2_SITE_LOG=%cd%\build_%TIMESTAMP%.1.p2_site.log
-set JETTY_LOG=%cd%\build_%TIMESTAMP%.2.jetty.log
-echo %time% building p2:site - logging output to %P2_SITE_LOG%
-call mvn -f releng\third-party\pom.xml p2:site --log-file "%P2_SITE_LOG%"
-if not %ERRORLEVEL% == 0 (
-	echo p2:site build failed!
-	exit /B 1
-)
-echo %time% run jetty - logging output to %JETTY_LOG%
-start "%1" cmd /C "mvn -f releng\third-party\pom.xml jetty:run --log-file %JETTY_LOG%"
-:wait_jetty
-echo Waiting for jetty server to start
-timeout /t 1
-findstr "[INFO] Started Server@" %JETTY_LOG%
-if not %ERRORLEVEL% == 0 goto :wait_jetty
-echo %time% jetty server up and running
-call :installCore
-if not %ERRORLEVEL% == 0 (
-	call :killJetty %1
-	exit /B 1
-)
-exit /B 0
-
 :installCore
 for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
 set TIMESTAMP=%LOCALDATETIME:~0,14%
@@ -88,38 +62,17 @@ if not %ERRORLEVEL% == 0 (
 )
 exit /B 0
 
-@REM Kill the console based on title passed as first arg (%1)
-@REM tasklist gives us the pid, and using unique id on window title to filter the list
-:killJetty
-echo kill jetty
-for /F "tokens=2 delims=," %%R in ('tasklist /FI "Windowtitle eq %1" /NH /FO csv') do (
-	taskkill /PID %%R
-)
-exit /B 0
-
 :test
 echo %time% running tests
 call mvn verify
 goto end
 
 :testUi
-@REM generate a unique id for window title
-@REM allow to filter uniquely to get PID associated later
-set JETTY_TITLE=jmc-jetty-%time%
-call :startJetty %JETTY_TITLE%
-if not %ERRORLEVEL% == 0 (
-	exit /B 1
-)
 echo %time% running UI tests
 call mvn verify -P uitests
-call :killJetty %JETTY_TITLE%
 goto end
 
 :packageJmc
-@REM generate a unique id for window title
-@REM allow to filter uniquely to get PID associated later
-set JETTY_TITLE=jmc-jetty-%time%
-call :startJetty %JETTY_TITLE%
 if not %ERRORLEVEL% == 0 (
 	exit /B 1
 )
@@ -129,7 +82,6 @@ set PACKAGE_LOG=%cd%\build_%TIMESTAMP%.4.package.log
 echo %time% packaging jmc - logging output to %PACKAGE_LOG%
 call mvn package --log-file "%PACKAGE_LOG%"
 if %ERRORLEVEL% == 0 echo You can now run jmc by calling "%0 --run" or "%cd%\target\products\org.openjdk.jmc\win32\win32\x86_64\JDK Mission Control\jmc.exe"
-call :killJetty %JETTY_TITLE%
 goto end
 
 :packageAgent
@@ -172,9 +124,6 @@ cd ..
 cd agent
 call mvn clean
 cd ..
-cd releng\third-party
-call mvn clean
-cd ..\..
 goto end
 
 :run

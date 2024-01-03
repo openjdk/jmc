@@ -8,7 +8,6 @@ ARCH="x86_64"
 if [[ "`uname -m`" =~ "arm64" ]]; then 
   ARCH="aarch64"
 fi
-JETTY_PID=""
 BASEDIR=""
 JMC_DIR=""
 JVM_ARGUMENTS=""
@@ -16,13 +15,6 @@ JVM_ARGUMENTS=""
 function err_report() {
     err_log "$(date +%T) ${PROGNAME}: Error on line $1"
     err_log "$(date +%T) current working directory: $PWD"
-}
-
-function exitTrap() {
-    if [ -n "${JETTY_PID}" ]; then
-        echo "$(date +%T) terminating jetty server"
-        kill "${JETTY_PID}"
-    fi
 }
 
 function installCore() {
@@ -42,42 +34,11 @@ function installCore() {
     }
 }
 
-function startJetty() {
-    local timestamp=$1
-    local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
-    local jettyLog="${BASEDIR}/build_${timestamp}.2.jetty.log"
-    
-
-    pushd releng/third-party 1> /dev/null || {
-        err_log "directory releng/third-party not found"
-        exit 1
-    }
-    echo "$(date +%T) building p2:site - logging output to ${p2SiteLog}"
-    mvn p2:site --log-file "${p2SiteLog}"
-
-    echo "$(date +%T) run jetty - logging output to ${jettyLog}"
-    touch "${jettyLog}" # create file so that it exists already for tail below
-    mvn jetty:run --log-file "${jettyLog}" &
-    JETTY_PID=$!
-
-    while ! grep -q "^\[INFO\] Started Server@" "${jettyLog}"; do
-        echo "$(date +%T) waiting for jetty server to start"
-        sleep 1
-    done
-    echo "$(date +%T) jetty server up and running on pid ${JETTY_PID}"
-
-    popd 1> /dev/null || {
-        err_log "could not go to project root directory"
-        exit 1
-    }
-}
-
 function err_log() {
     echo "$@" >&2
 }
 
 trap 'err_report $LINENO' ERR
-trap 'exitTrap' EXIT
 
 function printHelp() {
     echo "usage: call ./$(basename "$0") with the following options:"
@@ -103,14 +64,12 @@ fi
 
 function runTests() {
     local timestamp=$1
-    startJetty $timestamp
     echo "${timestamp} running tests"
     mvn ${JVM_ARGUMENTS} verify
 }
 
 function runUiTests() {
     local timestamp=$1
-    startJetty $timestamp
     installCore $timestamp
     echo "$(date +%T) running UI tests"
     mvn ${JVM_ARGUMENTS} verify -P uitests
@@ -118,7 +77,6 @@ function runUiTests() {
 
 function packageJmc() {
     local timestamp=$1    
-    startJetty $timestamp
     installCore $timestamp
     local packageLog="${BASEDIR}/build_${timestamp}.4.package.log"
 
@@ -176,16 +134,6 @@ function clean() {
 
     pushd agent 1> /dev/null || {
         err_log "directory agent not found"
-        exit 1
-    }
-    mvn clean
-    popd 1> /dev/null || {
-        err_log "could not go to project root directory"
-        exit 1
-    }
-
-    pushd releng/third-party 1> /dev/null || {
-        err_log "directory releng/third-party not found"
         exit 1
     }
     mvn clean
