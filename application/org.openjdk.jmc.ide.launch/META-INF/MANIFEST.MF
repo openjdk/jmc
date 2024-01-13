@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.debug.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.rjmx.common,
  org.eclipse.jdt.core,
  org.openjdk.jmc.ide.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
@@ -22,5 +23,4 @@ Require-Bundle: org.eclipse.debug.ui,
 Bundle-Activator: org.openjdk.jmc.ide.launch.LaunchPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Import-Package: org.openjdk.jmc.rjmx.services.jfr
 Automatic-Module-Name: org.openjdk.jmc.ide.launch

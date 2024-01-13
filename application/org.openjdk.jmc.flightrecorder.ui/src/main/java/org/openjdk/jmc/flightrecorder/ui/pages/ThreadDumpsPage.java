@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -73,6 +72,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.tree.IArray;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -94,7 +94,6 @@ import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorSta
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.tree.IArray;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
 import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;
 import org.openjdk.jmc.ui.handlers.CopySelectionAction;
@@ -154,11 +153,9 @@ public class ThreadDumpsPage extends AbstractDataPage {
 	}
 
 	private static class ThreadDump extends Node {
-		final ThreadDumpCollection parent;
 
-		ThreadDump(String title, String body, ThreadDumpCollection parent) {
+		ThreadDump(String title, String body) {
 			super(title, body);
-			this.parent = parent;
 		}
 
 	}
@@ -403,23 +400,7 @@ public class ThreadDumpsPage extends AbstractDataPage {
 	}
 
 	private static String joinSelectionForCopy(IStructuredSelection selection) {
-		List<?> list = selection.toList();
-		@SuppressWarnings("unchecked")
-		Set<ThreadDumpCollection> parents = (Set<ThreadDumpCollection>) list.stream()
-				.filter(o -> o instanceof ThreadDumpCollection).collect(Collectors.toSet());
-		return list.stream()
-				.flatMap(o -> o instanceof ThreadDumpCollection
-						? getThreadDumpCollectionStreamForCopy((ThreadDumpCollection) o)
-						: getThreadDumpStreamForCopy(parents, (ThreadDump) o))
-				.map(n -> n.body).collect(Collectors.joining(SEPARATOR));
-	}
-
-	private static Stream<Node> getThreadDumpCollectionStreamForCopy(ThreadDumpCollection tdc) {
-		return Stream.concat(Stream.of(tdc), Stream.of((tdc.dumps)));
-	}
-
-	private static Stream<Node> getThreadDumpStreamForCopy(Set<ThreadDumpCollection> parents, ThreadDump td) {
-		return parents.contains(td.parent) ? Stream.empty() : Stream.concat(Stream.of(td.parent), Stream.of(td));
+		return joinSelection(selection.toList());
 	}
 
 	private static ThreadDumpCollection[] parseEvents(IItemIterable is) {
@@ -436,7 +417,7 @@ public class ThreadDumpsPage extends AbstractDataPage {
 			ThreadDump[] dumps = new ThreadDump[parts.length - 2];
 			ThreadDumpCollection parent = new ThreadDumpCollection(title, str, dumps);
 			for (int i = 0; i < dumps.length; i++) {
-				dumps[i] = parseThreadDump(parts[i + 1], parent);
+				dumps[i] = parseThreadDump(parts[i + 1]);
 			}
 			return parent;
 		} else {
@@ -444,11 +425,11 @@ public class ThreadDumpsPage extends AbstractDataPage {
 		}
 	}
 
-	private static ThreadDump parseThreadDump(String str, ThreadDumpCollection parent) {
+	private static ThreadDump parseThreadDump(String str) {
 		str = str.trim();
 		int firstLineEnd = str.indexOf('\n');
 		String firstLine = firstLineEnd < 0 ? str : str.substring(0, firstLineEnd);
 		int lastQuote = firstLine.lastIndexOf('"');
-		return new ThreadDump(lastQuote > 1 ? firstLine.substring(1, lastQuote) : firstLine, str, parent);
+		return new ThreadDump(lastQuote > 1 ? firstLine.substring(1, lastQuote) : firstLine, str);
 	}
 }

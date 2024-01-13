@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -56,6 +56,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.HW_THREADS;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_ADDRESS;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_FILE_BYTES_READ;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_FILE_BYTES_WRITTEN;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_FILE_FORCE_METADATA;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_HOST;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_PORT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.IO_SOCKET_BYTES_READ;
@@ -77,6 +78,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.BOOLEAN_FLAG;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.CPU_INFORMATION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.FILE_READ;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.FILE_WRITE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.FILE_FORCE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_SURVIVOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.GC_CONF_TLAB;
@@ -250,12 +252,16 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> FILE_READ_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_FILE_READ_SIZE), Messages.getString(Messages.AGGR_FILE_READ_SIZE_DESC),
 			FILE_READ, IO_FILE_BYTES_READ);
+	public static final IAggregator<Boolean, ?> FILE_FORCE_METADATA = or(FILE_FORCE, IO_FILE_FORCE_METADATA);
 	public static final IAggregator<IQuantity, ?> FILE_WRITE_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_FILE_WRITE_COUNT), Messages.getString(Messages.AGGR_FILE_WRITE_COUNT_DESC),
 			JdkFilters.FILE_WRITE);
 	public static final IAggregator<IQuantity, ?> FILE_READ_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_FILE_READ_COUNT), Messages.getString(Messages.AGGR_FILE_READ_COUNT_DESC),
 			JdkFilters.FILE_READ);
+	public static final IAggregator<IQuantity, ?> FILE_FORCE_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_FILE_FORCE_COUNT), Messages.getString(Messages.AGGR_FILE_FORCE_COUNT_DESC),
+			JdkFilters.FILE_FORCE);
 	public static final IAggregator<IQuantity, ?> ERROR_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_ERROR_COUNT), Messages.getString(Messages.AGGR_ERROR_COUNT_DESC),
 			JdkFilters.ERRORS);
@@ -381,6 +387,11 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> STDDEV_BLOCKED_TIME = Aggregators.stddevp(
 			Messages.getString(Messages.AGGR_STDDEV_BLOCKED_TIME),
 			Messages.getString(Messages.AGGR_STDDEV_BLOCKED_TIME_DESC), DURATION);
+	public static final IAggregator<IQuantity, ?> TOTAL_INFLATED_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_TOTAL_INFLATED_COUNT),
+			Messages.getString(Messages.AGGR_TOTAL_INFLATED_COUNT_DESC), JdkFilters.MONITOR_INFLATE);
+	public static final IAggregator<String, ?> MONITOR_INFLATE_REASON = distinctAsString(JdkTypeIDs.MONITOR_INFLATE,
+			JdkAttributes.INFLATION_REASON);
 	public static final IAggregator<IQuantity, ?> ALLOC_INSIDE_TLAB_AVG = Aggregators.avg(
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG),
 			Messages.getString(Messages.AGGR_ALLOC_INSIDE_TLAB_AVG_DESC), JdkTypeIDs.ALLOC_INSIDE_TLAB,

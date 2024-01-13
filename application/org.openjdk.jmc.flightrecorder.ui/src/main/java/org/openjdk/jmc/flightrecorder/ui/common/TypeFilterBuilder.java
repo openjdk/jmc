@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -72,11 +72,11 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.flightrecorder.ui.EventTypeFolderNode;
 import org.openjdk.jmc.flightrecorder.ui.EventTypeFolderNode.EventTypeNode;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.tree.IParent;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
 import org.openjdk.jmc.ui.common.util.FilterMatcher.Where;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
@@ -271,6 +271,9 @@ public class TypeFilterBuilder {
 
 		private boolean matches(Object element) {
 			String label = labelProvider.apply(element);
+			if (element instanceof EventTypeNode) {
+				label = label.concat(" " + ((EventTypeNode) element).getType().getIdentifier());
+			}
 			if (FilterMatcher.getInstance().match(label, filterString, true)) {
 				return true;
 			}

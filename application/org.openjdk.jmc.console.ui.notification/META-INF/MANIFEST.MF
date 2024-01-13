@@ -26,5 +26,4 @@ Export-Package: org.openjdk.jmc.console.ui.notification,
  org.openjdk.jmc.console.ui.notification.widget,
  org.openjdk.jmc.console.ui.notification.wizard
 Bundle-ClassPath: .
-Import-Package: org.openjdk.jmc.rjmx.services.jfr
 Automatic-Module-Name: org.openjdk.jmc.console.ui.notification

@@ -123,13 +123,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.openjdk.jmc.rjmx.services.jfr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.owasp.encoder"
          download-size="0"
          install-size="0"

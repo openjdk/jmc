@@ -75,6 +75,7 @@ public final class JdkTypeIDs {
 
 	public static final String FILE_WRITE = PREFIX + "FileWrite";
 	public static final String FILE_READ = PREFIX + "FileRead";
+	public static final String FILE_FORCE = PREFIX + "FileForce";
 	public static final String SOCKET_WRITE = PREFIX + "SocketWrite";
 	public static final String SOCKET_READ = PREFIX + "SocketRead";
 
@@ -82,6 +83,7 @@ public final class JdkTypeIDs {
 	public static final String THREAD_SLEEP = PREFIX + "ThreadSleep";
 	public static final String MONITOR_ENTER = PREFIX + "JavaMonitorEnter";
 	public static final String MONITOR_WAIT = PREFIX + "JavaMonitorWait";
+	public static final String MONITOR_INFLATE = PREFIX + "JavaMonitorInflate";
 
 	public static final String METASPACE_OOM = PREFIX + "MetaspaceOOM";
 
@@ -161,6 +163,7 @@ public final class JdkTypeIDs {
 	public static final String GC_COLLECTOR_PAROLD_GARBAGE_COLLECTION = PREFIX + "ParallelOldGarbageCollection";
 	public static final String GC_COLLECTOR_YOUNG_GARBAGE_COLLECTION = PREFIX + "YoungGarbageCollection";
 	public static final String GC_COLLECTOR_SYSTEM_GC = PREFIX + "SystemGC";
+	public static final String GC_CPU_TIME = PREFIX + "GCCPUTime";
 	public static final String GC_DETAILED_ALLOCATION_REQUIRING_GC = PREFIX + "AllocationRequiringGC";
 	public static final String GC_DETAILED_EVACUATION_FAILED = PREFIX + "EvacuationFailed";
 	public static final String GC_DETAILED_EVACUATION_INFO = PREFIX + "EvacuationInformation";

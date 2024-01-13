@@ -121,11 +121,13 @@
 	<modules>
 		<module>org.openjdk.jmc.common</module>
 		<module>org.openjdk.jmc.flightrecorder</module>
+		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.rules</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.jdk</module>
 		<module>org.openjdk.jmc.flightrecorder.serializers</module>
 		<module>org.openjdk.jmc.flightrecorder.writer</module>
 		<module>org.openjdk.jmc.jdp</module>
+		<module>org.openjdk.jmc.rjmx.common</module>
 		<module>org.openjdk.jmc.testlib</module>
 		<module>tests</module>
 	</modules>

@@ -136,9 +136,9 @@
                "name": "<xsl:apply-templates select="name" />", <xsl:choose><xsl:when test="count(error)>0"><xsl:text>&#xa;               </xsl:text>"error": "<xsl:apply-templates select="error" />"</xsl:when><xsl:otherwise>
                "severity": "<xsl:apply-templates select="severity" />",
                "score": <xsl:apply-templates select="score" />,
-               "message": "<xsl:apply-templates select="summary" />",
-               "detailedMessage": "<xsl:apply-templates select="explanation" />"<xsl:apply-templates select="itemset" />
-             	</xsl:otherwise>
+               "summary": "<xsl:apply-templates select="summary" />",
+               "explanation": "<xsl:apply-templates select="explanation" />",
+               "solution": "<xsl:apply-templates select="solution" />"<xsl:apply-templates select="itemset" /></xsl:otherwise>
              </xsl:choose>
               }<xsl:if test="following-sibling::*">,</xsl:if></xsl:template>
 

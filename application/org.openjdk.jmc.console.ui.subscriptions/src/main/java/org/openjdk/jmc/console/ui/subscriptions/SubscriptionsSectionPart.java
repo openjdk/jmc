@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,10 +48,10 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.common.subscription.internal.ISubscriptionDebugService;
 import org.openjdk.jmc.rjmx.subscription.internal.EmptySubscriptionDebugService;
-import org.openjdk.jmc.rjmx.subscription.internal.ISubscriptionDebugService;
 import org.openjdk.jmc.rjmx.ui.internal.FreezeModel;
 import org.openjdk.jmc.rjmx.ui.internal.ToggleFreezeAction;
 import org.openjdk.jmc.ui.column.ColumnBuilder;

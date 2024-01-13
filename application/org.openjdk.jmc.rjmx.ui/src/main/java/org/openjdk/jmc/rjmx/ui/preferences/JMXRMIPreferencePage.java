@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.openjdk.jmc.common.security.SecurityManagerFactory;
-import org.openjdk.jmc.rjmx.preferences.JMXRMIPreferences;
+import org.openjdk.jmc.rjmx.common.preferences.JMXRMIPreferences;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.PasswordFieldEditor;
 

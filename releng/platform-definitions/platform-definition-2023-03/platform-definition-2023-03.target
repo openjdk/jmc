@@ -45,10 +45,10 @@
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
-            <unit id="org.eclipse.jetty.websocket.api" version="10.0.12"/>
-            <unit id="org.eclipse.jetty.websocket.server" version="10.0.12"/>
-            <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.12"/>
-            <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.12"/>
+            <unit id="org.eclipse.jetty.websocket.api" version="10.0.17"/>
+            <unit id="org.eclipse.jetty.websocket.server" version="10.0.17"/>
+            <unit id="org.eclipse.jetty.websocket.servlet" version="10.0.17"/>
+            <unit id="org.eclipse.jetty.websocket.javax.server" version="10.0.17"/>
             <unit id="org.apache.aries.spifly.dynamic.bundle" version="1.3.6"/>
             <unit id="fireplace-swing" version="0.0.1.rc3"/>
             <unit id="fireplace-swt-awt-bridge" version="0.0.1.rc3"/>

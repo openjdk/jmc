@@ -37,8 +37,8 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 
 import static org.junit.Assert.assertNotNull;
 

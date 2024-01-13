@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -147,30 +147,27 @@ public final class IOToolkit {
 	 *             on I/O error
 	 */
 	public static InputStream openUncompressedStream(InputStream stream) throws IOException {
-		InputStream in = stream;
-		if (in.markSupported()) {
-			in.mark(MAGIC_GZ.length + 1);
-			if (hasMagic(in, MAGIC_GZ)) {
-				in.reset();
-				return new GZIPInputStream(in);
-			}
+		InputStream in = new BufferedInputStream(stream);
+		in.mark(MAGIC_GZ.length + 1);
+		if (hasMagic(in, MAGIC_GZ)) {
 			in.reset();
-			in.mark(MAGIC_ZIP.length + 1);
-			if (hasMagic(in, MAGIC_ZIP)) {
-				in.reset();
-				ZipInputStream zin = new ZipInputStream(in);
-				zin.getNextEntry();
-				return zin;
-			}
-			in.reset();
-			in.mark(MAGIC_LZ4.length + 1);
-			if (hasMagic(in, MAGIC_LZ4)) {
-				in.reset();
-				return new LZ4FrameInputStream(in);
-			}
-			in.reset();
+			return new GZIPInputStream(in);
 		}
-		in = new BufferedInputStream(stream);
+		in.reset();
+		in.mark(MAGIC_ZIP.length + 1);
+		if (hasMagic(in, MAGIC_ZIP)) {
+			in.reset();
+			ZipInputStream zin = new ZipInputStream(in);
+			zin.getNextEntry();
+			return zin;
+		}
+		in.reset();
+		in.mark(MAGIC_LZ4.length + 1);
+		if (hasMagic(in, MAGIC_LZ4)) {
+			in.reset();
+			return new LZ4FrameInputStream(in);
+		}
+		in.reset();
 		return in;
 	}
 

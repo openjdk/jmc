@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -54,8 +54,9 @@
 	<xsl:apply-templates select="name" />
 	<xsl:apply-templates select="severity" />
 	<xsl:apply-templates select="score" />
-	<xsl:apply-templates select="message" />
-	<xsl:apply-templates select="detailedmessage" />
+	<xsl:apply-templates select="summary" />
+	<xsl:apply-templates select="explanation" />
+	<xsl:apply-templates select="solution" />
 	<xsl:apply-templates select="itemset" />
 </xsl:template>
 
@@ -71,12 +72,16 @@
 	<p><b>Score:</b> <xsl:value-of select="format-number(.,'0.#')"/></p>
 </xsl:template>
 
-<xsl:template match="rule/message">
-	<p><b>Message:</b> <xsl:value-of select="."/></p>
+<xsl:template match="rule/summary">
+	<p><b>Summary:</b> <xsl:value-of select="."/></p>
 </xsl:template>
 
-<xsl:template match="rule/detailedmessage">
-	<p><b>Detailed message:</b> <xsl:value-of select="."/></p>
+<xsl:template match="rule/explanation">
+	<p><b>Explanation:</b> <xsl:value-of select="."/></p>
+</xsl:template>
+
+<xsl:template match="rule/solution">
+	<p><b>Solution:</b> <xsl:value-of select="."/></p>
 </xsl:template>
 
 <xsl:template match="itemset">

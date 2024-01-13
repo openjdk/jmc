@@ -269,6 +269,13 @@ public class Messages {
 	public static final String FileWriteRuleFactory_TEXT_WARN_LONG = "FileWriteRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT = "FileWriteRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String FileWriteRule_CONFIG_WARNING_LIMIT_LONG = "FileWriteRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String FileForceRuleFactory_RULE_NAME = "FileForceRuleFactory_RULE_NAME"; //$NON-NLS-1$
+	public static final String FileForceRuleFactory_TEXT_NO_EVENTS = "FileForceRuleFactory_TEXT_NO_EVENTS"; //$NON-NLS-1$
+	public static final String FileForceRuleFactory_TEXT_OK = "FileForceRuleFactory_TEXT_OK"; //$NON-NLS-1$
+	public static final String FileForceRuleFactory_TEXT_WARN = "FileForceRuleFactory_TEXT_WARN"; //$NON-NLS-1$
+	public static final String FileForceRuleFactory_TEXT_WARN_LONG = "FileForceRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
+	public static final String FileForceRule_CONFIG_INFO_LIMIT = "FileForceRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
+	public static final String FileForceRule_CONFIG_INFO_LIMIT_LONG = "FileForceRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC = "FinalizersRunRule_CONFIG_FINALIZABLE_CLASSES_INCLUDE_REGEXP_DESC"; //$NON-NLS-1$
 	public static final String FinalizersRunRule_EXPLANATION = "FinalizersRunRule_EXPLANATION"; //$NON-NLS-1$
@@ -306,6 +313,9 @@ public class Messages {
 	public static final String GcFreedRatioRule_RULE_NAME = "GcFreedRatioRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE = "GcFreedRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE_DESC = "GcFreedRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_RULE_NAME = "GcInvertedParallelism_RULE_NAME"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_TEXT_WARN_SHORT = "GcInvertedParallelism_TEXT_WARN_SHORT"; //$NON-NLS-1$
+	public static final String GcInvertedParallelism_TEXT_WARN_LONG = "GcInvertedParallelism_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_RULE_NAME = "GcLockerRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_TEXT_INFO = "GcLockerRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String GcLockerRuleFactory_TEXT_INFO_LONG = "GcLockerRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$

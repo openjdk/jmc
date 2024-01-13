@@ -8,5 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.ui.common,
+ org.openjdk.jmc.common,
  org.openjdk.jmc.browser
 Automatic-Module-Name: org.openjdk.jmc.ui.common.test

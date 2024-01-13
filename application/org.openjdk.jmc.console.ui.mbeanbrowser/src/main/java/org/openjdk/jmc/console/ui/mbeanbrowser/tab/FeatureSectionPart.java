@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -60,12 +60,12 @@ import org.openjdk.jmc.console.ui.mbeanbrowser.metadata.MetadataModel;
 import org.openjdk.jmc.console.ui.mbeanbrowser.notifications.MBeanNotificationLogInspector;
 import org.openjdk.jmc.console.ui.mbeanbrowser.notifications.NotificationInfoSectionPart;
 import org.openjdk.jmc.console.ui.mbeanbrowser.notifications.NotificationsModel;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.internal.RJMXConnection;
-import org.openjdk.jmc.rjmx.services.IOperation;
-import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.common.services.IOperation;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.ui.attributes.MRIAttribute;
 import org.openjdk.jmc.rjmx.ui.attributes.MRIAttributeInspector;
 import org.openjdk.jmc.rjmx.ui.attributes.MRIAttributeInspector.ErroneousAttribute;

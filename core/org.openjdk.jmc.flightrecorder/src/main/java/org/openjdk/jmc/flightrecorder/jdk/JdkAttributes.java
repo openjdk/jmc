@@ -471,6 +471,9 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> IO_FILE_BYTES_READ = attr("bytesRead", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ),
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ_DESC), MEMORY);
+	public static final IAttribute<Boolean> IO_FILE_FORCE_METADATA = attr("metaData", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA),
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA_DESC), FLAG);
 	public static final IAttribute<Boolean> IO_FILE_READ_EOF = attr("endOfFile", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_READ_EOF), Messages.getString(Messages.ATTR_IO_FILE_READ_EOF_DESC),
 			FLAG);
@@ -717,6 +720,12 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
 	public static final IAttribute<IQuantity> GC_PAUSE_TARGET = attr("pauseTarget", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_PAUSE_TARGET), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_REAL = attr("realTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_REAL), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_SYSTEM = attr("systemTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_SYSTEM), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_USER = attr("userTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_USER), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);
@@ -777,6 +786,9 @@ public final class JdkAttributes {
 		}
 	});
 
+	public static final IAttribute<String> INFLATION_REASON = attr("cause", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_INFLATION_REASON), Messages.getString(Messages.ATTR_INFLATION_REASON_DESC),
+			PLAIN_TEXT);
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.openjdk.jmc.common.resource.Resource;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.BooleanField;
@@ -53,7 +54,6 @@ import org.openjdk.jmc.rjmx.triggers.fields.internal.TimeField;
 import org.openjdk.jmc.ui.common.idesupport.IDESupportToolkit;
 import org.openjdk.jmc.ui.common.resource.IImageResource;
 import org.openjdk.jmc.ui.common.resource.MCFile;
-import org.openjdk.jmc.ui.common.resource.Resource;
 
 public class TriggerComponent implements IExecutableExtension, IImageResource {
 	// extension

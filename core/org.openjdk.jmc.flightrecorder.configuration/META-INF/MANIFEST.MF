@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDK Flight Recorder Configuration
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.configuration;singleton:=true
+Bundle-Version: 9.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.openjdk.jmc.common, org.openjdk.jmc.flightrecorder
+Export-Package: org.openjdk.jmc.flightrecorder.configuration,
+ org.openjdk.jmc.flightrecorder.configuration.events,
+ org.openjdk.jmc.flightrecorder.configuration.internal,
+ org.openjdk.jmc.flightrecorder.configuration.model,
+ org.openjdk.jmc.flightrecorder.configuration.model.xml,
+ org.openjdk.jmc.flightrecorder.configuration.recording,
+ org.openjdk.jmc.flightrecorder.configuration.spi
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.configuration
