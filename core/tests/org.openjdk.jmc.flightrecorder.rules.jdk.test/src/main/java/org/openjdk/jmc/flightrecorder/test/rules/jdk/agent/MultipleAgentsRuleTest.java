@@ -78,7 +78,7 @@ public class MultipleAgentsRuleTest {
 	public void manyAgents() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_EVENT, ANOTHER_JAVA_EVENT, NATIVE_EVENT};
 		testMultipleAgentsRule(testEvents,
-				"There are 3 agents active (2 java, 1 native). Please confirm that loading these agents was intentional on the agents page. Remove any agents that are not necessary.");
+				"There are 3 agents active (2 java, 1 native). Please confirm that loading these agents was intentional on the agents page.");
 	}
 
 	private void testMultipleAgentsRule(TestEvent[] testEvents, String descriptionExpected) {

@@ -95,7 +95,7 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 			"Native Dynamic Agent Count", "The number of active dynamically loaded native Agents.", //$NON-NLS-1$
 			UnitLookup.TIMESTAMP, IQuantity.class);
 	public static final TypedResult<IQuantity> TOTAL_AGENT_COUNT = new TypedResult<>("totalDynamicAgentCount", //$NON-NLS-1$
-			"Total Dynamic Agent Count", "The total number of active dynamically loadd Agents.", //$NON-NLS-1$
+			"Total Dynamic Agent Count", "The total number of active dynamically loaded Agents.", //$NON-NLS-1$
 			UnitLookup.TIMESTAMP, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
