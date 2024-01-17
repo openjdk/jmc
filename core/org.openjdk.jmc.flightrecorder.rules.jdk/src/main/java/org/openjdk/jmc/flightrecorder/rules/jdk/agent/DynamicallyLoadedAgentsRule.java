@@ -117,7 +117,6 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 		long nativeWarningLimit = valueProvider.getPreferenceValue(JAVA_WARNING_LIMIT).clampedFloorIn(NUMBER_UNITY);
 		long javaCount = javaCountQuantity.longValue();
 		long nativeCount = nativeCountQuantity.longValue();
-		long totalCount = totalCountQuantity.longValue();
 
 		if (javaCount > javaWarningLimit || nativeCount > nativeWarningLimit) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
@@ -126,9 +125,7 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 					.setSolution(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_SOLUTION))
 					.addResult(JAVA_AGENT_COUNT, javaCountQuantity).addResult(NATIVE_AGENT_COUNT, nativeCountQuantity)
 					.addResult(TOTAL_AGENT_COUNT, totalCountQuantity)
-					.addResult(TypedResult.SCORE,
-							NUMBER_UNITY.quantity(totalCount * 20 / (javaWarningLimit + nativeWarningLimit + 1)))
-					.build();
+					.addResult(TypedResult.SCORE, NUMBER_UNITY.quantity(75)).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_OK))
@@ -161,7 +158,7 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 
 	@Override
 	public String getName() {
-		return Messages.getString(Messages.PasswordsInArgsRule_RULE_NAME);
+		return Messages.getString(Messages.DynamicallyLoadedAgentsRule_RULE_NAME);
 	}
 
 	@Override

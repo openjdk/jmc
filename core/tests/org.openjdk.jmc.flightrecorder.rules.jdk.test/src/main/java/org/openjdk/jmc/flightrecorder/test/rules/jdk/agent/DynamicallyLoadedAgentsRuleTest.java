@@ -69,7 +69,7 @@ public class DynamicallyLoadedAgentsRuleTest {
 	public void oneJavaDynamicAgent() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_DYNAMIC_EVENT};
 		testDynamicallyLoadedAgentsRule(testEvents,
-				"You have 1 dynamically loaded agent(s) active (1 java, 0 native). Go to the agents page to verify that loading these agents was intentional. Investigate their origin in the agent page, and remove the agents that are not necessary. Note that allowing for dynamically loaded agents can be a security risk.");
+				"There are 1 dynamically loaded agents active (1 java, 0 native). Ensure their intentional loading on the agents page and investigate their origins. Remove any unnecessary agents. Dynamic agent loading can pose a security risk. Disable it with -XX:-EnableDynamicAgentLoading.");
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class DynamicallyLoadedAgentsRuleTest {
 	public void oneNativeDynamicAgent() {
 		TestEvent[] testEvents = new TestEvent[] {NATIVE_DYNAMIC_EVENT};
 		testDynamicallyLoadedAgentsRule(testEvents,
-				"You have 1 dynamically loaded agent(s) active (0 java, 1 native). Go to the agents page to verify that loading these agents was intentional. Investigate their origin in the agent page, and remove the agents that are not necessary. Note that allowing for dynamically loaded agents can be a security risk.");
+				"There are 1 dynamically loaded agents active (0 java, 1 native). Ensure their intentional loading on the agents page and investigate their origins. Remove any unnecessary agents. Dynamic agent loading can pose a security risk. Disable it with -XX:-EnableDynamicAgentLoading.");
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class DynamicallyLoadedAgentsRuleTest {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_DYNAMIC_EVENT, JAVA_NON_DYNAMIC_EVENT, NATIVE_DYNAMIC_EVENT,
 				NATIVE_NON_DYNAMIC_EVENT};
 		testDynamicallyLoadedAgentsRule(testEvents,
-				"You have 2 dynamically loaded agent(s) active (1 java, 1 native). Go to the agents page to verify that loading these agents was intentional. Investigate their origin in the agent page, and remove the agents that are not necessary. Note that allowing for dynamically loaded agents can be a security risk.");
+				"There are 2 dynamically loaded agents active (1 java, 1 native). Ensure their intentional loading on the agents page and investigate their origins. Remove any unnecessary agents. Dynamic agent loading can pose a security risk. Disable it with -XX:-EnableDynamicAgentLoading.");
 	}
 
 	private void testDynamicallyLoadedAgentsRule(TestEvent[] testEvents, String descriptionExpected) {

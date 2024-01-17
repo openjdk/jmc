@@ -209,6 +209,7 @@ public class Messages {
 	public static final String DuplicateFlagsRule_RESULT_EXPLANATION = "DuplicateFlagsRule_RESULT_EXPLANATION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SOLUTION = "DuplicateFlagsRule_RESULT_SOLUTION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SUMMARY_OK = "DuplicateFlagsRule_RESULT_SUMMARY_OK"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_RULE_NAME = "DynamicallyLoadedAgentsRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String DynamicallyLoadedAgentsRule_TEXT_EXPLANATION = "DynamicallyLoadedAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
 	public static final String DynamicallyLoadedAgentsRule_TEXT_OK = "DynamicallyLoadedAgentsRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String DynamicallyLoadedAgentsRule_TEXT_SOLUTION = "DynamicallyLoadedAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
@@ -488,6 +489,7 @@ public class Messages {
 	public static final String MethodProfilingRule_WINDOW_SIZE_DESC = "MethodProfilingRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES = "MethodProfilingRule_EXCLUDED_PACKAGES"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES_DESC = "MethodProfilingRule_EXCLUDED_PACKAGES_DESC"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_RULE_NAME = "MultipleAgentsRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String MultipleAgentsRule_TEXT_EXPLANATION = "MultipleAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
 	public static final String MultipleAgentsRule_TEXT_OK = "MultipleAgentsRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String MultipleAgentsRule_TEXT_SOLUTION = "MultipleAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
