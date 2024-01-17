@@ -32,7 +32,10 @@
  */
 package org.openjdk.jmc.common.unit;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
+
 public class QuantitiesToolkit {
+	private final static ITypedQuantity<LinearUnit> ZERO = NUMBER_UNITY.quantity(0);
 
 	public static <M extends Comparable<? super M>> M min(M a, M b) {
 		return a.compareTo(b) < 0 ? a : b;
@@ -52,5 +55,13 @@ public class QuantitiesToolkit {
 
 	public static <M extends Comparable<? super M>> boolean same(M a, M b) {
 		return (a == null) ? (b == null) : ((b == null) ? false : (a.compareTo(b) == 0));
+	}
+
+	public static IQuantity nullSafe(IQuantity quantity) {
+		if (quantity != null) {
+			return quantity;
+		} else {
+			return ZERO;
+		}
 	}
 }

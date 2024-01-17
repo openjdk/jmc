@@ -209,6 +209,14 @@ public class Messages {
 	public static final String DuplicateFlagsRule_RESULT_EXPLANATION = "DuplicateFlagsRule_RESULT_EXPLANATION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SOLUTION = "DuplicateFlagsRule_RESULT_SOLUTION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SUMMARY_OK = "DuplicateFlagsRule_RESULT_SUMMARY_OK"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_EXPLANATION = "DynamicallyLoadedAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_OK = "DynamicallyLoadedAgentsRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_SOLUTION = "DynamicallyLoadedAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_SUMMARY = "DynamicallyLoadedAgentsRule_TEXT_SUMMARY"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT = "DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG = "DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT = "DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT_LONG = "DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String ErrorRule_CONFIG_EXCLUDED_ERRORS = "ErrorRule_CONFIG_EXCLUDED_ERRORS"; //$NON-NLS-1$
 	public static final String ErrorRule_CONFIG_EXCLUDED_ERRORS_LONG = "ErrorRule_CONFIG_EXCLUDED_ERRORS_LONG"; //$NON-NLS-1$
 	public static final String ErrorRule_CONFIG_INFO_LIMIT = "ErrorRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$

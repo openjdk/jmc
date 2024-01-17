@@ -1327,4 +1327,7 @@ public final class JdkAttributes {
 					};
 				}
 			});
+	
+	public static final IAttribute<Boolean> DYNAMIC = attr("dynamic", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_DYNAMIC), FLAG);
 }

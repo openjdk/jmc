@@ -263,6 +263,7 @@ public class Messages {
 	public static final String ATTR_DUMP_REASON_DESC = "ATTR_DUMP_REASON_DESC"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON_RECORDING_ID = "ATTR_DUMP_REASON_RECORDING_ID"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON_RECORDING_ID_DESC = "ATTR_DUMP_REASON_RECORDING_ID_DESC"; //$NON-NLS-1$
+	public static final String ATTR_DYNAMIC = "ATTR_DYNAMIC"; //$NON-NLS-1$
 	public static final String ATTR_ENTRIES = "ATTR_ENTRIES"; //$NON-NLS-1$
 	public static final String ATTR_ENVIRONMENT_KEY = "ATTR_ENVIRONMENT_KEY"; //$NON-NLS-1$
 	public static final String ATTR_ENVIRONMENT_VALUE = "ATTR_ENVIRONMENT_VALUE"; //$NON-NLS-1$

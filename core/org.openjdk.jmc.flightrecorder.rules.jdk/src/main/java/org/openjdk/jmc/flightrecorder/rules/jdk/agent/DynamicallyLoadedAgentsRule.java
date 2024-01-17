@@ -47,11 +47,13 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.PersistableItemFilter.Kind;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IResultValueProvider;
@@ -64,18 +66,20 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 
-public class MultipleAgentsRule implements IRule {
-	private static final String MULTIPLE_AGENTS_RESULT_ID = "MultipleAgents"; //$NON-NLS-1$
+public class DynamicallyLoadedAgentsRule implements IRule {
+	private static final String MULTIPLE_AGENTS_RESULT_ID = "DynamicAgents"; //$NON-NLS-1$
 
 	public static final TypedPreference<IQuantity> JAVA_WARNING_LIMIT = new TypedPreference<>(
-			"agents.muliple.java.warning.limit", //$NON-NLS-1$
-			Messages.getString(Messages.MultipleAgentsRule_JAVA_WARNING_LIMIT),
-			Messages.getString(Messages.MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(1));
+			"agents.dynamic.java.warning.limit", //$NON-NLS-1$
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT),
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG), NUMBER,
+			NUMBER_UNITY.quantity(0));
 
 	public static final TypedPreference<IQuantity> NATIVE_WARNING_LIMIT = new TypedPreference<>(
-			"agents.muliple.native.warning.limit", //$NON-NLS-1$
-			Messages.getString(Messages.MultipleAgentsRule_JAVA_WARNING_LIMIT),
-			Messages.getString(Messages.MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(1));
+			"agents.dynamic.native.warning.limit", //$NON-NLS-1$
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT),
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG), NUMBER,
+			NUMBER_UNITY.quantity(0));
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(JAVA_WARNING_LIMIT, NATIVE_WARNING_LIMIT);
@@ -84,14 +88,14 @@ public class MultipleAgentsRule implements IRule {
 			.addEventType(JdkTypeIDs.JAVA_AGENT, EventAvailability.ENABLED)
 			.addEventType(JdkTypeIDs.NATIVE_AGENT, EventAvailability.ENABLED).build();
 
-	public static final TypedResult<IQuantity> JAVA_AGENT_COUNT = new TypedResult<>("javaAgentCount", //$NON-NLS-1$
-			"Java Agent Count", "The number of active Java Agents.", //$NON-NLS-1$
+	public static final TypedResult<IQuantity> JAVA_AGENT_COUNT = new TypedResult<>("javaDynamicAgentCount", //$NON-NLS-1$
+			"Java Dynamic Agent Count", "The number of active dynamically loaded Java Agents.", //$NON-NLS-1$
 			UnitLookup.NUMBER, IQuantity.class);
-	public static final TypedResult<IQuantity> NATIVE_AGENT_COUNT = new TypedResult<>("nativeAgentCount", //$NON-NLS-1$
-			"Native Agent Count", "The number of active Native Agents.", //$NON-NLS-1$
+	public static final TypedResult<IQuantity> NATIVE_AGENT_COUNT = new TypedResult<>("nativeDynamicAgentCount", //$NON-NLS-1$
+			"Native Dynamic Agent Count", "The number of active dynamically loaded native Agents.", //$NON-NLS-1$
 			UnitLookup.TIMESTAMP, IQuantity.class);
-	public static final TypedResult<IQuantity> TOTAL_AGENT_COUNT = new TypedResult<>("totalAgentCount", //$NON-NLS-1$
-			"Total Agent Count", "The total number of active Agents.", //$NON-NLS-1$
+	public static final TypedResult<IQuantity> TOTAL_AGENT_COUNT = new TypedResult<>("totalDynamicAgentCount", //$NON-NLS-1$
+			"Total Dynamic Agent Count", "The total number of active dynamically loadd Agents.", //$NON-NLS-1$
 			UnitLookup.TIMESTAMP, IQuantity.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
@@ -99,10 +103,14 @@ public class MultipleAgentsRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		IQuantity javaCountQuantity = QuantitiesToolkit
-				.nullSafe(items.apply(ItemFilters.type(JdkTypeIDs.JAVA_AGENT)).getAggregate(Aggregators.count()));
+		IItemCollection dynamicEvents = items
+				.apply(ItemFilters.and(ItemFilters.type(JdkTypeIDs.JAVA_AGENT, JdkTypeIDs.NATIVE_AGENT),
+						ItemFilters.buildComparisonFilter(Kind.EQUALS, JdkAttributes.DYNAMIC, Boolean.TRUE)));
+
+		IQuantity javaCountQuantity = QuantitiesToolkit.nullSafe(
+				dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.JAVA_AGENT)).getAggregate(Aggregators.count()));
 		IQuantity nativeCountQuantity = QuantitiesToolkit
-				.nullSafe(items.apply(ItemFilters.type(JdkTypeIDs.NATIVE_AGENT)).getAggregate(Aggregators.count()));
+				.nullSafe(dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.NATIVE_AGENT)).getAggregate(Aggregators.count()));
 		IQuantity totalCountQuantity = javaCountQuantity.add(nativeCountQuantity);
 
 		long javaWarningLimit = valueProvider.getPreferenceValue(JAVA_WARNING_LIMIT).clampedFloorIn(NUMBER_UNITY);
@@ -113,9 +121,9 @@ public class MultipleAgentsRule implements IRule {
 
 		if (javaCount > javaWarningLimit || nativeCount > nativeWarningLimit) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
-					.setSummary(Messages.getString(Messages.MultipleAgentsRule_TEXT_SUMMARY))
-					.setExplanation(Messages.getString(Messages.MultipleAgentsRule_TEXT_EXPLANATION))
-					.setSolution(Messages.getString(Messages.MultipleAgentsRule_TEXT_SOLUTION))
+					.setSummary(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_SUMMARY))
+					.setExplanation(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_EXPLANATION))
+					.setSolution(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_SOLUTION))
 					.addResult(JAVA_AGENT_COUNT, javaCountQuantity).addResult(NATIVE_AGENT_COUNT, nativeCountQuantity)
 					.addResult(TOTAL_AGENT_COUNT, totalCountQuantity)
 					.addResult(TypedResult.SCORE,
@@ -123,7 +131,7 @@ public class MultipleAgentsRule implements IRule {
 					.build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.MultipleAgentsRule_TEXT_OK))
+				.setSummary(Messages.getString(Messages.DynamicallyLoadedAgentsRule_TEXT_OK))
 				.addResult(JAVA_AGENT_COUNT, javaCountQuantity).addResult(NATIVE_AGENT_COUNT, nativeCountQuantity)
 				.addResult(TOTAL_AGENT_COUNT, totalCountQuantity).build();
 	}
