@@ -45,11 +45,10 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.ResultProvider;
 import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
+import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileForceRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileWriteRule;
-import org.openjdk.jmc.flightrecorder.rules.jdk.io.FileForceRule;
 
-@SuppressWarnings("restriction")
 public class TestFileReadWriteForceRule {
 	private static final String FILE_NAME_1 = "/user/dir/file1.dat";
 	private static final String FILE_NAME_2 = "/user/dir/file2.dat";
@@ -81,7 +80,6 @@ public class TestFileReadWriteForceRule {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Test

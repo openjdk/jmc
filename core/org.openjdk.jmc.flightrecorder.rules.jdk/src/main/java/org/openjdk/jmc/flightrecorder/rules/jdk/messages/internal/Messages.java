@@ -480,6 +480,14 @@ public class Messages {
 	public static final String MethodProfilingRule_WINDOW_SIZE_DESC = "MethodProfilingRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES = "MethodProfilingRule_EXCLUDED_PACKAGES"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES_DESC = "MethodProfilingRule_EXCLUDED_PACKAGES_DESC"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_EXPLANATION = "MultipleAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_OK = "MultipleAgentsRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_SOLUTION = "MultipleAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_SUMMARY = "MultipleAgentsRule_TEXT_SUMMARY"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_JAVA_WARNING_LIMIT = "MultipleAgentsRule_JAVA_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG = "MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT = "MultipleAgentsRule_NATIVE_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG = "MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO = "NumberOfGcThreadsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$

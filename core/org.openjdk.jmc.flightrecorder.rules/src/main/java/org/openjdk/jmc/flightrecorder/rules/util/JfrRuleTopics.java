@@ -37,6 +37,7 @@ package org.openjdk.jmc.flightrecorder.rules.util;
  * as a convenience, you are by no means limited to these strings.
  */
 public final class JfrRuleTopics {
+	public static final String AGENT_INFORMATION = "agent_information"; //$NON-NLS-1$
 	public static final String BIASED_LOCKING = "biased_locking"; //$NON-NLS-1$
 	public static final String CLASS_LOADING = "classloading"; //$NON-NLS-1$
 	public static final String CODE_CACHE = "code_cache"; //$NON-NLS-1$

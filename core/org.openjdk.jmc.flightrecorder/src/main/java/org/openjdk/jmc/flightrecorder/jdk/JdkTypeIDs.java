@@ -211,4 +211,7 @@ public final class JdkTypeIDs {
 
 	public static final String FINALIZER_STATISTICS = PREFIX + "FinalizerStatistics";
 
+	public static final String JAVA_AGENT = PREFIX + "JavaAgent";
+	public static final String NATIVE_AGENT = PREFIX + "NativeAgent";
+
 }
