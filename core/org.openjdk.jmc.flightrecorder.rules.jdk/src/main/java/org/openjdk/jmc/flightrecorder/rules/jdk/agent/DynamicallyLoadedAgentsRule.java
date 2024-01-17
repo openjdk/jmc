@@ -109,8 +109,8 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 
 		IQuantity javaCountQuantity = QuantitiesToolkit.nullSafe(
 				dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.JAVA_AGENT)).getAggregate(Aggregators.count()));
-		IQuantity nativeCountQuantity = QuantitiesToolkit
-				.nullSafe(dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.NATIVE_AGENT)).getAggregate(Aggregators.count()));
+		IQuantity nativeCountQuantity = QuantitiesToolkit.nullSafe(
+				dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.NATIVE_AGENT)).getAggregate(Aggregators.count()));
 		IQuantity totalCountQuantity = javaCountQuantity.add(nativeCountQuantity);
 
 		long javaWarningLimit = valueProvider.getPreferenceValue(JAVA_WARNING_LIMIT).clampedFloorIn(NUMBER_UNITY);

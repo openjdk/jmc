@@ -49,33 +49,31 @@ import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
 
 public class MultipleAgentsRuleTest {
-	private final static JavaAgentTestEvent JAVA_EVENT = new JavaAgentTestEvent(true, "/my/agent/path/java-agent.jar", "-my -options");
-	private final static JavaAgentTestEvent ANOTHER_JAVA_EVENT = new JavaAgentTestEvent(true, "/my/otheragent/path/java-agent.jar", "");
-	private final static NativeAgentTestEvent NATIVE_EVENT = new NativeAgentTestEvent(true, "/my/agent/path/native-agent.jar", "-some -other -options");
-	
+	private final static JavaAgentTestEvent JAVA_EVENT = new JavaAgentTestEvent(true, "/my/agent/path/java-agent.jar",
+			"-my -options");
+	private final static JavaAgentTestEvent ANOTHER_JAVA_EVENT = new JavaAgentTestEvent(true,
+			"/my/otheragent/path/java-agent.jar", "");
+	private final static NativeAgentTestEvent NATIVE_EVENT = new NativeAgentTestEvent(true,
+			"/my/agent/path/native-agent.jar", "-some -other -options");
+
 	@Test
 	public void noAgentEvents() {
 		TestEvent[] testEvents = new TestEvent[] {};
-		testMultipleAgentsRule(testEvents,
-				"An acceptable number of java and native agents (0 total) were loaded!");
+		testMultipleAgentsRule(testEvents, "An acceptable number of java and native agents (0 total) were loaded!");
 	}
 
-	
 	@Test
 	public void oneJavaAgent() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_EVENT};
-		testMultipleAgentsRule(testEvents,
-				"An acceptable number of java and native agents (1 total) were loaded!");
+		testMultipleAgentsRule(testEvents, "An acceptable number of java and native agents (1 total) were loaded!");
 	}
 
 	@Test
 	public void oneJavaOneNativeAgent() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_EVENT, NATIVE_EVENT};
-		testMultipleAgentsRule(testEvents,
-				"An acceptable number of java and native agents (2 total) were loaded!");
+		testMultipleAgentsRule(testEvents, "An acceptable number of java and native agents (2 total) were loaded!");
 	}
 
-	
 	@Test
 	public void manyAgents() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_EVENT, ANOTHER_JAVA_EVENT, NATIVE_EVENT};

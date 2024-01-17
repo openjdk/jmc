@@ -35,7 +35,7 @@ package org.openjdk.jmc.flightrecorder.test.rules.jdk.agent;
 
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 
-public class NativeAgentTestEvent extends AgentTestEvent {	
+public class NativeAgentTestEvent extends AgentTestEvent {
 	public NativeAgentTestEvent(boolean dynamic, String name, String options) {
 		super(JdkTypeIDs.NATIVE_AGENT, dynamic, name, options);
 	}

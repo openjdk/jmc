@@ -49,11 +49,15 @@ import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
 
 public class DynamicallyLoadedAgentsRuleTest {
-	private final static JavaAgentTestEvent JAVA_DYNAMIC_EVENT = new JavaAgentTestEvent(true, "/my/agent/path/java-agent.jar", "-my -options");
-	private final static JavaAgentTestEvent JAVA_NON_DYNAMIC_EVENT = new JavaAgentTestEvent(false, "/my/agent/path/java-agent.jar", "-my -options");
-	private final static NativeAgentTestEvent NATIVE_DYNAMIC_EVENT = new NativeAgentTestEvent(true, "/my/agent/path/native-agent.jar", "-some -other -options");
-	private final static NativeAgentTestEvent NATIVE_NON_DYNAMIC_EVENT = new NativeAgentTestEvent(false, "/my/agent/path/native-agent.jar", "-some -other -options");
-	
+	private final static JavaAgentTestEvent JAVA_DYNAMIC_EVENT = new JavaAgentTestEvent(true,
+			"/my/agent/path/java-agent.jar", "-my -options");
+	private final static JavaAgentTestEvent JAVA_NON_DYNAMIC_EVENT = new JavaAgentTestEvent(false,
+			"/my/agent/path/java-agent.jar", "-my -options");
+	private final static NativeAgentTestEvent NATIVE_DYNAMIC_EVENT = new NativeAgentTestEvent(true,
+			"/my/agent/path/native-agent.jar", "-some -other -options");
+	private final static NativeAgentTestEvent NATIVE_NON_DYNAMIC_EVENT = new NativeAgentTestEvent(false,
+			"/my/agent/path/native-agent.jar", "-some -other -options");
+
 	@Test
 	public void noAgentEvents() {
 		TestEvent[] testEvents = new TestEvent[] {};
@@ -61,7 +65,6 @@ public class DynamicallyLoadedAgentsRuleTest {
 				"An acceptable number of java and native agents (0 total) were dynamically loaded!");
 	}
 
-	
 	@Test
 	public void oneJavaDynamicAgent() {
 		TestEvent[] testEvents = new TestEvent[] {JAVA_DYNAMIC_EVENT};
@@ -75,7 +78,7 @@ public class DynamicallyLoadedAgentsRuleTest {
 		testDynamicallyLoadedAgentsRule(testEvents,
 				"An acceptable number of java and native agents (0 total) were dynamically loaded!");
 	}
-	
+
 	@Test
 	public void oneNativeDynamicAgent() {
 		TestEvent[] testEvents = new TestEvent[] {NATIVE_DYNAMIC_EVENT};
@@ -90,10 +93,10 @@ public class DynamicallyLoadedAgentsRuleTest {
 				"An acceptable number of java and native agents (0 total) were dynamically loaded!");
 	}
 
-	
 	@Test
 	public void manyAgents() {
-		TestEvent[] testEvents = new TestEvent[] {JAVA_DYNAMIC_EVENT, JAVA_NON_DYNAMIC_EVENT, NATIVE_DYNAMIC_EVENT, NATIVE_NON_DYNAMIC_EVENT};
+		TestEvent[] testEvents = new TestEvent[] {JAVA_DYNAMIC_EVENT, JAVA_NON_DYNAMIC_EVENT, NATIVE_DYNAMIC_EVENT,
+				NATIVE_NON_DYNAMIC_EVENT};
 		testDynamicallyLoadedAgentsRule(testEvents,
 				"You have 2 dynamically loaded agent(s) active (1 java, 1 native). Go to the agents page to verify that loading these agents was intentional. Investigate their origin in the agent page, and remove the agents that are not necessary. Note that allowing for dynamically loaded agents can be a security risk.");
 	}

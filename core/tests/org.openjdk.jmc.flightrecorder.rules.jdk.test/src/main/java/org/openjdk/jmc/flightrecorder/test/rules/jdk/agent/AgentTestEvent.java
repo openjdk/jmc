@@ -43,7 +43,7 @@ public class AgentTestEvent extends TestEvent {
 	private final boolean dynamic;
 	private final String name;
 	private final String options;
-	
+
 	public AgentTestEvent(String id, boolean dynamic, String name, String options) {
 		super(id);
 		this.dynamic = dynamic;
@@ -56,10 +56,10 @@ public class AgentTestEvent extends TestEvent {
 	public <M> IMemberAccessor<M, IItem> getAccessor(IAccessorKey<M> attribute) {
 		if ("dynamic".equals(attribute.getIdentifier())) {
 			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, Boolean, Boolean> constant(dynamic);
-		} else if ("name".equals(attribute.getIdentifier())){
+		} else if ("name".equals(attribute.getIdentifier())) {
 			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(name);
 		} else if ("options".equals(attribute.getIdentifier())) {
-			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(options);			
+			return (IMemberAccessor<M, IItem>) MemberAccessorToolkit.<IItem, String, String> constant(options);
 		}
 		return null;
 	}
