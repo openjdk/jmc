@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
- * 
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -46,25 +46,27 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.common.test.MCTestCase;
+import org.openjdk.jmc.common.jvm.Connectable;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
-import org.openjdk.jmc.rjmx.ConnectionException;
-import org.openjdk.jmc.rjmx.ConnectionToolkit;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
-import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
-import org.openjdk.jmc.rjmx.internal.DefaultConnectionHandle;
-import org.openjdk.jmc.rjmx.internal.RJMXConnection;
-import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
-import org.openjdk.jmc.rjmx.services.IDiagnosticCommandService;
-import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
-import org.openjdk.jmc.ui.common.jvm.Connectable;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
+import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
+import org.openjdk.jmc.rjmx.common.internal.DefaultConnectionHandle;
+import org.openjdk.jmc.rjmx.common.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
+import org.openjdk.jmc.rjmx.common.services.IDiagnosticCommandService;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
+import org.openjdk.jmc.rjmx.internal.ServiceFactoryInitializer;
+import org.openjdk.jmc.rjmx.internal.SyntheticRepositoryInitializer;
+import org.openjdk.jmc.test.MCTestCase;
 
 /**
  */
@@ -135,7 +137,7 @@ public class RjmxTestCase extends MCTestCase {
 
 	/**
 	 * Creates a server descriptor with information matching the currently running JVM.
-	 * 
+	 *
 	 * @return the server descriptor.
 	 */
 	public static IServerDescriptor createDefaultServerDesciptor() {
@@ -150,7 +152,7 @@ public class RjmxTestCase extends MCTestCase {
 	/**
 	 * Creates a server descriptor with information derived from the JVM with the provided
 	 * connection.
-	 * 
+	 *
 	 * @param connection
 	 *            an active {@link MBeanServerConnection}.
 	 * @return the server descriptor.
@@ -168,7 +170,7 @@ public class RjmxTestCase extends MCTestCase {
 	/**
 	 * Creates a server descriptor with information derived from the JVM described by the server
 	 * descriptor. Will connect temporarily to derive the information.
-	 * 
+	 *
 	 * @param descriptor
 	 *            the descriptor defining the JVM to connect to.
 	 * @return the server descriptor, with information derived from the actual connection, or an
@@ -284,9 +286,11 @@ public class RjmxTestCase extends MCTestCase {
 		m_connectionDescriptor = getTestConnectionDescriptor();
 		m_host = ConnectionToolkit.getHostName(m_connectionDescriptor.createJMXServiceURL());
 		m_connection = new RJMXConnection(m_connectionDescriptor, createDefaultServerDesciptor(m_connectionDescriptor),
-				null);
+				null, SyntheticRepositoryInitializer.initializeAttributeEntries(),
+				SyntheticRepositoryInitializer.initializeNotificationEntries());
 		m_connection.connect();
-		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null);
+		m_connectionHandle = new DefaultConnectionHandle(m_connection, "Test", null,
+				ServiceFactoryInitializer.initializeFromExtensions());
 		Assert.assertTrue(m_connectionHandle.isConnected());
 	}
 

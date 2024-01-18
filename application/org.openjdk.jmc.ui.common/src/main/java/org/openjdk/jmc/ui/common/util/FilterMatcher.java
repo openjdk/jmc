@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -52,7 +52,7 @@ public class FilterMatcher {
 
 	private final static FilterMatcher instance = new FilterMatcher();
 
-	private static volatile Pattern lastPattern = null;
+	private static volatile Pattern lastPattern;
 
 	public static enum Where {
 		BEFORE, AFTER, BEFORE_AND_AFTER

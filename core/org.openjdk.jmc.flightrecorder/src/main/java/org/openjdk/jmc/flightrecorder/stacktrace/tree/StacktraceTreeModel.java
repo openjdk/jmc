@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2022, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,9 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 
-import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
-
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
@@ -45,9 +44,12 @@ import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
+
+import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 public class StacktraceTreeModel {
 
@@ -131,6 +133,31 @@ public class StacktraceTreeModel {
 	 */
 	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
 			IAttribute<IQuantity> attribute) {
+		this(items, frameSeparator, invertedStacks, attribute, () -> false);
+	}
+
+	/**
+	 * Builds a StacktraceTreeModel from a given collection of events. Given that creating this
+	 * object can be very time consuming, this constructor supports early termination using the stop
+	 * flag. If the constructor was terminated using the stop flag the object is in an invalid state
+	 * and should not be used.
+	 *
+	 * @param items
+	 *            the data we want to represent.
+	 * @param frameSeparator
+	 *            defines what represents a node in the tree. Defaults to METHOD.
+	 * @param invertedStacks
+	 *            defines how the stacks are aggregated. Defaults to false (i.e. bottom-up,
+	 *            Thread.run() at the root of the tree).
+	 * @param attribute
+	 *            defines what we use as node weights. If null, the weight is the number of
+	 *            occurrences for the frame.
+	 * @param stopFlag
+	 *            enables concurrent interruption. The stop flag is polled and if it every returns
+	 *            true the constructor will return early.
+	 */
+	public StacktraceTreeModel(IItemCollection items, FrameSeparator frameSeparator, boolean invertedStacks,
+			IAttribute<IQuantity> attribute, BooleanSupplier stopFlag) {
 		this.items = items;
 		this.frameSeparator = frameSeparator;
 		this.attribute = attribute;
@@ -139,12 +166,20 @@ public class StacktraceTreeModel {
 		AggregatableFrame rootFrame = new AggregatableFrame(frameSeparator, ROOT_FRAME);
 		this.root = Node.newRootNode(rootFrame);
 		for (IItemIterable iterable : items) {
+			if (stopFlag.getAsBoolean()) {
+				return;
+			}
 			IMemberAccessor<IMCStackTrace, IItem> stacktraceAccessor = getAccessor(iterable, EVENT_STACKTRACE);
 			if (stacktraceAccessor == null) {
 				continue;
 			}
 			IMemberAccessor<IQuantity, IItem> quantityAccessor = getAccessor(iterable, attribute);
-			iterable.forEach((item) -> addItem(item, stacktraceAccessor, quantityAccessor));
+			for (final var item : iterable) {
+				if (stopFlag.getAsBoolean()) {
+					return;
+				}
+				addItem(item, stacktraceAccessor, quantityAccessor);
+			}
 		}
 	}
 
@@ -160,6 +195,10 @@ public class StacktraceTreeModel {
 	 */
 	public IItemCollection getItems() {
 		return items;
+	}
+
+	public IAttribute<IQuantity> getAttribute() {
+		return attribute;
 	}
 
 	private void addItem(
@@ -181,6 +220,9 @@ public class StacktraceTreeModel {
 
 		// if we don't request a specific attribute, we simply count occurrences
 		double value = (quantityAccessor != null) ? quantityAccessor.getMember(item).doubleValue() : 1.0;
+		if (attribute != null && attribute.getContentType() == UnitLookup.MEMORY) {
+			value = value / 1024;
+		}
 
 		// if the stack is zero valued for the requested attribute we prune it
 		if (attribute != null && value == 0.0) {
@@ -212,13 +254,19 @@ public class StacktraceTreeModel {
 	}
 
 	private Node getOrCreateNode(Node parent, AggregatableFrame frame) {
-		return parent.children.stream()
-				// TODO: consider a map lookup instead of linear search
-				.filter(child -> child.getFrame().equals(frame)).findAny().orElseGet(() -> {
-					Node result = new Node(parent, frame);
-					parent.children.add(result);
-					return result;
-				});
+		Node result = null;
+		// TODO: consider a map lookup instead of linear search
+		for (final var child : parent.children) {
+			if (child.getFrame().equals(frame)) {
+				result = child;
+				break;
+			}
+		}
+		if (result == null) {
+			result = new Node(parent, frame);
+			parent.children.add(result);
+		}
+		return result;
 	}
 
 	private static <T> IMemberAccessor<T, IItem> getAccessor(IItemIterable iterable, IAttribute<T> attr) {

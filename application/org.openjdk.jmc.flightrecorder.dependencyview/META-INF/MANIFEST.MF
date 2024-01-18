@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Heatmap
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.dependencyview;singleton:=true
+Bundle-Version: 9.0.0.qualifier
+Require-Bundle: org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.flightrecorder.serializers
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.dependencyview
+Bundle-Vendor: Oracle Corporation

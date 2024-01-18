@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023 Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -34,10 +34,10 @@
 <feature
       id="org.openjdk.jmc.feature.flightrecorder"
       label="%name"
-      version="8.2.0.qualifier"
+      version="9.0.0.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="8.2.0.qualifier">
+      license-feature-version="9.0.0.qualifier">
 
    <description url="%descriptionUrl">
       %description
@@ -123,13 +123,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.openjdk.jmc.rjmx.services.jfr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.owasp.encoder"
          download-size="0"
          install-size="0"
@@ -137,7 +130,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.lz4.lz4-java"
+         id="lz4-java"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -179,14 +172,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jetty.websocket.javax.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.openjdk.jmc.flightrecorder.flameview"
+         id="org.openjdk.jmc.flightrecorder.flamegraph"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -201,6 +187,13 @@
 
    <plugin
          id="org.openjdk.jmc.flightrecorder.heatmap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openjdk.jmc.flightrecorder.dependencyview"
          download-size="0"
          install-size="0"
          version="0.0.0"

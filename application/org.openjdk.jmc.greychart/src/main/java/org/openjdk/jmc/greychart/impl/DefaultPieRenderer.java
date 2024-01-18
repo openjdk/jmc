@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,12 +43,12 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.AbstractSeriesPlotRenderer;
 import org.openjdk.jmc.greychart.FontAndColors;
 import org.openjdk.jmc.greychart.SeriesGreyChart;
 import org.openjdk.jmc.greychart.SeriesMetadataProvider;
 import org.openjdk.jmc.greychart.data.DataSeriesProvider;
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
 
 /**
  * Renders a simple pie. Not really optimized for dynamic charts (creates arrays). Can be optimized

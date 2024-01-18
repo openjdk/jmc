@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,10 +37,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.IMRIService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 import org.openjdk.jmc.ui.misc.TypedLabelProvider;

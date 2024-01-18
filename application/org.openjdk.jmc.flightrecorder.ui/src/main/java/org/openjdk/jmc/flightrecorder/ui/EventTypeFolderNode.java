@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,10 +40,10 @@ import java.util.stream.Stream;
 
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.tree.IParent;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
-import org.openjdk.jmc.ui.common.tree.IParent;
 
 public class EventTypeFolderNode implements IParent<Object> {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -94,6 +94,8 @@ public class Messages {
 	public static final String AGGR_FILE_WRITE_COUNT_DESC = "AGGR_FILE_WRITE_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FILE_WRITE_SIZE = "AGGR_FILE_WRITE_SIZE"; //$NON-NLS-1$
 	public static final String AGGR_FILE_WRITE_SIZE_DESC = "AGGR_FILE_WRITE_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_FILE_FORCE_COUNT = "AGGR_FILE_FORCE_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_FILE_FORCE_COUNT_DESC = "AGGR_FILE_FORCE_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FIRST_ATTRIBUTE = "AGGR_FIRST_ATTRIBUTE"; //$NON-NLS-1$
 	public static final String AGGR_FIRST_ATTRIBUTE_DESC = "AGGR_FIRST_ATTRIBUTE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_FLR_DATA_LOST_SIZE = "AGGR_FLR_DATA_LOST_SIZE"; //$NON-NLS-1$
@@ -152,8 +154,14 @@ public class Messages {
 	public static final String AGGR_OBJ_ALLOC_SUM_DESC = "AGGR_OBJ_ALLOC_SUM_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES = "AGGR_OBJECT_COUNT_MAX_INSTANCES"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC = "AGGR_OBJECT_COUNT_MAX_INSTANCES_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_INSTANCES = "AGGR_OBJECT_COUNT_AVG_INSTANCES"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_INSTANCES_DESC = "AGGR_OBJECT_COUNT_AVG_INSTANCES_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE = "AGGR_OBJECT_COUNT_MAX_SIZE"; //$NON-NLS-1$
 	public static final String AGGR_OBJECT_COUNT_MAX_SIZE_DESC = "AGGR_OBJECT_COUNT_MAX_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_SIZE = "AGGR_OBJECT_COUNT_AVG_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_AVG_SIZE_DESC = "AGGR_OBJECT_COUNT_AVG_SIZE_DESC"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_TOTAL_SIZE = "AGGR_OBJECT_COUNT_TOTAL_SIZE"; //$NON-NLS-1$
+	public static final String AGGR_OBJECT_COUNT_TOTAL_SIZE_DESC = "AGGR_OBJECT_COUNT_TOTAL_SIZE_DESC"; //$NON-NLS-1$
 	public static final String AGGR_OUTSIDE_TLAB_COUNT = "AGGR_OUTSIDE_TLAB_COUNT"; //$NON-NLS-1$
 	public static final String AGGR_OUTSIDE_TLAB_COUNT_DESC = "AGGR_OUTSIDE_TLAB_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_SOCKET_READ_COUNT = "AGGR_SOCKET_READ_COUNT"; //$NON-NLS-1$
@@ -180,6 +188,8 @@ public class Messages {
 	public static final String AGGR_THROWABLES_COUNT_DESC = "AGGR_THROWABLES_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_COUNT = "AGGR_TOTAL_BLOCKED_COUNT"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_COUNT_DESC = "AGGR_TOTAL_BLOCKED_COUNT_DESC"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_INFLATED_COUNT = "AGGR_TOTAL_INFLATED_COUNT"; //$NON-NLS-1$
+	public static final String AGGR_TOTAL_INFLATED_COUNT_DESC = "AGGR_TOTAL_INFLATED_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_TIME = "AGGR_TOTAL_BLOCKED_TIME"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_BLOCKED_TIME_DESC = "AGGR_TOTAL_BLOCKED_TIME_DESC"; //$NON-NLS-1$
 	public static final String AGGR_TOTAL_GC_PAUSE = "AGGR_TOTAL_GC_PAUSE"; //$NON-NLS-1$
@@ -275,6 +285,12 @@ public class Messages {
 	public static final String ATTR_EXPLICIT_GC_DISABLED_DESC = "ATTR_EXPLICIT_GC_DISABLED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTED_PACKAGE = "ATTR_EXPORTED_PACKAGE"; //$NON-NLS-1$
 	public static final String ATTR_EXPORTING_MODULE = "ATTR_EXPORTING_MODULE"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS = "ATTR_FINALIZABLE_CLASS"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_DESC = "ATTR_FINALIZABLE_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME = "ATTR_FINALIZABLE_CLASS_NAME"; //$NON-NLS-1$
+	public static final String ATTR_FINALIZABLE_CLASS_NAME_DESC = "ATTR_FINALIZABLE_CLASS_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN = "ATTR_TOTAL_FINALIZERS_RUN"; //$NON-NLS-1$
+	public static final String ATTR_TOTAL_FINALIZERS_RUN_DESC = "ATTR_TOTAL_FINALIZERS_RUN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NAME = "ATTR_FLAG_NAME"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_BOOLEAN = "ATTR_FLAG_NEW_VALUE BOOLEAN"; //$NON-NLS-1$
 	public static final String ATTR_FLAG_NEW_VALUE_NUMBER = "ATTR_FLAG_NEW_VALUE_NUMBER"; //$NON-NLS-1$
@@ -319,6 +335,7 @@ public class Messages {
 	public static final String ATTR_GC_METASPACE_USED_DESC = "ATTR_GC_METASPACE_USED_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME = "ATTR_GC_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_NAME_DESC = "ATTR_GC_NAME_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_PAUSE_TARGET = "ATTR_GC_PAUSE_TARGET"; //$NON-NLS-1$
 	public static final String ATTR_GC_PHASE_NAME = "ATTR_GC_PHASE_NAME"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT = "ATTR_GC_ROOT"; //$NON-NLS-1$
 	public static final String ATTR_GC_ROOT_DESC = "ATTR_GC_ROOT_DESC"; //$NON-NLS-1$
@@ -326,6 +343,10 @@ public class Messages {
 	public static final String ATTR_GC_SUM_OF_PAUSES_DESC = "ATTR_GC_SUM_OF_PAUSES_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD = "ATTR_GC_THRESHOLD"; //$NON-NLS-1$
 	public static final String ATTR_GC_THRESHOLD_DESC = "ATTR_GC_THRESHOLD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME = "ATTR_GC_TIME"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_REAL = "ATTR_GC_TIME_REAL"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_SYSTEM = "ATTR_GC_TIME_SYSTEM"; //$NON-NLS-1$
+	public static final String ATTR_GC_TIME_USER = "ATTR_GC_TIME_USER"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO = "ATTR_GC_TIME_RATIO"; //$NON-NLS-1$
 	public static final String ATTR_GC_TIME_RATIO_DESC = "ATTR_GC_TIME_RATIO_DESC"; //$NON-NLS-1$
 	public static final String ATTR_GC_WHEN = "ATTR_GC_WHEN"; //$NON-NLS-1$
@@ -349,6 +370,8 @@ public class Messages {
 	public static final String ATTR_IO_ADDRESS = "ATTR_IO_ADDRESS"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_READ = "ATTR_IO_FILE_BYTES_READ"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_READ_DESC = "ATTR_IO_FILE_BYTES_READ_DESC"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_FORCE_METADATA = "ATTR_IO_FILE_FORCE_METADATA"; //$NON-NLS-1$
+	public static final String ATTR_IO_FILE_FORCE_METADATA_DESC = "ATTR_IO_FILE_FORCE_METADATA_DESC"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_WRITTEN = "ATTR_IO_FILE_BYTES_WRITTEN"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_BYTES_WRITTEN_DESC = "ATTR_IO_FILE_BYTES_WRITTEN_DESC"; //$NON-NLS-1$
 	public static final String ATTR_IO_FILE_READ_EOF = "ATTR_IO_FILE_READ_EOF"; //$NON-NLS-1$
@@ -508,6 +531,8 @@ public class Messages {
 	public static final String ATTR_YOUNG_GENERATION_MIN_SIZE = "ATTR_YOUNG_GENERATION_MIN_SIZE"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON = "ATTR_SHUTDOWN_REASON"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_REASON_DESC = "ATTR_SHUTDOWN_REASON_DESC"; //$NON-NLS-1$
+	public static final String ATTR_INFLATION_REASON = "ATTR_INFLATION_REASON"; //$NON-NLS-1$
+	public static final String ATTR_INFLATION_REASON_DESC = "ATTR_INFLATION_REASON_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SHUTDOWN_TIME = "ATTR_SHUTDOWN_TIME"; //$NON-NLS-1$
 	public static final String ATTR_SYSTEM_LOAD = "ATTR_SYSTEM_LOAD"; //$NON-NLS-1$
 	public static final String ATTR_SYSTEM_LOAD_DESC = "ATTR_SYSTEM_LOAD_DESC"; //$NON-NLS-1$

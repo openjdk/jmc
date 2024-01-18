@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -53,12 +53,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IFormColors;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.AccessibilityConstants;
-import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.accessibility.MCAccessibleListener;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.misc.IRefreshable;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 
@@ -225,28 +224,7 @@ public class DialViewer extends Composite implements IRefreshable {
 	@Override
 	public boolean refresh() {
 		if (!isDisposed()) {
-			if (IMMEDIATE_DRAWING) {
-				if (isVisible()) {
-					Rectangle area = getClientArea();
-					if (!area.isEmpty()) {
-						GC gc = new GC(this);
-						draw(gc, 0, 0, area.width, area.height, true);
-						// Must redraw focus in the same way as FocusTracker
-						if (isFocusControl()) {
-							FocusTracker.drawFocusOn(this, gc);
-						}
-						gc.dispose();
-					}
-				}
-			} else {
-				redraw();
-			}
-			/*
-			 * Explicit calls to update() should be avoided unless absolutely necessary. They may
-			 * have a negative performance impact and may cause issues on Mac OS X Cocoa (SWT 3.6).
-			 * If it is required here, there must be a justifying comment.
-			 */
-			// update();
+			redraw();
 			return true;
 		}
 		return false;

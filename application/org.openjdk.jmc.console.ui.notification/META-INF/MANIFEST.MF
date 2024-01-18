@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Name: Console Notification Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.console.ui.notification; singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.ui.common,
@@ -26,5 +26,4 @@ Export-Package: org.openjdk.jmc.console.ui.notification,
  org.openjdk.jmc.console.ui.notification.widget,
  org.openjdk.jmc.console.ui.notification.wizard
 Bundle-ClassPath: .
-Import-Package: org.openjdk.jmc.rjmx.services.jfr
 Automatic-Module-Name: org.openjdk.jmc.console.ui.notification

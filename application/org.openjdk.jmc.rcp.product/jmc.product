@@ -2,7 +2,7 @@
 <?pde version="3.5"?>
 
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -33,7 +33,7 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="8.2.0" useFeatures="true" includeLaunchers="true">
+<product name="JDK Mission Control" uid="org.openjdk.jmc" id="org.openjdk.jmc.rcp.application.product" application="org.openjdk.jmc.rcp.application.app" version="9.0.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="../org.openjdk.jmc.rcp.application/icons/mission_control_abt_Oracle.gif"/>
@@ -107,8 +107,9 @@
       <property name="eclipse.p2.profile" value="JMC" />
       <property name="eclipse.p2.unsignedPolicy" value="prompt" />
       <property name="eclipse.product" value="org.openjdk.jmc.rcp.application.product" />
-      <property name="osgi.instance.area.default" value="@user.home/.jmc/8.2.0" />
+      <property name="osgi.instance.area.default" value="@user.home/.jmc/9.0.0" />
       <property name="osgi.bundles.defaultStartLevel" value="4" />
+      <property name="osgi.requiredJavaVersion" value="17" />
    </configurations>
 
    <preferencesInfo>

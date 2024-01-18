@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Name: JOverFlow Plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Name: JOverFlow UI Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.joverflow.ui;singleton:=true
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: Oracle Corporation

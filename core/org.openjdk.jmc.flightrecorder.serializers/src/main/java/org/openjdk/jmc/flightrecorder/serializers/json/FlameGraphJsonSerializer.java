@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2020, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -56,8 +56,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -93,7 +96,7 @@ public class FlameGraphJsonSerializer {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		if (node.isRoot()) {
-			sb.append(createRootNodeJson(model.getItems()));
+			sb.append(createRootNodeJson(model));
 		} else {
 			sb.append(createNodeJsonProps(node.getFrame(), node.getCumulativeWeight()));
 		}
@@ -164,15 +167,32 @@ public class FlameGraphJsonSerializer {
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
-	private static String createRootNodeJson(IItemCollection events) {
-		Map<String, Long> eventCountsByType = countEventsByType(events);
-		String rootTitle = createRootNodeTitle(eventCountsByType);
+	private static String createRootNodeJson(StacktraceTreeModel model) {
+		Map<String, Long> eventCountsByType = countEventsByType(model.getItems());
+		String rootTitle = createRootNodeTitle(model, eventCountsByType);
 		String rootDescription = createRootNodeDescription(eventCountsByType);
-		return createJsonProps(rootTitle, rootDescription,
-				eventCountsByType.values().stream().mapToLong(Long::longValue).sum());
+		double rootValue;
+		if (model.getAttribute() == null) {
+			rootValue = eventValueSum(eventCountsByType);
+		} else {
+			IQuantity aggregate = model.getItems().getAggregate(Aggregators.sum(model.getAttribute()));
+			if (aggregate == null) {
+				rootValue = eventValueSum(eventCountsByType);
+			} else {
+				rootValue = aggregate.doubleValue();
+				if (model.getAttribute().getContentType() == UnitLookup.MEMORY) {
+					rootValue = rootValue / 1024;
+				}
+			}
+		}
+		return createJsonProps(rootTitle, rootDescription, rootValue);
 	}
 
-	private static String createRootNodeTitle(Map<String, Long> eventCountsByType) {
+	private static double eventValueSum(Map<String, Long> eventCountsByType) {
+		return eventCountsByType.values().stream().mapToLong(Long::longValue).sum();
+	}
+
+	private static String createRootNodeTitle(StacktraceTreeModel model, Map<String, Long> eventCountsByType) {
 		int eventsInTitle = Math.min(eventCountsByType.size(), MAX_TYPES_IN_ROOT_TITLE);
 		long totalEvents = eventCountsByType.values().stream().mapToLong(Long::longValue).sum();
 		if (totalEvents == 0) {

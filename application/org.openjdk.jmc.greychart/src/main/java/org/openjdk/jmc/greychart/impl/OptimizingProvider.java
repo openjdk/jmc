@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,8 +35,7 @@ package org.openjdk.jmc.greychart.impl;
 import java.awt.Polygon;
 import java.util.Iterator;
 
-import org.openjdk.jmc.ui.common.xydata.DataSeries;
-
+import org.openjdk.jmc.common.xydata.DataSeries;
 import org.openjdk.jmc.greychart.YAxis;
 
 public interface OptimizingProvider {
@@ -60,7 +59,7 @@ public interface OptimizingProvider {
 
 	/**
 	 * @param width
-	 * @return samples in data series coordinates (not neccessarily the same as world coordinates)
+	 * @return samples in data series coordinates (not necessarily the same as world coordinates)
 	 */
 	Iterator<SamplePoint> getSamples(int width);
 

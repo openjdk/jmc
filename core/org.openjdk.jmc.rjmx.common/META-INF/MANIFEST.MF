@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJMX Common
+Bundle-SymbolicName: org.openjdk.jmc.rjmx.common;singleton:=true
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Version: 9.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Require-Bundle: org.openjdk.jmc.common,
+ org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.configuration
+Export-Package: org.openjdk.jmc.rjmx.common,
+ org.openjdk.jmc.rjmx.common.internal;x-friends:="org.openjdk.jmc.rjmx,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.common.preferences,
+ org.openjdk.jmc.rjmx.common.servermodel,
+ org.openjdk.jmc.rjmx.common.services,
+ org.openjdk.jmc.rjmx.common.services.internal;x-friends:="org.openjdk.jmc.rjmx,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.common.services.jfr,
+ org.openjdk.jmc.rjmx.common.services.jfr.internal;x-friends:="org.openjdk.jmc.rjmx,org.openjdk.jmc.rjmx.services.jfr.test",
+ org.openjdk.jmc.rjmx.common.subscription,
+ org.openjdk.jmc.rjmx.common.subscription.internal;x-friends:="org.openjdk.jmc.rjmx,org.openjdk.jmc.rjmx.test",
+ org.openjdk.jmc.rjmx.common.util.internal;x-friends:="org.openjdk.jmc.rjmx"
+Automatic-Module-Name: org.openjdk.jmc.rjmx.common

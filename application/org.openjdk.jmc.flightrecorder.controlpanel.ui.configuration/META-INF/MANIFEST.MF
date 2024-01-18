@@ -2,14 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Flight Recorder Configuration UI
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration;singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Require-Bundle: org.openjdk.jmc.ui,
  org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.ui.common
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Oracle Corporation
-Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui,
- org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.xml
+Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui
 Import-Package: org.openjdk.jmc.common.io
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration

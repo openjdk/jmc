@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,14 +48,14 @@ import org.junit.Test;
 import org.openjdk.jmc.common.unit.IConstrainedMap;
 import org.openjdk.jmc.common.unit.IMutableConstrainedMap;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
+import org.openjdk.jmc.flightrecorder.configuration.IRecordingDescriptor;
 import org.openjdk.jmc.flightrecorder.configuration.events.EventOptionID;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
+import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeInfo;
 import org.openjdk.jmc.flightrecorder.configuration.recording.RecordingOptionsBuilder;
-import org.openjdk.jmc.rjmx.services.jfr.IEventTypeInfo;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
-import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor;
-import org.openjdk.jmc.rjmx.services.jfr.internal.EventTypeMetadataV1;
-import org.openjdk.jmc.rjmx.services.jfr.internal.EventTypeMetadataV2;
+import org.openjdk.jmc.rjmx.common.services.jfr.internal.EventTypeMetadataV1;
+import org.openjdk.jmc.rjmx.common.services.jfr.internal.EventTypeMetadataV2;
 
 @SuppressWarnings("nls")
 public class EventMetadataTest extends JfrTestCase {

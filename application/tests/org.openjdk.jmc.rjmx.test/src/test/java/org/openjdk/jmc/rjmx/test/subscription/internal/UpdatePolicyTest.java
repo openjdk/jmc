@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,16 +36,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.IMRISubscription;
-import org.openjdk.jmc.rjmx.subscription.IMRIValueListener;
-import org.openjdk.jmc.rjmx.subscription.IUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
-import org.openjdk.jmc.rjmx.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMRISubscription;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
+import org.openjdk.jmc.rjmx.common.subscription.IUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRIValueEvent;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.internal.IIntervalUpdatePolicy;
+import org.openjdk.jmc.rjmx.common.subscription.internal.SimpleUpdatePolicy;
 import org.openjdk.jmc.rjmx.subscription.PolicyFactory;
-import org.openjdk.jmc.rjmx.subscription.internal.IIntervalUpdatePolicy;
-import org.openjdk.jmc.rjmx.subscription.internal.SimpleUpdatePolicy;
 import org.openjdk.jmc.rjmx.subscription.internal.UpdatePolicyToolkit;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 import org.openjdk.jmc.rjmx.test.testutil.TestToolkit;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,6 +45,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		// See http://visualvm.sourcearchive.com/documentation/1.2.1-0ubuntu3/MainClassApplicationTypeFactory_8java-source.html
 		IPreferenceStore store = BrowserAttachPlugin.getDefault().getPreferenceStore();
+		store.setDefault(PreferenceConstants.P_REFRESH_INTERVAL, 5000);
+		store.setDefault(PreferenceConstants.P_JVM_ATTACH_DELAY, 0);
 		store.setDefault(PreferenceConstants.P_AUTO_START_AGENT, true);
 		store.setDefault(PreferenceConstants.P_SHOW_UNCONNECTABLE, true);
 	}

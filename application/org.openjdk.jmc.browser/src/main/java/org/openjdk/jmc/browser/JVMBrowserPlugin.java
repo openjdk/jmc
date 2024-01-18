@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,7 +36,10 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.osgi.framework.BundleContext;
 
 import org.openjdk.jmc.browser.preferences.PreferenceConstants;
+import org.openjdk.jmc.common.labelingrules.NameConverter;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
+import org.openjdk.jmc.ui.common.idesupport.IDESupportFactory;
+import org.openjdk.jmc.ui.common.labelingrules.NameConverterRulesInitializer;
 
 /**
  * The main plugin class, controlling the life cycle.
@@ -63,6 +66,7 @@ public class JVMBrowserPlugin extends MCAbstractUIPlugin {
 	public JVMBrowserPlugin() {
 		super(PLUGIN_ID);
 		plugin = this;
+		initializeNameConverter();
 	}
 
 	@Override
@@ -102,6 +106,11 @@ public class JVMBrowserPlugin extends MCAbstractUIPlugin {
 
 	public void setWarnNoLocalJVMs(boolean warn) {
 		getPreferenceStore().setValue(PreferenceConstants.P_WARN_NO_LOCAL_JVMs, warn);
+	}
+
+	private void initializeNameConverter() {
+		NameConverter.getInstance().setRules(NameConverterRulesInitializer.initializeRulesFromExtensions());
+		NameConverter.getInstance().setIdentity(IDESupportFactory.getIDESupport().getIdentity());
 	}
 
 }

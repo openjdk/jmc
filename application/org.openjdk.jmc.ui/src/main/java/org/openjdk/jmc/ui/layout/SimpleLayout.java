@@ -562,7 +562,7 @@ public class SimpleLayout extends Layout {
 	/**
 	 * Returns the align for the controls. See {@link #setAlignment(int)}
 	 *
-	 * @return the alignment (SWT.FILL, SWT.BEGINING or SWT.END)
+	 * @return the alignment (SWT.FILL, SWT.BEGINNING or SWT.END)
 	 */
 	public int getAlignment() {
 		return m_style;

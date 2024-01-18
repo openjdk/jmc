@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -61,21 +61,21 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.browser.IJVMBrowserContextIDs;
 import org.openjdk.jmc.browser.JVMBrowserPlugin;
-import org.openjdk.jmc.rjmx.ConnectionDescriptorBuilder;
-import org.openjdk.jmc.rjmx.ConnectionToolkit;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
+import org.openjdk.jmc.common.security.CredentialsNotAvailableException;
+import org.openjdk.jmc.common.security.ICredentials;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.IServerHandle.State;
-import org.openjdk.jmc.rjmx.internal.ServerDescriptor;
+import org.openjdk.jmc.rjmx.common.ConnectionDescriptorBuilder;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
+import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.rjmx.servermodel.internal.Server;
 import org.openjdk.jmc.rjmx.servermodel.internal.ServerModelCredentials;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.security.CredentialsNotAvailableException;
-import org.openjdk.jmc.ui.common.security.ICredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.wizards.RelinkableWizardPage;
 

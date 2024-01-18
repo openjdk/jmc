@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +71,17 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		return sw.getBuffer().toString();
 	}
 
+	public static String toJsonString(IItemCollection items, BooleanSupplier stopFlag) {
+		StringWriter sw = new StringWriter();
+		IItemCollectionJsonSerializer marshaller = new IItemCollectionJsonSerializer(sw);
+		try {
+			marshaller.writeRecording(items, stopFlag);
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Failed to serialize recording to JSON", e);
+		}
+		return sw.getBuffer().toString();
+	}
+
 	public static String toJsonString(Iterable<IItem> items) {
 		StringWriter sw = new StringWriter();
 		IItemCollectionJsonSerializer marshaller = new IItemCollectionJsonSerializer(sw);
@@ -92,6 +104,29 @@ public class IItemCollectionJsonSerializer extends JsonWriter {
 		int count = 0;
 		for (IItemIterable events : recording) {
 			for (IItem event : events) {
+				nextElement(count == 0);
+				writeEvent(event);
+				count++;
+			}
+		}
+		writeArrayEnd();
+		writeObjectEnd();
+		flush();
+	}
+
+	private void writeRecording(IItemCollection recording, BooleanSupplier stopFlag) throws IOException {
+		writeObjectBegin();
+		nextField(true, "events");
+		writeArrayBegin();
+		int count = 0;
+		for (IItemIterable events : recording) {
+			if (stopFlag.getAsBoolean()) {
+				return;
+			}
+			for (IItem event : events) {
+				if (stopFlag.getAsBoolean()) {
+					return;
+				}
 				nextElement(count == 0);
 				writeEvent(event);
 				count++;

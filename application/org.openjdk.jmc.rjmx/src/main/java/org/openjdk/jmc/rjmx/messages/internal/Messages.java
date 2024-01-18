@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,15 +37,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.rjmx.messages.internal.messages"; //$NON-NLS-1$
 
-	public static String ConnectionException_ATTACH_NOT_SUPPORTED;
-	public static String ConnectionException_COULD_NOT_CONNECT_MSG;
-	public static String ConnectionException_COULD_NOT_DETERMINE_IP_MSG;
-	public static String ConnectionException_MALFORMED_URL_MSG;
-	public static String ConnectionException_MSARMI_CHECK_PASSWORD;
-	public static String ConnectionException_NAME_NOT_FOUND_MSG;
-	public static String ConnectionException_UNABLE_TO_CREATE_INITIAL_CONTEXT;
-	public static String ConnectionException_UNABLE_TO_RESOLVE_CREDENTIALS;
-	public static String ConnectionException_UNRESOLVED;
 	public static String JVMSupport_FLIGHT_RECORDER_DISABLED;
 	public static String JVMSupport_FLIGHT_RECORDER_DISABLED_SHORT;
 	public static String JVMSupport_FLIGHT_RECORDER_NOT_ENABLED;
@@ -64,7 +55,6 @@ public class Messages extends NLS {
 	public static String JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
 	public static String JVMSupport_TITLE_UNKNOWN_JVM;
 	public static String JVMSupport_TITLE_LEGACY_JVM_CONSOLE;
-	public static String LABEL_NOT_AVAILABLE;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

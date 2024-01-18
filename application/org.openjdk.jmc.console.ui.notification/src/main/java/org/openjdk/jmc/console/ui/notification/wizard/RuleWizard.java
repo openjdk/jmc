@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,11 +40,11 @@ import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.console.ui.notification.NotificationPlugin;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.subscription.IMRIService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
 import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
@@ -154,7 +154,7 @@ public class RuleWizard extends Wizard {
 
 		// create action
 		Collection<?> actions = factory.getActionExtensions().getPrototypes();
-		// Try to select ApplicationAlet by default
+		// Try to select ApplicationAlert by default
 		for (Object protoAction : actions) {
 			String className = protoAction.getClass().getName();
 			if (className.endsWith("ApplicationAlert")) //$NON-NLS-1$

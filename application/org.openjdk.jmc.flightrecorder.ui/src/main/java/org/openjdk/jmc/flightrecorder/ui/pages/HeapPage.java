@@ -131,6 +131,10 @@ public class HeapPage extends AbstractDataPage {
 	private static final String INSIDE_TLAB_COL = "insideTlabSize"; //$NON-NLS-1$
 	private static final String OUTSIDE_TLAB_COL = "outsideTlabSize"; //$NON-NLS-1$
 	private static final String GC_PAUSE_ID = "gcPause"; //$NON-NLS-1$
+	private static final String AVG_SIZE_COL = "avgSize"; //$NON-NLS-1$
+	private static final String AVG_INSTANCES_COL = "avgInstances"; //$NON-NLS-1$
+	private static final String INSTANCES_INCREASE_COL = "instancesIncrease"; //$NON-NLS-1$
+	private static final String HEAP_PERCENT_COL = "heapPercent"; //$NON-NLS-1$
 
 	private class ObjectStatisticsUi extends ChartAndTableUI {
 
@@ -176,6 +180,11 @@ public class HeapPage extends AbstractDataPage {
 					Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE, Messages.HeapPage_ALLOCATION_TOTAL_PERCENTAGE_DESC);
 			HISTOGRAM.addColumn(INSIDE_TLAB_COL, JdkAggregators.ALLOC_INSIDE_TLAB_SUM);
 			HISTOGRAM.addColumn(OUTSIDE_TLAB_COL, JdkAggregators.ALLOC_OUTSIDE_TLAB_SUM);
+			HISTOGRAM.addColumn(AVG_INSTANCES_COL, JdkAggregators.OBJECT_COUNT_AVG_INSTANCES);
+			HISTOGRAM.addColumn(AVG_SIZE_COL, JdkAggregators.OBJECT_COUNT_AVG_SIZE);
+			HISTOGRAM.addColumn(INSTANCES_INCREASE_COL, ObjectStatisticsDataProvider.getIncreaseInstancesAggregator());
+			HISTOGRAM.addPercentageColumn(HEAP_PERCENT_COL, JdkAggregators.OBJECT_COUNT_TOTAL_SIZE,
+					Messages.HeapPage_SIZE_TOTAL_PERCENTAGE, Messages.HeapPage_SIZE_TOTAL_PERCENTAGE_DESC);
 			return HISTOGRAM.buildWithoutBorder(parent, classifier, getTableSettings(state));
 		}
 

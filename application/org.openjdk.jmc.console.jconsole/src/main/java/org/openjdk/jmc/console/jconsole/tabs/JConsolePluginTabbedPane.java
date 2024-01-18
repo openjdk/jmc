@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -55,7 +55,7 @@ import org.eclipse.osgi.util.NLS;
 import org.openjdk.jmc.console.jconsole.Activator;
 import org.openjdk.jmc.console.jconsole.JConsolePluginLoader;
 import org.openjdk.jmc.console.jconsole.MissionControlContext;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 
 import com.sun.tools.jconsole.JConsolePlugin;
 
@@ -69,7 +69,7 @@ public class JConsolePluginTabbedPane extends JTabbedPane {
 	private static final long serialVersionUID = 1L;
 	private final List<JConsolePlugin> plugins = new ArrayList<>();
 	private final Map<JConsolePlugin, SwingWorker<?, ?>> swingWorkers = new HashMap<>();
-	private volatile boolean disposeTimerTask = false;
+	private volatile boolean disposeTimerTask;
 	private final MissionControlContext ctx;
 
 	public JConsolePluginTabbedPane(IConnectionHandle connectionHandle) {

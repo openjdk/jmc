@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -40,14 +40,11 @@
 	</parent>
 	<artifactId>missioncontrol.application</artifactId>
 	<packaging>pom</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<jfr.tests/>
 		<jfr.vmargs>-XX:+FlightRecorder</jfr.vmargs>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
 	</properties>
-
 	<modules>
 		<module>org.openjdk.jmc.alert</module>
 		<module>org.openjdk.jmc.attach</module>
@@ -59,7 +56,6 @@
 		<module>org.openjdk.jmc.console.jconsole</module>
 		<module>org.openjdk.jmc.console.pde</module>
 		<module>org.openjdk.jmc.console.persistence</module>
-		<module>org.openjdk.jmc.console.twitter</module>
 		<module>org.openjdk.jmc.console.ui</module>
 		<module>org.openjdk.jmc.console.ui.diagnostic</module>
 		<module>org.openjdk.jmc.console.ui.mbeanbrowser</module>
@@ -81,14 +77,13 @@
 		<module>org.openjdk.jmc.feature.pde</module>
 		<module>org.openjdk.jmc.feature.rcp</module>
 		<module>org.openjdk.jmc.feature.rcp.update</module>
-		<module>org.openjdk.jmc.feature.twitter</module>
 		<module>org.openjdk.jmc.feature.console.agent</module>
-		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration</module>
-		<module>org.openjdk.jmc.flightrecorder.flameview</module>
+		<module>org.openjdk.jmc.flightrecorder.flamegraph</module>
 		<module>org.openjdk.jmc.flightrecorder.graphview</module>
 		<module>org.openjdk.jmc.flightrecorder.heatmap</module>
+		<module>org.openjdk.jmc.flightrecorder.dependencyview</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.g1</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.jfx</module>
 		<module>org.openjdk.jmc.flightrecorder.metadata</module>
@@ -110,7 +105,6 @@
 		<module>org.openjdk.jmc.rcp.product.feature</module>
 		<module>org.openjdk.jmc.rjmx</module>
 		<module>org.openjdk.jmc.rjmx.ext</module>
-		<module>org.openjdk.jmc.rjmx.services.jfr</module>
 		<module>org.openjdk.jmc.rjmx.ui</module>
 		<module>org.openjdk.jmc.ui</module>
 		<module>org.openjdk.jmc.ui.common</module>
@@ -128,20 +122,6 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>no-jfr</id>
-			<activation>
-				<property>
-					<name>java.runtime.name</name>
-					<value>OpenJDK Runtime Environment</value>
-				</property>
-				<jdk>(,11)</jdk>
-			</activation>
-			<properties>
-				<jfr.tests>org.openjdk.jmc.rjmx.test.services.CommercialFeaturesServiceTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.EventConfigurationModelTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.test.PropertyContentBuilderTest,org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfcAndServerSettingsCombinationTest,org.openjdk.jmc.rjmx.services.jfr.test.EventMetadataTest,org.openjdk.jmc.rjmx.services.jfr.test.EventTemplateTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrControlTest,org.openjdk.jmc.rjmx.services.jfr.test.JfrPackageExampleTest,org.openjdk.jmc.rjmx.services.jfr.test.OnlineEventOptionsTest,org.openjdk.jmc.rjmx.services.jfr.test.RecordingOptionsTest,org.openjdk.jmc.flightrecorder.uitest.JfrWizardTest,org.openjdk.jmc.flightrecorder.uitest.TemplateManagerTest,org.openjdk.jmc.flightrecorder.uitest.ControlRecordingsTest,org.openjdk.jmc.console.uitest.DiagnosticCommandsTabTest</jfr.tests>
-				<jfr.vmargs/>
-			</properties>
-		</profile>
-		<profile>
 			<id>uitests</id>
 			<modules>
 				<module>uitests</module>
@@ -156,12 +136,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>common.test</artifactId>
+			<artifactId>flightrecorder</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder</artifactId>
+			<artifactId>flightrecorder.configuration</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
@@ -181,12 +161,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>jdp</artifactId>
+			<artifactId>rjmx.common</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>flightrecorder.test</artifactId>
+			<artifactId>jdp</artifactId>
 			<version>${revision}${changelist}</version>
 		</dependency>
 	</dependencies>

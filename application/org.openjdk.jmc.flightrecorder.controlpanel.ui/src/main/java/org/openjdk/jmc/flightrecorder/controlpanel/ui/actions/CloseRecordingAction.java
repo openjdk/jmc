@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,13 +35,13 @@ package org.openjdk.jmc.flightrecorder.controlpanel.ui.actions;
 import org.eclipse.osgi.util.NLS;
 
 import org.openjdk.jmc.common.io.IOToolkit;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
+import org.openjdk.jmc.flightrecorder.configuration.IRecordingDescriptor;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ControlPanel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.ImageConstants;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.RecordingProvider;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
-import org.openjdk.jmc.rjmx.services.jfr.IRecordingDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.ui.misc.AbstractWarningAction;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -85,13 +85,13 @@ public class RulesHtmlToolkit {
 			return "info"; //$NON-NLS-1$
 		} else if (result.getSeverity() == Severity.OK) {
 			return "ok"; //$NON-NLS-1$
+		} else if (result.getSeverity() == Severity.IGNORE) {
+			return "ignore"; //$NON-NLS-1$
 		} else if (result.getSeverity() == Severity.NA) {
 			if (Boolean.TRUE.equals(result.getResult(FAILED))) {
 				return "error"; //$NON-NLS-1$
 			} else if (Boolean.TRUE.equals(result.getResult(IN_PROGRESS))) {
 				return "progress"; //$NON-NLS-1$
-			} else if (Boolean.TRUE.equals(result.getResult(IGNORED))) {
-				return "ignore"; //$NON-NLS-1$
 			}
 			return "na"; //$NON-NLS-1$
 		}
@@ -135,6 +135,22 @@ public class RulesHtmlToolkit {
 		String template = PUSH_DIV;
 		template += END_DIV;
 		template += createShowOK();
+		template += END_DIV;
+		return template;
+	}
+
+	private static String createShowIgnore() {
+		String ignore = "<div class=\"okbox\"><label class=\"showIgnoreText\" for=\"showIgnore\">"; //$NON-NLS-1$
+		ignore += Messages.getString(Messages.RULESPAGE_SHOW_IGNORE_RESULTS_ACTION);
+		ignore += "</label>&nbsp;<input type=\"checkbox\" onclick='overview.showIgnore(this.checked);' id=\"showIgnore\">&nbsp;&nbsp;&nbsp;</div>"; //$NON-NLS-1$
+		ignore += "<script>window.onload = function() {overview.showIgnore(false)}</script>"; //$NON-NLS-1$
+		return ignore;
+	}
+
+	private static String buildShowIgnoreCheckBox() {
+		String template = PUSH_DIV;
+		template += END_DIV;
+		template += createShowIgnore();
 		template += END_DIV;
 		return template;
 	}
@@ -197,7 +213,17 @@ public class RulesHtmlToolkit {
 		boolean isInProgress = Boolean.TRUE.equals(result.getResult(IN_PROGRESS));
 		String displayScore = isInProgress ? "none" : "inline block"; //$NON-NLS-1$ //$NON-NLS-2$
 		String displayProgress = isInProgress ? "inline block" : "none"; //$NON-NLS-1$ //$NON-NLS-2$
-		return MessageFormat.format(sb.toString(), Encode.forHtml(id + uuid), (value == -1) ? "N/A" : value, //$NON-NLS-1$
+		Object scoreLabel;
+		if (value == -1) {
+			scoreLabel = "N/A";
+		} else if (value == -3) {
+			scoreLabel = "Ignored";
+			description = description.replaceAll("\n", "</br>"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			scoreLabel = value;
+		}
+
+		return MessageFormat.format(sb.toString(), Encode.forHtml(id + uuid), scoreLabel, //$NON-NLS-1$
 				Encode.forHtml(title), description, getType(result), margin, clazz, button, displayScore,
 				displayProgress, id);
 	}
@@ -229,7 +255,9 @@ public class RulesHtmlToolkit {
 		while (matcher.find()) {
 			String title = matcher.group(1);
 			String url = matcher.group(2);
-			String link = "<a href=\"" + url + "\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			String encodedUrl = Encode.forUriComponent(url);
+			String link = "<a class=\"anchorTag\" onclick=\"window.location.assign(decodeURIComponent('" + encodedUrl //$NON-NLS-1$
+					+ "'))\">" + title + "</a>"; //$NON-NLS-1$//$NON-NLS-2$
 			description = description.replace(matcher.group(), link);
 		}
 		return description;
@@ -283,6 +311,7 @@ public class RulesHtmlToolkit {
 		StringBuilder div = new StringBuilder(getHtmlTemplate());
 		if (addShowOkCheckBox) {
 			div.append(buildShowOkCheckBox());
+			div.append(buildShowIgnoreCheckBox());
 		}
 		div.append(getAllOkTemplate());
 		div.append(getAllIgnoredTemplate());

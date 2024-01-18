@@ -2,13 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Attach Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.attach;singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BuddyPolicy: app
-Export-Package: org.openjdk.jmc.attach,
- com.sun.tools.attach,
- com.sun.tools.classfile,
- sun.jvmstat.monitor,
- sun.tools.attach
+Export-Package: org.openjdk.jmc.attach
 Automatic-Module-Name: org.openjdk.jmc.attach

@@ -1,0 +1,91 @@
+#
+#  Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+#
+#  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+#  The contents of this file are subject to the terms of either the Universal Permissive License 
+#  v 1.0 as shown at http://oss.oracle.com/licenses/upl
+#   
+#  or the following license:
+#   
+#  Redistribution and use in source and binary forms, with or without modification, are permitted
+#  provided that the following conditions are met:
+#   
+#  1. Redistributions of source code must retain the above copyright notice, this list of conditions
+#  and the following disclaimer.
+#   
+#  2. Redistributions in binary form must reproduce the above copyright notice, this list of
+#  conditions and the following disclaimer in the documentation and/or other materials provided with
+#  the distribution.
+#   
+#  3. Neither the name of the copyright holder nor the names of its contributors may be used to
+#  endorse or promote products derived from this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+#  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+#  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+#  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+#  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+void java.lang.Object.wait(long) (107)
+    void sun.java2d.opengl.OGLRenderQueue$QueueFlusher.run() (97)
+
+    void java.util.TimerThread.mainLoop() (10)
+    void java.util.TimerThread.run() (10)
+
+
+int java.net.SocketInputStream.read(byte[], int, int, int) (9)
+int java.net.SocketInputStream.read(byte[], int, int) (9)
+void java.io.BufferedInputStream.fill() (9)
+int java.io.BufferedInputStream.read() (9)
+int java.io.FilterInputStream.read() (9)
+void sun.rmi.transport.tcp.TCPTransport.handleMessages(sun.rmi.transport.Connection, boolean) (9)
+void sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0() (9)
+void sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run() (9)
+void java.util.concurrent.ThreadPoolExecutor.runWorker(java.util.concurrent.ThreadPoolExecutor$Worker) (9)
+void java.util.concurrent.ThreadPoolExecutor$Worker.run() (9)
+void java.lang.Thread.run() (9)
+
+java.lang.Object[] java.util.AbstractCollection.toArray() (1)
+void java.util.ArrayList.<init>(java.util.Collection) (1)
+java.util.Collection oracle.jrockit.jfr.JFRImpl.getRecordings() (1)
+void oracle.jrockit.jfr.MetaProducer.onNewChunk() (1)
+void oracle.jrockit.jfr.JFRImpl.onNewChunk() (1)
+
+char[] java.util.Arrays.copyOf(char[], int) (1)
+void java.lang.String.<init>(char[]) (1)
+java.lang.String java.lang.String.valueOf(char[]) (1)
+java.lang.String java.lang.Thread.getName() (1)
+void sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run() (1)
+void java.util.concurrent.ThreadPoolExecutor.runWorker(java.util.concurrent.ThreadPoolExecutor$Worker) (1)
+void java.util.concurrent.ThreadPoolExecutor$Worker.run() (1)
+void java.lang.Thread.run() (1)
+
+void java.util.TimerThread.mainLoop() (1)
+void java.util.TimerThread.run() (1)
+
+java.lang.Object java.lang.reflect.Array.newArray(java.lang.Class, int) (1)
+java.lang.Object java.lang.reflect.Array.newInstance(java.lang.Class, int) (1)
+java.lang.Object java.io.ObjectInputStream.readArray(boolean) (1)
+java.lang.Object java.io.ObjectInputStream.readObject0(boolean) (1)
+void java.io.ObjectInputStream.defaultReadFields(java.lang.Object, java.io.ObjectStreamClass) (1)
+void java.io.ObjectInputStream.readSerialData(java.lang.Object, java.io.ObjectStreamClass) (1)
+java.lang.Object java.io.ObjectInputStream.readOrdinaryObject(boolean) (1)
+java.lang.Object java.io.ObjectInputStream.readObject0(boolean) (1)
+java.lang.Object java.io.ObjectInputStream.readObject() (1)
+java.lang.Object sun.rmi.server.UnicastRef.unmarshalValue(java.lang.Class, java.io.ObjectInput) (1)
+void sun.rmi.server.UnicastServerRef.dispatch(java.rmi.Remote, java.rmi.server.RemoteCall) (1)
+java.lang.Void sun.rmi.transport.Transport$1.run() (1)
+java.lang.Object sun.rmi.transport.Transport$1.run() (1)
+java.lang.Object java.security.AccessController.doPrivileged(java.security.PrivilegedExceptionAction, java.security.AccessControlContext) (1)
+boolean sun.rmi.transport.Transport.serviceCall(java.rmi.server.RemoteCall) (1)
+void sun.rmi.transport.tcp.TCPTransport.handleMessages(sun.rmi.transport.Connection, boolean) (1)
+void sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0() (1)
+void sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run() (1)
+void java.util.concurrent.ThreadPoolExecutor.runWorker(java.util.concurrent.ThreadPoolExecutor$Worker) (1)
+void java.util.concurrent.ThreadPoolExecutor$Worker.run() (1)
+void java.lang.Thread.run() (1)
+

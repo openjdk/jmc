@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: flamegraph
+Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flamegraph; singleton:=true
+Bundle-Version: 9.0.0.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.openjdk.jmc.flightrecorder,
+ org.openjdk.jmc.flightrecorder.ui,
+ org.openjdk.jmc.flightrecorder.rules,
+ org.openjdk.jmc.common,
+ fireplace-swing,
+ fireplace-swt-awt-bridge,
+ fireplace-swing-animation,
+ radiance-animation
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Vendor: Oracle Corporation
+Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.flamegraph
+Export-Package: org.openjdk.jmc.flightrecorder.flamegraph,
+ org.openjdk.jmc.flightrecorder.flamegraph.views

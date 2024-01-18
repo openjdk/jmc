@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,12 +37,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.rjmx.ConnectionException;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.IConnectionListener;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
 import org.openjdk.jmc.rjmx.IServerHandle;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionListener;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
+import org.openjdk.jmc.rjmx.common.internal.DefaultConnectionHandle;
+import org.openjdk.jmc.rjmx.common.internal.RJMXConnection;
+import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
 
 public final class ServerHandle implements IServerHandle {
 
@@ -73,7 +76,9 @@ public final class ServerHandle implements IServerHandle {
 
 	public ServerHandle(IServerDescriptor server, IConnectionDescriptor descriptor, Runnable observer) {
 		this.observer = observer;
-		connection = new RJMXConnection(descriptor, server, connectionListener);
+		connection = new RJMXConnection(descriptor, server, connectionListener,
+				SyntheticRepositoryInitializer.initializeAttributeEntries(),
+				SyntheticRepositoryInitializer.initializeNotificationEntries());
 	}
 
 	public IConnectionDescriptor getConnectionDescriptor() {
@@ -114,7 +119,8 @@ public final class ServerHandle implements IServerHandle {
 				throw new ConnectionException("Server handle is disposed"); //$NON-NLS-1$
 			}
 			performedConnect = connection.connect();
-			newConnectionHandle = new DefaultConnectionHandle(connection, usage, listeners);
+			newConnectionHandle = new DefaultConnectionHandle(connection, usage, listeners,
+					ServiceFactoryInitializer.initializeFromExtensions());
 			connectionHandles.add(newConnectionHandle);
 		}
 		if (performedConnect) {

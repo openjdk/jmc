@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -63,7 +63,7 @@ import org.openjdk.jmc.console.ui.actions.MBeanAutomaticRefreshAction;
 import org.openjdk.jmc.console.ui.mbeanbrowser.MBeanBrowserPlugin;
 import org.openjdk.jmc.console.ui.mbeanbrowser.messages.internal.Messages;
 import org.openjdk.jmc.console.ui.mbeanbrowser.tab.FeatureSectionPart;
-import org.openjdk.jmc.rjmx.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.ui.internal.MBeanPropertiesOrderer;
 import org.openjdk.jmc.rjmx.ui.internal.MBeanPropertiesOrderer.IMBeanPropertiesOrderChangedListener;
 import org.openjdk.jmc.rjmx.ui.internal.MBeanPropertiesOrderer.Property;

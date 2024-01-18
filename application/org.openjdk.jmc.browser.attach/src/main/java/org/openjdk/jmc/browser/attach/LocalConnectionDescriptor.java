@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -49,9 +49,9 @@ import java.util.logging.Logger;
 
 import javax.management.remote.JMXServiceURL;
 
-import org.openjdk.jmc.rjmx.ConnectionToolkit;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
 
 import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
@@ -214,7 +214,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	}
 
 	/**
-	 * Overriddden to lazily establish a service URL if needed. If the JVM is attachable, it will
+	 * Overridden to lazily establish a service URL if needed. If the JVM is attachable, it will
 	 * attach to the JVM, start up the management server, and set up the URL. If the service URL is
 	 * already established, it will be returned as is.
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,7 +32,10 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.views.stacktrace;
 
+import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,6 +73,8 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
@@ -94,15 +99,20 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.serializers.stacktraces.CollapsedSerializer;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
@@ -110,8 +120,10 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Branch;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
+import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
+import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
@@ -128,6 +140,7 @@ import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.handlers.MethodFormatter;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
+import org.openjdk.jmc.ui.misc.ClipboardManager;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.CopySettings;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
@@ -180,6 +193,20 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}
 	}
 
+	private class ExportCollpasedAction extends Action {
+		ExportCollpasedAction() {
+			super("Collapsed");
+		}
+
+		@Override
+		public void run() {
+			System.err.println("Export to collapsed");
+			String content = CollapsedSerializer.toCollapsed(new StacktraceTreeModel(itemsToShow,
+					new FrameSeparator(FrameCategorization.METHOD, false), false, currentAttribute));
+			ClipboardManager.setClipboardContents(new Object[] {content}, new Transfer[] {TextTransfer.getInstance()});
+		}
+	}
+
 	private static final String HELP_CONTEXT_ID = FlightRecorderUI.PLUGIN_ID + ".StacktraceView"; //$NON-NLS-1$
 	// FIXME: Define dynamic color (editable in preferences, to handle dark themes etc.)
 	private static final Color ALTERNATE_COLOR = SWTColorToolkit.getColor(new RGB(255, 255, 240));
@@ -211,6 +238,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private ViewerAction[] viewerActions;
 	private int[] columnWidths;
 	private Map<IItemCollection, Object[]> treeViewerExpandedItems = new WeakHashMap<>();
+	private AttributeSelection attributeSelection;
+	private IAttribute<IQuantity> currentAttribute;
+	private IToolBarManager toolBar;
+	private ViewerColumn valueColumn;
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -376,6 +407,26 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		reducedTreeAction.setChecked(reducedTree);
 	}
 
+	private void createAttributeSelection(String attrName, Collection<Pair<String, IAttribute<IQuantity>>> items) {
+		if (attributeSelection != null) {
+			toolBar.remove(attributeSelection.getId());
+		}
+		attributeSelection = new AttributeSelection(items, attrName, this::getCurrentAttribute,
+				this::setCurrentAttribute, this::rebuildModel);
+		toolBar.insertAfter(AttributeSelection.ATTRIBUTE_SELECTION_SEP_ID, attributeSelection);
+		toolBar.update(true);
+		if (attrName == null) {
+			attrName = AttributeSelection.SAMPLES;
+		}
+		if (valueColumn != null) {
+			if (treeLayout) {
+				((TreeViewerColumn) valueColumn).getColumn().setText(attrName);
+			} else {
+				((TableViewerColumn) valueColumn).getColumn().setText(attrName);
+			}
+		}
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
@@ -395,8 +446,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		treeAction.setChecked(treeLayout);
 		layoutActions = new IAction[] {treeAction, reducedTreeAction};
 
-		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration,
-				Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION, CoreImages.TIMESPAN);
+		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration, Messages.STACKTRACE_VIEW_DURATION,
+				CoreImages.TIMESPAN);
 		treeAction.setChecked(perDuration);
 
 		NavigateAction forwardAction = new NavigateAction(true);
@@ -426,7 +477,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_TOP));
 		siteMenu.add(new Separator(MCContextMenuManager.GROUP_VIEWER_SETUP));
 		addOptions(siteMenu);
-		IToolBarManager toolBar = site.getActionBars().getToolBarManager();
+		toolBar = site.getActionBars().getToolBarManager();
 		toolBar.add(selectGroupAction);
 		toolBar.add(backwardAction);
 		toolBar.add(forwardAction);
@@ -436,7 +487,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		toolBar.add(perByDurationAction);
 		Stream.of(groupByActions).forEach(toolBar::add);
 
+		toolBar.add(new Separator(AttributeSelection.ATTRIBUTE_SELECTION_SEP_ID));
+		createAttributeSelection(null, Collections.emptyList());
+
 		getSite().getPage().addSelectionListener(this);
+	}
+
+	private IAttribute<IQuantity> getCurrentAttribute() {
+		return currentAttribute;
+	}
+
+	private void setCurrentAttribute(IAttribute<IQuantity> attr) {
+		currentAttribute = attr;
 	}
 
 	@Override
@@ -530,11 +592,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		CopySelectionAction copyAction;
 		if (perDuration) {
 			headers = Arrays.asList(Messages.STACKTRACE_VIEW_STACK_TRACE, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME,
-					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME,
+					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, Messages.STACKTRACE_VIEW_DURATION_COLUMN_NAME,
 					Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME);
 			copyAction = new CopySelectionAction(viewer,
 					FormatToolkit.selectionFormatter(headers, stackTraceLabelProvider, countLabelProvider,
-							percentageLabelProvider, percentageByDurationLabelProvider));
+							percentageLabelProvider, durationLabelProvider, percentageByDurationLabelProvider));
 		} else {
 			headers = Arrays.asList(Messages.STACKTRACE_VIEW_STACK_TRACE, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME,
 					Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME);
@@ -564,13 +626,17 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_STACK_TRACE, SWT.NONE, columnWidths[0])
 				.setLabelProvider(stackTraceLabelProvider);
-		buildColumn(viewer, Messages.STACKTRACE_VIEW_COUNT_COLUMN_NAME, SWT.RIGHT, columnWidths[1])
-				.setLabelProvider(countLabelProvider);
+		valueColumn = buildColumn(viewer, AttributeSelection.SAMPLES, SWT.RIGHT, columnWidths[1]);
+		valueColumn.setLabelProvider(countLabelProvider);
 		buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_COLUMN_NAME, SWT.RIGHT, columnWidths[2])
 				.setLabelProvider(percentageLabelProvider);
-		if (perDuration)
+
+		if (perDuration) {
+			buildColumn(viewer, Messages.STACKTRACE_VIEW_DURATION_COLUMN_NAME, SWT.RIGHT, 300)
+					.setLabelProvider(durationLabelProvider);
 			buildColumn(viewer, Messages.STACKTRACE_VIEW_PERCENTAGE_BY_DURATION_COLUMN_NAME, SWT.RIGHT, 300)
 					.setLabelProvider(percentageByDurationLabelProvider);
+		}
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), HELP_CONTEXT_ID);
 
 		if (UIPlugin.getDefault().getAccessibilityMode()) {
@@ -644,6 +710,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		menu.appendToGroup(MCContextMenuManager.GROUP_VIEWER_SETUP, methodFormatter.createMenu());
 		SelectionStoreActionToolkit.addSelectionStoreActions(viewer, this::getSelectionStore,
 				this::getFlavoredSelection, menu);
+		MenuManager exportMenu = new MenuManager("Export stacktraces");
+		exportMenu.setRemoveAllWhenShown(true);
+		exportMenu.addMenuListener((manager) -> manager.add(new ExportCollpasedAction()));
+		menu.appendToGroup(MCContextMenuManager.GROUP_EDIT, exportMenu);
+
 	}
 
 	private IFlavoredSelection getFlavoredSelection() {
@@ -718,7 +789,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private StacktraceModel createStacktraceModel() {
-		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), itemsToShow);
+		IItemCollection filteredItems = itemsToShow;
+		if (currentAttribute != null) {
+			filteredItems = filteredItems.apply(ItemFilters.hasAttribute(currentAttribute));
+		}
+		return new StacktraceModel(threadRootAtTop, frameSeparatorManager.getFrameSeparator(), filteredItems,
+				currentAttribute);
 	}
 
 	private void rebuildModel() {
@@ -749,10 +825,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private void setModel(StacktraceModel model) {
-		// Check that the model is up to date
-		if (model.equals(createStacktraceModel()) && !viewer.getControl().isDisposed()) {
+		if (!viewer.getControl().isDisposed()) {
 			setViewerInput(model.getRootFork());
 		}
+		List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
+		String attrName = currentAttribute != null ? currentAttribute.getName() : null;
+		createAttributeSelection(attrName, attrList);
 	}
 
 	private void setViewerInput(Fork rootFork) {
@@ -776,17 +854,17 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 2 && (total = rootFork.getItemsInFork()) > 0) { // index == 2 => percentage column
+			if (event.index == 2 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 2 => percentage column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
-				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
+				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
-				double fraction = frame.getItemCount() / total;
+				double fraction = frame.getAttributeAggregate() / total;
 				event.gc.setBackground(COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
@@ -802,17 +880,17 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			StacktraceFrame frame = (StacktraceFrame) event.item.getData();
 			Fork rootFork = getRootFork(frame.getBranch().getParentFork());
 			double total;
-			if (event.index == 3 && (total = rootFork.getItemsInFork()) > 0) { // index == 3 => percentage (by duration) column
+			if (event.index == 4 && (total = rootFork.getAggregateItemsInFork()) > 0) { // index == 4 => percentage (by duration) column
 				// Draw siblings
 				Fork parentFork = frame.getBranch().getParentFork();
-				int forkOffset = parentFork.getItemOffset();
+				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
-				int siblingsWidth = (int) Math.round(event.width * parentFork.getItemsInFork() / total);
+				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
 				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
-				double fraction = frame.getItemCount() / total;
+				double fraction = frame.getAttributeAggregate() / total;
 				event.gc.setBackground(COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
@@ -826,9 +904,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		@Override
 		public String getText(Object element) {
 			StacktraceFrame frame = (StacktraceFrame) element;
-			int itemCount = frame.getItemCount();
-			int totalCount = getRootFork(frame.getBranch().getParentFork()).getItemsInFork();
-			return UnitLookup.PERCENT_UNITY.quantity(itemCount / (double) totalCount).displayUsing(IDisplayable.AUTO);
+			long aggregValue = frame.getAttributeAggregate();
+			long totalCount = getRootFork(frame.getBranch().getParentFork()).getAggregateItemsInFork();
+			return UnitLookup.PERCENT_UNITY.quantity(aggregValue / (double) totalCount).displayUsing(IDisplayable.AUTO);
 		}
 
 		@Override
@@ -860,8 +938,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			IQuantity duration = getDurationCount(frame.getItems());
 			IQuantity totalDuration = getDurationCount(
 					getRootFork(frame.getBranch().getParentFork()).getAllItemsInFork());
-			return UnitLookup.PERCENT_UNITY.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
-					.displayUsing(IDisplayable.AUTO);
+			if (duration.doubleValue() > 0) {
+				return UnitLookup.PERCENT_UNITY.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
+						.displayUsing(IDisplayable.AUTO);
+			} else {
+				return UnitLookup.PERCENT_UNITY.quantity(0).displayUsing(IDisplayable.AUTO);
+			}
 		}
 
 		@Override
@@ -872,12 +954,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			IQuantity totalDuration = getDurationCount(rootFork.getAllItemsInFork());
 			Fork parentFork = frame.getBranch().getParentFork();
 			int itemsInSiblings = parentFork.getItemsInFork() - frame.getBranch().getFirstFrame().getItemCount();
-			String frameFraction = UnitLookup.PERCENT_UNITY
-					.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
-					.displayUsing(IDisplayable.AUTO);
+			String frameFraction = "";
+			if (duration.doubleValue() > 0) {
+				frameFraction = UnitLookup.PERCENT_UNITY
+						.quantity(duration.doubleValue() / (double) totalDuration.doubleValue())
+						.displayUsing(IDisplayable.AUTO);
+			} else {
+				frameFraction = UnitLookup.PERCENT_UNITY.quantity(0).displayUsing(IDisplayable.AUTO);
+			}
 			StringBuilder sb = new StringBuilder("<form>"); //$NON-NLS-1$
 			sb.append("<li style='image' value='" + COUNT_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
-			sb.append(Messages.stackTraceMessage(duration.doubleValue(), totalDuration.doubleValue(), frameFraction));
+			sb.append(Messages.stackTraceMessage(duration.doubleValue(), duration.getUnit().getIdentifier(),
+					totalDuration.doubleValue(), totalDuration.getUnit().getIdentifier(), frameFraction));
 			sb.append("</span></li>"); //$NON-NLS-1$
 			sb.append("<li style='image' value='" + SIBLINGS_IMG_KEY + "'><span nowrap='true'>"); //$NON-NLS-1$ //$NON-NLS-2$
 			sb.append(Messages.siblingMessage(itemsInSiblings, parentFork.getBranchCount() - 1));
@@ -908,9 +996,28 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private final ColumnLabelProvider countLabelProvider = new ColumnLabelProvider() {
 		@Override
 		public String getText(Object element) {
-			return Integer.toString(((StacktraceFrame) element).getItemCount());
+			return Long.toString(((StacktraceFrame) element).getAttributeAggregate());
 		}
 	};
+
+	private final ColumnLabelProvider durationLabelProvider = new ColumnLabelProvider() {
+		@Override
+		public String getText(Object element) {
+			StacktraceFrame frame = (StacktraceFrame) element;
+			IQuantity duration = getDurationCount(frame.getItems());
+			try {
+				return formatDuration(duration.longValueIn(UnitLookup.NANOSECOND));
+			} catch (QuantityConversionException e) {
+				return Messages.N_A;
+			}
+		}
+	};
+
+	private String formatDuration(long duration) {
+		Duration rawDuration = Duration.ofNanos(duration);
+		return String.format("%d h %d m %d s %d ms %d ns", rawDuration.toHoursPart(), rawDuration.toMinutesPart(),
+				rawDuration.toSecondsPart(), rawDuration.toMillisPart(), rawDuration.toNanosPart() % 1000000L);
+	}
 
 	private final ColumnLabelProvider stackTraceLabelProvider = new ColumnLabelProvider() {
 

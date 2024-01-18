@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,11 +38,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -70,10 +72,11 @@ import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 public class HeatmapView extends ViewPart implements ISelectionListener {
+	private final static Logger LOGGER = Logger.getLogger(HeatmapView.class.getName());
 	private static final String HTML_PAGE;
 	static {
-		String jsD3V6 = "jslibs/d3.v6.min.js";
-		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3V6),
+		String jsD3 = "jslibs/d3.v7.min.js";
+		HTML_PAGE = String.format(loadStringFromFile("page.template"), loadLibraries(jsD3),
 				loadStringFromFile("heatmap.js"));
 	}
 
@@ -97,16 +100,31 @@ public class HeatmapView extends ViewPart implements ISelectionListener {
 
 		@Override
 		public void run() {
-			view.modelState = ModelState.STARTED;
-			if (isInvalid) {
-				return;
-			}
-			String eventsJson = IItemCollectionJsonSerializer.toJsonString(items);
-			if (isInvalid) {
-				return;
-			} else {
-				view.modelState = ModelState.FINISHED;
-				DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, eventsJson));
+			final var start = System.currentTimeMillis();
+			Exception exception = null;
+			LOGGER.info("starting to create model");
+			try {
+				view.modelState = ModelState.STARTED;
+				if (isInvalid) {
+					return;
+				}
+				String eventsJson = IItemCollectionJsonSerializer.toJsonString(items, () -> isInvalid);
+				if (isInvalid) {
+					return;
+				} else {
+					view.modelState = ModelState.FINISHED;
+					DisplayToolkit.inDisplayThread().execute(() -> view.setModel(items, eventsJson));
+				}
+			} catch (Exception e) {
+				exception = e;
+				throw e;
+			} finally {
+				final var duration = Duration.ofMillis(System.currentTimeMillis() - start);
+				var level = Level.INFO;
+				if (exception != null) {
+					level = Level.SEVERE;
+				}
+				LOGGER.log(level, "creating model took " + duration + " isInvalid:" + isInvalid, exception);
 			}
 		}
 	}

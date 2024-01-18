@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,12 +32,12 @@
  */
 package org.openjdk.jmc.rjmx.persistence.internal;
 
-import org.openjdk.jmc.rjmx.ConnectionException;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.ServiceNotAvailableException;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
+import org.openjdk.jmc.rjmx.common.services.IServiceFactory;
+import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.services.IPersistenceService;
-import org.openjdk.jmc.rjmx.services.IServiceFactory;
-import org.openjdk.jmc.rjmx.subscription.ISubscriptionService;
 
 public class PersistenceServiceFactory implements IServiceFactory<IPersistenceService> {
 

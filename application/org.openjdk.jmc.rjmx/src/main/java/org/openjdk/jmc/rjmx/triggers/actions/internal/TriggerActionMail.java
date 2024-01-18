@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,16 +46,15 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import org.eclipse.osgi.util.NLS;
-
+import org.openjdk.jmc.common.security.PersistentCredentials;
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
 import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationToolkit;
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
-import org.openjdk.jmc.ui.common.util.Environment;
 
 /**
  * NotificationAction that emails a certain target the NotificationEvent and the details of what has

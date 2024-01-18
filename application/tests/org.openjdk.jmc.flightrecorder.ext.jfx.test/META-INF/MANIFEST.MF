@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 9.0.0.qualifier
 Bundle-Name: Java FX for JFR Tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.ext.jfx.test;singleton:=true
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.junit,
  org.openjdk.jmc.flightrecorder.ext.jfx,
- org.openjdk.jmc.common.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ org.openjdk.jmc.testlib
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ext.jfx.test
 Import-Package: org.openjdk.jmc.common,

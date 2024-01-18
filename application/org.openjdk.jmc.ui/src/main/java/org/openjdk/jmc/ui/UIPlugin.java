@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,14 +32,9 @@
  */
 package org.openjdk.jmc.ui;
 
-import java.awt.GraphicsEnvironment;
-import java.util.logging.Level;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.misc.TrayManager;
 import org.openjdk.jmc.ui.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.security.DialogSecurityManager;
@@ -213,7 +208,6 @@ public class UIPlugin extends MCAbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		initSwingLookAndFeel();
 		// FIXME: Move to extension point
 		SecurityManagerFactory.setDefaultSecurityManager(new DialogSecurityManager());
 	}
@@ -377,20 +371,5 @@ public class UIPlugin extends MCAbstractUIPlugin {
 	 */
 	public void setTrayManager(TrayManager trayManager) {
 		m_trayManager = trayManager;
-	}
-
-	/**
-	 * Sets the Swing look and feel if needed.
-	 */
-	private static void initSwingLookAndFeel() {
-		// Avoid the possibly broken GTK look and feel on Linux
-		String laf = System.getProperty("swing.defaultlaf"); //$NON-NLS-1$
-		if (Environment.getOSType() == OSType.LINUX && laf == null && !GraphicsEnvironment.isHeadless()) {
-			laf = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
-			System.setProperty("swing.defaultlaf", laf); //$NON-NLS-1$
-			System.setProperty("swing.systemlaf", laf); //$NON-NLS-1$
-			UIPlugin.getDefault().getLogger().log(Level.INFO,
-					"On Linux, setting look and feel system properties to " + laf); //$NON-NLS-1$
-		}
 	}
 }

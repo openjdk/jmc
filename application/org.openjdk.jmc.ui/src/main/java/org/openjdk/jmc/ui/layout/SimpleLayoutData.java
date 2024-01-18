@@ -115,7 +115,7 @@ public class SimpleLayoutData {
 	 * weight so it will get half a pixel from B. If the weights are the same and there is a draw
 	 * the component that was added to the parent the first will win.
 	 * <p>
-	 * The default weight factor is MCLayout.INIFINITE_WEIGHT. If all controls have an infinitive
+	 * The default weight factor is MCLayout.INFINITE_WEIGHT. If all controls have an infinitive
 	 * weight they will all get the same amount of excessive space.
 	 */
 	public void setWeight(float weight) {

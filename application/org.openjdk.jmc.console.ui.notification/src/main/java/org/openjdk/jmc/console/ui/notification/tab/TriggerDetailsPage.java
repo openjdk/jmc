@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,7 +45,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import org.openjdk.jmc.console.ui.notification.widget.ActionChooser;
 import org.openjdk.jmc.console.ui.notification.widget.ConstraintChooser;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationRegistry;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;

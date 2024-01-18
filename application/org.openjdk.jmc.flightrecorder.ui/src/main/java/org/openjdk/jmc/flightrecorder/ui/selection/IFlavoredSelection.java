@@ -55,7 +55,7 @@ public interface IFlavoredSelection extends ISelection {
 	 *            Filter to apply to the selection data
 	 * @param items
 	 *            Items that can be used to select suitable flavors
-	 * @param attributees
+	 * @param attributes
 	 *            Attributes that can be used to select suitable flavors
 	 * @return A stream of flavors
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,11 +40,11 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.openjdk.jmc.common.util.StateToolkit;
 import org.openjdk.jmc.common.util.XmlToolkit;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.rjmx.servermodel.IServerModel;
 import org.openjdk.jmc.rjmx.servermodel.internal.ServerModel;
 import org.openjdk.jmc.rjmx.subscription.IMRIMetadataProviderService;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadataService;
 import org.openjdk.jmc.rjmx.subscription.internal.ExtensionMetadataProviderService;
 import org.openjdk.jmc.rjmx.subscription.internal.FileMRIMetadataDB;
 import org.openjdk.jmc.rjmx.triggers.extension.internal.TriggerFactory;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,9 +32,8 @@
  */
 package org.openjdk.jmc.rjmx.triggers;
 
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.w3c.dom.Element;
-
-import org.openjdk.jmc.rjmx.IConnectionHandle;
 
 /**
  * Interface for actions taken when a NotificationRule triggers.
@@ -85,7 +84,7 @@ public interface ITriggerAction {
 	 * @param node
 	 *            the XML node representing the object
 	 * @throws Exception
-	 *             if an exception occured during initialization.
+	 *             if an exception occurred during initialization.
 	 */
 	void initializeFromXml(Element node) throws Exception;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -40,16 +40,13 @@
 	</parent>
 	<artifactId>platform-definitions</artifactId>
 	<packaging>pom</packaging>
-
 	<properties>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
-
 	<modules>
-		<module>platform-definition-2021-09</module>
-		<module>platform-definition-2021-06</module>
-		<module>platform-definition-2021-03</module>
-		<module>platform-definition-2020-12</module>
-		<module>platform-definition-2020-09</module>
+		<module>platform-definition-2023-09</module>
+		<module>platform-definition-2023-03</module>
+		<module>platform-definition-2022-12</module>
+		<module>platform-definition-2022-09</module>
 	</modules>
 </project>

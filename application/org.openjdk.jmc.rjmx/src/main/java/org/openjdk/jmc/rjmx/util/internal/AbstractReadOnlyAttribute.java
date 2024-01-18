@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,13 +43,14 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.TabularData;
 
+import org.openjdk.jmc.common.tree.IParent;
+import org.openjdk.jmc.rjmx.common.services.IAttributeInfo;
+import org.openjdk.jmc.rjmx.common.util.internal.SimpleAttributeInfo;
 import org.openjdk.jmc.rjmx.services.IAttribute;
 import org.openjdk.jmc.rjmx.services.IAttributeChild;
-import org.openjdk.jmc.rjmx.services.IAttributeInfo;
 import org.openjdk.jmc.rjmx.services.IIndexedAttributeChild;
 import org.openjdk.jmc.rjmx.services.IKeyedAttributeChild;
 import org.openjdk.jmc.rjmx.services.IReadOnlyAttribute;
-import org.openjdk.jmc.ui.common.tree.IParent;
 
 public abstract class AbstractReadOnlyAttribute implements IReadOnlyAttribute, IParent<Object> {
 	private final IAttributeInfo info;

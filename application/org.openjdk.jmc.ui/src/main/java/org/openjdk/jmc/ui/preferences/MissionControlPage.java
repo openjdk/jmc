@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -49,11 +49,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
+import org.openjdk.jmc.common.security.ActionNotGrantedException;
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.UIPlugin;
-import org.openjdk.jmc.ui.common.security.ActionNotGrantedException;
-import org.openjdk.jmc.ui.common.security.SecurityException;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.misc.TrayManager;
 
 public class MissionControlPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
@@ -160,8 +159,8 @@ public class MissionControlPage extends FieldEditorPreferencePage implements IWo
 
 	/**
 	 * Since {@link FieldEditorPreferencePage} messes around with the layout this method is used to
-	 * get some formatting on the accessibility options. It basicly wraps a {@link Composite} around
-	 * the component by "inserting" it between the real parent and the field editor.
+	 * get some formatting on the accessibility options. It basically wraps a {@link Composite}
+	 * around the component by "inserting" it between the real parent and the field editor.
 	 *
 	 * @param parent
 	 *            the real {@link Composite}.

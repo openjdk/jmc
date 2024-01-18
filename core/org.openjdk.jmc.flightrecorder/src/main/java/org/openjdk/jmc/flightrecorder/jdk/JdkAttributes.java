@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -471,6 +471,9 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> IO_FILE_BYTES_READ = attr("bytesRead", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ),
 			Messages.getString(Messages.ATTR_IO_FILE_BYTES_READ_DESC), MEMORY);
+	public static final IAttribute<Boolean> IO_FILE_FORCE_METADATA = attr("metaData", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA),
+			Messages.getString(Messages.ATTR_IO_FILE_FORCE_METADATA_DESC), FLAG);
 	public static final IAttribute<Boolean> IO_FILE_READ_EOF = attr("endOfFile", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_IO_FILE_READ_EOF), Messages.getString(Messages.ATTR_IO_FILE_READ_EOF_DESC),
 			FLAG);
@@ -622,6 +625,8 @@ public final class JdkAttributes {
 	public static final IAttribute<Boolean> USE_DYNAMIC_GC_THREADS = attr("usesDynamicGCThreads", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS),
 			Messages.getString(Messages.ATTR_USE_DYNAMIC_GC_THREADS_DESC), FLAG);
+	public static final IAttribute<IQuantity> GC_TIME = attr("gcTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_TIME_RATIO = attr("gcTimeRatio", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_TIME_RATIO), Messages.getString(Messages.ATTR_GC_TIME_RATIO_DESC),
 			NUMBER);
@@ -713,6 +718,14 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> GC_CLASSSPACE_USED = attr("classSpace:used", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED),
 			Messages.getString(Messages.ATTR_GC_METASPACE_CLASS_USED_DESC), MEMORY);
+	public static final IAttribute<IQuantity> GC_PAUSE_TARGET = attr("pauseTarget", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_PAUSE_TARGET), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_REAL = attr("realTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_REAL), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_SYSTEM = attr("systemTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_SYSTEM), TIMESPAN);
+	public static final IAttribute<IQuantity> GC_TIME_USER = attr("userTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_GC_TIME_USER), TIMESPAN);
 	public static final IAttribute<IQuantity> GC_THRESHOLD = attr("gcThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_THRESHOLD), Messages.getString(Messages.ATTR_GC_THRESHOLD_DESC),
 			MEMORY);
@@ -757,9 +770,25 @@ public final class JdkAttributes {
 			PERCENTAGE);
 	public static final IAttribute<IQuantity> THREAD_USER_CPU_LOAD = Attribute.attr("user", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USER_LOAD), Messages.getString(Messages.ATTR_USER_LOAD_DESC), PERCENTAGE);
-	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.attr("thread", //$NON-NLS-1$
+
+	public static final IAttribute<IMCThread> JAVA_THREAD_POSTJDK9 = Attribute.attr("thread", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD);
+	public static final IAttribute<IMCThread> JAVA_THREAD_PREJDK9 = Attribute.attr("javalangthread", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD);
 
+	public static final IAttribute<IMCThread> JAVA_THREAD = Attribute.canonicalize(new Attribute<IMCThread>("(thread)", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_JAVA_THREAD), Messages.getString(Messages.ATTR_JAVA_THREAD_DESC), THREAD) { //$NON-NLS-2$
+		@Override
+		public <U> IMemberAccessor<IMCThread, U> customAccessor(IType<U> type) {
+			final IMemberAccessor<IMCThread, U> postJDK9Accessor = JAVA_THREAD_POSTJDK9.getAccessor(type);
+			final IMemberAccessor<IMCThread, U> preJDK9Accessor = JAVA_THREAD_PREJDK9.getAccessor(type);
+			return postJDK9Accessor == null ? preJDK9Accessor : postJDK9Accessor;
+		}
+	});
+
+	public static final IAttribute<String> INFLATION_REASON = attr("cause", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_INFLATION_REASON), Messages.getString(Messages.ATTR_INFLATION_REASON_DESC),
+			PLAIN_TEXT);
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);
@@ -1276,4 +1305,26 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CONSTANT_VALUE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
+
+	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = attr("totalFinalizersRun", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER);
+	public static final IAttribute<IMCType> FINALIZABLE_CLASS = attr("finalizableClass", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS),
+			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_DESC), CLASS);
+	public static final IAttribute<String> FINALIZABLE_CLASS_NAME = Attribute.canonicalize(
+			new Attribute<String>("finalizableClassName", Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_NAME_DESC), PLAIN_TEXT) {
+				@Override
+				public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+					final IMemberAccessor<IMCType, U> accessor = FINALIZABLE_CLASS.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<String, U>() {
+						@Override
+						public String getMember(U i) {
+							IMCType type = accessor.getMember(i);
+							return type == null ? null : type.getFullName();
+						}
+					};
+				}
+			});
 }

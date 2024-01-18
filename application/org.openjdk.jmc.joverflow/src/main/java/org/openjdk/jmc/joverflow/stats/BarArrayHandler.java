@@ -46,7 +46,7 @@ import org.openjdk.jmc.joverflow.util.MiscUtils;
 
 /**
  * Detects "vertical bar"-shaped multi-dimensional arrays and ArrayLists/Vectors: those where the
- * "vertical" (outer) dimension is considerably bigger than the "horizonal" one, i.e. which consist
+ * "vertical" (outer) dimension is considerably bigger than the "horizontal" one, i.e. which consist
  * of a large number of short sub-arrays. Since each sub-array has its own header plus a pointer to
  * it from the outer array, "vertical bar" arrays can create significant overhead
  */

@@ -221,7 +221,7 @@ abstract class AbstractArrayBasedCollectionDescriptor extends AbstractCollection
 	/**
 	 * Returns additional memory size for $Entry objects used by most maps. It is very important
 	 * that this method also marks these $Entry objects as setVisitedAsCollectionImpl(), so that
-	 * their size is not taken into account when calculating implementation-inlcusive size for
+	 * their size is not taken into account when calculating implementation-inclusive size for
 	 * classes in DetailedStatsCalculator.handleInstance().
 	 */
 	protected int getMapEntriesImplSize() {

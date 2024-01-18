@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -5625,10 +5625,20 @@
 			</arguments>
 		</metadata>
 		<metadata>
-			<mri.dataPath>FreePhysicalMemorySize</mri.dataPath>
+			<mri.dataPath>FreeMemorySize</mri.dataPath>
 			<mri.objectName>java.lang:type=OperatingSystem</mri.objectName>
 			<displayname>Free Physical Memory</displayname>
 			<description>The amount of free physical memory.</description>
+			<unitstring>memory:B</unitstring>
+			<arguments>
+				<color>#a0c0ff</color>
+			</arguments>
+		</metadata>
+		<metadata>
+			<mri.dataPath>FreePhysicalMemorySize</mri.dataPath>
+			<mri.objectName>java.lang:type=OperatingSystem</mri.objectName>
+			<displayname>Free Physical Memory (deprecated)</displayname>
+			<description>The amount of free physical memory - deprecated since JDK 14. Use FreeMemorySize instead.</description>
 			<unitstring>memory:B</unitstring>
 			<arguments>
 				<color>#a0c0ff</color>
@@ -5730,10 +5740,17 @@
 			<unitstring>percentage:</unitstring>
 		</metadata>
 		<metadata>
-			<mri.dataPath>TotalPhysicalMemorySize</mri.dataPath>
+			<mri.dataPath>TotalMemorySize</mri.dataPath>
 			<mri.objectName>java.lang:type=OperatingSystem</mri.objectName>
 			<displayname>Total Physical Memory</displayname>
 			<description>The total amount of physical memory.</description>
+			<unitstring>memory:B</unitstring>
+		</metadata>
+		<metadata>
+			<mri.dataPath>TotalPhysicalMemorySize</mri.dataPath>
+			<mri.objectName>java.lang:type=OperatingSystem</mri.objectName>
+			<displayname>Total Physical Memory (deprecated)</displayname>
+			<description>The total amount of physical memory - deprecated since JDK 14. Use TotalMemorySize.</description>
 			<unitstring>memory:B</unitstring>
 		</metadata>
 		<metadata>
@@ -5941,6 +5958,14 @@
 			<displayname>All Thread IDs</displayname>
 			<description>All live thread IDs.</description>
 			<unitstring/>
+			<persistent>false</persistent>
+		</metadata>
+		<metadata>
+			<mri.dataPath>CurrentThreadAllocatedBytes</mri.dataPath>
+			<mri.objectName>java.lang:type=Threading</mri.objectName>
+			<displayname>Current Thread Allocated Bytes</displayname>
+			<description>An approximation of the total amount of memory, in bytes, allocated in heap memory for the current thread.</description>
+			<unitstring>memory:B</unitstring>
 			<persistent>false</persistent>
 		</metadata>
 		<metadata>

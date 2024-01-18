@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -66,13 +66,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.XYChart;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
@@ -407,6 +407,8 @@ public class ChartCanvas extends Canvas {
 		}
 	}
 
+	private boolean isCtrlHeld;
+
 	class KeyNavigator implements KeyListener {
 
 		@Override
@@ -428,6 +430,20 @@ public class ChartCanvas extends Canvas {
 					redrawChart();
 					redrawChartText();
 					break;
+				case SWT.CTRL:
+					isCtrlHeld = true;
+					break;
+				case 'a':
+					if (isCtrlHeld) {
+						awtChart.selectAll(numItems, laneHeight);
+						if (selectionListener != null) {
+							selectionListener.run();
+						}
+						redrawChart();
+						redrawChartText();
+						break;
+					}
+					break;
 				case SWT.ARROW_RIGHT:
 					pan(10);
 					break;
@@ -448,9 +464,12 @@ public class ChartCanvas extends Canvas {
 
 		@Override
 		public void keyReleased(KeyEvent event) {
-			// Ignore
+			switch (event.keyCode) {
+			case SWT.CTRL:
+				isCtrlHeld = false;
+				break;
+			}
 		}
-
 	}
 
 	private class AntiAliasingListener implements IPropertyChangeListener {

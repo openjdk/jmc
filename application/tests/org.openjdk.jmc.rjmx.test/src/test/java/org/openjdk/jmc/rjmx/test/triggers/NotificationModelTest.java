@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,9 +44,9 @@ import org.junit.Test;
 
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.rjmx.subscription.IMRIMetadata;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.rjmx.subscription.MRI.Type;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadata;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
+import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 import org.openjdk.jmc.rjmx.test.RjmxTestCase;
 import org.openjdk.jmc.rjmx.test.triggers.NotificationActionCallback.NotificationActionCallbackReceiver;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;

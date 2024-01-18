@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,7 +34,6 @@ package org.openjdk.jmc.ui.security;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -44,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import org.openjdk.jmc.common.security.PersistentCredentials;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.wizards.IPerformFinishable;
 
@@ -58,7 +58,6 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 
 	private final boolean usePasswordVerification;
 	private final boolean warnForDataClear;
-	private static final int MIN_PASSWORD_LENGTH = 5;
 
 	private String password;
 
@@ -148,10 +147,8 @@ final class MasterPasswordWizardPage extends WizardPage implements IPerformFinis
 			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_PASSWORD_EMPTY_TEXT);
 			return;
 		}
-		if (passwordField.getText().length() < MIN_PASSWORD_LENGTH) {
-			setErrorMessage(
-					NLS.bind(Messages.MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_SHORTER_THAN_X_CHARACTERS_TEXT,
-							MIN_PASSWORD_LENGTH));
+		if (!PersistentCredentials.isPasswordValid(passwordField.getText())) {
+			setErrorMessage(Messages.MasterPasswordWizardPage_ERROR_MESSAGE_PASSWORD_VALIDATION_FAILED);
 			return;
 		}
 		if (usePasswordVerification) {

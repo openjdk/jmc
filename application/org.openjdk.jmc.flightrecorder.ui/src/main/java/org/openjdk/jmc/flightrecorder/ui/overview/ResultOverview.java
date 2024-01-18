@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -151,6 +151,30 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		}
 	}
 
+	class ShowIgnoreAction extends Action {
+		public ShowIgnoreAction(String text) {
+			super(text, IAction.AS_CHECK_BOX);
+			super.setImageDescriptor(ResultOverview.ICON_IGNORE);
+		}
+
+		@Override
+		public void run() {
+			report.setShowIgnore(this.isChecked());
+		}
+	}
+
+	class BrowserAction extends Action {
+		public BrowserAction(String text) {
+			super(text, IAction.AS_CHECK_BOX);
+			super.setImageDescriptor(ResultOverview.ICON_BROWSER);
+		}
+
+		@Override
+		public void run() {
+			browserAction.setChecked(true);
+		}
+	}
+
 	public static class ResultOverviewPageFactory implements IDataPageFactory {
 		@Override
 		public String getName(IState state) {
@@ -186,6 +210,8 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 			.getMCImageDescriptor(ImageConstants.ICON_OK);
 	public static final ImageDescriptor ICON_NA = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_NA);
+	public static final ImageDescriptor ICON_IGNORE = FlightRecorderUI.getDefault()
+			.getMCImageDescriptor(ImageConstants.ICON_IGNORE);
 
 	private static final ImageDescriptor ICON_OVERVIEW = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_OVERVIEW);
@@ -193,6 +219,8 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 			.getMCImageDescriptor(ImageConstants.ICON_TABLE);
 	private static final ImageDescriptor ICON_EXPORT = FlightRecorderUI.getDefault()
 			.getMCImageDescriptor(ImageConstants.ICON_DOWNLOAD_TIME_INTERVAL);
+	private static final ImageDescriptor ICON_BROWSER = FlightRecorderUI.getDefault()
+			.getMCImageDescriptor(ImageConstants.ICON_BROWSER);
 
 	private Form form;
 	private FormToolkit toolkit;
@@ -200,7 +228,9 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 	private IState loadedState;
 	private ExportAction exportAction;
 	private ShowOkAction showOkAction;
+	private ShowIgnoreAction showIgnoreAction;
 	private Separator separator;
+	private BrowserAction browserAction;
 
 	private boolean displayReport = !UIPlugin.getDefault().getAccessibilityMode();
 	private ResultReportUi report;
@@ -219,12 +249,18 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		showOkAction = new ShowOkAction(Messages.RULESPAGE_SHOW_OK_RESULTS_ACTION);
 		showOkAction.setId("showOk"); //$NON-NLS-1$
 		form.getToolBarManager().add(showOkAction);
+		showIgnoreAction = new ShowIgnoreAction(Messages.RULESPAGE_SHOW_IGNORE_RESULTS_ACTION);
+		showIgnoreAction.setId("showIgnore"); //$NON-NLS-1$
+		form.getToolBarManager().add(showIgnoreAction);
 		exportAction = new ExportAction(Messages.ResultOverview_EXPORT_ACTION, ICON_EXPORT, editor);
 		exportAction.setId("exportAction"); //$NON-NLS-1$
 		form.getToolBarManager().add(exportAction);
 		separator = new Separator();
 		separator.setId("separator"); //$NON-NLS-1$
 		form.getToolBarManager().add(separator);
+		browserAction = new BrowserAction(Messages.ResultOverview_BROWSER_ACTION);
+		browserAction.setId("browserAction");
+		form.getToolBarManager().add(browserAction);
 		reportAction = new DisplayModeAction(Messages.ResultOverview_DISPLAYMODE_REPORT, form, ICON_OVERVIEW, true);
 		tableAction = new DisplayModeAction(Messages.ResultOverview_DISPLAYMODE_TABLE, form, ICON_TABLE, false);
 		if (displayReport) {
@@ -243,12 +279,14 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 
 	private void setVisibleActions(boolean visible) {
 		form.getToolBarManager().find(showOkAction.getId()).setVisible(visible);
+		form.getToolBarManager().find(showIgnoreAction.getId()).setVisible(visible);
 		form.getToolBarManager().find(exportAction.getId()).setVisible(visible);
 		form.getToolBarManager().find(separator.getId()).setVisible(visible);
+		form.getToolBarManager().find(browserAction.getId()).setVisible(false);
 		form.getToolBarManager().update(true);
 	}
 
-	private volatile boolean isUpdated = false;
+	private volatile boolean isUpdated;
 
 	public void updateRule(IResult result) {
 		if (displayReport && report != null) {
@@ -276,6 +314,7 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 					report = null;
 				} else {
 					showOkAction.setChecked(report.getShowOk());
+					showIgnoreAction.setChecked(report.getShowIgnore());
 				}
 			} catch (SWTException | SWTError e) {
 				reportAction.setEnabled(false);
@@ -334,6 +373,21 @@ public class ResultOverview extends AbstractDataPage implements IPageUI {
 		if (report != null) {
 			report.saveTo(writableState);
 		}
+	}
+
+	/**
+	 * This method makes browser icon visible.
+	 */
+	public void enableBrowserAction() {
+		form.getToolBarManager().find(showOkAction.getId()).setVisible(false);
+		form.getToolBarManager().find(showIgnoreAction.getId()).setVisible(false);
+		form.getToolBarManager().find(exportAction.getId()).setVisible(false);
+		form.getToolBarManager().find(separator.getId()).setVisible(false);
+		form.getToolBarManager().find(browserAction.getId()).setVisible(true);
+		browserAction.setChecked(true);
+		reportAction.setChecked(false);
+		tableAction.setChecked(false);
+		form.getToolBarManager().update(true);
 	}
 
 }

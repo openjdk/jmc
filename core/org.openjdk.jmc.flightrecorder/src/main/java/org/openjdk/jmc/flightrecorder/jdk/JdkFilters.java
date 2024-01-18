@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -63,6 +63,7 @@ public final class JdkFilters {
 	public static final IItemFilter ENVIRONMENT_VARIABLE = ItemFilters.type(JdkTypeIDs.ENVIRONMENT_VARIABLE);
 	public static final IItemFilter FILE_READ = ItemFilters.type(JdkTypeIDs.FILE_READ);
 	public static final IItemFilter FILE_WRITE = ItemFilters.type(JdkTypeIDs.FILE_WRITE);
+	public static final IItemFilter FILE_FORCE = ItemFilters.type(JdkTypeIDs.FILE_FORCE);
 	public static final IItemFilter CODE_CACHE_FULL = ItemFilters.type(JdkTypeIDs.CODE_CACHE_FULL);
 	public static final IItemFilter CODE_CACHE_STATISTICS = ItemFilters.type(JdkTypeIDs.CODE_CACHE_STATISTICS);
 	public static final IItemFilter CODE_CACHE_CONFIGURATION = ItemFilters.type(JdkTypeIDs.CODE_CACHE_CONFIG);
@@ -99,6 +100,7 @@ public final class JdkFilters {
 	public static final IItemFilter CLASS_LOADER_EVENTS = ItemFilters.or(CLASS_LOAD, CLASS_UNLOAD, CLASS_DEFINE,
 			CLASS_LOADER_STATISTICS);
 	public static final IItemFilter MONITOR_ENTER = ItemFilters.type(JdkTypeIDs.MONITOR_ENTER);
+	public static final IItemFilter MONITOR_INFLATE = ItemFilters.type(JdkTypeIDs.MONITOR_INFLATE);
 	public static final IItemFilter FILE_OR_SOCKET_IO = ItemFilters.type(JdkTypeIDs.SOCKET_READ,
 			JdkTypeIDs.SOCKET_WRITE, JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE);
 	// NOTE: Are there more types to add (i.e. relevant types with duration)?
@@ -109,6 +111,8 @@ public final class JdkFilters {
 	public static final IItemFilter EXECUTION_SAMPLE = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE);
 	public static final IItemFilter CONTEXT_SWITCH_RATE = ItemFilters.type(JdkTypeIDs.CONTEXT_SWITCH_RATE);
 	public static final IItemFilter CPU_LOAD = ItemFilters.type(JdkTypeIDs.CPU_LOAD);
+	public static final IItemFilter GC_G1MMU = ItemFilters.type(JdkTypeIDs.GC_G1MMU);
+	public static final IItemFilter GC_CPU_TIME = ItemFilters.type(JdkTypeIDs.GC_CPU_TIME);
 	public static final IItemFilter GC_PAUSE = ItemFilters.type(JdkTypeIDs.GC_PAUSE);
 	public static final IItemFilter GC_PAUSE_PHASE = ItemFilters.type(JdkTypeIDs.GC_PAUSE_L1, JdkTypeIDs.GC_PAUSE_L2,
 			JdkTypeIDs.GC_PAUSE_L3, JdkTypeIDs.GC_PAUSE_L4);

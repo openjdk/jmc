@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -42,30 +42,25 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.graphview</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<properties>
-		<download.maven.plugin.version>1.6.7</download.maven.plugin.version>
 		<download-maven-plugin.phase>process-resources</download-maven-plugin.phase>
 		<download-maven-plugin.output>${project.basedir}/src/main/resources/jslibs</download-maven-plugin.output>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotless.config.path.js>${basedir}/../../configuration/ide/eclipse/formatting/formattingjs.xml</spotless.config.path.js>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.googlecode.maven-download-plugin</groupId>
 				<artifactId>download-maven-plugin</artifactId>
-				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>d3-v5-js</id>
+						<id>download-d3</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v5.min.js</url>
+							<url>https://d3js.org/d3.v7.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
@@ -73,13 +68,13 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>wasm</id>
+						<id>download-wasm</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@0.3.14/dist/index.js</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@1.14.1/dist/index.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
@@ -87,13 +82,13 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>d3-graphviz-js</id>
+						<id>download-graphviz</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/d3-graphviz@3.1.0/build/d3-graphviz.js</url>
+							<url>https://unpkg.com/d3-graphviz@4.1.1/build/d3-graphviz.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
@@ -101,13 +96,13 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>graphvizlib-wasm</id>
+						<id>download-graphvizlib-wasm</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@0.3.14/dist/graphvizlib.wasm</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@1.14.1/dist/graphvizlib.wasm</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>

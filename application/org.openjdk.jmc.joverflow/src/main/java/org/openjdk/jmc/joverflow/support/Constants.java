@@ -94,7 +94,7 @@ public interface Constants {
 	/**
 	 * We assume that objects in memory are aligned at the byte granularity below. The value may be
 	 * different if compressed references are used. However, it should be rare in practice - it
-	 * requires an explicit JVM otpion -XX:ObjectAlignmentInBytes=<n>, and it makes sense to use it
+	 * requires an explicit JVM option -XX:ObjectAlignmentInBytes=<n>, and it makes sense to use it
 	 * only to enable narrow pointers for heap sizes larger than ~32GB.
 	 */
 	static final int DEFAULT_OBJECT_ALIGNMENT_IN_MEMORY = 8;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,7 +47,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -57,6 +56,10 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment.OSType;
+import org.openjdk.jmc.common.xydata.DefaultXYData;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.AxisContentType;
 import org.openjdk.jmc.greychart.TickDensity;
 import org.openjdk.jmc.greychart.TickFormatter;
@@ -77,10 +80,6 @@ import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.AccessibilityConstants;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.accessibility.MCAccessibleListener;
-import org.openjdk.jmc.ui.common.util.Environment;
-import org.openjdk.jmc.ui.common.util.Environment.OSType;
-import org.openjdk.jmc.ui.common.xydata.DefaultXYData;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 /**
  * The GUI for an attribute chart
@@ -185,22 +184,7 @@ public class ChartComposite extends SelectionCanvas {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
 			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
 			m_chart.setXAxis(m_chart.getXAxis());
-			if (IMMEDIATE_DRAWING && isVisible() && !getClientArea().isEmpty()) {
-				GC gc = new GC(this);
-				paint(gc);
-				if (isFocusControl()) {
-					FocusTracker.drawFocusOn(this, gc);
-				}
-				gc.dispose();
-			} else {
-				redraw();
-				/*
-				 * Explicit calls to update() should be avoided unless absolutely necessary. They
-				 * may have a negative performance impact and may cause issues on Mac OS X Cocoa
-				 * (SWT 3.6). If it is required here, there must be a justifying comment.
-				 */
-				// update();
-			}
+			redraw();
 		}
 	}
 

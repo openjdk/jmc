@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,8 +37,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,14 +51,14 @@ import java.util.logging.Level;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.util.StringToolkit;
+import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.common.services.IAttributeStorage;
+import org.openjdk.jmc.rjmx.common.services.MRIDataSeries;
+import org.openjdk.jmc.rjmx.common.services.internal.IAttributeStorageService;
+import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
+import org.openjdk.jmc.rjmx.common.subscription.MRI;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
-import org.openjdk.jmc.rjmx.services.IAttributeStorage;
-import org.openjdk.jmc.rjmx.services.IAttributeStorageService;
-import org.openjdk.jmc.rjmx.services.MRIDataSeries;
-import org.openjdk.jmc.rjmx.subscription.IMRIService;
-import org.openjdk.jmc.rjmx.subscription.MRI;
-import org.openjdk.jmc.ui.common.xydata.ITimestampedData;
 
 public class PersistenceReader implements IMRIService, IAttributeStorageService {
 
@@ -251,10 +251,7 @@ public class PersistenceReader implements IMRIService, IAttributeStorageService 
 		}
 		MRI mri;
 		try {
-			mri = MRI.createFromQualifiedName(URLDecoder.decode(attributeDir.getName(), "UTF-8")); //$NON-NLS-1$
-		} catch (UnsupportedEncodingException e) {
-			// This should never happen
-			throw new RuntimeException(e);
+			mri = MRI.createFromQualifiedName(URLDecoder.decode(attributeDir.getName(), StandardCharsets.UTF_8));
 		} catch (IllegalArgumentException e) {
 			// Log warning and ignore directory
 			RJMXPlugin.getDefault().getLogger().log(Level.WARNING,

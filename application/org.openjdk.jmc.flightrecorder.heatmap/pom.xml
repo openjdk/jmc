@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -42,30 +42,25 @@
 	</parent>
 	<artifactId>org.openjdk.jmc.flightrecorder.heatmap</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<properties>
-		<download.maven.plugin.version>1.4.2</download.maven.plugin.version>
 		<download-maven-plugin.phase>process-resources</download-maven-plugin.phase>
 		<download-maven-plugin.output>${project.basedir}/src/main/resources/jslibs</download-maven-plugin.output>
-		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
-		<spotless.config.path.js>${basedir}/../../configuration/ide/eclipse/formatting/formattingjs.xml</spotless.config.path.js>
+		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.googlecode.maven-download-plugin</groupId>
 				<artifactId>download-maven-plugin</artifactId>
-				<version>${download.maven.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>d3-v6-js</id>
+						<id>download-d3</id>
 						<phase>${download-maven-plugin.phase}</phase>
 						<goals>
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://d3js.org/d3.v6.min.js</url>
+							<url>https://d3js.org/d3.v7.min.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>

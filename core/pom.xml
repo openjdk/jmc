@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--   
-   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
-   
+<!--
+   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-   
-   The contents of this file are subject to the terms of either the Universal Permissive License 
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
    v 1.0 as shown at http://oss.oracle.com/licenses/upl
-   
+
    or the following license:
-   
+
    Redistribution and use in source and binary forms, with or without modification, are permitted
    provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice, this list of conditions
    and the following disclaimer.
-   
+
    2. Redistributions in binary form must reproduce the above copyright notice, this list of
    conditions and the following disclaimer in the documentation and/or other materials provided with
    the distribution.
-   
+
    3. Neither the name of the copyright holder nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -37,7 +37,7 @@
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>missioncontrol.core</artifactId>
 	<version>${revision}${changelist}</version>
-        <name>JDK Mission Control Core</name>
+	<name>JDK Mission Control Core</name>
 	<packaging>pom</packaging>
 	<description>JDK Mission Control is an advanced set of tools that enables
 		efficient and detailed analysis of the extensive of data collected by
@@ -47,35 +47,45 @@
 	</description>
 	<inceptionYear>${project.inceptionYear}</inceptionYear>
 	<properties>
+		<!-- Config -->
+		<revision>9.0.0</revision>
+		<changelist>-SNAPSHOT</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.inceptionYear>2018</project.inceptionYear>
-		<revision>8.2.0</revision>
-		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<manifest-location>META-INF</manifest-location>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<maven.jar.version>3.2.0</maven.jar.version>
-		<maven.bundle.version>5.1.1</maven.bundle.version>
-		<spotless.version>2.14.0</spotless.version>
-		<maven.directory.version>0.3.1</maven.directory.version>
-		<maven.resources.version>3.2.0</maven.resources.version>
-		<maven.source.version>3.2.1</maven.source.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<nexus.staging.version>1.6.8</nexus.staging.version>
-		<maven.gpg.version>1.6</maven.gpg.version>
-		<build.helper.maven.version>3.2.0</build.helper.maven.version>
-		<spotless.config.path>${basedir}/../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
+		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<!-- Plugin Versions -->
+		<maven.toolchains.version>3.1.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
+		<spotless.version>2.34.0</spotless.version>
+		<maven.directory.version>1.0</maven.directory.version>
+		<maven.resources.version>3.3.1</maven.resources.version>
+		<maven.flatten.version>1.5.0</maven.flatten.version>
+		<maven.compiler.version>3.11.0</maven.compiler.version>
+		<maven.antrun.version>3.1.0</maven.antrun.version>
+		<maven.surefire.version>3.1.0</maven.surefire.version>
+		<maven.jar.version>3.3.0</maven.jar.version>
+		<maven.source.version>3.3.0</maven.source.version>
+		<maven.javadoc.version>3.5.0</maven.javadoc.version>
+		<maven.install.version>3.1.1</maven.install.version>
+		<maven.deploy.version>3.1.1</maven.deploy.version>
+		<maven.gpg.version>3.1.0</maven.gpg.version>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
+		<!-- Versions -->
+		<junit.version>4.13.2</junit.version>
 	</properties>
-	<url>http://jdk.java.net/jmc</url>
+	<url>https://jdk.java.net/jmc</url>
 	<licenses>
 		<license>
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -84,14 +94,14 @@
 	</organization>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>https://bugs.openjdk.java.net/projects/JMC/issues</url>
+		<url>https://bugs.openjdk.org/projects/JMC/issues</url>
 	</issueManagement>
 	<mailingLists>
 		<mailingList>
 			<name>jmc dev</name>
-			<subscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</subscribe>
-			<unsubscribe>http://mail.openjdk.java.net/mailman/listinfo/jmc-dev</unsubscribe>
-			<archive>http://mail.openjdk.java.net/pipermail/jmc-dev/</archive>
+			<subscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</subscribe>
+			<unsubscribe>https://mail.openjdk.org/mailman/listinfo/jmc-dev</unsubscribe>
+			<archive>https://mail.openjdk.org/pipermail/jmc-dev/</archive>
 		</mailingList>
 	</mailingLists>
 	<scm>
@@ -104,18 +114,21 @@
 		<developer>
 			<id>jmc</id>
 			<name>JDK Mission Control</name>
-			<email>jmc-dev@openjdk.java.net</email>
+			<email>jmc-dev@openjdk.org</email>
 			<url>https://www.oracle.com/java/technologies/jdk-mission-control.html</url>
 		</developer>
 	</developers>
 	<modules>
 		<module>org.openjdk.jmc.common</module>
 		<module>org.openjdk.jmc.flightrecorder</module>
+		<module>org.openjdk.jmc.flightrecorder.configuration</module>
 		<module>org.openjdk.jmc.flightrecorder.rules</module>
 		<module>org.openjdk.jmc.flightrecorder.rules.jdk</module>
 		<module>org.openjdk.jmc.flightrecorder.serializers</module>
 		<module>org.openjdk.jmc.flightrecorder.writer</module>
 		<module>org.openjdk.jmc.jdp</module>
+		<module>org.openjdk.jmc.rjmx.common</module>
+		<module>org.openjdk.jmc.testlib</module>
 		<module>tests</module>
 	</modules>
 	<profiles>
@@ -136,7 +149,15 @@
 			<url>${snapshot.repo}</url>
 		</snapshotRepository>
 	</distributionManagement>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -146,29 +167,8 @@
 					<version>${maven.jar.version}</version>
 					<configuration>
 						<archive>
-							<manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+							<manifestFile>${project.build.directory}/${manifest-location}/MANIFEST.MF</manifestFile>
 						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${maven.bundle.version}</version>
-					<configuration>
-						<manifestLocation>${manifest-location}</manifestLocation>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>com.diffplug.spotless</groupId>
-					<artifactId>spotless-maven-plugin</artifactId>
-					<version>${spotless.version}</version>
-					<configuration>
-						<java>
-							<eclipse>
-								<file>${spotless.config.path}</file>
-								<version>4.8.0</version>
-							</eclipse>
-						</java>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -177,7 +177,7 @@
 					<version>${maven.resources.version}</version>
 					<executions>
 						<execution>
-							<id>copy-resources</id>
+							<id>copy-license</id>
 							<phase>process-resources</phase>
 							<goals>
 								<goal>copy-resources</goal>
@@ -186,21 +186,130 @@
 								<outputDirectory>${project.build.directory}</outputDirectory>
 								<resources>
 									<resource>
-										<targetPath>${basedir}/target/classes</targetPath>
+										<targetPath>${project.basedir}/target/classes</targetPath>
 										<directory>${rootDir}/license</directory>
 									</resource>
 									<resource>
-										<targetPath>${basedir}/target/apidocs</targetPath>
+										<targetPath>${project.basedir}/target/apidocs</targetPath>
 										<directory>${rootDir}/license</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-manifest</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<resources>
+									<resource>
+										<targetPath>${project.build.directory}/${manifest-location}</targetPath>
+										<directory>${project.basedir}/${manifest-location}</directory>
 									</resource>
 								</resources>
 							</configuration>
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven.deploy.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-checkstyle-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>check</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>${maven.toolchains.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>${maven.compiler.source}</version>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+						<eclipse>
+							<file>${jmc.config.path}/ide/eclipse/formatting/formatting.xml</file>
+							<version>4.8.0</version>
+						</eclipse>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
 				<artifactId>directory-maven-plugin</artifactId>
@@ -208,10 +317,10 @@
 				<executions>
 					<execution>
 						<id>directories</id>
+						<phase>initialize</phase>
 						<goals>
 							<goal>highest-basedir</goal>
 						</goals>
-						<phase>initialize</phase>
 						<configuration>
 							<property>rootDir</property>
 						</configuration>
@@ -219,20 +328,64 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build.helper.maven.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.version}</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>check for manifest</id>
+						<phase>compile</phase>
 						<goals>
-							<goal>add-source</goal>
+							<goal>run</goal>
 						</goals>
 						<configuration>
-							<sources>
-								<source>${rootDir}/license</source>
-							</sources>
+							<exportAntProperties>true</exportAntProperties>
+							<target name="check-manifest">
+								<available file="${project.build.directory}/${manifest-location}" property="manifest.present"/>
+							</target>
 						</configuration>
+					</execution>
+					<execution>
+						<id>fix qualifier</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="fix-qualifier" if="${manifest.present}">
+								<tstamp>
+									<format property="buildtimestamp" pattern="yyyyMMddHHmm"/>
+								</tstamp>
+								<condition property="qualifier.value" value=".${buildtimestamp}" else="">
+									<and>
+										<isset property="changelist"/>
+										<equals arg1="${changelist}" arg2="-SNAPSHOT"/>
+									</and>
+								</condition>
+								<replace token=".qualifier" value="${qualifier.value}" dir="${project.build.directory}/${manifest-location}"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.version}</version>
+				<configuration>
+					<configLocation>${jmc.config.path}/checkstyle/checkstyle.xml</configLocation>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<inputEncoding>UTF-8</inputEncoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+				</configuration>
+				<executions>
+					<execution>
+						<id>check</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -262,7 +415,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<source>8</source>
+					<release>${maven.compiler.source}</release>
+					<sourcepath>src/main/java</sourcepath>
 					<noindex>true</noindex>
 					<additionalOptions>
 						<additionalOption>-Xdoclint:all</additionalOption>
@@ -277,6 +431,11 @@
 						</p>]]>
 					</bottom>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>${maven.install.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -300,13 +459,9 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>${maven.flatten.version}</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>

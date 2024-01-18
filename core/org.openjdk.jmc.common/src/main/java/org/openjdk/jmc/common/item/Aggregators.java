@@ -140,8 +140,15 @@ public class Aggregators {
 		double sum = 0.0;
 		IUnit unit = null;
 
+		Predicate predicate;
+
 		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor) {
 			super(accessor);
+		}
+
+		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate predicate) {
+			this(accessor);
+			this.predicate = predicate;
 		}
 
 		@Override
@@ -150,7 +157,10 @@ public class Aggregators {
 			if (unit == null) {
 				unit = fieldValue.getUnit();
 			}
-			sum += fieldValue.doubleValueIn(unit);
+			double value = fieldValue.doubleValueIn(unit);
+			if ((predicate != null && predicate.test(value)) || (predicate == null)) {
+				sum += value;
+			}
 		}
 
 		@Override
@@ -743,6 +753,31 @@ public class Aggregators {
 		ContentType<IQuantity> contentType = attribute.getContentType();
 		if (contentType instanceof LinearKindOfQuantity) {
 			return new Sum(name, description, (LinearKindOfQuantity) contentType) {
+
+				@Override
+				protected IMemberAccessor<IQuantity, IItem> doGetAccessor(IType<IItem> type) {
+					if (type.getIdentifier().equals(typeId)) {
+						return attribute.getAccessor(type);
+					}
+					return null;
+				}
+
+			};
+		}
+		throw new IllegalArgumentException("Can only use LinearKindOfQuantity"); //$NON-NLS-1$
+	}
+
+	public static IAggregator<IQuantity, ?> sum(
+		String name, String description, final String typeId, final IAttribute<IQuantity> attribute,
+		Predicate<Double> predicate) {
+		ContentType<IQuantity> contentType = attribute.getContentType();
+		if (contentType instanceof LinearKindOfQuantity) {
+			return new Sum(name, description, (LinearKindOfQuantity) contentType) {
+
+				@Override
+				public SumConsumer newItemConsumer(IType<IItem> type) {
+					return new SumConsumer(getAccessor(type), predicate);
+				}
 
 				@Override
 				protected IMemberAccessor<IQuantity, IItem> doGetAccessor(IType<IItem> type) {

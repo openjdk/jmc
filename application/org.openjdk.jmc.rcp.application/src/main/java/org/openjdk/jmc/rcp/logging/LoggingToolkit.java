@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -46,7 +47,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Platform;
 
 import org.openjdk.jmc.common.io.IOToolkit;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.common.util.Environment;
 
 /**
  * Class for handling the java.util.logging subsystem.
@@ -153,7 +154,7 @@ public final class LoggingToolkit {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			props.store(baos, ""); //$NON-NLS-1$
 			String newProps = baos.toString();
-			return new ByteArrayInputStream(newProps.getBytes("UTF-8")); //$NON-NLS-1$
+			return new ByteArrayInputStream(newProps.getBytes(StandardCharsets.UTF_8));
 		}
 	}
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -37,7 +37,7 @@
       version="2.0.0.qualifier"
       provider-name="%provider"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="8.2.0.qualifier">
+      license-feature-version="9.0.0.qualifier">
 
    <description url="%descriptionUrl">
       %description
@@ -52,7 +52,6 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.openjdk.jmc.pde" match="equivalent"/>
       <import plugin="org.eclipse.pde.core"/>
       <import feature="org.openjdk.jmc.feature.console" match="equivalent"/>
    </requires>

@@ -81,7 +81,7 @@ public class DefaultSignalGenerator implements SignalGenerator {
 	 * @param startValue
 	 *            the startvalue
 	 * @param startTime
-	 *            the start time. currentTimeMilis is usually a good one.
+	 *            the start time. currentTimeMillis is usually a good one.
 	 */
 	public DefaultSignalGenerator(int type, long period, double min, double max, double startValue, long startTime) {
 		m_type = type;

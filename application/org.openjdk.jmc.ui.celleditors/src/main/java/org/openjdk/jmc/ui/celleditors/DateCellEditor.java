@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,8 +39,6 @@ import java.util.Date;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
-
-import org.openjdk.jmc.ui.celleditors.Messages;
 
 public class DateCellEditor extends ParsingCellEditor {
 

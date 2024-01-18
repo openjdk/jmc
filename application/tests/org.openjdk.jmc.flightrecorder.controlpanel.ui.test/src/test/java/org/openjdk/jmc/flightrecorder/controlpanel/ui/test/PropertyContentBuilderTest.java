@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,10 +52,12 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.openjdk.jmc.common.util.StringToolkit;
+import org.openjdk.jmc.common.version.JavaVersionSupport;
 import org.openjdk.jmc.flightrecorder.configuration.ConfigurationToolkit;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
+import org.openjdk.jmc.flightrecorder.configuration.events.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.configuration.events.IEventTypeID;
 import org.openjdk.jmc.flightrecorder.configuration.events.SchemaVersion;
-import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfiguration;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.EventConfigurationModel;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.model.test.JfrControlTestCase;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.EventConfigurationPart;
@@ -65,8 +68,8 @@ import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.Pro
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContainer.EventNode;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContainer.FolderNode;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
 import org.openjdk.jmc.flightrecorder.controlpanel.ui.recordingconfiguration.PropertyContentBuilder;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
 
 @SuppressWarnings("nls")
 public class PropertyContentBuilderTest extends JfrControlTestCase {
@@ -87,7 +90,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertNodes(
 				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
 						"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"),
-				propertyRoots, "root");
+				removeUnsupportedRootNodes(propertyRoots), "root");
 	}
 
 	@Test
@@ -102,7 +105,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		case V2:
 			assertNodes(Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH",
 					"Operating System", "IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH",
-					"org", "IN_CONFIGURATION"), propertyRoots, "root");
+					"org", "IN_CONFIGURATION"), removeUnsupportedRootNodes(propertyRoots), "root");
 			break;
 		}
 	}
@@ -113,7 +116,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertNodes(
 				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
 						"IN_BOTH", "Java Development Kit", "IN_SERVER", "Flight Recorder", "IN_SERVER"),
-				propertyRoots, "root");
+				removeUnsupportedRootNodes(propertyRoots), "root");
 	}
 
 	@Test
@@ -122,7 +125,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertNodes(
 				Arrays.asList("Java Application", "IN_BOTH", "Java Virtual Machine", "IN_BOTH", "Operating System",
 						"IN_BOTH", "Flight Recorder", "IN_BOTH", "Java Development Kit", "IN_BOTH"),
-				propertyRoots, "root");
+				removeUnsupportedRootNodes(propertyRoots), "root");
 	}
 
 	@Test
@@ -146,7 +149,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 			break;
 		}
 
-		// FIXME: Should we include extraTestOption and enabledButWrongForTest here, with either IN_CONFIGURATION style, or some new disabled/error style?
+		// FIXME: Should we include extraTestOption and enabledButWrongForTest here,
+		// with either IN_CONFIGURATION style, or some new disabled/error style?
 		EventNode threadAllocation = javaStatistics.getEvent(threadAllocationID, PathElementKind.IN_BOTH);
 		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption", "IN_CONFIGURATION"
 
@@ -184,7 +188,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 			break;
 		}
 
-		// FIXME: Should we include extraTestOption and enabledButWrongForTest here, with either IN_CONFIGURATION style, or some new disabled/error style?
+		// FIXME: Should we include extraTestOption and enabledButWrongForTest here,
+		// with either IN_CONFIGURATION style, or some new disabled/error style?
 		EventNode threadAllocation = javaStatistics.getEvent(threadAllocationID, PathElementKind.IN_BOTH);
 		assertOptions(threadAllocation, Arrays.asList("Enabled", "IN_BOTH", "Period", "IN_BOTH")); // "extraTestOption", "IN_CONFIGURATION"
 
@@ -241,8 +246,13 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertEquals("Expected first folder node to be ", "Java Application", javaApplicationNode.getName());
 		Collection<PropertyKey> optionKeys = EventConfigurationPart.findProperties(javaApplicationNode).keySet();
 		List<String> props = optionKeys.stream().map(p -> p.getLabel()).collect(Collectors.toList());
+		String[] expected = new String[] {"Enabled", "Period", "Stack Trace", "Threshold"};
+		if (ConnectionToolkit.isJavaVersionAboveOrEqual(getConnectionHandle(), JavaVersionSupport.JDK_16)) {
+			// probably related to https://bugs.openjdk.org/browse/JDK-8257602
+			expected = new String[] {"Enabled", "Event Emission Throttle", "Period", "Stack Trace", "Threshold"};
+		}
 		assertArrayEquals("Options from the " + javaApplicationNode.getName() + " sub tree does not match expected",
-				new String[] {"Enabled", "Period", "Stack Trace", "Threshold"}, props.toArray());
+				expected, props.toArray());
 	}
 
 	@Test
@@ -287,7 +297,8 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 				properties.stream().flatMap(s -> s.stream()).collect(Collectors.toList()));
 	}
 
-	// TODO: Add more tests: Other categories, labels, descriptions, option label and descriptions, content types.
+	// TODO: Add more tests: Other categories, labels, descriptions, option label
+	// and descriptions, content types.
 
 	// TODO: Test the offline cases as well?
 
@@ -318,6 +329,18 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertNodes(expected, event.getChildren(), event.getName());
 	}
 
+	private <T extends PathElement> Collection<T> removeUnsupportedRootNodes(Collection<T> actualNodes) {
+		List<T> res = new ArrayList<T>();
+		for (T pathElement : actualNodes) {
+			if (!pathElement.getName().equals("jdk")) {
+				// jdk named root nodes are related to nodes that are not supported in newer
+				// JDKs like jdk.SafepointWaitBlocked (removed in JDK 13)
+				res.add(pathElement);
+			}
+		}
+		return res;
+	}
+
 	private void assertNodes(
 		List<String> expected, Collection<? extends PathElement> actualNodes, String nodeIdentifier) {
 		assertNodes("Option tree nodes for " + nodeIdentifier + " did not match the expected", expected, actualNodes);
@@ -335,7 +358,7 @@ public class PropertyContentBuilderTest extends JfrControlTestCase {
 		assertTrue(
 				"Node names differ from expected: " + StringToolkit.join(actualNodesNames, ",") + " != "
 						+ StringToolkit.join(expectedNodesNames, ","),
-				actualNodesNames.containsAll(expectedNodesNames) && expectedNodesNames.containsAll(actualNodesNames));
+				actualNodesNames.containsAll(expectedNodesNames));
 		for (PathElement pathElement : actualNodes) {
 			String nodeName = pathElement.getName();
 			assertEquals("Wrong path element kind for '" + nodeName + "',", expectedMap.get(nodeName),

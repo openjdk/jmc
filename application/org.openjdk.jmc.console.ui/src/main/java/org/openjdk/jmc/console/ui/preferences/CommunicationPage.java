@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,14 +51,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-
+import org.openjdk.jmc.common.security.PersistentCredentials;
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.console.ui.ConsolePlugin;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.preferences.PreferencesKeys;
-import org.openjdk.jmc.ui.common.security.PersistentCredentials;
-import org.openjdk.jmc.ui.common.security.SecurityException;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.misc.IntFieldEditor;
 import org.openjdk.jmc.ui.preferences.LongQuantityFieldEditor;
 

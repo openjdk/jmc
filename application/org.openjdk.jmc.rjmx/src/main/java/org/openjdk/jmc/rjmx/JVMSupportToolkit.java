@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,15 +32,14 @@
  */
 package org.openjdk.jmc.rjmx;
 
-import javax.management.MBeanServerConnection;
-
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.common.version.JavaVersionSupport;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.internal.ServerToolkit;
 import org.openjdk.jmc.rjmx.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.services.internal.HotspotManagementToolkit;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
 
 /**
  * Checks the JVM capabilities of a connection.
@@ -66,7 +65,7 @@ public final class JVMSupportToolkit {
 		if (ConnectionToolkit.isJRockit(connection)) {
 			title = Messages.JVMSupport_TITLE_JROCKIT_NOT_SUPPORTED;
 			message = Messages.JVMSupport_MESSAGE_JROCKIT_NOT_SUPPORTED;
-		} else if (!ConnectionToolkit.isHotSpot(connection)) {
+		} else if (!ConnectionToolkit.isHotSpot(connection) && !ConnectionToolkit.isSubstrateVM(connection)) {
 			title = Messages.JVMSupport_TITLE_UNKNOWN_JVM;
 			message = Messages.JVMSupport_MESSAGE_UNKNOWN_JVM;
 		} else if (!ConnectionToolkit.isJavaVersionAboveOrEqual(connection,
@@ -82,54 +81,6 @@ public final class JVMSupportToolkit {
 			return returnInfo;
 		}
 		return new String[0];
-	}
-
-	/**
-	 * Checks if Flight Recorder is available for use
-	 * 
-	 * @param connection
-	 * @return If it is an Oracle JVM or there is a FlightRecorder VM option, then return true.
-	 *         Otherwise, return false. This is used for verifying JDK 8 JVMs that are not built
-	 *         with JFR enabled, e.g., OpenJDK 8
-	 */
-	public static boolean hasFlightRecorder(IConnectionHandle connection) {
-		if (ConnectionToolkit.isOracle(connection)) {
-			return true;
-		}
-		MBeanServerConnection server = connection.getServiceOrNull(MBeanServerConnection.class);
-		try {
-			HotspotManagementToolkit.getVMOption(server, "FlightRecorder");
-			return true;
-		} catch (Exception e) { // RuntimeMBeanException thrown if FlightRecorder is not present
-			return false;
-		}
-	}
-
-	/**
-	 * Checks if Flight Recorder is disabled.
-	 *
-	 * @param connection
-	 *            the connection to check
-	 * @param explicitFlag
-	 *            If the flag has to be explicitly disabled on the command line with
-	 *            -XX:-FlightRecorder
-	 * @return If explicitFlag is true, then returns true only if Flight Recorder is explicitly
-	 *         disabled on the command line. If explicitFlag is false, then returns true if Flight
-	 *         Recorder is currently not enabled.
-	 */
-	public static boolean isFlightRecorderDisabled(IConnectionHandle connection, boolean explicitFlag) {
-		try {
-			MBeanServerConnection server = connection.getServiceOrThrow(MBeanServerConnection.class);
-			boolean disabled = !Boolean
-					.parseBoolean(HotspotManagementToolkit.getVMOption(server, "FlightRecorder").toString()); //$NON-NLS-1$
-			if (explicitFlag) {
-				return (disabled && HotspotManagementToolkit.isVMOptionExplicit(server, "FlightRecorder")); //$NON-NLS-1$
-			} else {
-				return disabled;
-			}
-		} catch (Exception e) {
-			return false;
-		}
 	}
 
 	/**
@@ -151,7 +102,7 @@ public final class JVMSupportToolkit {
 		if (!ConnectionToolkit.isJavaVersionAboveOrEqual(handle, JavaVersionSupport.JFR_ENGINE_SUPPORTED)) {
 			return getJfrOldHotSpotNotSupported(shortMessage);
 		}
-		if (isFlightRecorderDisabled(handle, true)) {
+		if (ConnectionToolkit.isFlightRecorderDisabled(handle, true)) {
 			return getJfrDisabled(shortMessage);
 		}
 		return getJfrNotEnabled(shortMessage);
@@ -177,6 +128,9 @@ public final class JVMSupportToolkit {
 				return getJfrJRockitNotSupported(shortMessage);
 			}
 			if (jvmInfo.getJvmType() == JVMType.UNKNOWN) {
+				return null;
+			}
+			if (jvmInfo.getJvmType() == JVMType.SUBSTRATE) {
 				return null;
 			}
 			if (jvmInfo.getJvmType() != JVMType.HOTSPOT) {

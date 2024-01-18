@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,7 +44,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import org.openjdk.jmc.common.util.MemberAccessorToolkit;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
@@ -65,8 +65,7 @@ public class TableInformationSectionPart extends MCSectionPart {
 		super(parent, toolkit, Messages.SECTION_SERVER_INFORMATION_TITLE);
 
 		Composite body = createSectionBody(MCLayoutFactory.createMarginFreeFormPageLayout());
-		Table table = toolkit.createTable(body,
-				SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL);
+		Table table = toolkit.createTable(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		table.setLayoutData(MCLayoutFactory.createFormPageLayoutData());
 		TableViewer viewer = new TableViewer(table);
 		viewer.setContentProvider(new TreeStructureContentProvider());
@@ -81,6 +80,7 @@ public class TableInformationSectionPart extends MCSectionPart {
 		ColumnMenusFactory.addDefaultMenus(columnManager, MCContextMenuManager.create(table));
 
 		viewer.setInput(ServerInformationModelBuilder.build(connection));
+		columnManager.packColumns();
 	}
 
 	public void saveState(IMemento state) {

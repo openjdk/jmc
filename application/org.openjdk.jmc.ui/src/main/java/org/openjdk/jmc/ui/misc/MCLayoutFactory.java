@@ -136,14 +136,14 @@ public class MCLayoutFactory {
 	 * @return
 	 */
 	public static Object createFormPageLayoutData(
-		int widthHint, int heightHint, int horizontalSpan, int vererticalSpan, boolean grabExcessiveHorizontal,
+		int widthHint, int heightHint, int horizontalSpan, int verticalSpan, boolean grabExcessiveHorizontal,
 		boolean grabExcessiveVertical) {
 		GridData layoutData = (GridData) createFormPageLayoutData(widthHint, heightHint, grabExcessiveHorizontal,
 				grabExcessiveVertical);
 		layoutData.widthHint = widthHint;
 		layoutData.heightHint = heightHint;
 		layoutData.horizontalSpan = horizontalSpan;
-		layoutData.verticalSpan = vererticalSpan;
+		layoutData.verticalSpan = verticalSpan;
 		return layoutData;
 	}
 
@@ -171,8 +171,8 @@ public class MCLayoutFactory {
 	/**
 	 * Factory method for creating layout data for a form page
 	 *
-	 * @param horisontalAlignment
-	 *            horisontal alignment
+	 * @param horizontalAlignment
+	 *            horizontal alignment
 	 * @param verticalAlignment
 	 *            vertical alignment
 	 * @param widthHint
@@ -182,8 +182,8 @@ public class MCLayoutFactory {
 	 * @return
 	 */
 	public static Object createFormPageLayoutData(
-		int horisontalAlignment, int verticalAlignment, int widthHint, int heightHint) {
-		GridData layoutData = new GridData(horisontalAlignment, verticalAlignment, false, false);
+		int horizontalAlignment, int verticalAlignment, int widthHint, int heightHint) {
+		GridData layoutData = new GridData(horizontalAlignment, verticalAlignment, false, false);
 		layoutData.widthHint = widthHint;
 		layoutData.heightHint = heightHint;
 		return layoutData;

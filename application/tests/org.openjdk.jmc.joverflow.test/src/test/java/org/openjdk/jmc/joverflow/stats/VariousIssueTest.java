@@ -231,7 +231,7 @@ public class VariousIssueTest {
 	}
 
 	/**
-	 * Relies on ConcurrentHashMap (CHM) implementaiton in JDK6. From JDK7 update ?, some CHM
+	 * Relies on ConcurrentHashMap (CHM) implementation in JDK6. From JDK7 update ?, some CHM
 	 * substructures are allocated lazily, so the code below will need to be changed.
 	 */
 	private int getExpectedEmptyCHMOverhead(int numCHMs, int chmCapacity)

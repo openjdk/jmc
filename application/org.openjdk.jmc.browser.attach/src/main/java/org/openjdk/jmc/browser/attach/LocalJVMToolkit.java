@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,13 +32,15 @@
  */
 package org.openjdk.jmc.browser.attach;
 
-import static org.openjdk.jmc.ui.common.jvm.Connectable.ATTACHABLE;
-import static org.openjdk.jmc.ui.common.jvm.Connectable.MGMNT_AGENT_STARTED;
-import static org.openjdk.jmc.ui.common.jvm.Connectable.NO;
+import static org.openjdk.jmc.common.jvm.Connectable.ATTACHABLE;
+import static org.openjdk.jmc.common.jvm.Connectable.MGMNT_AGENT_STARTED;
+import static org.openjdk.jmc.common.jvm.Connectable.NO;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.State;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,14 +64,14 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.openjdk.jmc.attach.AttachToolkit;
 import org.openjdk.jmc.browser.attach.internal.ExecuteTunnler;
 import org.openjdk.jmc.browser.attach.preferences.PreferenceConstants;
+import org.openjdk.jmc.common.jvm.Connectable;
+import org.openjdk.jmc.common.jvm.JVMArch;
+import org.openjdk.jmc.common.jvm.JVMDescriptor;
+import org.openjdk.jmc.common.jvm.JVMType;
+import org.openjdk.jmc.common.util.Environment;
 import org.openjdk.jmc.common.version.JavaVMVersionToolkit;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
-import org.openjdk.jmc.ui.common.jvm.Connectable;
-import org.openjdk.jmc.ui.common.jvm.JVMArch;
-import org.openjdk.jmc.ui.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.ui.common.jvm.JVMType;
-import org.openjdk.jmc.ui.common.util.Environment;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 
 import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
@@ -109,10 +111,13 @@ public class LocalJVMToolkit {
 
 	private static long SEQ_NUMBER = 0;
 	private static boolean isErrorMessageSent = false;
+	private static boolean isPreferenceStoreListenerEnabled;
 	private static boolean m_unconnectableInited = false;
 	private static AtomicBoolean m_showUnconnectable = new AtomicBoolean();
 
 	private static Map<Object, DiscoveryEntry> last = new WeakHashMap<>();
+
+	private static Thread sleeperThread;
 
 	static final String LOCAL_CONNECTOR_ADDRESS_PROP = "com.sun.management.jmxremote.localConnectorAddress"; //$NON-NLS-1$
 	static final String JVM_ARGS_PROP = "sun.jvm.args"; //$NON-NLS-1$
@@ -319,6 +324,27 @@ public class LocalJVMToolkit {
 		return stringValue.toUpperCase().contains("DEBUG"); //$NON-NLS-1$
 	}
 
+	private static void addPreferenceStoreListener() {
+		if (!isPreferenceStoreListenerEnabled) {
+			BrowserAttachPlugin.getDefault().getPreferenceStore()
+					.addPropertyChangeListener(new IPropertyChangeListener() {
+						@Override
+						public void propertyChange(PropertyChangeEvent event) {
+							if (event.getProperty().equals(PreferenceConstants.P_JVM_ATTACH_DELAY)) {
+								if (sleeperThread.getState().equals(State.TIMED_WAITING)) {
+									sleeperThread.interrupt();
+								}
+							}
+						}
+					});
+			isPreferenceStoreListenerEnabled = true;
+		}
+	}
+
+	private static final int getJvmAttachDelay() {
+		return BrowserAttachPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.P_JVM_ATTACH_DELAY);
+	}
+
 	private static void populateAttachableVMs(Map<Object, DiscoveryEntry> map) {
 		// This used to leak \BaseNamedObjects\hsperfdata_* Section handles on Windows
 		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
@@ -334,6 +360,22 @@ public class LocalJVMToolkit {
 					// Check if we already have a descriptor *first* to avoid unnecessary attach which may leak handles
 					DiscoveryEntry connDesc = last.get(vmid);
 					if (connDesc == null) {
+						if (getJvmAttachDelay() > 0) {
+							addPreferenceStoreListener();
+							sleeperThread = new Thread(() -> {
+								try {
+									Thread.sleep(getJvmAttachDelay());
+								} catch (InterruptedException e) {
+									// Interrupted if delay setting is changed while sleeping.
+								}
+							});
+							try {
+								sleeperThread.start();
+								sleeperThread.join();
+							} catch (InterruptedException e) {
+								// ignore
+							}
+						}
 						connDesc = createAttachableJvmDescriptor(vmd);
 					}
 
@@ -570,7 +612,7 @@ public class LocalJVMToolkit {
 		do {
 			n = in.read(b);
 			if (n > 0) {
-				String s = new String(b, 0, n, "UTF-8"); //$NON-NLS-1$
+				String s = new String(b, 0, n, StandardCharsets.UTF_8);
 				buf.append(s);
 			}
 		} while (n > 0);

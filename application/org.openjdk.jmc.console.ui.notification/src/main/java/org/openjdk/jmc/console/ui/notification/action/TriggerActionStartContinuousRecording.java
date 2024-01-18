@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,10 +34,10 @@ package org.openjdk.jmc.console.ui.notification.action;
 
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.console.ui.notification.NotificationPlugin;
+import org.openjdk.jmc.flightrecorder.configuration.FlightRecorderException;
+import org.openjdk.jmc.flightrecorder.configuration.IFlightRecorderService;
 import org.openjdk.jmc.flightrecorder.configuration.recording.RecordingOptionsBuilder;
-import org.openjdk.jmc.rjmx.IConnectionHandle;
-import org.openjdk.jmc.rjmx.services.jfr.FlightRecorderException;
-import org.openjdk.jmc.rjmx.services.jfr.IFlightRecorderService;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.triggers.IActivatableTriggerAction;
 import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;

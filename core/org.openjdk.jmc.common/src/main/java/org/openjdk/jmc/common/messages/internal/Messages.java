@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -58,6 +59,17 @@ public class Messages {
 	public static final String ITEM_COLLECTION_DESC = "ITEM_COLLECTION_DESC";
 	public static final String MISSING_VALUE = "MISSING_VALUE"; //$NON-NLS-1$
 	public static final String MISSING_VALUE_TOOLTIP = "MISSING_VALUE_TOOLTIP"; //$NON-NLS-1$
+	public static final String NameConverter_DEBUG = "NameConverter_DEBUG"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_ARCH_32BIT = "NameConverter_JVM_ARCH_32BIT"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_ARCH_64BIT = "NameConverter_JVM_ARCH_64BIT"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_ARCH_OTHER = "NameConverter_JVM_ARCH_OTHER"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_ARCH_UNKNOWN = "NameConverter_JVM_ARCH_UNKNOWN"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_TYPE_HOTSPOT = "NameConverter_JVM_TYPE_HOTSPOT"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_TYPE_JROCKIT = "NameConverter_JVM_TYPE_JROCKIT"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_TYPE_OTHER = "NameConverter_JVM_TYPE_OTHER"; //$NON-NLS-1$
+	public static final String NameConverter_JVM_TYPE_UNKNOWN = "NameConverter_JVM_TYPE_UNKNOWN"; //$NON-NLS-1$
+	public static final String NameConverter_LOCAL_NAME_TEMPLATE = "NameConverter_LOCAL_NAME_TEMPLATE"; //$NON-NLS-1$
+	public static final String NameConverter_UNKNOWN_LOCAL_JVM = "NameConverter_UNKNOWN_LOCAL_JVM"; //$NON-NLS-1$
 	public static final String QuantityConversionException_CONSTRAINTS_DO_NOT_MATCH = "QuantityConversionException_CONSTRAINTS_DO_NOT_MATCH"; //$NON-NLS-1$
 	public static final String QuantityConversionException_NO_UNIT_MSG = "QuantityConversionException_NO_UNIT_MSG"; //$NON-NLS-1$
 	public static final String QuantityConversionException_TOO_HIGH_MSG = "QuantityConversionException_TOO_HIGH_MSG"; //$NON-NLS-1$
@@ -91,5 +103,9 @@ public class Messages {
 		} catch (MissingResourceException e) {
 			return def;
 		}
+	}
+
+	public static boolean hasString(String key) {
+		return RESOURCE_BUNDLE.containsKey(key);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,9 +51,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-import org.openjdk.jmc.rjmx.preferences.JMXRMIPreferences;
-import org.openjdk.jmc.ui.common.security.SecurityManagerFactory;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
+import org.openjdk.jmc.rjmx.common.preferences.JMXRMIPreferences;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.PasswordFieldEditor;
 

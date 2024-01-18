@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,9 +42,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 
 import org.openjdk.jmc.common.util.TypeHandling;
-import org.openjdk.jmc.rjmx.services.IAttributeInfo;
-import org.openjdk.jmc.rjmx.services.IOperation;
-import org.openjdk.jmc.rjmx.services.IOperation.OperationImpact;
+import org.openjdk.jmc.rjmx.common.services.IAttributeInfo;
+import org.openjdk.jmc.rjmx.common.services.IOperation;
+import org.openjdk.jmc.rjmx.common.services.IOperation.OperationImpact;
 import org.openjdk.jmc.rjmx.ui.RJMXUIPlugin;
 import org.openjdk.jmc.rjmx.ui.internal.IconConstants;
 import org.openjdk.jmc.ui.UIPlugin;
