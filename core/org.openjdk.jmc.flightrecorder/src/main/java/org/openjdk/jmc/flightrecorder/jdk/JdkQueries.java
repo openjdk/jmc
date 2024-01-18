@@ -243,7 +243,8 @@ public final class JdkQueries {
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
 	public static final IItemQuery VM_OPERATIONS_BLOCKING = fromWhere(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT)
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
-	public static final IItemQuery AGENTS = fromWhere(JdkFilters.AGENTS).select(AGENT_INITIALIZATION_TIME, AGENT_NAME,
-			AGENT_OPTIONS, AGENT_DYNAMIC, AGENT_INITIALIZATION_DURATION, JfrAttributes.START_TIME, JfrAttributes.END_TIME, JfrAttributes.EVENT_TYPE)
+	public static final IItemQuery AGENTS = fromWhere(JdkFilters.AGENTS)
+			.select(AGENT_INITIALIZATION_TIME, AGENT_NAME, AGENT_OPTIONS, AGENT_DYNAMIC, AGENT_INITIALIZATION_DURATION,
+					JfrAttributes.START_TIME, JfrAttributes.END_TIME, JfrAttributes.EVENT_TYPE)
 			.build();
 }

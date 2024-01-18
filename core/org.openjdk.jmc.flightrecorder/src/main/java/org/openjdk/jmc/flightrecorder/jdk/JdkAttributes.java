@@ -1332,8 +1332,7 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_AGENT_DYNAMIC), Messages.getString(Messages.ATTR_AGENT_DYNAMIC_DESC),
 			FLAG);
 	public static final IAttribute<String> AGENT_NAME = attr("name", Messages.getString(Messages.ATTR_AGENT_NAME), //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_AGENT_NAME_DESC),
-			PLAIN_TEXT);
+			Messages.getString(Messages.ATTR_AGENT_NAME_DESC), PLAIN_TEXT);
 	public static final IAttribute<String> AGENT_OPTIONS = attr("options", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_AGENT_OPTIONS), Messages.getString(Messages.ATTR_AGENT_OPTIONS_DESC),
 			PLAIN_TEXT);

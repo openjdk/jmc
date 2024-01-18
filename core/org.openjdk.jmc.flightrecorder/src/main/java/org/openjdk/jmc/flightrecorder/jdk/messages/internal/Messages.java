@@ -550,7 +550,7 @@ public class Messages {
 	public static final String ATTR_USER_LOAD_DESC = "ATTR_USER_LOAD_DESC"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD = "ATTR_JAVA_THREAD"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD_DESC = "ATTR_JAVA_THREAD_DESC"; //$NON-NLS-1$
-	
+
 	private Messages() {
 	}
 
