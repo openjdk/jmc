@@ -77,8 +77,8 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 
 	public static final TypedPreference<IQuantity> NATIVE_WARNING_LIMIT = new TypedPreference<>(
 			"agents.dynamic.native.warning.limit", //$NON-NLS-1$
-			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT),
-			Messages.getString(Messages.DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG), NUMBER,
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT),
+			Messages.getString(Messages.DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT_LONG), NUMBER,
 			NUMBER_UNITY.quantity(0));
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
