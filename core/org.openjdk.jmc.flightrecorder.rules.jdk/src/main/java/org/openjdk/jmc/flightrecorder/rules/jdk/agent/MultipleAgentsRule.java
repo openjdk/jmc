@@ -75,7 +75,8 @@ public class MultipleAgentsRule implements IRule {
 	public static final TypedPreference<IQuantity> NATIVE_WARNING_LIMIT = new TypedPreference<>(
 			"agents.muliple.native.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.MultipleAgentsRule_NATIVE_WARNING_LIMIT),
-			Messages.getString(Messages.MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG), NUMBER, NUMBER_UNITY.quantity(1));
+			Messages.getString(Messages.MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG), NUMBER,
+			NUMBER_UNITY.quantity(1));
 
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(JAVA_WARNING_LIMIT, NATIVE_WARNING_LIMIT);
