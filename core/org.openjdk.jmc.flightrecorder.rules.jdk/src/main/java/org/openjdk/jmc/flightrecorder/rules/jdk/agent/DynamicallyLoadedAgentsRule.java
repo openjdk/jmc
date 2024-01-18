@@ -105,7 +105,7 @@ public class DynamicallyLoadedAgentsRule implements IRule {
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemCollection dynamicEvents = items
 				.apply(ItemFilters.and(ItemFilters.type(JdkTypeIDs.JAVA_AGENT, JdkTypeIDs.NATIVE_AGENT),
-						ItemFilters.buildComparisonFilter(Kind.EQUALS, JdkAttributes.DYNAMIC, Boolean.TRUE)));
+						ItemFilters.buildComparisonFilter(Kind.EQUALS, JdkAttributes.AGENT_DYNAMIC, Boolean.TRUE)));
 
 		IQuantity javaCountQuantity = QuantitiesToolkit.nullSafe(
 				dynamicEvents.apply(ItemFilters.type(JdkTypeIDs.JAVA_AGENT)).getAggregate(Aggregators.count()));

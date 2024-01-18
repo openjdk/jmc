@@ -205,6 +205,16 @@ public class Messages {
 	public static final String AGGR_VM_OPERATION_DURATION = "AGGR_VM_OPERATION_DURATION"; //$NON-NLS-1$
 	public static final String AGGR_VM_OPERATION_DURATION_DESC = "AGGR_VM_OPERATION_DURATION_DESC"; //$NON-NLS-1$
 	public static final String ATTR_ADAPTORS = "ATTR_ADAPTORS"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_DYNAMIC = "ATTR_AGENT_DYNAMIC"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_DYNAMIC_DESC = "ATTR_AGENT_DYNAMIC_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_TIME = "ATTR_AGENT_INITIALIZATION_TIME"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_INITIALIZATION_TIME_DESC = "ATTR_AGENT_INITIALIZATION_TIME_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_DURATION = "ATTR_AGENT_INITIALIZATION_DURATION"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_DURATION_DESC = "ATTR_AGENT_INITIALIZATION_DURATION_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_NAME = "ATTR_AGENT_NAME";
+	public static final String ATTR_AGENT_NAME_DESC = "ATTR_AGENT_NAME_DESC";
+	public static final String ATTR_AGENT_OPTIONS = "ATTR_AGENT_OPTIONS"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_OPTIONS_DESC = "ATTR_AGENT_OPTIONS_DESC"; //$NON-NLS-1$;
 	public static final String ATTR_ALLOCATION_CLASS = "ATTR_ALLOCATION_CLASS"; //$NON-NLS-1$
 	public static final String ATTR_ALLOCATION_CLASS_DESC = "ATTR_ALLOCATION_CLASS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_ALLOCATION_SIZE = "ATTR_ALLOCATION_SIZE"; //$NON-NLS-1$
@@ -263,7 +273,6 @@ public class Messages {
 	public static final String ATTR_DUMP_REASON_DESC = "ATTR_DUMP_REASON_DESC"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON_RECORDING_ID = "ATTR_DUMP_REASON_RECORDING_ID"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON_RECORDING_ID_DESC = "ATTR_DUMP_REASON_RECORDING_ID_DESC"; //$NON-NLS-1$
-	public static final String ATTR_DYNAMIC = "ATTR_DYNAMIC"; //$NON-NLS-1$
 	public static final String ATTR_ENTRIES = "ATTR_ENTRIES"; //$NON-NLS-1$
 	public static final String ATTR_ENVIRONMENT_KEY = "ATTR_ENVIRONMENT_KEY"; //$NON-NLS-1$
 	public static final String ATTR_ENVIRONMENT_VALUE = "ATTR_ENVIRONMENT_VALUE"; //$NON-NLS-1$
@@ -541,7 +550,7 @@ public class Messages {
 	public static final String ATTR_USER_LOAD_DESC = "ATTR_USER_LOAD_DESC"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD = "ATTR_JAVA_THREAD"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD_DESC = "ATTR_JAVA_THREAD_DESC"; //$NON-NLS-1$
-
+	
 	private Messages() {
 	}
 

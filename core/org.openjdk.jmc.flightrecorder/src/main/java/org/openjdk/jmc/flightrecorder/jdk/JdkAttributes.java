@@ -1328,6 +1328,19 @@ public final class JdkAttributes {
 				}
 			});
 
-	public static final IAttribute<Boolean> DYNAMIC = attr("dynamic", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_DYNAMIC), FLAG);
+	public static final IAttribute<Boolean> AGENT_DYNAMIC = attr("dynamic", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_AGENT_DYNAMIC), Messages.getString(Messages.ATTR_AGENT_DYNAMIC_DESC),
+			FLAG);
+	public static final IAttribute<String> AGENT_NAME = attr("name", Messages.getString(Messages.ATTR_AGENT_NAME), //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_AGENT_NAME_DESC),
+			PLAIN_TEXT);
+	public static final IAttribute<String> AGENT_OPTIONS = attr("options", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_AGENT_OPTIONS), Messages.getString(Messages.ATTR_AGENT_OPTIONS_DESC),
+			PLAIN_TEXT);
+	public static final IAttribute<IQuantity> AGENT_INITIALIZATION_TIME = attr("initializationTime", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_TIME),
+			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_TIME_DESC), TIMESTAMP);
+	public static final IAttribute<IQuantity> AGENT_INITIALIZATION_DURATION = attr("initializationDuration", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION),
+			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION_DESC), TIMESPAN);
 }

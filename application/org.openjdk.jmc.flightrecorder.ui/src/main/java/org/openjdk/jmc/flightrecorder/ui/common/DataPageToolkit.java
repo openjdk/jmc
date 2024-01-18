@@ -812,6 +812,8 @@ public class DataPageToolkit {
 			return ResultOverview.ICON_INFO;
 		case WARNING:
 			return ResultOverview.ICON_WARNING;
+		case IGNORE:
+			return ResultOverview.ICON_IGNORE;
 		case NA:
 			return ResultOverview.ICON_NA;
 		}

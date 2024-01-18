@@ -311,6 +311,10 @@
             id="org.openjdk.jmc.flightrecorder.ui.recording">
       </factory>
       <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.AgentsPage$AgentsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.agents">
+      </factory>
+      <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.ConstantPoolsPage$ConstantPoolsPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.constantpools">
       </factory>

@@ -36,6 +36,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.flightrecorder.ui.messages.internal.messages"; //$NON-NLS-1$
+	public static String AgentsPage_PAGE_NAME;
 	public static String ATTRIBUTE_CONFIG_PAGE_RULES;
 	public static String ATTRIBUTE_CONFIG_RULE;
 	public static String ATTRIBUTE_CONFIG_RULES;
