@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -205,6 +205,16 @@ public class Messages {
 	public static final String AGGR_VM_OPERATION_DURATION = "AGGR_VM_OPERATION_DURATION"; //$NON-NLS-1$
 	public static final String AGGR_VM_OPERATION_DURATION_DESC = "AGGR_VM_OPERATION_DURATION_DESC"; //$NON-NLS-1$
 	public static final String ATTR_ADAPTORS = "ATTR_ADAPTORS"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_DYNAMIC = "ATTR_AGENT_DYNAMIC"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_DYNAMIC_DESC = "ATTR_AGENT_DYNAMIC_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_TIME = "ATTR_AGENT_INITIALIZATION_TIME"; //$NON-NLS-1$
+	public static final String ATTR_AGENT_INITIALIZATION_TIME_DESC = "ATTR_AGENT_INITIALIZATION_TIME_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_DURATION = "ATTR_AGENT_INITIALIZATION_DURATION"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_INITIALIZATION_DURATION_DESC = "ATTR_AGENT_INITIALIZATION_DURATION_DESC"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_NAME = "ATTR_AGENT_NAME";
+	public static final String ATTR_AGENT_NAME_DESC = "ATTR_AGENT_NAME_DESC";
+	public static final String ATTR_AGENT_OPTIONS = "ATTR_AGENT_OPTIONS"; //$NON-NLS-1$;
+	public static final String ATTR_AGENT_OPTIONS_DESC = "ATTR_AGENT_OPTIONS_DESC"; //$NON-NLS-1$;
 	public static final String ATTR_ALLOCATION_CLASS = "ATTR_ALLOCATION_CLASS"; //$NON-NLS-1$
 	public static final String ATTR_ALLOCATION_CLASS_DESC = "ATTR_ALLOCATION_CLASS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_ALLOCATION_SIZE = "ATTR_ALLOCATION_SIZE"; //$NON-NLS-1$
