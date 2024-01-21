@@ -60,6 +60,7 @@
             <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.2200.v20230717-2134"/>
             <unit id="org.eclipse.pde.feature.group" version="3.15.100.v20230903-1000"/>
             <unit id="org.eclipse.platform.sdk" version="4.29.0.I20230903-1000"/>
+            <unit id="jakarta.inject.jakarta.inject-api" version="2.0.1"/>
             <repository location="https://download.eclipse.org/releases/2023-09/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
