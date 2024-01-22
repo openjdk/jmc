@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -309,6 +309,10 @@
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.RecordingPage$RecordingPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.recording">
+      </factory>
+      <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.AgentsPage$AgentsPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.agents">
       </factory>
       <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.ConstantPoolsPage$ConstantPoolsPageFactory"

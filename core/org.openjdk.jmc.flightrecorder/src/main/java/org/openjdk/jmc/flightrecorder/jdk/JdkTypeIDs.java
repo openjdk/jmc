@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -210,5 +210,8 @@ public final class JdkTypeIDs {
 	public static final String PROCESS_START = PREFIX + "ProcessStart";
 
 	public static final String FINALIZER_STATISTICS = PREFIX + "FinalizerStatistics";
+
+	public static final String JAVA_AGENT = PREFIX + "JavaAgent";
+	public static final String NATIVE_AGENT = PREFIX + "NativeAgent";
 
 }
