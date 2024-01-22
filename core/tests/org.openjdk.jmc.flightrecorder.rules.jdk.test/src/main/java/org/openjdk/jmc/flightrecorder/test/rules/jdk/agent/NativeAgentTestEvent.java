@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -30,38 +31,12 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.common.unit;
+package org.openjdk.jmc.flightrecorder.test.rules.jdk.agent;
 
-import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
+import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 
-public class QuantitiesToolkit {
-	private final static ITypedQuantity<LinearUnit> ZERO = NUMBER_UNITY.quantity(0);
-
-	public static <M extends Comparable<? super M>> M min(M a, M b) {
-		return a.compareTo(b) < 0 ? a : b;
-	}
-
-	public static <M extends Comparable<? super M>> M max(M a, M b) {
-		return a.compareTo(b) > 0 ? a : b;
-	}
-
-	public static <M extends Comparable<? super M>> M minPresent(M a, M b) {
-		return (a == null) ? b : (b == null) ? a : min(a, b);
-	}
-
-	public static <M extends Comparable<? super M>> M maxPresent(M a, M b) {
-		return (a == null) ? b : (b == null) ? a : max(a, b);
-	}
-
-	public static <M extends Comparable<? super M>> boolean same(M a, M b) {
-		return (a == null) ? (b == null) : ((b == null) ? false : (a.compareTo(b) == 0));
-	}
-
-	public static IQuantity nullSafe(IQuantity quantity) {
-		if (quantity != null) {
-			return quantity;
-		} else {
-			return ZERO;
-		}
+public class NativeAgentTestEvent extends AgentTestEvent {
+	public NativeAgentTestEvent(boolean dynamic, String name, String options) {
+		super(JdkTypeIDs.NATIVE_AGENT, dynamic, name, options);
 	}
 }

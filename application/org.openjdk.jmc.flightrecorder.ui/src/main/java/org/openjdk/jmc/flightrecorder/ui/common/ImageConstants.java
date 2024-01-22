@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -137,4 +137,5 @@ public class ImageConstants {
 	public static final String PAGE_SYSTEM_PROPERTIES = "pages/systemproperties.png"; //$NON-NLS-1$
 	public static final String PAGE_RECORDING = "pages/recording.png"; //$NON-NLS-1$
 	public static final String PAGE_NATIVE_LIBRARY = "pages/nativelibraries.png"; //$NON-NLS-1$ //FIXME!
+	public static final String PAGE_AGENT = "pages/agent.png"; //$NON-NLS-1$
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,6 +48,11 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAggregators.JVM_VERSION;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAggregators.OBJECT_COUNT_MAX_INSTANCES;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAggregators.OBJECT_COUNT_MAX_SIZE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.ADAPTORS;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.AGENT_DYNAMIC;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.AGENT_INITIALIZATION_DURATION;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.AGENT_INITIALIZATION_TIME;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.AGENT_NAME;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.AGENT_OPTIONS;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.ALLOCATION_CLASS;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.BLOCKING;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.CALLER;
@@ -130,6 +135,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.UNALLOCATED;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 
 /**
  * Item queries based on JDK flight recorder data.
@@ -237,5 +243,8 @@ public final class JdkQueries {
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
 	public static final IItemQuery VM_OPERATIONS_BLOCKING = fromWhere(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT)
 			.select(DURATION, OPERATION, BLOCKING, SAFEPOINT, EVENT_THREAD, CALLER).build();
-
+	public static final IItemQuery AGENTS = fromWhere(JdkFilters.AGENTS)
+			.select(AGENT_INITIALIZATION_TIME, AGENT_NAME, AGENT_OPTIONS, AGENT_DYNAMIC, AGENT_INITIALIZATION_DURATION,
+					JfrAttributes.START_TIME, JfrAttributes.END_TIME, JfrAttributes.EVENT_TYPE)
+			.build();
 }

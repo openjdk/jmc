@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -973,6 +973,22 @@
 					<column id="baseAddress:address" width="100" />
 					<column id="topAddress:address" width="100" />
 					<column id="Count" width="70" hidden="true" />
+				</table>
+				<filter showFilter="false" showSearch="true" />
+			</state>
+		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.agents"
+			id="org.openjdk.jmc.flightrecorder.ui.agents">
+			<state>
+				<table sortColumn="initializationTime:timestamp">
+					<column id="initializationTime:timestamp" width="150" sortAscending="true"/>
+					<column id="startTime:timestamp" hidden="true" width="150" />
+					<column id="(endTime):timestamp" hidden="true" width="150" />
+					<column id="(eventType):type" width="100" />
+					<column id="name:text" width="410"/>
+					<column id="options:text" width="160"/>
+					<column id="dynamic:boolean" width="100"/>
+					<column id="initializationDuration:timespan" width="130"/>
 				</table>
 				<filter showFilter="false" showSearch="true" />
 			</state>

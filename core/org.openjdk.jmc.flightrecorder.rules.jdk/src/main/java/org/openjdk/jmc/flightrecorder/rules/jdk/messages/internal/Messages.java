@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -209,6 +209,15 @@ public class Messages {
 	public static final String DuplicateFlagsRule_RESULT_EXPLANATION = "DuplicateFlagsRule_RESULT_EXPLANATION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SOLUTION = "DuplicateFlagsRule_RESULT_SOLUTION"; //$NON-NLS-1$
 	public static final String DuplicateFlagsRule_RESULT_SUMMARY_OK = "DuplicateFlagsRule_RESULT_SUMMARY_OK"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_RULE_NAME = "DynamicallyLoadedAgentsRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_EXPLANATION = "DynamicallyLoadedAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_OK = "DynamicallyLoadedAgentsRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_SOLUTION = "DynamicallyLoadedAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_TEXT_SUMMARY = "DynamicallyLoadedAgentsRule_TEXT_SUMMARY"; //$NON-NLS-1$
+	public static final String DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT = "DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG = "DynamicallyLoadedAgentsRule_JAVA_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT = "DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT_LONG = "DynamicallyLoadedAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String ErrorRule_CONFIG_EXCLUDED_ERRORS = "ErrorRule_CONFIG_EXCLUDED_ERRORS"; //$NON-NLS-1$
 	public static final String ErrorRule_CONFIG_EXCLUDED_ERRORS_LONG = "ErrorRule_CONFIG_EXCLUDED_ERRORS_LONG"; //$NON-NLS-1$
 	public static final String ErrorRule_CONFIG_INFO_LIMIT = "ErrorRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
@@ -480,6 +489,15 @@ public class Messages {
 	public static final String MethodProfilingRule_WINDOW_SIZE_DESC = "MethodProfilingRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES = "MethodProfilingRule_EXCLUDED_PACKAGES"; //$NON-NLS-1$
 	public static final String MethodProfilingRule_EXCLUDED_PACKAGES_DESC = "MethodProfilingRule_EXCLUDED_PACKAGES_DESC"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_RULE_NAME = "MultipleAgentsRule_RULE_NAME"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_EXPLANATION = "MultipleAgentsRule_TEXT_EXPLANATION"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_OK = "MultipleAgentsRule_TEXT_OK"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_SOLUTION = "MultipleAgentsRule_TEXT_SOLUTION"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_TEXT_SUMMARY = "MultipleAgentsRule_TEXT_SUMMARY"; //$NON-NLS-1$
+	public static final String MultipleAgentsRule_JAVA_WARNING_LIMIT = "MultipleAgentsRule_JAVA_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG = "MultipleAgentsRule_JAVA_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT = "MultipleAgentsRule_NATIVE_WARNING_LIMIT"; //$NON-NLS-1$;
+	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG = "MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO = "NumberOfGcThreadsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$

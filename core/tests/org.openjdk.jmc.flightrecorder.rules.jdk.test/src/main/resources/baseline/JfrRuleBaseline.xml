@@ -80,6 +80,10 @@
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -244,6 +248,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>OK</severity>
             <summary>Deprecated option flags were detected.</summary>
@@ -396,6 +404,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -536,6 +548,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>MethodProfiling</id>
             <severity>OK</severity>
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Options</id>
@@ -681,6 +697,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -816,6 +836,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>MethodProfiling</id>
             <severity>OK</severity>
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Options</id>
@@ -957,6 +981,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1117,6 +1145,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1275,6 +1307,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1404,6 +1440,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>MethodProfiling</id>
             <severity>OK</severity>
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Options</id>
@@ -1546,6 +1586,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1685,6 +1729,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -1816,6 +1864,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1958,6 +2010,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2089,6 +2145,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>DuplicateFlags</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2232,6 +2292,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2367,6 +2431,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2488,6 +2556,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2620,6 +2692,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2740,6 +2816,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2875,6 +2955,11 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         <rule>
             <id>DuplicateFlags</id>
             <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
+            <severity>OK</severity>
+            <summary>An acceptable number of java and native agents (0 total) were dynamically loaded!</summary>
         </rule>
         <rule>
             <id>Errors</id>
@@ -3039,6 +3124,11 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>OK</severity>
+            <summary>An acceptable number of java and native agents (0 total) were loaded!</summary>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3180,6 +3270,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3301,6 +3395,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
         </rule>
         <rule>
             <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3437,6 +3535,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3558,6 +3660,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
         </rule>
         <rule>
             <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3708,6 +3814,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3854,6 +3964,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>MethodProfiling</id>
             <severity>OK</severity>
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Options</id>
@@ -4015,6 +4129,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>There were no duplicate JVM flags on the command line.</summary>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -4163,6 +4281,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>OK</severity>
             <summary>Deprecated option flags were detected.</summary>
@@ -4309,6 +4431,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>DuplicateFlags</id>
             <severity>OK</severity>
             <summary>There were no duplicate JVM flags on the command line.</summary>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Errors</id>
@@ -4473,6 +4599,10 @@ To improve rule accuracy and/or get more details for further investigation, it i
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>OK</severity>
             <summary>Deprecated option flags were detected.</summary>
@@ -4633,6 +4763,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>2 duplicated JVM flags found.</summary>
             <explanation>Duplicated JVM flags may be caused by multiple layers of scripts used when launching the application. Having duplicate flags is dangerous as changing one of the flags in one of the scripts may not have the intended effect. This can be especially dangerous for security related system properties. The following flags were duplicated: &lt;ul&gt;&lt;li&gt;-Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed,-Djava.endorsed.dirs=c:\java\JDK18~1.0_6\jre\lib\endorsed;C:\tmp\WLS-JFR\oracle_common\modules\endorsed&lt;/li&gt;&lt;li&gt;-Xverify:none,-Xverify:none&lt;/li&gt;&lt;/ul&gt;</explanation>
             <solution>Try to find all the places where the flag is defined and keep only one.</solution>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>Errors</id>
@@ -4806,6 +4940,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <summary>No methods where optimization would be particularly efficient could be detected.</summary>
         </rule>
         <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Options</id>
             <severity>Information</severity>
             <summary>Deprecated option flags were detected.</summary>
@@ -4969,6 +5107,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <solution>Try to find all the places where the flag is defined and keep only one.</solution>
         </rule>
         <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>Errors</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -5091,6 +5233,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
         </rule>
         <rule>
             <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>

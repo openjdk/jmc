@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -155,6 +155,7 @@ public final class JdkFilters {
 	public static final IItemFilter NATIVE_METHOD_SAMPLE = ItemFilters.type(JdkTypeIDs.NATIVE_METHOD_SAMPLE);
 	public static final IItemFilter THREAD_START = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START);
 	public static final IItemFilter THREAD_END = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_END);
+	public static final IItemFilter AGENTS = ItemFilters.type(JdkTypeIDs.JAVA_AGENT, JdkTypeIDs.NATIVE_AGENT);
 
 	public static class MethodFilter implements IItemFilter {
 
