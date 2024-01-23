@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -363,14 +363,53 @@ public class OptionsCheckRule implements IRule {
 			new DeprecatedOption("UseFastEmptyMethods", null, JavaVersionSupport.JDK_9, null),
 			new DeprecatedOption("UseNewReflection", null, JavaVersionSupport.JDK_9, null),
 			new DeprecatedOption("UseOldInlining", null, JavaVersionSupport.JDK_9, null),
-			new DeprecatedOption("VerifyReflectionBytecodes", null, JavaVersionSupport.JDK_9, null)};
+			new DeprecatedOption("VerifyReflectionBytecodes", null, JavaVersionSupport.JDK_9, null),
+			new DeprecatedOption("InitialRAMFraction", JavaVersionSupport.JDK_10, null, null),
+			new DeprecatedOption("MaxRAMFraction", JavaVersionSupport.JDK_10, null, null),
+			new DeprecatedOption("MinRAMFraction", JavaVersionSupport.JDK_10, null, null),
+			new DeprecatedOption("AggressiveOpts", JavaVersionSupport.JDK_11, null, JavaVersionSupport.JDK_13),
+			new DeprecatedOption("UnlockCommercialFeatures", JavaVersionSupport.JDK_11, null, null),
+			new DeprecatedOption("UseContainerCpuShares", JavaVersionSupport.JDK_11_0_17, null, null),
+			new DeprecatedOption("MonitorInUseLists", null, JavaVersionSupport.JDK_12, null),
+			new DeprecatedOption("UseConcMarkSweepGC", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("CMSClassUnloadingEnabled", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("CMSExpAvgFactor", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("CMSInitiatingOccupancyFraction", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("CMSScavengeBeforeRemark", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("CMSTriggerRatio", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("UseParallelOldGC", JavaVersionSupport.JDK_14, null, null),
+			new DeprecatedOption("UseAdaptiveGCBoundary", null, JavaVersionSupport.JDK_15, null),
+			new DeprecatedOption("ForceNUMA", JavaVersionSupport.JDK_15, null, null),
+			new DeprecatedOption("UseBiasedLocking", JavaVersionSupport.JDK_15, JavaVersionSupport.JDK_18, null),
+			new DeprecatedOption("BiasedLockingStartupDelay", JavaVersionSupport.JDK_15, JavaVersionSupport.JDK_18,
+					null),
+			new DeprecatedOption("TraceClassLoading", JavaVersionSupport.JDK_9, JavaVersionSupport.JDK_16, null),
+			new DeprecatedOption("TraceClassUnloading", JavaVersionSupport.JDK_9, JavaVersionSupport.JDK_16, null),
+			new DeprecatedOption("TraceExceptions", JavaVersionSupport.JDK_9, JavaVersionSupport.JDK_16, null),
+			new DeprecatedOption("UseContainerCpuShares", JavaVersionSupport.JDK_17, null, null),
+			new DeprecatedOption("G1RSetRegionEntries", null, JavaVersionSupport.JDK_18, null),
+			new DeprecatedOption("G1RSetSparseRegionEntries", null, JavaVersionSupport.JDK_18, null),
+			new DeprecatedOption("GCParallelVerificationEnabled", null, null, JavaVersionSupport.JDK_19),
+			new DeprecatedOption("G1UseAdaptiveConcRefinement", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRefinementGreenZone", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRefinementYellowZone", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRefinementRedZone", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRefinementThresholdStep", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRefinementServiceIntervalMillis", null, JavaVersionSupport.JDK_20, null),
+			new DeprecatedOption("G1ConcRSLogCacheSize", null, JavaVersionSupport.JDK_21, null),
+			new DeprecatedOption("G1ConcRSHotCardLimit", null, JavaVersionSupport.JDK_21, null),
+			new DeprecatedOption("EnableWaitForParallelLoad", null, null, JavaVersionSupport.JDK_21),
+			new DeprecatedOption("MetaspaceReclaimPolicy", null, JavaVersionSupport.JDK_21, null)};
 
 	@SuppressWarnings("nls")
 	private static final DeprecatedOption[] DEPRECATED_OPTIONS_X = {
 			// Deprecated in 8, removed in 9
 			// https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html
 			new DeprecatedOption("incgc", JavaVersionSupport.JDK_8, null, JavaVersionSupport.JDK_9),
-			new DeprecatedOption("run", JavaVersionSupport.JDK_8, null, JavaVersionSupport.JDK_9)};
+			new DeprecatedOption("run", JavaVersionSupport.JDK_8, null, JavaVersionSupport.JDK_9),
+			new DeprecatedOption("verify:none", JavaVersionSupport.JDK_13, null, null),
+			new DeprecatedOption("concgc", null, JavaVersionSupport.JDK_14, null),
+			new DeprecatedOption("noconcgc", null, JavaVersionSupport.JDK_14, null)};
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.VM_INFO, EventAvailability.AVAILABLE).build();

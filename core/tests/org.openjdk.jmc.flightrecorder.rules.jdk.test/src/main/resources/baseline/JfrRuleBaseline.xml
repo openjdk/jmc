@@ -254,7 +254,8 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -555,7 +556,8 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -842,7 +844,8 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -1445,7 +1448,8 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -3968,7 +3972,8 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -4282,7 +4287,8 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flags are or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UseParallelOldGC: Deprecated in Java 14.&lt;/li&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -4599,7 +4605,8 @@ To improve rule accuracy and/or get more details for further investigation, it i
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -4940,7 +4947,7 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <id>Options</id>
             <severity>Information</severity>
             <summary>Deprecated option flags were detected.</summary>
-            <explanation>The following option flags are or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:PermSize=128m: Ignored in Java 8 and removed in Java 9. PermGen was removed in JDK 8, since Java users should not need to know up front how much memory to reserve for class metadata etc. Just like in the JRockit and J9 JVMs, native memory is now used for class metadata, and it will dynamically grow as needed. The equivalent of java.lang.OutOfMemoryError: PermGen will be much harder to provoke. To influence when to start attempting to reclaim metaspace memory, check out the [MaxMetaspaceSize flag](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html).&lt;/li&gt;&lt;li&gt;-XX:MaxPermSize=256m: Ignored in Java 8 and removed in Java 9. PermGen was removed in JDK 8, since Java users should not need to know up front how much memory to reserve for class metadata etc. Just like in the JRockit and J9 JVMs, native memory is now used for class metadata, and it will dynamically grow as needed. The equivalent of java.lang.OutOfMemoryError: PermGen will be much harder to provoke. To influence when to start attempting to reclaim metaspace memory, check out the [MaxMetaspaceSize flag](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html).&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
+            <explanation>The following option flags are or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:PermSize=128m: Ignored in Java 8 and removed in Java 9. PermGen was removed in JDK 8, since Java users should not need to know up front how much memory to reserve for class metadata etc. Just like in the JRockit and J9 JVMs, native memory is now used for class metadata, and it will dynamically grow as needed. The equivalent of java.lang.OutOfMemoryError: PermGen will be much harder to provoke. To influence when to start attempting to reclaim metaspace memory, check out the [MaxMetaspaceSize flag](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html).&lt;/li&gt;&lt;li&gt;-XX:MaxPermSize=256m: Ignored in Java 8 and removed in Java 9. PermGen was removed in JDK 8, since Java users should not need to know up front how much memory to reserve for class metadata etc. Just like in the JRockit and J9 JVMs, native memory is now used for class metadata, and it will dynamically grow as needed. The equivalent of java.lang.OutOfMemoryError: PermGen will be much harder to provoke. To influence when to start attempting to reclaim metaspace memory, check out the [MaxMetaspaceSize flag](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html).&lt;/li&gt;&lt;li&gt;-Xverify:none: Deprecated in Java 13.&lt;/li&gt;&lt;li&gt;-Xverify:none: Deprecated in Java 13.&lt;/li&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
@@ -5235,7 +5242,8 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
