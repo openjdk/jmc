@@ -167,6 +167,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.openjdk.jmc.rjmx.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.openjdk.jmc.rjmx.ext"
          download-size="0"
          install-size="0"
@@ -181,7 +188,6 @@
          version="0.0.0"
          unpack="false"/>
 
-   
    <plugin
          id="jakarta.activation-api"
          download-size="0"
@@ -196,4 +202,31 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="fireplace-swing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fireplace-swing-animation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fireplace-swt-awt-bridge"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="radiance-animation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 </feature>
