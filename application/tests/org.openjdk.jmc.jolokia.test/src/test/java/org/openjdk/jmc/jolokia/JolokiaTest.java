@@ -65,8 +65,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
 /**

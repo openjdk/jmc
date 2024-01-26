@@ -35,8 +35,8 @@ package org.openjdk.jmc.jolokia;
 
 import javax.management.remote.JMXServiceURL;
 
-import org.openjdk.jmc.rjmx.IConnectionDescriptor;
-import org.openjdk.jmc.rjmx.IServerDescriptor;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 
 /**
  * Describes the JVM and how to connect to it.
