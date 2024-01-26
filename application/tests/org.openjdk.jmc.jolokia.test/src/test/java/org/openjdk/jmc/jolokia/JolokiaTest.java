@@ -70,7 +70,7 @@ import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
 /**
- * I test that JMX connections done with JmcJolokiaJmxConnectionProvider are functional
+ * Tests that JMX connections done with JmcJolokiaJmxConnectionProvider are functional
  */
 @SuppressWarnings("restriction")
 public class JolokiaTest {

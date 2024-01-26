@@ -64,9 +64,7 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<includes>${test.includes}</includes>
-					<!-- Start jolokia on a random free port to avoid requiring
-					specific 
-						ports to run test -->
+					<!-- Start jolokia on a random free port to avoid requiring specific ports to run test -->
 					<argLine>
 						-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.version}/jolokia-jvm-${jolokia.version}.jar=port=0,discover=true</argLine>
 				</configuration>
