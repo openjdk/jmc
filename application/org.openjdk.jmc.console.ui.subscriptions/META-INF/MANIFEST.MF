@@ -9,6 +9,7 @@ Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.console.ui,
  org.eclipse.core.runtime,
- org.openjdk.jmc.rjmx.ui
+ org.openjdk.jmc.rjmx.ui,
+ jakarta.inject.jakarta.inject-api
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.openjdk.jmc.console.ui.subscriptions
