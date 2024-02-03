@@ -39,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.Attribute;
@@ -186,7 +187,7 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 
 	@Override
 	public Map<String, Object> getEnvironment() {
-		return null;
+		return new HashMap<>();
 	}
 
 	@Override
