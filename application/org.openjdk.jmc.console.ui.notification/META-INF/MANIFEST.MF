@@ -17,7 +17,8 @@ Require-Bundle: org.openjdk.jmc.ui.common,
  org.openjdk.jmc.alert,
  org.openjdk.jmc.flightrecorder.controlpanel.ui,
  org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration,
- org.openjdk.jmc.flightrecorder.configuration
+ org.openjdk.jmc.flightrecorder.configuration,
+ jakarta.inject.jakarta.inject-api
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.console.ui.notification.NotificationPlugin
 Export-Package: org.openjdk.jmc.console.ui.notification,

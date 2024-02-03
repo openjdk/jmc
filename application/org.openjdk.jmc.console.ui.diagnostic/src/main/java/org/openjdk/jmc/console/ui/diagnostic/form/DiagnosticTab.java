@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,7 +35,7 @@ package org.openjdk.jmc.console.ui.diagnostic.form;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;

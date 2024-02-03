@@ -8,7 +8,8 @@ Bundle-Activator: org.openjdk.jmc.console.ui.diagnostic.DiagnosticPlugin
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.console.ui,
- org.openjdk.jmc.rjmx.ui
+ org.openjdk.jmc.rjmx.ui,
+ jakarta.inject.jakarta.inject-api
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.console.ui.diagnostic.form,
  org.openjdk.jmc.console.ui.diagnostic.preferences
