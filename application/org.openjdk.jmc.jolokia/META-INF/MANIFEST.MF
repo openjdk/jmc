@@ -14,7 +14,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.openjdk.jmc.ui
 Export-Package:  org.openjdk.jmc.jolokia,
  org.openjdk.jmc.jolokia.preferences
-Import-Package: org.jolokia.converter,
- org.json.simple
 Bundle-Activator: org.openjdk.jmc.jolokia.JmcJolokiaPlugin
 Bundle-ActivationPolicy: lazy
