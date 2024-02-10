@@ -113,8 +113,11 @@ public final class RecordingImpl extends Recording {
 	private final MetadataImpl metadata = new MetadataImpl(constantPools);
 	private final TypesImpl types;
 
+	// a cache to hold already computed stack frames
 	private final Map<StackTraceElement, TypedValue> frameCache = new HashMap<>(16000);
+	// a cache to hold already resolved class loaders
 	private final Map<String, TypedValue> classLoaderCache = new HashMap<>(128);
+	// a cache to hold already resolved modules
 	private final Map<String, TypedValue> moduleCache = new HashMap<>(4096);
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
