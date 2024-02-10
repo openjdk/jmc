@@ -55,6 +55,14 @@ public abstract class Recording implements AutoCloseable {
 	 */
 	public abstract RecordingImpl writeEvent(TypedValue event);
 
+	/**
+	 * Write a custom event defined as an instance of a {@link jdk.jfr.Event jfr event} subclass. If
+	 * the event type has not been registered yet, it will be registered.
+	 * 
+	 * @param event
+	 *            the event instance
+	 * @return {@literal this} for chaining
+	 */
 	public abstract RecordingImpl writeEvent(Event event);
 
 	/**
@@ -67,6 +75,14 @@ public abstract class Recording implements AutoCloseable {
 	 */
 	public abstract Type registerEventType(String name);
 
+	/**
+	 * Try registering a user event type described by the custom {@link jdk.jfr.Event event} class.
+	 * If a same-named event already exists it will be returned.
+	 * 
+	 * @param eventType
+	 *            the JFR event class
+	 * @return a corresponding user event type
+	 */
 	public abstract Type registerEventType(Class<? extends Event> eventType);
 
 	/**
