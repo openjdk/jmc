@@ -214,6 +214,7 @@ public class PresetManagerPage extends BaseWizardPage {
 				String[] files = openFileDialog(Messages.PresetManagerPage_MESSAGE_EXPORT_PRESET_TO_A_FILE,
 						new String[] {PRESET_XML_EXTENSION}, SWT.SAVE | SWT.SINGLE);
 				if (files.length == 0) {
+					tableInspector.setFocus();
 					return;
 				}
 
@@ -228,6 +229,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			}
 		};
 		tableInspector.setContentProvider(new PresetTableContentProvider());
+		tableInspector.setFocus();
 
 		return container;
 	}
