@@ -525,7 +525,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 							} else {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										traverseAlready = !traverseAlready;
+										setTraverseAlready(!traverseAlready);
 										if (traverseAlready) {
 											IWorkbenchPage activePage = PlatformUI.getWorkbench()
 													.getWorkbenchWindows()[0].getActivePage();
@@ -567,7 +567,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 						if (e.getModifiersEx() > 0) {
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
-									traverseAlready = !traverseAlready;
+									setTraverseAlready(!traverseAlready);
 									if (traverseAlready) {
 										IWorkbenchPage activePage = PlatformUI.getWorkbench().getWorkbenchWindows()[0]
 												.getActivePage();
@@ -599,6 +599,10 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			});
 			return panel;
 		});
+	}
+
+	private static void setTraverseAlready(boolean isTraverseAlready) {
+		traverseAlready = isTraverseAlready;
 	}
 
 	@Override
