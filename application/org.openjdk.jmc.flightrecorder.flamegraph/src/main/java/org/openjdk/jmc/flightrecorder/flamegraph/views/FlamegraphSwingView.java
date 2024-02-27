@@ -181,7 +181,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private IAttribute<IQuantity> currentAttribute;
 	private AttributeSelection attributeSelection;
 	private IToolBarManager toolBar;
-	private static boolean traverseAlready = false;
+	private boolean traverseAlready = false;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -509,100 +509,21 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 				JComponent flamegraphComponent = flamegraphView.component;
 				flamegraphComponent.setBackground(bgColorAwtColor);
-				flamegraphComponent.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-						Collections.emptySet());
-				flamegraphComponent.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-						Collections.emptySet());
-				flamegraphComponent.setFocusable(true);
-				flamegraphComponent.setFocusTraversalKeysEnabled(true);
 
-				flamegraphComponent.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						if (e.getKeyCode() == KeyEvent.VK_TAB) {
-							if (e.getModifiersEx() > 0) {
-								e.getComponent().transferFocusBackward();
-							} else {
-								Display.getDefault().syncExec(new Runnable() {
-									public void run() {
-										setTraverseAlready(!traverseAlready);
-										if (traverseAlready) {
-											IWorkbenchPage activePage = PlatformUI.getWorkbench()
-													.getWorkbenchWindows()[0].getActivePage();
-											try {
-												IViewPart outlineView = activePage.showView(OUTLINE_VIEW_ID);
-												if (activePage.getActiveEditor() != null) {
-													outlineView.setFocus();
-												} else {
-													IViewPart showView = activePage.showView(JVM_BROWSER_VIEW_ID);
-													showView.setFocus();
-												}
-											} catch (PartInitException e) {
-												FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-														"Failed to set focus", e); //$NON-NLS-1$
-											}
+				// Adding focus traversal and key listener for flamegraph component 
+				setFocusTraversalProperties(flamegraphComponent);
+				addKeyListenerForFwdFocusToSWT(flamegraphComponent);
 
-										} else {
-											e.getComponent().transferFocus();
-										}
-									}
-								});
-							}
-							e.consume();
-						}
-					}
-				});
 				panel.add(flamegraphComponent, BorderLayout.CENTER);
 			}
 			panel.setBackground(bgColorAwtColor);
-			panel.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
-			panel.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
-			panel.setFocusable(true);
-			panel.setFocusTraversalKeysEnabled(true);
 
-			panel.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_TAB) {
-						if (e.getModifiersEx() > 0) {
-							Display.getDefault().syncExec(new Runnable() {
-								public void run() {
-									setTraverseAlready(!traverseAlready);
-									if (traverseAlready) {
-										IWorkbenchPage activePage = PlatformUI.getWorkbench().getWorkbenchWindows()[0]
-												.getActivePage();
-										try {
-											IViewPart outlineView = activePage.showView(OUTLINE_VIEW_ID);
-											if (activePage.getActiveEditor() != null) {
-												outlineView.setFocus();
-											} else {
-												IViewPart showView = activePage.showView(JVM_BROWSER_VIEW_ID);
-												showView.setFocus();
-											}
-										} catch (PartInitException e) {
-											FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-													"Failed to set focus", e); //$NON-NLS-1$
-										}
+			// Adding focus traversal and key listener for main panel
+			setFocusTraversalProperties(panel);
+			addKeyListenerForBkwdFocustoSWT(panel);
 
-									} else {
-										e.getComponent().transferFocusBackward();
-									}
-								}
-							});
-
-						} else {
-							e.getComponent().transferFocus();
-						}
-						e.consume();
-					}
-				}
-			});
 			return panel;
 		});
-	}
-
-	private static void setTraverseAlready(boolean isTraverseAlready) {
-		traverseAlready = isTraverseAlready;
 	}
 
 	@Override
@@ -656,35 +577,55 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			});
 		});
 
-		searchField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
-		searchField.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
-		searchField.setFocusable(true);
-		searchField.setFocusTraversalKeysEnabled(true);
+		// Adding focus traversal and key listener for search field
+		setFocusTraversalProperties(searchField);
+		addKeyListener(searchField);
 
-		searchField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_TAB) {
-					if (e.getModifiersEx() > 0) {
-						e.getComponent().transferFocusBackward();
-					} else {
-						e.getComponent().transferFocus();
-					}
-					e.consume();
-				}
-			}
-		});
 		var panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.add(new JLabel(getFlamegraphMessage("FLAMEVIEW_SEARCH")));
-		panel.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
-		panel.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
-		panel.setFocusable(true);
-		panel.setFocusTraversalKeysEnabled(true);
 
-		panel.addKeyListener(new KeyAdapter() {
+		// Adding focus traversal and key listener for panel
+		setFocusTraversalProperties(panel);
+		addKeyListener(panel);
+
+		panel.add(searchField);
+		return panel;
+	}
+
+	/**
+	 * This method sets the focus from swing to SWT. If outline page is active focus will be set to
+	 * outline view else to JVM Browser
+	 */
+	private void setFocusBackToSWT() {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage();
+				try {
+					IViewPart outlineView = activePage.showView(OUTLINE_VIEW_ID);
+					if (activePage.getActiveEditor() != null) {
+						outlineView.setFocus();
+					} else {
+						IViewPart showView = activePage.showView(JVM_BROWSER_VIEW_ID);
+						showView.setFocus();
+					}
+				} catch (PartInitException e) {
+					FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Failed to set focus", e); //$NON-NLS-1$
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adding key listener to transfer focus forward or backward based on 'TAB' or 'Shift + TAB'
+	 * 
+	 * @param comp
+	 */
+	private void addKeyListener(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					// Shift + TAB
 					if (e.getModifiersEx() > 0) {
 						e.getComponent().transferFocusBackward();
 					} else {
@@ -694,8 +635,76 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				}
 			}
 		});
-		panel.add(searchField);
-		return panel;
+	}
+
+	/**
+	 * Adding key listener and checking if all the swing components are already cycled (Fwd) once.
+	 * On completion of swing component cycle transferring focus back to SWT.
+	 * 
+	 * @param comp
+	 */
+	private void addKeyListenerForFwdFocusToSWT(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					// Shift + TAB
+					if (e.getModifiersEx() > 0) {
+						e.getComponent().transferFocusBackward();
+					} else {
+						traverseAlready = !traverseAlready;
+						// If already cycled (Fwd) within swing component then transfer the focus back to SWT
+						if (traverseAlready) {
+							setFocusBackToSWT();
+						} else {
+							e.getComponent().transferFocus();
+						}
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adding key listener and checking if all the swing components are already cycled (Bkwd) once.
+	 * On completion of swing component cycle transferring focus back to SWT.
+	 * 
+	 * @param comp
+	 */
+	private void addKeyListenerForBkwdFocustoSWT(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					// Shift + TAB
+					if (e.getModifiersEx() > 0) {
+						traverseAlready = !traverseAlready;
+						// If already cycled (Bkwd) within swing component then transfer the focus back to SWT
+						if (traverseAlready) {
+							setFocusBackToSWT();
+						} else {
+							e.getComponent().transferFocusBackward();
+						}
+					} else {
+						e.getComponent().transferFocus();
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Setting the focus traversal properties.
+	 * 
+	 * @param comp
+	 */
+	private void setFocusTraversalProperties(JComponent comp) {
+		comp.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusable(true);
+		comp.setFocusTraversalKeysEnabled(true);
 	}
 
 	private FlamegraphView<Node> createFlameGraph(Composite owner, DefaultToolTip tooltip) {
