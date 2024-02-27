@@ -588,7 +588,10 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 	}
 
 	private void connectJmxConnector(JMXServiceURL serviceURL, Map<String, Object> env) throws IOException {
-		m_jmxc = JMXConnectorFactory.newJMXConnector(serviceURL, env);
+		if (m_jmxc == null) {
+			//This will use Java's standard connector, which will not take JMC extensions into account
+			m_jmxc = JMXConnectorFactory.newJMXConnector(serviceURL, env);
+		}
 		m_jmxc.addConnectionNotificationListener(m_disconnectListener, null, null);
 		// This is a hack to provide SSL properties to the RMI SSL server socket factory using system properties
 		JMXRMISystemPropertiesProvider.setup();
@@ -611,6 +614,10 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 			throw new InvoluntaryDisconnectException("Server is disconnected!"); //$NON-NLS-1$
 		}
 		return server;
+	}
+
+	public void specifyConnector(final JMXConnector specificConnector) {
+		this.m_jmxc = specificConnector;
 	}
 
 }
