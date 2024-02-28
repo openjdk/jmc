@@ -51,6 +51,7 @@ import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlamegr
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -520,7 +521,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 			// Adding focus traversal and key listener for main panel
 			setFocusTraversalProperties(panel);
-			addKeyListenerForBkwdFocustoSWT(panel);
+			addKeyListenerForBkwdFocusToSWT(panel);
 
 			return panel;
 		});
@@ -625,8 +626,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
-					// Shift + TAB
-					if (e.getModifiersEx() > 0) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
 						e.getComponent().transferFocusBackward();
 					} else {
 						e.getComponent().transferFocus();
@@ -648,8 +648,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
-					// Shift + TAB
-					if (e.getModifiersEx() > 0) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
 						e.getComponent().transferFocusBackward();
 					} else {
 						traverseAlready = !traverseAlready;
@@ -672,13 +671,12 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	 * 
 	 * @param comp
 	 */
-	private void addKeyListenerForBkwdFocustoSWT(JComponent comp) {
+	private void addKeyListenerForBkwdFocusToSWT(JComponent comp) {
 		comp.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
-					// Shift + TAB
-					if (e.getModifiersEx() > 0) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
 						traverseAlready = !traverseAlready;
 						// If already cycled (Bkwd) within swing component then transfer the focus back to SWT
 						if (traverseAlready) {
