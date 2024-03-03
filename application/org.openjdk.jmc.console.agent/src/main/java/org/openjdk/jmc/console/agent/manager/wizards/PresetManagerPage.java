@@ -206,7 +206,7 @@ public class PresetManagerPage extends BaseWizardPage {
 				}
 
 				tableInspector.getViewer().refresh();
-				tableInspector.setFocus();
+				setFocusOnTableInspector();
 			}
 
 			@Override
@@ -214,7 +214,7 @@ public class PresetManagerPage extends BaseWizardPage {
 				String[] files = openFileDialog(Messages.PresetManagerPage_MESSAGE_EXPORT_PRESET_TO_A_FILE,
 						new String[] {PRESET_XML_EXTENSION}, SWT.SAVE | SWT.SINGLE);
 				if (files.length == 0) {
-					tableInspector.setFocus();
+					setFocusOnTableInspector();
 					return;
 				}
 
@@ -229,7 +229,7 @@ public class PresetManagerPage extends BaseWizardPage {
 			}
 		};
 		tableInspector.setContentProvider(new PresetTableContentProvider());
-		tableInspector.setFocus();
+		setFocusOnTableInspector();
 
 		return container;
 	}
@@ -255,5 +255,10 @@ public class PresetManagerPage extends BaseWizardPage {
 			PresetRepository repository = (PresetRepository) inputElement;
 			return repository.listPresets();
 		}
+	}
+
+	// 8204: This set focus is required in order to set the focus back to wizard instead of main screen
+	private void setFocusOnTableInspector() {
+		tableInspector.setFocus();
 	}
 }

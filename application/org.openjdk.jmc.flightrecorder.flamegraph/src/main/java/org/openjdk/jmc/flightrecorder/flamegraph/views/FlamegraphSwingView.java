@@ -600,7 +600,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private void setFocusBackToSWT() {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				IWorkbenchPage activePage = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage();
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
 					IViewPart outlineView = activePage.showView(OUTLINE_VIEW_ID);
 					if (activePage.getActiveEditor() != null) {
@@ -618,8 +618,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	/**
 	 * Adding key listener to transfer focus forward or backward based on 'TAB' or 'Shift + TAB'
-	 * 
-	 * @param comp
 	 */
 	private void addKeyListener(JComponent comp) {
 		comp.addKeyListener(new KeyAdapter() {
@@ -640,8 +638,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	/**
 	 * Adding key listener and checking if all the swing components are already cycled (Fwd) once.
 	 * On completion of swing component cycle transferring focus back to SWT.
-	 * 
-	 * @param comp
 	 */
 	private void addKeyListenerForFwdFocusToSWT(JComponent comp) {
 		comp.addKeyListener(new KeyAdapter() {
@@ -668,8 +664,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	/**
 	 * Adding key listener and checking if all the swing components are already cycled (Bkwd) once.
 	 * On completion of swing component cycle transferring focus back to SWT.
-	 * 
-	 * @param comp
 	 */
 	private void addKeyListenerForBkwdFocusToSWT(JComponent comp) {
 		comp.addKeyListener(new KeyAdapter() {
@@ -695,8 +689,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 
 	/**
 	 * Setting the focus traversal properties.
-	 * 
-	 * @param comp
 	 */
 	private void setFocusTraversalProperties(JComponent comp) {
 		comp.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
