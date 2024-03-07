@@ -58,7 +58,6 @@ public class ProtocolInitializer {
 	private final static String ATTRIBUTE_SEPARATOR = "separator"; //$NON-NLS-1$
 
 	public JMXConnector newJMXConnector(JMXServiceURL serviceURL, Map<String, ?> environment) throws IOException {
-		@SuppressWarnings("unchecked")
 		JMXConnectorProvider realProvider = findProtocolExtension(serviceURL);
 		if (realProvider == null) {
 			return null;
