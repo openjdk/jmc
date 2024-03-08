@@ -46,7 +46,6 @@ import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
  * refreshed in the background by some means of discovering JVMs. Listeners will be notified of any
  * changes.
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractCachedDescriptorProvider extends AbstractDescriptorProvider {
 
 	private static final long LOCAL_REFRESH_INTERVAL = 20000;
