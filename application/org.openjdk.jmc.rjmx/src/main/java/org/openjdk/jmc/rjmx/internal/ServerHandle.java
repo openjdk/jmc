@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,12 +37,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.management.remote.JMXConnector;
 
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.rjmx.IServerHandle;
+import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
@@ -144,7 +144,7 @@ public final class ServerHandle implements IServerHandle {
 			return new ProtocolInitializer().newJMXConnector(descriptor.createJMXServiceURL(),
 					descriptor.getEnvironment());
 		} catch (IOException e) {
-			Logger.getLogger(getClass().getName()).log(Level.INFO, "Error attempting JMX protocol extensions", e);
+			RJMXPlugin.getDefault().getLogger().log(Level.INFO, "Error attempting JMX protocol extensions", e);
 			return null;
 		}
 	}

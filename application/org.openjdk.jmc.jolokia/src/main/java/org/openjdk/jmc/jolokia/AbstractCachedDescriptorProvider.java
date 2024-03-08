@@ -116,7 +116,6 @@ public abstract class AbstractCachedDescriptorProvider extends AbstractDescripto
 	 * Sets up the thread.
 	 */
 	private void initialize() {
-
 		scanner = new Scanner();
 		scannerThread = new Thread(scanner, getName()); // $NON-NLS-1$
 		scannerThread.start();

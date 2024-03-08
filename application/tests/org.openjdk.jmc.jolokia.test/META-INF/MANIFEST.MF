@@ -8,10 +8,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.jolokia,
- org.eclipse.osgi;bundle-version="3.16.200",
+ org.eclipse.osgi,
  org.eclipse.ui.workbench,
  org.openjdk.jmc.rjmx,
  org.eclipse.ui,
  org.awaitility,
- org.hamcrest;bundle-version="2.1.0"
+ org.hamcrest
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test
