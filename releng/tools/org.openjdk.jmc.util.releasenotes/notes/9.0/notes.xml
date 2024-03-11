@@ -46,7 +46,7 @@
             <description>
 				Previously the JVM Browser checked every 5000 ms [0] for new JVMs. This can now be configured.
             </description>
-            <image>jfr/eventtypeid.png</image>
+            <image>general/refreshinterval.png</image>
         </note>
     </component>
     <component>
@@ -62,14 +62,14 @@
             	the linear search for the lane, and then a linear time reordering. This has been improved with 
             	a binary search.
             </description>
-            <image>core/enhancements.png</image>
+            <image>jfr/jfrperformance.png</image>
         </note>        
         <note version="9.0">
             <title>Support checkpoint event sizes beyond u4 limit</title>
             <description>
             	The JMC JFR parser now support checkpoint event sizes beyond the u4 limit.
             </description>
-            <image>core/enhancements.png</image>
+            <image>jfr/checkpointsize.png</image>
         </note>        
         <note version="9.0">
             <title>Move non-Eclipse dependant classes from org.openjdk.jmc.ui.common to org.openjdk.jmc.common</title>
@@ -78,7 +78,7 @@
             	third-party applications that consume jmc-core), and these classes now live in jmc.common. Please see JMC-7308 
             	for further information.
             </description>
-            <image>core/enhancements.png</image>
+            <image>general/reorganize.png</image>
         </note>
         <note version="9.0">
             <title>Move rjmx bundle from application to core</title>
@@ -86,7 +86,7 @@
 				The rjmx classes and related services (FlightRecorderService) are now exposed for third-party application usage.
 				Please see JMC-7069 for further information.
             </description>
-            <image>core/enhancements.png</image>
+            <image>general/reorganize.png</image>
         </note>
         <note version="9.0">
             <title>Move org.openjdk.jmc.flightrecorder.configuration bundle from application to core</title>
@@ -94,7 +94,7 @@
 				The org.openjdk.jmc.flightrecorder.configuration bundle contains many classes useful for working with jfr, 
 				and would be a great asset to have in core. Please see JMC-7307 for further information.
             </description>
-            <image>core/enhancements.png</image>
+            <image>general/reorganize.png</image>
         </note>
     </component>
     <component>
@@ -114,20 +114,20 @@
                Previously JMC was unable to start flightrecorder on a graalvm native image, even if there is 
                built-in jfr support. This has now been fixed.
             </description>
-            <image>jfr/native-image.png</image>
+            <image>jfr/native-image-alt.png</image>
         </note>
         <note version="9.0">
             <title>Provide an alternative Java based flamegraph visualization</title>
             <description>
-				The current flamegraph visualization takes palce in an embedded browser component (provided 
+				The previous flamegraph visualization takes place in an embedded browser component (provided 
 				by the Eclipse platform), unfortunately this approach has some drawbacks, the first being a bit slow.
 				This view is now using a Java (Swing) based flamegraph library. Also, the flame graph model creation 
 				performance have been improved.
             </description>
-            <image>jfr/native-image.png</image>
+            <image>jfr/flamegraph.png</image>
         </note>
         <note version="9.0">
-            <title>Rule that looks at G1 MMU Information</title>
+            <title>Rule that checks on G1 pause time target compliance</title>
             <description>
             	New rule that looks at the pause time target and compares it to the actual pauses.
             </description>
@@ -165,7 +165,7 @@
             <description>
             	Due to changes in APIs and cost of maintainence, the Twitter plug-in has been removed.
             </description>
-            <image>jfr/deadbird.png</image>
+            <image>jfr/twitterplugin.png</image>
         </note>
     </component>
     <!-- Add more components as needed -->
