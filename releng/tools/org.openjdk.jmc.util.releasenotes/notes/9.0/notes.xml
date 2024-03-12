@@ -140,7 +140,7 @@
             	The chart will also include a File Force row. There is a preference setting for the associated file force rule, where the peak duration warning limit can be set.
             	See JMC PR#533 for more information. 
             </description>
-            <image>jfr/rule.png</image>
+            <image>jfr/fileforce.png</image>
         </note>
         <note version="9.0">
             <title>Rule that checks on G1 pause time target compliance</title>
