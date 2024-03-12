@@ -53,6 +53,10 @@ When it is running, go ahead and open up the most recent target file you can fin
 
 **Wait for all the dependencies to be properly loaded** (check the progress in the lower right corner), then click the _Set as Active Target Platform_ link in the upper right corner.
 
+**If you are running Eclipse 2023-06 and above** you will need to update the `http` Protocol Rule found in _Preferences > Install/Update > Trust > Authorities > Protocol Rules_ from `Default` to `Allow`. To address [CVE-2021-41033](https://nvd.nist.gov/vuln/detail/CVE-2021-41033), Eclipse made all access to external update sites and their artifacts use https, even when http is specified. The local p2 repository served by Jetty is currently configured as http, so this step is necessary in order to resolve the Platform Target as shown above.
+
+   ![Protocol Rules](images/trusthttp.png)
+
 ## Configuring Eclipse
 
 **Maven settings**
