@@ -9,7 +9,7 @@
                 This is the latest (2024) major release of JDK Mission Control. JMC 9 requires JDK 17+ to run and introduces 
                 several new features, enhancements, and bug fixes. This version continues to support connecting to, and parsing 
                 JFR recordings from, OpenJDK 8u272+ and Oracle JDK 7u40+, and can open and visualize flight recordings from JDK 7 
-                and 8. JDK Mission Control is available for Windows (x86_64), Mac OS X (ARM and x86_64), and Linux (x86_64).
+                and 8. JDK Mission Control is available for Windows (x86_64), Mac OS X (ARM and x86_64), and Linux (ARM and x86_64).
             </description>
             <image>general/jmc.png</image>
         </note>
@@ -44,7 +44,7 @@
         <note version="9.0">
             <title>Add user configuration for local JVM refresh interval</title>
             <description>
-				Previously the JVM Browser checked every 5000 ms [0] for new JVMs. This can now be configured.
+				Previously the JVM Browser checked every 5000 ms for new JVMs. This can now be configured.
             </description>
             <image>general/refreshinterval.png</image>
         </note>
@@ -74,9 +74,9 @@
         <note version="9.0">
             <title>Move non-Eclipse dependant classes from org.openjdk.jmc.ui.common to org.openjdk.jmc.common</title>
             <description>
-            	There are a number of classes currently in jmc.ui.common that would be a great asset to the core distribution (and the 
-            	third-party applications that consume jmc-core), and these classes now live in jmc.common. Please see JMC-7308 
-            	for further information.
+            	There were a number of classes prviously in jmc.ui.common that would be a great asset to the core distribution 
+            	(and the third-party applications that consume jmc-core), and these classes now live in jmc.common. 
+            	Please see JMC-7308 for further information.
             </description>
             <image>general/reorganize.png</image>
         </note>
@@ -92,7 +92,7 @@
             <title>Move org.openjdk.jmc.flightrecorder.configuration bundle from application to core</title>
             <description>
 				The org.openjdk.jmc.flightrecorder.configuration bundle contains many classes useful for working with jfr, 
-				and would be a great asset to have in core. Please see JMC-7307 for further information.
+				and are now available in core. Please see JMC-7307 for further information.
             </description>
             <image>general/reorganize.png</image>
         </note>
