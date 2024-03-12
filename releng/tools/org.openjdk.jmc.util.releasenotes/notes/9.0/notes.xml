@@ -79,9 +79,9 @@
             <image>jfr/checkpointsize.png</image>
         </note>        
         <note version="9.0">
-            <title>Move non-Eclipse dependant classes from org.openjdk.jmc.ui.common to org.openjdk.jmc.common</title>
+            <title>Move non-Eclipse dependent classes from org.openjdk.jmc.ui.common to org.openjdk.jmc.common</title>
             <description>
-            	There were a number of classes prviously in jmc.ui.common that would be a great asset to the core distribution 
+            	There were a number of classes previously in jmc.ui.common that would be a great asset to the core distribution 
             	(and the third-party applications that consume jmc-core), and these classes now live in jmc.common. 
             	Please see JMC-7308 for further information.
             </description>
@@ -153,12 +153,12 @@
             <title>Rule that looks at finalization statistics</title>
             <description>
 				JDK 18 comes with a FinalizationStatistics event that helps users find where in their application 
-				finalizers are run. This is importartant as finalization has been deprecated for removal in a future 
+				finalizers are run. This is important as finalization has been deprecated for removal in a future 
 				release. For more information about finalization and its flaws, see https://openjdk.java.net/jeps/421.
 				Even if an application doesn't implement any finalize() methods, it may rely on third-party libraries 
 				that does. Static analysis of third-party libraries using "jdeprscan --for-removal" can be used to list 
 				those classes, but it will not tell if they are being used. For example, an application may be missing 
-				a call to a close() method, so the resource is cleaned up by the finalizer, which is suboptimal.
+				a call to a close() method, so the resource is cleaned up by the finalizer, which is sub-optimal.
             </description>
             <image>jfr/rule.png</image>
         </note>
@@ -179,7 +179,7 @@
         <note version="9.0">
             <title>Twitter plug-in removed</title>
             <description>
-            	Due to changes in APIs and cost of maintainence, the Twitter plug-in has been removed.
+            	Due to changes in APIs and cost of maintenance, the Twitter plug-in has been removed.
             </description>
             <image>jfr/twitterplugin.png</image>
         </note>
@@ -190,10 +190,10 @@
         <bugfix>
             <area>Agent</area>
             <bugid>8045</bugid>
-            <synopsis>retransformClasses() doesn't retransform all needed classes</synopsis>
+            <synopsis>retransformClasses() doesn't re-transform all needed classes</synopsis>
             <description>
 				The retransformClasses() methods in Agent and AgentController use Class.forName() to try to get the 
-				class objects of classes needed to retransform. This obviously doesn't work for classes loaded by 
+				class objects of classes needed to re-transform. This obviously doesn't work for classes loaded by 
 				classloaders different from the one which loads the agent. Those classes would be instrumented if 
 				they were loaded after their event probes were defined the AgentController. But when loaded earlier 
 				they would not be instrumented. This has been fixed.
