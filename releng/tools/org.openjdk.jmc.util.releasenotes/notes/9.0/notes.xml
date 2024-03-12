@@ -29,7 +29,14 @@
 			<description>
 				JMC 9 is now built for Linux aarch64.
 			</description>
-			<image>general/eclipse.png</image>
+			<image>general/linuxaarch64.png</image>
+		</note>
+		<note version="9.0">
+			<title>Support for dark mode</title>
+			<description>
+				JMC 9 now supports dark mode. Go to Preferences, General | Appearance, and select the Dark theme to enable.
+			</description>
+			<image>general/darkmode.png</image>
 		</note>
 		<note version="9.0">
 			<title>Minor bugfixes and improvements</title>
@@ -125,6 +132,15 @@
 				performance have been improved.
             </description>
             <image>jfr/flamegraph.png</image>
+        </note>
+       	<note version="9.0">
+            <title>Visualization and Rule for FileChannel.force()</title>
+            <description>
+            	The File I/O page has been updated to show force related information. There are two new columns added - Force Count and Update Metadata. Both are hidden by default and can be enabled by right clicking the table. 
+            	The chart will also include a File Force row. There is a preference setting for the associated file force rule, where the peak duration warning limit can be set.
+            	See JMC PR#533 for more information. 
+            </description>
+            <image>jfr/rule.png</image>
         </note>
         <note version="9.0">
             <title>Rule that checks on G1 pause time target compliance</title>
