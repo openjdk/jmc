@@ -18,6 +18,10 @@ Install Eclipse, and before starting it, add the following two lines to the ecli
    -Dp2.trustedAuthorities=https://download.eclipse.org,https://archive.eclipse.org,http://localhost
    ```
 
+Alternatively, instead of editing the eclipse.ini file you can update the `http` Protocol Rule found in _Preferences > Install/Update > Trust > Authorities > Protocol Rules_ from `Default` to `Allow`.
+
+**As of Eclipse 2023-06 and above** Eclipse made all access to external update sites and their artifacts use https, even when http is specified. The local p2 repository served by Jetty is currently configured as http, so this step is necessary in order to resolve the Platform Target as described later in the _Setting up the PDE target runtime environment_ section.
+
 Next start Eclipse and create a new workspace for your JMC work. Creating a new workspace is as easy as picking a new name when starting up your Eclipse in the dialog asking for a directory for the workspace:
 
 ![Workspace Selection](images/workspace.png)
@@ -52,10 +56,6 @@ When it is running, go ahead and open up the most recent target file you can fin
 ![Platform Target](images/platformtarget.png)
 
 **Wait for all the dependencies to be properly loaded** (check the progress in the lower right corner), then click the _Set as Active Target Platform_ link in the upper right corner.
-
-**If you are running Eclipse 2023-06 and above** you will need to update the `http` Protocol Rule found in _Preferences > Install/Update > Trust > Authorities > Protocol Rules_ from `Default` to `Allow`. To address [CVE-2021-41033](https://nvd.nist.gov/vuln/detail/CVE-2021-41033), Eclipse made all access to external update sites and their artifacts use https, even when http is specified. The local p2 repository served by Jetty is currently configured as http, so this step is necessary in order to resolve the Platform Target as shown above.
-
-   ![Protocol Rules](images/trusthttp.png)
 
 ## Configuring Eclipse
 
