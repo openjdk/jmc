@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+    <component>
+        <name>General</name>
+        <note version="9.0">
+            <title>JMC 9 - New Release!</title>
+            <description>
+                This is the latest (2024) major release of JDK Mission Control. JMC 9 requires JDK 17+ to run and introduces 
+                several new features, enhancements, and bug fixes. This version continues to support connecting to, and parsing 
+                JFR recordings from, OpenJDK 8u272+ and Oracle JDK 7u40+, and can open and visualize flight recordings from JDK 7 
+                and 8. JDK Mission Control is available for Windows (x86_64), Mac OS X (ARM and x86_64), and Linux (ARM and x86_64).
+            </description>
+            <image>general/jmc.png</image>
+        </note>
+		<note version="9.0">
+			<title>Eclipse 4.30 support</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2023-12 and later. To install JDK Mission Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be vendor specific, and some vendors
+				will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="9.0">
+			<title>Support for Linux/aarch64</title>
+			<description>
+				JMC 9 is now built for Linux aarch64.
+			</description>
+			<image>general/linuxaarch64.png</image>
+		</note>
+		<note version="9.0">
+			<title>Support for dark mode</title>
+			<description>
+				JMC 9 now supports dark mode. Go to Preferences, General | Appearance, and select the Dark theme to enable.
+			</description>
+			<image>general/darkmode.png</image>
+		</note>
+		<note version="9.0">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are 118 fixes and improvements in this release.
+				Check out the JMC 9.0 Result Dashboard
+				(https://bugs.openjdk.org/secure/Dashboard.jspa?selectPageId=21800)
+				for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+        <note version="9.0">
+            <title>Add user configuration for local JVM refresh interval</title>
+            <description>
+				Previously the JVM Browser checked every 5000 ms for new JVMs. This can now be configured.
+            </description>
+            <image>general/refreshinterval.png</image>
+        </note>
+    </component>
+    <component>
+        <name>Core</name>
+        <!-- Core library enhancements for JMC 9 -->
+        <note version="9.0">
+            <title>Better JFR parser performance</title>
+            <description>
+            	Multiple efforts have been made to reduce allocations in the JMC parser, including:
+            	reduced allocation of Doubles, reduced allocation rate in ParserStats.
+            	Also, when duration events aren't ordered by their end time (e.g. events which stack so that the last 
+            	event finishes first, or file reads with overlaps) `DisjointBuilder.add` can be slow because of 
+            	the linear search for the lane, and then a linear time reordering. This has been improved with 
+            	a binary search.
+            </description>
+            <image>jfr/jfrperformance.png</image>
+        </note>        
+        <note version="9.0">
+            <title>Support checkpoint event sizes beyond u4 limit</title>
+            <description>
+            	The JMC JFR parser now support checkpoint event sizes beyond the u4 limit.
+            </description>
+            <image>jfr/checkpointsize.png</image>
+        </note>        
+        <note version="9.0">
+            <title>Move non-Eclipse dependent classes from org.openjdk.jmc.ui.common to org.openjdk.jmc.common</title>
+            <description>
+            	There were a number of classes previously in jmc.ui.common that would be a great asset to the core distribution 
+            	(and the third-party applications that consume jmc-core), and these classes now live in jmc.common. 
+            	Please see JMC-7308 for further information.
+            </description>
+            <image>general/reorganize.png</image>
+        </note>
+        <note version="9.0">
+            <title>Move rjmx bundle from application to core</title>
+            <description>
+				The rjmx classes and related services (FlightRecorderService) are now exposed for third-party application usage.
+				Please see JMC-7069 for further information.
+            </description>
+            <image>general/reorganize.png</image>
+        </note>
+        <note version="9.0">
+            <title>Move org.openjdk.jmc.flightrecorder.configuration bundle from application to core</title>
+            <description>
+				The org.openjdk.jmc.flightrecorder.configuration bundle contains many classes useful for working with jfr, 
+				and are now available in core. Please see JMC-7307 for further information.
+            </description>
+            <image>general/reorganize.png</image>
+        </note>
+    </component>
+    <component>
+        <name>Java Flight Recorder (JFR)</name>
+        <!-- JFR improvements for JMC 9 -->
+        <note version="9.0">
+            <title>The Event Browser now supports searching and showing event type ids</title>
+            <description>
+               Searching in the search bar now also searches event type IDs, and there is also a
+               (by default hidden) column that makes it easy to show the event type IDs for the shown events.
+            </description>
+            <image>jfr/eventtypeid.png</image>
+        </note>
+        <note version="9.0">
+            <title>Add support for enabling jfr on native images</title>
+            <description>
+               Previously JMC was unable to start flightrecorder on a graalvm native image, even if there is 
+               built-in jfr support. This has now been fixed.
+            </description>
+            <image>jfr/native-image-alt.png</image>
+        </note>
+        <note version="9.0">
+            <title>Provide an alternative Java based flamegraph visualization</title>
+            <description>
+				The previous flamegraph visualization takes place in an embedded browser component (provided 
+				by the Eclipse platform), unfortunately this approach has some drawbacks, the first being a bit slow.
+				This view is now using a Java (Swing) based flamegraph library. Also, the flame graph model creation 
+				performance have been improved.
+            </description>
+            <image>jfr/flamegraph.png</image>
+        </note>
+       	<note version="9.0">
+            <title>Visualization and Rule for FileChannel.force()</title>
+            <description>
+            	The File I/O page has been updated to show force related information. There are two new columns added - Force Count and Update Metadata. Both are hidden by default and can be enabled by right clicking the table. 
+            	The chart will also include a File Force row. There is a preference setting for the associated file force rule, where the peak duration warning limit can be set.
+            	See JMC PR#533 for more information. 
+            </description>
+            <image>jfr/fileforce.png</image>
+        </note>
+        <note version="9.0">
+            <title>Rule that checks on G1 pause time target compliance</title>
+            <description>
+            	New rule that looks at the pause time target and compares it to the actual pauses.
+            </description>
+            <image>jfr/rule.png</image>
+        </note>
+        <note version="9.0">
+            <title>Rule that looks at finalization statistics</title>
+            <description>
+				JDK 18 comes with a FinalizationStatistics event that helps users find where in their application 
+				finalizers are run. This is important as finalization has been deprecated for removal in a future 
+				release. For more information about finalization and its flaws, see https://openjdk.java.net/jeps/421.
+				Even if an application doesn't implement any finalize() methods, it may rely on third-party libraries 
+				that does. Static analysis of third-party libraries using "jdeprscan --for-removal" can be used to list 
+				those classes, but it will not tell if they are being used. For example, an application may be missing 
+				a call to a close() method, so the resource is cleaned up by the finalizer, which is sub-optimal.
+            </description>
+            <image>jfr/rule.png</image>
+        </note>
+        <note version="9.0">
+            <title>Rule that detects GC Inverted Parallelism</title>
+            <description>
+            	Rule inspired by the "Inverted Parallelism" analysis in Garbagecat. See JMC-8144 for more information.
+            </description>
+            <image>jfr/rule.png</image>
+        </note>
+        <note version="9.0">
+            <title>Support for the new JPLIS agent events</title>
+            <description>
+            	There is now a new page and rule for loaded JPLIS agents. See JMC-8054 for more information.
+            </description>
+            <image>jfr/agent.png</image>
+        </note>
+        <note version="9.0">
+            <title>Twitter plug-in removed</title>
+            <description>
+            	Due to changes in APIs and cost of maintenance, the Twitter plug-in has been removed.
+            </description>
+            <image>jfr/twitterplugin.png</image>
+        </note>
+    </component>
+    <!-- Add more components as needed -->
+    <bugfixes>
+        <!-- Bug fixes in JMC 9 -->
+        <bugfix>
+            <area>Agent</area>
+            <bugid>8045</bugid>
+            <synopsis>retransformClasses() doesn't re-transform all needed classes</synopsis>
+            <description>
+				The retransformClasses() methods in Agent and AgentController use Class.forName() to try to get the 
+				class objects of classes needed to re-transform. This obviously doesn't work for classes loaded by 
+				classloaders different from the one which loads the agent. Those classes would be instrumented if 
+				they were loaded after their event probes were defined the AgentController. But when loaded earlier 
+				they would not be instrumented. This has been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Agent</area>
+            <bugid>8048</bugid>
+            <synopsis>Agent throws exceptions on missing or empty descriptions</synopsis>
+            <description>
+				When the description of an event or value is empty or missing, the agent fails with exceptions.
+				This has now been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Console</area>
+            <bugid>8154</bugid>
+            <synopsis>Some JMX attributes are missing unit specifications in the Console</synopsis>
+            <description>
+            	The missing unit specifications have now been added.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8063</bugid>
+            <synopsis>IMCFrame Type cache not synchronized</synopsis>
+            <description>
+                The type cache used in the IMCFrame Type inner class wasn't synchronized and could cause a concurrent 
+                modification exception during e.g. JFR parsing. This has been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8156</bugid>
+            <synopsis>JfrRulesReport.printReport does not respect verbosity for text and json</synopsis>
+            <description>
+            	The verbosity flag for text and json reports didn't work. This has been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8041</bugid>
+            <synopsis>JfrRulesReport json reports produce incomplete results</synopsis>
+            <description>
+            	While generating JFR Rules Reports in json format, the results were incomplete. The components "message" 
+            	and "detailedMessage" were not populated. This has been fixed. 
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>JFR</area>
+            <bugid>7885</bugid>
+            <synopsis>Graphical rendering of dependency view fails due to heap memory drain</synopsis>
+            <description>
+            	Also JMC-7496. The dependency view drains the heap memory and causes out-of-memory exceptions and performance delays.
+            	This has been improved.
+            </description>
+        </bugfix>
+    </bugfixes>
+	<knownissues>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>
+				This one is still under investigation, but it seems JMC
+				can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph view, heatmap view and dependency view does not work on Windows
+			</synopsis>
+			<description>
+				This is due to a problem with the Windows based browser
+				component in SWT. We're hoping for a fix in the component for a
+				future version of the Eclipse platform.
+			</description>
+		</issue>
+	</knownissues>
+</notes>
