@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.flightrecorder.jdk;
 
 import static org.openjdk.jmc.common.item.Aggregators.avg;
 import static org.openjdk.jmc.common.item.Aggregators.distinctAsString;
+import static org.openjdk.jmc.common.item.Aggregators.convertAsString;
 import static org.openjdk.jmc.common.item.Aggregators.filter;
 import static org.openjdk.jmc.common.item.Aggregators.max;
 import static org.openjdk.jmc.common.item.Aggregators.min;
@@ -117,6 +118,7 @@ public final class JdkAggregators {
 	public static final IAggregator<String, ?> JVM_NAME = distinctAsString(VM_INFO, JdkAttributes.JVM_NAME);
 	public static final IAggregator<IQuantity, ?> JVM_PID = min(JdkAttributes.JVM_PID.getName(), null, VM_INFO,
 			JdkAttributes.JVM_PID);
+	public static final IAggregator<String, ?> JVM_PID_ID = convertAsString(VM_INFO, JdkAttributes.JVM_PID);
 	public static final IAggregator<IQuantity, ?> JVM_START_TIME = min(JdkAttributes.JVM_START_TIME.getName(), null,
 			VM_INFO, JdkAttributes.JVM_START_TIME);
 	public static final IAggregator<String, ?> JVM_VERSION = distinctAsString(VM_INFO, JdkAttributes.JVM_VERSION);
