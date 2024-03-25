@@ -206,4 +206,19 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 		return result;
 	}
 
+	@Override
+	public boolean isInstanceOf(ObjectName objectName, String type) throws InstanceNotFoundException, IOException {
+		if ("java.lang.management.OperatingSystemMXBean".equals(type)
+				&& "com.sun.management.internal.OperatingSystemImpl"
+						.equals(this.getMBeanInfo(objectName).getClassName())) {
+			return true;
+		}
+		try {
+			return super.isInstanceOf(objectName, type);
+		} catch (NoClassDefFoundError ce) {
+			//Handle this until it is fixed in jolokia https://github.com/jolokia/jolokia/issues/666
+			return false;
+		}
+	}
+
 }
