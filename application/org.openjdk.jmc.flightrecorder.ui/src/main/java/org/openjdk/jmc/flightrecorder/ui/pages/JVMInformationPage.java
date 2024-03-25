@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -234,7 +234,7 @@ public class JVMInformationPage extends AbstractDataPage {
 			infoViewer = new ItemAggregateViewer(jvmInfSection, toolkit);
 			infoViewer.addAggregate(JdkAggregators.JVM_START_TIME);
 			infoViewer.addAggregate(JdkAggregators.JVM_NAME);
-			infoViewer.addAggregate(JdkAggregators.JVM_PID_ID);
+			infoViewer.addAggregate(JdkAggregators.JVM_PID);
 			infoViewer.addAggregate(JdkAggregators.JVM_VERSION);
 			infoViewer.addAggregate(JdkAggregators.JVM_ARGUMENTS);
 			infoViewer.addAggregate(JdkAggregators.JAVA_ARGUMENTS);
