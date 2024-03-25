@@ -36,7 +36,7 @@
 [general]
 project=jmc
 jbs=jmc
-version=9.0.0
+version=9.1.0
 
 [checks]
 error=author,reviewers,merge,message,issues
