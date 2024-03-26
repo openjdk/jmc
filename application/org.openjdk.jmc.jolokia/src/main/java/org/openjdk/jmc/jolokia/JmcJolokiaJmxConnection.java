@@ -215,7 +215,7 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 		}
 		try {
 			return super.isInstanceOf(objectName, type);
-		} catch (NoClassDefFoundError ce) {
+		} catch (NoClassDefFoundError | UnsatisfiedLinkError ce) {
 			//Handle this until it is fixed in jolokia https://github.com/jolokia/jolokia/issues/666
 			return false;
 		}
