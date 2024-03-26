@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -1046,6 +1046,31 @@ public class Aggregators {
 
 	public static IAggregator<String, ?> distinctAsString(String typeId, IAttribute<String> attribute) {
 		return filter(distinctAsString(attribute, ", "), ItemFilters.type(typeId)); //$NON-NLS-1$
+	}
+
+	public static <T> IAggregator<Number, ?> getIdentifier(String typeId, IAttribute<T> attribute) {
+		IAggregator<Set<T>, ?> aggregator = Aggregators.distinct(attribute);
+		aggregator = filter(aggregator, ItemFilters.type(typeId));
+		return Aggregators.valueBuilderAggregator(aggregator, new IValueBuilder<Number, Set<T>>() {
+			@Override
+			public IType<? super Number> getValueType() {
+				return UnitLookup.RAW_NUMBER;
+			}
+
+			@Override
+			public Number getValue(Set<T> source) {
+				Number value = 0;
+				if (source.isEmpty()) {
+					return null;
+				} else {
+					Iterator<?> itr = source.iterator();
+					while (itr.hasNext()) {
+						value = (Number) itr.next();
+					}
+					return value;
+				}
+			}
+		}, attribute.getName(), attribute.getDescription());
 	}
 
 	public static IAggregator<String, ?> distinctAsString(IAttribute<String> attribute, final String delimiter) {

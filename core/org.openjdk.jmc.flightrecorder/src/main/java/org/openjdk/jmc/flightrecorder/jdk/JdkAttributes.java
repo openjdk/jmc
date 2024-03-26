@@ -49,6 +49,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.THREAD;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESTAMP;
 import static org.openjdk.jmc.common.unit.UnitLookup.UNKNOWN;
+import static org.openjdk.jmc.common.unit.UnitLookup.RAW_NUMBER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -457,8 +458,8 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_JVM_START_TIME), TIMESTAMP);
 	public static final IAttribute<String> JVM_NAME = attr("jvmName", Messages.getString(Messages.ATTR_JVM_NAME), //$NON-NLS-1$
 			PLAIN_TEXT);
-	public static final IAttribute<IQuantity> JVM_PID = attr("pid", Messages.getString(Messages.ATTR_JVM_PID), //$NON-NLS-1$
-			NUMBER);
+	public static final IAttribute<Number> JVM_PID = attr("pid", Messages.getString(Messages.ATTR_JVM_PID), //$NON-NLS-1$
+			RAW_NUMBER);
 	public static final IAttribute<String> JVM_VERSION = attr("jvmVersion", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_JVM_VERSION), PLAIN_TEXT);
 	public static final IAttribute<String> JVM_ARGUMENTS = attr("jvmArguments", //$NON-NLS-1$
