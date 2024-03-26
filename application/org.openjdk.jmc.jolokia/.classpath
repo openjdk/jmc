@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<!-- Convenience: Regarding access rules. It appears that these packages are exported from jolokia standalone. Wondering whether eclipse caps at 36 access rules or something. Setting access rules on that specific plugin dependency does not seem to be persisted to the .classpath file, hence setting access policy globally for all plugin dependencies-->
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/jolokia/**"/>
+			<accessrule kind="accessible" pattern="org/json/simple/*"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
