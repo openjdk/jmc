@@ -107,7 +107,7 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 		MBeanInfo localInfo;
 		try {
 			localInfo = ManagementFactory.getPlatformMBeanServer().getMBeanInfo(name);
-		} catch (Exception ignore) {
+		} catch (Exception | NoClassDefFoundError ignore) {
 			localInfo = null;
 		}
 		return Optional.ofNullable(localInfo);
@@ -116,16 +116,19 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 	@Override
 	public Object invoke(ObjectName name, String operationName, Object[] params, String[] signature)
 			throws InstanceNotFoundException, MBeanException, IOException {
-		for (int i = 0; i < params.length; i++) {
-			Object object = params[i];
-			if (object instanceof TabularData) {
-				try {
-					params[i] = new Converters().getToJsonConverter().convertToJson(object, new LinkedList<String>(),
-							JsonConvertOptions.DEFAULT);
-				} catch (AttributeNotFoundException ignore) {
-				}
-			}
 
+		if (params != null) {
+			for (int i = 0; i < params.length; i++) {
+				Object object = params[i];
+				if (object instanceof TabularData) {
+					try {
+						params[i] = new Converters().getToJsonConverter().convertToJson(object,
+								new LinkedList<String>(), JsonConvertOptions.DEFAULT);
+					} catch (AttributeNotFoundException ignore) {
+					}
+				}
+
+			}
 		}
 		return super.invoke(name, operationName, params, signature);
 	}
@@ -215,7 +218,7 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 		}
 		try {
 			return super.isInstanceOf(objectName, type);
-		} catch (NoClassDefFoundError | UnsatisfiedLinkError ce) {
+		} catch (NoClassDefFoundError | UnsatisfiedLinkError e) {
 			//Handle this until it is fixed in jolokia https://github.com/jolokia/jolokia/issues/666
 			return false;
 		}
