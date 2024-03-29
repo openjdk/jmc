@@ -1048,24 +1048,24 @@ public class Aggregators {
 		return filter(distinctAsString(attribute, ", "), ItemFilters.type(typeId)); //$NON-NLS-1$
 	}
 
-	public static <T> IAggregator<Number, ?> getIdentifier(String typeId, IAttribute<T> attribute) {
+	public static <T> IAggregator<Long, ?> getIdentifier(String typeId, IAttribute<T> attribute) {
 		IAggregator<Set<T>, ?> aggregator = Aggregators.distinct(attribute);
 		aggregator = filter(aggregator, ItemFilters.type(typeId));
-		return Aggregators.valueBuilderAggregator(aggregator, new IValueBuilder<Number, Set<T>>() {
+		return Aggregators.valueBuilderAggregator(aggregator, new IValueBuilder<Long, Set<T>>() {
 			@Override
-			public IType<? super Number> getValueType() {
-				return UnitLookup.RAW_NUMBER;
+			public IType<? super Long> getValueType() {
+				return UnitLookup.RAW_LONG;
 			}
 
 			@Override
-			public Number getValue(Set<T> source) {
-				Number value = 0;
+			public Long getValue(Set<T> source) {
+				Long value = 0L;
 				if (source.isEmpty()) {
 					return null;
 				} else {
 					Iterator<?> itr = source.iterator();
 					while (itr.hasNext()) {
-						value = (Number) itr.next();
+						value = (Long) itr.next();
 					}
 					return value;
 				}
