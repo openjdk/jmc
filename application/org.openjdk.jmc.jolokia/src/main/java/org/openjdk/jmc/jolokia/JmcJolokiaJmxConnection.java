@@ -52,8 +52,8 @@ import javax.management.openmbean.TabularData;
 
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
-import org.jolokia.converter.Converters;
-import org.jolokia.converter.json.JsonConvertOptions;
+import org.jolokia.service.serializer.JolokiaSerializer;
+import org.jolokia.server.core.service.serializer.SerializeOptions;
 
 /**
  * Make JMC specific adjustments to Jolokia JMX connection. May consider to use the decorator
@@ -122,8 +122,8 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 				Object object = params[i];
 				if (object instanceof TabularData) {
 					try {
-						params[i] = new Converters().getToJsonConverter().convertToJson(object,
-								new LinkedList<String>(), JsonConvertOptions.DEFAULT);
+						params[i] = new JolokiaSerializer().serialize(object, new LinkedList<String>(),
+								SerializeOptions.DEFAULT);
 					} catch (AttributeNotFoundException ignore) {
 					}
 				}
