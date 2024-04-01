@@ -31,29 +31,22 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.jolokia;
+package org.openjdk.jmc.jolokia.preferences;
 
 import org.eclipse.osgi.util.NLS;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = Messages.class.getPackageName() + ".messages"; //$NON-NLS-1$
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	public static String JolokiaDiscoveryListener_Description;
+	private static final String BUNDLE_NAME = "org.openjdk.jmc.jolokia.preferences.messages"; //$NON-NLS-1$
+	public static String JolokiaPreferencePage_Description;
+	public static String JolokiaPreferencePage_DiscoverTimeoutLabel;
+	public static String JolokiaPreferencePage_Label;
+	public static String JolokiaPreferencePage_MulticastGroupLabel;
+	public static String JolokiaPreferencePage_MulticastGroupTooltip;
+	public static String JolokiaPreferencePage_MulticastPortLabel;
+	public static String JolokiaPreferencePage_MulticastPortTooltip;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
 	}
 
 	private Messages() {

@@ -13,5 +13,6 @@ Require-Bundle: org.junit,
  org.openjdk.jmc.rjmx,
  org.eclipse.ui,
  org.awaitility,
- org.hamcrest
+ org.hamcrest,
+ org.osgi.service.servlet;bundle-version="2.0.0"
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test

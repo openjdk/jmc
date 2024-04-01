@@ -165,6 +165,19 @@
 									<transitive>false</transitive>
 								</artifact>
 								<artifact>
+									<id>org.jolokia:jolokia-service-discovery:${jolokia.version}</id>
+									<override>true</override>
+									<instructions>
+										<Export-Package>org.jolokia.service.discovery</Export-Package>
+									</instructions>
+								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-server-core:${jolokia.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.osgi:org.osgi.service.servlet:2.0.0</id>
+								</artifact>
+								<artifact>
 									<id>com.github.tomakehurst:wiremock-standalone:${wiremock.version}</id>
 									<transitive>false</transitive>
 								</artifact>
