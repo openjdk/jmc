@@ -109,7 +109,6 @@
 		<maven.deploy.version>3.1.1</maven.deploy.version>
 		<spotbugs.version>4.7.3.5</spotbugs.version>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<jolokia.version>1.7.2</jolokia.version>
 	</properties>
 	<scm>
 		<connection>${scmConnection}</connection>
