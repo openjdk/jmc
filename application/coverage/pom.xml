@@ -320,6 +320,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>org.openjdk.jmc.jolokia</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.rjmx.ui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -408,6 +413,12 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.ui.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>org.openjdk.jmc.jolokia.test</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
