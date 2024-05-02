@@ -211,8 +211,8 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
 	@Override
 	public boolean isInstanceOf(ObjectName objectName, String type) throws InstanceNotFoundException, IOException {
-		if ("java.lang.management.OperatingSystemMXBean".equals(type)
-				&& "com.sun.management.internal.OperatingSystemImpl"
+		if ("java.lang.management.OperatingSystemMXBean".equals(type) //$NON-NLS-1$
+				&& "com.sun.management.internal.OperatingSystemImpl" //$NON-NLS-1$
 						.equals(this.getMBeanInfo(objectName).getClassName())) {
 			return true;
 		}
