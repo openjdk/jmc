@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -50,7 +50,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<argLine>-Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Djmc.test.rjmx.serviceURL=service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi ${jfr.vmargs}</argLine>
+					<argLine>${surefireArgLine} -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Djmc.test.rjmx.serviceURL=service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi ${jfr.vmargs}</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
