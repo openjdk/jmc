@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,10 +41,10 @@ import org.openjdk.jmc.browser.attach.BrowserAttachPlugin;
 
 import com.sun.tools.attach.AgentLoadException;
 
-import sun.tools.attach.HotSpotVirtualMachine;
+import com.sun.tools.attach.VirtualMachine;
 
 /**
- * Ugly ass class needed for us to work better with Sun.
+ * This is class is required to for example execute diagnostic commands.
  */
 public class ExecuteTunnler {
 	private final static String ERROR_MESSAGE_PROBLEM = "Problem executing command on local JVM"; //$NON-NLS-1$
@@ -64,14 +64,13 @@ public class ExecuteTunnler {
 	 * @throws AgentLoadException
 	 * @throws IOException
 	 */
-	public static InputStream execute(
-		HotSpotVirtualMachine hsvm, String command, Object[] args, boolean throwCausingException)
+	public static InputStream execute(VirtualMachine hsvm, String command, Object[] args, boolean throwCausingException)
 			throws AgentLoadException, IOException {
 		return invoke(hsvm, command, args, throwCausingException);
 	}
 
-	private static InputStream invoke(
-		HotSpotVirtualMachine hsvm, String command, Object[] args, boolean throwCausingException) throws IOException {
+	private static InputStream invoke(VirtualMachine hsvm, String command, Object[] args, boolean throwCausingException)
+			throws IOException {
 		Method m;
 		try {
 			m = hsvm.getClass().getDeclaredMethod("execute", //$NON-NLS-1$
