@@ -105,7 +105,7 @@ public class MonitoredHostWrapper {
 					| IllegalAccessException
 					| IllegalArgumentException
 					| InvocationTargetException e) {
-				BrowserAttachPlugin.getPluginLogger().log(Level.WARNING,
+				BrowserAttachPlugin.getPluginLogger().log(Level.FINEST,
 						"Problem getting active VMs. This could make local attach problematic.", e);
 			}
 		}
@@ -130,7 +130,7 @@ public class MonitoredHostWrapper {
 						| InvocationTargetException
 						| NoSuchMethodException
 						| SecurityException e) {
-					BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, MonitoredHostWrapper.ERROR_MESSAGE_ATTACH,
+					BrowserAttachPlugin.getPluginLogger().log(Level.FINEST, MonitoredHostWrapper.ERROR_MESSAGE_ATTACH,
 							e);
 				}
 			}
