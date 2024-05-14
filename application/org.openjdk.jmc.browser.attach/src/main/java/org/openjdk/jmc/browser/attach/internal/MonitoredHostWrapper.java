@@ -44,7 +44,7 @@ import java.util.logging.Level;
 import org.openjdk.jmc.browser.attach.BrowserAttachPlugin;
 
 public class MonitoredHostWrapper {
-	static final String ERROR_MESSAGE_ATTACH = "Could not find attach related classes. This can affect discovery of locally running JVMs.";
+	public static final String ERROR_MESSAGE_ATTACH = "Could not find attach related classes. This can affect discovery of locally running JVMs.";
 
 	private static Class<?> CLASS_HOST_IDENTIFIER;
 	private static Class<?> CLASS_VM_IDENTIFIER;

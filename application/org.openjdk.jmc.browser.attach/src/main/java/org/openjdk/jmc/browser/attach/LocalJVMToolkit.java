@@ -125,6 +125,7 @@ public class LocalJVMToolkit {
 			CLASS_HOTSPOT_VIRTUAL_MACHINE = Class.forName("sun.tools.attach.HotSpotVirtualMachine");
 		} catch (ClassNotFoundException e) {
 			CLASS_HOTSPOT_VIRTUAL_MACHINE = null;
+			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, MonitoredHostWrapper.ERROR_MESSAGE_ATTACH, e); //$NON-NLS-1$
 		}
 	}
 
@@ -403,10 +404,12 @@ public class LocalJVMToolkit {
 								try {
 									// try to force finish init the attached JVM
 									// to ensure properties are correctly populated
-									// see JMC-4454 for details
-									Method methodStartLocalManagementAgent = CLASS_HOTSPOT_VIRTUAL_MACHINE
-											.getMethod("startLocalManagementAgent");
-									methodStartLocalManagementAgent.invoke(vm);
+									// see JMC-4454 for details. Best effort.
+									if (CLASS_HOTSPOT_VIRTUAL_MACHINE != null) {
+										Method methodStartLocalManagementAgent = CLASS_HOTSPOT_VIRTUAL_MACHINE
+												.getMethod("startLocalManagementAgent");
+										methodStartLocalManagementAgent.invoke(vm);
+									}
 								} catch (Exception ex) {
 									// swallow exceptions
 								}
