@@ -312,6 +312,8 @@ public final class JdkAttributes {
 				}
 			});
 	public static final IAttribute<String> PID = attr("pid", Messages.getString(Messages.ATTR_PID), PLAIN_TEXT); //$NON-NLS-1$
+	public static final IAttribute<String> CERTIFICATE_ID_STR = attr("certificateId", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CERTIFICATE_ID), PLAIN_TEXT);
 	public static final IAttribute<String> COMMAND_LINE = attr("commandLine", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_COMMAND_LINE), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> JVM_SYSTEM = attr("jvmSystem", //$NON-NLS-1$
@@ -459,6 +461,8 @@ public final class JdkAttributes {
 			PLAIN_TEXT);
 	public static final IAttribute<IQuantity> JVM_PID = attr("pid", Messages.getString(Messages.ATTR_JVM_PID), //$NON-NLS-1$
 			NUMBER);
+	public static final IAttribute<IQuantity> CERTIFICATE_ID = attr("certificateId", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CERTIFICATE_ID), NUMBER);
 	public static final IAttribute<String> JVM_VERSION = attr("jvmVersion", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_JVM_VERSION), PLAIN_TEXT);
 	public static final IAttribute<String> JVM_ARGUMENTS = attr("jvmArguments", //$NON-NLS-1$

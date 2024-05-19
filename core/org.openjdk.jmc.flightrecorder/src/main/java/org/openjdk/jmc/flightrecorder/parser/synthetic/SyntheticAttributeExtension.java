@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,7 @@ import org.openjdk.jmc.common.IMCPackage;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -169,6 +170,23 @@ public class SyntheticAttributeExtension implements IParserExtension {
 						IEventSink moduleExportSink = new ModuleExportSink(subSink, packageIndex);
 						return moduleExportSink;
 					}
+				} else if (JdkTypeIDs.X509_CERTIFICATE.equals(identifier)) {
+					// Adding a String certificateId, as that is what is used in the jdk.X509Certificate event.
+					int packageIndex = -1;
+					for (int i = 0; i < dataStructure.size(); i++) {
+						ValueField vf = dataStructure.get(i);
+						if (vf.matches(JdkAttributes.CERTIFICATE_ID)) {
+							packageIndex = i;
+							break;
+						}
+					}
+					if (packageIndex != -1) {
+						List<ValueField> newDataStructure = new ArrayList<>(dataStructure);
+						newDataStructure.set(packageIndex, new ValueField(JdkAttributes.CERTIFICATE_ID_STR));
+						IEventSink subSink = sf.create(identifier, label, category, description, newDataStructure);
+						IEventSink longAsStrSink = new LongAsStringSink(subSink, packageIndex);
+						return longAsStrSink;
+					}
 				}
 				return sf.create(identifier, label, category, description, dataStructure);
 			}
@@ -208,6 +226,28 @@ public class SyntheticAttributeExtension implements IParserExtension {
 				Object[] newValues = new Object[values.length + 1];
 				System.arraycopy(values, 0, newValues, 0, values.length);
 				newValues[values.length] = exportingModule;
+				subSink.addEvent(newValues);
+			}
+		}
+	}
+
+	private static class LongAsStringSink implements IEventSink {
+		private final IEventSink subSink;
+		private final int idIndex;
+
+		public LongAsStringSink(IEventSink subSink, int idIndex) {
+			this.subSink = subSink;
+			this.idIndex = idIndex;
+		}
+
+		@Override
+		public void addEvent(Object[] values) {
+			IQuantity longId = (IQuantity) values[idIndex];
+			if (longId != null && values != null && values.length > 0) {
+				String strId = String.valueOf(longId.longValue());
+				Object[] newValues = new Object[values.length];
+				System.arraycopy(values, 0, newValues, 0, values.length - 1);
+				newValues[idIndex] = strId;
 				subSink.addEvent(newValues);
 			}
 		}

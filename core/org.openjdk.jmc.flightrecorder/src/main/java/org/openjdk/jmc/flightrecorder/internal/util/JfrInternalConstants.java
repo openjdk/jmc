@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -44,5 +44,4 @@ public final class JfrInternalConstants {
 	public static final String BCI_ID = "bytecodeIndex"; //$NON-NLS-1$
 	public static final String MODIFIERS_ID = "modifiers"; //$NON-NLS-1$
 	public static final String JAVA_THREAD_ID_ID = "javaThreadId"; //$NON-NLS-1$
-	public static final String CERTIFICATE_ID = "certificateId"; //$NON-NLS-1$
 }
