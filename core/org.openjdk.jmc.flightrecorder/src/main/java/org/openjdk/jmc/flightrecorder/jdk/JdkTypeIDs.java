@@ -72,7 +72,6 @@ public final class JdkTypeIDs {
 	public static final String CLASS_LOAD_STATISTICS = PREFIX + "ClassLoadingStatistics";
 	public static final String CLASS_LOADER_STATISTICS = PREFIX + "ClassLoaderStatistics";
 	public static final String COMPILATION = PREFIX + "Compilation";
-	public static final String X509_CERTIFICATE = PREFIX + "X509Certificate";
 
 	public static final String FILE_WRITE = PREFIX + "FileWrite";
 	public static final String FILE_READ = PREFIX + "FileRead";
