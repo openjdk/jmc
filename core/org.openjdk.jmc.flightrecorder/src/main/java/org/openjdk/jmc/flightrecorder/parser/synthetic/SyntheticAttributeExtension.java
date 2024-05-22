@@ -170,8 +170,7 @@ public class SyntheticAttributeExtension implements IParserExtension {
 						IEventSink moduleExportSink = new ModuleExportSink(subSink, packageIndex);
 						return moduleExportSink;
 					}
-				} else if (JdkTypeIDs.X509_CERTIFICATE.equals(identifier)
-						|| JdkTypeIDs.X509_VALIDATION.equals(identifier)) {
+				} else if (JdkTypeIDs.X509_CERTIFICATE.equals(identifier)) {
 					// Adding a String certificateId, as that is what is used in the jdk.X509Certificate event.
 					int packageIndex = -1;
 					for (int i = 0; i < dataStructure.size(); i++) {
