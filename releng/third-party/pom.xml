@@ -57,11 +57,12 @@
 		<lz4.version>1.8.0</lz4.version>
 		<hdrhistogram.version>2.1.12</hdrhistogram.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty.version>10.0.18</jetty.version>
+		<jetty.version>12.0.6</jetty.version>
 		<spifly.version>1.3.6</spifly.version>
 		<fireplace.version>0.0.1-rc3</fireplace.version>
 		<radiance.version>6.0.0</radiance.version>
 		<jakarta.inject.version>2.0.1</jakarta.inject.version>
+		<jakarta.annotation.version>1.3.5</jakarta.annotation.version>
 	</properties>
 
 	<build>
@@ -116,13 +117,24 @@
 									<id>org.adoptopenjdk:jemmy-swt:${jemmy.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-jetty-server:${jetty.version}</id>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-jetty-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-javax-server:${jetty.version}</id>
+									<id>org.eclipse.jetty.ee9:jetty-ee9-servlet:${jetty.version}</id>
+								</artifact>
+
+								<artifact>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-servlet:${jetty.version}</id>
+								</artifact>
+								
+								<artifact>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-jetty-api:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-jetty-api:${jetty.version}</id>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-jetty-api:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-jetty-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.eclipse.jetty:jetty-security:${jetty.version}</id>
@@ -130,11 +142,16 @@
 								<artifact>
 									<id>org.eclipse.jetty:jetty-server:${jetty.version}</id>
 								</artifact>
-								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-core-server:${jetty.version}</id>
+								<artifact>									<id>org.eclipse.jetty.websocket:jetty-websocket-core-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty:jetty-xml:${jetty.version}</id>
+									<id>org.eclipse.jetty:jetty-alpn-client:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-core-client:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>jakarta.annotation:jakarta.annotation-api:${jakarta.annotation.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
