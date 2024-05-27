@@ -58,6 +58,7 @@
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
+		<tycho.testArgLine.local></tycho.testArgLine.local>
 	</properties>
 	<profiles>
 		<profile>
@@ -106,6 +107,9 @@
 		</profile>
 		<profile>
 			<id>coverage</id>
+			<properties>
+				<tycho.testArgLine.local>${tycho.testArgLine}</tycho.testArgLine.local>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -118,9 +122,6 @@
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
-								<configuration>
-									<propertyName>surefireArgLine</propertyName>
-								</configuration>
 							</execution>
 							<execution>
 								<id>post-unit-test</id>
@@ -149,7 +150,6 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<argLine>${surefireArgLine}</argLine>
 					<appArgLine>-nl en</appArgLine>
 					<includes>${test.includes}</includes>
 					<excludes>
