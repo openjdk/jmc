@@ -48,6 +48,7 @@
             <unit id="org.jolokia.client-jmx-adapter.standalone" version="2.0.2"/>
             <unit id="org.jolokia.service.discovery" version="2.0.2"/>
             <unit id="org.jolokia.server.core" version="2.0.2"/>
+            <unit id="org.jolokia.client-kubernetes.standalone" version="2.0.2"/>
             <unit id="com.github.tomakehurst.wiremock-standalone" version="2.27.2"/>
             <unit id="org.eclipse.jetty.websocket.api" version="12.0.6"/>
             <unit id="org.eclipse.jetty.ee9.websocket.api" version="12.0.6"/>
