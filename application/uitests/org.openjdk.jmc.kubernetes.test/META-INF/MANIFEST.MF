@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJMX Test
+Bundle-SymbolicName: org.openjdk.jmc.kubernetes.test;singleton:=true
+Bundle-Version: 9.1.0.qualifier
+Import-Package: io.fabric8.kubernetes.api.model
+Bundle-Vendor: Oracle Corporation
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit,
+ org.openjdk.jmc.jolokia,
+ org.eclipse.osgi;bundle-version="3.16.200",
+ org.eclipse.ui.workbench,
+ org.openjdk.jmc.rjmx;bundle-version="9.0.0",
+ org.eclipse.ui,
+ org.hamcrest;bundle-version="2.1",
+ org.openjdk.jmc.kubernetes;bundle-version="9.0.0",
+ com.github.tomakehurst.wiremock-standalone;bundle-version="2.27.2",
+ org.awaitility;bundle-version="4.0.0"
+Automatic-Module-Name: org.openjdk.jmc.jolokia.test
