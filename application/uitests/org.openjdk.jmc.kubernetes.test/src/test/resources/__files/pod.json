@@ -1,0 +1,11 @@
+{
+	"metadata": {
+		"clusterName": "test",
+		"labels": {
+			"jolokia": true
+		},
+		"name": "pod-abcdef",
+		"namespace": "ns1",
+		"selfLink": "/api/v1/namespaces/ns1/pods/pod-abcdef"
+	}
+}

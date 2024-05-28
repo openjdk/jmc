@@ -178,6 +178,13 @@
 									<id>org.osgi:org.osgi.service.servlet:2.0.0</id>
 								</artifact>
 								<artifact>
+									<id>org.jolokia:jolokia-client-kubernetes:jar:standalone:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
+									<id>org.awaitility:awaitility:4.0.0</id>
+								</artifact>
+								<artifact>
 									<id>com.github.tomakehurst:wiremock-standalone:${wiremock.version}</id>
 									<transitive>false</transitive>
 								</artifact>

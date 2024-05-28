@@ -1,0 +1,104 @@
+{
+   "request" : {
+      "path" : "java.lang/type=Runtime",
+      "type" : "list"
+   },
+   "status" : 200,
+   "timestamp" : 1658564737,
+   "value" : {
+      "attr" : {
+         "BootClassPath" : {
+            "desc" : "BootClassPath",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "BootClassPathSupported" : {
+            "desc" : "BootClassPathSupported",
+            "rw" : false,
+            "type" : "boolean"
+         },
+         "ClassPath" : {
+            "desc" : "ClassPath",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "InputArguments" : {
+            "desc" : "InputArguments",
+            "rw" : false,
+            "type" : "[Ljava.lang.String;"
+         },
+         "LibraryPath" : {
+            "desc" : "LibraryPath",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "ManagementSpecVersion" : {
+            "desc" : "ManagementSpecVersion",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "Name" : {
+            "desc" : "Name",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "ObjectName" : {
+            "desc" : "ObjectName",
+            "rw" : false,
+            "type" : "javax.management.ObjectName"
+         },
+         "Pid" : {
+            "desc" : "Pid",
+            "rw" : false,
+            "type" : "long"
+         },
+         "SpecName" : {
+            "desc" : "SpecName",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "SpecVendor" : {
+            "desc" : "SpecVendor",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "SpecVersion" : {
+            "desc" : "SpecVersion",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "StartTime" : {
+            "desc" : "StartTime",
+            "rw" : false,
+            "type" : "long"
+         },
+         "SystemProperties" : {
+            "desc" : "SystemProperties",
+            "rw" : false,
+            "type" : "javax.management.openmbean.TabularData"
+         },
+         "Uptime" : {
+            "desc" : "Uptime",
+            "rw" : false,
+            "type" : "long"
+         },
+         "VmName" : {
+            "desc" : "VmName",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "VmVendor" : {
+            "desc" : "VmVendor",
+            "rw" : false,
+            "type" : "java.lang.String"
+         },
+         "VmVersion" : {
+            "desc" : "VmVersion",
+            "rw" : false,
+            "type" : "java.lang.String"
+         }
+      },
+      "class" : "sun.management.RuntimeImpl",
+      "desc" : "Information on the management interface of the MBean"
+   }
+}

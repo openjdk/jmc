@@ -1,0 +1,15 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPathPattern": "/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*",
+		"bodyPatterns": [
+			{
+				"equalToJson": "{\"attribute\":\"Verbose\",\"mbean\":\"java.lang:type=Memory\",\"type\":\"READ\"}"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "jolokia-attribute.json"
+	}
+}
