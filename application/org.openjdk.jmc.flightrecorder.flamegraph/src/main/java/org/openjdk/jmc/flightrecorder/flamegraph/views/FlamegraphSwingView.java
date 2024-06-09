@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,8 +33,27 @@
  */
 package org.openjdk.jmc.flightrecorder.flamegraph.views;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.reverseOrder;
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PNG_IMAGE;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PRINT;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_RESET_ZOOM;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
+import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
+import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlamegraphMessage;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedOutputStream;
@@ -92,7 +111,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -129,21 +150,6 @@ import io.github.bric3.fireplace.flamegraph.animation.ZoomAnimation;
 import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
 import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 
-import static java.util.Collections.emptySet;
-import static java.util.Collections.reverseOrder;
-import static java.util.Map.Entry.comparingByValue;
-import static java.util.stream.Collectors.toMap;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PNG_IMAGE;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_PRINT;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_RESET_ZOOM;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_AS;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_SAVE_FLAME_GRAPH_AS;
-import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_TOGGLE_MINIMAP;
-import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlamegraphMessage;
-
 public class FlamegraphSwingView extends ViewPart implements ISelectionListener {
 	private static final String DIR_ICONS = "icons/"; //$NON-NLS-1$
 	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flamegraph"; //$NON-NLS-1$
@@ -162,6 +168,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				}
 			});
 
+	private static final String OUTLINE_VIEW_ID = "org.eclipse.ui.views.ContentOutline";
+	private static final String JVM_BROWSER_VIEW_ID = "org.openjdk.jmc.browser.views.JVMBrowserView";
 	private FrameSeparator frameSeparator;
 	private EmbeddingComposite embeddingComposite;
 	private FlamegraphView<Node> flamegraphView;
@@ -174,6 +182,7 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	private IAttribute<IQuantity> currentAttribute;
 	private AttributeSelection attributeSelection;
 	private IToolBarManager toolBar;
+	private boolean traverseAlready = false;
 
 	private enum GroupActionType {
 		THREAD_ROOT(Messages.STACKTRACE_VIEW_THREAD_ROOT, IAction.AS_RADIO_BUTTON, CoreImages.THREAD),
@@ -499,10 +508,21 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				flamegraphView = createFlameGraph(embeddingComposite, tooltip);
 				new ZoomAnimation().install(flamegraphView);
 
-				flamegraphView.component.setBackground(bgColorAwtColor);
-				panel.add(flamegraphView.component, BorderLayout.CENTER);
+				JComponent flamegraphComponent = flamegraphView.component;
+				flamegraphComponent.setBackground(bgColorAwtColor);
+
+				// Adding focus traversal and key listener for flamegraph component 
+				setFocusTraversalProperties(flamegraphComponent);
+				addKeyListenerForFwdFocusToSWT(flamegraphComponent);
+
+				panel.add(flamegraphComponent, BorderLayout.CENTER);
 			}
 			panel.setBackground(bgColorAwtColor);
+
+			// Adding focus traversal and key listener for main panel
+			setFocusTraversalProperties(panel);
+			addKeyListenerForBkwdFocusToSWT(panel);
+
 			return panel;
 		});
 	}
@@ -557,10 +577,124 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				}
 			});
 		});
+
+		// Adding focus traversal and key listener for search field
+		setFocusTraversalProperties(searchField);
+		addKeyListener(searchField);
+
 		var panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.add(new JLabel(getFlamegraphMessage("FLAMEVIEW_SEARCH")));
+
+		// Adding focus traversal and key listener for panel
+		setFocusTraversalProperties(panel);
+		addKeyListener(panel);
+
 		panel.add(searchField);
 		return panel;
+	}
+
+	/**
+	 * This method sets the focus from swing to SWT. If outline page is active focus will be set to
+	 * outline view else to JVM Browser
+	 */
+	private void setFocusBackToSWT() {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				try {
+					IViewPart outlineView = activePage.showView(OUTLINE_VIEW_ID);
+					if (activePage.getActiveEditor() != null) {
+						outlineView.setFocus();
+					} else {
+						IViewPart showView = activePage.showView(JVM_BROWSER_VIEW_ID);
+						showView.setFocus();
+					}
+				} catch (PartInitException e) {
+					FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Failed to set focus", e); //$NON-NLS-1$
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adding key listener to transfer focus forward or backward based on 'TAB' or 'Shift + TAB'
+	 */
+	private void addKeyListener(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+						e.getComponent().transferFocusBackward();
+					} else {
+						e.getComponent().transferFocus();
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adding key listener and checking if all the swing components are already cycled (Fwd) once.
+	 * On completion of swing component cycle transferring focus back to SWT.
+	 */
+	private void addKeyListenerForFwdFocusToSWT(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+						e.getComponent().transferFocusBackward();
+					} else {
+						traverseAlready = !traverseAlready;
+						// If already cycled (Fwd) within swing component then transfer the focus back to SWT
+						if (traverseAlready) {
+							setFocusBackToSWT();
+						} else {
+							e.getComponent().transferFocus();
+						}
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adding key listener and checking if all the swing components are already cycled (Bkwd) once.
+	 * On completion of swing component cycle transferring focus back to SWT.
+	 */
+	private void addKeyListenerForBkwdFocusToSWT(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+						traverseAlready = !traverseAlready;
+						// If already cycled (Bkwd) within swing component then transfer the focus back to SWT
+						if (traverseAlready) {
+							setFocusBackToSWT();
+						} else {
+							e.getComponent().transferFocusBackward();
+						}
+					} else {
+						e.getComponent().transferFocus();
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Setting the focus traversal properties.
+	 */
+	private void setFocusTraversalProperties(JComponent comp) {
+		comp.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusable(true);
+		comp.setFocusTraversalKeysEnabled(true);
 	}
 
 	private FlamegraphView<Node> createFlameGraph(Composite owner, DefaultToolTip tooltip) {
@@ -678,9 +812,9 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		DisplayToolkit.inDisplayThread().execute(() -> {
 			var fd = new FileDialog(embeddingComposite.getShell(), SWT.SAVE);
 			fd.setText(getFlamegraphMessage(FLAMEVIEW_SAVE_FLAME_GRAPH_AS));
-			fd.setFilterNames(new String[] {getFlamegraphMessage(FLAMEVIEW_PNG_IMAGE),
-					getFlamegraphMessage(FLAMEVIEW_JPEG_IMAGE)});
-			fd.setFilterExtensions(new String[] {"*.png", "*.jpg"}); //$NON-NLS-1$ //$NON-NLS-2$
+			fd.setFilterNames(new String[] { getFlamegraphMessage(FLAMEVIEW_PNG_IMAGE),
+					getFlamegraphMessage(FLAMEVIEW_JPEG_IMAGE) });
+			fd.setFilterExtensions(new String[] { "*.png", "*.jpg" }); //$NON-NLS-1$ //$NON-NLS-2$
 			fd.setFileName("flame_graph"); //$NON-NLS-1$
 			fd.setOverwrite(true);
 			if (fd.open() == null) {
@@ -689,7 +823,8 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 			}
 
 			var fileName = fd.getFileName().toLowerCase();
-			// FIXME: FileDialog filterIndex returns -1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
+			// FIXME: FileDialog filterIndex returns -1
+			// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=546256)
 			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				future.completeExceptionally(new UnsupportedOperationException("Unsupported image format")); //$NON-NLS-1$
 				return;
@@ -725,11 +860,11 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		}).ifPresent(destinationPath -> {
 			// make spotbugs happy about NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE
 			var type = Optional.ofNullable(destinationPath.getFileName()).map(p -> p.toString().toLowerCase())
-					.map(f -> switch (f.substring(f.lastIndexOf('.') + 1)) { //$NON-NLS-1$
+					.map(f -> switch (f.substring(f.lastIndexOf('.') + 1)) { // $NON-NLS-1$
 					case "jpeg", "jpg" -> //$NON-NLS-1$ //$NON-NLS-2$
-							"jpg"; //$NON-NLS-1$
+						"jpg"; //$NON-NLS-1$
 					case "png" -> //$NON-NLS-1$
-							"png"; //$NON-NLS-1$
+						"png"; //$NON-NLS-1$
 					default -> null;
 					}).orElseThrow(() -> new IllegalStateException("Unhandled type for " + destinationPath));
 
@@ -739,8 +874,10 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				var img = switch (type) {
 				case "png" -> renderImg;
 				case "jpg" -> {
-					// JPG does not have an alpha channel, and ImageIO.write will simply write a 0 byte file
-					// to workaround this it is required to copy the image to a BufferedImage without alpha channel
+					// JPG does not have an alpha channel, and ImageIO.write will simply write a 0
+					// byte file
+					// to workaround this it is required to copy the image to a BufferedImage
+					// without alpha channel
 					var newBufferedImage = new BufferedImage(renderImg.getWidth(), renderImg.getHeight(),
 							BufferedImage.TYPE_INT_RGB);
 					renderImg.copyData(newBufferedImage.getRaster());
@@ -758,6 +895,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 	}
 
 	private static ImageDescriptor flamegraphImageDescriptor(String iconName) {
-		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); //$NON-NLS-1$
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, DIR_ICONS + iconName).orElse(null); // $NON-NLS-1$
 	}
 }

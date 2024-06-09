@@ -18,6 +18,10 @@ Install Eclipse, and before starting it, add the following two lines to the ecli
    -Dp2.trustedAuthorities=https://download.eclipse.org,https://archive.eclipse.org,http://localhost
    ```
 
+Alternatively, instead of editing the eclipse.ini file you can update the `http` Protocol Rule found in _Preferences > Install/Update > Trust > Authorities > Protocol Rules_ from `Default` to `Allow`.
+
+**As of Eclipse 2023-06 and above** Eclipse made all access to external update sites and their artifacts use https, even when http is specified. The local p2 repository served by Jetty is currently configured as http, so this step is necessary in order to resolve the Platform Target as described later in the _Setting up the PDE target runtime environment_ section.
+
 Next start Eclipse and create a new workspace for your JMC work. Creating a new workspace is as easy as picking a new name when starting up your Eclipse in the dialog asking for a directory for the workspace:
 
 ![Workspace Selection](images/workspace.png)
