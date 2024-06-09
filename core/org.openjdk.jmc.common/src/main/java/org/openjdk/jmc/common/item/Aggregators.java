@@ -1093,6 +1093,31 @@ public class Aggregators {
 		};
 	}
 
+	public static <T> IAggregator<IQuantity, ?> getJvmPid(String typeId, IAttribute<T> attribute) {
+		IAggregator<Set<T>, ?> aggregator = Aggregators.distinct(attribute);
+		aggregator = filter(aggregator, ItemFilters.type(typeId));
+		return Aggregators.valueBuilderAggregator(aggregator, new IValueBuilder<IQuantity, Set<T>>() {
+			@Override
+			public IType<? super IQuantity> getValueType() {
+				return UnitLookup.NUMBER;
+			}
+
+			@Override
+			public IQuantity getValue(Set<T> source) {
+				Long value = 0L;
+				if (source.isEmpty()) {
+					return null;
+				} else {
+					Iterator<?> itr = source.iterator();
+					while (itr.hasNext()) {
+						value = Long.valueOf((String) itr.next());
+					}
+					return UnitLookup.NUMBER_UNITY.quantity(value);
+				}
+			}
+		}, attribute.getName(), attribute.getDescription());
+	}
+
 	public static <T> IAggregator<IQuantity, ?> countDistinct(
 		String name, String description, IAccessorFactory<T> attribute) {
 		return new SetAggregator<IQuantity, T>(name, description, attribute, UnitLookup.NUMBER) {
