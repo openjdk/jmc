@@ -81,7 +81,6 @@ public class JolokiaTest {
 		Awaitility.await().atMost(Duration.ofSeconds(15))//Note: hard code property to avoid module dependency on agent
 				.until(() -> (jolokiaUrl = System.getProperty("jolokia.agent")) != null);
 		jolokiaConnection = getJolokiaMBeanConnector();
-
 	}
 
 	@Test
@@ -96,7 +95,6 @@ public class JolokiaTest {
 				}
 			}
 		}
-
 	}
 
 	@Test
@@ -113,7 +111,6 @@ public class JolokiaTest {
 		String attribute = "Debug";
 		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, true));
 		Assert.assertEquals(true, jolokiaConnection.getAttribute(objectName, attribute));
-
 	}
 
 	private static MBeanServerConnection getJolokiaMBeanConnector() throws IOException, MalformedURLException {
