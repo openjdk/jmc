@@ -589,7 +589,7 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 
 	private void connectJmxConnector(JMXServiceURL serviceURL, Map<String, Object> env) throws IOException {
 		if (m_jmxc == null) {
-			//This will use Java's standard connector, which will not take JMC extensions into account
+			// This will use Java's standard connector, which will not take JMC extensions into account
 			m_jmxc = JMXConnectorFactory.newJMXConnector(serviceURL, env);
 		}
 		m_jmxc.addConnectionNotificationListener(m_disconnectListener, null, null);
