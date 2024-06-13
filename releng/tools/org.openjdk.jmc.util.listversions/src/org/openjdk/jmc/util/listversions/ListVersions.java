@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -104,6 +104,19 @@ public class ListVersions {
 						case "org.eclipse.equinox.executable.feature.group":
 						case "org.eclipse.pde.feature.group":
 						case "org.eclipse.platform.sdk":
+						case "org.eclipse.equinox.p2.ui.sdk.scheduler":
+						case "org.eclipse.equinox.p2.updatechecker":
+						case "org.eclipse.update.configurator":
+						case "org.eclipse.equinox.p2.reconciler.dropins":
+						case "org.eclipse.help.webapp":
+						case "org.apache.commons.codec":
+						case "org.eclipse.rcp.feature.group":
+						case "org.eclipse.help.feature.group":
+						case "org.eclipse.equinox.p2.rcp.feature.feature.group":
+						case "org.eclipse.ui.net":
+						case "org.eclipse.equinox.p2.director.app":
+						case "org.eclipse.ui.themes":
+						case "org.eclipse.sdk":
 							System.out.println("Found unit: " + id + ", Version: " + version);
 							break;
 						default:
