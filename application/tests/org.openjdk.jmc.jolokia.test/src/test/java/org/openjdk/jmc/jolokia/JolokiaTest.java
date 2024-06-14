@@ -70,9 +70,9 @@ public class JolokiaTest {
 
 	static String jolokiaUrl;
 
-	private static Set<String> unsafeAttributes = new HashSet<>(
-			Arrays.asList("BootClassPath", "UsageThreshold", "UsageThresholdExceeded", "UsageThresholdCount",
-					"CollectionUsageThreshold", "CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config"));
+	private static Set<String> unsafeAttributes = new HashSet<>(Arrays.asList("BootClassPath", "UsageThreshold",
+			"UsageThresholdExceeded", "UsageThresholdCount", "CollectionUsageThreshold",
+			"CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config"));
 
 	private static MBeanServerConnection jolokiaConnection, localConnection;
 
