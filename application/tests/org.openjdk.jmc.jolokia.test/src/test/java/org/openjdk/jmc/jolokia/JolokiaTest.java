@@ -94,9 +94,11 @@ public class JolokiaTest {
 				String attributeName = attributeInfo.getName();
 				if (!unsafeAttributes.contains(attributeName)) {
 					Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
-					if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
-						Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
-								localConnection.getAttribute(objectName, attributeName), attribute);
+					if (!"jolokia:type=Config".equals(objectName.toString())) {//Jolokia will not be visible in the native connection
+						if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+							Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
+									localConnection.getAttribute(objectName, attributeName), attribute);
+						}
 					}
 				}
 			}
