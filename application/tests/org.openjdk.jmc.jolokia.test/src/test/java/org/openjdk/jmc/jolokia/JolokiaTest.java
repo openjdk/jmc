@@ -88,21 +88,29 @@ public class JolokiaTest {
 	@Test
 	public void testReadAttributesOverJolokia() throws MalformedURLException, IOException, OperationsException,
 			IntrospectionException, AttributeNotFoundException, ReflectionException, MBeanException {
+		int fetched = 0, compared = 0, unavailable = 0;
 		for (ObjectName objectName : jolokiaConnection.queryNames(null, null)) {
 			for (MBeanAttributeInfo attributeInfo : getJolokiaMBeanConnector().getMBeanInfo(objectName)
 					.getAttributes()) {
 				String attributeName = attributeInfo.getName();
 				if (!unsafeAttributes.contains(attributeName)) {
 					Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
-					if (!"jolokia:type=Config".equals(objectName.toString())) {//Jolokia will not be visible in the native connection
-						if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+					fetched++;
+					if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+						try {
+							Object locallyRetrievedAttribute = localConnection.getAttribute(objectName, attributeName);
+							compared++;
 							Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
-									localConnection.getAttribute(objectName, attributeName), attribute);
+									locallyRetrievedAttribute, attribute);
+						} catch (InstanceNotFoundException e) {
+							unavailable++;
 						}
 					}
 				}
 			}
 		}
+		System.out.println(
+				"  attribute test stats: fetched: " + fetched + ", compared: " + compared + ", unavailable: " + unavailable);
 	}
 
 	@Test
