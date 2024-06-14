@@ -41,18 +41,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.management.Attribute;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
-import javax.management.InvalidAttributeValueException;
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanException;
-import javax.management.MBeanServerConnection;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.OperationsException;
-import javax.management.ReflectionException;
+import javax.management.*;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
@@ -73,7 +62,7 @@ public class JolokiaTest {
 			Arrays.asList("BootClassPath", "UsageThreshold", "UsageThresholdExceeded", "UsageThresholdCount",
 					"CollectionUsageThreshold", "CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount"));
 
-	private static MBeanServerConnection jolokiaConnection;
+	private static MBeanServerConnection jolokiaConnection, localConnection;
 
 	@BeforeClass
 	public static void startServer() throws Exception {
@@ -81,6 +70,7 @@ public class JolokiaTest {
 		Awaitility.await().atMost(Duration.ofSeconds(15))//Note: hard code property to avoid module dependency on agent
 				.until(() -> (jolokiaUrl = System.getProperty("jolokia.agent")) != null);
 		jolokiaConnection = getJolokiaMBeanConnector();
+		localConnection = MBeanServerFactory.createMBeanServer();
 	}
 
 	@Test
@@ -89,9 +79,12 @@ public class JolokiaTest {
 		for (ObjectName objectName : jolokiaConnection.queryNames(null, null)) {
 			for (MBeanAttributeInfo attributeInfo : getJolokiaMBeanConnector().getMBeanInfo(objectName)
 					.getAttributes()) {
-				if (!unsafeAttributes.contains(attributeInfo.getName())) {
-					System.out.println("Getting attribute " + objectName + "/" + attributeInfo.getName());
-					getJolokiaMBeanConnector().getAttribute(objectName, attributeInfo.getName());
+				String attributeName = attributeInfo.getName();
+				if (!unsafeAttributes.contains(attributeName)) {
+					Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
+					if( attribute instanceof String || attribute instanceof Boolean ) { // Assume strings and booleans are safe to compare directly
+						Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,  localConnection.getAttribute(objectName, attributeName), attribute);
+					}
 				}
 			}
 		}
