@@ -109,8 +109,8 @@ public class JolokiaTest {
 				}
 			}
 		}
-		System.out.println(
-				"  attribute test stats: fetched: " + fetched + ", compared: " + compared + ", unavailable: " + unavailable);
+		System.out.println("  attribute test stats: fetched: " + fetched + ", compared: " + compared + ", unavailable: "
+				+ unavailable);
 	}
 
 	@Test
