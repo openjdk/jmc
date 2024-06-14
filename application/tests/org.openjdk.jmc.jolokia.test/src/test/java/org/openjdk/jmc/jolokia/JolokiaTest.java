@@ -72,7 +72,7 @@ public class JolokiaTest {
 
 	private static Set<String> unsafeAttributes = new HashSet<>(Arrays.asList("BootClassPath", "UsageThreshold",
 			"UsageThresholdExceeded", "UsageThresholdCount", "CollectionUsageThreshold",
-			"CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config"));
+			"CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config", "MBeanServerId"));
 
 	private static MBeanServerConnection jolokiaConnection, localConnection;
 
