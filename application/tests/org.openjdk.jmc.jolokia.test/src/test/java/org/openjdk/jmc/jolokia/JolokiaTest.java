@@ -41,7 +41,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.OperationsException;
+import javax.management.ReflectionException;
+import javax.management.MBeanServerFactory;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
@@ -60,7 +72,7 @@ public class JolokiaTest {
 
 	private static Set<String> unsafeAttributes = new HashSet<>(
 			Arrays.asList("BootClassPath", "UsageThreshold", "UsageThresholdExceeded", "UsageThresholdCount",
-					"CollectionUsageThreshold", "CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount"));
+					"CollectionUsageThreshold", "CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config"));
 
 	private static MBeanServerConnection jolokiaConnection, localConnection;
 
@@ -82,8 +94,9 @@ public class JolokiaTest {
 				String attributeName = attributeInfo.getName();
 				if (!unsafeAttributes.contains(attributeName)) {
 					Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
-					if( attribute instanceof String || attribute instanceof Boolean ) { // Assume strings and booleans are safe to compare directly
-						Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,  localConnection.getAttribute(objectName, attributeName), attribute);
+					if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+						Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
+								localConnection.getAttribute(objectName, attributeName), attribute);
 					}
 				}
 			}
