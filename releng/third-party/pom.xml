@@ -31,7 +31,9 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>external-dependencies</artifactId>
@@ -57,13 +59,14 @@
 		<lz4.version>1.8.0</lz4.version>
 		<hdrhistogram.version>2.1.12</hdrhistogram.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty.version>10.0.18</jetty.version>
+		<jetty.version>12.0.6</jetty.version>
 		<spifly.version>1.3.6</spifly.version>
 		<jolokia.version>2.0.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
 		<fireplace.version>0.0.1-rc3</fireplace.version>
 		<radiance.version>6.0.0</radiance.version>
 		<jakarta.inject.version>2.0.1</jakarta.inject.version>
+		<jakarta.annotation.version>1.3.5</jakarta.annotation.version>
 	</properties>
 
 	<build>
@@ -79,17 +82,18 @@
 							<additionalArgs>-nouses</additionalArgs>
 							<pedantic>true</pedantic>
 							<artifacts>
-								<!-- specify third party non-OSGi dependencies here -->
+								<!-- specify third party non-OSGi dependencies
+								here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
 									<id>org.eclipse.angus:jakarta.mail:${jakarta.mail.version}</id>
-								</artifact>	
+								</artifact>
 								<artifact>
 									<id>jakarta.inject:jakarta.inject-api:${jakarta.inject.version}</id>
-								</artifact>	
+								</artifact>
 								<artifact>
 									<id>org.eclipse.angus:angus-activation:${angus.activation.version}</id>
-								</artifact>	
+								</artifact>
 								<artifact>
 									<id>jakarta.activation:jakarta.activation-api:${jakarta.activation.version}</id>
 								</artifact>
@@ -118,13 +122,22 @@
 									<id>org.adoptopenjdk:jemmy-swt:${jemmy.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-jetty-server:${jetty.version}</id>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-jetty-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-javax-server:${jetty.version}</id>
+									<id>org.eclipse.jetty.ee9:jetty-ee9-servlet:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-jetty-api:${jetty.version}</id>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-servlet:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-jetty-api:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-jetty-api:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.ee9.websocket:jetty-ee9-websocket-jetty-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.eclipse.jetty:jetty-security:${jetty.version}</id>
@@ -133,10 +146,16 @@
 									<id>org.eclipse.jetty:jetty-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty.websocket:websocket-core-server:${jetty.version}</id>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-core-server:${jetty.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.eclipse.jetty:jetty-xml:${jetty.version}</id>
+									<id>org.eclipse.jetty:jetty-alpn-client:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.eclipse.jetty.websocket:jetty-websocket-core-client:${jetty.version}</id>
+								</artifact>
+								<artifact>
+									<id>jakarta.annotation:jakarta.annotation-api:${jakarta.annotation.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
