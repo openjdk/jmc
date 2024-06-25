@@ -45,10 +45,5 @@
 	</properties>
 	<modules>
 		<module>platform-definition-2024-03</module>
-		<module>platform-definition-2023-12</module>
-		<module>platform-definition-2023-09</module>
-		<module>platform-definition-2023-03</module>
-		<module>platform-definition-2022-12</module>
-		<module>platform-definition-2022-09</module>
 	</modules>
 </project>
