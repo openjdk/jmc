@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.openjdk.jmc.jolokia;singleton:=true
+Bundle-Version: 9.1.0.qualifier
+Automatic-Module-Name: org.openjdk.jmc.jolokia
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.jolokia.client-jmx-adapter.standalone;bundle-version="2.0.2";visibility:=reexport,
+ org.openjdk.jmc.common,
+ org.openjdk.jmc.rjmx,
+ org.openjdk.jmc.ui
+Export-Package:  org.openjdk.jmc.jolokia,
+ org.openjdk.jmc.jolokia.preferences
+Bundle-Activator: org.openjdk.jmc.jolokia.JmcJolokiaPlugin
+Bundle-ActivationPolicy: lazy

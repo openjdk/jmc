@@ -61,6 +61,8 @@
 		<jemmy.version>2.0.0</jemmy.version>
 		<jetty.version>12.0.6</jetty.version>
 		<spifly.version>1.3.6</spifly.version>
+		<jolokia.version>2.0.2</jolokia.version>
+		<wiremock.version>2.27.2</wiremock.version>
 		<fireplace.version>0.0.1-rc3</fireplace.version>
 		<radiance.version>6.0.0</radiance.version>
 		<jakarta.inject.version>2.0.1</jakarta.inject.version>
@@ -157,6 +159,14 @@
 								</artifact>
 								<artifact>
 									<id>org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:${spifly.version}</id>
+								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-client-jmx-adapter:jar:standalone:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
+									<id>com.github.tomakehurst:wiremock-standalone:${wiremock.version}</id>
+									<transitive>false</transitive>
 								</artifact>
 								<artifact>
 									<id>io.github.bric3.fireplace:fireplace-swing:${fireplace.version}</id>
