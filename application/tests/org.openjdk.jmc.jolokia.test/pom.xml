@@ -74,8 +74,7 @@
 					<includes>${test.includes}</includes>
 					<!-- Start jolokia on a random free port to avoid requiring specific ports to run test -->
 					<!-- Agent version may differ from client version, in fact it may be a good test -->
-					<argLine>
-						-javaagent:${settings.localRepository}/org/jolokia/jolokia-agent-jvm/${jolokia.agent.version}/jolokia-agent-jvm-${jolokia.agent.version}-javaagent.jar=port=0,discoveryEnabled=true</argLine>
+					<argLine>${tycho.testArgLine.local} -javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.agent.version}/jolokia-jvm-${jolokia.agent.version}.jar=port=0,discover=true</argLine>
 				</configuration>
 			</plugin>
 
