@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-   Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2023, Red Hat Inc. All rights reserved.
+   Copyright (c) 2019, 2024, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2024, Red Hat Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -320,6 +320,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>org.openjdk.jmc.jolokia</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.rjmx.ui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -408,6 +413,12 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.ui.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>org.openjdk.jmc.jolokia.test</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
