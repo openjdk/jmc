@@ -45,8 +45,7 @@ public class JmcJolokiaJmxConnectionProvider implements JMXConnectorProvider {
 	@Override
 	public JMXConnector newJMXConnector(JMXServiceURL serviceURL, Map<String, ?> environment) throws IOException {
 		if (!"jolokia".equals(serviceURL.getProtocol())) { //$NON-NLS-1$
-			throw new MalformedURLException(Messages
-					.getString("JmcJolokiaJmxConnectionProvider.JMC_JOLOKIA_JMX_CONNECTION_PROVIDER_EXCEPTION_MSG")); //$NON-NLS-1$
+			throw new MalformedURLException(Messages.JmcJolokiaJmxConnectionProvider_UnsupportedUrlMessage);
 		}
 		return new JmcJolokiaJmxConnector(serviceURL, environment);
 	}
