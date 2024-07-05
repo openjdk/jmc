@@ -77,7 +77,7 @@
 	<properties>
 		<!-- Config -->
 		<revision>9.1.0</revision>
-		<changelist>-SNAPSHOT</changelist>
+		<changelist>.qualifier</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -94,9 +94,9 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<!-- Plugin Versions -->
-		<tycho.version>3.0.5</tycho.version>
-		<maven.toolchains.version>3.1.0</maven.toolchains.version>
-		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<tycho.version>4.0.8</tycho.version>
+		<maven.toolchains.version>3.2.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.4.0</maven.checkstyle.version>
 		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
 		<spotless.version>2.34.0</spotless.version>
 		<maven.directory.version>1.0</maven.directory.version>
