@@ -39,7 +39,7 @@
 		<artifactId>platform-definitions</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>platform-definition-2023-12</artifactId>
+	<artifactId>platform-definition-2024-03</artifactId>
 	<packaging>eclipse-target-definition</packaging>
 	<properties>
 		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>

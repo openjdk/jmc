@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -34,11 +34,11 @@
 <feature
       id="org.openjdk.jmc.feature.core"
       label="%name"
-      version="9.0.0.qualifier"
+      version="9.1.0.qualifier"
       provider-name="%provider"
       plugin="org.openjdk.jmc.ui"
       license-feature="org.openjdk.jmc.feature.license"
-      license-feature-version="9.0.0.qualifier">
+      license-feature-version="9.1.0.qualifier">
 
    <description url="%descriptionUrl">
       %description
@@ -225,6 +225,13 @@
 
    <plugin
          id="radiance-animation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+    <plugin
+         id="org.openjdk.jmc.jolokia"
          download-size="0"
          install-size="0"
          version="0.0.0"

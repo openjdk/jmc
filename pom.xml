@@ -76,7 +76,7 @@
 	</modules>
 	<properties>
 		<!-- Config -->
-		<revision>9.0.0</revision>
+		<revision>9.1.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,7 +125,7 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2023-12</id>
+			<id>2024-03</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -139,91 +139,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-12</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2023-09</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-09</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2023-03</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-03</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2022-12</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-12</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2022-09</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-09</artifactId>
+									<artifactId>platform-definition-2024-03</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -291,6 +207,18 @@
 					<useProjectSettings>false</useProjectSettings>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+				<products>
+					<product>
+						<archiveFileName>${groupId}-${project.version}</archiveFileName>
+					</product>
+				</products>
+				</configuration>
+			 </plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>

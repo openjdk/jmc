@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Name: Flight Recorder Serializers Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.serializers;singleton:=true
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.flightrecorder.serializers,
  org.openjdk.jmc.flightrecorder.serializers.json,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -52,6 +52,7 @@
 		<module>org.openjdk.jmc.rjmx.test</module>
 		<module>org.openjdk.jmc.ui.common.test</module>
 		<module>org.openjdk.jmc.ui.test</module>
+		<module>org.openjdk.jmc.jolokia.test</module>
 	</modules>
 	<properties>
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
