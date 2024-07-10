@@ -53,6 +53,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Recording;
@@ -74,6 +76,8 @@ import jdk.jfr.Timestamp;
  * {@link Chunk chunks} for writing user events.
  */
 public final class RecordingImpl extends Recording {
+	private static final Logger LOGGER = Logger.getLogger(RecordingImpl.class.getName());
+
 	private static final byte[] MAGIC = new byte[] {'F', 'L', 'R', '\0'};
 	private static final short MAJOR_VERSION = 2;
 	private static final short MINOR_VERSION = 0;
@@ -498,7 +502,7 @@ public final class RecordingImpl extends Recording {
 						break;
 					}
 					default: {
-						//System.err.println("Cannot write type:" + f.getType().getName());
+						LOGGER.log(Level.WARNING, "Cannot write type:" + f.getType().getName());
 					}
 					}
 				} catch (IllegalAccessException e) {
