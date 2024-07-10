@@ -2373,7 +2373,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------
 
-%% The following notice is provided with respect to HdrHistogram v2.1.12,
+%% The following notice is provided with respect to HdrHistogram v2.2.2,
 which may be included with this product.
 
 The code in this repository code was Written by Gil Tene, Michael Barker,
@@ -2391,7 +2391,7 @@ the Author.
 -----------------------------------------------------------------------------
 ** Beginning of "BSD 2-Clause License" text. **
 
- Copyright (c) 2012, 2013, 2014 Gil Tene
+ Copyright (c) 2012, 2013, 2014, 2015, 2016 Gil Tene
  Copyright (c) 2014 Michael Barker
  Copyright (c) 2014 Matt Warren
  All rights reserved.
