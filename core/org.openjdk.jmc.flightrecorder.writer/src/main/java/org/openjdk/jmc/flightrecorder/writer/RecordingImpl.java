@@ -67,6 +67,7 @@ import org.openjdk.jmc.flightrecorder.writer.api.Types;
 import jdk.jfr.Event;
 import jdk.jfr.Name;
 import jdk.jfr.StackTrace;
+import jdk.jfr.Timestamp;
 
 /**
  * The main entry point to JFR recording functionality. Allows to define custom types and initiate
@@ -298,6 +299,10 @@ public final class RecordingImpl extends Recording {
 		 */
 		return registerType(getEventName(eventType), "jdk.jfr.Event", b -> {
 			Field[] fields = eventType.getDeclaredFields();
+
+			boolean eventThredOverride = false;
+			boolean stackTraceOverride = false;
+			boolean startTimeOverride = false;
 			for (Field f : fields) {
 				if (Modifier.isTransient(f.getModifiers()) || Modifier.isStatic(f.getModifiers())) {
 					// skip static and transient fields
@@ -308,14 +313,20 @@ public final class RecordingImpl extends Recording {
 				if (fieldType != null) {
 					java.lang.annotation.Annotation[] as = f.getAnnotations();
 					String fieldName = getFieldName(f);
-					if (fieldName.equals("startTime") || fieldName.equals("eventThread")
-							|| fieldName.equals("stackTrace")) {
-						// built-in fields; skip
-						continue;
+					if (fieldName.equals("startTime")) {
+						startTimeOverride = true;
+					} else if (fieldName.equals("eventThread")) {
+						eventThredOverride = true;
+					} else if (fieldName.equals("stackTrace")) {
+						stackTraceOverride = true;
 					}
 					TypedFieldBuilder fieldTypeBuilder = types.fieldBuilder(fieldName, fieldType);
 
+					boolean foundTimestampAnnotation = false;
 					for (java.lang.annotation.Annotation a : as) {
+						if (a.getClass().equals(Timestamp.class)) {
+							foundTimestampAnnotation = true;
+						}
 						AnnotationValueObject val = processAnnotation(types, a);
 						if (val != null) {
 							fieldTypeBuilder = val.annotationValue != null
@@ -323,18 +334,27 @@ public final class RecordingImpl extends Recording {
 									: fieldTypeBuilder.addAnnotation(val.annotationType);
 						}
 					}
+					if (fieldName.equals("startTime") && !foundTimestampAnnotation) {
+						// make sure that even the overridden startTime field has a @Timestamp annotation
+						fieldTypeBuilder.addAnnotation(Types.JDK.ANNOTATION_TIMESTAMP, "NANOSECONDS_SINCE_EPOCH");
+					}
 					b.addField(fieldTypeBuilder.build());
 				}
 			}
-			// force 'startTime' field
-			b.addField("startTime", Types.Builtin.LONG,
-					field -> field.addAnnotation(Types.JDK.ANNOTATION_TIMESTAMP, "NANOSECONDS_SINCE_EPOCH"));
-			// force 'eventThread' field
-			b.addField("eventThread", Types.JDK.THREAD);
-
-			// force 'stackTrace' field if the event is collecting stacktraces
-			if (hasStackTrace(eventType)) {
-				b.addField("stackTrace", Types.JDK.STACK_TRACE);
+			if (!startTimeOverride) {
+				// force 'startTime' field
+				b.addField("startTime", Types.Builtin.LONG,
+						field -> field.addAnnotation(Types.JDK.ANNOTATION_TIMESTAMP, "NANOSECONDS_SINCE_EPOCH"));
+			}
+			if (!eventThredOverride) {
+				// force 'eventThread' field
+				b.addField("eventThread", Types.JDK.THREAD);
+			}
+			if (!stackTraceOverride) {
+				// force 'stackTrace' field if the event is collecting stacktraces
+				if (hasStackTrace(eventType)) {
+					b.addField("stackTrace", Types.JDK.STACK_TRACE);
+				}
 			}
 			for (java.lang.annotation.Annotation a : eventType.getAnnotations()) {
 				AnnotationValueObject val = processAnnotation(types, a);
