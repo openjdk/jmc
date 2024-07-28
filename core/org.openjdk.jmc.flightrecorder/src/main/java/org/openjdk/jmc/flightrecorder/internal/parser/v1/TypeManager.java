@@ -468,6 +468,7 @@ class TypeManager {
 		TypeEntry fieldType = getTypeEntry(f.classId);
 		String typeIdentifier = fieldType.element.typeIdentifier;
 		boolean isNumeric = PrimitiveReader.isNumeric(typeIdentifier);
+		boolean isLong = PrimitiveReader.isLong(typeIdentifier);
 		IValueReader reader = fieldType.getReader();
 		if (f.ticksUnitKind == UnitLookup.TIMESPAN) {
 			reader = new QuantityReader(typeIdentifier, header.getTicksTimespanUnit(), f.unsigned);
@@ -483,7 +484,7 @@ class TypeManager {
 						|| JfrInternalConstants.BCI_ID.equals(f.fieldIdentifier)
 						|| JfrInternalConstants.MODIFIERS_ID.equals(f.fieldIdentifier)
 						|| JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)
-						|| JfrInternalConstants.CERTIFICATE_ID_ID.equals(f.fieldIdentifier)) {
+						|| JfrInternalConstants.CERTIFICATE_ID_ID.equals(f.fieldIdentifier) || isLong) {
 					reader = new PrimitiveReader(typeIdentifier);
 				} else {
 					IUnit unit = UnitLookup.getUnitOrNull(valueType);

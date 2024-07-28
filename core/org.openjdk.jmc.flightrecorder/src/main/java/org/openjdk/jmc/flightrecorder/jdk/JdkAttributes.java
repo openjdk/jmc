@@ -49,6 +49,7 @@ import static org.openjdk.jmc.common.unit.UnitLookup.THREAD;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESTAMP;
 import static org.openjdk.jmc.common.unit.UnitLookup.UNKNOWN;
+import static org.openjdk.jmc.common.unit.UnitLookup.RAW_NUMBER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -792,9 +793,27 @@ public final class JdkAttributes {
 	public static final IAttribute<String> SHUTDOWN_REASON = attr("reason", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SHUTDOWN_REASON), Messages.getString(Messages.ATTR_SHUTDOWN_REASON_DESC),
 			PLAIN_TEXT);
-	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = attr("loadedClassCount", //$NON-NLS-1$
+	public static final IAttribute<Number> CLASSLOADER_LOADED_COUNT_NUMBER = attr("loadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),
-			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), NUMBER);
+			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = Attribute.canonicalize(
+			new Attribute<IQuantity>("loadedClassCount", Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), NUMBER) {
+				@Override
+				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+
+					final IMemberAccessor<Number, U> accessor = CLASSLOADER_LOADED_COUNT_NUMBER.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
+						@Override
+						public IQuantity getMember(U i) {
+							Number countNumber = accessor.getMember(i);
+							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
+						}
+					};
+				}
+			});
+
 	public static final IAttribute<IQuantity> CLASSLOADER_UNLOADED_COUNT = attr("unloadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT),
 			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT_DESC), NUMBER);
@@ -1128,9 +1147,27 @@ public final class JdkAttributes {
 	public static final IAttribute<String> ENVIRONMENT_VALUE = attr("value", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_ENVIRONMENT_VALUE), PLAIN_TEXT);
 
-	public static final IAttribute<IQuantity> EXCEPTION_THROWABLES_COUNT = attr("throwables", //$NON-NLS-1$
+	public static final IAttribute<Number> EXCEPTION_THROWABLES_COUNT_NUMBER = attr("throwables", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT),
-			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), NUMBER);
+			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> EXCEPTION_THROWABLES_COUNT = Attribute.canonicalize(
+			new Attribute<IQuantity>("throwables", Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), NUMBER) {
+				@Override
+				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+
+					final IMemberAccessor<Number, U> accessor = EXCEPTION_THROWABLES_COUNT_NUMBER.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
+						@Override
+						public IQuantity getMember(U i) {
+							Number countNumber = accessor.getMember(i);
+							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
+						}
+					};
+				}
+			});
+
 	public static final IAttribute<IMCType> EXCEPTION_THROWNCLASS = attr("thrownClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_EXCEPTION_THROWNCLASS), CLASS);
 	public static final IAttribute<String> EXCEPTION_THROWNCLASS_NAME = Attribute.canonicalize(
@@ -1306,9 +1343,27 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> SAMPLE_WEIGHT = attr("weight", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_SAMPLE_WEIGHT), MEMORY);
 
-	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = attr("totalFinalizersRun", //$NON-NLS-1$
+	public static final IAttribute<Number> TOTAL_FINALIZERS_RUN_NUMBER = attr("totalFinalizersRun", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
-			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER);
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = Attribute.canonicalize(
+			new Attribute<IQuantity>("totalFinalizersRun", Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN), //$NON-NLS-1$
+					Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER) {
+				@Override
+				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+
+					final IMemberAccessor<Number, U> accessor = TOTAL_FINALIZERS_RUN_NUMBER.getAccessor(type);
+					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
+						@Override
+						public IQuantity getMember(U i) {
+							Number countNumber = accessor.getMember(i);
+							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
+						}
+					};
+				}
+			});
+
 	public static final IAttribute<IMCType> FINALIZABLE_CLASS = attr("finalizableClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS),
 			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS_DESC), CLASS);
