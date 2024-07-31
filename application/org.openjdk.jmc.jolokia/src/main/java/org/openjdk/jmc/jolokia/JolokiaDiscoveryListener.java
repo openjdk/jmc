@@ -72,7 +72,6 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 					this.settings.getDiscoveryTimeout(), this.settings.getMulticastGroup(),
 					this.settings.getMulticastPort())) {
 				try {
-
 					@SuppressWarnings("unchecked")
 					Map<String, ?> response = (Map<String, ?>) object;
 					JVMDescriptor jvmInfo;

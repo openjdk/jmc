@@ -102,7 +102,6 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 	 * to support different flavors of JVM.
 	 */
 	public static JVMDescriptor attemptToGetJvmInfo(RemoteJmxAdapter adapter) {
-
 		try {
 			AttributeList attributes = adapter.getAttributes(new ObjectName(ManagementFactory.RUNTIME_MXBEAN_NAME),
 					new String[] {"Pid", "Name", "InputArguments", "SystemProperties"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -167,9 +166,7 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 							vmVendor = value;
 						}
 					}
-
 				}
-
 			}
 			return new JVMDescriptor(javaVersion, type, arch, javaCommand, arguments, vmName, vmVendor, pid, isDebug,
 					Connectable.UNKNOWN);
@@ -177,7 +174,6 @@ public class JolokiaAgentDescriptor implements ServerConnectionDescriptor {
 		} catch (RuntimeException | IOException | InstanceNotFoundException | MalformedObjectNameException ignore) {
 			return NULL_DESCRIPTOR;
 		}
-
 	}
 
 	@Override
