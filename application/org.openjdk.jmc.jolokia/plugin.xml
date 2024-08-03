@@ -41,4 +41,19 @@
             <sysproperty name="running.in.jmc" include="true" />
       </client>
    </extension>
+      <extension
+            point="org.eclipse.ui.preferencePages">
+         <page
+               category="org.openjdk.jmc.browser.preferences.BrowserPreferencePage"
+               class="org.openjdk.jmc.jolokia.preferences.JolokiaPreferencePage"
+               id="org.openjdk.jmc.jolokia.preferences.JolokiaPreferencePage"
+               name="%page.name">
+         </page>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.preferences">
+         <initializer
+               class="org.openjdk.jmc.jolokia.preferences.PreferenceInitializer">
+         </initializer>
+      </extension>
 </plugin>

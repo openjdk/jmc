@@ -31,19 +31,30 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.jolokia;
+package org.openjdk.jmc.jolokia.preferences;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.openjdk.jmc.jolokia.JmcJolokiaPlugin;
+import org.jolokia.server.core.config.ConfigKey;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = Messages.class.getPackageName() + ".messages"; //$NON-NLS-1$
-	public static String JmcJolokiaJmxConnectionProvider_UnsupportedUrlMessage;
-	public static String JolokiaDiscoveryListener_Description;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+/**
+ * Class used to initialize default preference values.
+ */
+public class PreferenceInitializer extends AbstractPreferenceInitializer implements PreferenceConstants {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 * initializeDefaultPreferences()
+	 */
+	public void initializeDefaultPreferences() {
+		IPreferenceStore store = JmcJolokiaPlugin.getDefault().getPreferenceStore();
+		store.setDefault(P_SCAN, false);
+		store.setDefault(P_MULTICAST_GROUP, ConfigKey.MULTICAST_GROUP.getDefaultValue());
+		store.setDefault(P_MULTICAST_PORT, ConfigKey.MULTICAST_PORT.getDefaultValue());
+		store.setDefault(P_DISCOVER_TIMEOUT, 1000);
 	}
 
-	private Messages() {
-	}
 }

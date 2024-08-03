@@ -33,17 +33,16 @@
  */
 package org.openjdk.jmc.jolokia;
 
-import org.eclipse.osgi.util.NLS;
+import javax.management.remote.JMXServiceURL;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = Messages.class.getPackageName() + ".messages"; //$NON-NLS-1$
-	public static String JmcJolokiaJmxConnectionProvider_UnsupportedUrlMessage;
-	public static String JolokiaDiscoveryListener_Description;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
 
-	private Messages() {
-	}
+/**
+ * Describes the JVM and how to connect to it.
+ */
+public interface ServerConnectionDescriptor extends IServerDescriptor, IConnectionDescriptor {
+	String getPath();
+
+	JMXServiceURL serviceUrl();
 }

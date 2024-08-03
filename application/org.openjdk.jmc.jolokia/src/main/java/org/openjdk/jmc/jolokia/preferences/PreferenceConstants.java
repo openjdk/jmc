@@ -31,19 +31,15 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.jolokia;
+package org.openjdk.jmc.jolokia.preferences;
 
-import org.eclipse.osgi.util.NLS;
+/**
+ * Constant definitions for plug-in preferences.
+ */
+public interface PreferenceConstants {
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = Messages.class.getPackageName() + ".messages"; //$NON-NLS-1$
-	public static String JmcJolokiaJmxConnectionProvider_UnsupportedUrlMessage;
-	public static String JolokiaDiscoveryListener_Description;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-
-	private Messages() {
-	}
+	public static final String P_SCAN = "discoverJolokia"; //$NON-NLS-1$
+	public static final String P_MULTICAST_GROUP = "multicastGroup";//$NON-NLS-1$
+	public static final String P_MULTICAST_PORT = "multicastPort";//$NON-NLS-1$
+	public static final String P_DISCOVER_TIMEOUT = "discoverTimeout";//$NON-NLS-1$ 
 }

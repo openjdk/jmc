@@ -33,9 +33,21 @@
  */
 package org.openjdk.jmc.jolokia;
 
+import java.util.Arrays;
+import java.util.TreeSet;
+
+import org.jolokia.server.core.config.ConfigKey;
+import org.jolokia.server.core.config.StaticConfiguration;
+import org.jolokia.server.core.detector.ServerDetector;
+import org.jolokia.server.core.restrictor.AllowAllRestrictor;
+import org.jolokia.server.core.service.JolokiaServiceManagerFactory;
+import org.jolokia.server.core.service.api.JolokiaContext;
+import org.jolokia.server.core.service.api.JolokiaServiceManager;
+import org.jolokia.server.core.service.impl.JulLogHandler;
+import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 
-public class JmcJolokiaPlugin extends MCAbstractUIPlugin {
+public class JmcJolokiaPlugin extends MCAbstractUIPlugin implements JolokiaDiscoverySettings, PreferenceConstants {
 
 	public final static String PLUGIN_ID = "org.openjdk.jmc.jolokia"; //$NON-NLS-1$
 	private static JmcJolokiaPlugin plugin;
@@ -47,5 +59,38 @@ public class JmcJolokiaPlugin extends MCAbstractUIPlugin {
 
 	public static JmcJolokiaPlugin getDefault() {
 		return plugin;
+	}
+
+	@Override
+	public boolean shouldRunDiscovery() {
+		return getPreferenceStore().getBoolean(P_SCAN);
+	}
+
+	/**
+	 * @return a very basic Jolokia context to satisfy discovery. We are not interested in the
+	 *         server side aspects here.
+	 */
+	@Override
+	public JolokiaContext getJolokiaContext() {
+		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jmc");//$NON-NLS-1$
+		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
+				new JulLogHandler(PLUGIN_ID), new AllowAllRestrictor(),
+				() -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
+		return serviceManager.start();
+	}
+
+	@Override
+	public String getMulticastGroup() {
+		return this.getPreferenceStore().getString(P_MULTICAST_GROUP);
+	}
+
+	@Override
+	public int getMulticastPort() {
+		return this.getPreferenceStore().getInt(P_MULTICAST_PORT);
+	}
+
+	@Override
+	public int getDiscoveryTimeout() {
+		return this.getPreferenceStore().getInt(P_DISCOVER_TIMEOUT);
 	}
 }

@@ -46,7 +46,7 @@
 
 	<properties>
 		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
-		<jolokia.agent.version>1.7.2</jolokia.agent.version>
+		<jolokia.agent.version>2.0.2</jolokia.agent.version>
 	</properties>
 
 	<dependencies>
@@ -57,9 +57,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-jvm</artifactId>
+			<artifactId>jolokia-agent-jvm</artifactId>
 			<version>${jolokia.agent.version}</version>
 			<scope>test</scope>
+			<classifier>javaagent</classifier>
 		</dependency>
 	</dependencies>
 
@@ -74,7 +75,7 @@
 					<!-- Start jolokia on a random free port to avoid requiring specific ports to run test -->
 					<!-- Agent version may differ from client version, in fact it may be a good test -->
 					<argLine>
-						-javaagent:${settings.localRepository}/org/jolokia/jolokia-jvm/${jolokia.agent.version}/jolokia-jvm-${jolokia.agent.version}.jar=port=0,discover=true</argLine>
+						-javaagent:${settings.localRepository}/org/jolokia/jolokia-agent-jvm/${jolokia.agent.version}/jolokia-agent-jvm-${jolokia.agent.version}-javaagent.jar=port=0,discoveryEnabled=true</argLine>
 				</configuration>
 			</plugin>
 
