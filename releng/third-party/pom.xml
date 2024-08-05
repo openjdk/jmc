@@ -43,8 +43,8 @@
 	<properties>
 		<!-- Config -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<spotless.config.path>${basedir}/../../configuration/ide/eclipse/formatting/formatting.xml</spotless.config.path>
 		<!-- Plugin Versions -->
 		<p2-maven-plugin.version>2.1.0</p2-maven-plugin.version>
@@ -223,8 +223,8 @@
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>[17,)</version>
-									<message>Building JMC requires Java 17 or later</message>
+									<version>[21,)</version>
+									<message>Building JMC requires Java 21 or later</message>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
