@@ -136,7 +136,6 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
-						    <executionEnvironment>JavaSE-21</executionEnvironment>
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
