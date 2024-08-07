@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.uitest;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
@@ -248,7 +247,6 @@ public class ControlRecordingsTest extends MCJemmyTestBase {
 	/**
 	 * Verifies that recording events can be added/removed on the fly
 	 */
-	@Ignore("Requires a jdk17 backport of JDK-8286740")
 	@Test
 	public void modifyRecordingEvents() {
 		// Dump the test recording to get the current event settings (combined from, possibly multiple recordings)
@@ -294,7 +292,6 @@ public class ControlRecordingsTest extends MCJemmyTestBase {
 	/**
 	 * Verifies that recording event threshold settings can be modified on the fly
 	 */
-	@Ignore("Requires a jdk17 backport of JDK-8286740")
 	@Test
 	public void modifyEventThreshold() {
 		// Dump the test recording to get the current event settings (combined from, possibly multiple recordings)
@@ -333,7 +330,6 @@ public class ControlRecordingsTest extends MCJemmyTestBase {
 	/**
 	 * Verifies that recording event period settings can be modified on the fly
 	 */
-	@Ignore("Requires a jdk17 backport of JDK-8286740")
 	@Test
 	public void modifyEventPeriod() {
 		// FIXME: JMC-5207 - Remove the assume call once the GTK3 related bug has been fixed
