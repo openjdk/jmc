@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -72,6 +72,7 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -212,8 +213,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private static final Color ALTERNATE_COLOR = SWTColorToolkit.getColor(new RGB(255, 255, 240));
 	private static final String COUNT_IMG_KEY = "countColor"; //$NON-NLS-1$
 	private static final Color COUNT_COLOR = SWTColorToolkit.getColor(new RGB(100, 200, 100));
+	private static final Color COUNT_COLOR_DARK_MODE = SWTColorToolkit.getColor(new RGB(7, 94, 7));
 	private static final String SIBLINGS_IMG_KEY = "siblingsColor"; //$NON-NLS-1$
 	private static final Color SIBLINGS_COUNT_COLOR = SWTColorToolkit.getColor(new RGB(170, 250, 170));
+	private static final Color SIBLINGS_COUNT_COLOR_DARK_MODE = SWTColorToolkit.getColor(new RGB(8, 115, 8));
 	private static final int[] DEFAULT_COLUMN_WIDTHS = {650, 80, 120};
 	private static final String THREAD_ROOT_KEY = "threadRootAtTop"; //$NON-NLS-1$
 	private static final String FRAME_OPTIMIZATION_KEY = "distinguishFramesByOptimization"; //$NON-NLS-1$
@@ -252,8 +255,14 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		@Override
 		protected Composite createViewerToolTipContentArea(Event event, ViewerCell cell, Composite parent) {
 			FormText formText = CompositeToolkit.createInfoFormText(parent);
-			formText.setImage(COUNT_IMG_KEY, SWTColorToolkit.getColorThumbnail(COUNT_COLOR.getRGB()));
-			formText.setImage(SIBLINGS_IMG_KEY, SWTColorToolkit.getColorThumbnail(SIBLINGS_COUNT_COLOR.getRGB()));
+			if (isDarkMode()) {
+				formText.setImage(COUNT_IMG_KEY, SWTColorToolkit.getColorThumbnail(COUNT_COLOR_DARK_MODE.getRGB()));
+				formText.setImage(SIBLINGS_IMG_KEY,
+						SWTColorToolkit.getColorThumbnail(SIBLINGS_COUNT_COLOR_DARK_MODE.getRGB()));
+			} else {
+				formText.setImage(COUNT_IMG_KEY, SWTColorToolkit.getColorThumbnail(COUNT_COLOR.getRGB()));
+				formText.setImage(SIBLINGS_IMG_KEY, SWTColorToolkit.getColorThumbnail(SIBLINGS_COUNT_COLOR.getRGB()));
+			}
 			formText.setText(getText(event), true, false);
 			return formText;
 		}
@@ -860,12 +869,20 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
-				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				if (isDarkMode()) {
+					event.gc.setBackground(SIBLINGS_COUNT_COLOR_DARK_MODE);
+				} else {
+					event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				}
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
 				double fraction = frame.getAttributeAggregate() / total;
-				event.gc.setBackground(COUNT_COLOR);
+				if (isDarkMode()) {
+					event.gc.setBackground(COUNT_COLOR_DARK_MODE);
+				} else {
+					event.gc.setBackground(COUNT_COLOR);
+				}
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
 				event.gc.fillRectangle(event.x + startPixel, event.y, Math.max(widthPixel, 1), event.height);
@@ -886,12 +903,20 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
-				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				if (isDarkMode()) {
+					event.gc.setBackground(SIBLINGS_COUNT_COLOR_DARK_MODE);
+				} else {
+					event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				}
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
 				double fraction = frame.getAttributeAggregate() / total;
-				event.gc.setBackground(COUNT_COLOR);
+				if (isDarkMode()) {
+					event.gc.setBackground(COUNT_COLOR_DARK_MODE);
+				} else {
+					event.gc.setBackground(COUNT_COLOR);
+				}
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
 				event.gc.fillRectangle(event.x + startPixel, event.y, Math.max(widthPixel, 1), event.height);
@@ -1057,7 +1082,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 		@Override
 		public Color getBackground(Object element) {
-			if (treeLayout) {
+			if (treeLayout || isDarkMode()) {
 				return null;
 			} else {
 				int parentCount = 0;
@@ -1070,6 +1095,16 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			}
 		}
 	};
+
+	private static boolean isDarkMode() {
+		Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry()
+				.get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+		if (color.getRed() < 255) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private static boolean isNavigationFrame(StacktraceFrame frame) {
 		return isFirstInBranchWithSiblings(frame) && !isInOpenFork(frame);
