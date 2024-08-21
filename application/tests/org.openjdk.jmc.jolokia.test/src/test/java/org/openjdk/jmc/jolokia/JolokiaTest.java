@@ -40,6 +40,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.Attribute;
 import javax.management.AttributeNotFoundException;
@@ -58,21 +60,37 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.awaitility.Awaitility;
+import org.jolokia.server.core.config.ConfigKey;
+import org.jolokia.server.core.config.StaticConfiguration;
+import org.jolokia.server.core.detector.ServerDetector;
+import org.jolokia.server.core.restrictor.AllowAllRestrictor;
+import org.jolokia.server.core.service.JolokiaServiceManagerFactory;
+import org.jolokia.server.core.service.api.JolokiaContext;
+import org.jolokia.server.core.service.api.JolokiaServiceManager;
+import org.jolokia.server.core.service.impl.StdoutLogHandler;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openjdk.jmc.common.IDescribable;
+import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
+import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
+import org.openjdk.jmc.rjmx.common.IServerDescriptor;
+import org.openjdk.jmc.rjmx.descriptorprovider.IDescriptorListener;
 
 /**
  * Tests that JMX connections done with JmcJolokiaJmxConnectionProvider are functional
  */
 @SuppressWarnings("restriction")
-public class JolokiaTest {
+public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstants {
 
 	static String jolokiaUrl;
 
 	private static Set<String> unsafeAttributes = new HashSet<>(Arrays.asList("BootClassPath", "UsageThreshold",
 			"UsageThresholdExceeded", "UsageThresholdCount", "CollectionUsageThreshold",
 			"CollectionUsageThresholdExceeded", "CollectionUsageThresholdCount", "Config", "MBeanServerId"));
+
+	private JolokiaDiscoveryListener discoveryListener;
 
 	private static MBeanServerConnection jolokiaConnection, localConnection;
 
@@ -123,10 +141,12 @@ public class JolokiaTest {
 	public void testWriteAttribute()
 			throws InstanceNotFoundException, AttributeNotFoundException, InvalidAttributeValueException,
 			MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
-		ObjectName objectName = new ObjectName("jolokia:type=Config");
-		String attribute = "Debug";
+		ObjectName objectName = new ObjectName("java.lang:type=Memory");
+		String attribute = "Verbose";
 		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, true));
 		Assert.assertEquals(true, jolokiaConnection.getAttribute(objectName, attribute));
+		//set it back as it otherwise generates a lot of noise in the output
+		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, false));
 	}
 
 	private static MBeanServerConnection getJolokiaMBeanConnector() throws IOException, MalformedURLException {
@@ -135,6 +155,77 @@ public class JolokiaTest {
 		connector.connect();
 		MBeanServerConnection connection = connector.getMBeanServerConnection();
 		return connection;
+	}
+
+	@Test
+	public void testDiscover() {
+		boolean isMacOs = "macosx".equals(System.getProperty("osgi.os"));
+		boolean isCiRun = "true".equals(System.getenv("GITHUB_ACTIONS"));
+		boolean shouldTestMacOS = "true".equals(System.getenv("JOLOKIA_TEST_DISCOVERY_ON_MAC"));
+		if (isMacOs && isCiRun && !shouldTestMacOS) {
+			//This does not work in the JMC CI pipeline for Mac 
+			// 'D> --> Couldnt send discovery message from /127.0.0.1: java.net.BindException: Can't assign requested address
+			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException: 
+			//    org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException: 
+			//    Can't send discovery UDP packet from /127.0.0.1: Can't assign requested address'
+			// We get test coverage on both Linux and Windows
+			return;
+
+		}
+		discoveryListener = new JolokiaDiscoveryListener(this);
+
+		final AtomicInteger foundVms = new AtomicInteger(0);
+
+		discoveryListener.addDescriptorListener(new IDescriptorListener() {
+			public void onDescriptorDetected(
+				IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
+				IConnectionDescriptor connectionDescriptor, IDescribable provider) {
+				foundVms.getAndIncrement();
+			}
+
+			public void onDescriptorRemoved(String descriptorId) {
+				foundVms.getAndDecrement();
+			}
+
+		});
+		// Test that at least one VM (the one running the test was discovered)
+		Awaitility.await().atMost(Duration.ofSeconds(5)).until(() -> foundVms.get() > 0);
+	}
+
+	@After
+	public void stopListener() throws Exception {
+		if (discoveryListener != null) {
+			discoveryListener.shutdown();
+		}
+	}
+
+	@Override
+	public boolean shouldRunDiscovery() {
+		return true;
+	}
+
+	@Override
+	public JolokiaContext getJolokiaContext() {
+		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jolokiatest");
+		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
+				new StdoutLogHandler(true), new AllowAllRestrictor(),
+				() -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
+		return serviceManager.start();
+	}
+
+	@Override
+	public String getMulticastGroup() {
+		return ConfigKey.MULTICAST_GROUP.getDefaultValue();
+	}
+
+	@Override
+	public int getMulticastPort() {
+		return Integer.parseInt(ConfigKey.MULTICAST_PORT.getDefaultValue());
+	}
+
+	@Override
+	public int getDiscoveryTimeout() {
+		return 1000;
 	}
 
 }

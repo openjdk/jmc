@@ -40,12 +40,14 @@
             <unit id="angus-activation" version="2.0.0"/>
             <unit id="org.owasp.encoder" version="1.2.3"/>
             <unit id="lz4-java" version="1.8.0"/>
-            <unit id="org.hdrhistogram.HdrHistogram" version="2.1.12"/>
+            <unit id="org.hdrhistogram.HdrHistogram" version="2.2.2"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
             <unit id="org.jolokia.client-jmx-adapter.standalone" version="2.0.2"/>
+            <unit id="org.jolokia.service.discovery" version="2.0.2"/>
+            <unit id="org.jolokia.server.core" version="2.0.2"/>
             <unit id="com.github.tomakehurst.wiremock-standalone" version="2.27.2"/>
             <unit id="org.eclipse.jetty.websocket.api" version="12.0.6"/>
             <unit id="org.eclipse.jetty.ee9.websocket.api" version="12.0.6"/>
