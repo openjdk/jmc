@@ -1,6 +1,6 @@
 #
-# Copyright (c) 2019, 2023, Oracle and/or its affiliates. All rights reserved.
-# Copyright (c) 2019, 2023, Datadog, Inc. All rights reserved.
+# Copyright (c) 2019, 2024, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2019, 2024, Datadog, Inc. All rights reserved.
 #
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
@@ -73,9 +73,9 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: temurin
-        java-version: '17'
+        java-version: '21'
         java-package: jdk
-        mvn-toolchain-id: 'JavaSE-17'
+        mvn-toolchain-id: 'JavaSE-21'
     - name: Cache local Maven repository
       uses: actions/cache@v3
       with:
