@@ -94,8 +94,10 @@ import org.openjdk.jmc.flightrecorder.rules.TypedResult;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.test.SlowTests;
 import org.openjdk.jmc.test.TestToolkit;
+import org.openjdk.jmc.test.io.FileResource;
 import org.openjdk.jmc.test.io.IOResource;
 import org.openjdk.jmc.test.io.IOResourceSet;
+import org.openjdk.jmc.test.io.JfrGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -139,6 +141,62 @@ public class TestRulesWithJfr {
 	@Test
 	public void verifyAllResults() throws IOException {
 		verifyRuleResults(false);
+	}
+
+	@Test
+	public void allocation() throws IOException {
+		JfrGenerator.create()
+				// Hint for Intellij to provide text highlighting
+				// language=Java
+				.source("""
+				import java.util.concurrent.ThreadLocalRandom;
+				import java.util.concurrent.atomic.AtomicReference;
+				public final class Main {
+					private static final AtomicReference<Object> REF = new AtomicReference<>();
+					static final class AllocatingThread extends Thread {
+						private final int iterations;
+						AllocatingThread(int iterations, String name) {
+							this.iterations = iterations;
+							setName(name);
+						}
+						@Override
+						public void run() {
+							for (int i = 0; i < iterations; i++) {
+				                REF.set(new byte[ThreadLocalRandom.current().nextInt(1_000)]);
+				            }
+						}
+					}
+					public static void main(String[] args) {
+						for (int i = 0; i < 10; i++) {
+							new AllocatingThread(1, "low-allocation").start();
+						}
+						new AllocatingThread(1_000_000, "high-allocation").start();
+					}
+				}
+				""")
+				// language=XML
+				.configuration("""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<configuration version="2.0" label="custom" description="" provider="custom">
+					<event name="jdk.ObjectAllocationInNewTLAB">
+						<setting name="enabled">true</setting>
+						<setting name="stackTrace">true</setting>
+					</event>
+					<event name="jdk.ObjectAllocationOutsideTLAB">
+						<setting name="enabled">true</setting>
+						<setting name="stackTrace">true</setting>
+					</event>
+				</configuration>
+				""")
+				.execute(path -> {
+					IOResource recording = new FileResource(path.toFile());
+					Report report = generateReport(recording, false, null);
+					RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
+					Assert.assertNotNull("No results found for Allocations.thread", allocationByThreadResult);
+					Assert.assertEquals(allocationByThreadResult.severity, "Information");
+					Assert.assertTrue(allocationByThreadResult.summary,
+							allocationByThreadResult.summary.contains("The most allocations were likely done by thread ''high-allocation''"));
+				});
 	}
 
 	private void verifyRuleResults(boolean onlyOneRecording) throws IOException {
