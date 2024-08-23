@@ -34,6 +34,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.memory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -44,6 +45,7 @@ import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.SimpleArray;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -126,10 +128,6 @@ public class AutoBoxingRule extends AbstractRule {
 	private static final Collection<TypedPreference<?>> CONFIGURATION_ATTRIBUTES = Arrays
 			.<TypedPreference<?>> asList(AUTOBOXING_RATIO_INFO_LIMIT, AUTOBOXING_RATIO_WARNING_LIMIT);
 
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.AVAILABLE).build();
-
 	public static final TypedResult<IMCType> LARGEST_ALLOCATED_TYPE = new TypedResult<>("largestAllocatedType", //$NON-NLS-1$
 			"Largest Allocated Type", "The type allocated the most.", UnitLookup.CLASS, IMCType.class);
 	public static final TypedResult<IMCFrame> SECOND_FRAME_MOST_ALLOCATED = new TypedResult<>(
@@ -151,16 +149,27 @@ public class AutoBoxingRule extends AbstractRule {
 
 	public AutoBoxingRule() {
 		super("PrimitiveToObjectConversion", Messages.getString(Messages.AutoboxingRule_RULE_NAME), //$NON-NLS-1$
-				JfrRuleTopics.HEAP, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, REQUIRED_EVENTS);
+				JfrRuleTopics.HEAP, CONFIGURATION_ATTRIBUTES, RESULT_ATTRIBUTES, Collections.emptyMap());
 	}
 
 	@Override
 	protected IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
+		boolean preciseEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB)
+				.isLessAvailableThan(EventAvailability.ENABLED)
+				&& !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_OUTSIDE_TLAB)
+						.isLessAvailableThan(EventAvailability.AVAILABLE);
+		boolean sampledEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJ_ALLOC_SAMPLE)
+				.isLessAvailableThan(EventAvailability.AVAILABLE);
+		if (!preciseEvents && !sampledEvents) {
+			return RulesToolkit.getNotApplicableResult(this, vp, null);
+		}
+
 		double autoboxingRatioInfoLimit = vp.getPreferenceValue(AUTOBOXING_RATIO_INFO_LIMIT).doubleValue();
 		double autoboxingRatioWarningLimit = vp.getPreferenceValue(AUTOBOXING_RATIO_WARNING_LIMIT).doubleValue();
 
 		// FIXME: Should add a dependency on a rule checking allocation pressure later, but keeping the rule very simplistic as a first step.
-		IItemCollection allocationItems = items.apply(JdkFilters.ALLOC_ALL);
+		IItemFilter filter = preciseEvents ? JdkFilters.ALLOC_ALL : JdkFilters.OBJ_ALLOC;
+		IItemCollection allocationItems = items.apply(filter);
 		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
 		StacktraceModel model = new StacktraceModel(false, sep, allocationItems);
 		Map<IMCType, IQuantity> allocationSizeByType = new HashMap<>();

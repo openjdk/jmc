@@ -860,6 +860,65 @@ public class RulesToolkit {
 	}
 
 	/**
+	 * Each group is represented by the sum of the result of {@code weightAccessorFactory} belong in
+	 * that group, elements are grouped by the {@code groupAccessorFactory} value.
+	 * <p>
+	 * For example, the items {A[1], B[1], C[1], A[1], B[1], A[2], A[1]} will become {C[1], B[2],
+	 * A[5]} Note that when values exceed {@link Integer#MAX_VALUE}, all weights stored in the map
+	 * are scaled down by half. This can occur multiple times.
+	 *
+	 * @param items
+	 *            input items
+	 * @param groupAccessorFactory
+	 *            a factory that provides accessors for the input item types
+	 * @param weightAccessorFactory
+	 *            a factory that provides accessors for the input item weights
+	 * @return A sorted list of total weights, one for each unique value that the accessor computes
+	 *         from the input items, that tells total weight across input items which gave that
+	 *         accessor value.
+	 */
+	public static <T> List<IntEntry<T>> calculateGroupingScore(
+		IItemCollection items, IAccessorFactory<T> groupAccessorFactory,
+		IAccessorFactory<IQuantity> weightAccessorFactory) {
+		EntryHashMap<T, IntEntry<T>> map = MapToolkit.createIntMap(1000, 0.5f);
+		int valueShift = 0;
+		for (IItemIterable ii : items) {
+			IMemberAccessor<? extends T, IItem> groupByAccessor = groupAccessorFactory.getAccessor(ii.getType());
+			IMemberAccessor<? extends IQuantity, IItem> valueAccessor = weightAccessorFactory.getAccessor(ii.getType());
+			if (groupByAccessor == null || valueAccessor == null) {
+				continue;
+			}
+			for (IItem item : ii) {
+				T member = groupByAccessor.getMember(item);
+				if (member != null) {
+					IntEntry<T> entry = map.get(member, true);
+
+					int existingValue = entry.getValue();
+					long itemValue = valueAccessor.getMember(item).longValue();
+					long sum = Math.max(1, itemValue >> valueShift) + existingValue;
+					int newShift = 0;
+					while (sum >= Integer.MAX_VALUE) {
+						sum = sum >> 1;
+						newShift++;
+					}
+					if (newShift > 0) {
+						for (IntEntry<T> mapEntry : map) {
+							if (mapEntry.getValue() != 0) {
+								mapEntry.setValue(Math.max(1, mapEntry.getValue() >> newShift));
+							}
+						}
+						valueShift += newShift;
+					}
+					entry.setValue((int) sum);
+				}
+			}
+		}
+		List<IntEntry<T>> array = IteratorToolkit.toList(map.iterator(), map.size());
+		array.sort(null);
+		return array;
+	}
+
+	/**
 	 * Calculates a balance for entries, where later elements get a higher relevance than earlier
 	 * elements.
 	 * <p>
