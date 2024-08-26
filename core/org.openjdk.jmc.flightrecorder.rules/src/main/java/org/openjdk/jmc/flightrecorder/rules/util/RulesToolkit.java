@@ -861,11 +861,12 @@ public class RulesToolkit {
 
 	/**
 	 * Each group is represented by the sum of the result of {@code weightAccessorFactory} belong in
-	 * that group, elements are grouped by the {@code groupAccessorFactory} value.
+	 * that group divided by the smallest value observed in {@code items}.
+	 * Elements are grouped by the {@code groupAccessorFactory} value.
 	 * <p>
-	 * For example, the items {A[1], B[1], C[1], A[1], B[1], A[2], A[1]} will become {C[1], B[2],
-	 * A[5]} Note that when values exceed {@link Integer#MAX_VALUE}, all weights stored in the map
-	 * are scaled down by half. This can occur multiple times.
+	 * This is helpful for events like object allocation samples, where it's not clear how many
+	 * unique allocations were measured based on the weight value alone. By dividing by the minimum
+	 * observed weight, we can roughly estimate the number of allocations.
 	 *
 	 * @param items
 	 *            input items
@@ -873,15 +874,16 @@ public class RulesToolkit {
 	 *            a factory that provides accessors for the input item types
 	 * @param weightAccessorFactory
 	 *            a factory that provides accessors for the input item weights
-	 * @return A sorted list of total weights, one for each unique value that the accessor computes
+	 * @return A sorted list of grouping scores, one for each unique value that the accessor computes
 	 *         from the input items, that tells total weight across input items which gave that
-	 *         accessor value.
+	 *         accessor value, divided by the minimum observed value.
 	 */
 	public static <T> List<IntEntry<T>> calculateGroupingScore(
 		IItemCollection items, IAccessorFactory<T> groupAccessorFactory,
 		IAccessorFactory<IQuantity> weightAccessorFactory) {
 		EntryHashMap<T, IntEntry<T>> map = MapToolkit.createIntMap(1000, 0.5f);
 		int valueShift = 0;
+		long minWeight = 0;
 		for (IItemIterable ii : items) {
 			IMemberAccessor<? extends T, IItem> groupByAccessor = groupAccessorFactory.getAccessor(ii.getType());
 			IMemberAccessor<? extends IQuantity, IItem> valueAccessor = weightAccessorFactory.getAccessor(ii.getType());
@@ -895,7 +897,14 @@ public class RulesToolkit {
 
 					int existingValue = entry.getValue();
 					long itemValue = valueAccessor.getMember(item).longValue();
-					long sum = Math.max(1, itemValue >> valueShift) + existingValue;
+					if (itemValue < 0) {
+						throw new RuntimeException("Unexpected negative value: " + itemValue);
+					}
+					long scaledItemValue = Math.max(1, itemValue >> valueShift);
+					if (itemValue > 0 && (minWeight == 0 || scaledItemValue < minWeight)) {
+						minWeight = scaledItemValue;
+					}
+					long sum = scaledItemValue + existingValue;
 					int newShift = 0;
 					while (sum >= Integer.MAX_VALUE) {
 						sum = sum >> 1;
@@ -907,9 +916,17 @@ public class RulesToolkit {
 								mapEntry.setValue(Math.max(1, mapEntry.getValue() >> newShift));
 							}
 						}
+						minWeight = Math.max(1, minWeight >> newShift);
 						valueShift += newShift;
 					}
 					entry.setValue((int) sum);
+				}
+			}
+		}
+		if (minWeight > 0) {
+			for (IntEntry<T> mapEntry : map) {
+				if (mapEntry.getValue() != 0) {
+					mapEntry.setValue(Math.max(1, mapEntry.getValue() / (int) minWeight));
 				}
 			}
 		}
