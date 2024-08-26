@@ -861,8 +861,8 @@ public class RulesToolkit {
 
 	/**
 	 * Each group is represented by the sum of the result of {@code weightAccessorFactory} belong in
-	 * that group divided by the smallest value observed in {@code items}.
-	 * Elements are grouped by the {@code groupAccessorFactory} value.
+	 * that group divided by the smallest value observed in {@code items}. Elements are grouped by
+	 * the {@code groupAccessorFactory} value.
 	 * <p>
 	 * This is helpful for events like object allocation samples, where it's not clear how many
 	 * unique allocations were measured based on the weight value alone. By dividing by the minimum
@@ -874,9 +874,9 @@ public class RulesToolkit {
 	 *            a factory that provides accessors for the input item types
 	 * @param weightAccessorFactory
 	 *            a factory that provides accessors for the input item weights
-	 * @return A sorted list of grouping scores, one for each unique value that the accessor computes
-	 *         from the input items, that tells total weight across input items which gave that
-	 *         accessor value, divided by the minimum observed value.
+	 * @return A sorted list of grouping scores, one for each unique value that the accessor
+	 *         computes from the input items, that tells total weight across input items which gave
+	 *         that accessor value, divided by the minimum observed value.
 	 */
 	public static <T> List<IntEntry<T>> calculateGroupingScore(
 		IItemCollection items, IAccessorFactory<T> groupAccessorFactory,
