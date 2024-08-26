@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,7 +65,6 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
@@ -99,6 +98,10 @@ public class AllocationByClassRule implements IRule {
 		IItemFilter filter = preciseEvents ? JdkFilters.ALLOC_ALL : JdkFilters.OBJ_ALLOC;
 		List<IntEntry<IMCType>> entries = preciseEvents
 				? RulesToolkit.calculateGroupingScore(items.apply(filter), JdkAttributes.ALLOCATION_CLASS)
+				// Using object allocation sample events we must calculate cores taking sample weight
+				// into account. The weight is based on both number of samples and the estimated allocation
+				// size, which we cannot decouple to exactly match the behavior of the more expensive and
+				// precise object allocation in new tlab/outside tlab events.
 				: RulesToolkit.calculateGroupingScore(items.apply(filter), JdkAttributes.ALLOCATION_CLASS,
 						JdkAttributes.TOTAL_ALLOCATION_SIZE);
 		if (entries.size() > 1) {

@@ -30,7 +30,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.test.io;
+package org.openjdk.jmc.flightrecorder.test.util;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -40,10 +40,14 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.TimeZone;
 
+/**
+ * Test utility to produce a JFR recording for a simple java program. This allows us to validate
+ * that JMC rules catch problems in a specific program in a way that's easy for developers to
+ * follow, without checking in recording artifacts. These should be used judiciously because
+ * executing these processes and capturing recordings while running tests is more expensive than
+ * consuming stored recording data, and only provides feedback on JFRs from the active JDK version.
+ */
 public final class JfrGenerator {
-
-	private JfrGenerator() {
-	}
 
 	public static SourceStage create() {
 		return new SourceStage();
@@ -97,6 +101,10 @@ public final class JfrGenerator {
 			this.configurationContents = configurationContents;
 		}
 
+		/**
+		 * Executes the provided Java source with the specified recording configuration, then
+		 * invokes {@code consumer} with the resulting recording.
+		 */
 		public void execute(RecordingConsumer consumer) throws IOException {
 			Objects.requireNonNull(consumer, "Consumer is required");
 			Path temp = Files.createTempDirectory("jfr-generator").toAbsolutePath();
@@ -143,5 +151,8 @@ public final class JfrGenerator {
 	@FunctionalInterface
 	public interface RecordingConsumer {
 		void acceptRecording(Path recording) throws IOException;
+	}
+
+	private JfrGenerator() {
 	}
 }

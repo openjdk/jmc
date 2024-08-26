@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -100,6 +100,10 @@ public class AllocationByThreadRule implements IRule {
 		IItemCollection allocationItems = items.apply(filter);
 		List<IntEntry<IMCThread>> entries = preciseEvents
 				? RulesToolkit.calculateGroupingScore(allocationItems, JfrAttributes.EVENT_THREAD)
+				// Using object allocation sample events we must calculate cores taking sample weight
+				// into account. The weight is based on both number of samples and the estimated allocation
+				// size, which we cannot decouple to exactly match the behavior of the more expensive and
+				// precise object allocation in new tlab/outside tlab events.
 				: RulesToolkit.calculateGroupingScore(allocationItems, JfrAttributes.EVENT_THREAD,
 						JdkAttributes.SAMPLE_WEIGHT);
 		if (entries.size() > 0) {
