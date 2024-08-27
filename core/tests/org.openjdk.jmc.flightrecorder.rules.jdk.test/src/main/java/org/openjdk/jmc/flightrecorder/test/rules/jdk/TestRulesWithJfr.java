@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -141,45 +142,45 @@ public class TestRulesWithJfr {
 	@Test
 	public void verifyAllResults() throws IOException {
 		verifyRuleResults(false);
-}
-
-// Hint for Intellij to provide text highlighting
-// language=Java
-private static final String HIGH_ALLOCATION_ON_SINGLE_THREAD = """
-import java.util.concurrent.atomic.AtomicReference;
-
-public final class Main {
-	private static final AtomicReference<Object> REF = new AtomicReference<>();
-
-	static final class AllocatingThread extends Thread {
-		private final int iterations;
-
-		AllocatingThread(int iterations, String name) {
-			this.iterations = iterations;
-			setName(name);
-		}
-
-		@Override
-		public void run() {
-			for (int i = 0; i < iterations; i++) {
-				REF.set(new byte[1_000_000]);
-			}
-		}
 	}
-
-	public static void main(String[] args) {
-		for (int i = 0; i < 10; i++) {
-			new AllocatingThread(1, "low-allocation").start();
-		}
-		new AllocatingThread(100_000, "high-allocation").start();
-	}
-
-	}""";
 
 	@Test
-	public void allocationByThreadRuleObjectAllocationEvents() throws IOException {
+	public void allocationByThreadRule() throws IOException {
+		// language=Java
+		String source = """
+		import java.util.concurrent.atomic.AtomicReference;
+		
+		public final class Main {
+			private static final AtomicReference<Object> REF = new AtomicReference<>();
+		
+			static final class AllocatingThread extends Thread {
+				private final int iterations;
+		
+				AllocatingThread(int iterations, String name) {
+					this.iterations = iterations;
+					setName(name);
+				}
+		
+				@Override
+				public void run() {
+					for (int i = 0; i < iterations; i++) {
+						REF.set(new byte[100_000]);
+						// Provide a small delay for the object allocation sampler
+						if (i % 1000 == 0) try { Thread.sleep(1); } catch (Exception ignored) {}
+					}
+				}
+			}
+		
+			public static void main(String[] args) {
+				for (int i = 0; i < 10; i++) {
+					new AllocatingThread(1, "low-allocation").start();
+				}
+				new AllocatingThread(100_000, "high-allocation").start();
+			}
+		}
+		""";
 		JfrGenerator.create()
-				.source(HIGH_ALLOCATION_ON_SINGLE_THREAD)
+				.source(source)
 				// language=XML
 				.configuration("""
 				<?xml version="1.0" encoding="UTF-8"?>
@@ -194,28 +195,77 @@ public final class Main {
 					</event>
 				</configuration>
 				""")
-				.execute(path -> {
-					IOResource recording = new FileResource(path.toFile());
-					Report report = generateReport(recording, false, null);
-					RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
-					Assert.assertNotNull("No results found for Allocations.thread", allocationByThreadResult);
-					Assert.assertEquals("Information", allocationByThreadResult.severity);
-					Assert.assertTrue(allocationByThreadResult.summary,
-							allocationByThreadResult.summary.contains("The most allocations were likely done by thread ''high-allocation''"));
-				});
+				.execute(this::assertsForHighAllocationOnSingleThreadSource);
+		JfrGenerator.create()
+				.source(source)
+				.configurationName("default")
+				.execute(this::assertsForHighAllocationOnSingleThreadSource);
+	}
+
+	private void assertsForHighAllocationOnSingleThreadSource(Path recordingPath) {
+		IOResource recording = new FileResource(recordingPath.toFile());
+		Report report = generateReport(recording, false, null);
+		RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
+		Assert.assertNotNull("No results found for Allocations.thread", allocationByThreadResult);
+		Assert.assertEquals("Information", allocationByThreadResult.severity);
+		Assert.assertTrue(allocationByThreadResult.summary, allocationByThreadResult.summary
+				.contains("The most allocations were likely done by thread ''high-allocation''"));
+
+		RuleResult allocationByClassResult = report.rules.get("Allocations.class");
+		Assert.assertNotNull("No results found for Allocations.class", allocationByClassResult);
+		Assert.assertEquals("Information", allocationByClassResult.severity);
+		Assert.assertTrue(allocationByClassResult.summary,
+				allocationByClassResult.summary.contains("The most allocated type is likely ''byte[]''"));
 	}
 
 	@Test
-	public void allocationByThreadRuleDefaultSettings() throws IOException {
-		JfrGenerator.create().source(HIGH_ALLOCATION_ON_SINGLE_THREAD).configurationName("default").execute(path -> {
-			IOResource recording = new FileResource(path.toFile());
-			Report report = generateReport(recording, false, null);
-			RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
-			Assert.assertNotNull("No results found for Allocations.thread", allocationByThreadResult);
-			Assert.assertEquals("Information", allocationByThreadResult.severity);
-			Assert.assertTrue(allocationByThreadResult.summary, allocationByThreadResult.summary
-					.contains("The most allocations were likely done by thread ''high-allocation''"));
-		});
+	public void autoboxingRule() throws IOException {
+		// language=Java
+		String source = """
+		import java.util.concurrent.atomic.AtomicReference;
+		
+		public final class Main {
+			private static final AtomicReference<Object> REF = new AtomicReference<>();
+		
+			public static void main(String[] args) throws Exception {
+				for (int i = 0; i < 1_000_000; i++) {
+					REF.set(i);
+					// Provide a small delay for the object allocation sampler
+					if (i % 1000 == 0) Thread.sleep(1);
+				}
+			}
+		}""";
+		JfrGenerator.create()
+				.source(source)
+				// language=XML
+				.configuration("""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<configuration version="2.0">
+					<event name="jdk.ObjectAllocationInNewTLAB">
+						<setting name="enabled">true</setting>
+						<setting name="stackTrace">true</setting>
+					</event>
+					<event name="jdk.ObjectAllocationOutsideTLAB">
+						<setting name="enabled">true</setting>
+						<setting name="stackTrace">true</setting>
+					</event>
+				</configuration>
+				""")
+				.execute(this::assertsForHeavyAutoboxing);
+		JfrGenerator.create()
+				.source(source)
+				.configurationName("default")
+				.execute(this::assertsForHeavyAutoboxing);
+	}
+
+	private void assertsForHeavyAutoboxing(Path recordingPath) {
+		IOResource recording = new FileResource(recordingPath.toFile());
+		Report report = generateReport(recording, false, null);
+		RuleResult allocationByThreadResult = report.rules.get("PrimitiveToObjectConversion");
+		Assert.assertNotNull("No results found for PrimitiveToObjectConversion", allocationByThreadResult);
+		Assert.assertEquals("Information", allocationByThreadResult.severity);
+		Assert.assertTrue(allocationByThreadResult.summary, allocationByThreadResult.summary
+				.contains("The most common object type that primitives are converted into is ''java.lang.Integer''"));
 	}
 
 	private void verifyRuleResults(boolean onlyOneRecording) throws IOException {
