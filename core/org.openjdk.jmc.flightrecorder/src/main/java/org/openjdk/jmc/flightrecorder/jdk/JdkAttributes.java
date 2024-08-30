@@ -579,8 +579,6 @@ public final class JdkAttributes {
 						return JdkAttributes.TLAB_SIZE.getAccessor(type);
 					} else if (type.getIdentifier().equals(JdkTypeIDs.ALLOC_OUTSIDE_TLAB)) {
 						return JdkAttributes.ALLOCATION_SIZE.getAccessor(type);
-					} else if (type.getIdentifier().equals(JdkTypeIDs.OBJ_ALLOC_SAMPLE)) {
-						return JdkAttributes.SAMPLE_WEIGHT.getAccessor(type);
 					}
 					return null;
 				}

@@ -43,6 +43,8 @@ import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.SimpleArray;
+import org.openjdk.jmc.common.item.IAggregator;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
@@ -168,6 +170,10 @@ public class AutoBoxingRule extends AbstractRule {
 
 		// FIXME: Should add a dependency on a rule checking allocation pressure later, but keeping the rule very simplistic as a first step.
 		IItemFilter filter = preciseEvents ? JdkFilters.ALLOC_ALL : JdkFilters.OBJ_ALLOC;
+		IAttribute<IQuantity> allocationAttribute = preciseEvents ? JdkAttributes.TOTAL_ALLOCATION_SIZE
+				: JdkAttributes.SAMPLE_WEIGHT;
+		IAggregator<IQuantity, ?> aggregator = preciseEvents ? JdkAggregators.ALLOCATION_TOTAL
+				: JdkAggregators.OBJ_ALLOC_TOTAL_SUM;
 		IItemCollection allocationItems = items.apply(filter);
 		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
 		StacktraceModel model = new StacktraceModel(false, sep, allocationItems);
@@ -182,7 +188,7 @@ public class AutoBoxingRule extends AbstractRule {
 				SimpleArray<IItem> itemArray = stacktraceFrame.getItems();
 				IQuantity total = UnitLookup.BYTE.quantity(0);
 				for (IItem item : itemArray) {
-					total = total.add(RulesToolkit.getValue(item, JdkAttributes.TOTAL_ALLOCATION_SIZE));
+					total = total.add(RulesToolkit.getValue(item, allocationAttribute));
 				}
 				sizeOfAllBoxedAllocations = sizeOfAllBoxedAllocations.add(total);
 				if (total.compareTo(largestAllocatedByType) > 0) {
@@ -206,7 +212,7 @@ public class AutoBoxingRule extends AbstractRule {
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 					.setSummary(Messages.getString(Messages.AutoboxingRule_RESULT_NO_AUTOBOXING)).build();
 		}
-		IQuantity totalAllocationSize = allocationItems.getAggregate(JdkAggregators.ALLOCATION_TOTAL);
+		IQuantity totalAllocationSize = allocationItems.getAggregate(aggregator);
 		double possibleAutoboxingRatio = sizeOfAllBoxedAllocations.ratioTo(totalAllocationSize);
 
 		double score = RulesToolkit.mapExp100(possibleAutoboxingRatio * 100, autoboxingRatioInfoLimit,

@@ -103,7 +103,7 @@ public class AllocationByClassRule implements IRule {
 				// size, which we cannot decouple to exactly match the behavior of the more expensive and
 				// precise object allocation in new tlab/outside tlab events.
 				: RulesToolkit.calculateGroupingScore(items.apply(filter), JdkAttributes.ALLOCATION_CLASS,
-						JdkAttributes.TOTAL_ALLOCATION_SIZE);
+						JdkAttributes.SAMPLE_WEIGHT);
 		if (entries.size() > 1) {
 			double balance = RulesToolkit.calculateBalanceScore(entries);
 			IntEntry<IMCType> mostSignificant = entries.get(entries.size() - 1);
