@@ -146,126 +146,129 @@ public class TestRulesWithJfr {
 
 	@Test
 	public void allocationByThreadRule() throws IOException {
-		// language=Java
-		String source = """
-		import java.util.concurrent.atomic.AtomicReference;
-		
-		public final class Main {
-			private static final AtomicReference<Object> REF = new AtomicReference<>();
-		
-			static final class AllocatingThread extends Thread {
-				private final int iterations;
-		
-				AllocatingThread(int iterations, String name) {
-					this.iterations = iterations;
-					setName(name);
-				}
-		
-				@Override
-				public void run() {
-					for (int i = 0; i < iterations; i++) {
-						REF.set(new byte[100_000]);
-						// Provide a small delay for the object allocation sampler
-						if (i % 1000 == 0) try { Thread.sleep(1); } catch (Exception ignored) {}
+		for (JfrConfiguration config : allocationProfilingConfigurations()) {
+			JfrGenerator.create()
+					// language=Java
+					.source(
+					"""
+					import java.util.concurrent.atomic.AtomicReference;
+					
+					public final class Main {
+						private static final AtomicReference<Object> REF = new AtomicReference<>();
+					
+						static final class AllocatingThread extends Thread {
+							private final int iterations;
+					
+							AllocatingThread(int iterations, String name) {
+								this.iterations = iterations;
+								setName(name);
+							}
+					
+							@Override
+							public void run() {
+								for (int i = 0; i < iterations; i++) {
+									REF.set(new byte[100_000]);
+								}
+							}
+						}
+					
+						public static void main(String[] args) {
+							for (int i = 0; i < 10; i++) {
+								new AllocatingThread(1, "low-allocation").start();
+							}
+							new AllocatingThread(100_000, "high-allocation").start();
+						}
 					}
-				}
-			}
-		
-			public static void main(String[] args) {
-				for (int i = 0; i < 10; i++) {
-					new AllocatingThread(1, "low-allocation").start();
-				}
-				new AllocatingThread(100_000, "high-allocation").start();
-			}
+					""")
+					.configuration(config.content())
+					.execute(recordingPath -> {
+						IOResource recording = new FileResource(recordingPath.toFile());
+						Report report = generateReport(recording, false, null);
+						RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
+						String prefix = "Configuration[" + config.name() + "] ";
+						Assert.assertNotNull(prefix + "No results found for Allocations.thread", allocationByThreadResult);
+						Assert.assertEquals(prefix, "Information", allocationByThreadResult.severity);
+						Assert.assertTrue(prefix + allocationByThreadResult.summary, allocationByThreadResult.summary
+								.contains("The most allocations were likely done by thread ''high-allocation''"));
+
+						RuleResult allocationByClassResult = report.rules.get("Allocations.class");
+						Assert.assertNotNull(prefix + "No results found for Allocations.class", allocationByClassResult);
+						Assert.assertEquals(prefix, "Information", allocationByClassResult.severity);
+						Assert.assertTrue(prefix + allocationByClassResult.summary,
+								allocationByClassResult.summary.contains("The most allocated type is likely ''byte[]''"));
+					});
 		}
-		""";
-		JfrGenerator.create()
-				.source(source)
-				// language=XML
-				.configuration("""
-				<?xml version="1.0" encoding="UTF-8"?>
-				<configuration version="2.0">
-					<event name="jdk.ObjectAllocationInNewTLAB">
-						<setting name="enabled">true</setting>
-						<setting name="stackTrace">true</setting>
-					</event>
-					<event name="jdk.ObjectAllocationOutsideTLAB">
-						<setting name="enabled">true</setting>
-						<setting name="stackTrace">true</setting>
-					</event>
-				</configuration>
-				""")
-				.execute(this::assertsForHighAllocationOnSingleThreadSource);
-		JfrGenerator.create()
-				.source(source)
-				.configurationName("default")
-				.execute(this::assertsForHighAllocationOnSingleThreadSource);
 	}
 
-	private void assertsForHighAllocationOnSingleThreadSource(Path recordingPath) {
-		IOResource recording = new FileResource(recordingPath.toFile());
-		Report report = generateReport(recording, false, null);
-		RuleResult allocationByThreadResult = report.rules.get("Allocations.thread");
-		Assert.assertNotNull("No results found for Allocations.thread", allocationByThreadResult);
-		Assert.assertEquals("Information", allocationByThreadResult.severity);
-		Assert.assertTrue(allocationByThreadResult.summary, allocationByThreadResult.summary
-				.contains("The most allocations were likely done by thread ''high-allocation''"));
+	private static List<JfrConfiguration> allocationProfilingConfigurations() {
+		return List.of(
+				new JfrConfiguration(
+						"ObjectAllocationInNewTLAB/OutsideTLAB",
+						// language=XML
+						"""
+						<?xml version="1.0" encoding="UTF-8"?>
+						<configuration version="2.0">
+							<event name="jdk.ObjectAllocationInNewTLAB">
+								<setting name="enabled">true</setting>
+								<setting name="stackTrace">true</setting>
+							</event>
+							<event name="jdk.ObjectAllocationOutsideTLAB">
+								<setting name="enabled">true</setting>
+								<setting name="stackTrace">true</setting>
+							</event>
+						</configuration>
+						"""),
+				new JfrConfiguration(
+						"ObjectAllocationSample",
+						// language=XML
+						"""
+						<?xml version="1.0" encoding="UTF-8"?>
+						<configuration version="2.0">
+							<event name="jdk.ObjectAllocationSample">
+								<setting name="enabled">true</setting>
+								<setting name="stackTrace">true</setting>
+								<!-- Effectively disable the throttle -->
+								<setting name="throttle">1/ns</setting>
+							</event>
+						</configuration>
+						"""));
+	}
 
-		RuleResult allocationByClassResult = report.rules.get("Allocations.class");
-		Assert.assertNotNull("No results found for Allocations.class", allocationByClassResult);
-		Assert.assertEquals("Information", allocationByClassResult.severity);
-		Assert.assertTrue(allocationByClassResult.summary,
-				allocationByClassResult.summary.contains("The most allocated type is likely ''byte[]''"));
+	record JfrConfiguration(String name, String content) {
 	}
 
 	@Test
 	public void autoboxingRule() throws IOException {
-		// language=Java
-		String source = """
-		import java.util.concurrent.atomic.AtomicReference;
-		
-		public final class Main {
-			private static final AtomicReference<Object> REF = new AtomicReference<>();
-		
-			public static void main(String[] args) throws Exception {
-				for (int i = 0; i < 1_000_000; i++) {
-					REF.set(i);
-					// Provide a small delay for the object allocation sampler
-					if (i % 1000 == 0) Thread.sleep(1);
-				}
-			}
-		}""";
+		for (JfrConfiguration config : allocationProfilingConfigurations()) {
 		JfrGenerator.create()
-				.source(source)
-				// language=XML
-				.configuration("""
-				<?xml version="1.0" encoding="UTF-8"?>
-				<configuration version="2.0">
-					<event name="jdk.ObjectAllocationInNewTLAB">
-						<setting name="enabled">true</setting>
-						<setting name="stackTrace">true</setting>
-					</event>
-					<event name="jdk.ObjectAllocationOutsideTLAB">
-						<setting name="enabled">true</setting>
-						<setting name="stackTrace">true</setting>
-					</event>
-				</configuration>
-				""")
-				.execute(this::assertsForHeavyAutoboxing);
-		JfrGenerator.create()
-				.source(source)
-				.configurationName("default")
-				.execute(this::assertsForHeavyAutoboxing);
-	}
-
-	private void assertsForHeavyAutoboxing(Path recordingPath) {
-		IOResource recording = new FileResource(recordingPath.toFile());
-		Report report = generateReport(recording, false, null);
-		RuleResult allocationByThreadResult = report.rules.get("PrimitiveToObjectConversion");
-		Assert.assertNotNull("No results found for PrimitiveToObjectConversion", allocationByThreadResult);
-		Assert.assertEquals("Information", allocationByThreadResult.severity);
-		Assert.assertTrue(allocationByThreadResult.summary, allocationByThreadResult.summary
-				.contains("The most common object type that primitives are converted into is ''java.lang.Integer''"));
+				.source(
+						// language=Java
+						"""
+						import java.util.concurrent.atomic.AtomicReference;
+						
+						public final class Main {
+							private static final AtomicReference<Object> REF = new AtomicReference<>();
+						
+							public static void main(String[] args) throws Exception {
+								for (int i = 0; i < 1_000_000; i++) {
+									REF.set(i);
+									// Provide a small delay for the object allocation sampler
+									if (i % 1000 == 0) Thread.sleep(1);
+								}
+							}
+						}""")
+				.configuration(config.content())
+				.execute(recordingPath -> {
+					IOResource recording = new FileResource(recordingPath.toFile());
+					Report report = generateReport(recording, false, null);
+					RuleResult allocationByThreadResult = report.rules.get("PrimitiveToObjectConversion");
+					String prefix = "Configuration[" + config.name() + "] ";
+					Assert.assertNotNull(prefix + "No results found for PrimitiveToObjectConversion", allocationByThreadResult);
+					Assert.assertEquals(prefix, "Information", allocationByThreadResult.severity);
+					Assert.assertTrue(prefix + allocationByThreadResult.summary, allocationByThreadResult.summary
+							.contains("The most common object type that primitives are converted into is ''java.lang.Integer''"));
+				});
+		}
 	}
 
 	private void verifyRuleResults(boolean onlyOneRecording) throws IOException {
