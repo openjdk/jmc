@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -238,7 +238,7 @@ public class NotificationTrigger implements ITrigger {
 			if (stateStore.m_lastTriggerErrorTimestamp == null || (aspectEvent.getTimestamp()
 					- stateStore.m_lastTriggerErrorTimestamp >= TRIGGER_ERROR_HANDLING_LIMIT_TIME_MS)) {
 				stateStore.m_lastTriggerErrorTimestamp = aspectEvent.getTimestamp();
-				handleException(connectionHandle, rule, e);
+				handleException(connectionHandle, rule, e, "");
 			}
 			return;
 		}
@@ -324,19 +324,21 @@ public class NotificationTrigger implements ITrigger {
 		stateStore.m_triggerState = triggState;
 		if (notificationEnabled) {
 			stateStore.m_lastTriggerEventTimestamp = aspectEvent.getTimestamp();
+			String triggerMessage = NotificationToolkit.prettyPrint(event);
 			// FIXME: The invocation of the actions should be added to a queue and dispatched in a separate thread
 			try {
 				rule.getAction().handleNotificationEvent(event);
 			} catch (Throwable e) {
-				handleException(connectionHandle, rule, e);
+				handleException(connectionHandle, rule, e, triggerMessage);
 			}
 		}
 	}
 
-	private void handleException(IConnectionHandle connectionHandle, TriggerRule rule, Throwable e) {
+	private void handleException(
+		IConnectionHandle connectionHandle, TriggerRule rule, Throwable e, String triggerMessage) {
 		IExceptionHandler[] handlers = getExceptionHandlers();
 		for (IExceptionHandler handler : handlers) {
-			handler.handleException(connectionHandle, rule, e);
+			handler.handleException(connectionHandle, rule, e, triggerMessage);
 		}
 	}
 

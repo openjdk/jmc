@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,12 +37,15 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.jobs.Job;
 import org.openjdk.jmc.common.resource.Resource;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
+import org.openjdk.jmc.rjmx.triggers.actions.internal.TriggerActionValidator;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.BooleanField;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.DateField;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.Field;
+import org.openjdk.jmc.rjmx.triggers.fields.internal.Field.FieldValueChangeListener;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.FieldHolder;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.FileField;
 import org.openjdk.jmc.rjmx.triggers.fields.internal.FloatField;
@@ -143,6 +146,7 @@ public class TriggerComponent implements IExecutableExtension, IImageResource {
 					String fieldValue = getAttribute(element, XML_FIELD_DEFAULT_VALUE, ""); //$NON-NLS-1$
 					Field field = createField(element, fieldId, fieldLabel, fieldValue, fieldDescription);
 					if (field != null) {
+						addListeners(field);
 						m_fieldHolder.addField(field);
 					} else {
 						RJMXPlugin.getDefault().getLogger().severe("Extension XML-parse error " + element.getName()); //$NON-NLS-1$
@@ -152,6 +156,28 @@ public class TriggerComponent implements IExecutableExtension, IImageResource {
 							"Extension XML-parse error " + element.getName(), e); //$NON-NLS-1$
 				}
 			}
+		}
+	}
+
+	private void addListeners(Field field) {
+		String fieldId = field.getId();
+		if ("dumpfilename".equals(fieldId) || "recordingfilename".equals(fieldId) || "filename".equals(fieldId)
+				|| "log_file".equals(fieldId) || "logfilename".equals(fieldId)) {
+			field.addFieldValueListener(new FieldValueChangeListener() {
+				@Override
+				public void onChange(Field field) {
+					Job validatePathJob = new TriggerActionValidator("PathValidation", field);
+					validatePathJob.schedule();
+				}
+			});
+		} else if ("email_from".equals(fieldId) || "email_to".equals(fieldId) || "email_cc".equals(fieldId)) {
+			field.addFieldValueListener(new FieldValueChangeListener() {
+				@Override
+				public void onChange(Field field) {
+					Job validateEmailJob = new TriggerActionValidator("EmailValidation", field);
+					validateEmailJob.schedule();
+				}
+			});
 		}
 	}
 
