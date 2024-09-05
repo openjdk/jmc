@@ -56,4 +56,10 @@
                class="org.openjdk.jmc.jolokia.preferences.PreferenceInitializer">
          </initializer>
       </extension>
+            <extension
+         point="org.openjdk.jmc.rjmx.descriptorProvider">
+      <provider
+            class="org.openjdk.jmc.jolokia.JolokiaDiscoveryListener">
+      </provider>
+   </extension>
 </plugin>
