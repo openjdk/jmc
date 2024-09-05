@@ -1397,4 +1397,11 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> AGENT_INITIALIZATION_DURATION = attr("initializationDuration", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION),
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION_DESC), TIMESPAN);
+
+	public static final IAttribute<IQuantity> RSS_SIZE = new Attribute<IQuantity>("size", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RSS_SIZE), Messages.getString(Messages.ATTR_RSS_SIZE_DESC), MEMORY) {
+	};
+	public static final IAttribute<IQuantity> RSS_PEAK = attr("peak", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RSS_PEAK), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), MEMORY);
+
 }

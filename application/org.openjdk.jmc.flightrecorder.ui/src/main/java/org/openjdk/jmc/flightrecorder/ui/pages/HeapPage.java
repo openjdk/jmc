@@ -34,6 +34,9 @@ package org.openjdk.jmc.flightrecorder.ui.pages;
 
 import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.HEAP_SUMMARY;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.OS_MEMORY_SUMMARY;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.RSS_SIMPLE_QUERY;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_PEAK;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -215,12 +218,20 @@ public class HeapPage extends AbstractDataPage {
 				allEvents = heapSummaryEvents;
 			}
 
+			IItemCollection rssEvents = allItems.apply(JdkFilters.RSS);
+			Stream<IAttribute<IQuantity>> rssAttributes = Stream.of(RSS_SIZE, RSS_PEAK)
+					.filter(this::isAttributeEnabled);
+			if (DataPageToolkit.addEndTimeLines(heapRenderer, rssEvents, false, rssAttributes)) {
+				allEvents = allEvents == null ? rssEvents
+						: ItemCollectionToolkit.merge(() -> Stream.of(heapSummaryEvents, rssEvents));
+			}
+
 			IItemCollection memorySummaryEvents = allItems.apply(OS_MEMORY_SUMMARY.getFilter());
 			Stream<IAttribute<IQuantity>> msAttributes = DataPageToolkit.getQuantityAttributes(OS_MEMORY_SUMMARY)
 					.filter(this::isAttributeEnabled);
 			if (DataPageToolkit.addEndTimeLines(heapRenderer, memorySummaryEvents, false, msAttributes)) {
-				allEvents = allEvents == null ? memorySummaryEvents
-						: ItemCollectionToolkit.merge(() -> Stream.of(heapSummaryEvents, memorySummaryEvents));
+				allEvents = allEvents == null ? memorySummaryEvents : ItemCollectionToolkit
+						.merge(() -> Stream.of(heapSummaryEvents, rssEvents, memorySummaryEvents));
 			}
 			if (allEvents != null) {
 				rows.add(new ItemRow(Messages.HeapPage_ROW_MEMORY_USAGE, Messages.HeapPage_ROW_MEMORY_USAGE_DESC,
@@ -263,7 +274,9 @@ public class HeapPage extends AbstractDataPage {
 			allocationAction = DataPageToolkit.createAggregatorCheckAction(allocTotalAggregator, ALLOCATION_COL,
 					DataPageToolkit.ALLOCATION_COLOR, b -> buildChart());
 			Stream<IAction> attributeActions = Stream
-					.concat(HEAP_SUMMARY.getAttributes().stream(), OS_MEMORY_SUMMARY.getAttributes().stream())
+					.concat(RSS_SIMPLE_QUERY.getAttributes().stream(),
+							Stream.concat(HEAP_SUMMARY.getAttributes().stream(),
+									OS_MEMORY_SUMMARY.getAttributes().stream()))
 					.map(a -> DataPageToolkit.createAttributeCheckAction(a, b -> buildChart()));
 
 			return Stream.concat(Stream.concat(Stream.of(gcPauseAction, allocationAction), attributeActions),

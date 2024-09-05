@@ -263,6 +263,9 @@ public class JavaApplicationPage extends AbstractDataPage {
 					Messages.JavaApplicationPage_ROW_CPU_USAGE_DESC, allItems, true, JdkQueries.CPU_USAGE_SIMPLE_QUERY,
 					this::isAttributeEnabled, UnitLookup.PERCENT.quantity(0), UnitLookup.PERCENT.quantity(100))
 					.ifPresent(rows::add);
+			DataPageToolkit.buildLinesRow(Messages.JavaApplicationPage_ROW_RSS,
+					Messages.JavaApplicationPage_ROW_RSS_DESC, allItems, true, JdkQueries.RSS_SIMPLE_QUERY,
+					this::isAttributeEnabled, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
 			DataPageToolkit.buildLinesRow(Messages.JavaApplicationPage_ROW_HEAP_USAGE,
 					JdkAttributes.HEAP_USED.getDescription(), allItems, false, JdkQueries.HEAP_SUMMARY,
 					this::isAttributeEnabled, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
@@ -325,7 +328,8 @@ public class JavaApplicationPage extends AbstractDataPage {
 					FlightRecorderUI.getDefault().getMCImageDescriptor(ImageConstants.ICON_STOP), b -> buildChart());
 			Stream<IAction> attributeActions = Stream
 					.concat(JdkQueries.CPU_USAGE_SIMPLE_QUERY.getAttributes().stream(),
-							Stream.of(JdkAttributes.HEAP_USED))
+							Stream.concat(JdkQueries.RSS_SIMPLE_QUERY.getAttributes().stream(),
+									Stream.of(JdkAttributes.HEAP_USED)))
 					.map(a -> DataPageToolkit.createAttributeCheckAction(a, b -> buildChart()));
 
 			// FIXME: Consider using a custom tooltip instead where the color could be shown graphically.
