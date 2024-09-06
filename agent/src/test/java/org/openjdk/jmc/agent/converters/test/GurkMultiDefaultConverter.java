@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.agent.converters.test;
 
+import java.util.Date;
+
 import org.openjdk.jmc.agent.test.Gurka;
 
 /**
@@ -61,5 +63,37 @@ public class GurkMultiDefaultConverter {
 
 	public static int convert(Long value) {
 		return value.intValue();
+	}
+
+	public static String convert(boolean b) {
+		return Boolean.toString(b);
+	}
+
+	public static String convert(byte b) {
+		return Byte.toString(b);
+	}
+
+	public static String convert(short s) {
+		return Short.toString(s);
+	}
+
+	public static String convert(char c) {
+		return "" + c;
+	}
+
+	public static long convert(int i) {
+		return i;
+	}
+
+	public static int convert(float f) {
+		return (int) f;
+	}
+
+	public static String convert(long l) {
+		return new Date(l).toString();
+	}
+
+	public static String convert(double d) {
+		return Integer.toString((int) d);
 	}
 }

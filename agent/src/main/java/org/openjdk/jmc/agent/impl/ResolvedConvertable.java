@@ -136,6 +136,25 @@ public final class ResolvedConvertable extends AbstractConvertable implements Co
 	}
 
 	private static Class<?> getClassFromType(Type type) throws MalformedConverterException {
+		switch (type.getClassName()) {
+		case "boolean":
+			return boolean.class;
+		case "byte":
+			return byte.class;
+		case "short":
+			return short.class;
+		case "char":
+			return char.class;
+		case "int":
+			return int.class;
+		case "float":
+			return float.class;
+		case "long":
+			return long.class;
+		case "double":
+			return double.class;
+		}
+
 		try {
 			return Class.forName(type.getClassName());
 		} catch (ClassNotFoundException e) {

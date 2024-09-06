@@ -77,6 +77,14 @@ public class InstrumentMeConverter {
 					printClassGurka(Gurka.createGurka());
 					innerClass.switchGurka();
 					innerClass.instrumentationPoint();
+					printBooleanMultiDefault((TestToolkit.randomLong() & 1) == 0);
+					printByteMultiDefault((byte) (TestToolkit.randomLong() & 255));
+					printShortMultiDefault((short) (TestToolkit.randomLong() & 255));
+					printCharMultiDefault(Double.toString(TestToolkit.randomLong()).charAt(0));
+					printIntMultiDefault((int) TestToolkit.randomLong());
+					printFloatMultiDefault((float) Math.random());
+					printLongMultiDefault(System.currentTimeMillis());
+					printDoubleMultiDefault(Math.random() * 500 - 250);
 				} catch (InterruptedException e) {
 				} catch (URISyntaxException e) {
 				}
@@ -171,6 +179,46 @@ public class InstrumentMeConverter {
 
 	public static void printClassGurka(Gurka createGurka) throws InterruptedException {
 		System.out.println("C The class of Gurka is: " + createGurka.getClass().getName());
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printBooleanMultiDefault(boolean b) throws InterruptedException {
+		System.out.println("C boolean MC: " + b);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printByteMultiDefault(byte b) throws InterruptedException {
+		System.out.println("C byte MC: " + b);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printShortMultiDefault(short s) throws InterruptedException {
+		System.out.println("C short MC: " + s);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printCharMultiDefault(char c) throws InterruptedException {
+		System.out.println("C char MC: " + c);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printFloatMultiDefault(float f) throws InterruptedException {
+		System.out.println("C float MC: " + f);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printIntMultiDefault(int i) throws InterruptedException {
+		System.out.println("C int MC: " + i);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printLongMultiDefault(long l) throws InterruptedException {
+		System.out.println("C long MC: " + l);
+		Thread.sleep(SLEEP_TIME);
+	}
+
+	public static void printDoubleMultiDefault(double d) throws InterruptedException {
+		System.out.println("C double MC: " + d);
 		Thread.sleep(SLEEP_TIME);
 	}
 }
