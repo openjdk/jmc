@@ -946,7 +946,7 @@ public class RulesToolkit {
 	 * @return the balance score
 	 */
 	public static <T> double calculateBalanceScore(List<IntEntry<T>> array) {
-		int totalCount = 0;
+		long totalCount = 0;
 		for (IntEntry<T> e : array) {
 			totalCount += e.getValue();
 		}
