@@ -50,7 +50,7 @@
             name="%page.name">
       </page>
    </extension>
-  <extension
+   <extension
         point="org.eclipse.core.runtime.preferences">
      <initializer
            class="org.openjdk.jmc.jolokia.preferences.PreferenceInitializer">
