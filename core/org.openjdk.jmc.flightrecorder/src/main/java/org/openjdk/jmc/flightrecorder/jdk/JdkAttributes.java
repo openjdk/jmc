@@ -1398,11 +1398,11 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION),
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION_DESC), TIMESPAN);
 
-	// Don't want the canonicalized size attribute, so creating a new one...
+	// Don't want these to be canonicalized general size and/or peak attributes, so creating new ones...
 	public static final IAttribute<IQuantity> RSS_SIZE = new Attribute<IQuantity>("size", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_RSS_SIZE), Messages.getString(Messages.ATTR_RSS_SIZE_DESC), MEMORY) {
 	};
-	public static final IAttribute<IQuantity> RSS_PEAK = attr("peak", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_RSS_PEAK), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), MEMORY);
-
+	public static final IAttribute<IQuantity> RSS_PEAK = new Attribute<IQuantity>("peak", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RSS_PEAK), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), MEMORY) {	
+	};
 }
