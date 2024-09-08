@@ -41,8 +41,6 @@ import org.openjdk.jmc.common.security.ICredentials;
 import org.openjdk.jmc.common.security.PersistentCredentials;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.common.security.SecurityManagerFactory;
-import org.openjdk.jmc.ui.misc.DisplayToolkit;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 public class JmcKubernetesPlugin extends MCAbstractUIPlugin
@@ -66,18 +64,6 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 	 */
 	public static JmcKubernetesPlugin getDefault() {
 		return plugin;
-	}
-
-	private void ensureNeededCredentialsAreUnlocked() {
-		if (getScanningCredentials() != null && SecurityManagerFactory.getSecurityManager().isLocked()) {
-			DisplayToolkit.safeAsyncExec(() -> {
-				try {
-					SecurityManagerFactory.getSecurityManager().unlock();
-				} catch (SecurityException e) {
-					logError("Error unlocking credentials needed for kubernetes scanning", e);//$NON-NLS-1$
-				}
-			});
-		}
 	}
 
 	@Override
@@ -151,12 +137,6 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 		if (getPreferenceStore().getBoolean(P_LOG_ERRORS)) {
 			Platform.getLog(FrameworkUtil.getBundle(getClass())).error(message, error);
 		}
-	}
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		this.ensureNeededCredentialsAreUnlocked();
 	}
 
 }
