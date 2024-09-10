@@ -344,8 +344,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimBoolean">
-			<label>ConverterEventMultiDefaultPrimBoolean</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveBoolean">
+			<label>ConverterEventMultiDefaultPrimitiveBoolean</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -367,8 +367,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimByte">
-			<label>ConverterEventMultiDefaultPrimByte</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveByte">
+			<label>ConverterEventMultiDefaultPrimitiveByte</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -390,8 +390,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimShort">
-			<label>ConverterEventMultiDefaultPrimShort</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveShort">
+			<label>ConverterEventMultiDefaultPrimitiveShort</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -413,8 +413,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimChar">
-			<label>ConverterEventMultiDefaultPrimChar</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveChar">
+			<label>ConverterEventMultiDefaultPrimitiveChar</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -436,8 +436,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimInt">
-			<label>ConverterEventMultiDefaultPrimInt</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveInt">
+			<label>ConverterEventMultiDefaultPrimitiveInt</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -459,8 +459,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimFloat">
-			<label>ConverterEventMultiDefaultPrimFloat</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveFloat">
+			<label>ConverterEventMultiDefaultPrimitiveFloat</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -482,8 +482,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimLong">
-			<label>ConverterEventMultiDefaultPrimLong</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveLong">
+			<label>ConverterEventMultiDefaultPrimitiveLong</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>
@@ -505,8 +505,8 @@
 			</method>
 			<location>WRAP</location>
 		</event>
-		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimDouble">
-			<label>ConverterEventMultiDefaultPrimDouble</label>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveDouble">
+			<label>ConverterEventMultiDefaultPrimitiveDouble</label>
 			<description>Testing picking the right method.
 			</description>
 			<path>demo/converterevents</path>

@@ -78,7 +78,7 @@ public class GurkMultiDefaultConverter {
 	}
 
 	public static String convert(char c) {
-		return "" + c;
+		return String.valueOf(c);
 	}
 
 	public static long convert(int i) {
@@ -86,7 +86,7 @@ public class GurkMultiDefaultConverter {
 	}
 
 	public static int convert(float f) {
-		return (int) f;
+		return Math.round(f);
 	}
 
 	public static String convert(long l) {
