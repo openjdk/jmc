@@ -59,7 +59,8 @@ public class CompositeKeyAccessorFactory implements IAccessorFactory<CompositeKe
 			public CompositeKey getMember(T item) {
 				Object[] result = new Object[functions.size()];
 				for (int i = 0; i < functions.size(); i++) {
-					result[i] = functions.get(i).getMember(item);
+					IMemberAccessor<?, T> accessor = functions.get(i);
+					result[i] = accessor == null ? null : accessor.getMember(item);
 				}
 				return new CompositeKey(result);
 			}
