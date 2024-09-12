@@ -238,7 +238,7 @@ public class NotificationTrigger implements ITrigger {
 			if (stateStore.m_lastTriggerErrorTimestamp == null || (aspectEvent.getTimestamp()
 					- stateStore.m_lastTriggerErrorTimestamp >= TRIGGER_ERROR_HANDLING_LIMIT_TIME_MS)) {
 				stateStore.m_lastTriggerErrorTimestamp = aspectEvent.getTimestamp();
-				handleException(connectionHandle, rule, e, "");
+				handleException(connectionHandle, rule, e, null);
 			}
 			return;
 		}
