@@ -1,14 +1,39 @@
 package org.openjdk.jmc.ui.common.util;
 
+import org.eclipse.jface.util.PropertyChangeEvent;
+
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.PlatformUI;
 
 public class ThemeUtils {
+
+	private static boolean isCurrentThemeDark = isDarkMode();
+
+	static {
+		IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equalsIgnoreCase(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR)) {
+					isCurrentThemeDark = isDarkMode();
+				}
+
+			}
+
+		};
+		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(propertyChangeListener);
+
+	}
+
+	public static boolean isDarkTheme() {
+		return isCurrentThemeDark;
+	}
+
 	private static final double BRIGHTNESS_THRESHOLD = 0.5;
 
-	public static boolean isDarkMode() {
+	private static boolean isDarkMode() {
 		ColorRegistry colorRegistry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 		RGB backgroundColor = colorRegistry.getRGB(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 
@@ -16,7 +41,6 @@ public class ThemeUtils {
 			// Fallback to a default behavior if the color is not available
 			return false;
 		}
-
 		return calculateBrightness(backgroundColor) < BRIGHTNESS_THRESHOLD;
 	}
 
