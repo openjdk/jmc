@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -134,6 +134,7 @@ import org.openjdk.jmc.ui.CoreImages;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.CopySelectionAction;
 import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
@@ -212,8 +213,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private static final Color ALTERNATE_COLOR = SWTColorToolkit.getColor(new RGB(255, 255, 240));
 	private static final String COUNT_IMG_KEY = "countColor"; //$NON-NLS-1$
 	private static final Color COUNT_COLOR = SWTColorToolkit.getColor(new RGB(100, 200, 100));
+	private static final Color COUNT_COLOR_DARK_MODE = SWTColorToolkit.getColor(new RGB(7, 94, 7));
 	private static final String SIBLINGS_IMG_KEY = "siblingsColor"; //$NON-NLS-1$
 	private static final Color SIBLINGS_COUNT_COLOR = SWTColorToolkit.getColor(new RGB(170, 250, 170));
+	private static final Color SIBLINGS_COUNT_COLOR_DARK_MODE = SWTColorToolkit.getColor(new RGB(8, 115, 8));
 	private static final int[] DEFAULT_COLUMN_WIDTHS = {650, 80, 120};
 	private static final String THREAD_ROOT_KEY = "threadRootAtTop"; //$NON-NLS-1$
 	private static final String FRAME_OPTIMIZATION_KEY = "distinguishFramesByOptimization"; //$NON-NLS-1$
@@ -860,12 +863,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
-				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				event.gc.setBackground(
+						ThemeUtils.isDarkTheme() ? SIBLINGS_COUNT_COLOR_DARK_MODE : SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
 				double fraction = frame.getAttributeAggregate() / total;
-				event.gc.setBackground(COUNT_COLOR);
+				event.gc.setBackground(ThemeUtils.isDarkTheme() ? COUNT_COLOR_DARK_MODE : COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
 				event.gc.fillRectangle(event.x + startPixel, event.y, Math.max(widthPixel, 1), event.height);
@@ -886,12 +890,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				long forkOffset = parentFork.getItemOffset();
 				int siblingsStart = (int) Math.floor(event.width * forkOffset / total);
 				int siblingsWidth = (int) Math.round(event.width * parentFork.getAggregateItemsInFork() / total);
-				event.gc.setBackground(SIBLINGS_COUNT_COLOR);
+				event.gc.setBackground(
+						ThemeUtils.isDarkTheme() ? SIBLINGS_COUNT_COLOR_DARK_MODE : SIBLINGS_COUNT_COLOR);
 				event.gc.fillRectangle(event.x + siblingsStart, event.y, siblingsWidth, event.height);
 				// Draw group
 				double offset = (forkOffset + frame.getBranch().getItemOffsetInFork()) / total;
 				double fraction = frame.getAttributeAggregate() / total;
-				event.gc.setBackground(COUNT_COLOR);
+				event.gc.setBackground(ThemeUtils.isDarkTheme() ? COUNT_COLOR_DARK_MODE : COUNT_COLOR);
 				int startPixel = (int) Math.floor(event.width * offset);
 				int widthPixel = (int) Math.round(event.width * fraction);
 				event.gc.fillRectangle(event.x + startPixel, event.y, Math.max(widthPixel, 1), event.height);
@@ -1057,7 +1062,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 		@Override
 		public Color getBackground(Object element) {
-			if (treeLayout) {
+			if (treeLayout || ThemeUtils.isDarkTheme()) {
 				return null;
 			} else {
 				int parentCount = 0;
