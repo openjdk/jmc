@@ -13,12 +13,12 @@ public class ThemeUtils {
 	private static boolean isCurrentThemeDark;
 
 	static {
-		computeCurrentThemeDarkModeStatus(); // To Initialize the value
+		updateCurrentThemeDarkModeStatus(); // To Initialize the value
 		IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equalsIgnoreCase(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR)) {
-					computeCurrentThemeDarkModeStatus(); // To update the value whenever property changes
+					updateCurrentThemeDarkModeStatus(); // To update the value whenever property changes
 				}
 
 			}
@@ -34,7 +34,7 @@ public class ThemeUtils {
 
 	private static final double BRIGHTNESS_THRESHOLD = 0.5;
 
-	private static void computeCurrentThemeDarkModeStatus() {
+	private static void updateCurrentThemeDarkModeStatus() {
 		ColorRegistry colorRegistry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 		RGB backgroundColor = colorRegistry.getRGB(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 
