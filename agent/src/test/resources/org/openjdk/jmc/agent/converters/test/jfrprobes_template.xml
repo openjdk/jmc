@@ -331,11 +331,195 @@
 			</class>
 			<method>
 				<name>printDoubleMultiDefault</name>
-				<descriptor>(Ljava/lang/Double;)V</descriptor>
+				<descriptor>(Ljava/lang/Double;)Z</descriptor>
 				<parameters>
 					<parameter index="0">
 						<name>Double as Int</name>
 						<description>The converted Double-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveBoolean">
+			<label>ConverterEventMultiDefaultPrimitiveBoolean</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printBooleanMultiDefault</name>
+				<descriptor>(Z)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>boolean as string</name>
+						<description>The converted boolean-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveByte">
+			<label>ConverterEventMultiDefaultPrimitiveByte</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printByteMultiDefault</name>
+				<descriptor>(B)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>byte as string</name>
+						<description>The converted byte-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveShort">
+			<label>ConverterEventMultiDefaultPrimitiveShort</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printShortMultiDefault</name>
+				<descriptor>(S)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>short as string</name>
+						<description>The converted short-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveChar">
+			<label>ConverterEventMultiDefaultPrimitiveChar</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printCharMultiDefault</name>
+				<descriptor>(C)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>char as string</name>
+						<description>The converted char-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveInt">
+			<label>ConverterEventMultiDefaultPrimitiveInt</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printIntMultiDefault</name>
+				<descriptor>(I)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>int as long</name>
+						<description>The converted long-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveFloat">
+			<label>ConverterEventMultiDefaultPrimitiveFloat</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printFloatMultiDefault</name>
+				<descriptor>(F)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>float as int</name>
+						<description>The converted float-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveLong">
+			<label>ConverterEventMultiDefaultPrimitiveLong</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printLongMultiDefault</name>
+				<descriptor>(J)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>long as string</name>
+						<description>The converted long-parameter</description>
+						<contenttype>None</contenttype>
+						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
+						</converter>
+					</parameter>
+				</parameters>
+			</method>
+			<location>WRAP</location>
+		</event>
+		<event id="demo.jfr.convertertest.ConverterEventMultiDefaultPrimitiveDouble">
+			<label>ConverterEventMultiDefaultPrimitiveDouble</label>
+			<description>Testing picking the right method.
+			</description>
+			<path>demo/converterevents</path>
+			<stacktrace>true</stacktrace>
+			<class>org.openjdk.jmc.agent.converters.test.InstrumentMeConverter
+			</class>
+			<method>
+				<name>printDoubleMultiDefault</name>
+				<descriptor>(D)V</descriptor>
+				<parameters>
+					<parameter index="0">
+						<name>double as string</name>
+						<description>The converted double-parameter</description>
 						<contenttype>None</contenttype>
 						<converter>org.openjdk.jmc.agent.converters.test.GurkMultiDefaultConverter
 						</converter>

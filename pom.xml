@@ -91,12 +91,12 @@
 		<patchId></patchId>
 		<jmc.config.path>${project.basedir}/configuration</jmc.config.path>
 		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<!-- Plugin Versions -->
-		<tycho.version>3.0.5</tycho.version>
-		<maven.toolchains.version>3.1.0</maven.toolchains.version>
-		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<tycho.version>4.0.8</tycho.version>
+		<maven.toolchains.version>3.2.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.4.0</maven.checkstyle.version>
 		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
 		<spotless.version>2.34.0</spotless.version>
 		<maven.directory.version>1.0</maven.directory.version>
@@ -125,10 +125,31 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2024-03</id>
+			<id>2024-06</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.openjdk.jmc</groupId>
+									<artifactId>platform-definition-2024-06</artifactId>
+									<version>${revision}${changelist}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>2024-03</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -214,7 +235,7 @@
 				<configuration>
 				<products>
 					<product>
-						<archiveFileName>${groupId}-${project.version}</archiveFileName>
+						<archiveFileName>${project.groupId}-${project.version}</archiveFileName>
 					</product>
 				</products>
 				</configuration>
@@ -235,9 +256,9 @@
 					<execution>
 						<id>build-qualifier</id>
 						<phase>validate</phase>
-						<goals>
+						<!--<goals>
 							<goal>build-qualifier</goal>
-						</goals>
+						</goals>-->
 					</execution>
 				</executions>
 				<configuration>
