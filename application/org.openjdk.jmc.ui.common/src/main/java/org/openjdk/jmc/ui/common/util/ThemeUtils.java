@@ -10,14 +10,15 @@ import org.eclipse.ui.PlatformUI;
 
 public class ThemeUtils {
 
-	private static boolean isCurrentThemeDark = isDarkMode();
+	private static boolean isCurrentThemeDark;
 
 	static {
+		isDarkMode(); // To Initialize the value
 		IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equalsIgnoreCase(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR)) {
-					isCurrentThemeDark = isDarkMode();
+					isDarkMode(); // To update the value whenever property changes
 				}
 
 			}
@@ -33,15 +34,17 @@ public class ThemeUtils {
 
 	private static final double BRIGHTNESS_THRESHOLD = 0.5;
 
-	private static boolean isDarkMode() {
+	private static void isDarkMode() {
 		ColorRegistry colorRegistry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 		RGB backgroundColor = colorRegistry.getRGB(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 
 		if (backgroundColor == null) {
 			// Fallback to a default behavior if the color is not available
-			return false;
+			isCurrentThemeDark = false;
+		} else {
+			isCurrentThemeDark = calculateBrightness(backgroundColor) < BRIGHTNESS_THRESHOLD;
 		}
-		return calculateBrightness(backgroundColor) < BRIGHTNESS_THRESHOLD;
+
 	}
 
 	private static double calculateBrightness(RGB color) {
