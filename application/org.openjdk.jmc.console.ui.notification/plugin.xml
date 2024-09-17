@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -87,7 +87,7 @@
             name="%TRIGGER_ACTION_DUMP_JFR_NAME">
          <file
                description="%TRIGGER_ACTION_DUMP_JFR_FILE_DESCRIPTION"
-               id="file"
+               id="dumpfilename"
                name="%TRIGGER_ACTION_DUMP_JFR_FILE"
                value="automaticallyTriggeredRecording.jfr"/>
          <timerange
@@ -127,7 +127,7 @@
 	  	    value="My Recording"/>
       <file
             description="%TRIGGER_ACTION_START_TIME_JFR_FILE_DESCRIPTION"
-            id="file"
+            id="recordingfilename"
             name="%TRIGGER_ACTION_START_TIME_JFR_FILE"
             value="automaticallyTriggeredRecording.jfr"/>
 	  <timerange

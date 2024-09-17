@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -139,7 +139,7 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 		}
 	}
 
-	private String createExceptionMessage(Date d, Throwable exception, TriggerRule rule) {
+	private String createExceptionMessage(Date d, Throwable exception, TriggerRule rule, String triggerMessage) {
 		StringBuilder builder = new StringBuilder();
 		if (d != null) {
 			DateFormat df1 = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -148,6 +148,9 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 					new Object[] {df1.format(d), df2.format(d)}));
 		}
 		builder.append(NLS.bind(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION, rule.getName()));
+		if (triggerMessage != null) {
+			builder.append("\n" + triggerMessage + "\n");
+		}
 		builder.append(NLS.bind(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION_MESSAGE_CAPTION,
 				exception.getLocalizedMessage()));
 		builder.append(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION_MESSAGE_MORE_INFORMATION);
@@ -183,8 +186,7 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 			DisplayToolkit.safeAsyncExec(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 				@Override
 				public void run() {
-					Display display = PlatformUI.getWorkbench().getDisplay();
-					Shell shell = display.getActiveShell();
+					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 					if (shell != null && !shell.isDisposed()) {
 						if (!hasDialog()) {
 							dialog = createDialog(shell);
@@ -214,9 +216,8 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 
 	public static AlertDialog createDialog(Shell shell) {
 		Display display = PlatformUI.getWorkbench().getDisplay();
-		if (display != null && !display.isDisposed() && display.getActiveShell() != null
-				&& !display.getActiveShell().isDisposed()) {
-			return new AlertDialog(display.getActiveShell());
+		if (display != null && !display.isDisposed()) {
+			return new AlertDialog(shell);
 		} else {
 			return null;
 		}
@@ -241,7 +242,8 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 		reg.put(IMAGE_ALERT_BANNER, getImageDescriptor("icons/trigger-alerts-wiz.gif").createImage()); //$NON-NLS-1$
 	}
 
-	public synchronized void addException(IConnectionHandle connectionHandle, TriggerRule rule, Throwable throwable) {
+	public synchronized void addException(
+		IConnectionHandle connectionHandle, TriggerRule rule, Throwable throwable, String triggerMessage) {
 		// FIXME: JMC-4270 - Server time approximation is not reliable
 //		IMBeanHelperService mhs = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 //		long timestamp = 0;
@@ -253,6 +255,6 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 //		Date creationDate = new Date(timestamp);
 		Date creationDate = new Date();
 		addAlertObject(new AlertObject(creationDate, connectionHandle.getServerDescriptor().getDisplayName(), rule,
-				createExceptionMessage(creationDate, throwable, rule), throwable));
+				createExceptionMessage(creationDate, throwable, rule, triggerMessage), throwable));
 	}
 }

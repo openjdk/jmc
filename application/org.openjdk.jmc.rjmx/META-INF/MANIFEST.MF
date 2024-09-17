@@ -7,7 +7,8 @@ Bundle-Version: 9.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.rjmx.RJMXPlugin
 Eclipse-BuddyPolicy: app
 Import-Package: jakarta.mail,
- jakarta.mail.internet
+ jakarta.mail.internet,
+ org.eclipse.swt.widgets
 Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.actionprovider;
   x-friends:="org.openjdk.jmc.console.ui,
