@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -81,7 +81,7 @@ public class TriggerActionThreadStackDump extends TriggerAction {
 				data += "\n\n"; //$NON-NLS-1$
 			}
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			IDESupportToolkit.writeAsJob(jobName, file, stream, isAppend());
+			IDESupportToolkit.writeAsJob(jobName, file, stream, isAppend(), data);
 		} else {
 			LOGGER.info(data);
 		}

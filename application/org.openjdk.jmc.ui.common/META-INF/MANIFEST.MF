@@ -7,7 +7,9 @@ Bundle-Version: 9.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.ui.common.CorePlugin
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.openjdk.jmc.common;visibility:=reexport
+ org.openjdk.jmc.common;visibility:=reexport,
+ org.eclipse.jface,
+ org.eclipse.ui.workbench
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.expressions
 Export-Package: org.openjdk.jmc.ui.common,
