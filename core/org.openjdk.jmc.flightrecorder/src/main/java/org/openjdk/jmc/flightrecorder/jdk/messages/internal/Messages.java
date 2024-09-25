@@ -494,6 +494,10 @@ public class Messages {
 	public static final String ATTR_REVOKATION_LOCK_CLASS_DESC = "ATTR_REVOKATION_LOCK_CLASS_DESC"; //$NON-NLS-1$
 	public static final String ATTR_REVOKED_CLASS = "ATTR_REVOKED_CLASS"; //$NON-NLS-1$
 	public static final String ATTR_REVOKED_CLASS_DESC = "ATTR_REVOKED_CLASS_DESC"; //$NON-NLS-1$
+	public static final String ATTR_RSS_SIZE = "ATTR_RSS_SIZE"; //$NON-NLS-1$
+	public static final String ATTR_RSS_SIZE_DESC = "ATTR_RSS_SIZE_DESC"; //$NON-NLS-1$
+	public static final String ATTR_RSS_PEAK = "ATTR_RSS_PEAK"; //$NON-NLS-1$
+	public static final String ATTR_RSS_PEAK_DESC = "ATTR_RSS_PEAK_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT = "ATTR_SAFEPOINT"; //$NON-NLS-1$
 	public static final String ATTR_SAFEPOINT_DESC = "ATTR_SAFEPOINT_DESC"; //$NON-NLS-1$
 	public static final String ATTR_SAMPLE_WEIGHT = "ATTR_SAMPLE_WEIGHT"; //$NON-NLS-1$
