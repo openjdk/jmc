@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -860,6 +860,82 @@ public class RulesToolkit {
 	}
 
 	/**
+	 * Each group is represented by the sum of the result of {@code weightAccessorFactory} belong in
+	 * that group divided by the smallest value observed in {@code items}. Elements are grouped by
+	 * the {@code groupAccessorFactory} value.
+	 * <p>
+	 * This is helpful for events like object allocation samples, where it's not clear how many
+	 * unique allocations were measured based on the weight value alone. By dividing by the minimum
+	 * observed weight, we can roughly estimate the number of allocations.
+	 *
+	 * @param items
+	 *            input items
+	 * @param groupAccessorFactory
+	 *            a factory that provides accessors for the input item types
+	 * @param weightAccessorFactory
+	 *            a factory that provides accessors for the input item weights
+	 * @return A sorted list of grouping scores, one for each unique value that the accessor
+	 *         computes from the input items, that tells total weight across input items which gave
+	 *         that accessor value, divided by the minimum observed value.
+	 */
+	public static <T> List<IntEntry<T>> calculateGroupingScore(
+		IItemCollection items, IAccessorFactory<T> groupAccessorFactory,
+		IAccessorFactory<IQuantity> weightAccessorFactory) {
+		EntryHashMap<T, IntEntry<T>> map = MapToolkit.createIntMap(1000, 0.5f);
+		int valueShift = 0;
+		long minWeight = 0;
+		for (IItemIterable ii : items) {
+			IMemberAccessor<? extends T, IItem> groupByAccessor = groupAccessorFactory.getAccessor(ii.getType());
+			IMemberAccessor<? extends IQuantity, IItem> valueAccessor = weightAccessorFactory.getAccessor(ii.getType());
+			if (groupByAccessor == null || valueAccessor == null) {
+				continue;
+			}
+			for (IItem item : ii) {
+				T member = groupByAccessor.getMember(item);
+				if (member != null) {
+					IntEntry<T> entry = map.get(member, true);
+
+					int existingValue = entry.getValue();
+					long itemValue = valueAccessor.getMember(item).longValue();
+					if (itemValue < 0) {
+						throw new RuntimeException("Unexpected negative value: " + itemValue);
+					}
+					long scaledItemValue = Math.max(1, itemValue >> valueShift);
+					if (itemValue > 0 && (minWeight == 0 || scaledItemValue < minWeight)) {
+						minWeight = scaledItemValue;
+					}
+					long sum = scaledItemValue + existingValue;
+					int newShift = 0;
+					while (sum >= Integer.MAX_VALUE) {
+						sum = sum >> 1;
+						newShift++;
+					}
+					if (newShift > 0) {
+						for (IntEntry<T> mapEntry : map) {
+							if (mapEntry.getValue() != 0) {
+								mapEntry.setValue(Math.max(1, mapEntry.getValue() >> newShift));
+							}
+						}
+						minWeight = Math.max(1, minWeight >> newShift);
+						valueShift += newShift;
+					}
+					entry.setValue((int) sum);
+				}
+			}
+		}
+		if (minWeight > 0) {
+			for (IntEntry<T> mapEntry : map) {
+				if (mapEntry.getValue() != 0) {
+					mapEntry.setValue(Math.max(1, mapEntry.getValue() / (int) minWeight));
+				}
+			}
+		}
+		List<IntEntry<T>> array = IteratorToolkit.toList(map.iterator(), map.size());
+		array.sort(null);
+		return array;
+	}
+
+	/**
 	 * Calculates a balance for entries, where later elements get a higher relevance than earlier
 	 * elements.
 	 * <p>
@@ -870,7 +946,7 @@ public class RulesToolkit {
 	 * @return the balance score
 	 */
 	public static <T> double calculateBalanceScore(List<IntEntry<T>> array) {
-		int totalCount = 0;
+		long totalCount = 0;
 		for (IntEntry<T> e : array) {
 			totalCount += e.getValue();
 		}
