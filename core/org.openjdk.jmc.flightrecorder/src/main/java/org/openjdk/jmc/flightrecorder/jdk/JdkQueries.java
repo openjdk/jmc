@@ -122,6 +122,8 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_FOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_NAME;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_VALUE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RESERVED_SIZE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_PEAK;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SAFEPOINT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_FRACTION_INDEX;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_INDEX;
@@ -189,6 +191,7 @@ public final class JdkQueries {
 			.select(GC_ID, END_TIME).build();
 	public static final IItemQuery CPU_USAGE_SIMPLE_QUERY = fromWhere(JdkFilters.CPU_LOAD)
 			.select(MACHINE_TOTAL, JVM_TOTAL).build();
+	public static final IItemQuery RSS_SIMPLE_QUERY = fromWhere(JdkFilters.RSS).select(RSS_SIZE, RSS_PEAK).build();
 	public static final IItemQuery CPU_USAGE_DETAILED_GRAPH_QUERY = fromWhere(JdkFilters.CPU_LOAD)
 			.select(MACHINE_TOTAL, JVM_TOTAL, JVM_SYSTEM).build();
 	public static final IItemQuery ENVIRONMENT_VARIABLE = fromWhere(JdkFilters.ENVIRONMENT_VARIABLE)

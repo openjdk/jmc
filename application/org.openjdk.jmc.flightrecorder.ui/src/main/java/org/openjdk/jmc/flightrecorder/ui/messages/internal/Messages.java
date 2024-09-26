@@ -360,6 +360,8 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_ROW_CPU_USAGE;
 	public static String JavaApplicationPage_ROW_CPU_USAGE_DESC;
 	public static String JavaApplicationPage_ROW_HEAP_USAGE;
+	public static String JavaApplicationPage_ROW_RSS;
+	public static String JavaApplicationPage_ROW_RSS_DESC;
 	public static String JavaApplicationPage_SELECTED_THREAD;
 	public static String JavaApplicationPage_SELECTED_THREADS;
 	public static String JavaApplicationPage_THREAD_ACTIVITY_ACTION;
