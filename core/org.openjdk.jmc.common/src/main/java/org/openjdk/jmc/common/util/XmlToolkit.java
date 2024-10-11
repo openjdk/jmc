@@ -170,8 +170,9 @@ public final class XmlToolkit {
 			InputSource xml = new InputSource(
 					new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?><" + rootElementName + "/>")); //$NON-NLS-1$ //$NON-NLS-2$
 			DocumentBuilderFactory dbf = createDocumentBuildFactoryInstance();
-
-			doc = dbf.newDocumentBuilder().parse(xml);
+			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+			documentBuilder.setErrorHandler(null);
+			doc = documentBuilder.parse(xml);
 		} catch (IOException e) {
 			// just rethrow
 			throw e;
@@ -380,6 +381,7 @@ public final class XmlToolkit {
 		try {
 			DocumentBuilderFactory factory = createDocumentBuildFactoryInstance();
 			docBuilder = factory.newDocumentBuilder();
+			docBuilder.setErrorHandler(null);
 		} catch (ParserConfigurationException e) {
 			// This shouldn't happen since all configuration is done within XmlToolkit
 			LOGGER.log(Level.WARNING, "Parser configuration error", e); //$NON-NLS-1$
