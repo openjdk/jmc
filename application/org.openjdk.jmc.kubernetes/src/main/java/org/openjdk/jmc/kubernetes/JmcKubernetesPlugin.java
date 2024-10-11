@@ -102,7 +102,7 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 
 	private PersistentCredentials getScanningCredentials() {
 		String key = getPreferenceStore().getString(P_CREDENTIALS_KEY);
-		return key == null ? null : new PersistentCredentials(key);
+		return key == null || key == "" ? null : new PersistentCredentials(key);
 	}
 
 	public ICredentials storeCredentials(String username, String password) throws SecurityException {
