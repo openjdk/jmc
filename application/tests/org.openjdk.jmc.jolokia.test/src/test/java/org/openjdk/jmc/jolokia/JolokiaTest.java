@@ -159,11 +159,8 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 
 	@Test
 	public void testDiscover() {
-		boolean isMacOs = "macosx".equals(System.getProperty("osgi.os"));
-		boolean isCiRun = "true".equals(System.getenv("GITHUB_ACTIONS"));
-		boolean shouldTestMacOS = "true".equals(System.getenv("JOLOKIA_TEST_DISCOVERY_ON_MAC"));
-		if (isMacOs && isCiRun && !shouldTestMacOS) {
-			//This does not work in the JMC CI pipeline for Mac 
+		if("true".equals(System.getProperty("skipJDPMulticastTests"))) {
+			//In certain situations multicast will not work 
 			// 'D> --> Couldnt send discovery message from /127.0.0.1: java.net.BindException: Can't assign requested address
 			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException: 
 			//    org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException: 
