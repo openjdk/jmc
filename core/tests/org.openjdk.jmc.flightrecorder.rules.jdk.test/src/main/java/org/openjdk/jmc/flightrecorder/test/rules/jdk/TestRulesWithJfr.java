@@ -224,6 +224,7 @@ public class TestRulesWithJfr {
 			docFactory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
 			docFactory.setValidating(true);
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			docBuilder.setErrorHandler(null);
 			Document baselineDoc = docBuilder.parse(file);
 			collection = ReportCollection.fromXml(baselineDoc, reportName);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
