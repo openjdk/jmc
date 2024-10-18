@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2023, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -134,6 +134,7 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 		gridData.widthHint = 180;
 		chartLegend.getControl().setLayoutData(gridData);
 		DataPageToolkit.createChartTimestampTooltip(chartCanvas);
+		DataPageToolkit.createChartTimestampTooltip(textCanvas);
 
 		chart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), X_OFFSET, Y_OFFSET,
 				timelineCanvas, controlBar, buttonGroup);
