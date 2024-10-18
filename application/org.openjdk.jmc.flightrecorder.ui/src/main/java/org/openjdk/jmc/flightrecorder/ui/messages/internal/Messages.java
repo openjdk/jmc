@@ -621,6 +621,7 @@ public class Messages extends NLS {
 	public static String VMOperationPage_PAGE_NAME;
 	public static String VMOperationPage_ROW_VM_OPERATIONS;
 	public static String VMOperationPage_TIMELINE_SELECTION;
+	public static String ThreadsPage_LANE_THREAD_ID_TOOLTIP;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
