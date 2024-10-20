@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: IDE Launch
 Bundle-SymbolicName: org.openjdk.jmc.ide.launch;singleton:=true
 Bundle-Version: 0.0.4.qualifier
