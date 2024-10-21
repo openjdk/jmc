@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.openjdk.jmc.rjmx.ui,
  org.openjdk.jmc.console.ui.mbeanbrowser,
  org.junit
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Import-Package: org.openjdk.jmc.common.util,
  org.openjdk.jmc.console.ui.diagnostic.form,

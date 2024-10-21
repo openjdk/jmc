@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.joverflow.test;singleton:=true
 Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.joverflow
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit
 Automatic-Module-Name: org.openjdk.jmc.joverflow.test

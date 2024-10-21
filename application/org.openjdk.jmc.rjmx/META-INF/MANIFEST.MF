@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: RJMX
 Bundle-SymbolicName: org.openjdk.jmc.rjmx;singleton:=true
 Bundle-Version: 9.1.0.qualifier

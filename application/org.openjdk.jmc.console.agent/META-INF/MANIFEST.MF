@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.rjmx,
  jakarta.inject.jakarta.inject-api
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.eclipse.debug.core.sourcelookup.containers
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.console.agent.AgentPlugin
