@@ -4,7 +4,7 @@ Bundle-Name: UI CellEditors
 Bundle-SymbolicName: org.openjdk.jmc.ui.celleditors;singleton:=true
 Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.openjdk.jmc.rjmx;visibility:=reexport,
   org.openjdk.jmc.ui
 Export-Package: org.openjdk.jmc.ui.celleditors

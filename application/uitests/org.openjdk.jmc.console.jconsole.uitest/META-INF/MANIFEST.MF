@@ -4,7 +4,7 @@ Bundle-Name: Uitest
 Bundle-SymbolicName: org.openjdk.jmc.console.jconsole.uitest;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.openjdk.jmc.test.jemmy,
  org.junit

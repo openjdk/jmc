@@ -6,6 +6,6 @@ Bundle-Version: 9.1.0.qualifier
 Require-Bundle: org.openjdk.jmc.flightrecorder,
  org.openjdk.jmc.flightrecorder.ui,
  org.openjdk.jmc.flightrecorder.serializers
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.dependencyview
 Bundle-Vendor: Oracle Corporation
