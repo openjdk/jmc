@@ -647,6 +647,7 @@ public class Messages {
 	public static final String VMOperationRule_CONFIG_WARNING_LIMIT = "VMOperationRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String VMOperationRule_CONFIG_WARNING_LIMIT_LONG = "VMOperationRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String VMOperations_RULE_NAME = "VMOperations_RULE_NAME"; //$NON-NLS-1$
+	public static final String VMOperations_Duration_Operation = "VMOperations_Duration_Operation"; //$NON-NLS-1$
 	public static final String VerifyNoneRule_RULE_NAME = "VerifyNoneRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String VerifyNoneRule_TEXT_INFO = "VerifyNoneRule_TEXT_INFO"; //$NON-NLS-1$
 	public static final String VerifyNoneRule_TEXT_INFO_LONG = "VerifyNoneRule_TEXT_INFO_LONG"; //$NON-NLS-1$
