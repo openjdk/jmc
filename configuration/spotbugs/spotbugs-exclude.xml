@@ -1290,8 +1290,8 @@
 	</Match>
 	<!-- False positives for package lookup in flamegraph color mapper - should be mapped to UNKNOWN_PACKAGE and not be null -->
 	<Match>
-    	<Class name="org.openjdk.jmc.flightrecorder.flamegraph.views.FlamegraphSwingView"/>
-    	<Method name="createFlameGraph"/>
-    	<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+		<Class name="org.openjdk.jmc.flightrecorder.flamegraph.views.FlamegraphSwingView"/>
+		<Method name="createFlameGraph"/>
+		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
 	</Match>
 </FindBugsFilter>
