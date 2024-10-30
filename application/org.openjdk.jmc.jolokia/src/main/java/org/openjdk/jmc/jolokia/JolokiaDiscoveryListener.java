@@ -38,9 +38,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.service.discovery.JolokiaDiscovery;
-import org.openjdk.jmc.common.jvm.JVMDescriptor;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 
 /**
@@ -75,14 +73,7 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 				try {
 					@SuppressWarnings("unchecked")
 					Map<String, ?> response = (Map<String, ?>) object;
-					JVMDescriptor jvmInfo;
-					try {// if it is connectable, see if we can get info from connection
-						jvmInfo = JolokiaAgentDescriptor
-								.attemptToGetJvmInfo(new RemoteJmxAdapter(String.valueOf(response.get("url")))); //$NON-NLS-1$
-					} catch (Exception ignore) {
-						jvmInfo = JolokiaAgentDescriptor.NULL_DESCRIPTOR;
-					}
-					JolokiaAgentDescriptor agentDescriptor = new JolokiaAgentDescriptor(response, jvmInfo);
+					JolokiaAgentDescriptor agentDescriptor = new JolokiaAgentDescriptor(response);
 					found.put(agentDescriptor.getGUID(), agentDescriptor);
 
 				} catch (URISyntaxException ignore) {
