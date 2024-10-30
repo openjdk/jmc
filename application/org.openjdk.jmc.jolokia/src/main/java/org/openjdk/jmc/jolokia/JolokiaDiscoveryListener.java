@@ -49,10 +49,13 @@ import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
  */
 public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider implements PreferenceConstants {
 
-	JolokiaDiscoverySettings settings;
+	private JolokiaDiscoverySettings settings;
+	private final JolokiaDiscovery jolokiaDiscovery;
 
 	public JolokiaDiscoveryListener(JolokiaDiscoverySettings settings) {
 		this.settings = settings;
+		jolokiaDiscovery = new JolokiaDiscovery();
+		jolokiaDiscovery.init(this.settings.getJolokiaContext());
 	}
 
 	public JolokiaDiscoveryListener() {
@@ -66,8 +69,6 @@ public class JolokiaDiscoveryListener extends AbstractCachedDescriptorProvider i
 			return found;
 		}
 		try {
-			JolokiaDiscovery jolokiaDiscovery = new JolokiaDiscovery();
-			jolokiaDiscovery.init(this.settings.getJolokiaContext());
 			for (Object object : jolokiaDiscovery.lookupAgentsWithTimeoutAndMulticastAddress(
 					this.settings.getDiscoveryTimeout(), this.settings.getMulticastGroup(),
 					this.settings.getMulticastPort())) {
