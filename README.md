@@ -215,7 +215,9 @@ Prerequisites for building Mission Control:
 
 1. Install a JDK 17 distribution and make sure it is declared in the local maven toolchain `~/.m2/toolchains.xml`
 
-2. Install Maven (version 3.5.x. or above)
+2. Install a JDK 21 distribution and make sure that it too is declared in the local maven toolchain.
+
+3. Install Maven (version 3.5.x. or above)
 
 On Linux or macOS you can use the `build.sh` script to build JMC:
 ```
@@ -227,13 +229,28 @@ usage: call ./build.sh with the following options:
    --clean       to run maven clean
 ```
 
-Otherwise follow the steps manually:
+Otherwise follow the steps manually.
 
-First get third party dependencies into a local _p2_ repo and make it available on localhost:
+## Building JMC Step-by-Step
+
+Here are the individual steps:
+
+1. Get the third-party dependencies into a local _p2_ repo and make it available on localhost. 
+
+2. Build and install the core libraries.
+
+3. Build the JMC application.
+
+First, if on Mac / Linux:
 
 ```bash
-cd missioncontrol-folder # where you just cloned the sources
 mvn p2:site --file releng/third-party/pom.xml; mvn jetty:run --file releng/third-party/pom.xml
+```
+
+Or, if on Windows:
+
+```bash
+mvn p2:site --file releng\third-party\pom.xml && mvn jetty:run --file releng\third-party\pom.xml
 ```
 
 Then in another terminal (in the project root):
