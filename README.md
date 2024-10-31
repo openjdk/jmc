@@ -366,11 +366,12 @@ to use when launching, add `-vm` and the path to a directory where a JDK java la
 Here is an example for Mac OS X:
 
 ```bash
-# on Intel
+# on aarch64 (M1/M2/M3/M4)
+target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
+
+# on x86_64 (Intel)
 target/products/org.openjdk.jmc/macosx/cocoa/x86_64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 
-# on M1/M2
-target/products/org.openjdk.jmc/macosx/cocoa/aarch64/JDK\ Mission\ Control.app/Contents/MacOS/jmc
 ```
 
 Here is an example for Linux:
