@@ -554,6 +554,14 @@ public class Messages {
 	public static final String ATTR_USER_LOAD_DESC = "ATTR_USER_LOAD_DESC"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD = "ATTR_JAVA_THREAD"; //$NON-NLS-1$
 	public static final String ATTR_JAVA_THREAD_DESC = "ATTR_JAVA_THREAD_DESC"; //$NON-NLS-1$
+	public static final String ATTR_THREADS_ACCUMULATED_COUNT = "ATTR_THREADS_ACCUMULATED_COUNT";
+	public static final String ATTR_THREADS_ACCUMULATED_COUNT_DESC = "ATTR_THREADS_ACCUMULATED_COUNT_DESC";
+	public static final String ATTR_THREADS_ACTIVE_COUNT = "ATTR_THREADS_ACTIVE_COUNT";
+	public static final String ATTR_THREADS_ACTIVE_COUNT_DESC = "ATTR_THREADS_ACTIVE_COUNT_DESC";
+	public static final String ATTR_THREADS_DAEMON_COUNT = "ATTR_THREADS_DAEMON_COUNT";
+	public static final String ATTR_THREADS_DAEMON_COUNT_DESC = "ATTR_THREADS_DAEMON_COUNT_DESC";
+	public static final String ATTR_THREADS_PEAK_COUNT = "ATTR_THREADS_PEAK_COUNT";
+	public static final String ATTR_THREADS_PEAK_COUNT_DESC = "ATTR_THREADS_PEAK_COUNT_DESC";
 
 	private Messages() {
 	}
