@@ -1336,6 +1336,11 @@
 		<Method name="createFlameGraph"/>
 		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
 	</Match>
+    <Match>
+        <Class name="org.openjdk.jmc.flightrecorder.flamegraph.views.FlamegraphSwingView"/>
+        <Method name="saveFlamegraph"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
 
 	<!-- Store field is used by framework even though it appears unread -->
 	<Match>
