@@ -159,7 +159,7 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 
 	@Test
 	public void testDiscover() {
-		if("true".equals(System.getProperty("skipJDPMulticastTests"))) {
+		if ("true".equals(System.getProperty("skipJDPMulticastTests"))) {
 			//In certain situations multicast will not work 
 			// 'D> --> Couldnt send discovery message from /127.0.0.1: java.net.BindException: Can't assign requested address
 			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException: 
