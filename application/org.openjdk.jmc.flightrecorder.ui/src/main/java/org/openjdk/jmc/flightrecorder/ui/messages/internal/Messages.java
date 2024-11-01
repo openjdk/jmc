@@ -360,6 +360,8 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_ROW_CPU_USAGE;
 	public static String JavaApplicationPage_ROW_CPU_USAGE_DESC;
 	public static String JavaApplicationPage_ROW_HEAP_USAGE;
+	public static String JavaApplicationPage_ROW_RSS;
+	public static String JavaApplicationPage_ROW_RSS_DESC;
 	public static String JavaApplicationPage_SELECTED_THREAD;
 	public static String JavaApplicationPage_SELECTED_THREADS;
 	public static String JavaApplicationPage_THREAD_ACTIVITY_ACTION;
@@ -542,6 +544,8 @@ public class Messages extends NLS {
 	public static String STACKTRACE_VIEW_TRACE_IN_GROUP;
 	public static String STACKTRACE_VIEW_TRACE_IN_GROUPS;
 	public static String STACKTRACE_VIEW_TRACE_OF_TOTAL;
+	public static String STACKTRACE_VIEW_TRACE_OF_TOTAL_COUNT;
+	public static String STACKTRACE_VIEW_TRACES_OF_TOTAL_COUNT;
 	public static String STORED_SELECTIONS_SIZE_LESS_THAN_ZERO;
 	public static String STORED_SELECTIONS_SIZE_PREF;
 	public static String STORED_SELECTIONS_SIZE_UNPARSABLE;
@@ -628,9 +632,9 @@ public class Messages extends NLS {
 	public static String stackTraceMessage(int itemCount, int totalCount, String frameFraction) {
 		String message;
 		if (itemCount == 1) {
-			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL;
+			message = Messages.STACKTRACE_VIEW_TRACE_OF_TOTAL_COUNT;
 		} else {
-			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL;
+			message = Messages.STACKTRACE_VIEW_TRACES_OF_TOTAL_COUNT;
 		}
 		return NLS.bind(message, new Object[] {itemCount, frameFraction, totalCount});
 	}

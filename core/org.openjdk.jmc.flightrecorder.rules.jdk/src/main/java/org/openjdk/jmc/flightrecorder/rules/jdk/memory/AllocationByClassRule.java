@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -65,7 +65,6 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
@@ -73,10 +72,6 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 
 public class AllocationByClassRule implements IRule {
 	private static final String CLASS_RESULT_ID = "Allocations.class"; //$NON-NLS-1$
-
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
 
 	public static final TypedResult<IMCType> MOST_ALLOCATED_TYPE = new TypedResult<>("mostAllocatedType", //$NON-NLS-1$
 			"Most Allocated Type", "The most allocated type.", UnitLookup.CLASS, IMCType.class);
@@ -90,8 +85,25 @@ public class AllocationByClassRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		List<IntEntry<IMCType>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
-				JdkAttributes.ALLOCATION_CLASS);
+		boolean preciseEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB)
+				.isLessAvailableThan(EventAvailability.ENABLED)
+				&& !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_OUTSIDE_TLAB)
+						.isLessAvailableThan(EventAvailability.ENABLED);
+		boolean sampledEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJ_ALLOC_SAMPLE)
+				.isLessAvailableThan(EventAvailability.ENABLED);
+		if (!preciseEvents && !sampledEvents) {
+			return RulesToolkit.getNotApplicableResult(this, valueProvider, null);
+		}
+
+		IItemFilter filter = preciseEvents ? JdkFilters.ALLOC_ALL : JdkFilters.OBJ_ALLOC;
+		List<IntEntry<IMCType>> entries = preciseEvents
+				? RulesToolkit.calculateGroupingScore(items.apply(filter), JdkAttributes.ALLOCATION_CLASS)
+				// Using object allocation sample events we must calculate cores taking sample weight
+				// into account. The weight is based on both number of samples and the estimated allocation
+				// size, which we cannot decouple to exactly match the behavior of the more expensive and
+				// precise object allocation in new tlab/outside tlab events.
+				: RulesToolkit.calculateGroupingScore(items.apply(filter), JdkAttributes.ALLOCATION_CLASS,
+						JdkAttributes.SAMPLE_WEIGHT);
 		if (entries.size() > 1) {
 			double balance = RulesToolkit.calculateBalanceScore(entries);
 			IntEntry<IMCType> mostSignificant = entries.get(entries.size() - 1);
@@ -99,7 +111,7 @@ public class AllocationByClassRule implements IRule {
 			double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
 			double score = balance * relevance * 0.74; // ceiling at 74;
 
-			IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
+			IItemFilter significantFilter = ItemFilters.and(filter,
 					ItemFilters.equals(JdkAttributes.ALLOCATION_CLASS, mostSignificant.getKey()));
 			StacktraceModel stacktraceModel = new StacktraceModel(false,
 					new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
@@ -153,7 +165,7 @@ public class AllocationByClassRule implements IRule {
 
 	@Override
 	public Map<String, EventAvailability> getRequiredEvents() {
-		return REQUIRED_EVENTS;
+		return Collections.emptyMap();
 	}
 
 	@Override

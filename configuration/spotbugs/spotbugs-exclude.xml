@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -90,6 +90,30 @@
     <Match>
         <Bug pattern="DM_CONVERT_CASE"/>
     </Match>
+
+	<!-- Excluding unused/unread fields for now -->
+	<Match>
+		<Or>
+			<Bug pattern="UUF_UNUSED_FIELD" />
+			<Bug pattern="URF_UNREAD_FIELD" />
+			<Bug pattern="UWF_UNWRITTEN_FIELD" />
+			<Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD" />
+			<Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
+			<Bug pattern="UWF_NULL_FIELD" />
+			<Bug pattern="NP_UNWRITTEN_FIELD" />
+			<Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" />
+		</Or>
+	</Match>
+
+	<!-- Excluding low level unread public/protected and null-on-some-path -->
+	<Match>
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+		<Rank value="17" />
+	</Match>
+	<Match>
+		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+		<Rank value="15" />
+	</Match>
 
 	<!-- Allow low level access of overridable methods within the constructor -->
 	<Match>
@@ -1102,6 +1126,24 @@
 		<Rank value="20" />
 	</Match>
 
+	<!-- Excluding low ranking uncalled private methods for now -->
+	<Match>
+		<Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
+		<Rank value="15" />
+	</Match>
+
+	<!-- Seems to be getting it wrong for Medium, e.g. LocalDescriptorProvider$LocalScanner should NOT be static -->
+	<Match>
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC" />
+		<Rank value="10" />
+	</Match>
+
+	<!-- These should be properly analyzed - see JMC-8283 -->
+	<Match>
+		<Bug pattern="DE_MIGHT_IGNORE" />
+		<Rank value="10" />
+	</Match>
+
 	<!-- Excluding native memory since not yet shipped -->
 	<Match>
 		<Class name="~org\.openjdk\.jmc\.console\.ui\.nativememory\..*" />
@@ -1288,5 +1330,31 @@
 	<Match>
 		<Class name="org.openjdk.jmc.rjmx.subscription.internal.EvilMethodsClass"/>
 	</Match>
-		
+	<!-- False positives for package lookup in flamegraph color mapper - should be mapped to UNKNOWN_PACKAGE and not be null -->
+	<Match>
+		<Class name="org.openjdk.jmc.flightrecorder.flamegraph.views.FlamegraphSwingView"/>
+		<Method name="createFlameGraph"/>
+		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+	</Match>
+
+	<!-- Store field is used by framework even though it appears unread -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.celleditors.AttributeEditingSupport"/>
+		<Field name="store"/>
+		<Bug pattern="URF_UNREAD_FIELD"/>
+	</Match>
+
+	<!-- Field is written indirectly through framework -->
+	<Match>
+		<Class name="org.openjdk.jmc.browser.wizards.ConnectionWizardPage"/>
+		<Field name="currentUrl"/>
+		<Bug pattern="NP_UNWRITTEN_FIELD"/>
+	</Match>
+
+	<!-- Equals only checks serverHandle by design since that uniquely identifies an editor input -->
+	<Match>
+		<Class name="org.openjdk.jmc.console.agent.editor.AgentEditorInput"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_UNUSUAL"/>
+	</Match>
 </FindBugsFilter>

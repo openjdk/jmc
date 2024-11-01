@@ -387,8 +387,32 @@ public final class JdkAttributes {
 				}
 			});
 
-	public static final IAttribute<IQuantity> RECORDING_ID = attr("id", Messages.getString(Messages.ATTR_RECORDING_ID), //$NON-NLS-1$
-			NUMBER);
+	private static IAttribute<IQuantity> convertNumberToQuantity(
+		String identifier, String name, String description, IAttribute<Number> attribute) {
+		return Attribute.canonicalize(new Attribute<IQuantity>(identifier, name, //$NON-NLS-1$
+				description, NUMBER) {
+			@Override
+			public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+
+				final IMemberAccessor<Number, U> accessor = attribute.getAccessor(type);
+				return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
+					@Override
+					public IQuantity getMember(U i) {
+						Number countNumber = accessor.getMember(i);
+						return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
+					}
+				};
+			}
+		});
+	}
+
+	public static final IAttribute<Number> RECORDING_ID_NUMBER = attr("id", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RECORDING_ID), Messages.getString(Messages.ATTR_RECORDING_ID), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> RECORDING_ID = convertNumberToQuantity("id",
+			Messages.getString(Messages.ATTR_RECORDING_ID), Messages.getString(Messages.ATTR_RECORDING_ID),
+			RECORDING_ID_NUMBER);
+
 	public static final IAttribute<String> RECORDING_NAME = attr("name", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_RECORDING_NAME), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> RECORDING_START = attr("recordingStart", //$NON-NLS-1$
@@ -752,8 +776,15 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_FLAG_OLD_VALUE_TEXT), PLAIN_TEXT);
 	public static final IAttribute<String> FLAG_ORIGIN = attr("origin", Messages.getString(Messages.ATTR_FLAG_ORIGIN), //$NON-NLS-1$
 			PLAIN_TEXT);
-	public static final IAttribute<IQuantity> FLAG_VALUE_NUMBER = attr("value", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_FLAG_VALUE_NUMBER), NUMBER);
+
+	public static final IAttribute<Number> FLAG_VALUE_NUMBER_RAW = attr("value", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_FLAG_VALUE_NUMBER), Messages.getString(Messages.ATTR_FLAG_VALUE_NUMBER),
+			RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> FLAG_VALUE_NUMBER = convertNumberToQuantity("value",
+			Messages.getString(Messages.ATTR_FLAG_VALUE_NUMBER), Messages.getString(Messages.ATTR_FLAG_VALUE_NUMBER),
+			FLAG_VALUE_NUMBER_RAW);
+
 	public static final IAttribute<Boolean> FLAG_VALUE_BOOLEAN = attr("value", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_FLAG_VALUE_BOOLEAN), FLAG);
 	public static final IAttribute<String> FLAG_VALUE_TEXT = attr("value", //$NON-NLS-1$
@@ -797,26 +828,18 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),
 			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), RAW_NUMBER);
 
-	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = Attribute.canonicalize(
-			new Attribute<IQuantity>("loadedClassCount", Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT), //$NON-NLS-1$
-					Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), NUMBER) {
-				@Override
-				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
+	public static final IAttribute<IQuantity> CLASSLOADER_LOADED_COUNT = convertNumberToQuantity("loadedClassCount",
+			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT),
+			Messages.getString(Messages.ATTR_CLASSLOADER_LOADED_COUNT_DESC), CLASSLOADER_LOADED_COUNT_NUMBER);
 
-					final IMemberAccessor<Number, U> accessor = CLASSLOADER_LOADED_COUNT_NUMBER.getAccessor(type);
-					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
-						@Override
-						public IQuantity getMember(U i) {
-							Number countNumber = accessor.getMember(i);
-							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
-						}
-					};
-				}
-			});
-
-	public static final IAttribute<IQuantity> CLASSLOADER_UNLOADED_COUNT = attr("unloadedClassCount", //$NON-NLS-1$
+	public static final IAttribute<Number> CLASSLOADER_UNLOADED_COUNT_NUMBER = attr("unloadedClassCount", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT),
-			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT_DESC), NUMBER);
+			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT_DESC), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> CLASSLOADER_UNLOADED_COUNT = convertNumberToQuantity("unloadedClassCount",
+			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT),
+			Messages.getString(Messages.ATTR_CLASSLOADER_UNLOADED_COUNT_DESC), CLASSLOADER_UNLOADED_COUNT_NUMBER);
+
 	private static final IAttribute<IMCType> CLASS_DEFINING_CLASSLOADER_V0 = attr("definingClassLoader", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_CLASS_DEFINING_CLASSLOADER), CLASS);
 	private static final IAttribute<IMCType> CLASS_INITIATING_CLASSLOADER_V0 = attr("initiatingClassLoader", //$NON-NLS-1$
@@ -1151,22 +1174,9 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT),
 			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), RAW_NUMBER);
 
-	public static final IAttribute<IQuantity> EXCEPTION_THROWABLES_COUNT = Attribute.canonicalize(
-			new Attribute<IQuantity>("throwables", Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT), //$NON-NLS-1$
-					Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), NUMBER) {
-				@Override
-				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
-
-					final IMemberAccessor<Number, U> accessor = EXCEPTION_THROWABLES_COUNT_NUMBER.getAccessor(type);
-					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
-						@Override
-						public IQuantity getMember(U i) {
-							Number countNumber = accessor.getMember(i);
-							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
-						}
-					};
-				}
-			});
+	public static final IAttribute<IQuantity> EXCEPTION_THROWABLES_COUNT = convertNumberToQuantity("throwables",
+			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT),
+			Messages.getString(Messages.ATTR_EXCEPTION_THROWABLES_COUNT_DESC), EXCEPTION_THROWABLES_COUNT_NUMBER);
 
 	public static final IAttribute<IMCType> EXCEPTION_THROWNCLASS = attr("thrownClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_EXCEPTION_THROWNCLASS), CLASS);
@@ -1212,8 +1222,15 @@ public final class JdkAttributes {
 			});
 	public static final IAttribute<String> REFERENCE_STATISTICS_TYPE = attr("type", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_TYPE), PLAIN_TEXT);
-	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = attr("count", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_COUNT), NUMBER);
+
+	public static final IAttribute<Number> REFERENCE_STATISTICS_COUNT_NUMBER = attr("count", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_COUNT),
+			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_COUNT), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> REFERENCE_STATISTICS_COUNT = convertNumberToQuantity("count", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_COUNT),
+			Messages.getString(Messages.ATTR_REFERENCE_STATISTICS_COUNT), REFERENCE_STATISTICS_COUNT_NUMBER);
+
 	public static final IAttribute<IQuantity> GC_SUM_OF_PAUSES = attr("sumOfPauses", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_GC_SUM_OF_PAUSES), Messages.getString(Messages.ATTR_GC_SUM_OF_PAUSES_DESC),
 			TIMESPAN);
@@ -1347,22 +1364,9 @@ public final class JdkAttributes {
 			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
 			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), RAW_NUMBER);
 
-	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = Attribute.canonicalize(
-			new Attribute<IQuantity>("totalFinalizersRun", Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN), //$NON-NLS-1$
-					Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), NUMBER) {
-				@Override
-				public <U> IMemberAccessor<IQuantity, U> customAccessor(IType<U> type) {
-
-					final IMemberAccessor<Number, U> accessor = TOTAL_FINALIZERS_RUN_NUMBER.getAccessor(type);
-					return accessor == null ? null : new IMemberAccessor<IQuantity, U>() {
-						@Override
-						public IQuantity getMember(U i) {
-							Number countNumber = accessor.getMember(i);
-							return countNumber == null ? null : UnitLookup.NUMBER_UNITY.quantity(countNumber);
-						}
-					};
-				}
-			});
+	public static final IAttribute<IQuantity> TOTAL_FINALIZERS_RUN = convertNumberToQuantity("totalFinalizersRun",
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN),
+			Messages.getString(Messages.ATTR_TOTAL_FINALIZERS_RUN_DESC), TOTAL_FINALIZERS_RUN_NUMBER);
 
 	public static final IAttribute<IMCType> FINALIZABLE_CLASS = attr("finalizableClass", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_FINALIZABLE_CLASS),
@@ -1397,4 +1401,12 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> AGENT_INITIALIZATION_DURATION = attr("initializationDuration", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION),
 			Messages.getString(Messages.ATTR_AGENT_INITIALIZATION_DURATION_DESC), TIMESPAN);
+
+	// Don't want these to be canonicalized general size and/or peak attributes, so creating new ones...
+	public static final IAttribute<IQuantity> RSS_SIZE = new Attribute<IQuantity>("size", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RSS_SIZE), Messages.getString(Messages.ATTR_RSS_SIZE_DESC), MEMORY) {
+	};
+	public static final IAttribute<IQuantity> RSS_PEAK = new Attribute<IQuantity>("peak", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_RSS_PEAK), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), MEMORY) {
+	};
 }

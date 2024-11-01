@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  jakarta.inject.jakarta.inject-api
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.console.jconsole
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: .,
  external:$java.home$/../lib/jconsole.jar
 Eclipse-BuddyPolicy: app 

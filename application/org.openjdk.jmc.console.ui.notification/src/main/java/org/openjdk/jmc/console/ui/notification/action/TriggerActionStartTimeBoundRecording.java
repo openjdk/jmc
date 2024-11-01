@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -58,6 +58,7 @@ import org.openjdk.jmc.rjmx.triggers.IActivatableTriggerAction;
 import org.openjdk.jmc.rjmx.triggers.ITriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerAction;
 import org.openjdk.jmc.rjmx.triggers.TriggerEvent;
+import org.openjdk.jmc.rjmx.triggers.internal.NotificationToolkit;
 import org.openjdk.jmc.ui.MCPathEditorInput;
 import org.openjdk.jmc.ui.WorkbenchToolkit;
 import org.openjdk.jmc.ui.common.idesupport.IDESupportToolkit;
@@ -105,7 +106,7 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 			}
 			b.name(name);
 
-			MCFile path = IDESupportToolkit.createFileResource(getSetting("file").getFileName()); //$NON-NLS-1$
+			MCFile path = IDESupportToolkit.createFileResource(getSetting("recordingfilename").getFileName()); //$NON-NLS-1$
 			IRecordingDescriptor descriptor = service.start(b.build(),
 					TriggerActionRecordingToolkit.getTemplate("Profiling", service)); //$NON-NLS-1$
 			boolean open = getSetting("open").getBoolean(); //$NON-NLS-1$
@@ -140,6 +141,7 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			String triggerMessage = NotificationToolkit.prettyPrint(m_event);
 			try {
 				m_descriptor = m_service.getUpdatedRecordingDescription(m_descriptor);
 				m_updateErrorCount = 0;
@@ -147,9 +149,10 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 				NotificationPlugin.getDefault().getLogger()
 						.severe("Problem updating a flight recording on the " + m_descriptor.getName() + " JVM"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (++m_updateErrorCount > MAX_CONTINUOUS_ERROR_COUNT) {
-					return StatusFactory
-							.createErr(NLS.bind(Messages.TriggerActionStartTimeBoundRecording_UPDATE_STATUS_ERROR_MSG,
-									m_descriptor.getName()), e, false);
+					return StatusFactory.createErr(NLS.bind(
+							"\n" + triggerMessage + "\n"
+									+ Messages.TriggerActionStartTimeBoundRecording_UPDATE_STATUS_ERROR_MSG,
+							m_descriptor.getName()), e, false);
 				}
 			}
 			if (m_descriptor.getState() != RecordingState.STOPPED) {
@@ -166,12 +169,13 @@ public class TriggerActionStartTimeBoundRecording extends TriggerAction implemen
 				return StatusFactory.createOk(
 						NLS.bind(Messages.WriteAndOpenRecordingJob_MESSAGE_SUCCESSFUL_DUMP, m_descriptor.getName()));
 			} catch (FlightRecorderException e) {
-				return StatusFactory.createErr(NLS.bind(Messages.TriggerActionStartTimeBoundRecording_SERVICE_ERROR_MSG,
+				return StatusFactory.createErr(NLS.bind(
+						"\n" + triggerMessage + "\n" + Messages.TriggerActionStartTimeBoundRecording_SERVICE_ERROR_MSG,
 						m_descriptor.getName()), e, false);
 			} catch (IOException e) {
-				return StatusFactory.createErr(
-						NLS.bind(Messages.TriggerActionStartTimeBoundRecording_IO_ERROR_MSG, m_descriptor.getName()), e,
-						false);
+				return StatusFactory.createErr(NLS.bind(
+						"\n" + triggerMessage + "\n" + Messages.TriggerActionStartTimeBoundRecording_IO_ERROR_MSG,
+						m_descriptor.getName()), e, false);
 			}
 		}
 	}

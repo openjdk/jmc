@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.ui.common.idesupport;
 
 import java.io.InputStream;
+
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +53,7 @@ final class JobFileWrite extends Job {
 	private final MCFile file;
 	private final InputStream stream;
 	private final boolean append;
+	private final String triggerMessage;
 
 	/**
 	 * @param jobName
@@ -64,11 +66,12 @@ final class JobFileWrite extends Job {
 	 *            {@code true} if the file should be appended, {@code false} if it should be
 	 *            overwritten
 	 */
-	JobFileWrite(String jobName, MCFile file, InputStream stream, boolean append) {
+	JobFileWrite(String jobName, MCFile file, InputStream stream, boolean append, String triggerMessage) {
 		super(jobName);
 		this.file = file;
 		this.stream = stream;
 		this.append = append;
+		this.triggerMessage = triggerMessage;
 	}
 
 	@Override
@@ -78,8 +81,8 @@ final class JobFileWrite extends Job {
 		} catch (Exception e) {
 			// Want non-localized message in the log!
 			CorePlugin.getDefault().getLogger().log(Level.SEVERE, "Could not write the specified file!", e); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
-					NLS.bind(Messages.JobFileWrite_ERROR_FILE_WRITE_FAILED, file.getPath()), e);
+			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, NLS.bind(
+					"\n" + triggerMessage + "\n" + Messages.JobFileWrite_ERROR_FILE_WRITE_FAILED, file.getPath()), e);
 		} finally {
 			IOToolkit.closeSilently(stream);
 		}

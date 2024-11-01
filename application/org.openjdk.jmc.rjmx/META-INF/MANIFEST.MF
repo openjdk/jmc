@@ -1,13 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: RJMX
 Bundle-SymbolicName: org.openjdk.jmc.rjmx;singleton:=true
 Bundle-Version: 9.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.rjmx.RJMXPlugin
 Eclipse-BuddyPolicy: app
 Import-Package: jakarta.mail,
- jakarta.mail.internet
+ jakarta.mail.internet,
+ org.eclipse.swt.widgets
 Export-Package: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.rjmx.actionprovider;
   x-friends:="org.openjdk.jmc.console.ui,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,9 +38,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
+import org.openjdk.jmc.common.collection.EntryHashMap;
+import org.openjdk.jmc.common.collection.MapToolkit;
 import org.openjdk.jmc.common.version.JavaVersion;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.rules.report.html.JfrHtmlRulesReport;
@@ -96,5 +99,22 @@ public class RulesToolkitTest {
 			fail();
 		}
 		assert (!report.isEmpty());
+	}
+
+	@Test
+	public void testCalculateBalanceScoreLargeValues() {
+		// Validate the test using equal small values
+		double score = RulesToolkit.calculateBalanceScore(List.of(intEntry(5), intEntry(5)));
+		assertEquals(.75D, score, .01D);
+		// Large integer values should be no different
+		score = RulesToolkit.calculateBalanceScore(List.of(intEntry(Integer.MAX_VALUE), intEntry(Integer.MAX_VALUE)));
+		assertEquals(.75D, score, .01D);
+	}
+
+	private static MapToolkit.IntEntry<String> intEntry(int value) {
+		EntryHashMap<String, MapToolkit.IntEntry<String>> map = MapToolkit.createIntMap(1, 1);
+		MapToolkit.IntEntry<String> entry = map.get("stub", true);
+		entry.setValue(value);
+		return entry;
 	}
 }
