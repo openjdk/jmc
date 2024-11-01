@@ -818,6 +818,32 @@ public final class JdkAttributes {
 		}
 	});
 
+	public static final IAttribute<Number> THREADS_ACCUMULATED_COUNT_NUMBER = Attribute.attr("accumulatedCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_ACCUMULATED_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_ACCUMULATED_COUNT_DESC), RAW_NUMBER);
+	public static final IAttribute<Number> THREADS_ACTIVE_COUNT_NUMBER = Attribute.attr("activeCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_ACTIVE_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_ACTIVE_COUNT_DESC), RAW_NUMBER);
+	public static final IAttribute<Number> THREADS_DAEMON_COUNT_NUMBER = Attribute.attr("daemonCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_DAEMON_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_DAEMON_COUNT_DESC), RAW_NUMBER);
+	public static final IAttribute<Number> THREADS_PEAK_COUNT_NUMBER = Attribute.attr("peakCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_PEAK_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_PEAK_COUNT_DESC), RAW_NUMBER);
+
+	public static final IAttribute<IQuantity> THREADS_ACCUMULATED_COUNT = convertNumberToQuantity("accumulatedCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_ACCUMULATED_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_ACCUMULATED_COUNT_DESC), THREADS_ACCUMULATED_COUNT_NUMBER);
+	public static final IAttribute<IQuantity> THREADS_ACTIVE_COUNT = convertNumberToQuantity("activeCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_ACTIVE_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_ACTIVE_COUNT_DESC), THREADS_ACTIVE_COUNT_NUMBER);
+	public static final IAttribute<IQuantity> THREADS_DAEMON_COUNT = convertNumberToQuantity("daemonCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_DAEMON_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_DAEMON_COUNT_DESC), THREADS_DAEMON_COUNT_NUMBER);
+	public static final IAttribute<IQuantity> THREADS_PEAK_COUNT = convertNumberToQuantity("peakCount", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_THREADS_PEAK_COUNT),
+			Messages.getString(Messages.ATTR_THREADS_PEAK_COUNT_DESC), THREADS_PEAK_COUNT_NUMBER);
+
 	public static final IAttribute<String> INFLATION_REASON = attr("cause", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_INFLATION_REASON), Messages.getString(Messages.ATTR_INFLATION_REASON_DESC),
 			PLAIN_TEXT);
