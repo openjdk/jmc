@@ -51,7 +51,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-@SuppressWarnings("restriction")
 class BuiltinTypeTest {
 	private static final long TYPE_ID = 1L;
 	private BuiltinType instance;

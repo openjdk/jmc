@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,7 +48,6 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRu
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.MockEventCollection;
 import org.openjdk.jmc.flightrecorder.test.rules.jdk.TestEvent;
 
-@SuppressWarnings("restriction")
 public class PasswordsInEnvironmentRuleTest {
 
 	@Test

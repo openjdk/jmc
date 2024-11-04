@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,7 +50,6 @@ import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldBuilder;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedFieldValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
-@SuppressWarnings("restriction")
 class TypedValueBuilderImplTest {
 	private static final String CUSTOM_FIELD_NAME = "custom_field";
 	private static final String CUSTOM_FIELD_ARRAY_NAME = "custom_field_arr";
