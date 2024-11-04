@@ -31,7 +31,6 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
     <setAttribute key="additional_plugins">
         <setEntry value="jakarta.xml.bind:2.3.3.v20201118-1818:default:true:default:default"/>
