@@ -263,9 +263,9 @@ public class JavaApplicationPage extends AbstractDataPage {
 					Messages.JavaApplicationPage_ROW_CPU_USAGE_DESC, allItems, true, JdkQueries.CPU_USAGE_SIMPLE_QUERY,
 					this::isAttributeEnabled, UnitLookup.PERCENT.quantity(0), UnitLookup.PERCENT.quantity(100))
 					.ifPresent(rows::add);
-			DataPageToolkit.buildLinesRow("Threads", "Various thread counts", allItems, true,
-					JdkQueries.THREAD_STATISTICS, this::isAttributeEnabled, UnitLookup.NUMBER_UNITY.quantity(0), null)
-					.ifPresent(rows::add);
+			DataPageToolkit.buildLinesRow(Messages.JavaApplicationPage_ROW_THREAD_COUNTS,
+					Messages.JavaApplicationPage_ROW_THREAD_COUNTS_DESC, allItems, false, JdkQueries.THREAD_STATISTICS,
+					this::isAttributeEnabled, UnitLookup.NUMBER_UNITY.quantity(0), null).ifPresent(rows::add);
 			DataPageToolkit.buildLinesRow(Messages.JavaApplicationPage_ROW_RSS,
 					Messages.JavaApplicationPage_ROW_RSS_DESC, allItems, true, JdkQueries.RSS_SIMPLE_QUERY,
 					this::isAttributeEnabled, UnitLookup.BYTE.quantity(0), null).ifPresent(rows::add);
