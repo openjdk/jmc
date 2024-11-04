@@ -79,7 +79,6 @@ import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
-@SuppressWarnings("restriction")
 class RecordingImplTest {
 	@Label("Simple Test Event")
 	@Registered(true)

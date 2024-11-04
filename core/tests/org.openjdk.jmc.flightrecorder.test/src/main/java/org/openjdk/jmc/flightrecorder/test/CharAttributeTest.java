@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, 2023 Red Hat, Inc. All rights reserved.
+ * Copyright (c) 2022, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024, Red Hat, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -57,7 +57,6 @@ import jdk.jfr.Recording;
 /**
  * Test for making sure events with {@code char} attributes can be parsed.
  */
-@SuppressWarnings("restriction")
 public class CharAttributeTest {
 
 	@Test

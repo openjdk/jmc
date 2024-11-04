@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2023, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,7 +48,6 @@ import org.mockito.Mockito;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
-@SuppressWarnings("restriction")
 class ResolvableTypeTest {
 	private static final String FIELD_1_NAME = "field_1";
 	private static final String FIELD_2_NAME = "field_2";
