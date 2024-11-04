@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.latency;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
+import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -137,6 +139,10 @@ public class VMOperationRule implements IRule {
 			String longMessage = isCombinedDuration
 					? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG_COMBINED_DURATION)
 					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_LONG);
+			String vmOperationsList = getVMOperationsList(items.apply(JdkFilters.VM_OPERATIONS_BLOCKING_OR_SAFEPOINT));
+			if (vmOperationsList != null) {
+				longMessage = vmOperationsList.concat(longMessage);
+			}
 			String shortMessage = isCombinedDuration
 					? Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN_COMBINED_DURATION)
 					: Messages.getString(Messages.VMOperationRuleFactory_TEXT_WARN);
@@ -189,6 +195,24 @@ public class VMOperationRule implements IRule {
 		return new Pair<IItem, IQuantity>(startingEvent, longestDuration);
 	}
 
+	private String getVMOperationsList(IItemCollection items) {
+		List<IItem> sortedEventsByDuration = sortEventsByDurationTime(items);
+		Collections.reverse(sortedEventsByDuration);
+		char bulletSymbol = '\u2023';
+		char newLineSymbol = '\n';
+
+		StringBuilder sb = new StringBuilder(
+				newLineSymbol + Messages.getString(Messages.VMOperations_Duration_Operation) + newLineSymbol);
+		if (sortedEventsByDuration.size() >= 5) {
+			for (IItem iItem : sortedEventsByDuration.subList(0, 5)) {
+				sb.append(bulletSymbol + " " + getDuration(iItem).displayUsing(IDisplayable.AUTO) + " "
+						+ getOperation(iItem) + newLineSymbol);
+			}
+		}
+		sb.append(newLineSymbol);
+		return sb.toString();
+	}
+
 	private List<IItem> sortEventsByStartTime(IItemCollection items) {
 		List<IItem> sortedEvents = new ArrayList<>();
 		for (IItemIterable iter : items) {
@@ -200,6 +224,22 @@ public class VMOperationRule implements IRule {
 			@Override
 			public int compare(IItem e1, IItem e2) {
 				return getStartTime(e1).compareTo(getStartTime(e2));
+			}
+		});
+		return sortedEvents;
+	}
+
+	private List<IItem> sortEventsByDurationTime(IItemCollection items) {
+		List<IItem> sortedEvents = new ArrayList<>();
+		for (IItemIterable iter : items) {
+			for (IItem event : iter) {
+				sortedEvents.add(event);
+			}
+		}
+		sortedEvents.sort(new Comparator<IItem>() {
+			@Override
+			public int compare(IItem e1, IItem e2) {
+				return getDuration(e1).compareTo(getDuration(e2));
 			}
 		});
 		return sortedEvents;
