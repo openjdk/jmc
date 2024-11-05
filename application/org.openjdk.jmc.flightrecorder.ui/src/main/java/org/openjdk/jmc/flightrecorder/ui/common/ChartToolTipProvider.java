@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -54,6 +54,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
+import org.openjdk.jmc.common.IMCThread;
 
 /**
  * Default chart tooltip provider. Note that each instance is only used once.
@@ -70,6 +71,8 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 	private int colorNum;
 	protected int bulletIndent;
 	protected String lastAt;
+	private Object hoveredItemData;
+	private boolean isChartTextCanvas;
 
 	/**
 	 * Return the HTML. This method should typically only be called once. (Though technically, with
@@ -112,7 +115,7 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 
 	@Override
 	public void hover(Object data) {
-		// Auto-generated method stub
+		this.hoveredItemData = data;
 	}
 
 	protected String format(IDisplayable value) {
@@ -141,6 +144,14 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 
 	protected void appendTitle(String title) {
 		text.append("<p><b>").append(title).append("</b></p>"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	protected void appendThreadId(Long threadId) {
+		if (text.indexOf(threadId.toString()) == -1) {
+			text.append("<p><b>") //$NON-NLS-1$
+					.append(htmlify(NLS.bind(Messages.ThreadsPage_LANE_THREAD_ID_TOOLTIP, threadId.toString())))
+					.append("</b></p>"); //$NON-NLS-1$
+		}
 	}
 
 	protected void appendAtIfNew(IDisplayable newAt) {
@@ -184,50 +195,57 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 	// FIXME: One idea was to let the user see the details in Properties/StackTrace views by click-selecting an event.
 	@Override
 	public void visit(ISpan span) {
-		if (span.getDescription() != null) {
-			appendTitle(span.getDescription());
-		}
-		appendAtIfNew(span.getRange());
-		appendTagLI(span.getColor());
-		// Would normally insert <span nowrap='true'> here, but since bold text is not displayed,
-		// it is inserted after the <b> element instead.
-		Object payload = span.getPayload();
-		IItem item = AdapterUtil.getAdapter(payload, IItem.class);
-		if (payload instanceof IDisplayable) {
-			text.append("<span nowrap='true'>"); //$NON-NLS-1$
-			text.append(format((IDisplayable) payload)).append(": "); //$NON-NLS-1$
-		} else if (item != null) {
-			IType<IItem> type = ItemToolkit.getItemType(item);
-			text.append("<b>").append(htmlify(type.getName())).append("</b><span nowrap='true'>: "); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		text.append(format(span.getWidth()));
-		text.append("</span></li>"); //$NON-NLS-1$
-		if (item != null) {
-			IType<IItem> type = ItemToolkit.getItemType(item);
-			IMCStackTrace trace = null;
-			Iterator<IAttribute<?>> attributes = getAttributeStream(type).iterator();
-			while (attributes.hasNext()) {
-				IAttribute<?> attribute = attributes.next();
-				if (attribute.equals(JfrAttributes.EVENT_STACKTRACE)) {
-					trace = JfrAttributes.EVENT_STACKTRACE.getAccessor(type).getMember(item);
-					continue;
-				}
-				text.append("<p vspace='false'><span nowrap='true'>"); //$NON-NLS-1$
-				text.append(htmlify(attribute.getName())).append(": "); //$NON-NLS-1$
-				// FIXME: Format timestamp with higher precision
-				Object value = attribute.getAccessor(type).getMember(item);
-				String valueString = TypeHandling.getValueString(value);
-				text.append(htmlify(valueString));
-				text.append("</span></p>"); //$NON-NLS-1$
-				// Get value
+		if (isChartTextCanvas) {
+			if (hoveredItemData instanceof IMCThread && ((IMCThread) hoveredItemData).getThreadId() != null) {
+				appendThreadId(((IMCThread) hoveredItemData).getThreadId());
 			}
-			if (trace != null) {
-				text.append("<p vspace='false'/>"); //$NON-NLS-1$
-				text.append("<p vspace='false'>"); //$NON-NLS-1$
-				text.append(htmlify(JfrAttributes.EVENT_STACKTRACE.getName())).append(":<br/>"); //$NON-NLS-1$
-				appendStackTrace(trace, true, false, true, true, true, false);
-				text.append("</p>"); //$NON-NLS-1$
+		} else {
+			if (span.getDescription() != null) {
+				appendTitle(span.getDescription());
+			}
 
+			appendAtIfNew(span.getRange());
+			appendTagLI(span.getColor());
+			// Would normally insert <span nowrap='true'> here, but since bold text is not displayed,
+			// it is inserted after the <b> element instead.
+			Object payload = span.getPayload();
+			IItem item = AdapterUtil.getAdapter(payload, IItem.class);
+			if (payload instanceof IDisplayable) {
+				text.append("<span nowrap='true'>"); //$NON-NLS-1$
+				text.append(format((IDisplayable) payload)).append(": "); //$NON-NLS-1$
+			} else if (item != null) {
+				IType<IItem> type = ItemToolkit.getItemType(item);
+				text.append("<b>").append(htmlify(type.getName())).append("</b><span nowrap='true'>: "); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			text.append(format(span.getWidth()));
+			text.append("</span></li>"); //$NON-NLS-1$
+			if (item != null) {
+				IType<IItem> type = ItemToolkit.getItemType(item);
+				IMCStackTrace trace = null;
+				Iterator<IAttribute<?>> attributes = getAttributeStream(type).iterator();
+				while (attributes.hasNext()) {
+					IAttribute<?> attribute = attributes.next();
+					if (attribute.equals(JfrAttributes.EVENT_STACKTRACE)) {
+						trace = JfrAttributes.EVENT_STACKTRACE.getAccessor(type).getMember(item);
+						continue;
+					}
+					text.append("<p vspace='false'><span nowrap='true'>"); //$NON-NLS-1$
+					text.append(htmlify(attribute.getName())).append(": "); //$NON-NLS-1$
+					// FIXME: Format timestamp with higher precision
+					Object value = attribute.getAccessor(type).getMember(item);
+					String valueString = TypeHandling.getValueString(value);
+					text.append(htmlify(valueString));
+					text.append("</span></p>"); //$NON-NLS-1$
+					// Get value
+				}
+				if (trace != null) {
+					text.append("<p vspace='false'/>"); //$NON-NLS-1$
+					text.append("<p vspace='false'>"); //$NON-NLS-1$
+					text.append(htmlify(JfrAttributes.EVENT_STACKTRACE.getName())).append(":<br/>"); //$NON-NLS-1$
+					appendStackTrace(trace, true, false, true, true, true, false);
+					text.append("</p>"); //$NON-NLS-1$
+
+				}
 			}
 		}
 	}
@@ -267,5 +285,15 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 					htmlify(NLS.bind(Messages.ChartToolTipProvider_CAPTION_DESCRIPTION, lane.getLaneDescription())));
 		}
 		text.append("</span></p>"); //$NON-NLS-1$
+	}
+
+	@Override
+	public void setChartTextCanvas(boolean chartTextCanvas) {
+		this.isChartTextCanvas = chartTextCanvas;
+	}
+
+	@Override
+	public boolean isChartTextCanvas() {
+		return this.isChartTextCanvas;
 	}
 }

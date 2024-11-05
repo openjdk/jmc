@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -71,6 +71,7 @@ import org.eclipse.ui.part.Page;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.Aggregators;
@@ -430,7 +431,12 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 			return limitedDeepToString(((Collection<?>) value).toArray(), JfrPropertySheet::getVerboseString);
 		}
 
-		return TypeHandling.getVerboseString(value);
+		String verboseString = TypeHandling.getVerboseString(value);
+		if (value instanceof IMCThread) {
+			return "(" + NLS.bind(Messages.ThreadsPage_LANE_THREAD_ID_TOOLTIP, ((IMCThread) value).getThreadId()) + ") "
+					+ verboseString;
+		}
+		return verboseString;
 	}
 
 	private TableViewer viewer;
