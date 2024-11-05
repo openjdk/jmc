@@ -132,6 +132,11 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_RECL
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_SWEPT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_ZOMBIFIED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREAD_DUMP_RESULT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACCUMULATED_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACTIVE_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_DAEMON_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_PEAK_COUNT;
+
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.UNALLOCATED;
 
 import org.openjdk.jmc.common.item.Aggregators;
@@ -236,6 +241,8 @@ public final class JdkQueries {
 			.build();
 	public static final IItemQuery SYSTEM_PROPERTIES = fromWhere(JdkFilters.SYSTEM_PROPERTIES)
 			.select(ENVIRONMENT_KEY, ENVIRONMENT_VALUE).build();
+	public static final IItemQuery THREAD_STATISTICS = fromWhere(JdkFilters.THREAD_STATISTICS)
+			.select(THREADS_ACTIVE_COUNT, THREADS_DAEMON_COUNT, THREADS_PEAK_COUNT, THREADS_ACCUMULATED_COUNT).build();
 	public static final IItemQuery THREAD_DUMP = fromWhere(JdkFilters.THREAD_DUMP).select(END_TIME, THREAD_DUMP_RESULT)
 			.build();
 	public static final IItemQuery THROWABLES_STATISTICS = fromWhere(JdkFilters.THROWABLES_STATISTICS)

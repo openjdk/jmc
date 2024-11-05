@@ -151,6 +151,7 @@ public final class JdkFilters {
 	public static final IItemFilter BIASED_LOCKING_REVOCATIONS = ItemFilters.type(
 			JdkTypeIDs.BIASED_LOCK_CLASS_REVOCATION, JdkTypeIDs.BIASED_LOCK_REVOCATION,
 			JdkTypeIDs.BIASED_LOCK_SELF_REVOCATION);
+	public static final IItemFilter THREAD_STATISTICS = ItemFilters.type(JdkTypeIDs.THREAD_STATISTICS);
 	public static final IItemFilter THREAD_CPU_LOAD = ItemFilters.type(JdkTypeIDs.THREAD_CPU_LOAD);
 	public static final IItemFilter NATIVE_METHOD_SAMPLE = ItemFilters.type(JdkTypeIDs.NATIVE_METHOD_SAMPLE);
 	public static final IItemFilter THREAD_START = ItemFilters.type(JdkTypeIDs.JAVA_THREAD_START);
