@@ -46,7 +46,6 @@ import org.openjdk.jmc.common.IMCPackage;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
@@ -242,7 +241,7 @@ public class SyntheticAttributeExtension implements IParserExtension {
 
 		@Override
 		public void addEvent(Object[] values) {
-			IQuantity longPid = (IQuantity) values[pidIndex];
+			Number longPid = (Number) values[pidIndex];
 			if (longPid != null && values != null && values.length > 0) {
 				String pid = String.valueOf(longPid.longValue());
 				Object[] newValues = new Object[values.length];
