@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2023, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -424,6 +424,11 @@ public class ChartTextCanvas extends Canvas {
 					setHoveredItemData(data);
 				}
 			}
+
+			@Override
+			public boolean isChartTextCanvas() {
+				return true;
+			}
 		}, lastMouseX, lastMouseY);
 		redraw();
 		if (chartCanvas != null) {
@@ -491,6 +496,7 @@ public class ChartTextCanvas extends Canvas {
 	public void infoAt(IChartInfoVisitor visitor, int x, int y) {
 		Point p = chartCanvas.translateDisplayToImageCoordinates(x, y);
 		if (awtChart != null) {
+			visitor.setChartTextCanvas(true);
 			awtChart.infoAt(visitor, p.x, p.y);
 		}
 	}

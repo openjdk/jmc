@@ -157,6 +157,7 @@ public final class XMLModel extends Observable {
 			SAXParser sp = spf.newSAXParser();
 			XMLReader xr = sp.getXMLReader();
 			XMLModelBuilder dataHandler = new XMLModelBuilder(dummyRoot);
+			xr.setErrorHandler(null);
 			xr.setContentHandler(dataHandler);
 			xr.parse(input);
 			List<XMLTagInstance> instances = dummyRoot.getTagsInstances();

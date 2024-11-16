@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -146,9 +146,15 @@ public class CodeCacheRule implements IRule {
 			IQuantity.class);
 	public static final TypedCollectionResult<CodeHeapData> CODE_HEAPS = new TypedCollectionResult<>("codeHeaps", //$NON-NLS-1$
 			"Code Heaps", "The code heaps in the JVM.", CODE_HEAP, CodeHeapData.class); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final TypedResult<IQuantity> CODE_CACHE_RESERVED_SIZE = new TypedResult<>("reservedSize", //$NON-NLS-1$
+			"Code Cache Reserved Size", "The reserved size for the code cache.", UnitLookup.NUMBER, //$NON-NLS-1$//$NON-NLS-2$
+			IQuantity.class);
+	public static final TypedResult<IQuantity> CODE_CACHE_FULL_COUNT = new TypedResult<>("codeCacheFullCount", //$NON-NLS-1$
+			"Code Cache Full Count", "The number of times the code cache was full.", UnitLookup.NUMBER, //$NON-NLS-1$//$NON-NLS-2$
+			IQuantity.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, CODE_CACHE_FREE_RATIO);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, CODE_CACHE_FREE_RATIO, CODE_CACHE_RESERVED_SIZE, CODE_CACHE_FULL_COUNT);
 
 	@Override
 	public RunnableFuture<IResult> createEvaluation(
@@ -168,10 +174,13 @@ public class CodeCacheRule implements IRule {
 		// Check if this is an early unsupported recording
 		IItemCollection ccItems = items.apply(JdkFilters.CODE_CACHE_CONFIGURATION);
 		IType<IItem> ccType = RulesToolkit.getType(ccItems, JdkTypeIDs.CODE_CACHE_CONFIG);
+		IQuantity ccReserved = ccItems.getAggregate(
+				(IAggregator<IQuantity, ?>) Aggregators.min(JdkTypeIDs.CODE_CACHE_CONFIG, JdkAttributes.RESERVED_SIZE));
 		IQuantity ccFullCount = items.getAggregate(JdkAggregators.CODE_CACHE_FULL_COUNT);
 		if (ccFullCount != null && ccFullCount.doubleValue() > 0) {
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.WARNING)
 					.setSummary(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN))
+					.addResult(CODE_CACHE_RESERVED_SIZE, ccReserved).addResult(CODE_CACHE_FULL_COUNT, ccFullCount)
 					.setExplanation(Messages.getString(Messages.CodeCacheRuleFactory_TEXT_WARN_LONG))
 					.setSolution(Messages.getString(Messages.CodeCacheRuleFactory_BLOG_REFERENCE)).build();
 		}

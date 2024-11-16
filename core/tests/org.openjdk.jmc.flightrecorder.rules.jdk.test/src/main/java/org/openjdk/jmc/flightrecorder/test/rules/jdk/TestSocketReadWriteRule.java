@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,7 +48,6 @@ import org.openjdk.jmc.flightrecorder.rules.ResultToolkit;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketReadRule;
 import org.openjdk.jmc.flightrecorder.rules.jdk.io.SocketWriteRule;
 
-@SuppressWarnings("restriction")
 public class TestSocketReadWriteRule {
 	private static final String ADDRESS_1 = "123.45.67.78";
 	private static final String ADDRESS_2 = "123.102.103.104";

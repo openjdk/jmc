@@ -360,6 +360,10 @@ public class Messages extends NLS {
 	public static String JavaApplicationPage_ROW_CPU_USAGE;
 	public static String JavaApplicationPage_ROW_CPU_USAGE_DESC;
 	public static String JavaApplicationPage_ROW_HEAP_USAGE;
+	public static String JavaApplicationPage_ROW_RSS;
+	public static String JavaApplicationPage_ROW_RSS_DESC;
+	public static String JavaApplicationPage_ROW_THREAD_COUNTS;
+	public static String JavaApplicationPage_ROW_THREAD_COUNTS_DESC;
 	public static String JavaApplicationPage_SELECTED_THREAD;
 	public static String JavaApplicationPage_SELECTED_THREADS;
 	public static String JavaApplicationPage_THREAD_ACTIVITY_ACTION;
@@ -619,6 +623,7 @@ public class Messages extends NLS {
 	public static String VMOperationPage_PAGE_NAME;
 	public static String VMOperationPage_ROW_VM_OPERATIONS;
 	public static String VMOperationPage_TIMELINE_SELECTION;
+	public static String ThreadsPage_LANE_THREAD_ID_TOOLTIP;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

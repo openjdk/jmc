@@ -122,6 +122,8 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_FOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_NAME;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_VALUE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RESERVED_SIZE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_PEAK;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SAFEPOINT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_FRACTION_INDEX;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_INDEX;
@@ -130,6 +132,11 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_RECL
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_SWEPT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_ZOMBIFIED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREAD_DUMP_RESULT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACCUMULATED_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACTIVE_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_DAEMON_COUNT;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_PEAK_COUNT;
+
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.UNALLOCATED;
 
 import org.openjdk.jmc.common.item.Aggregators;
@@ -189,6 +196,7 @@ public final class JdkQueries {
 			.select(GC_ID, END_TIME).build();
 	public static final IItemQuery CPU_USAGE_SIMPLE_QUERY = fromWhere(JdkFilters.CPU_LOAD)
 			.select(MACHINE_TOTAL, JVM_TOTAL).build();
+	public static final IItemQuery RSS_SIMPLE_QUERY = fromWhere(JdkFilters.RSS).select(RSS_SIZE, RSS_PEAK).build();
 	public static final IItemQuery CPU_USAGE_DETAILED_GRAPH_QUERY = fromWhere(JdkFilters.CPU_LOAD)
 			.select(MACHINE_TOTAL, JVM_TOTAL, JVM_SYSTEM).build();
 	public static final IItemQuery ENVIRONMENT_VARIABLE = fromWhere(JdkFilters.ENVIRONMENT_VARIABLE)
@@ -233,6 +241,8 @@ public final class JdkQueries {
 			.build();
 	public static final IItemQuery SYSTEM_PROPERTIES = fromWhere(JdkFilters.SYSTEM_PROPERTIES)
 			.select(ENVIRONMENT_KEY, ENVIRONMENT_VALUE).build();
+	public static final IItemQuery THREAD_STATISTICS = fromWhere(JdkFilters.THREAD_STATISTICS)
+			.select(THREADS_ACTIVE_COUNT, THREADS_DAEMON_COUNT, THREADS_PEAK_COUNT, THREADS_ACCUMULATED_COUNT).build();
 	public static final IItemQuery THREAD_DUMP = fromWhere(JdkFilters.THREAD_DUMP).select(END_TIME, THREAD_DUMP_RESULT)
 			.build();
 	public static final IItemQuery THROWABLES_STATISTICS = fromWhere(JdkFilters.THROWABLES_STATISTICS)

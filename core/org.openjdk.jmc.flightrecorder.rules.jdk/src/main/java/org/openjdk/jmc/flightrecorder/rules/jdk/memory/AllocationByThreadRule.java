@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
@@ -65,7 +66,6 @@ import org.openjdk.jmc.flightrecorder.rules.jdk.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
-import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel;
@@ -73,10 +73,6 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 
 public class AllocationByThreadRule implements IRule {
 	private static final String THREAD_RESULT_ID = "Allocations.thread"; //$NON-NLS-1$
-
-	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
-			.addEventType(JdkTypeIDs.ALLOC_INSIDE_TLAB, EventAvailability.ENABLED)
-			.addEventType(JdkTypeIDs.ALLOC_OUTSIDE_TLAB, EventAvailability.ENABLED).build();
 
 	public static final TypedResult<IMCThread> MOST_ALLOCATING_THREAD = new TypedResult<>("mostAllocatingThread", //$NON-NLS-1$
 			"Most Allocating Thread", "The thread that allocated the most.", UnitLookup.THREAD, IMCThread.class);
@@ -90,8 +86,26 @@ public class AllocationByThreadRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
-		List<IntEntry<IMCThread>> entries = RulesToolkit.calculateGroupingScore(items.apply(JdkFilters.ALLOC_ALL),
-				JfrAttributes.EVENT_THREAD);
+		boolean preciseEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_INSIDE_TLAB)
+				.isLessAvailableThan(EventAvailability.ENABLED)
+				&& !RulesToolkit.getEventAvailability(items, JdkTypeIDs.ALLOC_OUTSIDE_TLAB)
+						.isLessAvailableThan(EventAvailability.ENABLED);
+		boolean sampledEvents = !RulesToolkit.getEventAvailability(items, JdkTypeIDs.OBJ_ALLOC_SAMPLE)
+				.isLessAvailableThan(EventAvailability.ENABLED);
+		if (!preciseEvents && !sampledEvents) {
+			return RulesToolkit.getNotApplicableResult(this, valueProvider, null);
+		}
+
+		IItemFilter filter = preciseEvents ? JdkFilters.ALLOC_ALL : JdkFilters.OBJ_ALLOC;
+		IItemCollection allocationItems = items.apply(filter);
+		List<IntEntry<IMCThread>> entries = preciseEvents
+				? RulesToolkit.calculateGroupingScore(allocationItems, JfrAttributes.EVENT_THREAD)
+				// Using object allocation sample events we must calculate cores taking sample weight
+				// into account. The weight is based on both number of samples and the estimated allocation
+				// size, which we cannot decouple to exactly match the behavior of the more expensive and
+				// precise object allocation in new tlab/outside tlab events.
+				: RulesToolkit.calculateGroupingScore(allocationItems, JfrAttributes.EVENT_THREAD,
+						JdkAttributes.SAMPLE_WEIGHT);
 		if (entries.size() > 0) {
 			double balance = RulesToolkit.calculateBalanceScore(entries);
 			IntEntry<IMCThread> mostSignificant = entries.get(entries.size() - 1);
@@ -99,7 +113,7 @@ public class AllocationByThreadRule implements IRule {
 			double relevance = RulesToolkit.mapExp100Y(mostSignificant.getValue(), 1000, 50);
 			double score = balance * relevance * 0.74; // ceiling at 74;
 
-			IItemFilter significantFilter = ItemFilters.and(JdkFilters.ALLOC_ALL,
+			IItemFilter significantFilter = ItemFilters.and(filter,
 					ItemFilters.equals(JfrAttributes.EVENT_THREAD, mostSignificant.getKey()));
 			StacktraceModel stacktraceModel = new StacktraceModel(false,
 					new FrameSeparator(FrameCategorization.METHOD, false), items.apply(significantFilter));
@@ -153,7 +167,7 @@ public class AllocationByThreadRule implements IRule {
 
 	@Override
 	public Map<String, EventAvailability> getRequiredEvents() {
-		return REQUIRED_EVENTS;
+		return Collections.emptyMap();
 	}
 
 	@Override

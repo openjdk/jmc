@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -155,6 +155,7 @@ final class DefaultIItemResultSet implements IItemResultSet {
 		data.addAll(processingQueue);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void checkStatusOfAllTasks(List<Future> totalAssignedTasks) {
 		int completedTask = 0;
 		for (Future future : totalAssignedTasks) {

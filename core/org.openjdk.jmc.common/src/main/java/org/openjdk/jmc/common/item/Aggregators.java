@@ -140,13 +140,13 @@ public class Aggregators {
 		double sum = 0.0;
 		IUnit unit = null;
 
-		Predicate predicate;
+		Predicate<Double> predicate;
 
 		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor) {
 			super(accessor);
 		}
 
-		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate predicate) {
+		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate<Double> predicate) {
 			this(accessor);
 			this.predicate = predicate;
 		}

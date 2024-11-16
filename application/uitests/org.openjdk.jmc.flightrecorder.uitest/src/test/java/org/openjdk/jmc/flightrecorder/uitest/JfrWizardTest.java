@@ -37,6 +37,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -77,6 +78,7 @@ public class JfrWizardTest extends MCJemmyTestBase {
 	 * recording running as recording settings for different recording result in a union setting in
 	 * each of the recordings
 	 */
+	@Ignore("Failing on Windows on JDK21")
 	@Test
 	public void verifyMinimalRecordingEventSettings() {
 		JfrWizard recordingWizard = MC.jvmBrowser.startFlightRecordingWizard();

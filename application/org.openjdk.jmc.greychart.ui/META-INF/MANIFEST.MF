@@ -4,7 +4,7 @@ Bundle-Name: GreyChart UI Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.greychart.ui
 Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.openjdk.jmc.greychart;visibility:=reexport,
  org.openjdk.jmc.ui
 Export-Package: org.openjdk.jmc.greychart.ui.views,

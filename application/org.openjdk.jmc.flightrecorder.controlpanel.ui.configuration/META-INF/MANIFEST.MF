@@ -7,7 +7,7 @@ Require-Bundle: org.openjdk.jmc.ui,
  org.openjdk.jmc.flightrecorder.configuration,
  org.openjdk.jmc.ui.common
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: Oracle Corporation
 Export-Package: org.openjdk.jmc.flightrecorder.controlpanel.ui.configuration.model.gui
 Import-Package: org.openjdk.jmc.common.io

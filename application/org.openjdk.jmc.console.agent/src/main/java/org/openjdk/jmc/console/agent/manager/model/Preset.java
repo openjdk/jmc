@@ -165,6 +165,7 @@ public class Preset implements IPreset {
 			factory.setExpandEntityReferences(false);
 			factory.setValidating(true);
 			builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(null);
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
 			throw new RuntimeException(e);

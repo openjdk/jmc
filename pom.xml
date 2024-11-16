@@ -108,7 +108,7 @@
 		<download.maven.plugin.version>1.6.8</download.maven.plugin.version>
 		<maven.deploy.version>3.1.1</maven.deploy.version>
 		<spotbugs.version>4.7.3.5</spotbugs.version>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
 	</properties>
 	<scm>
 		<connection>${scmConnection}</connection>
