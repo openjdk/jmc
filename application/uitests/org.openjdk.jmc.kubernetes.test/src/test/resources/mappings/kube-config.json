@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/mock-kube-config.yml"
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "mock-kube-config.yml",
+		"transformers": [
+			"response-template"
+		]
+	}
+}
