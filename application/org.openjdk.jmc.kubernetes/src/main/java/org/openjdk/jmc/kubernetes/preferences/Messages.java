@@ -41,7 +41,6 @@ public class Messages extends NLS {
 	public static String JmcKubernetesPreferenceForm_FormDescription;
 	public static String JmcKubernetesPreferenceForm_LabelToolTip;
 	public static String JmcKubernetesPreferenceForm_LogErrorsLabel;
-	public static String JmcKubernetesPreferenceForm_LogErrorsTooltip;
 	public static String JmcKubernetesPreferenceForm_PasswordLabel;
 	public static String JmcKubernetesPreferenceForm_PasswordTooltip;
 	public static String JmcKubernetesPreferenceForm_PathLabel;
