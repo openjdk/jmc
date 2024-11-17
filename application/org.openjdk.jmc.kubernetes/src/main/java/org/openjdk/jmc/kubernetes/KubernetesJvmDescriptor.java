@@ -50,8 +50,7 @@ public class KubernetesJvmDescriptor implements ServerConnectionDescriptor {
 	private final Map<String, Object> env;
 	private final JMXServiceURL connectUrl;
 
-	public KubernetesJvmDescriptor(ObjectMeta metadata, JMXServiceURL connectUrl,
-			Map<String, Object> env) {
+	public KubernetesJvmDescriptor(ObjectMeta metadata, JMXServiceURL connectUrl, Map<String, Object> env) {
 		this.metadata = metadata;
 		this.env = env;
 		this.connectUrl = connectUrl;

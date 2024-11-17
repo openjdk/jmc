@@ -57,12 +57,10 @@ import org.jolokia.client.J4pClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.jolokia.server.core.osgi.security.AuthorizationHeaderParser;
 import org.jolokia.server.core.util.Base64Util;
+import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
-import org.openjdk.jmc.jolokia.JolokiaAgentDescriptor;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
 import org.openjdk.jmc.kubernetes.preferences.KubernetesScanningParameters;
-import org.openjdk.jmc.common.jvm.JVMDescriptor;
-import org.openjdk.jmc.common.security.SecurityException;
 
 import io.fabric8.kubernetes.api.model.NamedContext;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -71,10 +69,10 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.internal.KubeConfigUtils;
-import io.fabric8.kubernetes.client.utils.Utils;
 import io.fabric8.kubernetes.client.dsl.AnyNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.PodResource;
+import io.fabric8.kubernetes.client.internal.KubeConfigUtils;
+import io.fabric8.kubernetes.client.utils.Utils;
 
 /**
  * This class attempts to connect to JVMs in pods running in kubernetes in a background thread.
@@ -254,8 +252,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 			try {
 				connection = new JmcKubernetesJmxConnection(jvmClient);
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
-				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL,
-						env);
+				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL, env);
 				found.put(descriptor.getGUID(), descriptor);
 			} catch (IOException e) {
 				parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
