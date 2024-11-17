@@ -253,9 +253,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 			JmcKubernetesJmxConnection connection;
 			try {
 				connection = new JmcKubernetesJmxConnection(jvmClient);
-				JVMDescriptor jvmDescriptor = JolokiaAgentDescriptor.attemptToGetJvmInfo(connection);
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
-				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jvmDescriptor, jmxServiceURL,
+				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL,
 						env);
 				found.put(descriptor.getGUID(), descriptor);
 			} catch (IOException e) {

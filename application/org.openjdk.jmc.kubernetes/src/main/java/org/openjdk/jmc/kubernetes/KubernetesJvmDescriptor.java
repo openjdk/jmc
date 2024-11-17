@@ -46,14 +46,12 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class KubernetesJvmDescriptor implements ServerConnectionDescriptor {
 
-	private final JVMDescriptor jvmDescriptor;
 	private final ObjectMeta metadata;
 	private final Map<String, Object> env;
 	private final JMXServiceURL connectUrl;
 
-	public KubernetesJvmDescriptor(ObjectMeta metadata, JVMDescriptor jvmDescriptor, JMXServiceURL connectUrl,
+	public KubernetesJvmDescriptor(ObjectMeta metadata, JMXServiceURL connectUrl,
 			Map<String, Object> env) {
-		this.jvmDescriptor = jvmDescriptor;
 		this.metadata = metadata;
 		this.env = env;
 		this.connectUrl = connectUrl;
@@ -71,7 +69,7 @@ public class KubernetesJvmDescriptor implements ServerConnectionDescriptor {
 
 	@Override
 	public JVMDescriptor getJvmInfo() {
-		return this.jvmDescriptor;
+		return null;
 	}
 
 	public String getPath() {
