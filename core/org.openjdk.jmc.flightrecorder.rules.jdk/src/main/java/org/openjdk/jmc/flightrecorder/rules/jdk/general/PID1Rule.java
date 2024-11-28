@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -86,6 +87,7 @@ public class PID1Rule implements IRule {
 
 		if (aggregate.size() > 1) {
 			// log that it contains more than 1 element. Why does it contain more?
+			Logger.getLogger(this.getClass().getName()).warning("There is more than one PID information available. This should not be possible.");
 			return RulesToolkit.getNotApplicableResult(this, valueProvider,
 					"There is more than one PID information available. This should not be possible.");
 		}
