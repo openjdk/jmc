@@ -654,6 +654,10 @@ public class Messages {
 	public static final String VerifyNoneRule_TEXT_OK = "VerifyNoneRule_TEXT_OK"; //$NON-NLS-1$
 	public static final String VerifyNoneRule_WLS_TEXT_INFO = "VerifyNoneRule_WLS_TEXT_INFO"; //$NON-NLS-1$
 	public static final String VerifyNoneRule_WLS_TEXT_INFO_LONG = "VerifyNoneRule_WLS_TEXT_INFO_LONG"; //$NON-NLS-1$
+	public static final String PID1Rule_CONFIG_EXCLUDED_STRINGS = "TODO";
+	public static final String PID1Rule_CONFIG_EXCLUDED_STRINGS_LONG = "TODO";
+	public static final String PID1Rule_RULE_NAME = "TODO";
+	public static final String PID1Rule_TEXT_OK = "TODO";
 
 	private Messages() {
 	}
