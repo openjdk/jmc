@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2024, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -35,17 +36,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.releng</artifactId>
+		<artifactId>platform-definitions</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>platform-definitions</artifactId>
-	<packaging>pom</packaging>
+	<artifactId>platform-definition-2024-09</artifactId>
+	<packaging>eclipse-target-definition</packaging>
 	<properties>
-		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
+		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
 	</properties>
-	<modules>
-		<module>platform-definition-2024-09</module>
-		<module>platform-definition-2024-06</module>
-		<module>platform-definition-2024-03</module>
-	</modules>
 </project>
