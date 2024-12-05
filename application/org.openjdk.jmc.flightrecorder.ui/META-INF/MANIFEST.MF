@@ -27,8 +27,8 @@ Require-Bundle: org.openjdk.jmc.rjmx,
  org.eclipse.jetty.ee9.websocket.servlet,
  org.eclipse.jetty.ee9.server,
  org.eclipse.jetty.server,
- org.eclipse.jetty.ee9.websocket.server;bundle-version="12.0.6",
- org.eclipse.jetty.servlet-api;bundle-version="5.0.2"
+ org.eclipse.jetty.ee9.websocket.server,
+ org.eclipse.jetty.servlet-api
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI
 Export-Package: org.openjdk.jmc.flightrecorder.ui,
