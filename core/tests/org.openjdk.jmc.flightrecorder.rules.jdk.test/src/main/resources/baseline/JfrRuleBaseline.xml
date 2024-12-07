@@ -262,6 +262,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -564,6 +569,11 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -827,6 +837,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1097,6 +1111,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1390,6 +1408,11 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -1652,6 +1675,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -1919,6 +1946,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -2227,6 +2258,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -2527,6 +2562,11 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <summary>No problems were found with the recording settings.</summary>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -2811,6 +2851,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3089,6 +3133,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -3374,6 +3422,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3641,6 +3693,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -3898,6 +3954,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
             <severity>Not Applicable</severity>
         </rule>
         <rule>
@@ -4207,6 +4267,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>Not Applicable</severity>
         </rule>
@@ -4481,6 +4545,11 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <severity>Not Applicable</severity>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>OK</severity>
+            <summary>PID1Rule_TEXT_OK</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -4744,6 +4813,11 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
         <rule>
             <id>OverAggressiveRecordingSetting</id>
             <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>OK</severity>
+            <summary>PID1Rule_TEXT_OK</summary>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
@@ -5049,6 +5123,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>OverAggressiveRecordingSetting</id>
             <severity>OK</severity>
             <summary>No problems were found with the recording settings.</summary>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
@@ -5366,6 +5445,11 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <summary>No problems were found with the recording settings.</summary>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -5425,6 +5509,280 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>biasedLockingRevocationPause</id>
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
+        </rule>
+    </report>
+    <report>
+        <file>pid1.jfr</file>
+        <rule>
+            <id>Allocations.class</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Allocations.thread</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ApplicationHalts</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>BufferLost</id>
+            <severity>OK</severity>
+            <summary>No Flight Recorder buffers were lost during the recording.</summary>
+        </rule>
+        <rule>
+            <id>BytecodeVerification</id>
+            <severity>OK</severity>
+            <summary>The application ran with bytecode verification enabled.</summary>
+        </rule>
+        <rule>
+            <id>ClassLeak</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ClassLoading</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CodeCache</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompareCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>CompressedOops</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ContextSwitch</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DMSIncident</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DebugNonSafepoints</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DiscouragedVmOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DumpReason</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>DuplicateFlags</id>
+            <severity>OK</severity>
+            <summary>There were no duplicate JVM flags on the command line.</summary>
+        </rule>
+        <rule>
+            <id>DynamicAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Exceptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Fatal Errors</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FewSampledThreads</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileForce</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FileWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FinalizersRun</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>FlightRecordingSupport</id>
+            <severity>OK</severity>
+            <summary>The JVM version used for this recording has full Flight Recorder support.</summary>
+        </rule>
+        <rule>
+            <id>FullGc</id>
+            <severity>Not Applicable</severity>
+            <summary>This rule is only valid for CMS and G1 Garbage Collectors, neither of which were detected for this JVM.</summary>
+        </rule>
+        <rule>
+            <id>GarbageCollectionInfoRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcFreedRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcInvertedParallelism</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcOptions</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>GcPauseTargetRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapContent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HeapDump</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighGc</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>HighJvmCpu</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>IncreasingMetaSpaceLiveSet</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JavaBlocking</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>JfrPeriodicEventsFix</id>
+            <severity>OK</severity>
+            <summary>The version of Java you are running is not affected by a performance issue related to periodic events.</summary>
+        </rule>
+        <rule>
+            <id>LongGcPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>LowOnPhysicalMemory</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManagementAgent</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ManyRunningProcesses</id>
+            <severity>OK</severity>
+            <summary>1 processes were running while this Flight Recording was made.</summary>
+            <explanation>At 11/30/24 8:41:01.780 AM, a total of 1 other processes were running on the host machine that this Flight Recording was made on.</explanation>
+            <solution>If this is a server environment, it may be good to only run other critical processes on that machine.</solution>
+        </rule>
+        <rule>
+            <id>MetaspaceOom</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MethodProfiling</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>MultipleAgents</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>Options</id>
+            <severity>OK</severity>
+            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+        </rule>
+        <rule>
+            <id>OverAggressiveRecordingSetting</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>Warning</severity>
+            <summary>Process runs with PID 1.</summary>
+            <explanation>Java processes should not run with PID 1 as this PID is reserved for the init process in Linux, which is responsible for signal handling and process management. Java processes do not natively handle signals like SIGTERM correctly, leading to issues such as unclean shutdowns and orphaned child processes.</explanation>
+            <solution>Enforce the process does not run with PID 1. In Docker, this can be achieved by using the lightweight init system tini with the '--init' flag. For an example with Docker Compose refer to the [documentation from Docker Compose](https://docs.docker.com/reference/compose-file/services/#init).</solution>
+        </rule>
+        <rule>
+            <id>PasswordsInArguments</id>
+            <severity>OK</severity>
+            <summary>The recording does not seem to contain passwords in the application arguments.</summary>
+        </rule>
+        <rule>
+            <id>PasswordsInEnvironment</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PasswordsInSystemProperties</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PrimitiveToObjectConversion</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ProcessStarted</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketRead</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>SocketWrite</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>StackdepthSetting</id>
+            <severity>OK</severity>
+            <summary>No stack traces were truncated in this recording.</summary>
+        </rule>
+        <rule>
+            <id>StringDeduplication</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>TlabAllocationRatio</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>VMOperations</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocation</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
         </rule>
     </report>
     <report>
@@ -5681,6 +6039,11 @@ To improve rule accuracy and/or get more details for further investigation, it i
         <rule>
             <id>OverAggressiveRecordingSetting</id>
             <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
@@ -6025,6 +6388,11 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <summary>No problems were found with the recording settings.</summary>
         </rule>
         <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
+        </rule>
+        <rule>
             <id>PasswordsInArguments</id>
             <severity>OK</severity>
             <summary>The recording does not seem to contain passwords in the application arguments.</summary>
@@ -6318,6 +6686,11 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
         <rule>
             <id>OverAggressiveRecordingSetting</id>
             <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
