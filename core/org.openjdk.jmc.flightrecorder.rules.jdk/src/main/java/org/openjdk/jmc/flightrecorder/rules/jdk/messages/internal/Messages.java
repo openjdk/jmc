@@ -658,6 +658,7 @@ public class Messages {
 	public static final String PID1Rule_TEXT_OK = "PID1Rule_TEXT_OK"; //$NON-NLS-1$
 	public static final String PID1Rule_TEXT_INFO_LONG = "PID1Rule_TEXT_INFO_LONG"; //$NON-NLS-1$
 	public static final String PID1Rule_TEXT_INFO = "PID1Rule_TEXT_INFO"; //$NON-NLS-1$
+	public static final String PID1Rule_TEXT_SOLUTION = "PID1Rule_TEXT_SOLUTION"; //$NON-NLS-1$
 	public static final String PID1Rule_NO_PID = "PID1Rule_NO_PID"; //$NON-NLS-1$
 
 	private Messages() {

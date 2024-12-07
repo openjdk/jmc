@@ -5727,7 +5727,8 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>PID1Rule</id>
             <severity>Warning</severity>
             <summary>Process runs with PID 1.</summary>
-            <explanation>Java processes shouldn't run with PID 1 as this PID is for the init process in Unix-like systems and receives special treatment.</explanation>
+            <explanation>Java processes should not run with PID 1 as this PID is reserved for the init process in Linux, which is responsible for signal handling and process management. Java processes do not natively handle signals like SIGTERM correctly, leading to issues such as unclean shutdowns and orphaned child processes.</explanation>
+            <solution>Enforce the process does not run with PID 1. In Docker, this can be achieved by using the lightweight init system tini with the '--init' flag. For an example with Docker Compose refer to the [documentation from Docker Compose](https://docs.docker.com/reference/compose-file/services/#init).</solution>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
