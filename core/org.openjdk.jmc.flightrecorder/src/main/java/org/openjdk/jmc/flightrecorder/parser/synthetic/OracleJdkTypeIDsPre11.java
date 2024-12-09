@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -176,6 +176,7 @@ public final class OracleJdkTypeIDsPre11 {
 	private final static String JAVA_THREAD_START = JVM_EVENT_ID_ROOT + "java/thread_start";
 	private final static String JAVA_THREAD_END = JVM_EVENT_ID_ROOT + "java/thread_end";
 	private final static String VM_OPERATIONS = JVM_EVENT_ID_ROOT + "vm/runtime/execute_vm_operation";
+	private final static String VM_SHUTDOWN = JVM_EVENT_ID_ROOT + "vm/runtime/shutdown";
 
 	private final static String THREAD_STATISTICS = JVM_EVENT_ID_ROOT + "java/statistics/threads";
 	private final static String CONTEXT_SWITCH_RATE = JVM_EVENT_ID_ROOT + "os/processor/context_switch_rate";
@@ -369,6 +370,8 @@ public final class OracleJdkTypeIDsPre11 {
 			return JdkTypeIDs.JAVA_THREAD_END;
 		case VM_OPERATIONS:
 			return JdkTypeIDs.VM_OPERATIONS;
+		case VM_SHUTDOWN:
+			return JdkTypeIDs.VM_SHUTDOWN;
 		case THREAD_STATISTICS:
 			return JdkTypeIDs.THREAD_STATISTICS;
 		case CONTEXT_SWITCH_RATE:
