@@ -16,6 +16,7 @@ openjdk8u292.jfr
 openjdk8u302ea.jfr
 parallel-gc_cpu.jfr
 parallel-on-singlecpu.jfr
+pid1.jfr
 stringdedup_enabled_jdk9.jfr
 wldf.jfr
 wls-medrec-jdk9.jfr
