@@ -254,11 +254,17 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>Options</id>
             <severity>OK</severity>
-            <summary>No undocumented, deprecated or non-recommended option flags were detected.</summary>
+            <summary>Deprecated option flags were detected.</summary>
+            <explanation>The following option flag is or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
             <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>PID1Rule</id>
+            <severity>Ignore</severity>
+            <summary>There is no PID information available.</summary>
         </rule>
         <rule>
             <id>PasswordsInArguments</id>
