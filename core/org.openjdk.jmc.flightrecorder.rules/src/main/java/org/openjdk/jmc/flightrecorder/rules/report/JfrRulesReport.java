@@ -331,12 +331,13 @@ public class JfrRulesReport {
 								Element itemNode = parent.getOwnerDocument().createElement("item"); //$NON-NLS-1$
 								itemsNode.appendChild(itemNode);
 								for (IMemberAccessor<?, IItem> a : accessors) {
-									if (a != null)
+									if (a != null) {
 										itemNode.appendChild(createValueNode(parent.getOwnerDocument(), "value", //$NON-NLS-1$
 												toString(a.getMember(item))));
-									else
+									} else {
 										Logger.getLogger(JfrRulesReport.class.getName()).log(Level.WARNING,
 												"Accessor is null: " + item.getType()); //$NON-NLS-1$
+									}
 								}
 							}
 						}
