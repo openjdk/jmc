@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -329,8 +331,13 @@ public class JfrRulesReport {
 								Element itemNode = parent.getOwnerDocument().createElement("item"); //$NON-NLS-1$
 								itemsNode.appendChild(itemNode);
 								for (IMemberAccessor<?, IItem> a : accessors) {
-									itemNode.appendChild(createValueNode(parent.getOwnerDocument(), "value", //$NON-NLS-1$
-											toString(a.getMember(item))));
+									if (a != null) {
+										itemNode.appendChild(createValueNode(parent.getOwnerDocument(), "value", //$NON-NLS-1$
+												toString(a.getMember(item))));
+									} else {
+										Logger.getLogger(JfrRulesReport.class.getName()).log(Level.WARNING,
+												"Accessor is null: " + item.getType()); //$NON-NLS-1$
+									}
 								}
 							}
 						}

@@ -153,8 +153,8 @@ public final class JdkQueries {
 			.select(ALLOC_INSIDE_TLAB_AVG).select(ALLOC_INSIDE_TLAB_SUM).groupBy(ALLOCATION_CLASS).build();
 	public static final IItemQuery ALLOC_INSIDE_TLAB_BY_THREAD = fromWhere(JdkFilters.ALLOC_INSIDE_TLAB)
 			.select(ALLOC_INSIDE_TLAB_AVG).select(ALLOC_INSIDE_TLAB_SUM).groupBy(EVENT_THREAD).build();
-	public static final IItemQuery JFR_DATA_LOST = fromWhere(JdkFilters.JFR_DATA_LOST)
-			.select(END_TIME, EVENT_THREAD, FLR_DATA_LOST).build();
+	public static final IItemQuery JFR_DATA_LOST = fromWhere(JdkFilters.JFR_DATA_LOST).select(END_TIME, FLR_DATA_LOST)
+			.build();
 	public static final IItemQuery CLASS_LOAD = fromWhere(JdkFilters.CLASS_LOAD)
 			.select(CLASS_LOADED, CLASS_DEFINING_CLASSLOADER, CLASS_INITIATING_CLASSLOADER, EVENT_THREAD, DURATION)
 			.build();
