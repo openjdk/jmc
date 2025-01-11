@@ -34,7 +34,7 @@ function installCore() {
     }
 
     echo "$(date +%T) installing core artifacts - logging output to ${installLog}"
-    mvn clean install --log-file "${installLog}"
+    mvn ${JVM_ARGUMENTS} clean install --log-file "${installLog}"
 
     popd 1> /dev/null || {
         err_log "could not go to project root directory"
